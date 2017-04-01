@@ -1,8 +1,6 @@
 package common
 
 import(
-	"os"
-	"fmt"
 	"hash"
 	"bytes"
 	"encoding/hex"
