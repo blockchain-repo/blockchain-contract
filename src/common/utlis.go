@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"time"
+	"bytes"
 )
 
 func GenDate() string {
@@ -19,17 +20,32 @@ func GenTimestamp() string {
 	return strconv.FormatInt(millis,10)
 }
 
-func Serialize(dat map[string]interface{}) string {
-	str, err := json.Marshal(dat)
+func Serialize(obj interface{}) string {
+	str, err := json.Marshal(obj)
 	if err != nil {
 		panic(err)
 	}
 	return string(str)
 }
 
-func Deserialize(str string) map[string]interface{} {
-	var dat map[string]interface{}
-	err := json.Unmarshal([]byte(str), &dat)
+//only for selfTest, format json output
+func _SerializePretty(obj interface{}) string {
+	input, err := json.Marshal(obj)
+	if err != nil {
+		panic(err)
+	}
+	var out bytes.Buffer
+	err = json.Indent(&out, input, "", "\t")
+
+	if err != nil {
+		panic(err)
+	}
+	return string(out.String())
+}
+
+func Deserialize(jsonStr string) interface{} {
+	var dat interface{}
+	err := json.Unmarshal([]byte(jsonStr), &dat)
         if  err != nil {
 		panic(err)
 	}

@@ -5,7 +5,7 @@ import(
 	"testing"
 )
 
-func Test_HashData(t * testing.T) {
+func Test_HashData(t *testing.T) {
 	hash := HashData("hello unichain 2017")
 	data := "2c27fa14ff62005acda2b1845bb335f5c139ff252670d6d86cf9801617120037"
 	if hash != data {
@@ -15,13 +15,13 @@ func Test_HashData(t * testing.T) {
 	fmt.Println("----------------------hash:",hash)
 }
 
-func Test_GenerateKeyPair(t * testing.T) {
+func Test_GenerateKeyPair(t *testing.T) {
 	publicKeyBase58,privateKeyBase58 := GenerateKeyPair()
         fmt.Println("----------------------pub:",publicKeyBase58)
 	fmt.Println("----------------------pri:",privateKeyBase58)
 }
 
-func Test_GetPubByPriv(t * testing.T) {
+func Test_GetPubByPriv(t *testing.T) {
 	pub:= "BbfY4Dc5s8dTP1Z1yixnetezRKYREHqwbP8GQGh3WyVS"
 	pri:= "6hXsHQ4fdWQ9UY1XkBYCYRouAagRW8rXxYSLgpveQNYY"
 	pub2 :=GetPubByPriv(pri)
@@ -30,7 +30,7 @@ func Test_GetPubByPriv(t * testing.T) {
 	}
 }
 
-func Test_Sign(t * testing.T) {
+func Test_Sign(t *testing.T) {
 	msg := "hello unichain 2017"
 	pri := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
 	sig := "48cpAsUuNf6qKCMFFKitSNjaA8nfPM4o7MacVp8U3QVMbVUr34SSRTTpahi3WEv3GaF2bVWG7J4SLTojgDoacLxT"
@@ -40,7 +40,7 @@ func Test_Sign(t * testing.T) {
         }
 }
 
-func Test_Verify(t * testing.T) {
+func Test_Verify(t *testing.T) {
 	pub := "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	pub2 := "AZfjdKxEr9G3NwdAkco22nN8PfgQvCr5TDPK1tqsGZrk"
 	msg := "hello unichain 2017"

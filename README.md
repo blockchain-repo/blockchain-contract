@@ -70,3 +70,29 @@ git clone https://git.oschina.net/uni-ledger/unicontract.git $GOPATH/src/
 ```
 bash build.sh
 ```
+
+#### issues:
+If you have the error as follows:
+```
+cannot find package "github.com/btcsuite/btcutil/base58" in any of:
+cannot find package "golang.org/x/crypto/sha3" in any of:
+cannot find package "golang.org/x/crypto/ed25519" in any of
+.....
+```
+
+You can solve it as follows:
+```
+go get github.com/btcsuite/btcutil/base58
+
+# go get golang.org/x/crypto/sha3
+go get github.com/golang/crypto/sha3
+
+# go get golang.org/x/crypto/ed25519
+go get github.com/golang/crypto/ed25519
+
+
+mkdir -p $GOPATH/src/golang.org
+
+cd $GOPATH/src/golang.org
+ln -s $GOPATH/src/github.com/golang/ x
+```
