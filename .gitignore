@@ -24,8 +24,8 @@ _testmain.go
 !.gitkeep
 
 # beego run
-lastupdate.temp
-#.log
+lastupdate.tmp
+*.log
 
 .idea
-.unicontract
+unicontract
