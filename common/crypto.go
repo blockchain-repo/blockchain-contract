@@ -56,5 +56,5 @@ func Verify(pub string,msg string,sig string) bool {
 	pubByte := base58.Decode(pub)
 	publicKey := make([]byte, 32)
 	copy(publicKey, pubByte)
-	return ed25519.Verify(publicKey,[]byte(msg), base58.Decode(sig))
+	return ed25519.Verify(publicKey, []byte(msg), base58.Decode(sig))
 }
