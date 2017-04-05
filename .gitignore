@@ -24,7 +24,7 @@ _testmain.go
 !.gitkeep
 
 # beego run
-*.lastupdate.temp
+lastupdate.temp
 #.log
 
 .idea

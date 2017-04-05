@@ -33,4 +33,3 @@ func TestMax(t *testing.T){
 PASS
 ok      uniledger.com/unicontract/unittest  0.003s
 ```
-#
