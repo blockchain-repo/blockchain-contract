@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 
 !.gitkeep
+
+# beego run
+*.lastupdate.temp
+#.log
+
+.idea

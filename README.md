@@ -1,30 +1,41 @@
+## unicontract
+### Pre
 
-## 目录结构描述
+#### 1. Download
 ```
-bin:
-pkg:
-src:
-  |__unicontract
-       |__ api:    合约执行层对合约应用层提供的API
-       |__ chain:  合约执行层与区块链层交互接口
-       |__ commands:命令行支持
-       |__ common: 公用工具集包
-       |__ core:   合约执行层核心处理逻辑******
-            |__
-            |__
-       |__ demo:   调用使用样例
-       |__ test:   单元测试、集成测试等
-       |__ tools:  语法检查、逻辑检查等工具
+sudo wget https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz -c -P /opt
+
+sudo tar -C /usr/local/ -xzf /opt/go1.8.linux-amd64.tar.gz
+
+```
+#### 2. Configure
+创建`go workspace`
+
+```
+mkdir -p $HOME/work/golang
 ```
 
-## 产出目录结构
+在 `/etc/profile` 或者 `$HOME/.profile` 中添加以下几行:
 ```
-unicontract:
-  |__bin:  产出bin文件
-  |__conf: conf配置文件
-  |__data: 依赖数据文件
-  |__log:  过程log文件,按日期切割
-      |__ unicontract.log
-      |__ unicontract.log.wf
-      |__ unicontract.log.debug
+export GOROOT=/usr/local/go
+export PATH=$GOROOT/bin:$PATH
+
+export GOPATH=$HOME/work/golang
+
+```
+
+如果想在任意目录执行生成的文件，则可以添加`$GOPATH/bin`到`$PATH`
+```
+export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+```
+然后, 执行 `source /etc/profile` 或者 `source ~/.profile`
+
+检查是否生效
+```
+go version
+```
+
+## start
+```
+bash build.sh
 ```
