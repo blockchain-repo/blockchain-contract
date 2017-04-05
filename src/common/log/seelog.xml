@@ -1,0 +1,45 @@
+<seelog>
+    <outputs formatid="main">
+
+        <filter levels="trace,info,debug,critical,error,warn" >
+            <rollingfile formatid="info"
+                         type="size"
+                         filename="/var/log/seelog/info.log"
+                         maxsize="1000"
+                         maxrolls="5"
+            />
+            <!--archivetype="zip"-->
+        </filter>
+
+        <filter levels="trace,info,debug,critical,error,warn" formatid="debug">
+            <rollingfile formatid="debug"
+                         type="date"
+                         namemode="prefix"
+                         filename="/var/log/seelog/debuge.log"
+                         datepattern="2006.02.01"
+                         maxrolls="5"
+                         fullname="true"
+            />
+        </filter>
+
+        <!--<splitter formatid="format2">-->
+            <!--<file path="~/seelog/log3.log"/>-->
+            <!--<file path="/home/wsp/log/test/log4.log"/>-->
+        <!--</splitter>-->
+
+        <filter levels="trace,info,debug,critical,error,warn">
+            <console />
+        </filter>
+
+        <!--<filter levels="trace,info,debug,error,critical,warn">-->
+            <!--<file path="~/seelog/test.log"/>-->
+        <!--</filter>-->
+
+    </outputs>
+
+    <formats>
+        <format id="main" format="%Date/%Time [%LEV]-[%FullPath]-[line num:%Line] %Msg%n"/>
+        <format id="info" format="%Date/%Time [%LEV]-[%FullPath]-[line num:%Line] %Msg%n"/>
+        <format id="debug" format="%Date/%Time [%LEV]-[%FullPath]-[line num:%Line] %Msg%n"/>
+    </formats>
+</seelog>
