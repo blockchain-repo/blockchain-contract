@@ -1,10 +1,11 @@
 package common
 
 import (
+	"bytes"
 	"encoding/json"
+	"log"
 	"strconv"
 	"time"
-	"bytes"
 )
 
 func GenDate() string {
@@ -17,28 +18,28 @@ func GenTimestamp() string {
 	t := time.Now()
 	nanos := t.UnixNano()
 	millis := nanos / 1000000 //ms len=13
-	return strconv.FormatInt(millis,10)
+	return strconv.FormatInt(millis, 10)
 }
 
 func Serialize(obj interface{}) string {
 	str, err := json.Marshal(obj)
 	if err != nil {
-		panic(err)
+		log.Fatalf(err.Error())
 	}
 	return string(str)
 }
 
 //only for selfTest, format json output
-func _SerializePretty(obj interface{}) string {
+func SerializePretty(obj interface{}) string {
 	input, err := json.Marshal(obj)
 	if err != nil {
-		panic(err)
+		log.Fatalf(err.Error())
 	}
 	var out bytes.Buffer
 	err = json.Indent(&out, input, "", "\t")
 
 	if err != nil {
-		panic(err)
+		log.Fatalf(err.Error())
 	}
 	return string(out.String())
 }
@@ -46,8 +47,8 @@ func _SerializePretty(obj interface{}) string {
 func Deserialize(jsonStr string) interface{} {
 	var dat interface{}
 	err := json.Unmarshal([]byte(jsonStr), &dat)
-        if  err != nil {
-		panic(err)
+	if err != nil {
+		log.Fatalf(err.Error())
 	}
 	return dat
 }
