@@ -1,14 +1,12 @@
 package models
 
 import (
-	"fmt"
-	"testing"
-	//"reflect"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/apex/log"
+	"testing"
 	"time"
-	//"os"
 )
 
 func Test_Contract(t *testing.T) {
@@ -27,7 +25,6 @@ func Test_Contract(t *testing.T) {
 
 	contract.Head.Version = "v1.0"
 
-
 	contract.Body.Other.Creator_pubkey = "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc"
 	contract.Body.Other.Create_timestamp = time.Now().Unix()
 	contract.Body.Other.Operation = "CREATE"
@@ -41,82 +38,78 @@ func Test_Contract(t *testing.T) {
 
 	contractSignatures := make([]ContractSignature, 3)
 	contractSignatures[0] = ContractSignature{Owner_pubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-	Signature:"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc", Timestamp:time.Now().Unix()}
+		Signature: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc", Timestamp: time.Now().Unix()}
 	contractSignatures[1] = ContractSignature{Owner_pubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-	Signature:"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc", Timestamp:time.Now().Unix()}
+		Signature: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc", Timestamp: time.Now().Unix()}
 	contractSignatures[2] = ContractSignature{Owner_pubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-	Signature:"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc", Timestamp:time.Now().Unix()}
+		Signature: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc", Timestamp: time.Now().Unix()}
 
 	contract.Body.ContractSignatures = contractSignatures
 
 	contractAsserts := make([]ContractAssert, 3)
-	contractAsserts[0] = ContractAssert{Id: "111", Name: "wx1", Amount:1000}
-	contractAsserts[1] = ContractAssert{Id: "113", Name: "wx2", Amount:800}
-	contractAsserts[2] = ContractAssert{Id: "112", Name: "wx3", Amount:100}
+	contractAsserts[0] = ContractAssert{Id: "111", Name: "wx1", Amount: 1000}
+	contractAsserts[1] = ContractAssert{Id: "113", Name: "wx2", Amount: 800}
+	contractAsserts[2] = ContractAssert{Id: "112", Name: "wx3", Amount: 100}
 	contract.Body.ContractAsserts = contractAsserts
-
 
 	plans := make([]Plan, 2)
 
 	planConditions := make([]PlanTaskCondition, 3)
-	plans[0] = Plan{Id:"ID_Axxxxxx", PlanType:"PLAN", State:"dormant", Name:"N_Axxxxx",Description:"xxxxx"}
+	plans[0] = Plan{Id: "ID_Axxxxxx", PlanType: "PLAN", State: "dormant", Name: "N_Axxxxx", Description: "xxxxx"}
 
-	planConditions[0] = PlanTaskCondition{Id:"1", ConditionType:"PreCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	planConditions[1] = PlanTaskCondition{Id:"2", ConditionType:"DisgardCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	planConditions[2] = PlanTaskCondition{Id:"3", ConditionType:"CompleteCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
+	planConditions[0] = PlanTaskCondition{Id: "1", ConditionType: "PreCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	planConditions[1] = PlanTaskCondition{Id: "2", ConditionType: "DisgardCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	planConditions[2] = PlanTaskCondition{Id: "3", ConditionType: "CompleteCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
 	plans[0].Condition = planConditions
 	plans[0].Level = 1
-	plans[0].ContractType ="RIGHT"
-	plans[0].NextTask = []string{"1","2"}
+	plans[0].ContractType = "RIGHT"
+	plans[0].NextTask = []string{"1", "2"}
 
 	planConditions2 := make([]PlanTaskCondition, 3)
-	plans[1] = Plan{Id:"ID_Axxxxxx", PlanType:"PLAN", State:"dormant", Name:"N_Axxxxx",Description:"xxxxx"}
+	plans[1] = Plan{Id: "ID_Axxxxxx", PlanType: "PLAN", State: "dormant", Name: "N_Axxxxx", Description: "xxxxx"}
 
-	planConditions2[0] = PlanTaskCondition{Id:"1", ConditionType:"PreCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	planConditions2[1] = PlanTaskCondition{Id:"2", ConditionType:"DisgardCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	planConditions2[2] = PlanTaskCondition{Id:"3", ConditionType:"CompleteCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
+	planConditions2[0] = PlanTaskCondition{Id: "1", ConditionType: "PreCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	planConditions2[1] = PlanTaskCondition{Id: "2", ConditionType: "DisgardCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	planConditions2[2] = PlanTaskCondition{Id: "3", ConditionType: "CompleteCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
 	plans[1].Condition = planConditions2
 	plans[1].Level = 1
-	plans[1].ContractType ="RIGHT"
-	plans[1].NextTask = []string{"1","2"}
-
-
+	plans[1].ContractType = "RIGHT"
+	plans[1].NextTask = []string{"1", "2"}
 
 	tasks := make([]Task, 3)
 
-	tasks[0] = Task{Id:"ID_Cxxxxxx", PlanType:"ENQUIRY", State:"dormant", Name:"Axxxxxx",Description:"xxxxx"}
+	tasks[0] = Task{Id: "ID_Cxxxxxx", PlanType: "ENQUIRY", State: "dormant", Name: "Axxxxxx", Description: "xxxxx"}
 	taskConditions := make([]PlanTaskCondition, 3)
 
-	taskConditions[0] = PlanTaskCondition{Id:"1", ConditionType:"PreCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	taskConditions[1] = PlanTaskCondition{Id:"2", ConditionType:"DisgardCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	taskConditions[2] = PlanTaskCondition{Id:"3", ConditionType:"CompleteCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
+	taskConditions[0] = PlanTaskCondition{Id: "1", ConditionType: "PreCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	taskConditions[1] = PlanTaskCondition{Id: "2", ConditionType: "DisgardCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	taskConditions[2] = PlanTaskCondition{Id: "3", ConditionType: "CompleteCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
 	tasks[0].Condition = taskConditions
 	tasks[0].Level = 1
-	tasks[0].ContractType ="RIGHT"
-	tasks[0].NextTask = []string{"Axxxxxx","Bxxxxxx"}
+	tasks[0].ContractType = "RIGHT"
+	tasks[0].NextTask = []string{"Axxxxxx", "Bxxxxxx"}
 
-	tasks[1] = Task{Id:"ID_Cxxxxxx", PlanType:"ENQUIRY", State:"dormant", Name:"Bxxxxxx",Description:"xxxxx"}
+	tasks[1] = Task{Id: "ID_Cxxxxxx", PlanType: "ENQUIRY", State: "dormant", Name: "Bxxxxxx", Description: "xxxxx"}
 	taskConditions2 := make([]PlanTaskCondition, 3)
 
-	taskConditions2[0] = PlanTaskCondition{Id:"1", ConditionType:"PreCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	taskConditions2[1] = PlanTaskCondition{Id:"2", ConditionType:"DisgardCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	taskConditions2[2] = PlanTaskCondition{Id:"3", ConditionType:"CompleteCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
+	taskConditions2[0] = PlanTaskCondition{Id: "1", ConditionType: "PreCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	taskConditions2[1] = PlanTaskCondition{Id: "2", ConditionType: "DisgardCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	taskConditions2[2] = PlanTaskCondition{Id: "3", ConditionType: "CompleteCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
 	tasks[1].Condition = taskConditions2
 	tasks[1].Level = 2
-	tasks[1].ContractType ="RIGHT"
-	tasks[1].NextTask = []string{"",""}
+	tasks[1].ContractType = "RIGHT"
+	tasks[1].NextTask = []string{"", ""}
 
-	tasks[2] = Task{Id:"ID_Cxxxxxx", PlanType:"ACTION", State:"dormant", Name:"Cxxxxxx",Description:"xxxxx"}
+	tasks[2] = Task{Id: "ID_Cxxxxxx", PlanType: "ACTION", State: "dormant", Name: "Cxxxxxx", Description: "xxxxx"}
 	taskConditions3 := make([]PlanTaskCondition, 3)
 
-	taskConditions3[0] = PlanTaskCondition{Id:"1", ConditionType:"PreCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	taskConditions3[1] = PlanTaskCondition{Id:"2", ConditionType:"DisgardCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
-	taskConditions3[2] = PlanTaskCondition{Id:"3", ConditionType:"CompleteCondition", Name:"XXXX",Value:"XXXX",Description:"xxxxx"}
+	taskConditions3[0] = PlanTaskCondition{Id: "1", ConditionType: "PreCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	taskConditions3[1] = PlanTaskCondition{Id: "2", ConditionType: "DisgardCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
+	taskConditions3[2] = PlanTaskCondition{Id: "3", ConditionType: "CompleteCondition", Name: "XXXX", Value: "XXXX", Description: "xxxxx"}
 	tasks[2].Condition = taskConditions3
 	tasks[2].Level = 2
-	tasks[2].ContractType ="DUTY"
-	tasks[2].NextTask = []string{"",""}
-
+	tasks[2].ContractType = "DUTY"
+	tasks[2].NextTask = []string{"", ""}
 
 	contract.Body.ContractComponents.Plans = plans
 	contract.Body.ContractComponents.Tasks = tasks

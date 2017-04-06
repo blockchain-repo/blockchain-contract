@@ -33,20 +33,6 @@ type ContractAssert struct {
 	Metadata map[string]interface{} `json:"metadata"`
 }
 
-type ContractRightTask struct {
-	// 权利 Plan1{enquiry,decision,action},Plan2,Plan3,Plan4……
-	Enquiry  map[string]interface{} `json:"right_enquiry"`
-	Decision map[string]interface{} `json:"right_decision"`
-	Action   map[string]interface{} `json:"right_action"`
-}
-
-type ContractDutyTask struct {
-	//义务 Plan1{enquiry,decision,action},Plan2,Plan3,Plan4……
-	Enquiry  map[string]interface{} `json:"enquiry"`
-	Decision map[string]interface{} `json:"decision"`
-	Action   map[string]interface{} `json:"action"`
-}
-
 //contract_components
 type PlanTaskCondition struct {
 	Id            string `json:"id"`
@@ -106,8 +92,6 @@ type Body struct {
 	//资产 Assert1{id,name,amount,metadata},Assert2,Assert3……
 	ContractAsserts    []ContractAssert `json:"contract_asserts"`
 	ContractComponents `json:"contract_components"`
-	//ContractRightTasks []ContractRightTask `json:"contract_right_asks"`
-	//ContractDutyTasks  []ContractDutyTask  `json:"contract_duty_tasks"`
 }
 
 type Contract struct {

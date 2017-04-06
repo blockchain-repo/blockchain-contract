@@ -8,10 +8,8 @@
 package routers
 
 import (
-	"unicontract/src/api/controllers"
-
-	"fmt"
 	"github.com/astaxie/beego"
+	"unicontract/src/api/controllers"
 )
 
 func init() {
@@ -26,7 +24,11 @@ func init() {
 				&controllers.UserController{},
 			),
 		),
+		beego.NSNamespace("/contract",
+			beego.NSInclude(
+				&controllers.ContractController{},
+			),
+		),
 	)
-	fmt.Println("dddd")
 	beego.AddNamespace(ns)
 }
