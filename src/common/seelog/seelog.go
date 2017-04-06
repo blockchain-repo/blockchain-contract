@@ -1,14 +1,16 @@
-package log
+package seelog
 
 import (
 	"github.com/cihub/seelog"
+	"os"
 )
 
 var logger seelog.LoggerInterface
 
 func init(){
-
-	newLogger, err := seelog.LoggerFromConfigAsFile("seelog.xml")
+	logxmlpath := os.Getenv("LOGXMLPATH")
+	logxmlpath = logxmlpath + "/seelog.xml"
+	newLogger, err := seelog.LoggerFromConfigAsFile(logxmlpath)
 
 	if err != nil {
 		seelog.Critical("err parsing config log file", err)
