@@ -16,18 +16,18 @@ func TestTracef(t *testing.T) {
 
 
 func TestDebuge(t *testing.T) {
-	Debuge("debuge test....")
+	Debug("debuge test....")
 }
 
 func TestDebugef(t *testing.T) {
-	Debugef("测试%s","debuge")
+	Debugf("测试%s","debuge")
 }
 
 
 func TestInfo(t *testing.T) {
 	for ; ; {
 		Info("Info test....")
-		Debuge("debuge test....")
+		Debug("debuge test....")
 		time.Sleep(time.Second * 1)
 	}
 }

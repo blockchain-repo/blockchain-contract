@@ -4,22 +4,20 @@
         <filter levels="trace,info,debug,critical,error,warn" >
             <rollingfile formatid="info"
                          type="size"
-                         filename="/var/log/seelog/info.log"
+                         filename="./info.log"
                          maxsize="1000"
-                         maxrolls="5"
-            />
+                         maxrolls="5"/>
             <!--archivetype="zip"-->
         </filter>
 
-        <filter levels="trace,info,debug,critical,error,warn" formatid="debug">
+        <filter levels="trace,info,debug,critical,error,warn">
             <rollingfile formatid="debug"
                          type="date"
                          namemode="prefix"
-                         filename="/var/log/seelog/debuge.log"
+                         filename="./debuge.log"
                          datepattern="2006.02.01"
                          maxrolls="5"
-                         fullname="true"
-            />
+                         fullname="true"/>
         </filter>
 
         <!--<splitter formatid="format2">-->

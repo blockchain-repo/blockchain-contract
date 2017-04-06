@@ -27,12 +27,12 @@ func Tracef(format string, params ...interface{}){
 	logger.Tracef(format,params)
 }
 
-func Debuge(v ...interface{}){
+func Debug(v ...interface{}){
 	defer logger.Flush()
 	logger.Debug(v)
 }
 
-func Debugef(format string, params ...interface{}){
+func Debugf(format string, params ...interface{}){
 	defer logger.Flush()
 	logger.Debugf(format,params)
 }
