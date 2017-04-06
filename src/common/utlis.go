@@ -1,6 +1,7 @@
 package common
 
 import (
+	"log"
 	"encoding/json"
 	"strconv"
 	"time"
@@ -23,7 +24,7 @@ func GenTimestamp() string {
 func Serialize(obj interface{}) string {
 	str, err := json.Marshal(obj)
 	if err != nil {
-		panic(err)
+		log.Fatalf(err)
 	}
 	return string(str)
 }
@@ -32,13 +33,13 @@ func Serialize(obj interface{}) string {
 func _SerializePretty(obj interface{}) string {
 	input, err := json.Marshal(obj)
 	if err != nil {
-		panic(err)
+		log.Fatalf(err)
 	}
 	var out bytes.Buffer
 	err = json.Indent(&out, input, "", "\t")
 
 	if err != nil {
-		panic(err)
+		log.Fatalf(err)
 	}
 	return string(out.String())
 }
@@ -47,7 +48,7 @@ func Deserialize(jsonStr string) interface{} {
 	var dat interface{}
 	err := json.Unmarshal([]byte(jsonStr), &dat)
         if  err != nil {
-		panic(err)
+		log.Fatalf(err)
 	}
 	return dat
 }
