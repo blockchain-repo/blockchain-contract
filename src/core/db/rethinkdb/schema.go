@@ -7,6 +7,8 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
+var Tables = [3] string{"Contract","Votes","ContractTasks"}
+
 func CreateTable(db string ,name string) {
 	session := ConnectDB(db)
 	respo, err := r.TableCreate(name).RunWrite(session)
@@ -41,7 +43,7 @@ func InitDatabase() {
 	dbname :="Unicontract"
 	CreateDatabase(dbname)
 
-	CreateTable(dbname,"Contract")
-	CreateTable(dbname,"Votes")
-	CreateTable(dbname,"ContractTasks")
+	for _,x := range Tables {
+		CreateTable(dbname,x)
+	}
 }
