@@ -71,6 +71,17 @@ git clone https://git.oschina.net/uni-ledger/unicontract.git $GOPATH/src/
 bash build.sh
 ```
 
+#### model generate(through the `*.proto`)
+Now `*.proto` files are in `src/core/protos/`, the generate `*.go` should be in
+`src/core/model/`.
+
+生成 `*.proto` 对应的 `.go` 文件
+```
+bash proto-gen-go.sh init
+```
+如果生成的`.go` 文件跟`.proto` 文件不在同一目录下，则需要修改生成的 .go 文件的 package信息
+
+
 #### issues:
 If you have the error as follows:
 ```

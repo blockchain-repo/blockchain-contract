@@ -7,13 +7,13 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
-var Tables = [3] string{"Contract","Votes","ContractTasks"}
+var Tables = [3]string{"Contract", "Votes", "ContractTasks"}
 
-func CreateTable(db string ,name string) {
+func CreateTable(db string, name string) {
 	session := ConnectDB(db)
 	respo, err := r.TableCreate(name).RunWrite(session)
 	if err != nil {
-	    log.Fatalf("Error creating table: %s", err)
+		log.Fatalf("Error creating table: %s", err)
 	}
 
 	fmt.Printf("%d table created\n", respo.TablesCreated)
@@ -22,11 +22,11 @@ func CreateTable(db string ,name string) {
 func CreateDatabase(name string) {
 	session := Connect()
 	resp, err := r.DBCreate(name).RunWrite(session)
-        if err != nil {
-            log.Fatalf("Error creating database: %s", err)
-        }
+	if err != nil {
+		log.Fatalf("Error creating database: %s", err)
+	}
 
-        fmt.Printf("%d DB created\n", resp.DBsCreated)
+	fmt.Printf("%d DB created\n", resp.DBsCreated)
 }
 
 func DropDatabase(name string) {
@@ -40,10 +40,10 @@ func DropDatabase(name string) {
 }
 
 func InitDatabase() {
-	dbname :="Unicontract"
+	dbname := "Unicontract"
 	CreateDatabase(dbname)
 
-	for _,x := range Tables {
-		CreateTable(dbname,x)
+	for _, x := range Tables {
+		CreateTable(dbname, x)
 	}
 }

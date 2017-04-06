@@ -6,7 +6,7 @@ import (
 
 var logger seelog.LoggerInterface
 
-func init(){
+func init() {
 
 	newLogger, err := seelog.LoggerFromConfigAsFile("seelog.xml")
 
@@ -17,71 +17,70 @@ func init(){
 	logger = newLogger
 }
 
-func Trace(v ...interface{}){
+func Trace(v ...interface{}) {
 	defer logger.Flush()
 	logger.Trace(v)
 }
 
-func Tracef(format string, params ...interface{}){
+func Tracef(format string, params ...interface{}) {
 	defer logger.Flush()
-	logger.Tracef(format,params)
+	logger.Tracef(format, params)
 }
 
-func Debug(v ...interface{}){
+func Debug(v ...interface{}) {
 	defer logger.Flush()
 	logger.Debug(v)
 }
 
-func Debugf(format string, params ...interface{}){
+func Debugf(format string, params ...interface{}) {
 	defer logger.Flush()
-	logger.Debugf(format,params)
+	logger.Debugf(format, params)
 }
 
-func Info(v ...interface{}){
+func Info(v ...interface{}) {
 	defer logger.Flush()
 	logger.Info(v)
 }
 
-func Infof(format string, params ...interface{}){
+func Infof(format string, params ...interface{}) {
 	defer logger.Flush()
-	logger.Infof(format,params )
+	logger.Infof(format, params)
 }
 
-
-func Warn(v ...interface{}){
+func Warn(v ...interface{}) {
 	defer logger.Flush()
 	logger.Warn(v)
 }
 
-func Warnf(format string, params ...interface{}){
+func Warnf(format string, params ...interface{}) {
 	defer logger.Flush()
-	logger.Warnf(format,params)
+	logger.Warnf(format, params)
 }
 
-func Error(v ...interface{}){
+func Error(v ...interface{}) {
 	defer logger.Flush()
 	logger.Error(v)
 }
 
-func Errorf(format string, params ...interface{}){
+func Errorf(format string, params ...interface{}) {
 	defer logger.Flush()
-	logger.Errorf(format,params)
+	logger.Errorf(format, params)
 }
 
-func Critical(v ...interface{}){
+func Critical(v ...interface{}) {
 	defer logger.Flush()
 	logger.Critical(v)
 }
 
-func Criticalf(format string, params ...interface{}){
+func Criticalf(format string, params ...interface{}) {
 	defer logger.Flush()
-	logger.Criticalf(format,params)
+	logger.Criticalf(format, params)
 }
 
-func Close(){
+func Close() {
 	logger.Close()
 }
 
-func Closed()  bool{
+func Closed() bool {
 	return logger.Closed()
 }

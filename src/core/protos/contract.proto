@@ -1,0 +1,86 @@
+package protos;
+
+message ContractAttributes{
+    required string name = 1;
+    required int64 start_timestamp = 2;
+    required int64 end_timestamp = 3;
+}
+
+message ContractSignature{
+    required string owner_pubkey = 1;
+    required string signature = 2;
+    required int64 timestamp = 3;
+
+}
+
+message Metadata{
+}
+
+message ContractAssert{
+    required string id = 1;
+    required string name = 2;
+    required float amount= 3;
+    optional Metadata metadata = 4;
+}
+
+message PlanTaskCondition{
+    required string id = 1;
+    required string type = 2;
+    required string name = 3;
+    required string value = 4;
+    required string description = 5;
+}
+
+message Plan{
+    required string id = 1;
+    required string type = 2;
+    required string state = 3;
+    required string name = 4;
+    required string description = 5;
+    repeated PlanTaskCondition condition = 6;
+    required int32 level = 7;
+    required string contract_type = 8;
+    repeated string next_task = 9;
+}
+
+message Task{
+    required string id = 1;
+    required string type = 2;
+    required string state = 3;
+    required string name = 4;
+    required string description = 5;
+    repeated PlanTaskCondition condition = 6;
+    required int32 level = 7;
+    required string contract_type = 8;
+    repeated string next_task = 9;
+}
+
+message ContractComponents{
+    repeated Plan plans = 1;
+    repeated Task tasks = 2;
+
+}
+
+message Contract {
+    required string creator_pubkey = 1;
+    required int64 create_timestamp = 2;
+    required string operation = 3;
+    required ContractAttributes contract_attributes= 4;
+    repeated string contract_owners = 5;
+    repeated ContractSignature contract_signatures = 6;
+    repeated ContractAssert contract_asserts = 7;
+    required ContractComponents contract_components = 8;
+}
+
+message ContractProto {
+    required string id = 1;
+    required string node_pubkey = 2;
+    required string main_pubkey = 3;
+    required string signature = 4;
+    repeated string voters = 5;
+    required int64 timestamp = 6;
+    required string version = 7;
+
+    required Contract contract = 8;
+}
+
