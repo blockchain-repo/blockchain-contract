@@ -80,30 +80,3 @@ Now `*.proto` files are in `src/core/protos/`, the generate `*.go` should be in
 bash proto-gen-go.sh init
 ```
 如果生成的`.go` 文件跟`.proto` 文件不在同一目录下，则需要修改生成的 .go 文件的 package信息
-
-
-#### issues:
-If you have the error as follows:
-```
-cannot find package "github.com/btcsuite/btcutil/base58" in any of:
-cannot find package "golang.org/x/crypto/sha3" in any of:
-cannot find package "golang.org/x/crypto/ed25519" in any of
-.....
-```
-
-You can solve it as follows:
-```
-go get github.com/btcsuite/btcutil/base58
-
-# go get golang.org/x/crypto/sha3
-go get github.com/golang/crypto/sha3
-
-# go get golang.org/x/crypto/ed25519
-go get github.com/golang/crypto/ed25519
-
-
-mkdir -p $GOPATH/src/golang.org
-
-cd $GOPATH/src/golang.org
-ln -s $GOPATH/src/github.com/golang/ x
-```
