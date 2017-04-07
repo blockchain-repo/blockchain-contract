@@ -1,92 +1,162 @@
 package controllers
 
 import (
-	"unicontract/src/api/models"
 	"encoding/json"
+	"unicontract/src/api/models"
 
+	"fmt"
 	"github.com/astaxie/beego"
 )
 
-// Operations about Users
+// Operations about Contract
 type ContractController struct {
 	beego.Controller
 }
 
+
+func (c *ContractController) Auth(signature string) bool {
+	if signature == "" {
+		return false
+	}
+	return true
+}
+
 // @Title CreateContract
 // @Description create contract
-// @Param	body		body 	models.User	true		"body for user content"
-// @Success 200 {int} models.User.Id
+// @Param	body		body 	models.Contract	true		"body for contract content"
+// @Success 200 {int} models.Contract.Head.Id
 // @Failure 403 body is empty
-// @router / [post]
-func (c *ContractController) Post() {
-	var user models.User
-	json.Unmarshal(c.Ctx.Input.RequestBody, &user)
-	uid := models.AddUser(user)
-	c.Data["json"] = map[string]string{"uid": uid}
+// @router /create [post]
+func (c *ContractController) Create() {
+	var contract models.Contract
+	fmt.Println("input is ", contract)
+	json.Unmarshal(c.Ctx.Input.RequestBody, &contract)
+	fmt.Println("input is ", contract)
+	cid := "00001test"
+	c.Data["json"] = map[string]string{"cid": cid}
 	c.ServeJSON()
 }
 
-// @Title GetAll
-// @Description get all Users
-// @Success 200 {object} models.User
-// @router / [get]
-func (c *ContractController) GetAll() {
-	users := models.GetAllUsers()
-	c.Data["json"] = users
+// @Title Signature
+// @Description signature the contract
+// @Param	body		body 	interface{}	true		"body for contract id"
+// @Success 200 {object} models.Contract
+// @Failure 403 body is empty
+// @router /signature [post]
+func (c *ContractController) Signature() {
+	var input map[string]interface{}
+	json.Unmarshal(c.Ctx.Input.RequestBody, &input)
+
+	target := input["target"]
+	desc := input["desc"]
+	fmt.Println("input is ", input)
+
+	fmt.Printf("target is %s, desc is %s\n", target, desc)
+
+	json.Unmarshal(c.Ctx.Input.RequestBody, &input)
+	json.Marshal(&input)
+	fmt.Println("input is ", input)
+	c.Data["json"] = input
 	c.ServeJSON()
 }
 
-// @Title Get
-// @Description get user by uid
-// @Param	uid		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.User
-// @Failure 403 :uid is empty
-// @router /:uid [get]
-func (c *ContractController) Get() {
-	uid := c.GetString(":uid")
-	if uid != "" {
-		user, err := models.GetUser(uid)
-		if err != nil {
-			c.Data["json"] = err.Error()
-		} else {
-			c.Data["json"] = user
-		}
+// @Title Stop
+// @Description stop the contract
+// @Param	body		body 	interface{}	true		"body for contract id"
+// @Success 200 {string} stop success!
+// @Failure 403 body is empty
+// @router /stop [post]
+func (c *ContractController) Stop() {
+	var input map[string]interface{}
+	json.Unmarshal(c.Ctx.Input.RequestBody, &input)
+
+	fmt.Println("input is ", input)
+	json.Unmarshal(c.Ctx.Input.RequestBody, &input)
+	fmt.Println("input is ", input)
+	c.Data["json"] = input
+	c.ServeJSON()
+}
+
+// @Title Find
+// @Description get contract by cid
+// @Param	body		body 	interface{}	true			"The key for contract"
+// @Success 200 {object} models.Contract
+// @Failure 403 cid is empty
+// @router /find [post]
+func (c *ContractController) Find() {
+	var input map[string]interface{}
+	json.Unmarshal(c.Ctx.Input.RequestBody, &input)
+	cid := input["cid"]
+
+	fmt.Println("input is ", input["cid"])
+
+	if cid != nil && cid != "" {
+		//user, err := models.GetUser(uid)
+		//if err != nil {
+		//	c.Data["json"] = err.Error()
+		//} else {
+		//	c.Data["json"] = user
+		//}
+		fmt.Println("input is ", cid)
+	}
+	c.ServeJSON()
+}
+
+// @Title Track
+// @Description track contract by uid
+// @Param	cid		path 	string	true		"The key for contract"
+// @Success 200 {object} models.Contract
+// @Failure 403 cid is empty
+// @router /track [post]
+func (c *ContractController) Track() {
+	var input map[string]interface{}
+	json.Unmarshal(c.Ctx.Input.RequestBody, &input)
+
+	cid := input["cid"]
+	if cid != "" {
+		//user, err := models.GetUser(uid)
+		//if err != nil {
+		//	c.Data["json"] = err.Error()
+		//} else {
+		//	c.Data["json"] = user
+		//}
+		fmt.Println("input is ", cid)
 	}
 	c.ServeJSON()
 }
 
 // @Title Update
-// @Description update the user
-// @Param	uid		path 	string	true		"The uid you want to update"
-// @Param	body		body 	models.User	true		"body for user content"
-// @Success 200 {object} models.User
-// @Failure 403 :uid is not int
-// @router /:uid [put]
-func (c *ContractController) Put() {
-	uid := c.GetString(":uid")
-	if uid != "" {
-		var user models.User
-		json.Unmarshal(c.Ctx.Input.RequestBody, &user)
-		uu, err := models.UpdateUser(uid, &user)
-		if err != nil {
-			c.Data["json"] = err.Error()
-		} else {
-			c.Data["json"] = uu
-		}
-	}
+// @Description update the contract
+// @Param	body		body 	models.Contract	true		"body for contract content"
+// @Success 200 {object} models.Contract
+// @Failure 403 cid is empty
+// @router /update [post]
+func (c *ContractController) Update() {
+	var contract models.Contract
+	fmt.Println("input is ", contract)
+
+	json.Unmarshal(c.Ctx.Input.RequestBody, &contract)
+	fmt.Println("contract.Id is ", contract.Id)
+	cid := "00001test"
+	c.Data["json"] = map[string]string{"cid": cid}
 	c.ServeJSON()
 }
 
-// @Title Delete
-// @Description delete the user
-// @Param	uid		path 	string	true		"The uid you want to delete"
-// @Success 200 {string} delete success!
-// @Failure 403 uid is empty
-// @router /:uid [delete]
-func (c *ContractController) Delete() {
-	uid := c.GetString(":uid")
-	models.DeleteUser(uid)
+// @Title Test
+// @Description test the contract
+// @Param	cid		path 	string	true		"The uid you want to test"
+// @Success 200 {string} test success!
+// @Failure 403 cid is empty
+// @router /test [post]
+func (c *ContractController) Test() {
+	var contract models.Contract
+	fmt.Println("contract is ", contract)
+	json.Unmarshal(c.Ctx.Input.RequestBody, &contract)
+	fmt.Println("Unmarshal contract is ", contract)
+
+	cid := contract.Id
+
+	fmt.Println("input is ", cid)
 	c.Data["json"] = "delete success!"
 	c.ServeJSON()
 }
-
