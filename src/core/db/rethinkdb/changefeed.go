@@ -10,7 +10,7 @@ func Changefeed(db string, name string) *r.Cursor {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Changes().Run(session)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	return res
 }
