@@ -17,7 +17,7 @@ import (
  * \return nil 正常
  * \       not nil 有错误
  */
-func Unmarshal(filenpath string, out interface{}) error {
+func Read(filenpath string, out interface{}) error {
 	detail, err := readFile(filenpath)
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func Unmarshal(filenpath string, out interface{}) error {
  * \return nil 正常
  * \       not nil 有错误
  */
-func Marshal(filenpath string, in interface{}) error {
+func Write(filenpath string, in interface{}) error {
 	detail, err := yaml.Marshal(in)
 	if err != nil {
 		return err

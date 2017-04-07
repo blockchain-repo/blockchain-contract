@@ -19,7 +19,7 @@ var testStruct = T{}
 var testMap = make(map[interface{}]interface{})
 
 func Test_Unmarshal_to_struct(t *testing.T) {
-	if err := Unmarshal(testConfigName, &testStruct); err != nil {
+	if err := Read(testConfigName, &testStruct); err != nil {
 		t.Errorf("Test_Unmarshal_to_struct is failed, err is %v\n", err)
 	} else {
 		t.Log("Test_Unmarshal_to_struct is pass.")
@@ -28,7 +28,7 @@ func Test_Unmarshal_to_struct(t *testing.T) {
 }
 
 func Test_Unmarshal_to_map(t *testing.T) {
-	if err := Unmarshal(testConfigName, &testMap); err != nil {
+	if err := Read(testConfigName, &testMap); err != nil {
 		t.Errorf("Test_Unmarshal_to_map is failed, err is %v\n", err)
 	} else {
 		t.Log("Test_Unmarshal_to_map is pass.")
@@ -37,7 +37,7 @@ func Test_Unmarshal_to_map(t *testing.T) {
 }
 
 func Test_Marshal_from_struct(t *testing.T) {
-	if err := Marshal(testConfigName, &testStruct); err != nil {
+	if err := Write(testConfigName, &testStruct); err != nil {
 		t.Errorf("Test_Marshal_from_struct is failed, err is %v\n", err)
 	} else {
 		t.Log("Test_Marshal_from_struct is pass.")
@@ -45,7 +45,7 @@ func Test_Marshal_from_struct(t *testing.T) {
 }
 
 func Test_Marshal_from_map(t *testing.T) {
-	if err := Marshal(testConfigName, &testMap); err != nil {
+	if err := Write(testConfigName, &testMap); err != nil {
 		t.Errorf("Test_Marshal_from_map is failed, err is %v\n", err)
 	} else {
 		t.Log("Test_Marshal_from_map is pass.")
