@@ -6,6 +6,7 @@ import (
 
 	"fmt"
 	"github.com/astaxie/beego"
+
 )
 
 // Operations about Contract
@@ -15,6 +16,7 @@ type ContractController struct {
 
 
 func (c *ContractController) Auth(signature string) bool {
+	fmt.Println("hello Auth...")
 	if signature == "" {
 		return false
 	}
@@ -31,6 +33,8 @@ func (c *ContractController) Create() {
 	var contract models.Contract
 	fmt.Println("input is ", contract)
 	json.Unmarshal(c.Ctx.Input.RequestBody, &contract)
+	types := c.Ctx.Input.Header("ReqData-Type")
+	fmt.Println("request type is", types)
 	fmt.Println("input is ", contract)
 	cid := "00001test"
 	c.Data["json"] = map[string]string{"cid": cid}
