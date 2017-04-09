@@ -29,3 +29,8 @@ lastupdate.tmp
 
 .idea
 unicontract
+
+# vendor for golang package manager
+vendor/*
+!vendor/vendor.json
+!vendor/README.md
