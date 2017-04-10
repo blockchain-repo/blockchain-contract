@@ -217,6 +217,12 @@
 			"path": "gopkg.in/gorethink/gorethink.v3/types",
 			"revision": "610fcc04c971a9fa42f1b6625c7c52b5bb472c51",
 			"revisionTime": "2017-01-30T21:28:06Z"
+		},
+		{
+			"checksumSHA1": "0KwOlQV1dNUh9X8t+5s7nX5bqfk=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "a3f3340b5840cee44f372bddb5880fcbc419b46a",
+			"revisionTime": "2017-02-08T14:18:51Z"
 		}
 	],
 	"rootPath": "unicontract"
