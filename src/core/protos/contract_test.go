@@ -2,16 +2,15 @@ package protos
 
 import (
 	"fmt"
+	"github.com/golang/protobuf/proto"
 	"testing"
 	"time"
 	"unicontract/src/common"
-	//"golang.org/x/protobuf/proto"
-	"github.com/golang/protobuf/proto"
 )
 
 func Test_ContractProto(t *testing.T) {
 	contract := ContractProto{ // golang
-	//contract := &ContractProto{ // proto-buf
+		//contract := &ContractProto{ // proto-buf
 		Id:         "2",
 		NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 		MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
@@ -99,7 +98,7 @@ func Test_ContractProto(t *testing.T) {
 							{
 								Id:          "3",
 								Type:        "CompleteCondition",
-								Name:        "XXXX",
+								Name:        "XXXXprotos.",
 								Value:       "XXXX",
 								Description: "xxxxx",
 							},
@@ -250,11 +249,35 @@ func Test_ContractProto(t *testing.T) {
 
 	//fmt.Println(common.Serialize(contract))
 	//fmt.Println(common.SerializePretty(contract))
-
 	result, err := proto.Marshal(&contract)
+	if err != nil {
+		fmt.Println("error ", err.Error())
+	}
+
+	//test---------ContractData Start--------------
+	data := ContractData{
+		Data: &contract,
+		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
+	}
+	fmt.Println("data is\n", data)
+	requestBody, err := proto.Marshal(&data)
+	if err != nil {
+		fmt.Println("error ", err.Error())
+	}
+	fmt.Println(requestBody)
+	result, err = proto.Marshal(&data)
 	if err != nil {
 		fmt.Println("error %s", err.Error())
 	}
+	var contractData ContractData
+	proto.Unmarshal(result, &contractData)
+	fmt.Printf("proto deserialize contract content is %s\n", contractData)
+	contractData_str := common.Serialize(contractData)
+
+	fmt.Printf("contract json len is %d, pretty json len is %d, proto-buf len is %d and origin content is \n%v",
+		1, 1, len(contractData_str), contractData_str)
+	//return
+	//test-------------ContractData End----------
 
 	contract_json_len := len(common.Serialize(contract))
 	contract_pretty_json_len := len(common.SerializePretty(contract))
@@ -275,6 +298,5 @@ func Test_ContractProto(t *testing.T) {
 	//origin_contract_pretty_str := common.SerializePretty(origin_contract)
 	//fmt.Printf("contract json len is %d, pretty json len is %d, proto-buf len is %d and origin content is \n%v",
 	//	contract_json_len, contract_pretty_json_len, len(origin_contract_pretty_str), origin_contract_pretty_str)
-
 
 }
