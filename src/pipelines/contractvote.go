@@ -72,11 +72,17 @@ func writeVote(in io.Reader, out io.Writer) {
 }
 
 func startContractVote() {
+
 	p:=Pipe(
 	changefeed,
 	validateContract,
 	vote,
 	writeVote)
 
-	p(os.Stdin, os.Stdout)
+	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	w := bufio.NewWriter(f)
+	p(nil,w)
 }
