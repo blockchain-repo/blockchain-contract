@@ -68,8 +68,8 @@ func Test_pipe(t *testing.T) {
         fmt.Println(v)
     }
 
-    p :=pipe(
-	bind(app1, args),
+    p :=Pipe(
+	Bind(app1, args),
 	app2,
 	app3,
 	app2)
