@@ -8,6 +8,13 @@ func init() {
 
 	beego.GlobalControllerRouter["unicontract/src/api/controllers:ContractController"] = append(beego.GlobalControllerRouter["unicontract/src/api/controllers:ContractController"],
 		beego.ControllerComments{
+			Method: "AuthSignature",
+			Router: `/authSignature`,
+			AllowHTTPMethods: []string{"post"},
+			Params: nil})
+
+	beego.GlobalControllerRouter["unicontract/src/api/controllers:ContractController"] = append(beego.GlobalControllerRouter["unicontract/src/api/controllers:ContractController"],
+		beego.ControllerComments{
 			Method: "Create",
 			Router: `/create`,
 			AllowHTTPMethods: []string{"post"},
@@ -22,8 +29,8 @@ func init() {
 
 	beego.GlobalControllerRouter["unicontract/src/api/controllers:ContractController"] = append(beego.GlobalControllerRouter["unicontract/src/api/controllers:ContractController"],
 		beego.ControllerComments{
-			Method: "Stop",
-			Router: `/stop`,
+			Method: "Terminate",
+			Router: `/terminate`,
 			AllowHTTPMethods: []string{"post"},
 			Params: nil})
 

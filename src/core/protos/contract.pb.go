@@ -7,6 +7,7 @@ Package protos is a generated protocol buffer package.
 
 It is generated from these files:
 	contract.proto
+	data.proto
 
 It has these top-level messages:
 	ContractAttributes
@@ -18,6 +19,7 @@ It has these top-level messages:
 	ContractComponents
 	Contract
 	ContractProto
+	ContractData
 */
 package protos
 

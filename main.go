@@ -10,7 +10,8 @@ import (
 
 func main() {
 	logs.SetLogger(logs.AdapterFile, `{"filename":"project.log","level":7,
-	"maxlines":0,"maxsize":0,"daily":true,"maxdays":10}`)
+	"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
+	"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
 	logs.Warn("main start")
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
