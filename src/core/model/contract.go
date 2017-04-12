@@ -85,10 +85,12 @@ func (c *ContractModel) validateContract() {
 	}
 
 	if !flag {
+		beego.Error("Only federation nodes can create contract")
 		panic("Only federation nodes can create contract")
 	}
 
 	if !c.IsSignatureValid() {
+		beego.Error("Invalid contract signature")
 		panic("Invalid contract signature")
 	}
 
@@ -98,17 +100,18 @@ func (c *ContractModel) validateContract() {
 func (c *ContractModel) validateContractContent() *ContractModel {
 	contract := &c.Contract
 	if contract == nil {
+		beego.Error("Empty contract is not allowed")
 		panic("Empty contract is not allowed")
 	}
 
 	if contract.Operation == "CREATE" {
-		beego.Debug("missing validate the contract [creator_pubkey]")
-		beego.Debug("missing validate the contract [create_timestamp]")
-		beego.Debug("missing validate the contract [contract_attributes]")
-		beego.Debug("missing validate the contract [contract_owners]")
-		beego.Debug("missing validate the contract [contract_signatures]")
-		beego.Debug("missing validate the contract [contract_asserts]")
-		beego.Debug("missing validate the contract [contract_components]")
+		beego.Error("missing validate the contract [creator_pubkey]")
+		beego.Error("missing validate the contract [create_timestamp]")
+		beego.Error("missing validate the contract [contract_attributes]")
+		beego.Error("missing validate the contract [contract_owners]")
+		beego.Error("missing validate the contract [contract_signatures]")
+		beego.Error("missing validate the contract [contract_asserts]")
+		beego.Error("missing validate the contract [contract_components]")
 	}
 
 	return c
