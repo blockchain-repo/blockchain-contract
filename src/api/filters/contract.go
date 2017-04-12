@@ -15,6 +15,7 @@ func responseWithStatusCode(ctx *context.Context, status int, output string) {
 	ctx.ResponseWriter.Write([]byte(output))
 }
 
+//签名身份验证
 func ContractFilter(ctx *context.Context) {
 	contentType := ctx.Input.Header("Content-Type")
 	requestDataType := ctx.Input.Header("RequestDataType")

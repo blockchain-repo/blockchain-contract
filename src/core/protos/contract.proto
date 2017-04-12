@@ -3,14 +3,14 @@ package protos;
 
 message ContractAttributes{
      string name = 1;
-     int64 start_timestamp = 2;
-     int64 end_timestamp = 3;
+     string start_timestamp = 2; //int64
+     string end_timestamp = 3;
 }
 
 message ContractSignature{
      string owner_pubkey = 1;
      string signature = 2;
-     int64 timestamp = 3;
+     string timestamp = 3;
 
 }
 
@@ -64,7 +64,7 @@ message ContractComponents{
 
 message Contract {
      string creator_pubkey = 1;
-     int64 create_timestamp = 2;
+     string create_timestamp = 2;
      string operation = 3;
      ContractAttributes contract_attributes= 4;
      repeated string contract_owners = 5;
@@ -79,7 +79,7 @@ message ContractProto {
      string main_pubkey = 3;
      string signature = 4;
      repeated string voters = 5;
-     int64 timestamp = 6;
+     string timestamp = 6;
      string version = 7;
      Contract contract = 8;
 }

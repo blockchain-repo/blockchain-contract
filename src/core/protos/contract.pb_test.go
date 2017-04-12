@@ -3,7 +3,6 @@ package protos
 import (
 	"fmt"
 	"testing"
-	"time"
 	"unicontract/src/common"
 )
 
@@ -18,18 +17,18 @@ func Test_ContractPb(t *testing.T) {
 		"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 		"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"}
 
-	contractProto.Timestamp = time.Now().Unix()
+	contractProto.Timestamp = common.GenTimestamp()
 	contractProto.Version = "v1.0"
 
 	contract := Contract{}
 	contract.CreatorPubkey = "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc"
-	contract.CreateTimestamp = time.Now().Unix()
+	contract.CreateTimestamp = common.GenTimestamp()
 	contract.Operation = "CREATE"
 
 	contract_attributes := ContractAttributes{}
 	contract_attributes.Name = "XXXXXX"
-	contract_attributes.StartTimestamp = time.Now().Unix()
-	contract_attributes.EndTimestamp = time.Now().Unix()
+	contract_attributes.StartTimestamp = common.GenTimestamp()
+	contract_attributes.EndTimestamp = common.GenTimestamp()
 
 	contract.ContractAttributes = &contract_attributes
 
@@ -41,13 +40,13 @@ func Test_ContractPb(t *testing.T) {
 	contractSignatures := make([]*ContractSignature, 3)
 	contractSignatures[0] = &ContractSignature{OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 		Signature: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Timestamp: time.Now().Unix()}
+		Timestamp: common.GenTimestamp()}
 	contractSignatures[1] = &ContractSignature{OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 		Signature: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Timestamp: time.Now().Unix()}
+		Timestamp: common.GenTimestamp()}
 	contractSignatures[2] = &ContractSignature{OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 		Signature: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Timestamp: time.Now().Unix()}
+		Timestamp: common.GenTimestamp()}
 
 	contract.ContractSignatures = contractSignatures
 

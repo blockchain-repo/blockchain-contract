@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"testing"
-	"time"
 	"unicontract/src/common"
 )
 
@@ -20,16 +19,16 @@ func Test_ContractProto(t *testing.T) {
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: time.Now().Unix(),
+		Timestamp: common.GenTimestamp(),
 		Version:   "v1.0",
 		Contract: &Contract{
 			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			CreateTimestamp: time.Now().Unix(),
+			CreateTimestamp: common.GenTimestamp(),
 			Operation:       "CREATE",
 			ContractAttributes: &ContractAttributes{
 				Name:           "XXXXXX",
-				StartTimestamp: time.Now().Unix(),
-				EndTimestamp:   time.Now().Unix(),
+				StartTimestamp: common.GenTimestamp(),
+				EndTimestamp:   common.GenTimestamp(),
 			},
 			ContractOwners: []string{
 				"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
@@ -41,17 +40,17 @@ func Test_ContractProto(t *testing.T) {
 				{
 					OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 					Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-					Timestamp:   time.Now().Unix(),
+					Timestamp:   string(common.GenTimestamp()),
 				},
 				{
 					OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 					Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-					Timestamp:   time.Now().Unix(),
+					Timestamp:  string(common.GenTimestamp()),
 				},
 				{
 					OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 					Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-					Timestamp:   time.Now().Unix(),
+					Timestamp:   string(common.GenTimestamp()),
 				},
 			},
 			ContractAsserts: []*ContractAssert{
