@@ -4,9 +4,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
-)
-
-import (
 	"gopkg.in/yaml.v2"
 )
 

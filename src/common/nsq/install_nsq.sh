@@ -5,6 +5,6 @@ apt-get -y gpm
 
 gpm install
 
-go get github.com/nsqio/nsq/...
+apt-get -y git
 
 exit 0

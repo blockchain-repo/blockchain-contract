@@ -1,0 +1,76 @@
+#ip,port
+ip: "192.168.80.39"
+port: "8088"
+
+#请求头
+head:
+  Content-Type: "application/x-protobuf"
+  RequestDataType: "proto"
+
+#合约查询
+ContractQuery:
+  method: "post"
+  path: "/v1/cc"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#合约跟踪
+ContractTracking:
+  method: "post"
+  path: "/v1/contract/create"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#合约资产冻结
+ContractAssetFreeze:
+  method: "post"
+  path: "/v1/cc"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#合约资产解冻
+ContractAssetThaw:
+  method: "post"
+  path: "/v1/cc"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#合约交易创建
+CreateContractTran:
+  method: "post"
+  path: "/v1/cc"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#合约资产转移
+TransferContractTran:
+  method: "post"
+  path: "/v1/cc"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -3,8 +3,8 @@ package protoc3
 
 import (
 	"github.com/golang/protobuf/proto"
-	logger "common/seelog"
-	uniprotoc "common/protoc3"
+	logger "unicontract/src/common/seelog"
+	uniprotoc "unicontract/src/common/protoc3"
 	"io/ioutil"
 	"log"
 	"fmt"
@@ -13,8 +13,6 @@ import (
 )
 
 func CreatePerson() proto.Message{
-
-
 	p := &uniprotoc.Person{
 		Id:    1234,
 		Name:  "John Doe",
@@ -92,6 +90,7 @@ func MessageName(){
 }
 
 func Float32(){
+
 	f := proto.Float32(0.32)
 	fmt.Println(f)
 	fmt.Println(*f)
