@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
-	"time"
 	"unicontract/src/core/protos"
+	"unicontract/src/common"
 )
 
 
@@ -67,16 +67,16 @@ func Test_ContractProto(t *testing.T) {
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: time.Now().Unix(),
+		Timestamp: common.GenTimestamp(),
 		Version:   "v1.0",
 		Contract: &protos.Contract{
 			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			CreateTimestamp: time.Now().Unix(),
+			CreateTimestamp: common.GenTimestamp(),
 			Operation:       "CREATE",
 			ContractAttributes: &protos.ContractAttributes{
 				Name:           "XXXXXX",
-				StartTimestamp: time.Now().Unix(),
-				EndTimestamp:   time.Now().Unix(),
+				StartTimestamp: common.GenTimestamp(),
+				EndTimestamp:   common.GenTimestamp(),
 			},
 			//ContractOwners: []string{
 			//	"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
@@ -88,17 +88,17 @@ func Test_ContractProto(t *testing.T) {
 			//	{
 			//		OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 			//		Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Timestamp:   time.Now().Unix(),
+			//		Timestamp:   common.GenTimestamp(),
 			//	},
 			//	{
 			//		OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 			//		Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Timestamp:   time.Now().Unix(),
+			//		Timestamp:   common.GenTimestamp(),
 			//	},
 			//	{
 			//		OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 			//		Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Timestamp:   time.Now().Unix(),
+			//		Timestamp:   common.GenTimestamp(),
 			//	},
 			//},
 			//	ContractAsserts: []*ContractAssert{
@@ -324,7 +324,7 @@ func Test_AuthSignature(t *testing.T) {
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: time.Now().Unix(),
+		Timestamp: common.GenTimestamp(),
 		Version:   "v1.0",
 	}
 
@@ -357,16 +357,16 @@ func Test_Creat(t *testing.T) {
 		//	"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 		//	"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		//},
-		//Timestamp: time.Now().Unix(),
+		//Timestamp: common.GenTimestamp(),
 		//Version:   "v1.0",
 		Contract: &protos.Contract{
 			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			CreateTimestamp: time.Now().Unix(),
+			CreateTimestamp: common.GenTimestamp(),
 			Operation:       "CREATE",
 			ContractAttributes: &protos.ContractAttributes{
 				Name:           "XXXXXX",
-				StartTimestamp: time.Now().Unix(),
-				EndTimestamp:   time.Now().Unix(),
+				StartTimestamp: common.GenTimestamp(),
+				EndTimestamp:   common.GenTimestamp(),
 			},
 		},
 	}
@@ -409,7 +409,7 @@ func Test_Signature(t *testing.T) {
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: time.Now().Unix(),
+		Timestamp: common.GenTimestamp(),
 		Version:   "v1.0",
 	}
 
@@ -444,7 +444,7 @@ func Test_Terminate(t *testing.T) {
 		//	"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 		//	"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		//},
-		//Timestamp: time.Now().Unix(),
+		//Timestamp: common.GenTimestamp(),
 		//Version:   "v1.0",
 	}
 	data := protos.ContractData{
@@ -525,7 +525,7 @@ func Test_Update(t *testing.T) {
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: time.Now().Unix(),
+		Timestamp: common.GenTimestamp(),
 		Version:   "v1.0",
 	}
 	data := protos.ContractData{
@@ -558,7 +558,7 @@ func Test_Test(t *testing.T) {
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: time.Now().Unix(),
+		Timestamp: common.GenTimestamp(),
 		Version:   "v1.0",
 	}
 	data := protos.ContractData{
