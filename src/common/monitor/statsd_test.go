@@ -8,8 +8,7 @@ import "testing"
  * return : 
  */
 
-func TestExample(t *testing.T) {
-	//for {
-	//	Example()
-	//}
+func TestGetMonitor(t *testing.T) {
+	GetMonitor()
+	_GetParam()
 }

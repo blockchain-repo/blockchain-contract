@@ -52,3 +52,50 @@ func Deserialize(jsonStr string) interface{} {
 	}
 	return dat
 }
+
+
+/**
+ * function : 断言-类型转换string
+ * param   :
+ * return : 返回string
+ */
+
+func TypeToString(name interface{}) string{
+
+	value,ok := name.(string)
+	if !ok {
+		log.Fatal("Type conversion error")
+	}
+	return value
+}
+
+/**
+ * function : 断言-类型转换int
+ * param   :
+ * return : 返回int
+ */
+
+func TypeToInt(name interface{}) int{
+
+	value,ok := name.(int)
+	if !ok {
+		log.Fatal("Type conversion error")
+	}
+	return value
+}
+
+/**
+ * function : 断言-类型转换int
+ * param   :
+ * return : 返回int
+ */
+
+func TypeToFloat(name interface{}) float32{
+
+	value,ok := name.(float32)
+	if !ok {
+		log.Fatal("Type conversion error")
+	}
+	return value
+}
+
