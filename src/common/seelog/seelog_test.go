@@ -23,11 +23,9 @@ func TestDebugef(t *testing.T) {
 }
 
 func TestInfo(t *testing.T) {
-	for {
-		Info("Info test....")
-		Debug("debuge test....")
-		time.Sleep(time.Second * 1)
-	}
+	Info("Info test....")
+	Debug("debuge test....")
+	time.Sleep(time.Second * 1)
 }
 
 func TestInfof(t *testing.T) {
