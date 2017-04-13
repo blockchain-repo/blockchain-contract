@@ -8,8 +8,8 @@ import (
 var logger seelog.LoggerInterface
 
 func init(){
-	logxmlpath := os.Getenv("REQUEST")
-	logxmlpath = logxmlpath + "conf/seelog.xml"
+	logxmlpath := os.Getenv("CONFIGPATH")
+	logxmlpath = logxmlpath + "/seelog.xml"
 	newLogger, err := seelog.LoggerFromConfigAsFile(logxmlpath)
 
 	if err != nil {

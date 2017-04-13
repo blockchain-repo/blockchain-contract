@@ -57,7 +57,7 @@ func Test(){
 			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
-		Timestamp: "12312",
+		Timestamp: "12321",
 		Version:   "v1.0",
 	}
 	data := protos.ContractData{

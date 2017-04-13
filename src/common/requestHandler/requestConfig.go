@@ -5,6 +5,7 @@ import (
 	"os"
 	"log"
 	"unicontract/src/common/yaml"
+	"fmt"
 )
 
 var config map[interface{}]interface{}
@@ -17,8 +18,9 @@ func _GetConfig() map[interface{}]interface{}{
 	//单例模式
 	once.Do(func(){
 		//获取环境变量
-		requestPath := os.Getenv("REQUEST")
-		requestPath = requestPath + "conf/requestConfig.yaml"
+		requestPath := os.Getenv("CONFIGPATH")
+		fmt.Println(requestPath)
+		requestPath = requestPath + "/requestConfig.yaml"
 		config = make(map[interface{}]interface{})
 		err := yaml.Read(requestPath,config)
 		if err != nil{
