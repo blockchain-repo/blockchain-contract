@@ -4,6 +4,8 @@ import (
     "io"
 )
 
+const MaxSizeTX = 16*1024
+
 //bind函数主要是用来为pipe函数整合用的，通过将闭包将函数签名变成pipe所需的样子  
 //返回一个函数闭包，将一个函数字面量app和字符串slice 传入其中  
 func Bind(app func(in io.Reader, out io.Writer, args []string), args []string) func(in io.Reader, out io.Writer) {

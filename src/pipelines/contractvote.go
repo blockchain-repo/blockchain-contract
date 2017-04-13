@@ -12,9 +12,8 @@ import (
 	r "unicontract/src/core/db/rethinkdb"
 )
 
-const MaxSizeTX = 16*1024
 
-func changefeed(in io.Reader, out io.Writer) {
+func cvchangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := r.Changefeed("Unicontract", "Contract")
 	for res.Next(&value) {
@@ -56,7 +55,7 @@ func vote(in io.Reader, out io.Writer) {
 }
 
 
-//TODO:core write vote
+//TODO:core write vote ??? UPDATE
 func writeVote(in io.Reader, out io.Writer) {
     rd := bufio.NewReader(in)
     p := make([]byte,MaxSizeTX)
@@ -74,7 +73,7 @@ func writeVote(in io.Reader, out io.Writer) {
 func startContractVote() {
 
 	p:=Pipe(
-	changefeed,
+	cvchangefeed,
 	validateContract,
 	vote,
 	writeVote)
