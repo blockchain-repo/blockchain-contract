@@ -4,7 +4,6 @@ import (
 	"testing"
 	"os"
 	"fmt"
-	"unicontract/src/common/seelog"
 )
 
 /**
@@ -30,6 +29,5 @@ func TestTest(t *testing.T) {
 	requestPath := os.Getenv("CONFIGPATH")
 	requestPath = requestPath + "/requestConfig.yaml"
 	fmt.Println(requestPath)
-	seelog.Debug("ssssssssssssssssss")
 	Test()
 }
