@@ -12,5 +12,4 @@ func TestExample(t *testing.T) {
 	//for {
 	//	Example()
 	//}
-
 }
