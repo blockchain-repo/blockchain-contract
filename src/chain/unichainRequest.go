@@ -10,10 +10,10 @@ import (
  * 响应结果struct
  */
 type ResponseResult struct {
-	status       string
-	code         string
-	message      string
-	data         string
+	Status       string
+	Code         string
+	Message      string
+	Data         string
 }
 
 /**
