@@ -1,8 +1,6 @@
 package pipelines
 
 import (
-	//	"time"
-	//	"fmt"
 	"bufio"
 	"bytes"
 	"encoding/json"
@@ -14,6 +12,7 @@ import (
 
 func cvChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
+	//TODO table name
 	res := r.Changefeed("Unicontract", "Contract")
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
@@ -21,11 +20,13 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 		if err != nil {
 			log.Fatalf(err.Error())
 		}
+		if bytes.Equal(v, []byte("null")) {
+			continue
+		}
 		out.Write(v)
 	}
 }
 
-//TODO: core validate func
 func cvValidateContract(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
@@ -34,12 +35,12 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 		if n == 0 {
 			break
 		}
+		//TODO validate
 		t := bytes.ToUpper(p[:n])
 		out.Write(t)
 	}
 }
 
-//TODO: core make vote
 func cvVote(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
@@ -48,12 +49,12 @@ func cvVote(in io.Reader, out io.Writer) {
 		if n == 0 {
 			break
 		}
+		//TODO make vote
 		t := bytes.ToLower(p[:n])
 		out.Write(t)
 	}
 }
 
-//TODO:core write vote ??? UPDATE
 func cvWriteVote(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
@@ -63,6 +64,7 @@ func cvWriteVote(in io.Reader, out io.Writer) {
 			break
 		}
 		t := p[:n]
+		//TODO write vote
 		r.Insert("Unicontract", "Votes", string(t))
 		out.Write(t)
 	}
