@@ -1,8 +1,6 @@
 package pipelines
 
 import (
-	//	"time"
-	//	"fmt"
 	"bufio"
 	"bytes"
 	"encoding/json"
@@ -14,12 +12,17 @@ import (
 
 func txeChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
+	//TODO table name
 	res := r.Changefeed("Unicontract", "Contract")
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
 			log.Fatalf(err.Error())
+			continue
+		}
+		if bytes.Equal(v, []byte("null")) {
+			continue
 		}
 		out.Write(v)
 	}
@@ -31,9 +34,10 @@ func txeHeadFilter(in io.Reader, out io.Writer) {
 	for {
 		n, _ := rd.Read(p)
 		if n == 0 {
-			break
+			continue
 		}
-		t := bytes.ToLower(p[:n])
+		t := p[:n]
+		//TODO head filter
 		out.Write(t)
 	}
 }
@@ -44,9 +48,10 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 	for {
 		n, _ := rd.Read(p)
 		if n == 0 {
-			break
+			continue
 		}
-		t := bytes.ToLower(p[:n])
+		t := p[:n]
+		//TODO query
 		out.Write(t)
 	}
 }
@@ -57,9 +62,10 @@ func txeSend(in io.Reader, out io.Writer) {
 	for {
 		n, _ := rd.Read(p)
 		if n == 0 {
-			break
+			continue
 		}
-		t := bytes.ToLower(p[:n])
+		t := p[:n]
+		//TODO send
 		out.Write(t)
 	}
 }

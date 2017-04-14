@@ -19,6 +19,7 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
 			log.Fatalf(err.Error())
+			continue
 		}
 		if bytes.Equal(v, []byte("null")) {
 			continue
@@ -33,10 +34,10 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 	for {
 		n, _ := rd.Read(p)
 		if n == 0 {
-			break
+			continue
 		}
 		//TODO validate
-		t := bytes.ToUpper(p[:n])
+		t := p[:n]
 		out.Write(t)
 	}
 }
@@ -47,10 +48,10 @@ func cvVote(in io.Reader, out io.Writer) {
 	for {
 		n, _ := rd.Read(p)
 		if n == 0 {
-			break
+			continue
 		}
 		//TODO make vote
-		t := bytes.ToLower(p[:n])
+		t := p[:n]
 		out.Write(t)
 	}
 }
@@ -61,7 +62,7 @@ func cvWriteVote(in io.Reader, out io.Writer) {
 	for {
 		n, _ := rd.Read(p)
 		if n == 0 {
-			break
+			continue
 		}
 		t := p[:n]
 		//TODO write vote
