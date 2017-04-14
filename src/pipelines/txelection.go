@@ -70,7 +70,7 @@ func txeSend(in io.Reader, out io.Writer) {
 	}
 }
 
-func txestartContractVote() {
+func starttxElection() {
 
 	p := Pipe(
 		txeChangefeed,
