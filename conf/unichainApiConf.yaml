@@ -1,0 +1,176 @@
+#ip,port
+ip: "192.168.80.39"
+port: "8088"
+
+#请求头
+head:
+  Content-Type: "application/json"
+
+#1.单条payload交易创建接口
+CreateByPayload:
+  method: "post"
+  path: "/uniledger/v1/transaction/createByPayload"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#2.根据交易ID获取交易
+QueryByID:
+  method: "post"
+  path: "/uniledger/v1/transaction/queryByID"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#3.获取区块链中的总交易条数
+QueryTxsTotal:
+  method: "post"
+  path: "/uniledger/v1/transaction/queryTxsTotal"
+
+  jsonBody:
+    beginTime: "111"
+    endTime: "111"
+
+#4.根据指定时间区间获取交易集
+QueryTxsByRange:
+  method: "post"
+  path: "/uniledger/v1/transaction/queryTxsByRange"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#5.获取每区块中包含的交易条数
+QueryGroupByBlock:
+  method: "post"
+  path: "/uniledger/v1/transaction/queryGroupByBlock"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#6.根据区块ID获取区块
+QueryBlockByID:
+  method: "post"
+  path: "/uniledger/v1/block/queryByID"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#7.根据区块ID获取区块中的交易
+QueryTxsByID:
+  method: "post"
+  path: "/uniledger/v1/block/queryTxsByID"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#8.根据区块ID获取区块中的交易条数
+QueryTxsCountByID:
+  method: "post"
+  path: "/uniledger/v1/block/queryTxsCountByID"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#9.获取区块链中的总区块数
+QueryBlockCount:
+  method: "post"
+  path: "/uniledger/v1/block/queryBlockCount"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#10.根据指定时间区间获取区块集
+QueryBlocksByRange:
+  method: "post"
+  path: "/uniledger/v1/block/queryBlocksByRange"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#11.获取所有无效区块集
+QueryInvalidBlockTotal:
+  method: "post"
+  path: "/uniledger/v1/block/queryInvalidBlockTotal"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#12.获取指定时间区间内的无效区块集
+QueryInvalidBlockByRange:
+  method: "post"
+  path: "/uniledger/v1/block/queryInvalidBlockByRange"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#13.获取参与投票的节点公钥集
+PublickeySet:
+  method: "post"
+  path: "/uniledger/v1/vote/publickeySet"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#14.根据指定时间区间获取交易创建平均时间
+TxCreateAvgTimeByRange:
+  method: "post"
+  path: "/uniledger/v1/timestat/txCreateAvgTimeByRange"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#15.根据指定时间区间获取区块创建平均时间
+BlockCreateAvgTimeByRange:
+  method: "post"
+  path: "/uniledger/v1/timestat/blockCreateAvgTimeByRange"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#16.根据指定区块ID获取投票时间
+VoteTimeByBlockID:
+  method: "post"
+  path: "/uniledger/v1/timestat/voteTimeByBlockID"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#17.获取区块的平均投票时间
+VoteAvgTimeByRange:
+  method: "post"
+  path: "/uniledger/v1/timestat/voteAvgTimeByRange"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

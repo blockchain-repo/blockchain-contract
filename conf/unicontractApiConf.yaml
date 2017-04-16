@@ -7,7 +7,7 @@ head:
   Content-Type: "application/x-protobuf"
   RequestDataType: "proto"
 
-#合约查询
+#1.合约查询
 ContractQuery:
   method: "post"
   path: "/v1/cc"
@@ -16,7 +16,7 @@ ContractQuery:
     beginTime: "123"
     endTime: "123"
 
-#合约跟踪
+#2.合约跟踪
 ContractTracking:
   method: "post"
   path: "/v1/contract/create"
@@ -25,16 +25,16 @@ ContractTracking:
     beginTime: "123"
     endTime: "123"
 
-#合约资产冻结
+#3.合约资产冻结
 ContractAssetFreeze:
-  method: "post"
-  path: "/v1/cc"
+  method: "put"
+  path: "/v1/wsp"
 
   jsonBody:
-    beginTime: "123"
-    endTime: "123"
+    beginTime: "222"
+    endTime: "222"
 
-#合约资产解冻
+#4.合约资产解冻
 ContractAssetThaw:
   method: "post"
   path: "/v1/cc"
@@ -43,7 +43,7 @@ ContractAssetThaw:
     beginTime: "123"
     endTime: "123"
 
-#合约交易创建
+#5.合约交易创建
 CreateContractTran:
   method: "post"
   path: "/v1/cc"
@@ -52,7 +52,7 @@ CreateContractTran:
     beginTime: "123"
     endTime: "123"
 
-#合约资产转移
+#6.合约资产转移
 TransferContractTran:
   method: "post"
   path: "/v1/cc"

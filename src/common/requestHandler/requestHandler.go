@@ -3,8 +3,8 @@ package requestHandler
 import (
 	"strings"
 	"github.com/astaxie/beego/httplib"
-	"fmt"
-	"log"
+	"unicontract/src/common"
+	"github.com/astaxie/beego"
 )
 
 
@@ -39,7 +39,7 @@ func NewRequestParam(method string,url string, head map[interface{}]interface{},
  * param : requestParam结构体
  * return: *http.Response,error
  */
-func RequestHandler(requestParam *RequestParam) (string,string){
+func RequestHandler(requestParam *RequestParam) (string,int){
 	method := strings.ToUpper(requestParam.Method)
 	requestParam.Method = method
 	if method == "GET" {
@@ -51,7 +51,7 @@ func RequestHandler(requestParam *RequestParam) (string,string){
 	}else if method == "DELETE" {
 		return _Delete(requestParam)
 	}else {
-		return "",fmt.Sprintf("%s is unsupported method", requestParam.Method)
+		return "",0
 	}
 }
 
@@ -60,12 +60,11 @@ func RequestHandler(requestParam *RequestParam) (string,string){
  * param : requestParam结构体
  * return: *http.Response,error
  */
-func _Get(requestParam *RequestParam) (string,string) {
+func _Get(requestParam *RequestParam) (string,int) {
 
 	request := httplib.Get(requestParam.URL)
-	jsonResponse,_ := request.String()
 
-	return jsonResponse,_GetResponse(request)
+	return _GetResponse(request)
 }
 
 /**
@@ -73,13 +72,12 @@ func _Get(requestParam *RequestParam) (string,string) {
  * param : requestParam结构体
  * return: *http.Response,error
  */
-func _Post(requestParam *RequestParam) (string,string) {
+func _Post(requestParam *RequestParam) (string,int) {
 
 	request := httplib.Post(requestParam.URL)
 	_SetParam(request,requestParam)
-	jsonResponse,_ := request.String()
 
-	return jsonResponse,_GetResponse(request)
+	return _GetResponse(request)
 }
 
 /**
@@ -87,13 +85,12 @@ func _Post(requestParam *RequestParam) (string,string) {
  * param : requestParam结构体
  * return: *http.Response,error
  */
-func _Put(requestParam *RequestParam) (string,string){
+func _Put(requestParam *RequestParam) (string,int){
 
 	request := httplib.Put(requestParam.URL)
 	_SetParam(request,requestParam)
-	jsonResponse,_ := request.String()
 
-	return jsonResponse,_GetResponse(request)
+	return _GetResponse(request)
 
 }
 
@@ -102,13 +99,12 @@ func _Put(requestParam *RequestParam) (string,string){
  * param : requestParam结构体
  * return: *http.Response,error
  */
-func _Delete(requestParam *RequestParam) (string,string){
+func _Delete(requestParam *RequestParam) (string,int){
 
 	request := httplib.Delete(requestParam.URL)
 	_SetParam(request,requestParam)
-	jsonResponse,_ := request.String()
 
-	return jsonResponse,_GetResponse(request)
+	return _GetResponse(request)
 }
 
 /**
@@ -118,32 +114,31 @@ func _Delete(requestParam *RequestParam) (string,string){
  */
 func _SetParam(request *httplib.BeegoHTTPRequest,requestParam *RequestParam){
 
+	//设置请求头
 	heads := requestParam.Heads
 	if heads != nil{
 		for k,v := range requestParam.Heads{
 
-			request.Header(TypeToString(k),TypeToString(v))
+			request.Header(common.TypeToString(k),common.TypeToString(v))
 		}
 	}
 
+	//设置参数
 	jsonBody := requestParam.JsonBody
 	switch jsonBody.(type) {
+	//body可以是string,[]byte类型,也可以在配置文件中配置key-value形式
 	case string:
 		request.Body(requestParam.JsonBody)
-
+	case []byte:
+		request.Body(requestParam.JsonBody)
 	case map[interface{}]interface{}:
-		body,ok := jsonBody.(map[interface{}]interface{})
-		if !ok{
-			log.Fatal("Type conversion error")
-		}
+		body := common.TypeToMap(jsonBody)
 		for k,v := range body{
-			key,_ := k.(string)
-			value,_ := v.(string)
-			request.Param(key,value)
+			request.Param(common.TypeToString(k),common.TypeToString(v))
 		}
 
 	default:
-		log.Fatal("Type error,please input string or map..")
+		beego.Debug("Type error,please input string or map..")
 	}
 
 }
@@ -153,11 +148,14 @@ func _SetParam(request *httplib.BeegoHTTPRequest,requestParam *RequestParam){
  * param : requestParam结构体
  * return: *http.Response,error
  */
-func _GetResponse(request *httplib.BeegoHTTPRequest) string{
+func _GetResponse(request *httplib.BeegoHTTPRequest) (string,int){
+
+	jsonResponse,_ := request.String()
 	respond,err := request.Response()
 	if err != nil{
-		log.Fatal(err.Error())
+		beego.Error(err.Error())
 	}
-	return respond.Status
+
+	return jsonResponse,respond.StatusCode
 }
 

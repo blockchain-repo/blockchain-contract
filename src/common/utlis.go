@@ -85,14 +85,44 @@ func TypeToInt(name interface{}) int{
 }
 
 /**
- * function : 断言-类型转换int
+ * function : 断言-类型转换float32
  * param   :
  * return : 返回int
  */
 
-func TypeToFloat(name interface{}) float32{
+func TypeToFloat32(name interface{}) float32{
 
 	value,ok := name.(float32)
+	if !ok {
+		log.Fatal("Type conversion error")
+	}
+	return value
+}
+
+/**
+ * function : 断言-类型转换float64
+ * param   :
+ * return : 返回int
+ */
+
+func TypeToFloat64(name interface{}) float64{
+
+	value,ok := name.(float64)
+	if !ok {
+		log.Fatal("Type conversion error")
+	}
+	return value
+}
+
+/**
+ * function : 断言-类型转换map[interface{}]interface{}
+ * param   :
+ * return : 返回int
+ */
+
+func TypeToMap(name interface{}) map[interface{}]interface{}{
+
+	value,ok := name.(map[interface{}]interface{})
 	if !ok {
 		log.Fatal("Type conversion error")
 	}

@@ -59,7 +59,7 @@ func _GetParam() (string,string,float32,int){
 	statsdConfig := _GetConfig()
 	ip :=common.TypeToString(statsdConfig["ip"])
 	port :=common.TypeToString(statsdConfig["port"])
-	simpleRate :=common.TypeToFloat(statsdConfig["simpleRate"])
+	simpleRate :=common.TypeToFloat32(statsdConfig["simpleRate"])
 	flushTime := common.TypeToInt(statsdConfig["flushTime"])
 
 	address := ip + ":" + port

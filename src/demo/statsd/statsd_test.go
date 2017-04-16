@@ -17,7 +17,7 @@ func TestExample(t *testing.T) {
 
 
 func TestExampleTagsFormat(t *testing.T) {
-	for i := 1 ; i <=1000000 ; i++ {
+	for i := 1 ; i <=10 ; i++ {
 		ExampleTagsFormat()
 	}
 
