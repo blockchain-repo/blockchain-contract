@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	beego.LoadAppConfig("ini", "../conf/app.conf")
 	logs.SetLogger(logs.AdapterFile, `{"filename":"project.log","level":7,
 	"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
 	"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
