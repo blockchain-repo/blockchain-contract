@@ -2,7 +2,10 @@
 
 
 ### Quick Start
-- http://git.oschina.net/uni-ledger/unicontract/issues/7
+1. sudo apt-get install git
+2. mkdir -p go/src && cd go/src
+2. git clone https://git.oschina.net/uni-ledger/unicontract.git
+4. ./build.sh init && . ~/.bashrc
 
 ### Contents
 ```
@@ -32,7 +35,3 @@ src:
 
 ### Links
 - http://git.oschina.net/uni-ledger/unicontract/issues/6
-
-### build.sh
-使用build脚本中init参数时，一定要用如下方法：   
-./build.sh init && . ~/.bashrc
