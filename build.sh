@@ -23,6 +23,8 @@ Options:
     h|-h|help|-help   usage help
     init              初始化环境，包括环境变量设置、相关工具的安装。
                       如果本机没有go等开发环境建议首先选择此选项；否则不需要。
+                      如果使用init参数，必须按照如下方法使用：
+                      ./build.sh init && . ~/.bashrc
     buildd            编译整个项目(debug)。
     buildr            编译整个项目(release)。
     test              进行全部单元测试。
