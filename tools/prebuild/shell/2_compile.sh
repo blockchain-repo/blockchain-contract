@@ -10,7 +10,7 @@ protos_file_path=$current_path/src/core/protos
 #get govendor
 echo "get govendor"
 cd $current_path
-go get -u github.com/kardianos/govendor
+go get github.com/kardianos/govendor
 govendor sync
 # --------------------------------------------------
 
