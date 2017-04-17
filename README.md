@@ -25,8 +25,8 @@ src:
                 |__ model    合约模型处理
                 |__ protos   合约接口描述proto
             |__ demo:       调用使用样例
-            |__ unittest:   单元测试、集成测试等
-            |__ tools:      语法检查、逻辑检查等工具
+            |__ pipelines:  流水线管道
+        |__tools   语法检查、逻辑检查等工具
         |__vendor  第三方包管理工具 govendor
 ```
 
