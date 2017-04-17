@@ -32,3 +32,7 @@ src:
 
 ### Links
 - http://git.oschina.net/uni-ledger/unicontract/issues/6
+
+### build.sh
+使用build脚本中init参数时，一定要用如下方法：   
+./build.sh init && . ~/.bashrc
