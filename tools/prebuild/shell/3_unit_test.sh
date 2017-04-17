@@ -3,7 +3,9 @@
 # "----------------------------------------------"
 #current_path=$(cd `dirname $0`; pwd)
 current_path=`pwd`
+#默认的临时文件名称
 tmp_file_name="/dev/shm/go_test_file_list"
+#默认的测试输出文件路径
 test_result_file_path="/dev/shm"
 # "----------------------------------------------"
 

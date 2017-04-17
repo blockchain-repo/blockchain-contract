@@ -2,7 +2,9 @@
 
 # --------------------------------------------------
 current_path=`pwd`
+#默认的编译输出路径及目标文件名称
 target="./bin/unicontract"
+#默认的proto schema文件路径
 protos_file_path=$current_path/src/core/protos
 # --------------------------------------------------
 

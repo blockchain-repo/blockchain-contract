@@ -3,17 +3,28 @@
 # --------------------------------------------------
 #current_path=$(cd `dirname $0`; pwd)
 current_path=`pwd`
+#默认的要写入环境变量的文件
 env_file=$HOME/.bashrc
+#默认的go安装路径
 go_root="/usr/local"
+#默认的proto安装路径
 proto_root="/opt/protoc"
+#默认的第三方安装包的路径
 dep_path=$current_path/tools/prebuild/dependent
-proto_name="protoc-3.2.0-linux-x86_64.zip"
+#默认的go安装包名字
 go_name="go1.8.linux-amd64.tar.gz"
+#默认的proto安装包的名字
+proto_name="protoc-3.2.0-linux-x86_64.zip"
+#默认的云端（七牛云）的go安装包位置
 download_go="http://ooekkyv04.bkt.clouddn.com/go1.8.linux-amd64.tar.gz"
+#默认的云端（七牛云）的proto安装包位置
 download_proto="http://ooekkyv04.bkt.clouddn.com/protoc-3.2.0-linux-x86_64.zip"
 download_success=false
+#默认的程序日志写入路径
 log_path=$current_path/log
+#默认的程序配置文件寻找路径
 config_path=$current_path/conf
+#没有安装过go时，默认的第一个GOPATH的路径
 first_gopath=$HOME/go
 # --------------------------------------------------
 
