@@ -83,7 +83,7 @@ if [ -z "$version" ]
 then
     if [ ! -d $proto_root ]
     then
-        mkdir $proto_root
+        sudo mkdir $proto_root
     fi
 
     if [ ! -e $dep_path/$proto_name ]
