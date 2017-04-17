@@ -11,6 +11,7 @@ pkg:
 src:
     |__unicontract
         |__conf/app.conf  api configure file
+        |__demo         调用使用样例
         |__src
             |__ api:    合约执行层对合约应用层提供的API
                 |__...
@@ -24,7 +25,6 @@ src:
                 |__ db       合约db处理
                 |__ model    合约模型处理
                 |__ protos   合约接口描述proto
-            |__ demo:       调用使用样例
             |__ pipelines:  流水线管道
         |__tools   语法检查、逻辑检查等工具
         |__vendor  第三方包管理工具 govendor
