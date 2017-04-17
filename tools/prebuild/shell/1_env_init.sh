@@ -27,15 +27,15 @@ then
     then
         download_success=false 
         sudo apt-get install -y axel 1>/dev/null 2>&1
-		axel $download_go -o $dep_path 1>/dev/null 2>&1 && download_success=true
+        axel $download_go -o $dep_path 1>/dev/null 2>&1 && download_success=true
     fi
-	
-	if [ ! $download_success ]
+
+    if [ ! $download_success ]
     then
         echo "download go failed"
-		exit 1
-	fi
-		
+        exit 1
+    fi
+
     sudo tar -C $go_root -xzf $dep_path/$go_name
     echo export GOROOT=$go_root/go >> $env_file
     export GOROOT=$go_root/go
@@ -53,8 +53,14 @@ then
     fi
     #. $env_file
 else
-    echo export GOPATH=$GOPATH:$current_path >> $env_file
-    export GOPATH=$GOPATH:$current_path
+    result=`echo $GOPATH | grep $current_path`
+    if [ -z "$result" ]
+    then
+        tmp_GOPATH=$GOPATH
+        sed -i -e '/export GOPATH=/d' $env_file
+        echo export GOPATH=$tmp_GOPATH:$current_path >> $env_file
+        export GOPATH=$tmp_GOPATH:$current_path
+    fi
 fi
 # --------------------------------------------------
 
@@ -68,19 +74,19 @@ then
     then
         mkdir $proto_root
     fi
-	
-	if [ ! -e $dep_path/$proto_name ]
+
+    if [ ! -e $dep_path/$proto_name ]
     then
         download_success=false 
         sudo apt-get install -y axel 1>/dev/null 2>&1
-		axel $download_proto -o $dep_path 1>/dev/null 2>&1 && download_success=true
+        axel $download_proto -o $dep_path 1>/dev/null 2>&1 && download_success=true
     fi
-	
-	if [ ! $download_success ]
+
+    if [ ! $download_success ]
     then
         echo "download proto failed"
-		exit 1
-	fi
+        exit 1
+    fi
 
     sudo apt-get -y install zip 1>/dev/null 2>&1
     sudo unzip $dep_path/$proto_name -d $proto_root
