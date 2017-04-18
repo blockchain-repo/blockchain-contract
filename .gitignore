@@ -22,3 +22,15 @@ _testmain.go
 *.exe
 
 !.gitkeep
+
+# beego run
+lastupdate.tmp
+*.log
+
+.idea
+unicontract
+
+# vendor for golang package manager
+#vendor/*
+#!vendor/vendor.json
+#!vendor/README.md

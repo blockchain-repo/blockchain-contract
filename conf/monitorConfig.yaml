@@ -1,0 +1,15 @@
+#monitor ip
+ip: "192.168.80.22"
+
+#monitor port
+port: "8125"
+
+#monitor rate
+simpleRate: 0.01
+
+#monitor flushTime ms
+flushTime: 100
+
+
+
+
