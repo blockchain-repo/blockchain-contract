@@ -109,5 +109,5 @@ func (v *Votes) VerifyVoteSchema() bool {
 }
 
 func (v *Votes) ToString() string {
-	return common.Serialize(v.Vote)
+	return common.Serialize(v)
 }

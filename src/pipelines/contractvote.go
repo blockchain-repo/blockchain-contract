@@ -14,7 +14,6 @@ import (
 
 func cvChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
-	//TODO table name
 	res := r.Changefeed("Unicontract", "Contract")
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
@@ -39,15 +38,23 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
-		//TODO validate
 		mod := model.ContractModel{}
 		err := json.Unmarshal(t,&mod)
 		if err != nil {
 			log.Fatalf(err.Error())
 			continue
 		}
-		mod.Validate()
-		out.Write(t)
+		//TODO validate return bool
+		v :=model.Votes{}
+		if mod.Validate() {
+			//vote true
+			v.Vote.IsValid = true
+		} else {
+			//vote flase
+			v.Vote.IsValid = false
+		}
+		v.Vote.VoteForContract = mod.Id
+		out.Write([]byte(v.ToString()))
 	}
 }
 
@@ -59,8 +66,14 @@ func cvVote(in io.Reader, out io.Writer) {
 		if n == 0 {
 			continue
 		}
-		//TODO make vote
 		t := p[:n]
+		v :=model.Votes{}
+		err := json.Unmarshal(t,&v)
+		if err != nil {
+			log.Fatalf(err.Error())
+			continue
+		}
+		//TODO make vote(Timestamp,NodePubkey,Sig)
 		out.Write(t)
 	}
 }
@@ -74,7 +87,6 @@ func cvWriteVote(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
-		//TODO write vote
 		r.Insert("Unicontract", "Votes", string(t))
 		out.Write(t)
 	}
