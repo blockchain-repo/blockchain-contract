@@ -7,7 +7,7 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
-var Tables = [4]string{"Contract", "Votes", "ContractTasks", "ConsensusFail"}
+var Tables = [5]string{"Contract", "Votes", "ContractTasks", "ConsensusFail","ContractOutputs"}
 
 func CreateTable(db string, name string) {
 	session := ConnectDB(db)

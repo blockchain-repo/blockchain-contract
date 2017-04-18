@@ -7,14 +7,17 @@ import (
 	"io"
 	"log"
 	"os"
+	"fmt"
 
 	r "unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/model"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	//TODO table name
-	res := r.Changefeed("Unicontract", "Contract")
+	res := r.Changefeed("Unicontract", "ContractOutputs")
+	fmt.Printf("changefeed result : %s",res)
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
@@ -25,6 +28,7 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 		if bytes.Equal(v, []byte("null")) {
 			continue
 		}
+		fmt.Printf("change result : %s",v)
 		out.Write(v)
 	}
 }
@@ -38,7 +42,19 @@ func txeHeadFilter(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
+		conout := model.ContractOutput{}
+		err := json.Unmarshal(t,&conout)
+		if err != nil {
+			log.Fatalf(err.Error())
+			continue
+		}
+		voters := conout.Transaction.Relaction.Voters
+		signatures := conout.Transaction.Relaction.Signatures
+
+		fmt.Print(len(voters),len(signatures))
+
 		//TODO head filter
+
 		out.Write(t)
 	}
 }
