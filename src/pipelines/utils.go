@@ -2,7 +2,7 @@ package pipelines
 
 import (
 	"io"
-	"log"
+//	"log"
 )
 
 const MaxSizeTX = 16 * 1024
