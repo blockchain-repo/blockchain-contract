@@ -9,7 +9,7 @@ import (
 // table [contract]
 type ContractModel struct {
 	Id         string `json:"id"`          //合约唯一标识ID，对合约主体信息计算hash
-	Version    string `json:"version"`     //合约描述结构版本号
+	Version    int8   `json:"version"`     //合约描述结构版本号
 	MainPubkey string `json:"main_pubkey"` //合约处理主节点公钥
 	NodePubkey string `json:"node_pubkey"` //合约运行节点公钥
 	Signature  string `json:"signature"`   //合约运行节点签名
@@ -22,9 +22,16 @@ type ContractModel struct {
 }
 
 // validate the contract
-func (c *ContractModel) Validate() {
-	c.validateContract()
-	c.validateContractContent()
+func (c *ContractModel) Validate() bool {
+	first_valid := c.validateContract()
+	if !first_valid {
+		return false
+	}
+	content_valid := c.validateContractContent()
+	if !content_valid {
+		return false
+	}
+	return true
 }
 
 //Create a signature for the contract
@@ -48,10 +55,8 @@ func (c *ContractModel) ToDict() *ContractModel {
 	if contract == nil {
 		panic("Empty contract creation is not allowed")
 	}
-	// contract serialized
-	contract_serialized := c.ToString()
 	// hash the contract in [contractModel]
-	c.Id = common.HashData(contract_serialized)
+	c.Id = c.GetId()
 	// todo NodePubkey
 	c.NodePubkey = ""
 	// todo MainPubkey
@@ -62,7 +67,7 @@ func (c *ContractModel) ToDict() *ContractModel {
 	c.Voters = []string{}
 	c.Timestamp = common.GenTimestamp()
 	// todo version
-	c.Version = "v1.0"
+	c.Version = 1
 	c.Contract = *contract
 
 	return c
@@ -72,8 +77,14 @@ func (c *ContractModel) ToString() string {
 	return common.Serialize(c)
 }
 
+// return the id (hash generate)
+func (c *ContractModel) GetId() string {
+	contract_serialized := common.Serialize(c.Contract)
+	return common.HashData(contract_serialized)
+}
+
 //Validate the contract
-func (c *ContractModel) validateContract() {
+func (c *ContractModel) validateContract() bool {
 	federation := c.Voters
 	nodePubkey := c.NodePubkey
 	flag := false
@@ -86,22 +97,25 @@ func (c *ContractModel) validateContract() {
 
 	if !flag {
 		beego.Error("Only federation nodes can create contract")
-		panic("Only federation nodes can create contract")
+		//panic("Only federation nodes can create contract")
+		return false
 	}
 
 	if !c.IsSignatureValid() {
 		beego.Error("Invalid contract signature")
-		panic("Invalid contract signature")
+		//panic("Invalid contract signature")
+		return false
 	}
-
+	return true
 }
 
 //Validate the contract content
-func (c *ContractModel) validateContractContent() *ContractModel {
+func (c *ContractModel) validateContractContent() bool {
 	contract := &c.Contract
 	if contract == nil {
 		beego.Error("Empty contract is not allowed")
-		panic("Empty contract is not allowed")
+		//panic("Empty contract is not allowed")
+		return false
 	}
 
 	if contract.Operation == "CREATE" {
@@ -114,5 +128,5 @@ func (c *ContractModel) validateContractContent() *ContractModel {
 		beego.Error("missing validate the contract [contract_components]")
 	}
 
-	return c
+	return true
 }

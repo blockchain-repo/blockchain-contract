@@ -25,7 +25,7 @@ func Test_Sign(t *testing.T) {
 	//fmt.Println("contract is : ", common.SerializePretty(contract))
 	fmt.Println("private_key is : ", private_key)
 	fmt.Println("contract is : ", common.Serialize(contract))
-	fmt.Println("signatureContract is : ", signatureContract)
+	fmt.Println("signatureContract isTest_Validate : ", signatureContract)
 }
 
 func Test_IsSignatureValid(t *testing.T) {

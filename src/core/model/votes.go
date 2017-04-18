@@ -13,12 +13,16 @@ type Vote struct {
 	Timestamp       string `json:"timestamp"`         //节点投票时间戳
 }
 
-// table [vote]
-type Votes struct {
-	Id         string `json:"id"`          //投票唯一标识ID，最投票主体信息计算hash
+type VotesWithoutId struct{
 	NodePubkey string `json:"node_pubkey"` //投票节点的公钥
 	Vote       Vote   `json:"vote"`        //投票信息
 	Signature  string `json:"signature"`   //投票节点签名
+}
+
+// table [vote]
+type Votes struct {
+	Id         string `json:"id"`          //投票唯一标识ID，最投票主体信息计算hash
+	VotesWithoutId
 }
 
 // Calculate the election status of a contract.

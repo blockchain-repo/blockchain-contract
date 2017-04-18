@@ -30,6 +30,7 @@ message ConditionsItem {
     int32 cid = 2;
     Condition condition = 3;
     repeated string owners_after = 4;
+    bool isfreeze = 5;
 }
 
 message Fulfillment {
