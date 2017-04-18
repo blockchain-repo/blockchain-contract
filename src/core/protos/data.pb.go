@@ -21,7 +21,7 @@ type ContractData struct {
 func (m *ContractData) Reset()                    { *m = ContractData{} }
 func (m *ContractData) String() string            { return proto.CompactTextString(m) }
 func (*ContractData) ProtoMessage()               {}
-func (*ContractData) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (*ContractData) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
 
 func (m *ContractData) GetData() *ContractProto {
 	if m != nil {
@@ -41,9 +41,9 @@ func init() {
 	proto.RegisterType((*ContractData)(nil), "protos.ContractData")
 }
 
-func init() { proto.RegisterFile("data.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("data.proto", fileDescriptor2) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor2 = []byte{
 	// 111 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0x49, 0x2c, 0x49,
 	0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x03, 0x53, 0xc5, 0x52, 0x7c, 0xc9, 0xf9, 0x79,

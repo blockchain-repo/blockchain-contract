@@ -98,7 +98,6 @@ func (c *ContractController) AuthSignature() {
 	beego.Debug("contract signature is " + contractSignature)
 	beego.Warn(c.Ctx.Request.RequestURI, "缺少验证签名方法![AuthSignature]")
 
-
 	//response := make(map[string]interface{})
 	//c.responseJsonBody(response, true, "signature is ok!")
 	//c.responseJsonBody(response, false, "缺少验证签名方法!")
@@ -229,7 +228,7 @@ func (c *ContractController) Terminate() {
 	}
 
 	beego.Warn("缺少查询合约方法![Terminate]")
-	beego.Warn(c.Ctx.Request.RequestURI,"缺少终止合约方法![Terminate]")
+	beego.Warn(c.Ctx.Request.RequestURI, "缺少终止合约方法![Terminate]")
 	beego.Warn("合约Id: " + contractId)
 	response := make(map[string]interface{})
 	response["creator"] = "xinwang"
@@ -279,7 +278,7 @@ func (c *ContractController) Find() {
 	response["func"] = "Signature"
 
 	beego.Error("合约(Id=" + contractId + ")不存在: ")
-	beego.Warn(c.Ctx.Request.RequestURI,"缺少查询合约方法![Find]")
+	beego.Warn(c.Ctx.Request.RequestURI, "缺少查询合约方法![Find]")
 	beego.Warn("合约Id: " + contractId)
 	//beego.Info("合约(Id=" + contractId + ")存在: ")
 	c.responseJsonBody(response, true, "查询合约成功!")
@@ -319,7 +318,7 @@ func (c *ContractController) Track() {
 	response["func"] = "Signature"
 
 	beego.Error("合约(Id=" + contractId + ")不存在: ")
-	beego.Warn(c.Ctx.Request.RequestURI,"缺少合约跟踪方法![Track]")
+	beego.Warn(c.Ctx.Request.RequestURI, "缺少合约跟踪方法![Track]")
 	beego.Warn("合约Id: " + contractId)
 	//beego.Info("合约(Id=" + contractId + ")存在: ")
 	c.responseJsonBody(response, true, "合约跟踪查询成功!")
@@ -359,7 +358,7 @@ func (c *ContractController) Update() {
 	beego.Debug("contract signature is " + contractSignature)
 	beego.Warn("缺少签名方法![Update]")
 	beego.Warn("缺少创建合约方法![Update]")
-	beego.Warn(c.Ctx.Request.RequestURI,"缺少合约更新方法![Update]")
+	beego.Warn(c.Ctx.Request.RequestURI, "缺少合约更新方法![Update]")
 
 	response := make(map[string]interface{})
 	//c.responseJsonBody(response, true, "signature is ok!")
@@ -401,7 +400,7 @@ func (c *ContractController) Test() {
 	contractSignature := contract.Signature
 	beego.Debug("contract signature is " + contractSignature)
 	beego.Warn("缺少签名方法![Test]")
-	beego.Warn(c.Ctx.Request.RequestURI,"缺少测试合约方法![Test]")
+	beego.Warn(c.Ctx.Request.RequestURI, "缺少测试合约方法![Test]")
 
 	response := make(map[string]interface{})
 	//c.responseJsonBody(response, true, "signature is ok!")

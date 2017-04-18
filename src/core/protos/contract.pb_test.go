@@ -18,7 +18,7 @@ func Test_ContractPb(t *testing.T) {
 		"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"}
 
 	contractProto.Timestamp = common.GenTimestamp()
-	contractProto.Version = "v1.0"
+	contractProto.Version = 1
 
 	contract := Contract{}
 	contract.CreatorPubkey = "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc"

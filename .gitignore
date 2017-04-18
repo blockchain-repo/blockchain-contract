@@ -34,3 +34,5 @@ unicontract
 #vendor/*
 #!vendor/vendor.json
 #!vendor/README.md
+bin/
+buildLog/

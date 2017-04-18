@@ -1,0 +1,78 @@
+syntax = "proto3";
+package protos;
+//import "unicontract/src/core/protos/contract.proto";
+import "google/protobuf/any.proto";
+
+// An Asset is a fungible unit to spend and lock with Transactions
+message Asset {
+    google.protobuf.Any data = 1; //dict A dictionary of data that can be added to an Asset
+    string id = 2; // A unique identifier of `data`'s content. hash
+    bool divisible = 3; //  A flag indicating if an Asset can be divided.
+    bool refillable = 4; //  A flag indicating if an Asset can be refilled.
+    bool updatable = 5; // A flag indicating if an Asset can be updated.
+}
+
+message ConditionDetails {
+    int32 bitmask = 1;
+    string public_key = 2;
+    string signature = 3; // sinature TODO
+    string type = 4;
+    int32 type_id = 5;
+}
+
+message Condition {
+    ConditionDetails details = 1;
+    string uri = 2;
+}
+
+message ConditionsItem {
+    int64 amount =1;
+    int32 cid = 2;
+    Condition condition = 3;
+    repeated string owners_after = 4;
+}
+
+message Fulfillment {
+    int32 fid = 1;
+    repeated string owners_before = 2;
+    string fulfillment = 3;
+    google.protobuf.Any input = 4;  // Reference to a condition of a previous transaction
+
+}
+
+message Metadata {
+    string id = 1;
+    google.protobuf.Any data = 2; //User provided transaction metadata.
+}
+
+message RelactionSignature {
+    string contract_node_pubkey = 1;
+    string signature =2;
+}
+
+// 合约&交易关系信息
+message Relaction {
+    string contract_id = 1; // 合约唯一标识ID
+    string task_id = 2; // 合约任务唯一标识ID
+    repeated string voters = 3; // 合约执行投票节点公钥环（合约执行所有节点公钥集合）
+    repeated RelactionSignature signatures = 4; // 合约执行节点针对交易的签名集（共识后保留的有效签名集合）
+}
+
+import "contract.proto";
+message Transaction {
+    Asset asset = 1;
+    repeated ConditionsItem conditions = 2;
+    repeated Fulfillment fulfillments = 3;
+    Metadata metadata = 4;
+    string operation = 5;
+    string timestamp = 6;
+    Relaction relaction = 7;
+    ContractProto contracts = 8; // 合约描述
+}
+
+message ContractOutput {
+    string id = 1;
+    Transaction transaction = 2;
+    int32 version = 3;
+
+}

@@ -20,7 +20,7 @@ func Test_ContractProto(t *testing.T) {
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
 		Timestamp: common.GenTimestamp(),
-		Version:   "v1.0",
+		Version:   1,
 		Contract: &Contract{
 			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 			CreateTimestamp: common.GenTimestamp(),

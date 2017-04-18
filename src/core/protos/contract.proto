@@ -80,7 +80,7 @@ message ContractProto {
      string signature = 4;
      repeated string voters = 5;
      string timestamp = 6;
-     string version = 7;
+     int32 version = 7;
      Contract contract = 8;
 }
 

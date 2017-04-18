@@ -7,10 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
-	"unicontract/src/core/protos"
 	"unicontract/src/common"
+	"unicontract/src/core/protos"
 )
-
 
 // application content-type
 const (
@@ -68,7 +67,7 @@ func Test_ContractProto(t *testing.T) {
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
 		Timestamp: common.GenTimestamp(),
-		Version:   "v1.0",
+		Version:   1,
 		Contract: &protos.Contract{
 			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 			CreateTimestamp: common.GenTimestamp(),
@@ -297,7 +296,7 @@ func Test_ContractProto(t *testing.T) {
 	//fmt.Println(common.Serialize(contract))
 	//fmt.Println(common.SerializePretty(contract))
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 	result, err := proto.Marshal(&data)
@@ -307,7 +306,6 @@ func Test_ContractProto(t *testing.T) {
 	fmt.Println("input result is ", result)
 
 }
-
 
 var default_url = "http://192.168.1.14:8088/v1/contract/"
 
@@ -325,11 +323,11 @@ func Test_AuthSignature(t *testing.T) {
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
 		Timestamp: common.GenTimestamp(),
-		Version:   "v1.0",
+		Version:   1,
 	}
 
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 	requestBody, err := proto.Marshal(&data)
@@ -378,7 +376,7 @@ func Test_Creat(t *testing.T) {
 	fmt.Println(contract)
 
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 	requestBody, err := proto.Marshal(&data)
@@ -410,11 +408,11 @@ func Test_Signature(t *testing.T) {
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
 		Timestamp: common.GenTimestamp(),
-		Version:   "v1.0",
+		Version:   1,
 	}
 
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 
@@ -435,7 +433,7 @@ func Test_Terminate(t *testing.T) {
 	url := default_url + "terminate"
 
 	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
+		Id: "2",
 		//NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 		//MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
 		//Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
@@ -448,7 +446,7 @@ func Test_Terminate(t *testing.T) {
 		//Version:   "v1.0",
 	}
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 
@@ -469,10 +467,10 @@ func Test_Find(t *testing.T) {
 	url := default_url + "find"
 
 	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
+		Id: "2",
 	}
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 
@@ -493,10 +491,10 @@ func Test_Track(t *testing.T) {
 	url := default_url + "track"
 
 	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
+		Id: "2",
 	}
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 	requestBody, err := proto.Marshal(&data)
@@ -526,10 +524,10 @@ func Test_Update(t *testing.T) {
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
 		Timestamp: common.GenTimestamp(),
-		Version:   "v1.0",
+		Version:   1,
 	}
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 	requestBody, err := proto.Marshal(&data)
@@ -559,10 +557,10 @@ func Test_Test(t *testing.T) {
 			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 		},
 		Timestamp: common.GenTimestamp(),
-		Version:   "v1.0",
+		Version:   1,
 	}
 	data := protos.ContractData{
-		Data: &contract,
+		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
 	}
 	requestBody, err := proto.Marshal(&data)
