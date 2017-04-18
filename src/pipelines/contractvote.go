@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+
 	r "unicontract/src/core/db/rethinkdb"
 )
 
@@ -36,8 +37,8 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 		if n == 0 {
 			continue
 		}
-		//TODO validate
 		t := p[:n]
+		//TODO validate
 		out.Write(t)
 	}
 }
