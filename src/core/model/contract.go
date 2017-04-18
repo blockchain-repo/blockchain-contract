@@ -69,7 +69,7 @@ func (c *ContractModel) ToDict() *ContractModel {
 }
 
 func (c *ContractModel) ToString() string {
-	return common.Serialize(c.Contract)
+	return common.Serialize(c)
 }
 
 //Validate the contract

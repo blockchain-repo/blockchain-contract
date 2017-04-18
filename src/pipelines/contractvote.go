@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 
+	"unicontract/src/core/model"
 	r "unicontract/src/core/db/rethinkdb"
 )
 
@@ -39,6 +40,13 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 		}
 		t := p[:n]
 		//TODO validate
+		mod := model.ContractModel{}
+		err := json.Unmarshal(t,&mod)
+		if err != nil {
+			log.Fatalf(err.Error())
+			continue
+		}
+		mod.Validate()
 		out.Write(t)
 	}
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func Test_Get(t *testing.T) {
-	res :=Get("bigchain","bigchain","79d22538b1301b497952ee43e6b72e46f7858106bda9eddf4ea98109dc912a69")
+	res :=Get("Unicontract","Contract","123151f1ddassd")
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
