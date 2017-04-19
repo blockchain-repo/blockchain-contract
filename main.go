@@ -1,11 +1,11 @@
 package main
 
 import (
-	//"flag"
-	//"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	_ "unicontract/src/api/routers"
+	"unicontract/src/common"
+	"unicontract/src/common/basic"
 )
 
 func main() {
@@ -21,9 +21,27 @@ func main() {
 	//todo if u want not output to console, open following line!
 	//beego.BeeLogger.DelLogger("console")
 
-	logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,
-	"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
-	"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
+	myBeegoLogAdapterMultiFile := &basic.MyBeegoLogAdapterMultiFile{}
+	myBeegoLogAdapterMultiFile.FileName = "unicontract.log"
+	myBeegoLogAdapterMultiFile.Level = 7
+	myBeegoLogAdapterMultiFile.MaxDays = 10
+	myBeegoLogAdapterMultiFile.MaxLines = 0
+	myBeegoLogAdapterMultiFile.MaxSize = 0
+	myBeegoLogAdapterMultiFile.Rotate = true
+	myBeegoLogAdapterMultiFile.Daily = true
+	//myBeegoLogAdapterMultiFile.Separate = []string{"emergency","critical","error", "warning", "debug"}
+	myBeegoLogAdapterMultiFile.Separate = []string{"emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"}
+
+
+	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
+	log_config_str := common.Serialize(log_config)
+	logs.Warn("log_config_str: " ,log_config_str)
+
+	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
+
+	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,
+	//"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
+	//"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
 	logs.Warn("main start")
 
 	//if beego.BConfig.RunMode == "dev" {
