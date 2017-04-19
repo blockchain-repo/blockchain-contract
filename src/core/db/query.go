@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"unicontract/src/common"
 	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/model"
 )
 
 const dbname = "Unicontract"
@@ -39,9 +40,14 @@ func GetContractMainPubkeyById(contractId string) string {
 	}
 
 	if main_pubkey, ok := blo["main_pubkey"]; ok {
-		return string(main_pubkey)
+		pubkey, _ok := main_pubkey.(string)
+		if _ok {
+			return pubkey
+		} else {
+			return ""
+		}
 	} else {
-		return nil
+		return ""
 	}
 }
 
@@ -56,4 +62,23 @@ func GetVotesById(contractId string) string {
 	}
 
 	return common.Serialize(blo)
+}
+
+func InsertContractStruct(contract model.ContractModel) bool {
+	res := rethinkdb.Insert(dbname, table_contract, common.Serialize(contract))
+	fmt.Printf("%d row inserted", res.Inserted)
+	if res.Inserted >= 1 {
+		return true
+	}
+	return false
+}
+
+// contract serialize contract string
+func InsertContract(contract string) bool {
+	res := rethinkdb.Insert(dbname, table_contract, contract)
+	fmt.Printf("%d row inserted", res.Inserted)
+	if res.Inserted >= 1 {
+		return true
+	}
+	return false
 }
