@@ -15,7 +15,6 @@ import (
 
 func txeChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
-	//TODO table name
 	res := r.Changefeed("Unicontract", "ContractOutputs")
 	fmt.Printf("changefeed result : %s",res)
 	for res.Next(&value) {
@@ -33,7 +32,7 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 	}
 }
 
-func txeHeadFilter(in io.Reader, out io.Writer) {
+func txeHeadFilter(in io.Reader, out io.Writer){
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
@@ -48,13 +47,46 @@ func txeHeadFilter(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		voters := conout.Transaction.Relaction.Voters
-		signatures := conout.Transaction.Relaction.Signatures
+		//main node filter
+		mainNodeKey  := conout.Transaction.Contracts.MainPubkey
+		//TODO get node pubkey
+		myNodeKey := ""
+		if mainNodeKey != myNodeKey {
+			continue
+		}
+		out.Write(t)
+	}
+}
 
-		fmt.Print(len(voters),len(signatures))
+func txeValidate(in io.Reader, out io.Writer) {
+	rd := bufio.NewReader(in)
+	p := make([]byte, MaxSizeTX)
+	for {
+		n, _ := rd.Read(p)
+		if n == 0 {
+			continue
+		}
+		t := p[:n]
+		coModel := model.ContractOutput{}
+		err := json.Unmarshal(t,&coModel)
+		if err != nil {
+			log.Fatalf(err.Error())
+			continue
+		}
 
-		//TODO head filter
-
+		if !coModel.HasEnoughVotes() {
+			//not enough votes
+			continue
+		}
+		if !coModel.ValidteHash() {
+			//invalidate hash
+			continue
+		}
+		if !coModel.ValidteSignature() {
+			//invalidate signature
+			//TODO Verify whether there is enough validate voters-signatures.
+			continue
+		}
 		out.Write(t)
 	}
 }
@@ -92,6 +124,7 @@ func starttxElection() {
 	p := Pipe(
 		txeChangefeed,
 		txeHeadFilter,
+		txeValidate,
 		txeQueryEists,
 		txeSend)
 
