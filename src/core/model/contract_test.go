@@ -55,13 +55,12 @@ func Test_IsSignatureValid(t *testing.T) {
 	isSignatureValid := contractModel.IsSignatureValid()
 	if isSignatureValid {
 		t.Log("contract 签名有效")
-	}else{
+	} else {
 		t.Error("contract 签名无效")
 	}
 }
 
-
-func Test_Validate(t *testing.T){
+func Test_Validate(t *testing.T) {
 	//create new obj
 	contractModel := ContractModel{}
 	private_key := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"

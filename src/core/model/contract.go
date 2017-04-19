@@ -77,7 +77,7 @@ func (c *ContractModel) ToString() string {
 	return common.Serialize(c)
 }
 
-// return the id (hash generate)
+// return the  id (hash generate)
 func (c *ContractModel) GetId() string {
 	contract_serialized := common.Serialize(c.Contract)
 	return common.HashData(contract_serialized)
