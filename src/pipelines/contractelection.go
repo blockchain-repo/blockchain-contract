@@ -6,8 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"log"
 	"os"
+)
+
+import (
+	beegoLog "github.com/astaxie/beego/logs"
 )
 
 import (
@@ -43,11 +46,11 @@ func ceChangefeed(in io.Reader, out io.Writer) {
 		// 提取new_val的值
 		slVote, err := json.Marshal(mValue[_NewVal])
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 		if bytes.Equal(slVote, []byte("null")) {
-			log.Fatalln("is null")
+			beegoLog.Error("is null")
 			continue
 		}
 		out.Write(slVote)
@@ -62,7 +65,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 		// 读取new_val的值
 		nReadNum, err := rd.Read(slVote)
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 		if nReadNum == 0 {
@@ -74,7 +77,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 		vote := model.Vote{}
 		err = json.Unmarshal(slReadData, &vote)
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 
@@ -88,7 +91,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 					slMyContract, pass, err := _verifyVotes(mainPubkey,
 						vote.VoteBody.VoteForContract)
 					if err != nil {
-						log.Fatalln(err.Error())
+						beegoLog.Error(err.Error())
 						continue
 					}
 
@@ -99,11 +102,11 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 					}
 				}
 			} else {
-				log.Fatalln(err.Error())
+				beegoLog.Error(err.Error())
 				continue
 			}
 		} else {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 	}
@@ -116,7 +119,7 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 	for {
 		nReadNum, err := rd.Read(slMyContract)
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 		if nReadNum == 0 {
@@ -127,14 +130,14 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		myContract := _MyContract{}
 		err = json.Unmarshal(slReadData, &myContract)
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 
 		input := _GetContractInput{Id: myContract.Id}
 		slInput, err := json.Marshal(input)
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 
@@ -154,7 +157,7 @@ func ceSend(in io.Reader, out io.Writer) {
 	for {
 		nReadNum, err := rd.Read(slReadData)
 		if err != nil {
-			log.Fatalln(err.Error())
+			beegoLog.Error(err.Error())
 			continue
 		}
 		if nReadNum == 0 {
@@ -164,7 +167,7 @@ func ceSend(in io.Reader, out io.Writer) {
 
 		responseResult := chain.CreateContract(slRealData)
 		if responseResult.Code != _HTTPOK {
-			log.Fatalln(responseResult.Message)
+			beegoLog.Error(responseResult.Message)
 		}
 
 		out.Write(slRealData)
@@ -181,7 +184,7 @@ func startContractElection() {
 
 	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 	if err != nil {
-		log.Fatalf(err.Error())
+		beegoLog.Error(err.Error())
 	}
 	w := bufio.NewWriter(f)
 	p(nil, w)
