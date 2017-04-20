@@ -78,12 +78,12 @@ func txeValidate(in io.Reader, out io.Writer) {
 			//not enough votes
 			continue
 		}
-		if !coModel.ValidteHash() {
-			//invalidate hash
+		if !coModel.ValidateHash() {
+			//invalid hash
 			continue
 		}
-		if !coModel.ValidteSignature() {
-			//invalidate signature
+		if !coModel.ValidateSignature() {
+			//invalid signature
 			//TODO Verify whether there is enough validate voters-signatures.
 			continue
 		}
@@ -100,7 +100,9 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
-		//TODO query
+
+
+
 		out.Write(t)
 	}
 }
