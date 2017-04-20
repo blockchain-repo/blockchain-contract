@@ -126,17 +126,17 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 }
 
 func (c *ContractOutput) validateSignature(nodePubkey string,nodeSignature string) bool{
-	var ConOutputClone = c
+	var ConOutTxClone = c.Transaction
 
 	//deep copy
-	var temp protos.ContractOutput
-	transactionCloneBytes, _ := json.Marshal(ConOutputClone)
-	err := json.Unmarshal(transactionCloneBytes, &temp)
+	var temp protos.Transaction
+	txCloneBytes, _ := json.Marshal(ConOutTxClone)
+	err := json.Unmarshal(txCloneBytes, &temp)
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
 
-	temp.Transaction.Relaction.Signatures = nil
+	temp.Relaction.Signatures = nil
 	tempNoSign := common.Serialize(temp)
 	return common.Verify(nodePubkey,tempNoSign,nodeSignature)
 }
