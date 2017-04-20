@@ -11,6 +11,7 @@ import (
 
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
+	"unicontract/src/chain"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
@@ -82,9 +83,8 @@ func txeValidate(in io.Reader, out io.Writer) {
 			//invalid hash
 			continue
 		}
-		if !coModel.ValidateSignature() {
+		if !coModel.ValidateContractOutput() {
 			//invalid signature
-			//TODO Verify whether there is enough validate voters-signatures.
 			continue
 		}
 		out.Write(t)
@@ -100,9 +100,25 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
+		coModel := model.ContractOutput{}
+		err := json.Unmarshal(t,&coModel)
+		if err != nil {
+			log.Fatalf(err.Error())
+			continue
+		}
+		//check whether already exist
+		id := coModel.Id
+		result := chain.GetContractTx("{'id':"+id+"}")
 
+		if result.Code != 200 {
+			//TODO error handling
+		}
 
-
+		fmt.Print(result.Data)
+		//if the unichain already has the contractoutput ,do nothing
+		if result.Data == nil {
+			continue
+		}
 		out.Write(t)
 	}
 }
@@ -116,7 +132,12 @@ func txeSend(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
-		//TODO send
+		//write the contractoutput to unichain.
+		result := chain.CreateContractTx(t)
+		fmt.Print(result.Data)
+		if result.Code != 200 {
+			//TODO error handling
+		}
 		out.Write(t)
 	}
 }

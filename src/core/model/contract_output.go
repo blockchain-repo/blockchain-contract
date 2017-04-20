@@ -101,6 +101,42 @@ func (c *ContractOutput) ValidateHash() bool {
 }
 
 //  判断是否有>1/2的有效签名。 return bool
-func (c *ContractOutput) ValidateSignature() bool {
+func (c *ContractOutput) ValidateContractOutput() bool {
+	voters := c.Transaction.Relaction.Voters
+	signatures := c.Transaction.Relaction.Signatures
+	voters_len := len(voters)
+
+	validSignCount := 0
+	for index, voter := range voters{
+		relationSignature := signatures[index]
+		nodePubkey := relationSignature.ContractNodePubkey
+		if nodePubkey != voter {
+			continue
+		}
+		nodeSignature := relationSignature.Signature
+		if c.validateSignature(nodePubkey,nodeSignature) {
+			validSignCount++
+		}
+	}
+
+	if validSignCount <= voters_len/2 {
+		return false
+	}
 	return true
+}
+
+func (c *ContractOutput) validateSignature(nodePubkey string,nodeSignature string) bool{
+	var ConOutputClone = c
+
+	//deep copy
+	var temp protos.ContractOutput
+	transactionCloneBytes, _ := json.Marshal(ConOutputClone)
+	err := json.Unmarshal(transactionCloneBytes, &temp)
+	if err != nil {
+		beego.Error("Unmarshal error ", err)
+	}
+
+	temp.Transaction.Relaction.Signatures = nil
+	tempNoSign := common.Serialize(temp)
+	return common.Verify(nodePubkey,tempNoSign,nodeSignature)
 }
