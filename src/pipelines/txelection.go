@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"fmt"
+	"errors"
 
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
@@ -81,10 +82,12 @@ func txeValidate(in io.Reader, out io.Writer) {
 		}
 		if !coModel.ValidateHash() {
 			//invalid hash
+			log.Fatal(errors.New("invalid hash"))
 			continue
 		}
 		if !coModel.ValidateContractOutput() {
 			//invalid signature
+			log.Fatal(errors.New("invalid signature"))
 			continue
 		}
 		out.Write(t)
@@ -112,6 +115,7 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 
 		if result.Code != 200 {
 			//TODO error handling
+			errors.New("")
 		}
 
 		fmt.Print(result.Data)
@@ -137,6 +141,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		fmt.Print(result.Data)
 		if result.Code != 200 {
 			//TODO error handling
+			errors.New("")
 		}
 		out.Write(t)
 	}
