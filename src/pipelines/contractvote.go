@@ -15,7 +15,7 @@ import (
 
 func cvChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
-	res := r.Changefeed("Unicontract", "Contract")
+	res := r.Changefeed("Unicontract", "Contracts")
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
@@ -46,6 +46,7 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			continue
 		}
 		v := model.Vote{}
+		//TODO Validate contract
 		if mod.Validate() {
 			//vote true
 			v.VoteBody.IsValid = true
@@ -73,7 +74,7 @@ func cvVote(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		//TODO make vote(NodePubkey)
+		//TODO read config
 		v.NodePubkey = "EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
