@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	r "gopkg.in/gorethink/gorethink.v3"
-	"unicontract/src/core/model"
+	"unicontract/src/common"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -57,16 +57,17 @@ const (
 )
 
 // 根据合约[id]获取合约
-func GetContractById(contractId string) (model.ContractModel, error) {
-	var blo model.ContractModel
+func GetContractById(contractId string) (string, error) {
 	res := Get(dbname, table_contract, contractId)
+
+	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
 		fmt.Printf("Error scanning database result: %s", err)
-		return blo, errors.New(err.Error())
+		return "", errors.New(err.Error())
 	}
 
-	return blo, nil
+	return common.Serialize(blo), nil
 }
 
 //根据合约[id]获取合约　处理主节点
@@ -80,6 +81,7 @@ func GetContractMainPubkeyById(contractId string) (string, error) {
 
 	var blo string
 	err = res.One(&blo)
+
 	if err != nil {
 		log.Fatalf(err.Error())
 		//fmt.Printf("Error scanning database result: %s", err)
@@ -89,29 +91,29 @@ func GetContractMainPubkeyById(contractId string) (string, error) {
 }
 
 // 根据合约[id]获取所有 vote
-func GetVotesByContractId(contractId string) (model.Votes, error) {
-	var blo model.Votes
+func GetVotesByContractId(contractId string) (string, error) {
 
 	if contractId == "" {
-		return blo, errors.New("contractId blank")
+		return "", errors.New("contractId blank")
 	}
 
 	session := ConnectDB(dbname)
 	res, err := r.Table(table_votes).Filter(r.Row.Field("vote").
 		Field("vote_for_contract").Eq(contractId)).Run(session)
+
 	if err != nil {
 		log.Fatalf(err.Error())
-		return blo, errors.New(err.Error())
+		return "", errors.New(err.Error())
 	}
 
-
-	err = res.One(&blo)
+	var blo []map[string]interface{}
+	err = res.All(&blo)
 	if err != nil {
 		log.Fatalf(err.Error())
 		//fmt.Printf("Error scanning database result: %s", err)
-		return blo, errors.New(err.Error())
+		return "", errors.New(err.Error())
 	}
-	return blo, nil
+	return common.Serialize(blo), nil
 }
 
 // contract serialize contract string

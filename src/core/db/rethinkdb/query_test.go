@@ -3,7 +3,7 @@ package rethinkdb
 import (
 	"fmt"
 	"testing"
-
+	"encoding/json"
 	"unicontract/src/common"
 	"unicontract/src/core/model"
 )
@@ -77,11 +77,16 @@ func Test_InsertContractStruct(t *testing.T) {
 
 func Test_GetContractById(t *testing.T) {
 	contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a567569"
-	contract, err := GetContractById(contractId)
+	/*-------------------examples:------------------*/
+	contractStr, err := GetContractById(contractId)
+	var contract model.ContractModel
+	json.Unmarshal([]byte(contractStr), &contract)
+
 	if err != nil {
 		fmt.Println("error Test_GetContractById")
 	}
 	fmt.Println(contract)
+	fmt.Println(common.SerializePretty(contract))
 }
 
 func Test_GetContractMainPubkeyById(t *testing.T) {
@@ -92,3 +97,39 @@ func Test_GetContractMainPubkeyById(t *testing.T) {
 	}
 	fmt.Println(main_pubkey)
 }
+
+func Test_InsertVote(t *testing.T){
+	vote := model.Vote{}
+
+	vote.NodePubkey = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	voteBody := &vote.VoteBody
+	voteBody.Timestamp = common.GenTimestamp()
+	voteBody.IsValid = true
+	voteBody.InvalidReason = ""
+	voteBody.VoteType = "CONTRACT"
+	voteBody.VoteForContract = "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a567569"
+	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	voteBodyStr := common.Serialize(voteBody)
+	vote.Id = common.HashData(voteBodyStr)
+	isTrue := InsertVote(common.Serialize(vote))
+	if isTrue {
+		fmt.Println("insert vote success!")
+	}
+}
+
+func Test_GetVotesByContractId(t *testing.T) {
+	contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a567569"
+	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
+
+	/*-------------------examples:------------------*/
+	votesStr, err  :=  GetVotesByContractId(contractId)
+	var votes []model.ContractModel
+	json.Unmarshal([]byte(votesStr), &votes)
+
+	if err != nil {
+		fmt.Println("GetVotesByContractId fail!")
+	}
+	//fmt.Println(votes)
+	fmt.Println(common.SerializePretty(votes))
+}
+

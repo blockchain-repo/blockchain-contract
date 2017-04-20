@@ -8,14 +8,12 @@ import (
 
 func Test_Votes(t *testing.T) {
 	//create new obj
-	votes := Votes{}
-	votes.VotesWithoutId.NodePubkey = "2123123"
-	votes.NodePubkey = "123123"
-	fmt.Println(votes)
-	result := common.SerializePretty(votes)
+	vote := Vote{}
+	vote.NodePubkey = "2123123"
+	vote.NodePubkey = "123123"
+	fmt.Println(vote)
+	result := common.SerializePretty(vote)
 	fmt.Println(result)
-	result2 := common.SerializePretty(votes.VotesWithoutId)
-	fmt.Println(result2)
 
 	//var str interface{}
 	//str = "334"
