@@ -13,7 +13,7 @@ type Vote struct {
 	Timestamp       string `json:"timestamp"`         //节点投票时间戳
 }
 
-type VotesWithoutId struct{
+type VotesWithoutId struct {
 	NodePubkey string `json:"node_pubkey"` //投票节点的公钥
 	Vote       Vote   `json:"vote"`        //投票信息
 	Signature  string `json:"signature"`   //投票节点签名
@@ -21,7 +21,7 @@ type VotesWithoutId struct{
 
 // table [vote]
 type Votes struct {
-	Id         string `json:"id"`          //投票唯一标识ID，最投票主体信息计算hash
+	Id string `json:"id"` //投票唯一标识ID，最投票主体信息计算hash
 	VotesWithoutId
 }
 
@@ -102,10 +102,17 @@ func (v *Votes) DecideVotes(n_voters int, n_valid int, n_invalid int) string {
 // TODO Verify the signature of a vote
 func (v *Votes) VerifyVoteSignature(vote Votes) bool {
 	signature := vote.Signature
-	pk_base58 := vote.NodePubkey
+	pub := vote.NodePubkey
 	body := vote.ToString()
-	public_key := common.Sign(pk_base58, body)
-	return common.Verify(public_key, body, signature)
+	return common.Verify(pub, body, signature)
+}
+
+func (v *Votes) SignVote(vote Votes) string {
+	//TODO priv_key
+	priv_key := "6hXsHQ4fdWQ9UY1XkBYCYRouAagRW8rXxYSLgpveQNYY"
+	msg := vote.ToString()
+	sig := common.Sign(priv_key, msg)
+	return sig
 }
 
 func (v *Votes) VerifyVoteSchema() bool {
