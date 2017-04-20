@@ -6,7 +6,7 @@ import (
 )
 
 func WriteContract(contract model.ContractModel) {
-	//TODO
+	//TODO keyrings
 	contract.MainPubkey = "EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"
 	str := contract.ToString()
 	r.Insert("Unicontract","Contract",str)

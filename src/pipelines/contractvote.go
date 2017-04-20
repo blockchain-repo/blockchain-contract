@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"unicontract/src/core/model"
+	"unicontract/src/common"
 	r "unicontract/src/core/db/rethinkdb"
 )
 
@@ -44,8 +45,7 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		//TODO validate return bool
-		v :=model.Votes{}
+		v := model.Votes{}
 		if mod.Validate() {
 			//vote true
 			v.Vote.IsValid = true
@@ -73,7 +73,10 @@ func cvVote(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		//TODO make vote(Timestamp,NodePubkey,Sig)
+		//TODO make vote(NodePubkey)
+		v.NodePubkey = "EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"
+		v.Signature = v.SignVote(v)
+		v.Vote.Timestamp = common.GenTimestamp()
 		out.Write(t)
 	}
 }
