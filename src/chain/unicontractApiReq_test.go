@@ -7,67 +7,89 @@ import (
 )
 
 /**
- * function : 1.合约查询 测试
+ * function : 1.创建合约 测试
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestContractQuery(t *testing.T)  {
-	result := ContractQuery("")
+func TestCreateContract(t *testing.T)  {
+	result := CreateContract("")
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
 
 /**
- * function : 2.合约跟踪 测试
+ * function : 2.创建合约交易 测试
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestContractTracking(t *testing.T) {
-	result := ContractTracking("")
+func TestCreateContractTx(t *testing.T) {
+	result := CreateContractTx("")
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
 
 /**
- * function : 3.合约资产冻结 测试
+ * function : 3.获取合约 测试
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestContractAssetFreeze(t *testing.T)  {
-	result := ContractAssetFreeze("")
+func TestGetContract(t *testing.T)  {
+	result := GetContract("")
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
 
 /**
- * function : 4.合约资产解冻 测试
+ * function : 4.获取合约交易 测试
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestContractAssetThaw(t *testing.T)  {
-	result := ContractAssetThaw("")
+func TestGetContractTx(t *testing.T)  {
+	result := GetContractTx("")
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
 
 /**
- * function : 5.合约交易创建 测试
+ * function : 5.获取合约记录 测试
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestCreateContractTran(t *testing.T)  {
-	result := CreateContractTran("")
+func TestGetContractRecord(t *testing.T)  {
+	result := GetContractRecord("")
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
 
 /**
- * function : 6.合约资产转移 测试
+ * function : 6.冻结资产 测试
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestTransferContractTran(t *testing.T)  {
-	result := TransferContractTran("")
+func TestFreezeAsset(t *testing.T)  {
+	result := FreezeAsset("")
+	fmt.Println(result)
+	fmt.Println(reflect.TypeOf(result))
+}
+
+/**
+ * function : 7.解冻资产 测试
+ * param   : jsonBody interface{}
+ * return : requestHandler.ResponseResult struct
+ */
+func TestUnfreezeAsset(t *testing.T)  {
+	result := UnfreezeAsset("")
+	fmt.Println(result)
+	fmt.Println(reflect.TypeOf(result))
+}
+
+/**
+ * function : 8.查询冻结资产 测试
+ * param   : jsonBody interface{}
+ * return : requestHandler.ResponseResult struct
+ */
+func TestFrozenAsset(t *testing.T)  {
+	result := FrozenAsset("")
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }

@@ -4,65 +4,79 @@ port: "8088"
 
 #请求头
 head:
-  Content-Type: "application/x-protobuf"
-  RequestDataType: "proto"
+  Content-Type: "application/json"
 
-#1.合约查询
-ContractQuery:
+#1.创建合约
+CreateContract:
   method: "post"
-  path: "/v1/cc"
+  path: "/uniledger/v1/contract/createContract"
 
   jsonBody:
     beginTime: "123"
     endTime: "123"
 
-#2.合约跟踪
-ContractTracking:
+#2.创建合约交易
+CreateContractTx:
   method: "post"
-  path: "/v1/contract/create"
+  path: "/uniledger/v1/contract/createContractTx"
 
   jsonBody:
     beginTime: "123"
     endTime: "123"
 
-#3.合约资产冻结
-ContractAssetFreeze:
+#3.获取合约
+GetContract:
   method: "put"
-  path: "/v1/wsp"
+  path: "/uniledger/v1/contract/getContract"
 
   jsonBody:
     beginTime: "222"
     endTime: "222"
 
-#4.合约资产解冻
-ContractAssetThaw:
+#4.获取合约交易
+GetContractTx:
   method: "post"
-  path: "/v1/cc"
+  path: "/uniledger/v1/contract/getContractTx"
 
   jsonBody:
     beginTime: "123"
     endTime: "123"
 
-#5.合约交易创建
-CreateContractTran:
+#5.获取合约记录
+GetContractRecord:
   method: "post"
-  path: "/v1/cc"
+  path: "/uniledger/v1/contract/getContractRecord"
 
   jsonBody:
     beginTime: "123"
     endTime: "123"
 
-#6.合约资产转移
-TransferContractTran:
+#6.冻结资产
+FreezeAsset:
   method: "post"
-  path: "/v1/cc"
+  path: "/uniledger/v1/contract/freezeAsset"
 
   jsonBody:
     beginTime: "123"
     endTime: "123"
 
+#7.解冻资产
+UnfreezeAsset:
+  method: "post"
+  path: "/uniledger/v1/contract/unfreezeAsset"
 
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
 
+#8.查询冻结资产
+FrozenAsset:
+  method: "post"
+  path: "/uniledger/v1/contract/frozenAsset"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
 
 
 

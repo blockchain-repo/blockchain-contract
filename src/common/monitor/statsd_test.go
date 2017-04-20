@@ -4,6 +4,7 @@ import (
 	"testing"
 	"fmt"
 	"time"
+	"math/rand"
 )
 
 /**
@@ -20,11 +21,10 @@ func TestGetMonitorConfig(t *testing.T) {
  */
 func TestGetMonitorParam(t *testing.T){
 
-	address,prefix,simpleRate,flushTime := _GetMonitorParam()
+	address,prefix,maxPacketSize := _GetMonitorParam()
 	fmt.Println(address)
 	fmt.Println(prefix)
-	fmt.Println(simpleRate)
-	fmt.Println(flushTime)
+	fmt.Println(maxPacketSize)
 }
 
 /**
@@ -44,7 +44,7 @@ func TestGetMonitor(t *testing.T) {
 /**
  * function : 测试 单例模式
  */
-func TestGetMonitorClient(t *testing.T) {
+func Test_GetMonitorClient(t *testing.T) {
 	monitor := _GetMonitorClient()
 	fmt.Println(monitor)
 
@@ -96,8 +96,8 @@ func TestGague(t *testing.T){
 func TestCount(t *testing.T){
 	fmt.Println("begin:",time.Now())
 	for i := 1; i <= 100000; i++ {
-		Monitor.Count("CountTest3",i)
-		Monitor.Count("CountTest4",100000-i)
+		Monitor.Count("CountTest1",i)
+		Monitor.Count("CountTest2",100000-i)
 	}
 	fmt.Println("end:",time.Now())
 }
@@ -107,7 +107,7 @@ func TestCount(t *testing.T){
  */
 func TestIncrement(t *testing.T){
 	fmt.Println("begin:",time.Now())
-	for i := 1; i <= 100000; i++ {
+	for i := 1; i <= 10000; i++ {
 		Monitor.Increment("IncrementTest")
 	}
 	fmt.Println("end:",time.Now())
@@ -118,20 +118,129 @@ func TestIncrement(t *testing.T){
  */
 func TestTest(t *testing.T){
 	fmt.Println("begin:",time.Now())
-	for i := 1; i <= 10000000; i++ {
-		Monitor.Gauge("Twa",i)
+	for i := 1; i <= 1000; i++ {
+		Monitor.Gauge("Twa",20000)
+		Monitor.Timing("TimeTest",11)
 	}
 	fmt.Println("end:",time.Now())
 
 }
 
+/**
+ * function : 测试 方法
+ */
+func TestTiming(t *testing.T){
+	for i := 1;i<=1000;i++ {
+		begin := time.Now().UnixNano()/1000000
+		end := time.Now().UnixNano()/1000000
+		time := end - begin
+		Monitor.Timing("TimeTest",time)
+	}
+}
+
+/**
+ * function : 测试 方法
+ */
+func TestNewTiming(t *testing.T){
+	for i:=1;i<=100;i++ {
+		Monitor.Increment("WJT")
+		Monitor.Flush()
+	}
+}
+
+/**
+ * function : 测试 方法
+ */
+func TestGaGUE(t *testing.T){
+
+	for i:=1;i<=6000;i++ {
+		if i == 6000{
+			fmt.Println(time.Now())
+			Monitor.Gauge("unichain",rand.Int())
+		}
+	}
+
+}
+
+/**
+ * function : 测试 方法
+ */
+func TestGague1(t *testing.T){
+	begin := time.Now().UnixNano()/1000000
+	fmt.Println("begin:",time.Now().UnixNano()/1000000)
+	for i:=1;i<=10000;i++ {
+		Monitor.Increment("ssss")
+		Monitor.Gauge("zzz",i)
+	}
+	fmt.Println("end:",time.Now().UnixNano()/1000000)
+	end := time.Now().UnixNano()/1000000
+	fmt.Println(end -begin)
+}
+
+/**
+ * function : 测试 方法
+ */
+func TestTime2(t *testing.T){
+
+	monitorFunc := func(){
+		defer Monitor.NewTiming().Send("AA")
+	}
+
+	monitorFunc()
+}
 
 
+/**
+ * function : 测试 方法
+ */
+func TestTime3(t *testing.T){
+	monitor1 := _GetMonitorClient()
+	//begin := time.Now().UnixNano()/1000000
+	//end := time.Now().UnixNano()/1000000
+	//timeT := end - begin
+	monitor1.Timing("aaaaaaaaaaaaa",1)
+	monitor1.Timing("aaaaaaaaaaaaa",2)
+	monitor1.Timing("aaaaaaaaaaaaa",3)
+	monitor1.Flush()
+	monitor1.Timing("aaaaaaaaaaaaa",4)
+	monitor1.Timing("aaaaaaaaaaaaa",5)
+	monitor1.Timing("aaaaaaaaaaaaa",6)
+	monitor1.Flush()
+	fmt.Println(time.Now())
+}
 
+/**
+ * function : 测试 方法
+ */
+func TestTime(t *testing.T){
 
+}
 
+/**
+ * function : 测试 方法
+ */
+func TestTime5(t *testing.T){
+	monitor1 := _GetMonitorClient()
+	for i:=1;i<=5;i++ {
 
+		monitor1.Count("CCCCCCCCCCCCCCCCCC",-2)
+	}
 
+	monitor1.Flush()
+
+}
+
+/**
+ * function : 测试 方法
+ */
+func TestTime6(t *testing.T){
+	monitor1 := _GetMonitorClient()
+	for i:=1;i<=100000;i++ {
+		monitor1.Unique("AAA","SSSSSSSSS")
+	}
+	monitor1.Flush()
+
+}
 
 
 

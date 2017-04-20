@@ -3,67 +3,89 @@ package chain
 import "unicontract/src/common/requestHandler"
 
 /**
- * function : 1.合约查询
+ * function : 1.创建合约
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func ContractQuery(jsonBody interface{})  *requestHandler.ResponseResult{
+func CreateContract(jsonBody interface{})  *requestHandler.ResponseResult{
 	yamlName := "unicontractApiConf.yaml"
-	apiName := "ContractQuery"
+	apiName := "CreateContract"
 	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
- * function : 2.合约跟踪
+ * function : 2.创建合约交易
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func ContractTracking(jsonBody interface{}) *requestHandler.ResponseResult{
+func CreateContractTx(jsonBody interface{}) *requestHandler.ResponseResult{
 	yamlName := "unicontractApiConf.yaml"
-	apiName := "ContractTracking"
+	apiName := "CreateContractTx"
 	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
- * function : 3.合约资产冻结
+ * function : 3.获取合约
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func ContractAssetFreeze(jsonBody interface{})  *requestHandler.ResponseResult{
+func GetContract(jsonBody interface{})  *requestHandler.ResponseResult{
 	yamlName := "unicontractApiConf.yaml"
-	apiName := "ContractAssetFreeze"
+	apiName := "GetContract"
 	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
- * function : 4.合约资产解冻
+ * function : 4.获取合约交易
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func ContractAssetThaw(jsonBody interface{})  *requestHandler.ResponseResult{
+func GetContractTx(jsonBody interface{})  *requestHandler.ResponseResult{
 	yamlName := "unicontractApiConf.yaml"
-	apiName := "ContractAssetThaw"
+	apiName := "GetContractTx"
 	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
- * function : 5.合约交易创建
+ * function : 5.获取合约记录
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func CreateContractTran(jsonBody interface{})  *requestHandler.ResponseResult{
+func GetContractRecord(jsonBody interface{})  *requestHandler.ResponseResult{
 	yamlName := "unicontractApiConf.yaml"
-	apiName := "CreateContractTran"
+	apiName := "GetContractRecord"
 	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
- * function : 6.合约资产转移
+ * function : 6.冻结资产
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TransferContractTran(jsonBody interface{})  *requestHandler.ResponseResult{
+func FreezeAsset(jsonBody interface{})  *requestHandler.ResponseResult{
 	yamlName := "unicontractApiConf.yaml"
-	apiName := "TransferContractTran"
+	apiName := "FreezeAsset"
+	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+}
+
+/**
+ * function : 7.解冻资产
+ * param   : jsonBody interface{}
+ * return : requestHandler.ResponseResult struct
+ */
+func UnfreezeAsset(jsonBody interface{})  *requestHandler.ResponseResult{
+	yamlName := "unicontractApiConf.yaml"
+	apiName := "UnfreezeAsset"
+	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+}
+
+/**
+ * function : 8.查询冻结资产
+ * param   : jsonBody interface{}
+ * return : requestHandler.ResponseResult struct
+ */
+func FrozenAsset(jsonBody interface{})  *requestHandler.ResponseResult{
+	yamlName := "unicontractApiConf.yaml"
+	apiName := "FrozenAsset"
 	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }

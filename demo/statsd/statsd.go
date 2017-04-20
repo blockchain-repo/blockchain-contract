@@ -2,7 +2,6 @@ package statsd
 
 import (
 	"log"
-	"runtime"
 	"time"
 
 	"github.com/alexcesaro/statsd"
@@ -26,32 +25,32 @@ func Example() {
 		// just log the error and go on.
 		log.Print(err)
 	}
-	defer c.Close()
 
 	// Increment a counter.
-	c.Increment("foo.counter")
-
-	// Gauge something.
-	c.Gauge("num_goroutine", runtime.NumGoroutine())
-
-	// Time something.
-	t := c.NewTiming()
-	ping("http://example.com/")
-	t.Send("homepage.response_time")
-
-	// It can also be used as a one-liner to easily time a function.
-	pingHomepage := func() {
-		defer c.NewTiming().Send("homepage.response_time")
-
-		ping("http://example.com/")
-	}
-	pingHomepage()
-
-	// Cloning a Client allows using different parameters while still using the
-	// same connection.
-	// This is way cheaper and more efficient than using New().
-	stat := c.Clone(statsd.Prefix("http"), statsd.SampleRate(0.2))
-	stat.Increment("view") // Increments http.view
+	c.Gauge("GGGGG",1)
+	c.Flush()
+	//
+	//// Gauge something.
+	//c.Gauge("num_goroutine", runtime.NumGoroutine())
+	//
+	//// Time something.
+	//t := c.NewTiming()
+	//ping("http://example.com/")
+	//t.Send("homepage.response_time")
+	//
+	//// It can also be used as a one-liner to easily time a function.
+	//pingHomepage := func() {
+	//	defer c.NewTiming().Send("homepage.response_time")
+	//
+	//	ping("http://example.com/")
+	//}
+	//pingHomepage()
+	//
+	//// Cloning a Client allows using different parameters while still using the
+	//// same connection.
+	//// This is way cheaper and more efficient than using New().
+	//stat := c.Clone(statsd.Prefix("http"), statsd.SampleRate(0.2))
+	//stat.Increment("view") // Increments http.view
 }
 
 //func ExampleClient_Clone() {
