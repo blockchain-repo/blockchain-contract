@@ -7,7 +7,17 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
-var Tables = [5]string{"Contracts", "Votes", "ContractTasks", "ConsensusFailures","ContractOutputs"}
+const DBNAME = "Unicontract"
+
+const (
+	TABLE_CONTRACTS          = "Contracts"
+	TABLE_VOTES              = "Votes"
+	TABLE_CONTRACT_TASKS     = "ContractTasks"
+	TABLE_CONSENSUS_FAILURES = "ConsensusFailues"
+	TABLE_CONTRACT_OUTPUTS   = "ContractOutputs"
+)
+
+var Tables = []string{TABLE_CONTRACTS, TABLE_VOTES, TABLE_CONTRACT_TASKS, TABLE_CONSENSUS_FAILURES,TABLE_CONTRACT_OUTPUTS}
 
 func CreateTable(db string, name string) {
 	session := ConnectDB(db)
@@ -40,7 +50,7 @@ func DropDatabase(name string) {
 }
 
 func InitDatabase() {
-	dbname := "Unicontract"
+	dbname := DBNAME
 	CreateDatabase(dbname)
 
 	for _, x := range Tables {

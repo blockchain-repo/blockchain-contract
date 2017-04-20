@@ -47,18 +47,9 @@ func Delete(db string, name string, id string) r.WriteResponse {
 
 /*----------------------------unicontract ops-------------------------------------*/
 
-const dbname = "Unicontract"
-const (
-	table_contracts         = "Contracts"
-	table_votes            = "Votes"
-	table_contract_tasks   = "ContractTasks"
-	table_consensus_failures   = "ConsensusFailues"
-	table_contract_outputs = "ContractOutputs"
-)
-
 // 根据合约[id]获取合约
 func GetContractById(contractId string) (string, error) {
-	res := Get(dbname, table_contracts, contractId)
+	res := Get(DBNAME, TABLE_CONTRACTS, contractId)
 
 	var blo map[string]interface{}
 	err := res.One(&blo)
@@ -72,8 +63,8 @@ func GetContractById(contractId string) (string, error) {
 
 //根据合约[id]获取合约　处理主节点
 func GetContractMainPubkeyById(contractId string) (string, error) {
-	session := ConnectDB(dbname)
-	res, err := r.Table(table_contracts).Get(contractId).Field("main_pubkey").Run(session)
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).Get(contractId).Field("main_pubkey").Run(session)
 	if err != nil {
 		log.Fatalf(err.Error())
 		return "", errors.New(err.Error())
@@ -97,9 +88,8 @@ func GetVotesByContractId(contractId string) (string, error) {
 		return "", errors.New("contractId blank")
 	}
 
-	session := ConnectDB(dbname)
-	res, err := r.Table(table_votes).Filter(r.Row.Field("vote").
-		Field("vote_for_contract").Eq(contractId)).Run(session)
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("vote").Field("vote_for_contract").Eq(contractId)).Run(session)
 
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -122,7 +112,7 @@ func InsertContract(contract string) bool {
 		return false
 	}
 
-	res := Insert(dbname, table_contracts, contract)
+	res := Insert(DBNAME, TABLE_CONTRACTS, contract)
 	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
@@ -136,7 +126,7 @@ func InsertVote(vote string) bool {
 		return false
 	}
 
-	res := Insert(dbname, table_votes, vote)
+	res := Insert(DBNAME, TABLE_VOTES, vote)
 	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
@@ -150,7 +140,7 @@ func InsertContractOutput(contractOutput string) bool {
 		return false
 	}
 
-	res := Insert(dbname, table_contract_outputs, contractOutput)
+	res := Insert(DBNAME, TABLE_CONTRACT_OUTPUTS, contractOutput)
 	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
@@ -164,7 +154,7 @@ func InsertContractTask(vote string) bool {
 		return false
 	}
 
-	res := Insert(dbname, table_votes, vote)
+	res := Insert(DBNAME, TABLE_VOTES, vote)
 	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
@@ -178,7 +168,7 @@ func InsertConsensusFail(vote string) bool {
 		return false
 	}
 
-	res := Insert(dbname, table_votes, vote)
+	res := Insert(DBNAME, TABLE_VOTES, vote)
 	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
