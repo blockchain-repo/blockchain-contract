@@ -40,7 +40,7 @@ func (v *Vote) PartitionEligibleVotes(votes []Vote, eligible_voters []string) ([
 			}
 		}
 		if voter_eligible != nil {
-			if v.VerifyVoteSignature(_votes) {
+			if _votes.VerifyVoteSignature() {
 				eligible = append(eligible[:], _votes)
 				continue
 			}
@@ -95,17 +95,17 @@ func (v *Vote) DecideVotes(n_voters int, n_valid int, n_invalid int) string {
 }
 
 // TODO Verify the signature of a vote
-func (v *Vote) VerifyVoteSignature(vote Vote) bool {
-	signature := vote.Signature
-	pub := vote.NodePubkey
-	body := vote.ToString()
+func (v *Vote) VerifyVoteSignature() bool {
+	signature := v.Signature
+	pub := v.NodePubkey
+	body := v.ToString()
 	return common.Verify(pub, body, signature)
 }
 
-func (v *Vote) SignVote(vote Vote) string {
+func (v *Vote) SignVote() string {
 	//TODO priv_key
 	priv_key := "6hXsHQ4fdWQ9UY1XkBYCYRouAagRW8rXxYSLgpveQNYY"
-	msg := vote.ToString()
+	msg := v.ToString()
 	sig := common.Sign(priv_key, msg)
 	return sig
 }
@@ -116,4 +116,8 @@ func (v *Vote) VerifyVoteSchema() bool {
 
 func (v *Vote) ToString() string {
 	return common.Serialize(v)
+}
+
+func (v *Vote) GenerateId() string {
+	return common.GenerateUUID()
 }

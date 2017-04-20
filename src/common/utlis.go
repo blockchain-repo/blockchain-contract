@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"time"
+	"github.com/google/uuid"
 )
 
 func GenDate() string {
@@ -129,3 +130,7 @@ func TypeToMap(name interface{}) map[interface{}]interface{}{
 	return value
 }
 
+// UUID
+func GenerateUUID() string{
+	return uuid.New().String()
+}
