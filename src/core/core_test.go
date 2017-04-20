@@ -21,6 +21,6 @@ func TestWriteContract(t *testing.T) {
 	}
 	// sign for contract
 	signatureContract := contractModel.Sign(private_key)
-	contractModel.Signature = signatureContract
+	_ = signatureContract
 	WriteContract(contractModel)
 }

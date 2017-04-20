@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
 	"unicontract/src/core/protos"
@@ -11,8 +12,6 @@ type ContractModel struct {
 	Id         string `json:"id"`          //合约唯一标识ID，对合约主体信息计算hash
 	Version    int8   `json:"version"`     //合约描述结构版本号
 	MainPubkey string `json:"main_pubkey"` //合约处理主节点公钥
-	NodePubkey string `json:"node_pubkey"` //合约运行节点公钥
-	Signature  string `json:"signature"`   //合约运行节点签名
 	Timestamp  string `json:"timestamp"`   //合约运行跟踪时间戳（以合约执行层输出结果时间为准）
 
 	//合约运行节点投票公钥环
@@ -36,17 +35,78 @@ func (c *ContractModel) Validate() bool {
 
 //Create a signature for the contract
 func (c *ContractModel) Sign(private_key string) string {
-	contract_serialized := c.ToString()
+	/*-------------module deep copy start --------------*/
+	var contractClone = c.Contract
+
+	// new obj
+	var temp protos.Contract
+
+	contractCloneBytes, _ := json.Marshal(contractClone)
+	err := json.Unmarshal(contractCloneBytes, &temp)
+	if err != nil {
+		beego.Error("Unmarshal error ", err)
+	}
+	//todo
+	temp.ContractSignatures = nil
+	contract_serialized := common.Serialize(temp)
+	/*-------------module deep copy end --------------*/
+
 	signatureContract := common.Sign(private_key, contract_serialized)
 	return signatureContract
 }
 
 // Check the validity of a Contract's signature
 func (c *ContractModel) IsSignatureValid() bool {
-	contract_serialized := c.ToString()
-	node_pubkey := c.NodePubkey
-	signatureContract := c.Signature
-	return common.Verify(node_pubkey, contract_serialized, signatureContract)
+
+	/*-------------module deep copy start --------------*/
+	var contractClone = c.Contract
+
+	// new obj
+	var temp protos.Contract
+
+	contractCloneBytes, _ := json.Marshal(contractClone)
+	err := json.Unmarshal(contractCloneBytes, &temp)
+	if err != nil {
+		beego.Error("Unmarshal error ", err)
+	}
+	//todo
+	temp.ContractSignatures = nil
+	contract_serialized := common.Serialize(temp)
+	/*-------------module deep copy end --------------*/
+
+	contractOwners := c.Contract.ContractOwners
+	contractSignatures := c.Contract.ContractSignatures
+
+	contractOwners_len := len(contractOwners)
+
+	if contractOwners_len != len(contractSignatures) {
+		return false
+	}
+
+	for index, contractOwner := range contractOwners {
+		if contractOwner == "" {
+			return false
+		}
+
+		contractSignature := contractSignatures[index]
+		if contractOwner != contractSignature.OwnerPubkey {
+			return false
+		}
+
+		// todo
+		if contractSignature.Signature == "" {
+			return false
+		}
+
+		// contract signature verify
+		verifyFlag := common.Verify(contractOwner, contract_serialized, contractSignature.Signature)
+		if !verifyFlag {
+			return false
+		}
+
+	}
+
+	return true
 }
 
 // TODO return new Contract with attach info
@@ -56,13 +116,9 @@ func (c *ContractModel) ToDict() *ContractModel {
 		panic("Empty contract creation is not allowed")
 	}
 	// hash the contract in [contractModel]
-	c.Id = c.GetId()
-	// todo NodePubkey
-	c.NodePubkey = ""
+	c.Id = c.GenerateId()
 	// todo MainPubkey
 	c.MainPubkey = ""
-	// todo Signature
-	c.Signature = ""
 	// todo voters
 	c.Voters = []string{}
 	c.Timestamp = common.GenTimestamp()
@@ -78,35 +134,35 @@ func (c *ContractModel) ToString() string {
 }
 
 // return the  id (hash generate)
-func (c *ContractModel) GetId() string {
+func (c *ContractModel) GenerateId() string {
 	contract_serialized := common.Serialize(c.Contract)
 	return common.HashData(contract_serialized)
 }
 
 //Validate the contract
 func (c *ContractModel) validateContract() bool {
-	federation := c.Voters
-	//TODO 
-	nodePubkey := c.NodePubkey
-	flag := false
-	for _, vote := range federation {
-		if vote == nodePubkey {
-			flag = true
-			break
-		}
-	}
-
-	if !flag {
-		beego.Error("Only federation nodes can create contract")
-		//panic("Only federation nodes can create contract")
-		return false
-	}
-
-	if !c.IsSignatureValid() {
-		beego.Error("Invalid contract signature")
-		//panic("Invalid contract signature")
-		return false
-	}
+	//federation := c.Voters
+	////TODO
+	//nodePubkey := c.NodePubkey
+	//flag := false
+	//for _, vote := range federation {
+	//	if vote == nodePubkey {
+	//		flag = true
+	//		break
+	//	}
+	//}
+	//
+	//if !flag {
+	//	beego.Error("Only federation nodes can create contract")
+	//	//panic("Only federation nodes can create contract")
+	//	return false
+	//}
+	//
+	//if !c.IsSignatureValid() {
+	//	beego.Error("Invalid contract signature")
+	//	//panic("Invalid contract signature")
+	//	return false
+	//}
 	return true
 }
 

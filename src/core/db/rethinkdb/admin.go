@@ -16,7 +16,6 @@ func Reconfig(db string,shards int,replicas int) *r.Cursor {
 	if err != nil {
 		log.Fatalf("Error reconfig database: %s", err)
 	}
-
 	return resp
 }
 

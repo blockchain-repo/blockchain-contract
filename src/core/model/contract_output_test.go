@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 	"unicontract/src/common"
-	"unicontract/src/core/protos"
 )
 
 func Test_ContractOutput(t *testing.T) {
@@ -12,11 +11,11 @@ func Test_ContractOutput(t *testing.T) {
 	contractOutput.Id = "1"
 	transaction := contractOutput.Transaction
 
-	conditions := make([]*protos.ConditionsItem, 3)
-	conditions[0] = &protos.ConditionsItem{
+	conditions := make([]*ConditionsItem, 3)
+	conditions[0] = &ConditionsItem{
 		Amount: 14213,
 		Cid:    123,
-		Condition: &protos.Condition{
+		Condition: &Condition{
 			Details: nil,
 			Uri:     "dd-dsd-qwq-ddd-aa",
 		},
@@ -33,15 +32,15 @@ func Test_ContractOutput(t *testing.T) {
 	fmt.Println(result)
 }
 
-func Test_GetId(t *testing.T) {
+func Test_GenerateId(t *testing.T) {
 	contractOutput := ContractOutput{}
 	contractOutput.Id = "1"
 	transaction := contractOutput.Transaction
-	conditions := make([]*protos.ConditionsItem, 3)
-	conditions[0] = &protos.ConditionsItem{
+	conditions := make([]*ConditionsItem, 3)
+	conditions[0] = &ConditionsItem{
 		Amount: 14213,
 		Cid:    123,
-		Condition: &protos.Condition{
+		Condition: &Condition{
 			Details: nil,
 			Uri:     "dd-dsd-qwq-ddd-aa-ww",
 		},
@@ -61,7 +60,7 @@ func Test_GetId(t *testing.T) {
 	//	Signature:"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 	//}
 
-	relation_signatures := []*protos.RelactionSignature{
+	relation_signatures := []*RelactionSignature{
 		{
 			ContractNodePubkey: "JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 			Signature:          "EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
@@ -71,7 +70,7 @@ func Test_GetId(t *testing.T) {
 			Signature:          "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
 		},
 	}
-	relaction := protos.Relaction{
+	relaction := Relaction{
 		Signatures: relation_signatures,
 		ContractId: "11",
 		TaskId:     "1212",
@@ -83,7 +82,7 @@ func Test_GetId(t *testing.T) {
 	//fmt.Printf("1111%+v\n", transaction)
 	fmt.Println(transaction)
 	//result := common.Serialize(contractOutput)
-	contract_output_id := contractOutput.GetId()
+	contract_output_id := contractOutput.GenerateId()
 	fmt.Println("contract_output_id= " + contract_output_id)
 
 	//transaction.Relaction.Signatures = nil

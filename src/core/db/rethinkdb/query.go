@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"errors"
-	"fmt"
 	r "gopkg.in/gorethink/gorethink.v3"
 	"unicontract/src/common"
 )
@@ -47,6 +46,20 @@ func Delete(db string, name string, id string) r.WriteResponse {
 
 /*----------------------------unicontract ops-------------------------------------*/
 
+/*----------------------------- contracts start---------------------------------------*/
+// contract serialize contract string
+func InsertContract(contract string) bool {
+	if contract == "" {
+		return false
+	}
+
+	res := Insert(DBNAME, TABLE_CONTRACTS, contract)
+	if res.Inserted >= 1 {
+		return true
+	}
+	return false
+}
+
 // 根据合约[id]获取合约
 func GetContractById(contractId string) (string, error) {
 	res := Get(DBNAME, TABLE_CONTRACTS, contractId)
@@ -54,7 +67,6 @@ func GetContractById(contractId string) (string, error) {
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
-		fmt.Printf("Error scanning database result: %s", err)
 		return "", errors.New(err.Error())
 	}
 
@@ -75,10 +87,25 @@ func GetContractMainPubkeyById(contractId string) (string, error) {
 
 	if err != nil {
 		log.Fatalf(err.Error())
-		//fmt.Printf("Error scanning database result: %s", err)
 		return "", errors.New(err.Error())
 	}
 	return blo, nil
+}
+
+/*----------------------------- contracts end---------------------------------------*/
+
+/*----------------------------- votes start---------------------------------------*/
+// vote serialize vote string
+func InsertVote(vote string) bool {
+	if vote == "" {
+		return false
+	}
+
+	res := Insert(DBNAME, TABLE_VOTES, vote)
+	if res.Inserted >= 1 {
+		return true
+	}
+	return false
 }
 
 // 根据合约[id]获取所有 vote
@@ -100,40 +127,14 @@ func GetVotesByContractId(contractId string) (string, error) {
 	err = res.All(&blo)
 	if err != nil {
 		log.Fatalf(err.Error())
-		//fmt.Printf("Error scanning database result: %s", err)
 		return "", errors.New(err.Error())
 	}
 	return common.Serialize(blo), nil
 }
 
-// contract serialize contract string
-func InsertContract(contract string) bool {
-	if contract == "" {
-		return false
-	}
+/*----------------------------- votes end---------------------------------------*/
 
-	res := Insert(DBNAME, TABLE_CONTRACTS, contract)
-	//fmt.Printf("%d row inserted", res.Inserted)
-	if res.Inserted >= 1 {
-		return true
-	}
-	return false
-}
-
-// vote serialize vote string
-func InsertVote(vote string) bool {
-	if vote == "" {
-		return false
-	}
-
-	res := Insert(DBNAME, TABLE_VOTES, vote)
-	//fmt.Printf("%d row inserted", res.Inserted)
-	if res.Inserted >= 1 {
-		return true
-	}
-	return false
-}
-
+/*----------------------------- contractOutputs start---------------------------------------*/
 // contractOutput serialize contractOutput string
 func InsertContractOutput(contractOutput string) bool {
 	if contractOutput == "" {
@@ -141,13 +142,39 @@ func InsertContractOutput(contractOutput string) bool {
 	}
 
 	res := Insert(DBNAME, TABLE_CONTRACT_OUTPUTS, contractOutput)
-	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
 	}
 	return false
 }
 
+// 根据合约[id]获取所有 vote
+func GetContractOutputByContractId(contractId string) (string, error) {
+
+	if contractId == "" {
+		return "", errors.New("contractId blank")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("vote").Field("vote_for_contract").Eq(contractId)).Run(session)
+
+	if err != nil {
+		log.Fatalf(err.Error())
+		return "", errors.New(err.Error())
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
+/*----------------------------- contractOutputs end---------------------------------------*/
+
+/*----------------------------- contractTask start---------------------------------------*/
 // vote serialize contract string
 func InsertContractTask(vote string) bool {
 	if vote == "" {
@@ -155,13 +182,15 @@ func InsertContractTask(vote string) bool {
 	}
 
 	res := Insert(DBNAME, TABLE_VOTES, vote)
-	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
 	}
 	return false
 }
 
+/*----------------------------- contractTask end---------------------------------------*/
+
+/*----------------------------- consensusFail start---------------------------------------*/
 // vote serialize contract string
 func InsertConsensusFail(vote string) bool {
 	if vote == "" {
@@ -169,9 +198,10 @@ func InsertConsensusFail(vote string) bool {
 	}
 
 	res := Insert(DBNAME, TABLE_VOTES, vote)
-	//fmt.Printf("%d row inserted", res.Inserted)
 	if res.Inserted >= 1 {
 		return true
 	}
 	return false
 }
+
+/*----------------------------- consensusFail end---------------------------------------*/
