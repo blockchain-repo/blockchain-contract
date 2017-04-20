@@ -86,6 +86,7 @@ func (c *ContractModel) GetId() string {
 //Validate the contract
 func (c *ContractModel) validateContract() bool {
 	federation := c.Voters
+	//TODO 
 	nodePubkey := c.NodePubkey
 	flag := false
 	for _, vote := range federation {

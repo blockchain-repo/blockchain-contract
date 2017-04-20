@@ -7,9 +7,6 @@ import (
 	"unicontract/src/core/protos"
 )
 
-type ContractOutputWithoutId struct {
-}
-
 // table [contract_output]
 type ContractOutput struct {
 	Id          string             `json:"id"`          //ContractOutput.Id
@@ -71,15 +68,9 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 		if contract_node_pubkey == "" {
 			invalid_signature_len += 1
 		} else {
-			//todo choice 1:  非法投票是否立即报错！
 			if voter != contract_node_pubkey || signature == "" {
-				return false
+				invalid_signature_len += 1
 			}
-
-			//todo choice 2: 非法投票不计算
-			//if voter != contract_node_pubkey || signature == "" {
-			//	invalid_signature_len += 1
-			//}
 		}
 
 	}

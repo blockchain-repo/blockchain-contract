@@ -27,7 +27,7 @@ func (v *Vote) ContractElection() {
 
 //  Filter votes from unknown nodes or nodes that are not listed on
 //	block. This is the primary Sybill protection.
-func (v *Vote) PartitionEligibleVotes(votes []Vote, eligible_voters []string) ([]Vote, []Vote) {
+func PartitionEligibleVotes(votes []Vote, eligible_voters []string) ([]Vote, []Vote) {
 	//eligible := make([]Votes, len(votes))
 	//ineligible := make([]Votes, len(votes))
 	var eligible []Vote
@@ -50,7 +50,7 @@ func (v *Vote) PartitionEligibleVotes(votes []Vote, eligible_voters []string) ([
 	return eligible, ineligible
 }
 
-func (v *Vote) CountVotes(eligible_votes []Vote) map[string]interface{} {
+func  CountVotes(eligible_votes []Vote) map[string]interface{} {
 
 	// Group by pubkey to detect duplicate voting
 	by_voter := make(map[Vote]bool)
@@ -110,14 +110,12 @@ func (v *Vote) SignVote() string {
 	return sig
 }
 
-func (v *Vote) VerifyVoteSchema() bool {
-	return true
-}
 
 func (v *Vote) ToString() string {
 	return common.Serialize(v)
 }
 
+// generate UUID
 func (v *Vote) GenerateId() string {
 	return common.GenerateUUID()
 }
