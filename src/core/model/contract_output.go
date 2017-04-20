@@ -91,7 +91,7 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 }
 
 // 判断hash，hash不包括voters的signatures
-func (c *ContractOutput) ValidteHash(id string) bool {
+func (c *ContractOutput) ValidateHash() bool {
 	hashId := id
 	rightId := c.GetId()
 	if hashId != rightId {
@@ -101,6 +101,6 @@ func (c *ContractOutput) ValidteHash(id string) bool {
 }
 
 //  判断是否有>1/2的有效签名。 return bool
-func (c *ContractOutput) ValidteSignature() bool {
+func (c *ContractOutput) ValidateSignature() bool {
 	return true
 }
