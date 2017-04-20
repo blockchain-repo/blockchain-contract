@@ -1,4 +1,4 @@
-package model
+package modVoteBodyel
 
 import (
 	"github.com/astaxie/beego"
