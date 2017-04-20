@@ -18,8 +18,8 @@ import (
 
 //---------------------------------------------------------------------------
 type _MyContract struct {
-	Contract model.ContractModel `json:'contract'`
-	SLVotes  []model.Vote        `json:'votes'`
+	model.ContractModel `json:'contract'`
+	SLVotes             []model.Vote `json:'votes'`
 }
 
 type _GetContractInput struct {
@@ -131,7 +131,7 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		input := _GetContractInput{Id: myContract.Contract.Id}
+		input := _GetContractInput{Id: myContract.Id}
 		slInput, err := json.Marshal(input)
 		if err != nil {
 			log.Fatalln(err.Error())
@@ -228,7 +228,7 @@ func _verifyVotes(mainPubkey, contractId string) ([]byte, bool, error) {
 
 	if bValid {
 		strContract, err := rethinkdb.GetContractById(contractId)
-		err = json.Unmarshal([]byte(strContract), &myContract.Contract)
+		err = json.Unmarshal([]byte(strContract), &myContract.ContractModel)
 		if err != nil {
 			return nil, false, err
 		}
