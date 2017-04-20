@@ -45,15 +45,15 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		v := model.Votes{}
+		v := model.Vote{}
 		if mod.Validate() {
 			//vote true
-			v.Vote.IsValid = true
+			v.VoteBody.IsValid = true
 		} else {
 			//vote flase
-			v.Vote.IsValid = false
+			v.VoteBody.IsValid = false
 		}
-		v.Vote.VoteForContract = mod.Id
+		v.VoteBody.VoteForContract = mod.Id
 		out.Write([]byte(v.ToString()))
 	}
 }
@@ -67,7 +67,7 @@ func cvVote(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
-		v :=model.Votes{}
+		v :=model.Vote{}
 		err := json.Unmarshal(t,&v)
 		if err != nil {
 			log.Fatalf(err.Error())
@@ -75,8 +75,9 @@ func cvVote(in io.Reader, out io.Writer) {
 		}
 		//TODO make vote(NodePubkey)
 		v.NodePubkey = "EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"
-		v.Signature = v.SignVote(v)
-		v.Vote.Timestamp = common.GenTimestamp()
+		v.Id = v.GenerateId()
+		v.Signature = v.SignVote()
+		v.VoteBody.Timestamp = common.GenTimestamp()
 		out.Write(t)
 	}
 }
