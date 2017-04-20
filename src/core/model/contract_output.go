@@ -92,7 +92,7 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 
 // 判断hash，hash不包括voters的signatures
 func (c *ContractOutput) ValidateHash() bool {
-	hashId := id
+	hashId := c.Id
 	rightId := c.GetId()
 	if hashId != rightId {
 		return false
