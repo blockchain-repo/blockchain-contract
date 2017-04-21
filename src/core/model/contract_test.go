@@ -32,20 +32,21 @@ func Test_Sign(t *testing.T) {
 func Test_IsSignatureValid(t *testing.T) {
 	//create new obj
 	contractModel := ContractModel{}
-	private_key := "C6WdHVbHAErN7KLoWs9VCBESbAXQG6PxRtKktWzoKytR"
+	private_key := "Cnodz1gyhaNoFcPCr72G9brFrGFfNJQUPFchGXyL11Pt"
 	// modify and set value for reference obj with &
 	contract := &contractModel.Contract
-	contract.CreatorPubkey = "6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo"
+	contractModel.MainPubkey = "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3"
+	contract.CreatorPubkey = "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3"
 	contract.Operation = "CREATE"
 	contract.ContractOwners = []string{
-		"6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo",
+		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 		//"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 	}
 	contractSignatures := []*protos.ContractSignature{
 		{
-			OwnerPubkey: "6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo",
-			Signature:   "5oq8mzZBMewyERy78cMyAzN9QcvnD5BxcqECKkMqdwyzPWCKwP6JBnEdATQf14LooN7AKS1FKV5AQ72hfHcRF4h3",
+			OwnerPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+			Signature:   "3XLffBVuFCZbZU1NcroQDSAgcdDtYQ2UK9ye9q9BzLaMiqjoHtJ3SirW5P9JJkjwAkC9CrguwKMRC36T2e769sqQ",
 			Timestamp:   common.GenTimestamp(),
 		},
 		//{
