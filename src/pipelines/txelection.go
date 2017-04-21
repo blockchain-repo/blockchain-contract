@@ -13,6 +13,7 @@ import (
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/chain"
+	"unicontract/src/config"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
@@ -51,9 +52,9 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 		}
 		//main node filter
 		mainNodeKey  := conout.Transaction.ContractModel.MainPubkey
-		//TODO get node pubkey
-		myNodeKey := ""
+		myNodeKey := config.Config.Keypair.PublicKey
 		if mainNodeKey != myNodeKey {
+			log.Printf("I am not the mainnode of the C-output %s",conout.Id)
 			continue
 		}
 		out.Write(t)
@@ -82,12 +83,12 @@ func txeValidate(in io.Reader, out io.Writer) {
 		}
 		if !coModel.ValidateHash() {
 			//invalid hash
-			log.Fatal(errors.New("invalid hash"))
+			log.Fatalln(errors.New("invalid hash"))
 			continue
 		}
 		if !coModel.ValidateContractOutput() {
 			//invalid signature
-			log.Fatal(errors.New("invalid signature"))
+			log.Fatalln(errors.New("invalid signature"))
 			continue
 		}
 		out.Write(t)
@@ -114,7 +115,7 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 		result := chain.GetContractTx("{'id':"+id+"}")
 
 		if result.Code != 200 {
-			//TODO error handling
+			//TODO error handling  Test
 			errors.New("")
 		}
 
@@ -140,7 +141,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		result := chain.CreateContractTx(t)
 		fmt.Print(result.Data)
 		if result.Code != 200 {
-			//TODO error handling
+			//TODO error handling Test
 			errors.New("")
 		}
 		out.Write(t)
