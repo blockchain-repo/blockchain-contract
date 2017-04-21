@@ -4,14 +4,15 @@
 1. sudo apt-get install git
 2. mkdir -p go/src && cd go/src
 2. git clone https://git.oschina.net/uni-ledger/unicontract.git
-4. ./build.sh init && . ~/.bashrc
+4. cd unicontract &&./build.sh init && . ~/.bashrc
+5. go run main.go
 
-### Contents
+### Project Contents
 ```
 bin:
 pkg:
 src:
-  |__unicontract
+  |__*unicontract
        |__ conf    配置文件
        |__ demo:   调用使用样例
        |__ src
@@ -26,7 +27,7 @@ src:
                  |__ db      合约db处理
                  |__ model   合约模型处理
                  |__ protos  合约接口描述proto
-             |__ pipelines: 流水线管道
+            |__ pipelines: 流水线管道
        |__ tools:  语法检查、逻辑检查等工具
        |__ verdor: 第三方包管理工具 govendor
 ```
@@ -43,5 +44,8 @@ unicontract:
       |__ unicontract.log.debug
 ```
 
-### Links
-- http://git.oschina.net/uni-ledger/unicontract/issues/6
+### Links for Developers
+- [Wiki](http://git.oschina.net/uni-ledger/unicontract/wikis/home)
+- [Open issues](http://git.oschina.net/uni-ledger/unicontract/issues)
+- [Useful links](http://git.oschina.net/uni-ledger/unicontract/issues/6)
+- [Gitter chatroom](https://gitter.im/uni-ledger/unicontract)
