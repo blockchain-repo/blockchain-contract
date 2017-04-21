@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
 	"unicontract/src/core/protos"
+	"fmt"
 )
 
 // table [contract]
@@ -22,14 +23,21 @@ type ContractModel struct {
 
 // validate the contract
 func (c *ContractModel) Validate() bool {
-	first_valid := c.validateContract()
-	if !first_valid {
+	headerValid := c.validateContractHeader()
+	if !headerValid {
 		return false
 	}
-	content_valid := c.validateContractContent()
-	if !content_valid {
+
+	idValid := c.Id == c.GenerateId()
+	if !idValid {
 		return false
 	}
+
+	signatureValid := c.IsSignatureValid()
+	if !signatureValid {
+		return false
+	}
+
 	return true
 }
 
@@ -46,7 +54,6 @@ func (c *ContractModel) Sign(private_key string) string {
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
-	//todo
 	temp.ContractSignatures = nil
 	contract_serialized := common.Serialize(temp)
 	/*-------------module deep copy end --------------*/
@@ -69,7 +76,6 @@ func (c *ContractModel) IsSignatureValid() bool {
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
-	//todo
 	temp.ContractSignatures = nil
 	contract_serialized := common.Serialize(temp)
 	/*-------------module deep copy end --------------*/
@@ -83,50 +89,43 @@ func (c *ContractModel) IsSignatureValid() bool {
 		return false
 	}
 
+	inValidSignatureCount := 0
 	for index, contractOwner := range contractOwners {
-		if contractOwner == "" {
+		if inValidSignatureCount >= (contractOwners_len+1)/2 {
 			return false
+		}
+
+		if contractOwner == "" {
+			inValidSignatureCount++
+			continue
 		}
 
 		contractSignature := contractSignatures[index]
 		if contractOwner != contractSignature.OwnerPubkey {
-			return false
+			inValidSignatureCount++
+			continue
 		}
 
-		// todo
 		if contractSignature.Signature == "" {
-			return false
+			inValidSignatureCount++
+			continue
 		}
 
 		// contract signature verify
 		verifyFlag := common.Verify(contractOwner, contract_serialized, contractSignature.Signature)
+		fmt.Println(contractOwner)
+		fmt.Println(contract_serialized)
+		fmt.Println(contractSignature.Signature)
 		if !verifyFlag {
-			return false
+			inValidSignatureCount++
+			continue
 		}
-
 	}
 
+	if inValidSignatureCount >= (contractOwners_len+1)/2 {
+		return false
+	}
 	return true
-}
-
-// TODO return new Contract with attach info
-func (c *ContractModel) ToDict() *ContractModel {
-	contract := &c.Contract
-	if contract == nil {
-		panic("Empty contract creation is not allowed")
-	}
-	// hash the contract in [contractModel]
-	c.Id = c.GenerateId()
-	// todo MainPubkey
-	c.MainPubkey = ""
-	// todo voters
-	c.Voters = []string{}
-	c.Timestamp = common.GenTimestamp()
-	// todo version
-	c.Version = 1
-	c.Contract = *contract
-
-	return c
 }
 
 func (c *ContractModel) ToString() string {
@@ -139,50 +138,28 @@ func (c *ContractModel) GenerateId() string {
 	return common.HashData(contract_serialized)
 }
 
-//Validate the contract
-func (c *ContractModel) validateContract() bool {
-	//federation := c.Voters
-	////TODO
-	//nodePubkey := c.NodePubkey
-	//flag := false
-	//for _, vote := range federation {
-	//	if vote == nodePubkey {
-	//		flag = true
-	//		break
-	//	}
-	//}
-	//
-	//if !flag {
-	//	beego.Error("Only federation nodes can create contract")
-	//	//panic("Only federation nodes can create contract")
-	//	return false
-	//}
-	//
-	//if !c.IsSignatureValid() {
-	//	beego.Error("Invalid contract signature")
-	//	//panic("Invalid contract signature")
-	//	return false
-	//}
-	return true
-}
-
-//Validate the contract content
-func (c *ContractModel) validateContractContent() bool {
-	contract := &c.Contract
-	if contract == nil {
-		beego.Error("Empty contract is not allowed")
-		//panic("Empty contract is not allowed")
+//Validate the contract header
+func (c *ContractModel) validateContractHeader() bool {
+	if c.MainPubkey == "" {
+		beego.Error("contract main_pubkey blank")
 		return false
 	}
 
-	if contract.Operation == "CREATE" {
-		beego.Error("missing validate the contract [creator_pubkey]")
-		beego.Error("missing validate the contract [create_timestamp]")
-		beego.Error("missing validate the contract [contract_attributes]")
-		beego.Error("missing validate the contract [contract_owners]")
-		beego.Error("missing validate the contract [contract_signatures]")
-		beego.Error("missing validate the contract [contract_asserts]")
-		beego.Error("missing validate the contract [contract_components]")
+	_contract := &c.Contract
+	if _contract == nil {
+		beego.Error("Empty contract is not allowed")
+		return false
+	}
+
+	if _contract.Operation != "CREATE" {
+		return false
+		//beego.Error("missing validate the contract [creator_pubkey]")
+		//beego.Error("missing validate the contract [create_timestamp]")
+		//beego.Error("missing validate the contract [contract_attributes]")
+		//beego.Error("missing validate the contract [contract_owners]")
+		//beego.Error("missing validate the contract [contract_signatures]")
+		//beego.Error("missing validate the contract [contract_asserts]")
+		//beego.Error("missing validate the contract [contract_components]")
 	}
 
 	return true
