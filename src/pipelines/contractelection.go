@@ -15,6 +15,7 @@ import (
 
 import (
 	"unicontract/src/chain"
+	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 )
@@ -196,8 +197,10 @@ func startContractElection() {
 // 私有工具函数
 //---------------------------------------------------------------------------
 func _verifyHeadNode(mainPubkey string) (bool, error) {
-	//TODO 验证是否是头节点
-	return true, nil
+	if mainPubkey == config.Config.Keypair.PublicKey {
+		return true, nil
+	}
+	return false, nil
 }
 
 //---------------------------------------------------------------------------
@@ -205,6 +208,10 @@ func _verifyVotes(mainPubkey, contractId string) ([]byte, bool, error) {
 	// 查询所有的vote
 	var myContract _MyContract
 	strVotes, err := rethinkdb.GetVotesByContractId(mainPubkey)
+	if err != nil {
+		return nil, false, err
+	}
+
 	var slVote []model.Vote
 	err = json.Unmarshal([]byte(strVotes), &slVote)
 	if err != nil {
@@ -250,8 +257,15 @@ func _verifyVotes(mainPubkey, contractId string) ([]byte, bool, error) {
 
 //---------------------------------------------------------------------------
 func _verifyPublicKey(NodePubkey string) (bool, error) {
-	//TODO 验证公钥是否在公钥环
-	return true, nil
+	isExist := false
+	publicKeys := config.GetAllPublicKey()
+	for _, value := range publicKeys {
+		if value == NodePubkey {
+			isExist = true
+			break
+		}
+	}
+	return isExist, nil
 }
 
 //---------------------------------------------------------------------------
