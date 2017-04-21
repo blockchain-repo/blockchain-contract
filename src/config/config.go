@@ -129,10 +129,11 @@ func WriteConToFile(){
 	}
 	var unicontractConfig UnicontractConfig
 
-	//ToDo 获取公私钥,各节点公钥
-	unicontractConfig.Keypair.Public = "aaaa"
-	unicontractConfig.Keypair.Private = "aaaa"
-	unicontractConfig.Keyrings = []string{"aa","aaa"}
+
+	pub,priv :=common.GenerateKeyPair()
+	unicontractConfig.Keypair.Public = pub
+	unicontractConfig.Keypair.Private = priv
+	unicontractConfig.Keyrings = []string{}
 
 	unictractStr := common.Serialize(unicontractConfig)
 	n,err := unictractConf.Write([]byte(unictractStr))
