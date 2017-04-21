@@ -17,11 +17,12 @@ func TestWriteConToFile(t *testing.T) {
 
 func TestTest(t *testing.T){
 	fmt.Println(Config.Keyrings)
-	fmt.Println(Config.Keypair.Private)
-	fmt.Println(Config.Keypair.Public)
+	fmt.Println(Config.Keypair.PrivateKey)
+	fmt.Println(Config.Keypair.PublicKey)
 
 }
 
 func TestReadUnicontractConfig(t *testing.T) {
 	fmt.Println(ReadUnicontractConfig())
 }
+
