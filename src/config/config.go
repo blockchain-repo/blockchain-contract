@@ -24,8 +24,8 @@ type UnicontractConfig struct {
  * function : 公私钥
  */
 type Keypair struct{
-	Public  string
-	Private string
+	PublicKey  string
+	PrivateKey string
 }
 
 /**
@@ -41,6 +41,13 @@ func init(){
 	}
 	fileName := user.HomeDir + "/.unicontract"
 
+	//判断文件是否存在
+	fileInfo,err := os.Stat(fileName)
+	if err != nil{	//文件不存在
+		//创建unictractConf
+		_CreatUnictractConf(fileName)
+	}
+
 	//读取配置文件
 	unicontractFile,err := os.Open(fileName)
 	defer unicontractFile.Close()
@@ -55,7 +62,7 @@ func init(){
 	var unicontractConfig UnicontractConfig
 	err = json.Unmarshal(unicontractStr,&unicontractConfig)
 	if err != nil{
-		beego.Error(err.Error())
+		beego.Error(err.Error(),fileInfo)
 	}
 	Config = unicontractConfig
 }
@@ -107,32 +114,36 @@ func WriteConToFile(){
 		fmt.Println(" please input y(es) or n(o) ")
 		inputReader := bufio.NewReader(os.Stdin)
 		p := make([]byte,10)
-		for i:=1;i<=3;i++{
-			fmt.Println(i)
-			n,_ := inputReader.Read(p)
-			if n == 0 {
-				fmt.Println("input error,please input y(es) or n(o) ")
-			}else {
-				if string(p) == "y"{
-					break
-				}else if string(p) == "n" {
-					beego.Debug("unicontractCOnf exist,fileInfo:",fileInfo)
-					return
-				}
-			}
+		inputReader.Read(p)
+
+		if p[0] != []byte("y")[0]{
+			beego.Debug("Give Up override unicontract!",fileInfo)
+			return
 		}
 	}
+	//创建unictractConf
+	_CreatUnictractConf(fileName)
+}
+
+/**
+ * function : 创建unictractConf
+ * param   :
+ * return :
+ */
+func _CreatUnictractConf(fileName string){
 	//文件不存在则创建unictractConf
 	unictractConf,err := os.Create(fileName)
+	defer unictractConf.Close()
+
 	if err != nil{
 		beego.Error(err.Error())
 	}
 	var unicontractConfig UnicontractConfig
 
-
+	//获取公私钥匙
 	pub,priv :=common.GenerateKeyPair()
-	unicontractConfig.Keypair.Public = pub
-	unicontractConfig.Keypair.Private = priv
+	unicontractConfig.Keypair.PublicKey = pub
+	unicontractConfig.Keypair.PrivateKey = priv
 	unicontractConfig.Keyrings = []string{}
 
 	unictractStr := common.Serialize(unicontractConfig)
@@ -142,8 +153,9 @@ func WriteConToFile(){
 	}else{
 		beego.Debug("crate unictractConfong File success",n)
 	}
-	defer unictractConf.Close()
 }
+
+
 
 
 
