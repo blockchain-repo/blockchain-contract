@@ -26,3 +26,7 @@ func TestReadUnicontractConfig(t *testing.T) {
 	fmt.Println(ReadUnicontractConfig())
 }
 
+func TestGetAllPublicKey(t *testing.T) {
+	a := GetAllPublicKey()
+	fmt.Println(a)
+}

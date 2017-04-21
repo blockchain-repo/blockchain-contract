@@ -17,6 +17,7 @@ var Config UnicontractConfig
  */
 type UnicontractConfig struct {
 	Keypair  Keypair
+	//切片
 	Keyrings []string
 }
 
@@ -144,6 +145,7 @@ func _CreatUnictractConf(fileName string){
 	pub,priv :=common.GenerateKeyPair()
 	unicontractConfig.Keypair.PublicKey = pub
 	unicontractConfig.Keypair.PrivateKey = priv
+	//添加公钥环 切片
 	unicontractConfig.Keyrings = []string{}
 
 	unictractStr := common.Serialize(unicontractConfig)
@@ -155,6 +157,19 @@ func _CreatUnictractConf(fileName string){
 	}
 }
 
+
+/**
+ * function : 获取所有节点公钥
+ * param   :
+ * return :
+ */
+func GetAllPublicKey() []string{
+
+	keyrings := Config.Keyrings
+	publicKey := Config.Keypair.PublicKey
+
+	return append(keyrings,publicKey)
+}
 
 
 
