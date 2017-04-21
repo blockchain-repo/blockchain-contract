@@ -85,7 +85,6 @@ func (c *ContractModel) IsSignatureValid() bool {
 	contractSignatures := c.Contract.ContractSignatures
 
 	contractOwners_len := len(contractOwners)
-
 	if contractOwners_len != len(contractSignatures) {
 		return false
 	}
@@ -102,7 +101,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 		}
 
 		contractSignature := contractSignatures[index]
-		if contractOwner != contractSignature.OwnerPubkey {
+		if contractOwner != contractSignature.OwnerPubkey{
 			inValidSignatureCount++
 			continue
 		}
@@ -141,8 +140,18 @@ func (c *ContractModel) GenerateId() string {
 
 //Validate the contract header
 func (c *ContractModel) validateContractHeader() bool {
+
+	pub_keys := config.GetAllPublicKey()
+	pub_keysSet := common.StrArrayToHashSet(pub_keys)
+
+	//todo voters in keyring or not ?
 	if c.MainPubkey == "" {
 		beego.Error("contract main_pubkey blank")
+		return false
+	}
+
+	if !pub_keysSet.Has(c.MainPubkey) {
+		beego.Warn("main_pubkey ", c.MainPubkey," not in pubkeys")
 		return false
 	}
 

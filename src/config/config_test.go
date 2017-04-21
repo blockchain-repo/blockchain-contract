@@ -16,7 +16,7 @@ func TestWriteConToFile(t *testing.T) {
 }
 
 func TestTest(t *testing.T){
-	fmt.Println(Config.Keyrings)
+	fmt.Println(Config.Keyring)
 	fmt.Println(Config.Keypair.PrivateKey)
 	fmt.Println(Config.Keypair.PublicKey)
 

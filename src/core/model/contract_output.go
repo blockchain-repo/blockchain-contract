@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
+	"unicontract/src/config"
 )
 
 // An Asset is a fungible unit to spend and lock with Transactions
@@ -160,8 +161,15 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 	signatures := c.Transaction.Relaction.Signatures
 	voters_len := len(voters)
 
+	/*----------------keyring----------------*/
+	pub_keys := config.GetAllPublicKey()
+	pub_keysSet := common.StrArrayToHashSet(pub_keys)
+
 	validSignCount := 0
 	for index, voter := range voters {
+		if !pub_keysSet.Has(voter) {
+			continue
+		}
 		relationSignature := signatures[index]
 		nodePubkey := relationSignature.ContractNodePubkey
 		if nodePubkey != voter {

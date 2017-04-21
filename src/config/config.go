@@ -18,15 +18,15 @@ var Config UnicontractConfig
 type UnicontractConfig struct {
 	Keypair  Keypair
 	//切片
-	Keyrings []string
+	Keyring []string `json:"keyring"`
 }
 
 /**
  * function : 公私钥
  */
 type Keypair struct{
-	PublicKey  string
-	PrivateKey string
+	PublicKey  string `json:"public"`
+	PrivateKey string `json:"private"`
 }
 
 /**
@@ -146,7 +146,7 @@ func _CreatUnictractConf(fileName string){
 	unicontractConfig.Keypair.PublicKey = pub
 	unicontractConfig.Keypair.PrivateKey = priv
 	//添加公钥环 切片
-	unicontractConfig.Keyrings = []string{}
+	unicontractConfig.Keyring = []string{}
 
 	unictractStr := common.Serialize(unicontractConfig)
 	n,err := unictractConf.Write([]byte(unictractStr))
@@ -165,9 +165,8 @@ func _CreatUnictractConf(fileName string){
  */
 func GetAllPublicKey() []string{
 
-	keyrings := Config.Keyrings
+	keyrings := Config.Keyring
 	publicKey := Config.Keypair.PublicKey
-
 	return append(keyrings,publicKey)
 }
 

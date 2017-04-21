@@ -73,15 +73,19 @@ func Test_IsSignatureValid(t *testing.T) {
 func Test_Validate(t *testing.T) {
 	//create new obj
 	contractModel := ContractModel{}
-	private_key := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	contractModel.MainPubkey = "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3"
+	private_key := "Cnodz1gyhaNoFcPCr72G9brFrGFfNJQUPFchGXyL11Pt"
+	//----------------------pub: HFStRMeL1aS824zsApWiEmZqn1r21FvkXQFkqGwJjb3d
+	//----------------------pri: EUFo91bZzqtZEAMUZ4Mr5N69BBwfBkKexwXDydTncqqg
 	// modify and set value for reference obj with &
 	contract := &contractModel.Contract
-	contract.CreatorPubkey = "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	contract.CreatorPubkey = "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3"
 	contract.Operation = "CREATE"
 	contract.ContractOwners = []string{
-		"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
+		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+		//"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+		//"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+		//"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
 		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 	}
 	// sign for contract
@@ -90,9 +94,25 @@ func Test_Validate(t *testing.T) {
 	fmt.Println("private_key is : ", private_key)
 	fmt.Println("contract is : ", common.Serialize(contract))
 	fmt.Println("signatureContract is : ", signatureContract)
-	contractModel.Voters = []string{
-		"3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ",
-		"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
+	contractSignatures := []*protos.ContractSignature{
+		{
+			OwnerPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+			Signature:   "3XLffBVuFCZbZU1NcroQDSAgcdDtYQ2UK9ye9q9BzLaMiqjoHtJ3SirW5P9JJkjwAkC9CrguwKMRC36T2e769sqQ",
+			Timestamp:   common.GenTimestamp(),
+		},
+		//{
+		//	OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+		//	Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+		//	Timestamp:   common.GenTimestamp(),
+		//},
 	}
-	contractModel.Validate()
+	contract.ContractSignatures = contractSignatures
+	contractModel.Voters = []string{
+		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+		//"3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ",
+		//"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
+	}
+	contractModel.Id = contractModel.GenerateId()
+	ok := contractModel.Validate()
+	fmt.Println(ok)
 }
