@@ -50,7 +50,7 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 			continue
 		}
 		//main node filter
-		mainNodeKey  := conout.Transaction.Contracts.MainPubkey
+		mainNodeKey  := conout.Transaction.ContractModel.MainPubkey
 		//TODO get node pubkey
 		myNodeKey := ""
 		if mainNodeKey != myNodeKey {

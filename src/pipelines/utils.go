@@ -37,9 +37,9 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 	return app
 }
 
-func init() {
-	//TODO log
-	go startContractVote()
-	go startContractElection()
-	go starttxElection()
-}
+//func init() {
+//	//TODO log
+//	go startContractVote()
+//	go startContractElection()
+//	go starttxElection()
+//}

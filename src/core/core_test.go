@@ -7,7 +7,7 @@ import (
 
 func TestWriteContract(t *testing.T) {
 	contractModel := model.ContractModel{}
-	contractModel.Id ="123151f1ddassd"
+	contractModel.Id ="sssssssssssssssssssssssssssssssssssssssssssssss"
 	private_key := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
 	// modify and set value for reference obj with &
 	contract := &contractModel.Contract

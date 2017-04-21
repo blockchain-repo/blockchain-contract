@@ -75,11 +75,13 @@ func cvVote(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
+		//TODO
 		v.NodePubkey = config.Config.Keypair.Public
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
 		v.VoteBody.Timestamp = common.GenTimestamp()
-		out.Write(t)
+		v.VoteBody.VoteType = "node"
+		out.Write([]byte(v.ToString()))
 	}
 }
 
