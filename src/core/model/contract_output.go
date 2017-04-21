@@ -97,8 +97,8 @@ func (c *ContractOutput) GenerateId() string {
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
-	//todo
-	temp.ContractModel.Contract.ContractSignatures = nil
+	//TODO deal with the timestamps
+	temp.Relaction.Signatures = nil
 	beego.Debug(temp)
 	contract_without_signatures_serialized := common.Serialize(temp)
 
@@ -126,21 +126,20 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 		}
 
 		_signature := signatures[index]
+
 		contract_node_pubkey := _signature.ContractNodePubkey
 		signature := _signature.Signature
-		_ = signature
 
 		if contract_node_pubkey == "" {
-			invalid_signature_len += 1
+			invalid_signature_len++
 		} else {
 			if voter != contract_node_pubkey || signature == "" {
-				invalid_signature_len += 1
+				invalid_signature_len++
 			}
 		}
-
 	}
 
-	if invalid_signature_len >= voters_len/2 {
+	if invalid_signature_len >= (voters_len+1)/2 {
 		return false
 	}
 	return true

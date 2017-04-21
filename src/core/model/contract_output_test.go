@@ -9,24 +9,22 @@ import (
 func Test_ContractOutput(t *testing.T) {
 	contractOutput := ContractOutput{}
 	contractOutput.Id = "1"
-	transaction := contractOutput.Transaction
+	//transaction := contractOutput.Transaction
 
-	conditions := make([]*ConditionsItem, 3)
+	conditions := make([]*ConditionsItem,1)
 	conditions[0] = &ConditionsItem{
 		Amount: 14213,
-		Cid:    123,
+		Cid:    0,
 		Condition: &Condition{
 			Details: nil,
 			Uri:     "dd-dsd-qwq-ddd-aa",
 		},
-		OwnersAfter: []string{"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"},
+		OwnersAfter: []string{"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc"},
 	}
 	contractOutput.Transaction.Conditions = conditions
+	contractOutput.Transaction.Timestamp = common.GenTimestamp()
 
-	transaction.Timestamp = common.GenTimestamp()
+
 	result := common.Serialize(contractOutput)
 	//result := common.SerializePretty(contractOutput)
 	fmt.Println(result)
@@ -36,17 +34,15 @@ func Test_GenerateId(t *testing.T) {
 	contractOutput := ContractOutput{}
 	contractOutput.Id = "1"
 	transaction := contractOutput.Transaction
-	conditions := make([]*ConditionsItem, 3)
+	conditions := make([]*ConditionsItem, 1)
 	conditions[0] = &ConditionsItem{
 		Amount: 14213,
-		Cid:    123,
+		Cid:    0,
 		Condition: &Condition{
 			Details: nil,
 			Uri:     "dd-dsd-qwq-ddd-aa-ww",
 		},
-		OwnersAfter: []string{"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"},
+		OwnersAfter: []string{"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc"},
 	}
 	contractOutput.Transaction.Conditions = conditions
 
