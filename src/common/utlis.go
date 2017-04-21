@@ -3,10 +3,11 @@ package common
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/google/uuid"
 	"log"
 	"strconv"
 	"time"
-	"github.com/google/uuid"
+	"unicontract/src/common/basic"
 )
 
 func GenDate() string {
@@ -54,16 +55,15 @@ func Deserialize(jsonStr string) interface{} {
 	return dat
 }
 
-
 /**
  * function : 断言-类型转换string
  * param   :
  * return : 返回string
  */
 
-func TypeToString(name interface{}) string{
+func TypeToString(name interface{}) string {
 
-	value,ok := name.(string)
+	value, ok := name.(string)
 	if !ok {
 		log.Fatal("Type conversion error")
 	}
@@ -76,9 +76,9 @@ func TypeToString(name interface{}) string{
  * return : 返回int
  */
 
-func TypeToInt(name interface{}) int{
+func TypeToInt(name interface{}) int {
 
-	value,ok := name.(int)
+	value, ok := name.(int)
 	if !ok {
 		log.Fatal("Type conversion error")
 	}
@@ -91,9 +91,9 @@ func TypeToInt(name interface{}) int{
  * return : 返回int
  */
 
-func TypeToFloat32(name interface{}) float32{
+func TypeToFloat32(name interface{}) float32 {
 
-	value,ok := name.(float32)
+	value, ok := name.(float32)
 	if !ok {
 		log.Fatal("Type conversion error")
 	}
@@ -106,9 +106,9 @@ func TypeToFloat32(name interface{}) float32{
  * return : 返回int
  */
 
-func TypeToFloat64(name interface{}) float64{
+func TypeToFloat64(name interface{}) float64 {
 
-	value,ok := name.(float64)
+	value, ok := name.(float64)
 	if !ok {
 		log.Fatal("Type conversion error")
 	}
@@ -121,9 +121,9 @@ func TypeToFloat64(name interface{}) float64{
  * return : 返回int
  */
 
-func TypeToMap(name interface{}) map[interface{}]interface{}{
+func TypeToMap(name interface{}) map[interface{}]interface{} {
 
-	value,ok := name.(map[interface{}]interface{})
+	value, ok := name.(map[interface{}]interface{})
 	if !ok {
 		log.Fatal("Type conversion error")
 	}
@@ -131,6 +131,32 @@ func TypeToMap(name interface{}) map[interface{}]interface{}{
 }
 
 // UUID
-func GenerateUUID() string{
+func GenerateUUID() string {
 	return uuid.New().String()
+}
+
+// 数组内部具体类型必须为基本类型不可以是，结构体，数组或指针等复杂类型！
+// array content must be simple style
+func ArrayToHashSet(array []interface{}) *basic.HashSet {
+	hashSet := basic.NewHashSet()
+	if len(array) == 0 {
+		return hashSet
+	}
+
+	for _, obj := range array {
+		hashSet.Add(obj)
+	}
+	return hashSet
+}
+
+func StrArrayToHashSet(array []string) *basic.HashSet {
+	hashSet := basic.NewHashSet()
+	if len(array) == 0 {
+		return hashSet
+	}
+
+	for _, obj := range array {
+		hashSet.Add(obj)
+	}
+	return hashSet
 }

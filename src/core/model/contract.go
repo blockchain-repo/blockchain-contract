@@ -2,10 +2,11 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
 	"unicontract/src/core/protos"
-	"fmt"
+	"unicontract/src/config"
 )
 
 // table [contract]

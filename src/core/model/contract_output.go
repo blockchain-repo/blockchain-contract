@@ -99,7 +99,6 @@ func (c *ContractOutput) GenerateId() string {
 	}
 	//TODO deal with the timestamps
 	temp.Relaction.Signatures = nil
-	beego.Debug(temp)
 	contract_without_signatures_serialized := common.Serialize(temp)
 
 	return common.HashData(contract_without_signatures_serialized)
