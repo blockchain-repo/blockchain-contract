@@ -62,14 +62,14 @@ type Relaction struct {
 }
 
 type Transaction struct {
-	Asset        *Asset            `json:"asset"`
-	Conditions   []*ConditionsItem `json:"conditions"`
-	Fulfillments []*Fulfillment    `json:"fulfillments"`
-	Metadata     *Metadata         `json:"metadata"`
-	Operation    string            `json:"operation"`
-	Timestamp    string            `json:"timestamp"`
-	Relaction    *Relaction        `json:"relaction"`
-	ContractModel     ContractModel     `json:"contracts"` //合约描述集合, (引用contract描述 for proto3)
+	Asset         *Asset            `json:"asset"`
+	Conditions    []*ConditionsItem `json:"conditions"`
+	Fulfillments  []*Fulfillment    `json:"fulfillments"`
+	Metadata      *Metadata         `json:"metadata"`
+	Operation     string            `json:"operation"`
+	Timestamp     string            `json:"timestamp"`
+	Relaction     *Relaction        `json:"relaction"`
+	ContractModel ContractModel     `json:"contracts"` //合约描述集合, (引用contract描述 for proto3)
 }
 
 // table [contract_output]
