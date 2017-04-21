@@ -69,7 +69,7 @@ type Transaction struct {
 	Operation    string            `json:"operation"`
 	Timestamp    string            `json:"timestamp"`
 	Relaction    *Relaction        `json:"relaction"`
-	Contract     ContractModel     `json:"contracts"` //合约描述集合, (引用contract描述 for proto3)
+	ContractModel     ContractModel     `json:"contracts"` //合约描述集合, (引用contract描述 for proto3)
 }
 
 // table [contract_output]
@@ -98,7 +98,7 @@ func (c *ContractOutput) GenerateId() string {
 		beego.Error("Unmarshal error ", err)
 	}
 	//todo
-	temp.Contract.Contract.ContractSignatures = nil
+	temp.ContractModel.Contract.ContractSignatures = nil
 	beego.Debug(temp)
 	contract_without_signatures_serialized := common.Serialize(temp)
 
