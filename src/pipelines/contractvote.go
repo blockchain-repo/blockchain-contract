@@ -47,7 +47,6 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			continue
 		}
 		v := model.Vote{}
-		//TODO Validate contract
 		if mod.Validate() {
 			//vote true
 			v.VoteBody.IsValid = true
@@ -75,8 +74,7 @@ func cvVote(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		//TODO
-		v.NodePubkey = config.Config.Keypair.Public
+		v.NodePubkey = config.Config.Keypair.PublicKey
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
 		v.VoteBody.Timestamp = common.GenTimestamp()
