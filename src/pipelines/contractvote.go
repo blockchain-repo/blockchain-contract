@@ -10,6 +10,7 @@ import (
 
 	"unicontract/src/core/model"
 	"unicontract/src/common"
+	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
 )
 
@@ -74,8 +75,7 @@ func cvVote(in io.Reader, out io.Writer) {
 			log.Fatalf(err.Error())
 			continue
 		}
-		//TODO read config
-		v.NodePubkey = "EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet"
+		v.NodePubkey = config.Config.Keypair.Public
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
 		v.VoteBody.Timestamp = common.GenTimestamp()
