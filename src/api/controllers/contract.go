@@ -6,6 +6,9 @@ import (
 	"github.com/golang/protobuf/proto"
 	"time"
 	"unicontract/src/core/protos"
+	"unicontract/src/core/model"
+	"unicontract/src/common"
+	"unicontract/src/core/db/rethinkdb"
 )
 
 // Operations about Contract
@@ -105,6 +108,21 @@ func (c *ContractController) AuthSignature() {
 	c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
 }
 
+
+func fromContractProtoToContractModel(contractProto *protos.ContractProto) model.ContractModel{
+	var contractModel model.ContractModel
+	contractModel.Id = contractProto.Id
+	contractModel.MainPubkey = contractProto.MainPubkey
+	contractModel.Version = contractProto.Version
+	contractModel.Timestamp = contractProto.Timestamp
+	contractModel.Voters = contractProto.Voters
+	contractModel.Contract = *contractProto.Contract
+
+	beego.Error(common.SerializePretty(contractModel))
+
+	return contractModel
+}
+
 // @Title CreateContract
 // @Description create contract
 // @Param	body		body 	models.Contract	true		"body for contract content"
@@ -118,7 +136,7 @@ func (c *ContractController) Create() {
 		return
 	}
 
-	//TODO 1. 签名验证
+	// 1. 签名验证
 	//TODO 2. contract check 验证contract是否合法
 	token := data.Token
 	beego.Debug("Token is " + token)
@@ -128,22 +146,29 @@ func (c *ContractController) Create() {
 	}
 
 	contract := data.Data
-	if contract == nil {
+	if contract == nil || contract.Id == ""{
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "contract error!")
 		return
 	}
 
-	contractSignature := contract.Signature
-	beego.Debug("contract signature is " + contractSignature)
-	beego.Warn("缺少签名方法![Create]")
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少创建合约方法![Create]")
+	contractModel := fromContractProtoToContractModel(contract)
+	beego.Warn(contractModel)
+	beego.Warn(contractModel.Id)
+	beego.Warn(contractModel.GenerateId())
+	if contractModel.Id != contractModel.GenerateId() {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "contract error!")
+		return
+	}
+
+	rethinkdb.InsertContract(common.Serialize(contractModel))
+	beego.Warn(c.Ctx.Request.RequestURI, "API Insert![Create Id:" + contractModel.Id + "]" )
 
 	response := make(map[string]interface{})
 	//c.responseJsonBody(response, true, "signature is ok!")
 	//c.responseJsonBody(response, false, "缺少签名方法,缺少创建合约方法")
 
-	response["id"] = time.Now().Unix()
-	c.responseJsonBody(response, true, "创建合约成功!")
+	response["id"] =  contractModel.Id
+	c.responseJsonBody(response, true, "API Insert![Create Id:" + contractModel.Id + "]" )
 
 }
 

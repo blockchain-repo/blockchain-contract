@@ -23,6 +23,7 @@ func Test_Sign(t *testing.T) {
 	}
 	// sign for contract
 	signatureContract := contractModel.Sign(private_key)
+	contractModel.Id = contractModel.GenerateId()
 	//fmt.Println("contract is : ", common.SerializePretty(contract))
 	fmt.Println("private_key is : ", private_key)
 	fmt.Println("contract is : ", common.Serialize(contract))

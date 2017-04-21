@@ -12,7 +12,7 @@ import (
 // table [contract]
 type ContractModel struct {
 	Id         string `json:"id"`          //合约唯一标识ID，对合约主体信息计算hash
-	Version    int8   `json:"version"`     //合约描述结构版本号
+	Version    int32   `json:"version"`     //合约描述结构版本号
 	MainPubkey string `json:"main_pubkey"` //合约处理主节点公钥
 	Timestamp  string `json:"timestamp"`   //合约运行跟踪时间戳（以合约执行层输出结果时间为准）
 
@@ -134,8 +134,22 @@ func (c *ContractModel) ToString() string {
 
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
-	contract_serialized := common.Serialize(c.Contract)
-	return common.HashData(contract_serialized)
+	/*-------------module deep copy--------------*/
+	var contractClone = c.Contract
+
+	// new obj
+	var temp protos.Contract
+
+	transactionCloneBytes, _ := json.Marshal(contractClone)
+	err := json.Unmarshal(transactionCloneBytes, &temp)
+	if err != nil {
+		beego.Error("Unmarshal error ", err)
+	}
+	//TODO deal with the timestamps
+	temp.ContractSignatures = nil
+	contract_without_signatures_serialized := common.Serialize(temp)
+
+	return common.HashData(contract_without_signatures_serialized)
 }
 
 //Validate the contract header

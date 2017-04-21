@@ -9,6 +9,9 @@ import (
 	"testing"
 	"unicontract/src/common"
 	"unicontract/src/core/protos"
+	"github.com/astaxie/beego"
+	"unicontract/src/core/model"
+	"encoding/json"
 )
 
 // application content-type
@@ -348,32 +351,69 @@ func Test_Creat(t *testing.T) {
 	contract := protos.ContractProto{ // proto-buf
 		//Id:         "2",
 		//NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
+		MainPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 		//Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//Voters: []string{
-		//	"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//	"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-		//	"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
-		//},
+		Voters: []string{
+			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
+			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+		},
 		//Timestamp: common.GenTimestamp(),
-		//Version:   "v1.0",
+		Version:   1,
 		Contract: &protos.Contract{
-			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+			CreatorPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 			CreateTimestamp: common.GenTimestamp(),
 			Operation:       "CREATE",
 			ContractAttributes: &protos.ContractAttributes{
 				Name:           "XXXXXX",
-				StartTimestamp: common.GenTimestamp(),
-				EndTimestamp:   common.GenTimestamp(),
+				//StartTimestamp: common.GenTimestamp(),
+				//EndTimestamp:   common.GenTimestamp(),
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:   "3XLffBVuFCZbZU1NcroQDSAgcdDtYQ2UK9ye9q9BzLaMiqjoHtJ3SirW5P9JJkjwAkC9CrguwKMRC36T2e769sqQ",
+					Timestamp:   common.GenTimestamp(),
+				},
+
+				//{
+				//	OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+				//	Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
+				//	Timestamp:   common.GenTimestamp(),
 			},
 		},
 	}
+
+	/*-------------module deep copy start --------------*/
+	var contractClone = contract.Contract
+
+	// new obj
+	var temp protos.Contract
+
+	contractCloneBytes, _ := json.Marshal(contractClone)
+	err := json.Unmarshal(contractCloneBytes, &temp)
+	if err != nil {
+		beego.Error("Unmarshal error ", err)
+	}
+	beego.Error(common.SerializePretty(temp))
+
+	temp.ContractSignatures = nil
+
+	beego.Error(common.SerializePretty(temp))
+
+	var tempContractModel model.ContractModel
+	tempContractModel.Contract = temp
+	id := tempContractModel.GenerateId()
+	contract.Id = id
+
+	/*-------------module deep copy end --------------*/
+
+
 	//requestBody, err := proto.Marshal(&contract)
 	//if err != nil {
 	//	fmt.Println("error ", err.Error())
 	//}
 	//fmt.Println(requestBody)
-	fmt.Println(contract)
 
 	data := protos.ContractData{
 		Data:  &contract,
