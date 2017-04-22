@@ -18,6 +18,7 @@ import (
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
+	"unicontract/src/common/monitor"
 )
 
 //---------------------------------------------------------------------------
@@ -60,6 +61,8 @@ func ceChangefeed(in io.Reader, out io.Writer) {
 
 //---------------------------------------------------------------------------
 func ceHeadFilter(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("ce_validate_head")
 	rd := bufio.NewReader(in)
 	slVote := make([]byte, MaxSizeTX)
 	for {
@@ -115,6 +118,9 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 
 //---------------------------------------------------------------------------
 func ceQueryEists(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("ce_query_contract")
+
 	rd := bufio.NewReader(in)
 	slMyContract := make([]byte, MaxSizeTX)
 	for {
@@ -153,6 +159,9 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 
 //---------------------------------------------------------------------------
 func ceSend(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("ce_send_contract")
+
 	rd := bufio.NewReader(in)
 	slReadData := make([]byte, MaxSizeTX)
 	for {

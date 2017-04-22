@@ -12,6 +12,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
+	"unicontract/src/common/monitor"
 )
 
 func cvChangefeed(in io.Reader, out io.Writer) {
@@ -32,6 +33,9 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 }
 
 func cvValidateContract(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("cv_validate_contract")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
@@ -60,6 +64,9 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 }
 
 func cvVote(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("cv_vote_contract")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
@@ -84,6 +91,9 @@ func cvVote(in io.Reader, out io.Writer) {
 }
 
 func cvWriteVote(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("cv_write_vote")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {

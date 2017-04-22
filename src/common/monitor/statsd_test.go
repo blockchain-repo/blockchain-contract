@@ -242,6 +242,16 @@ func TestTime6(t *testing.T){
 
 }
 
+func TestTest1(t *testing.T){
+	monitor1 := _GetMonitorClient()
+	for i:=1;i<=1000;i++ {
+		monitor1.Gauge("HAHAHAHAHAHAHAHAHAHA",1)
+		monitor1.Gauge("HEHEHEHEHEHHEHEHEHHE",2)
+	}
+	monitor1.Flush()
+
+}
+
 
 
 

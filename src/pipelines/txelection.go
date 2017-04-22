@@ -14,6 +14,7 @@ import (
 	"unicontract/src/core/model"
 	"unicontract/src/chain"
 	"unicontract/src/config"
+	"unicontract/src/common/monitor"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
@@ -36,6 +37,9 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 }
 
 func txeHeadFilter(in io.Reader, out io.Writer){
+
+	defer monitor.Monitor.NewTiming().Send("txe_validate_head")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
@@ -62,6 +66,9 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 }
 
 func txeValidate(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("txe_contractOutput_validate")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
@@ -96,6 +103,9 @@ func txeValidate(in io.Reader, out io.Writer) {
 }
 
 func txeQueryEists(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("txe_query_contractOutput")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
@@ -129,6 +139,9 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 }
 
 func txeSend(in io.Reader, out io.Writer) {
+
+	defer monitor.Monitor.NewTiming().Send("txe_send_contractOutput")
+
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
