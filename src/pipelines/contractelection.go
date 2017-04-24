@@ -244,10 +244,8 @@ func startContractElection() {
 // 私有工具函数
 //---------------------------------------------------------------------------
 func _verifyHeadNode(mainPubkey string) (bool, error) {
-	//log.Printf("10.PublicKey is %+v\n", config.Config.Keypair.PublicKey)
+	//log.Printf("10.PublicKey  is %+v\n", mainPubkey)
 	log.Println("10")
-	//do not forget fix it !!!!!
-	return true, nil
 	if mainPubkey == config.Config.Keypair.PublicKey {
 		return true, nil
 	}
@@ -326,8 +324,6 @@ func _verifyPublicKey(NodePubkey string) (bool, error) {
 	publicKeys := config.GetAllPublicKey()
 	//log.Printf("15.publicKeys is %+v\n", publicKeys)
 	log.Println("15")
-	//do not forget fix it !!!!!
-	return true, nil
 	for _, value := range publicKeys {
 		if value == NodePubkey {
 			isExist = true
