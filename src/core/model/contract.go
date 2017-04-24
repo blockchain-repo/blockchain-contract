@@ -103,8 +103,8 @@ func (c *ContractModel) IsSignatureValid() bool {
 
 		// contract signature verify
 		verifyFlag := common.Verify(contractOwner, contractBody_serialized, contractSignature.Signature)
-		beego.Debug("contract verify[owner:", contractOwner,",signature:",
-			contractSignature.Signature, "contractBody_serialized",contractBody_serialized,"]")
+		beego.Debug("contract verify[owner:", contractOwner, ",signature:",
+			contractSignature.Signature, "contractBody_serialized", contractBody_serialized, "]")
 		if !verifyFlag {
 			inValidSignatureCount++
 			continue

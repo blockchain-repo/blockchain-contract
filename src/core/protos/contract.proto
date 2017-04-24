@@ -97,7 +97,7 @@ message ContractHead {
 }
 
 message Contract {
-    string Id = 1;  //Hash contractBody except conotractSignatures
+    string id = 1;  //Hash contractBody except conotractSignatures
     ContractHead ContractHead = 2;
     ContractBody ContractBody = 3;
 }

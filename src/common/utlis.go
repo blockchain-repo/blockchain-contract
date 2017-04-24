@@ -3,12 +3,12 @@ package common
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/google/uuid"
 	"log"
+	"math/rand"
 	"strconv"
 	"time"
 	"unicontract/src/common/basic"
-
-	"github.com/google/uuid"
 )
 
 func GenDate() string {
@@ -174,4 +174,9 @@ func Try(execFunc func(), afterPanic func(interface{})) {
 		}
 	}()
 	execFunc()
+}
+
+func RandInt(min int, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return min + rand.Intn(max-min)
 }

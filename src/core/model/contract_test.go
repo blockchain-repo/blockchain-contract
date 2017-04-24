@@ -58,14 +58,14 @@ func Test_IsSignatureValid(t *testing.T) {
 	}
 	contractSignatures := []*protos.ContractSignature{
 		{
-			OwnerPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-			Signature:   "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
-			SignTimestamp:   common.GenTimestamp(),
+			OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+			Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+			SignTimestamp: common.GenTimestamp(),
 		},
 		{
-			OwnerPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Signature:   "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
-			SignTimestamp:   common.GenTimestamp(),
+			OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+			SignTimestamp: common.GenTimestamp(),
 		},
 	}
 	contractBody.ContractSignatures = contractSignatures
@@ -110,9 +110,9 @@ func Test_Validate(t *testing.T) {
 	}
 	contractSignatures := []*protos.ContractSignature{
 		{
-			OwnerPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Signature:   "4JmRZ2A1Dqf4sGQVS7Jo6nNdR17XxdYddSC3fE4bv6ov48J9CCSMSKmx9AUtkaqJLpsLEGepzjpTbZrXCpbohVeU",
-			SignTimestamp:   common.GenTimestamp(),
+			OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Signature:     "4JmRZ2A1Dqf4sGQVS7Jo6nNdR17XxdYddSC3fE4bv6ov48J9CCSMSKmx9AUtkaqJLpsLEGepzjpTbZrXCpbohVeU",
+			SignTimestamp: common.GenTimestamp(),
 		},
 		//{
 		//	OwnerPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",

@@ -60,12 +60,30 @@ func InsertContract(contract string) bool {
 	return false
 }
 
-// 根据合约[id]获取合约
-func GetContractById(contractId string) (string, error) {
-	res := Get(DBNAME, TABLE_CONTRACTS, contractId)
-
+func GetContractById(id string) (string, error) {
+	if id == "" {
+		return "", errors.New("id blank")
+	}
+	res := Get(DBNAME, TABLE_CONTRACTS, id)
 	var blo map[string]interface{}
 	err := res.One(&blo)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
+// 根据合约[id]获取具有相同contractId的合约
+func GetContractsByContractId(contractId string) (string, error) {
+	if contractId == "" {
+		return "", errors.New("contractId blank")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).Run(session)
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
 	if err != nil {
 		return "", errors.New(err.Error())
 	}
@@ -74,9 +92,10 @@ func GetContractById(contractId string) (string, error) {
 }
 
 //根据合约[id]获取合约　处理主节点
-func GetContractMainPubkeyById(contractId string) (string, error) {
+func GetContractMainPubkeyByContractId(contractId string) (string, error) {
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_CONTRACTS).Get(contractId).Field("main_pubkey").Run(session)
+	res, err := r.Table(TABLE_CONTRACTS).Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
+		Field("ContractHead").Field("MainPubkey").Run(session)
 	if err != nil {
 		log.Fatalf(err.Error())
 		return "", errors.New(err.Error())
@@ -108,6 +127,19 @@ func InsertVote(vote string) bool {
 	return false
 }
 
+func GetVoteById(id string) (string, error) {
+	if id == "" {
+		return "", errors.New("id blank")
+	}
+	res := Get(DBNAME, TABLE_VOTES, id)
+	var blo map[string]interface{}
+	err := res.One(&blo)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
 // 根据合约[id]获取所有 vote
 func GetVotesByContractId(contractId string) (string, error) {
 
@@ -116,7 +148,7 @@ func GetVotesByContractId(contractId string) (string, error) {
 	}
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("vote").Field("vote_for_contract").Eq(contractId)).Run(session)
+	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("Vote").Field("VoteForContract").Eq(contractId)).Run(session)
 
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -148,7 +180,7 @@ func InsertContractOutput(contractOutput string) bool {
 	return false
 }
 
-// 根据合约[id]获取所有 vote
+// 根据合约[id]获取所有 contractOutput
 func GetContractOutputByContractId(contractId string) (string, error) {
 
 	if contractId == "" {
@@ -156,7 +188,7 @@ func GetContractOutputByContractId(contractId string) (string, error) {
 	}
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("vote").Field("vote_for_contract").Eq(contractId)).Run(session)
+	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).Filter(r.Row.Field("transaction").Field("contracts").Field("id").Eq(contractId)).Run(session)
 
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -207,7 +239,7 @@ func InsertConsensusFail(vote string) bool {
 /*----------------------------- consensusFail end---------------------------------------*/
 
 /*----------------------------- SendFailingRecords start---------------------------------------*/
-func GetAllRecords(db string, name string) ([]string,error) {
+func GetAllRecords(db string, name string) ([]string, error) {
 	session := ConnectDB(db)
 	ids, err := r.Table(name).Field("id").Run(session)
 	if err != nil {
@@ -221,4 +253,5 @@ func GetAllRecords(db string, name string) ([]string,error) {
 	}
 	return idlist, nil
 }
+
 /*----------------------------- SendFailingRecords end---------------------------------------*/
