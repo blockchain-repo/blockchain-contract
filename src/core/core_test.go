@@ -2,13 +2,14 @@ package core
 
 import (
 	"testing"
+	"unicontract/src/common"
 	"unicontract/src/core/model"
 )
 
 func TestWriteContract(t *testing.T) {
 	contractModel := model.ContractModel{}
-	contractModel.Id ="sssssssssssssssssssssssssssssssssssssssssssssss"
-	private_key := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	contractModel.Timestamp = common.GenTimestamp()
+//	private_key := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
 	// modify and set value for reference obj with &
 	contract := &contractModel.Contract
 	contract.CreatorPubkey = "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
@@ -20,7 +21,7 @@ func TestWriteContract(t *testing.T) {
 		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 	}
 	// sign for contract
-	signatureContract := contractModel.Sign(private_key)
-	_ = signatureContract
+
+	contractModel.Id = common.GenTimestamp()
 	WriteContract(contractModel)
 }
