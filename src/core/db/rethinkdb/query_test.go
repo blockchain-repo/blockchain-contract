@@ -195,3 +195,10 @@ func Test_ContractOutput(t *testing.T) {
 	//fmt.Println(votes)
 	fmt.Println(common.SerializePretty(votes))
 }
+
+func Test_GetAllRecords(t *testing.T){
+	idList,_ :=GetAllRecords("Unicontract","SendFailingRecords")
+	for _,value := range idList {
+		fmt.Println(value)
+	}
+}

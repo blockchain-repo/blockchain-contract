@@ -205,3 +205,20 @@ func InsertConsensusFail(vote string) bool {
 }
 
 /*----------------------------- consensusFail end---------------------------------------*/
+
+/*----------------------------- SendFailingRecords start---------------------------------------*/
+func GetAllRecords(db string, name string) ([]string,error) {
+	session := ConnectDB(db)
+	ids, err := r.Table(name).Field("id").Run(session)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	var idlist []string
+	err = ids.All(&idlist)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return nil, errors.New(err.Error())
+	}
+	return idlist, nil
+}
+/*----------------------------- SendFailingRecords end---------------------------------------*/
