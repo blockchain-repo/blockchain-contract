@@ -118,8 +118,8 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 					}
 
 					if pass {
-						//log.Printf("18.slMyContract is %+v\n", string(slMyContract))
-						log.Println("18")
+						log.Printf("18.slMyContract is %+v\n", string(slMyContract))
+						//log.Println("18")
 						out.Write(slMyContract)
 					} else {
 						//TODO InValid情况
@@ -140,8 +140,6 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 func ceQueryEists(in io.Reader, out io.Writer) {
 	log.Printf("3.进入ceQueryEists\n")
 	defer monitor.Monitor.NewTiming().Send("ce_query_contract")
-
-	//defer PanicRecoverAndOutputStack(false)
 
 	rd := bufio.NewReader(in)
 	slMyContract := make([]byte, MaxSizeTX)
@@ -180,7 +178,8 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		//log.Printf("21.responseResult is %+v\n", responseResult)
 		log.Println("21")
 		if err != nil {
-			log.Printf("chain.GetContract err is %+v\n", err)
+			beegoLog.Error(err.Error())
+			continue
 		} else {
 			if responseResult.Code == _HTTPOK {
 				if responseResult.Data == nil {
@@ -196,8 +195,6 @@ func ceSend(in io.Reader, out io.Writer) {
 	log.Printf("4.进入ceSend\n")
 	defer monitor.Monitor.NewTiming().Send("ce_send_contract")
 
-	defer PanicRecoverAndOutputStack(false)
-
 	rd := bufio.NewReader(in)
 	slReadData := make([]byte, MaxSizeTX)
 	for {
@@ -211,12 +208,14 @@ func ceSend(in io.Reader, out io.Writer) {
 		}
 		slRealData := slReadData[:nReadNum]
 
-		responseResult,err := chain.CreateContract(slRealData)
-		if err != nil{
+		responseResult, err := chain.CreateContract(slRealData)
+		if err != nil {
 			beegoLog.Error(err.Error())
+			continue
 		}
 		if responseResult.Code != _HTTPOK {
 			beegoLog.Error(responseResult.Message)
+			continue
 		}
 
 		out.Write(slRealData)
@@ -373,7 +372,6 @@ func PanicRecoverAndOutputStack(outputStack bool) {
 		if outputStack {
 			var slStack [4096]byte
 			nReadNum := runtime.Stack(slStack[:], true)
-			log.Println("===========================================")
 			log.Printf(string(slStack[:nReadNum]))
 		}
 		log.Println("===========================================")
