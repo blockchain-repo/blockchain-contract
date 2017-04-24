@@ -430,6 +430,7 @@ func Test_Creat(t *testing.T) {
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
+		fmt.Println("handle error ", err.Error())
 	}
 
 }
@@ -503,11 +504,11 @@ func Test_Terminate(t *testing.T) {
 	//fmt.Println("response is:", string(response))
 }
 
-func Test_Find(t *testing.T) {
-	url := default_url + "find"
+func Test_Query(t *testing.T) {
+	url := default_url + "query"
 
 	contract := protos.ContractProto{ // proto-buf
-		Id: "2",
+		Id: "73544efa921145090f521672169dbdbd8ffa684f16988a40d1817b3a50d717d6",
 	}
 	data := protos.ContractData{
 		Data:  &contract,
@@ -519,12 +520,32 @@ func Test_Find(t *testing.T) {
 		fmt.Println("error ", err.Error())
 	}
 
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	responseData, err := httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
 	}
-	//fmt.Println("response is:", string(response))
+	/*---------------------- response -----------------------*/
+	var responseMap map[string]interface{}
+	json.Unmarshal(responseData, &responseMap)
+	fmt.Println("response is:", responseMap)
+	responseDataBody := responseMap["data"]
+	fmt.Println("responseDataBody is:", responseDataBody)
+	ress, ok :=responseDataBody.(string)
+
+	if ok {}
+	fmt.Println("ress is:", ress)
+	rrrr,_ := json.Marshal(ress)
+	fmt.Println("ress byte is:",rrrr )
+
+	responseDataBodyByte, _ := json.Marshal(responseDataBody)
+	fmt.Println(responseDataBodyByte)
+	var contractData protos.ContractData
+	proto.Unmarshal(responseDataBodyByte, &contractData)
+	fmt.Println("contractData is:", contractData)
+
+	//conotractData := responseData["data"]
+	//contractData_str := common.Serialize(contractData.Data)
 }
 
 func Test_Track(t *testing.T) {

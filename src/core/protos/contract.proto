@@ -1,86 +1,104 @@
 syntax = "proto3";
 package protos;
 
-message ContractAttributes{
-     string name = 1;
-     string start_timestamp = 2; //int64
-     string end_timestamp = 3;
-}
-
 message ContractSignature{
-     string owner_pubkey = 1;
-     string signature = 2;
-     string timestamp = 3;
+    string OwnerPubkey = 1;
+    string Signature = 2;
+    string SignTimestamp = 3;
 
 }
 
-import "google/protobuf/any.proto";
-//message Metadata{
-//}
-
-message ContractAssert{
-     string id = 1;
-     string name = 2;
-     float amount= 3;
-     google.protobuf.Any metadata = 4;
+message ContractAsset{
+    string AssetId = 1;
+    string Name = 2;
+    string Caption = 3;
+    string Description = 4;
+    string Unit = 5;
+    float Amount= 6;
+    bytes MetaData = 7;
 }
 
-message PlanTaskCondition{
-     string id = 1;
-     string type = 2;
-     string name = 3;
-     string value = 4;
-     string description = 5;
+message ExpressionResult {
+    string Messsage = 1;
+    string Code = 2;
 }
 
-message Plan{
-     string id = 1;
-     string type = 2;
-     string state = 3;
-     string name = 4;
-     string description = 5;
-     repeated PlanTaskCondition condition = 6;
-     int32 level = 7;
-     string contract_type = 8;
-     repeated string next_task = 9;
+message ComponentsExpression {
+    string Cname = 1;
+    string Ctype = 2;
+    string Caption = 3;
+    string Description = 4;
+    string ExpressionStr = 5;
+    ExpressionResult ExpressionResult = 6;
+    string LogicValue = 7;
 }
 
-message Task{
-     string id = 1;
-     string type = 2;
-     string state = 3;
-     string name = 4;
-     string description = 5;
-     repeated PlanTaskCondition condition = 6;
-     int32 level = 7;
-     string contract_type = 8;
-     repeated string next_task = 9;
+//import "google/protobuf/any.proto";
+
+message ComponentData{
+    string Cname = 1;
+    string Ctype = 2;
+    string Caption = 3;
+    string Description = 4;
+    string ModifyDate = 5;
+    string HardConvType = 6;
+//    map<string,?> Category = 7; // map[string]interface{} Category
+    ComponentData Parent = 8;
+    bool Mandatory = 9;
+//    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
+    string Unit = 11;
+//    google.protobuf.Any Value = 12; // interface{} Value
+    map<string,int32> Options = 13;
+//    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
+    string Format = 15;
 }
 
-message ContractComponents{
-    repeated Plan plans = 1;
-    repeated Task tasks = 2;
+message ContractComponent{
+    string Cname = 1;
+    string Ctype = 2;
+    string Caption = 3;
+    string Description = 4;
+    string State = 5;
+    repeated ComponentsExpression PreCondition= 6;
+    repeated ComponentsExpression CompleteCondition = 7;
+    repeated ComponentsExpression DisgardCondition = 8;
+    repeated string NextTasks = 9;
+    repeated ComponentData DataList = 10;
+    repeated ComponentsExpression DataValueSetterExpressionList = 11;
+    ContractComponent CandidateList = 12;
+    ContractComponent DecisionResult = 13;
+    repeated string TaskList = 14;
+    repeated string SupportArguments = 15;
+    repeated string AgainstArguments = 16;
+    int32 Support = 17;
+    repeated string Text = 18;
+}
+
+message ContractBody {
+    string ContractId = 1; // uuid
+    string Cname = 2; // contract name
+    string Ctype = 3;
+    string Caption = 4;
+    string Description = 5;
+    string ContractState = 6;
+    string Creator = 7;
+    string CreatorTime = 8;
+    string StartTime = 9;
+    string EndTime = 10;
+    repeated string ContractOwners = 11;
+    repeated ContractAsset ContractAssets = 12;
+    repeated ContractSignature ContractSignatures = 13;
+    repeated ContractComponent ContractComponents = 14;
+}
+
+message ContractHead {
+    string MainPubkey = 1;
+    int32 Version = 2;
 }
 
 message Contract {
-     string creator_pubkey = 1;
-     string create_timestamp = 2;
-     string operation = 3;
-     ContractAttributes contract_attributes= 4;
-     repeated string contract_owners = 5;
-     repeated ContractSignature contract_signatures = 6;
-     repeated ContractAssert contract_asserts = 7;
-     ContractComponents contract_components = 8;
-}
-
-message ContractProto {
-     string id = 1; //contract Id
-     string node_pubkey = 2;
-     string main_pubkey = 3;
-     string signature = 4;
-     repeated string voters = 5;
-     string timestamp = 6;
-     int32 version = 7;
-     Contract contract = 8;
+    string Id = 1;  //Hash contractBody except conotractSignatures
+    ContractHead ContractHead = 2;
+    ContractBody ContractBody = 3;
 }
 

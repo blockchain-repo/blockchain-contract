@@ -2,34 +2,24 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
-	"unicontract/src/core/protos"
 	"unicontract/src/config"
+	"unicontract/src/core/protos"
 )
 
-// table [contract]
+// table [Contracts]
 type ContractModel struct {
-	Id         string `json:"id"`          //合约唯一标识ID，对合约主体信息计算hash
-	Version    int32   `json:"version"`     //合约描述结构版本号
-	MainPubkey string `json:"main_pubkey"` //合约处理主节点公钥
-	Timestamp  string `json:"timestamp"`   //合约运行跟踪时间戳（以合约执行层输出结果时间为准）
-
-	//合约运行节点投票公钥环
-	//“voters”:[voter_node1_pubkey, voter_node2_pubkey, voter_node3_pubkey],
-	Voters   []string        `json:"voters"`
-	Contract protos.Contract `json:"contract"` //合约描述集合, (引用contract描述 for proto3)
+	protos.Contract //合约描述集合, (引用contract描述 for proto3)
 }
 
 // validate the contract
 func (c *ContractModel) Validate() bool {
-	headerValid := c.validateContractHeader()
-	if !headerValid {
+	headeValid := c.validateContractHead()
+	if !headeValid {
 		return false
 	}
-
-	idValid := c.Id == c.GenerateId()
+	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
 	if !idValid {
 		return false
 	}
@@ -42,47 +32,47 @@ func (c *ContractModel) Validate() bool {
 	return true
 }
 
-//Create a signature for the contract
+//Create a signature for the ContractBody
 func (c *ContractModel) Sign(private_key string) string {
 	/*-------------module deep copy start --------------*/
-	var contractClone = c.Contract
+	var contractBodyClone = c.ContractBody
 
 	// new obj
-	var temp protos.Contract
+	var temp protos.ContractBody
 
-	contractCloneBytes, _ := json.Marshal(contractClone)
-	err := json.Unmarshal(contractCloneBytes, &temp)
+	contractBodyCloneBytes, _ := json.Marshal(contractBodyClone)
+	err := json.Unmarshal(contractBodyCloneBytes, &temp)
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
 	temp.ContractSignatures = nil
-	contract_serialized := common.Serialize(temp)
+	contractBodySerialized := common.Serialize(temp)
 	/*-------------module deep copy end --------------*/
 
-	signatureContract := common.Sign(private_key, contract_serialized)
-	return signatureContract
+	signatureContractBody := common.Sign(private_key, contractBodySerialized)
+	return signatureContractBody
 }
 
-// Check the validity of a Contract's signature
+// Check the validity of a ContractBody's signature
 func (c *ContractModel) IsSignatureValid() bool {
 
 	/*-------------module deep copy start --------------*/
-	var contractClone = c.Contract
+	var contractBodyClone = c.Contract.ContractBody
 
 	// new obj
-	var temp protos.Contract
+	var temp protos.ContractBody
 
-	contractCloneBytes, _ := json.Marshal(contractClone)
-	err := json.Unmarshal(contractCloneBytes, &temp)
+	contractBodyCloneCloneBytes, _ := json.Marshal(contractBodyClone)
+	err := json.Unmarshal(contractBodyCloneCloneBytes, &temp)
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
 	temp.ContractSignatures = nil
-	contract_serialized := common.Serialize(temp)
+	contractBody_serialized := common.Serialize(temp)
 	/*-------------module deep copy end --------------*/
 
-	contractOwners := c.Contract.ContractOwners
-	contractSignatures := c.Contract.ContractSignatures
+	contractOwners := c.ContractBody.ContractOwners
+	contractSignatures := c.ContractBody.ContractSignatures
 
 	contractOwners_len := len(contractOwners)
 	if contractOwners_len != len(contractSignatures) {
@@ -101,7 +91,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 		}
 
 		contractSignature := contractSignatures[index]
-		if contractOwner != contractSignature.OwnerPubkey{
+		if contractOwner != contractSignature.OwnerPubkey {
 			inValidSignatureCount++
 			continue
 		}
@@ -112,10 +102,9 @@ func (c *ContractModel) IsSignatureValid() bool {
 		}
 
 		// contract signature verify
-		verifyFlag := common.Verify(contractOwner, contract_serialized, contractSignature.Signature)
-		fmt.Println(contractOwner)
-		fmt.Println(contract_serialized)
-		fmt.Println(contractSignature.Signature)
+		verifyFlag := common.Verify(contractOwner, contractBody_serialized, contractSignature.Signature)
+		beego.Debug("contract verify[owner:", contractOwner,",signature:",
+			contractSignature.Signature, "contractBody_serialized",contractBody_serialized,"]")
 		if !verifyFlag {
 			inValidSignatureCount++
 			continue
@@ -125,6 +114,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 	if inValidSignatureCount >= (contractOwners_len+1)/2 {
 		return false
 	}
+
 	return true
 }
 
@@ -134,57 +124,32 @@ func (c *ContractModel) ToString() string {
 
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
-	/*-------------module deep copy--------------*/
-	var contractClone = c.Contract
-
-	// new obj
-	var temp protos.Contract
-
-	transactionCloneBytes, _ := json.Marshal(contractClone)
-	err := json.Unmarshal(transactionCloneBytes, &temp)
-	if err != nil {
-		beego.Error("Unmarshal error ", err)
-	}
-	//TODO deal with the timestamps
-	temp.ContractSignatures = nil
-	contract_without_signatures_serialized := common.Serialize(temp)
-
-	return common.HashData(contract_without_signatures_serialized)
+	contractBodySerialized := common.Serialize(c.Contract.ContractBody)
+	return common.HashData(contractBodySerialized)
 }
 
 //Validate the contract header
-func (c *ContractModel) validateContractHeader() bool {
+func (c *ContractModel) validateContractHead() bool {
 
 	pub_keys := config.GetAllPublicKey()
 	pub_keysSet := common.StrArrayToHashSet(pub_keys)
-
+	contractHead := c.Contract.ContractHead
 	//todo voters in keyring or not ?
-	if c.MainPubkey == "" {
+	if contractHead.MainPubkey == "" {
 		beego.Error("contract main_pubkey blank")
 		return false
 	}
 
-	if !pub_keysSet.Has(c.MainPubkey) {
-		beego.Warn("main_pubkey ", c.MainPubkey," not in pubkeys")
+	if !pub_keysSet.Has(contractHead.MainPubkey) {
+		beego.Warn("main_pubkey ", contractHead.MainPubkey, " not in pubkeys")
 		return false
 	}
 
-	_contract := &c.Contract
-	if _contract == nil {
-		beego.Error("Empty contract is not allowed")
-		return false
-	}
-
-	if _contract.Operation != "CREATE" {
-		return false
-		//beego.Error("missing validate the contract [creator_pubkey]")
-		//beego.Error("missing validate the contract [create_timestamp]")
-		//beego.Error("missing validate the contract [contract_attributes]")
-		//beego.Error("missing validate the contract [contract_owners]")
-		//beego.Error("missing validate the contract [contract_signatures]")
-		//beego.Error("missing validate the contract [contract_asserts]")
-		//beego.Error("missing validate the contract [contract_components]")
-	}
+	//_contract := &c.Contract
+	//if _contract == nil {
+	//	beego.Error("Empty contract is not allowed")
+	//	return false
+	//}
 
 	return true
 }

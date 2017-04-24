@@ -2,22 +2,23 @@ package model
 
 import (
 	"unicontract/src/common"
+	"unicontract/src/config"
 )
 
 type VoteBody struct {
-	IsValid         bool   `json:"is_valid"`          //合约、合约交易投票结果，如true,false
-	InvalidReason   string `json:"invalid_reason"`    //合约、合约交易投无效票原因
-	VoteForContract string `json:"vote_for_contract"` //投票的合约、合约交易ID
-	VoteType        string `json:"vote_type"`         //投票对象的类型，如CONTRACT，TRANSACTION等
-	Timestamp       string `json:"timestamp"`         //节点投票时间戳
+	IsValid         bool   //合约、合约交易投票结果，如true,false
+	InvalidReason   string //合约、合约交易投无效票原因
+	VoteForContract string //投票的合约、合约交易ID
+	VoteType        string //投票对象的类型，如CONTRACT，TRANSACTION等
+	Timestamp       string //节点投票时间戳
 }
 
-// table [votes]
+// table [Votes]
 type Vote struct {
-	Id         string   `json:"id"`          //投票唯一标识ID，最投票主体信息计算hash
-	NodePubkey string   `json:"node_pubkey"` //投票节点的公钥
-	VoteBody   VoteBody `json:"vote"`        //投票信息
-	Signature  string   `json:"signature"`   //投票节点签名
+	Id         string   //投票唯一标识ID，最投票主体信息计算hash
+	NodePubkey string   //投票节点的公钥
+	VoteBody   VoteBody `json:"Vote"` //投票信息
+	Signature  string   //投票节点签名
 }
 
 // Calculate the election status of a contract.
@@ -50,7 +51,7 @@ func PartitionEligibleVotes(votes []Vote, eligible_voters []string) ([]Vote, []V
 	return eligible, ineligible
 }
 
-func  CountVotes(eligible_votes []Vote) map[string]interface{} {
+func CountVotes(eligible_votes []Vote) map[string]interface{} {
 
 	// Group by pubkey to detect duplicate voting
 	by_voter := make(map[Vote]bool)
@@ -104,12 +105,11 @@ func (v *Vote) VerifyVoteSignature() bool {
 
 func (v *Vote) SignVote() string {
 	//TODO priv_key
-	priv_key := "6hXsHQ4fdWQ9UY1XkBYCYRouAagRW8rXxYSLgpveQNYY"
-	msg := v.ToString()
+	priv_key := config.Config.Keypair.PrivateKey
+	msg := common.Serialize(v.VoteBody)
 	sig := common.Sign(priv_key, msg)
 	return sig
 }
-
 
 func (v *Vote) ToString() string {
 	return common.Serialize(v)

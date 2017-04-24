@@ -1,9 +1,8 @@
 syntax = "proto3";
 package protos;
-//import "unicontract/src/core/protos/contract.proto";
 
 import "contract.proto";
 message ContractData {
-    ContractProto data = 1; //
+    Contract data = 1; //
     string token = 2; //
 }

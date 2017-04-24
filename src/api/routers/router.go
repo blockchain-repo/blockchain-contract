@@ -22,7 +22,7 @@ func init() {
 			beego.NSRouter("/create", &controllers.ContractController{}, "post:Create"),
 			beego.NSRouter("/signature", &controllers.ContractController{}, "post:Signature"),
 			beego.NSRouter("/terminate", &controllers.ContractController{}, "post:Terminate"),
-			beego.NSRouter("/find", &controllers.ContractController{}, "post:Find"),
+			beego.NSRouter("/query", &controllers.ContractController{}, "post:Query"),
 			beego.NSRouter("/track", &controllers.ContractController{}, "post:Track"),
 			beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
 			beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),

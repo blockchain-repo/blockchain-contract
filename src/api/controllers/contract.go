@@ -55,6 +55,7 @@ func (c *ContractController) responseJsonBody(data interface{}, ok bool, msg str
 	response["msg"] = msg
 	response["data"] = data
 	c.Data["json"] = response
+	beego.Error(response)
 	c.ServeJSON()
 }
 
@@ -108,7 +109,7 @@ func (c *ContractController) AuthSignature() {
 	c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
 }
 
-
+// API receive and transfer it to contractModel
 func fromContractProtoToContractModel(contractProto *protos.ContractProto) model.ContractModel{
 	var contractModel model.ContractModel
 	contractModel.Id = contractProto.Id
@@ -121,6 +122,28 @@ func fromContractProtoToContractModel(contractProto *protos.ContractProto) model
 	beego.Error(common.SerializePretty(contractModel))
 
 	return contractModel
+}
+
+// go rethink get contractModel string and transfer it to contractProto
+func fromContractModelStrToContractProto(contractModelStr string) (protos.ContractProto, error){
+	// 1. to contractModel
+	var contractModel model.ContractModel
+	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
+	if err != nil {
+		beego.Error("error fromContractModelStrToContractProto", err)
+	}
+	beego.Warn(common.SerializePretty(contractModel))
+
+	// 2. to contractProto
+	var contractProto protos.ContractProto
+	contractProto.Id = contractModel.Id
+	contractProto.MainPubkey = contractModel.Id
+	contractProto.Version = contractModel.Version
+	contractProto.Timestamp = contractModel.Timestamp
+	contractProto.Voters = contractModel.Voters
+	contractProto.Contract = &contractModel.Contract
+
+	return contractProto, err
 }
 
 // @Title CreateContract
@@ -269,15 +292,15 @@ func (c *ContractController) Terminate() {
 	c.responseJsonBody(response, true, "合约终止成功!")
 }
 
-// @Title Find
+// @Title Query
 // @Description get contract by cid
 // @Param	body		body 	interface{}	true			"The key for contract"
 // @Success 200 {object} models.Contract
 // @Failure 403 cid is empty
-// @router /find [post]
-func (c *ContractController) Find() {
+// @router /query [post]
+func (c *ContractController) Query() {
 	data, _ := c.parseProtoRequestBody()
-	//TODO 1. find contract 查询合约
+	//TODO 1. query contract 查询合约
 	if data == nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
@@ -297,15 +320,33 @@ func (c *ContractController) Find() {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "错误请求!")
 		return
 	}
+	contractStr, err := rethinkdb.GetContractById(contractId)
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, nil, false, "查询错误!")
+		return
+	}
 
-	response := make(map[string]interface{})
-	response["creator"] = "xinwang"
-	response["func"] = "Signature"
+	if contractStr == "" {
+		beego.Error("合约(Id=" + contractId + ")不存在: ")
+	}
 
-	beego.Error("合约(Id=" + contractId + ")不存在: ")
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少查询合约方法![Find]")
+
+	contractProto, err := fromContractModelStrToContractProto(contractStr)
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, nil, false, err.Error())
+		return
+	}
+	contractProtoBytes, err := proto.Marshal(&contractProto)
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, nil, false, err.Error())
+		return
+	}
+
+	response := contractProtoBytes
+	beego.Error(contractProtoBytes)
+
 	beego.Warn("合约Id: " + contractId)
-	//beego.Info("合约(Id=" + contractId + ")存在: ")
+	beego.Warn("合约: " + contractStr)
 	c.responseJsonBody(response, true, "查询合约成功!")
 }
 
