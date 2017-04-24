@@ -161,7 +161,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		fmt.Print(result.Data)
 		if result.Code != 200 {
 			errors.New("request send failed")
-			saveOutputErrorData(_TableNameSendFailingRecords,t)
+			SaveOutputErrorData(_TableNameSendFailingRecords,t)
 		}
 		out.Write(t)
 	}

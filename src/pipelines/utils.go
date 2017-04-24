@@ -47,7 +47,7 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 	return app
 }
 
-func saveOutputErrorData(tableName string, t []byte) bool {
+func SaveOutputErrorData(tableName string, t []byte) bool {
 	coModel := model.ContractOutput{}
 	err := json.Unmarshal(t, &coModel)
 	if err != nil {
