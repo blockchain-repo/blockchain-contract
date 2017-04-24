@@ -2,10 +2,20 @@ package pipelines
 
 import (
 	"io"
-//	"log"
+	"encoding/json"
+	"log"
+	"time"
+
+	"unicontract/src/core/model"
+	"unicontract/src/core/db/rethinkdb"
+
+	"github.com/astaxie/beego/logs"
 )
 
-const MaxSizeTX = 16 * 1024
+const (
+	MaxSizeTX                    = 16 * 1024
+	_TableNameSendFailingRecords = "SendFailingRecords"
+)
 
 //bind函数主要是用来为pipe函数整合用的，通过将闭包将函数签名变成pipe所需的样子
 //返回一个函数闭包，将一个函数字面量app和字符串slice 传入其中
@@ -35,6 +45,30 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 		}
 	}
 	return app
+}
+
+func saveOutputErrorData(tableName string, t []byte) bool {
+	coModel := model.ContractOutput{}
+	err := json.Unmarshal(t, &coModel)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	dataId := coModel.Id
+
+	res := rethinkdb.Get(_DBName, tableName, dataId)
+	//TODO test nil data
+	if res != nil {
+		return true
+	}
+
+	//insert
+	failTime := time.Now().String()
+	dataJson := `{"id":"`+dataId+`","tableName":"`+tableName+`","failTime":"`+failTime+`","sendTime":"","numSend":"1","status":"unsend"}`
+	logs.Info(dataJson)
+	var result = rethinkdb.Insert(_DBName, tableName, dataJson)
+	logs.Info(result)
+
+	return true
 }
 
 //func init() {

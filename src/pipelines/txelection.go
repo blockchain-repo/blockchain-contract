@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"os"
 	"fmt"
 	"errors"
@@ -15,6 +14,8 @@ import (
 	"unicontract/src/chain"
 	"unicontract/src/config"
 	"unicontract/src/common/monitor"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
@@ -25,7 +26,7 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 		if bytes.Equal(v, []byte("null")) {
@@ -51,14 +52,14 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 		conout := model.ContractOutput{}
 		err := json.Unmarshal(t,&conout)
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 		//main node filter
 		mainNodeKey  := conout.Transaction.ContractModel.MainPubkey
 		myNodeKey := config.Config.Keypair.PublicKey
 		if mainNodeKey != myNodeKey {
-			log.Printf("I am not the mainnode of the C-output %s",conout.Id)
+			logs.Info("I am not the mainnode of the C-output %s",conout.Id)
 			continue
 		}
 		out.Write(t)
@@ -80,7 +81,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 		coModel := model.ContractOutput{}
 		err := json.Unmarshal(t,&coModel)
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 
@@ -90,12 +91,12 @@ func txeValidate(in io.Reader, out io.Writer) {
 		}
 		if !coModel.ValidateHash() {
 			//invalid hash
-			log.Fatalln(errors.New("invalid hash"))
+			logs.Error(errors.New("invalid hash"))
 			continue
 		}
 		if !coModel.ValidateContractOutput() {
 			//invalid signature
-			log.Fatalln(errors.New("invalid signature"))
+			logs.Error(errors.New("invalid signature"))
 			continue
 		}
 		out.Write(t)
@@ -117,19 +118,18 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 		coModel := model.ContractOutput{}
 		err := json.Unmarshal(t,&coModel)
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 		//check whether already exist
 		id := coModel.Id
 		result,err := chain.GetContractTx("{'id':"+id+"}")
 		if err != nil{
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 		}
 
 		if result.Code != 200 {
-			//TODO error handling  Test
-			errors.New("")
+			errors.New("request send failed")
 		}
 
 		fmt.Print(result.Data)
@@ -156,12 +156,12 @@ func txeSend(in io.Reader, out io.Writer) {
 		//write the contractoutput to unichain.
 		result,err:= chain.CreateContractTx(t)
 		if err != nil{
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 		}
 		fmt.Print(result.Data)
 		if result.Code != 200 {
-			//TODO error handling Test
-			errors.New("")
+			errors.New("request send failed")
+			saveOutputErrorData(_TableNameSendFailingRecords,t)
 		}
 		out.Write(t)
 	}
@@ -178,7 +178,7 @@ func starttxElection() {
 
 	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	w := bufio.NewWriter(f)
 	p(nil, w)
