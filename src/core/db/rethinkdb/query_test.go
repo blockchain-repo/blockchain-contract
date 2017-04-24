@@ -7,6 +7,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
+	"unicontract/src/config"
 )
 
 func Test_Get(t *testing.T) {
@@ -46,12 +47,15 @@ func Test_InsertContractStruct(t *testing.T) {
 	private_key := "C6WdHVbHAErN7KLoWs9VCBESbAXQG6PxRtKktWzoKytR"
 	// modify and set value for reference obj with &
 	contract := &contractModel.Contract
-	contract.CreatorPubkey = "6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo"
-	contract.Operation = "CREATE"
-	contract.ContractOwners = []string{
-		//"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-		"6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo",
+	contractHead := &protos.ContractHead{}
+	contractBody := &protos.ContractBody{}
+
+	contractHead.MainPubkey = "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo"
+	contractBody.Cname = "star"
+	contractBody.ContractOwners = []string{
+		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+		"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 	}
 	// sign for contract
 	signatureContract := contractModel.Sign(private_key)
@@ -59,13 +63,6 @@ func Test_InsertContractStruct(t *testing.T) {
 	fmt.Println("private_key is : ", private_key)
 	fmt.Println("contract is : ", common.Serialize(contract))
 	fmt.Println("signatureContract is : ", signatureContract)
-	contractModel.Voters = []string{
-		"6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo",
-		//"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-	}
-	contractModel.Timestamp = common.GenTimestamp()
-	//contractModel.NodePubkey = "AZfjdKxEr9G3NwdAkco22nN8PfgQvCr5TDPK1tqsGZrk"
-	contractModel.MainPubkey = "6prCcrjvCz5YwmiraCJko8niFpNQDv9296WoMeDo5FMo"
 
 	contractModel.Id = contractModel.GenerateId()
 	isTrue := InsertContract(common.Serialize(contractModel))
@@ -98,13 +95,13 @@ func Test_GetContractMainPubkeyById(t *testing.T) {
 func Test_InsertVote(t *testing.T) {
 	vote := model.Vote{}
 
-	vote.NodePubkey = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	vote.NodePubkey = config.Config.Keypair.PublicKey
 	voteBody := &vote.VoteBody
 	voteBody.Timestamp = common.GenTimestamp()
 	voteBody.IsValid = true
 	voteBody.InvalidReason = ""
 	voteBody.VoteType = "CONTRACT"
-	voteBody.VoteForContract = "1c54ec6c1c362beba4480b417e6646c0565ae322b0894f6c83f460d78b992711"
+	voteBody.VoteForContract = "73544efa921145090f521672169dbdbd8ffa684f16988a40d1817b3a50d717d6"
 	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	vote.Id = common.GenerateUUID()
 	isTrue := InsertVote(common.Serialize(vote))
@@ -114,7 +111,7 @@ func Test_InsertVote(t *testing.T) {
 }
 
 func Test_GetVotesByContractId(t *testing.T) {
-	contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a567569"
+	contractId := "73544efa921145090f521672169dbdbd8ffa684f16988a40d1817b3a50d717d6"
 	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
 
 	/*-------------------examples:------------------*/
@@ -125,7 +122,7 @@ func Test_GetVotesByContractId(t *testing.T) {
 	if err != nil {
 		fmt.Println("GetVotesByContractId fail!")
 	}
-	//fmt.Println(votes)
+	fmt.Println(votes)
 	fmt.Println(common.SerializePretty(votes))
 }
 
@@ -160,18 +157,21 @@ func Test_InsertContractOutput(t *testing.T) {
 	relaction.Signatures = signatures
 
 	//create new obj
-	contract := protos.Contract{}
+	contract := model.ContractModel{}
 	// modify and set value for reference obj with &
-	contract.CreatorPubkey = "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
-	contract.Operation = "CREATE"
-	contract.ContractOwners = []string{
-		"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
+	contractHead := &protos.ContractHead{}
+	contractBody := &protos.ContractBody{}
+	contractHead.MainPubkey = "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo"
+	contractBody.Cname = "star"
+	contractBody.ContractOwners = []string{
+		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+		"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 	}
+	contract.ContractHead = contractHead
+	contract.ContractBody = contractBody
+	transaction.ContractModel = contract
 	// sign for contract
-
 	conotractOutput.Id = conotractOutput.GenerateId()
 
 	isTrue := InsertContractOutput(common.Serialize(conotractOutput))
@@ -181,7 +181,7 @@ func Test_InsertContractOutput(t *testing.T) {
 }
 
 func Test_ContractOutput(t *testing.T) {
-	contractId := "aa70b6ea73c5b9f3b563c4242e3a625c89197ffc8c031cd3c4e1bc278e006645"
+	contractId := "3af8ef59ccbab0510d4afaace6729bc8110d1614a6380eefe87ee3cd1859cc15"
 	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
 
 	/*-------------------examples:------------------*/
