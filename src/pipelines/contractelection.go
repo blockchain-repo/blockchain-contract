@@ -211,7 +211,10 @@ func ceSend(in io.Reader, out io.Writer) {
 		}
 		slRealData := slReadData[:nReadNum]
 
-		responseResult := chain.CreateContract(slRealData)
+		responseResult,err := chain.CreateContract(slRealData)
+		if err != nil{
+			beegoLog.Error(err.Error())
+		}
 		if responseResult.Code != _HTTPOK {
 			beegoLog.Error(responseResult.Message)
 		}

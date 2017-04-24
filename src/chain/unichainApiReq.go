@@ -1,16 +1,30 @@
 package chain
 
-import "unicontract/src/common/requestHandler"
+import (
+	"unicontract/src/common/requestHandler"
+	"unicontract/src/common"
+	"errors"
+)
 
 /**
  * function : 1.单条payload交易创建接口
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func CreateByPayload(jsonBody interface{}) *requestHandler.ResponseResult{
+func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "CreateByPayload"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -18,10 +32,20 @@ func CreateByPayload(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryByID(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryByID"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -29,10 +53,20 @@ func QueryByID(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsTotal() *requestHandler.ResponseResult{
+func QueryTxsTotal() (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsTotal"
-	return requestHandler.GetRequestResult(yamlName,apiName,"")
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,"")
 }
 
 /**
@@ -40,10 +74,20 @@ func QueryTxsTotal() *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsByRange(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsByRange"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -51,10 +95,20 @@ func QueryTxsByRange(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryGroupByBlock() *requestHandler.ResponseResult{
+func QueryGroupByBlock() (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryGroupByBlock"
-	return requestHandler.GetRequestResult(yamlName,apiName,"")
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,"")
 }
 
 /**
@@ -62,10 +116,20 @@ func QueryGroupByBlock() *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryBlockByID(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryBlockByID"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -73,10 +137,20 @@ func QueryBlockByID(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsByID(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsByID"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -84,10 +158,20 @@ func QueryTxsByID(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsCountByID(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsCountByID"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -95,10 +179,20 @@ func QueryTxsCountByID(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryBlockCount() *requestHandler.ResponseResult{
+func QueryBlockCount() (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryBlockCount"
-	return requestHandler.GetRequestResult(yamlName,apiName,"")
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,"")
 }
 
 /**
@@ -106,10 +200,20 @@ func QueryBlockCount() *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryBlocksByRange(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryBlocksByRange"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -117,10 +221,20 @@ func QueryBlocksByRange(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryInvalidBlockTotal() *requestHandler.ResponseResult{
+func QueryInvalidBlockTotal() (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryInvalidBlockTotal"
-	return requestHandler.GetRequestResult(yamlName,apiName,"")
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,"")
 }
 
 /**
@@ -128,10 +242,20 @@ func QueryInvalidBlockTotal() *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryInvalidBlockByRange(jsonBody interface{}) *requestHandler.ResponseResult{
+func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryInvalidBlockByRange"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -139,10 +263,20 @@ func QueryInvalidBlockByRange(jsonBody interface{}) *requestHandler.ResponseResu
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func PublickeySet() *requestHandler.ResponseResult{
+func PublickeySet() (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "PublickeySet"
-	return requestHandler.GetRequestResult(yamlName,apiName,"")
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,"")
 }
 
 /**
@@ -150,10 +284,20 @@ func PublickeySet() *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TxCreateAvgTimeByRange(jsonBody interface{}) *requestHandler.ResponseResult{
+func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "TxCreateAvgTimeByRange"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -161,10 +305,20 @@ func TxCreateAvgTimeByRange(jsonBody interface{}) *requestHandler.ResponseResult
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func BlockCreateAvgTimeByRange(jsonBody interface{}) *requestHandler.ResponseResult{
+func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "BlockCreateAvgTimeByRange"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -172,10 +326,20 @@ func BlockCreateAvgTimeByRange(jsonBody interface{}) *requestHandler.ResponseRes
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func VoteTimeByBlockID(jsonBody interface{}) *requestHandler.ResponseResult{
+func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "VoteTimeByBlockID"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 /**
@@ -183,10 +347,20 @@ func VoteTimeByBlockID(jsonBody interface{}) *requestHandler.ResponseResult{
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func VoteAvgTimeByRange(jsonBody interface{}) *requestHandler.ResponseResult{
+func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	yamlName := "unichainApiConf.yaml"
 	apiName := "VoteAvgTimeByRange"
-	return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
+
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
 

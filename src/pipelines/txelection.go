@@ -122,7 +122,10 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 		}
 		//check whether already exist
 		id := coModel.Id
-		result := chain.GetContractTx("{'id':"+id+"}")
+		result,err := chain.GetContractTx("{'id':"+id+"}")
+		if err != nil{
+			log.Fatalf(err.Error())
+		}
 
 		if result.Code != 200 {
 			//TODO error handling  Test
@@ -151,7 +154,10 @@ func txeSend(in io.Reader, out io.Writer) {
 		}
 		t := p[:n]
 		//write the contractoutput to unichain.
-		result := chain.CreateContractTx(t)
+		result,err:= chain.CreateContractTx(t)
+		if err != nil{
+			log.Fatalf(err.Error())
+		}
 		fmt.Print(result.Data)
 		if result.Code != 200 {
 			//TODO error handling Test

@@ -12,7 +12,10 @@ import (
  * return : requestHandler.ResponseResult struct
  */
 func TestCreateByPayload(t *testing.T) {
-	result := CreateByPayload("")
+	result,err:= CreateByPayload("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -23,7 +26,10 @@ func TestCreateByPayload(t *testing.T) {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryByID(t *testing.T){
-	result := QueryByID("")
+	result,err := QueryByID("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -34,7 +40,10 @@ func TestQueryByID(t *testing.T){
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryTxsTotal(t *testing.T)  {
-	result := QueryTxsTotal()
+	result,err := QueryTxsTotal()
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -45,7 +54,10 @@ func TestQueryTxsTotal(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryTxsByRange(t *testing.T)  {
-	result := QueryTxsByRange("")
+	result,err := QueryTxsByRange("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -56,7 +68,10 @@ func TestQueryTxsByRange(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryGroupByBlock(t *testing.T)  {
-	result := QueryGroupByBlock()
+	result,err := QueryGroupByBlock()
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -67,7 +82,10 @@ func TestQueryGroupByBlock(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryBlockByID(t *testing.T)  {
-	result := QueryBlockByID("")
+	result,err := QueryBlockByID("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -78,7 +96,10 @@ func TestQueryBlockByID(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryTxsByID(t *testing.T)  {
-	result := QueryTxsByID("")
+	result,err := QueryTxsByID("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -89,7 +110,10 @@ func TestQueryTxsByID(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryTxsCountByID(t *testing.T)  {
-	result := QueryTxsCountByID("")
+	result,err := QueryTxsCountByID("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -100,7 +124,10 @@ func TestQueryTxsCountByID(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryBlockCount(t *testing.T)  {
-	result := QueryBlockCount()
+	result,err := QueryBlockCount()
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -111,7 +138,10 @@ func TestQueryBlockCount(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryBlocksByRange(t *testing.T)  {
-	result := QueryBlocksByRange("")
+	result,err := QueryBlocksByRange("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -122,7 +152,10 @@ func TestQueryBlocksByRange(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryInvalidBlockTotal(t *testing.T)  {
-	result := QueryInvalidBlockTotal()
+	result,err := QueryInvalidBlockTotal()
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -133,7 +166,10 @@ func TestQueryInvalidBlockTotal(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestQueryInvalidBlockByRange(t *testing.T)  {
-	result := QueryInvalidBlockByRange("")
+	result,err := QueryInvalidBlockByRange("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -144,7 +180,10 @@ func TestQueryInvalidBlockByRange(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestPublickeySet(t *testing.T)  {
-	result := PublickeySet()
+	result,err := PublickeySet()
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -155,7 +194,10 @@ func TestPublickeySet(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestTxCreateAvgTimeByRange(t *testing.T)  {
-	result := TxCreateAvgTimeByRange("")
+	result,err := TxCreateAvgTimeByRange("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -166,7 +208,10 @@ func TestTxCreateAvgTimeByRange(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestBlockCreateAvgTimeByRange(t *testing.T)  {
-	result := BlockCreateAvgTimeByRange("")
+	result,err := BlockCreateAvgTimeByRange("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -177,7 +222,10 @@ func TestBlockCreateAvgTimeByRange(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestVoteTimeByBlockID(t *testing.T)  {
-	result := VoteTimeByBlockID("")
+	result,err := VoteTimeByBlockID("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -188,7 +236,10 @@ func TestVoteTimeByBlockID(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestVoteAvgTimeByRange(t *testing.T)  {
-	result := VoteAvgTimeByRange("")
+	result,err := VoteAvgTimeByRange("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }

@@ -104,7 +104,7 @@ func Test_InsertVote(t *testing.T) {
 	voteBody.IsValid = true
 	voteBody.InvalidReason = ""
 	voteBody.VoteType = "CONTRACT"
-	voteBody.VoteForContract = "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a567569"
+	voteBody.VoteForContract = "1c54ec6c1c362beba4480b417e6646c0565ae322b0894f6c83f460d78b992711"
 	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	vote.Id = common.GenerateUUID()
 	isTrue := InsertVote(common.Serialize(vote))

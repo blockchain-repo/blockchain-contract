@@ -12,7 +12,10 @@ import (
  * return : requestHandler.ResponseResult struct
  */
 func TestCreateContract(t *testing.T)  {
-	result := CreateContract("")
+	result,err:= CreateContract("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -23,7 +26,10 @@ func TestCreateContract(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestCreateContractTx(t *testing.T) {
-	result := CreateContractTx("")
+	result,err := CreateContractTx("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -34,7 +40,10 @@ func TestCreateContractTx(t *testing.T) {
  * return : requestHandler.ResponseResult struct
  */
 func TestGetContract(t *testing.T)  {
-	result := GetContract("")
+	result,err := GetContract("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -45,7 +54,10 @@ func TestGetContract(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestGetContractTx(t *testing.T)  {
-	result := GetContractTx("")
+	result,err := GetContractTx("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -56,7 +68,10 @@ func TestGetContractTx(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestGetContractRecord(t *testing.T)  {
-	result := GetContractRecord("")
+	result,err := GetContractRecord("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -67,7 +82,10 @@ func TestGetContractRecord(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestFreezeAsset(t *testing.T)  {
-	result := FreezeAsset("")
+	result,err := FreezeAsset("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -78,7 +96,10 @@ func TestFreezeAsset(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestUnfreezeAsset(t *testing.T)  {
-	result := UnfreezeAsset("")
+	result,err := UnfreezeAsset("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
@@ -89,7 +110,10 @@ func TestUnfreezeAsset(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestFrozenAsset(t *testing.T)  {
-	result := FrozenAsset("")
+	result,err := FrozenAsset("")
+	if err != nil{
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	fmt.Println(reflect.TypeOf(result))
 }
