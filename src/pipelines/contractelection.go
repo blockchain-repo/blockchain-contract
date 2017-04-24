@@ -141,12 +141,13 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 	log.Printf("3.进入ceQueryEists\n")
 	defer monitor.Monitor.NewTiming().Send("ce_query_contract")
 
-	defer PanicRecoverAndOutputStack(false)
+	//defer PanicRecoverAndOutputStack(false)
 
 	rd := bufio.NewReader(in)
 	slMyContract := make([]byte, MaxSizeTX)
 	for {
 		nReadNum, err := rd.Read(slMyContract)
+		log.Printf("读取到数据......\n")
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
@@ -174,12 +175,17 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		//log.Printf("20.input is %+v\n", input)
 		log.Println("20")
 
-		responseResult := chain.GetContract(string(slInput))
+		responseResult, err := chain.GetContract(string(slInput))
+		_ = responseResult
 		//log.Printf("21.responseResult is %+v\n", responseResult)
 		log.Println("21")
-		if responseResult.Code == _HTTPOK {
-			if responseResult.Data == nil {
-				out.Write(slReadData)
+		if err != nil {
+			log.Printf("chain.GetContract err is %+v\n", err)
+		} else {
+			if responseResult.Code == _HTTPOK {
+				if responseResult.Data == nil {
+					out.Write(slReadData)
+				}
 			}
 		}
 	}

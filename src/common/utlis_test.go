@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -100,4 +101,15 @@ func Test_StrArrayToHashSet(t *testing.T) {
 	resultHashSet2 := StrArrayToHashSet(pub_keys2)
 	fmt.Println(resultHashSet.Intersect(resultHashSet2))
 	fmt.Println(resultHashSet2.Len())
+}
+
+func Test_Try(t *testing.T) {
+	var err error
+	Try(func() {
+		panic("我就是为了测试......")
+	}, func(e interface{}) {
+		fmt.Printf("%+v\n", e)
+		err = errors.New(e.(string))
+	})
+	fmt.Printf("%+v\n", err)
 }

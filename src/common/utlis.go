@@ -3,11 +3,12 @@ package common
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/google/uuid"
 	"log"
 	"strconv"
 	"time"
 	"unicontract/src/common/basic"
+
+	"github.com/google/uuid"
 )
 
 func GenDate() string {
@@ -159,4 +160,18 @@ func StrArrayToHashSet(array []string) *basic.HashSet {
 		hashSet.Add(obj)
 	}
 	return hashSet
+}
+
+/*
+ * try...catch 类似函数，起到获取异常作用
+ * \param [in]
+ * \return
+ */
+func Try(execFunc func(), afterPanic func(interface{})) {
+	defer func() {
+		if err := recover(); err != nil {
+			afterPanic(err)
+		}
+	}()
+	execFunc()
 }
