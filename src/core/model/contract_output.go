@@ -101,7 +101,7 @@ func (c *ContractOutput) GenerateId() string {
 		serializeStr = common.Serialize(conBody)
 	} else {
 		temp.Relaction.Votes = nil
-		temp.Timestamp = nil
+		temp.Timestamp = ""
 		serializeStr = common.Serialize(temp)
 	}
 
