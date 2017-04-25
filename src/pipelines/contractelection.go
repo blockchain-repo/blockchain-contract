@@ -41,8 +41,19 @@ const (
 	_HTTPOK         = 200
 )
 
+var (
+	gslPublicKeys   []string
+	gnPublicKeysNum int
+	gstrPublicKey   string
+)
+
+//---------------------------------------------------------------------------
 func init() {
 	log.SetPrefix("---------")
+
+	gslPublicKeys = config.GetAllPublicKey()
+	gnPublicKeysNum = len(gslPublicKeys)
+	gstrPublicKey = config.Config.Keypair.PublicKey
 }
 
 //---------------------------------------------------------------------------
@@ -100,7 +111,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 		log.Println("8")
 
 		// 验证是否为头节点
-		mainPubkey, err := rethinkdb.GetContractMainPubkeyById(
+		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContractId(
 			vote.VoteBody.VoteForContract)
 		//log.Printf("9.mainPubkey is %+v\n", mainPubkey)
 		log.Println("9")
@@ -113,15 +124,17 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 					slMyContract, pass, err :=
 						_verifyVotes(vote.VoteBody.VoteForContract)
 					if err != nil {
-						beegoLog.Error(err.Error())
+						if !pass { // 只有产生错误时才记录日志，当vote数量不够节点数量的一半时直接进入下次等待，不记录错误
+							beegoLog.Error(err.Error())
+						}
 						continue
 					}
 
-					if pass {
+					if pass { // 合约合法
 						log.Printf("18.slMyContract is %+v\n", string(slMyContract))
 						//log.Println("18")
 						out.Write(slMyContract)
-					} else {
+					} else { // 合约不合法
 						//TODO InValid情况
 					}
 				}
@@ -246,7 +259,7 @@ func startContractElection() {
 func _verifyHeadNode(mainPubkey string) (bool, error) {
 	//log.Printf("10.PublicKey  is %+v\n", mainPubkey)
 	log.Println("10")
-	if mainPubkey == config.Config.Keypair.PublicKey {
+	if mainPubkey == gstrPublicKey {
 		return true, nil
 	}
 	return false, nil
@@ -292,6 +305,9 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 	//log.Printf("16.eligible_votes is %+v\n", eligible_votes)
 	log.Println("16")
 	// 统计vote并判断valid
+	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
+		return return nil, true, errors.New("vote not enough")
+	}
 	bValid := _verifyValid(eligible_votes)
 
 	if bValid {
@@ -305,7 +321,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 			myContract.SLVotes = append(myContract.SLVotes, tmp)
 		}
 	} else {
-		//TODO InValid情况
+		return nil, bValid, nil
 	}
 
 	//log.Printf("17.myContract is %+v\n", myContract)
@@ -321,10 +337,9 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 //---------------------------------------------------------------------------
 func _verifyPublicKey(NodePubkey string) (bool, error) {
 	isExist := false
-	publicKeys := config.GetAllPublicKey()
 	//log.Printf("15.publicKeys is %+v\n", publicKeys)
 	log.Println("15")
-	for _, value := range publicKeys {
+	for _, value := range gslPublicKeys {
 		if value == NodePubkey {
 			isExist = true
 			break
