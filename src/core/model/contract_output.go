@@ -93,11 +93,19 @@ func (c *ContractOutput) GenerateId() string {
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
-	//TODO deal with the timestamps
-	//temp.Relaction.Signatures = nil
-	contract_without_signatures_serialized := common.Serialize(temp)
 
-	return common.HashData(contract_without_signatures_serialized)
+	operation := c.Transaction.Operation
+	var serializeStr string
+	if operation == "CONTRACT" {
+		conBody := temp.ContractModel.ContractBody
+		serializeStr = common.Serialize(conBody)
+	} else {
+		temp.Relaction.Votes = nil
+		temp.Timestamp = nil
+		serializeStr = common.Serialize(temp)
+	}
+
+	return common.HashData(serializeStr)
 }
 
 // judge has enough votes for ContractOutput
@@ -142,8 +150,15 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 
 // 判断hash，hash不包括voters的signatures
 func (c *ContractOutput) ValidateHash() bool {
-	hashId := c.Id
+	operation := c.Transaction.Operation
+	var hashId string
+	if operation == "CONTRACT" {
+		hashId = c.Transaction.ContractModel.Id
+	} else {
+		hashId = c.Id
+	}
 	rightId := c.GenerateId()
+
 	if hashId != rightId {
 		return false
 	}
@@ -171,7 +186,14 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 			continue
 		}
 		nodeVoteSignature := vote.Signature
-		if c.validateSignature(nodePubkey, nodeVoteSignature) {
+		var signData string
+		operation := c.Transaction.Operation
+		if operation == "CONTRACT" {
+			signData = common.Serialize(vote.VoteBody)
+		} else {
+			signData= vote.Id
+		}
+		if common.Verify(nodePubkey, signData, nodeVoteSignature) {
 			validSignCount++
 		}
 	}
@@ -180,20 +202,4 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		return false
 	}
 	return true
-}
-
-func (c *ContractOutput) validateSignature(nodePubkey string, nodeSignature string) bool {
-	var ConOutTxClone = c.Transaction
-
-	//deep copy
-	var temp Transaction
-	txCloneBytes, _ := json.Marshal(ConOutTxClone)
-	err := json.Unmarshal(txCloneBytes, &temp)
-	if err != nil {
-		beego.Error("Unmarshal error ", err)
-	}
-
-	temp.Relaction.Votes = nil
-	tempNoSign := common.Serialize(temp)
-	return common.Verify(nodePubkey, tempNoSign, nodeSignature)
 }
