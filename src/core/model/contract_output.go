@@ -49,17 +49,12 @@ type Metadata struct {
 	Data interface{} `json:"data"`
 }
 
-type RelactionSignature struct {
-	ContractNodePubkey string `json:"contract_node_pubkey"`
-	Signature          string `json:"signature"`
-}
-
 // 合约&交易关系信息
 type Relaction struct {
-	ContractId string                `json:"contract_id"`
-	TaskId     string                `json:"task_id"`
-	Voters     []string              `json:"voters"`
-	Signatures []*RelactionSignature `json:"signatures"`
+	ContractId string
+	TaskId     string
+	Voters     []string
+	Votes      []*Vote
 }
 
 type Transaction struct {
@@ -69,8 +64,8 @@ type Transaction struct {
 	Metadata      *Metadata         `json:"metadata"`
 	Operation     string            `json:"operation"`
 	Timestamp     string            `json:"timestamp"`
-	Relaction     *Relaction        `json:"relaction"`
-	ContractModel ContractModel     `json:"contracts"` //合约描述集合, (引用contract描述 for proto3)
+	Relaction     *Relaction
+	ContractModel ContractModel `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
 }
 
 // table [ContractOutputs]
@@ -108,14 +103,14 @@ func (c *ContractOutput) GenerateId() string {
 // judge has enough votes for ContractOutput
 func (c *ContractOutput) HasEnoughVotes() bool {
 	voters := c.Transaction.Relaction.Voters
-	signatures := c.Transaction.Relaction.Signatures
+	votes := c.Transaction.Relaction.Votes
 	voters_len := len(voters)
 
 	if voters_len <= 0 {
 		return false
 	}
 
-	if len(signatures) != voters_len {
+	if len(votes) != voters_len {
 		return false
 	}
 
@@ -125,15 +120,15 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 			return false
 		}
 
-		_signature := signatures[index]
+		vote := votes[index]
 
-		contract_node_pubkey := _signature.ContractNodePubkey
-		signature := _signature.Signature
+		ContractOutputNodePubkey := vote.NodePubkey
+		signature := vote.Signature
 
-		if contract_node_pubkey == "" {
+		if ContractOutputNodePubkey == "" {
 			invalid_signature_len++
 		} else {
-			if voter != contract_node_pubkey || signature == "" {
+			if voter != ContractOutputNodePubkey || signature == "" {
 				invalid_signature_len++
 			}
 		}
@@ -158,7 +153,7 @@ func (c *ContractOutput) ValidateHash() bool {
 //  判断是否有>1/2的有效签名。 return bool
 func (c *ContractOutput) ValidateContractOutput() bool {
 	voters := c.Transaction.Relaction.Voters
-	signatures := c.Transaction.Relaction.Signatures
+	votes := c.Transaction.Relaction.Votes
 	voters_len := len(voters)
 
 	/*----------------keyring----------------*/
@@ -170,13 +165,13 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		if !pub_keysSet.Has(voter) {
 			continue
 		}
-		relationSignature := signatures[index]
-		nodePubkey := relationSignature.ContractNodePubkey
+		vote := votes[index]
+		nodePubkey := vote.NodePubkey
 		if nodePubkey != voter {
 			continue
 		}
-		nodeSignature := relationSignature.Signature
-		if c.validateSignature(nodePubkey, nodeSignature) {
+		nodeVoteSignature := vote.Signature
+		if c.validateSignature(nodePubkey, nodeVoteSignature) {
 			validSignCount++
 		}
 	}
@@ -198,7 +193,7 @@ func (c *ContractOutput) validateSignature(nodePubkey string, nodeSignature stri
 		beego.Error("Unmarshal error ", err)
 	}
 
-	temp.Relaction.Signatures = nil
+	temp.Relaction.Votes = nil
 	tempNoSign := common.Serialize(temp)
 	return common.Verify(nodePubkey, tempNoSign, nodeSignature)
 }

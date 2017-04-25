@@ -184,7 +184,7 @@ func Test_InsertContractOutput(t *testing.T) {
 	transaction.Operation = "OUTPUT"
 	transaction.Timestamp = common.GenTimestamp()
 
-	relaction := model.Relaction{
+	relaction := &model.Relaction{
 		ContractId: "834fbab3-9118-45a5-b6d4-31d7baad5e13",
 		Voters: []string{
 			"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
@@ -192,18 +192,33 @@ func Test_InsertContractOutput(t *testing.T) {
 		},
 	}
 
-	signatures := []*model.RelactionSignature{
+	Votes := []*model.Vote{
 		{
-			ContractNodePubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-			Signature:          "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+			Id:         common.GenerateUUID(),
+			NodePubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+			VoteBody: model.VoteBody{
+				IsValid:         true,
+				InvalidReason:   "",
+				VoteForContract: "",
+				VoteType:        "",
+				Timestamp:       common.GenTimestamp(),
+			},
+			Signature: "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
 		},
 		{
-			ContractNodePubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Signature:          "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+			Id:         common.GenerateUUID(),
+			NodePubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			VoteBody: model.VoteBody{
+				IsValid:         true,
+				InvalidReason:   "",
+				VoteForContract: "",
+				VoteType:        "",
+				Timestamp:       common.GenTimestamp(),
+			},
+			Signature: "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
 		},
 	}
-	relaction.Signatures = signatures
-
+	relaction.Votes = Votes
 	//create new obj
 	contract := model.ContractModel{}
 	// modify and set value for reference obj with &

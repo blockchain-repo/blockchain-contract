@@ -15,7 +15,7 @@ type VoteBody struct {
 
 // table [Votes]
 type Vote struct {
-	Id         string   `json:"id"` //投票唯一标识ID，最投票主体信息计算hash
+	Id         string   `json:"id"` //投票唯一标识ID，UUID
 	NodePubkey string   //投票节点的公钥
 	VoteBody   VoteBody `json:"Vote"` //投票信息
 	Signature  string   //投票节点签名
