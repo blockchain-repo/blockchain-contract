@@ -9,5 +9,5 @@ func Test_InitDatabase(t *testing.T) {
 }
 
 func Test_DropDatabase(t *testing.T) {
-	DropDatabase("Unicontract")
+	DropDatabase(DBNAME)
 }

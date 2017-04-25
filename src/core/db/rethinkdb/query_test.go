@@ -197,10 +197,12 @@ func Test_InsertContractOutput(t *testing.T) {
 			Id:         common.GenerateUUID(),
 			NodePubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 			VoteBody: model.VoteBody{
-				IsValid:         true,
-				InvalidReason:   "",
-				VoteForContract: "",
-				VoteType:        "",
+				IsValid:       true,
+				InvalidReason: "",
+				//IsValid:         false,
+				//InvalidReason:   "random false",
+				VoteForContract: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
+				VoteType:        "None",
 				Timestamp:       common.GenTimestamp(),
 			},
 			Signature: "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
@@ -211,14 +213,15 @@ func Test_InsertContractOutput(t *testing.T) {
 			VoteBody: model.VoteBody{
 				IsValid:         true,
 				InvalidReason:   "",
-				VoteForContract: "",
-				VoteType:        "",
+				VoteForContract: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
+				VoteType:        "None",
 				Timestamp:       common.GenTimestamp(),
 			},
 			Signature: "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
 		},
 	}
 	relaction.Votes = Votes
+	transaction.Relaction = relaction
 	//create new obj
 	contract := model.ContractModel{}
 	// modify and set value for reference obj with &
@@ -267,4 +270,55 @@ func Test_GetAllRecords(t *testing.T) {
 	for _, value := range idList {
 		fmt.Println(value)
 	}
+}
+
+func Test_InsertConsensusFailure(t *testing.T) {
+	/*-------------------examples:------------------*/
+	consensusFailure := &model.ConsensusFailure{}
+	consensusFailure.Id = common.GenerateUUID()
+	consensusFailure.Timestamp = common.GenTimestamp()
+	consensusFailure.ConsensusId = "3ea445410f608e6453cdcb7dbe42d57a89aca018993d7e87da85993cbccc6308"
+
+	consensusFailure.ConsensusReason = "random " + strconv.Itoa(common.RandInt(0, 10))
+	consensusFailure.ConsensusType = "CONTRACT"
+	//consensusFailure.ConsensusType = "TRANSACTION"
+
+	ok := InsertConsensusFailure(common.Serialize(consensusFailure))
+
+	if ok {
+		fmt.Println("InsertConsensusFailure success")
+	}
+}
+
+func Test_GetConsensusFailureById(t *testing.T) {
+	id := "0a4957ed-b074-4326-879d-6a26b44843b2"
+	//id := "5c63f2c4-a578-450e-8714-66e99c1ad364"
+	/*-------------------examples:------------------*/
+	consensusFailureStr, err := GetConsensusFailureById(id)
+	var consensusFailure model.ConsensusFailure
+	json.Unmarshal([]byte(consensusFailureStr), &consensusFailure)
+
+	if err != nil {
+		fmt.Println("error Test_GetConsensusFailureById")
+	}
+	fmt.Println(consensusFailure)
+	fmt.Println(common.SerializePretty(consensusFailure))
+}
+
+func Test_GetConsensusFailuresByConsensusId(t *testing.T) {
+	//consensusId := "834fbab3-9118-45a5-b6d4-31d7baad5e13"
+	consensusId := "3ea445410f608e6453cdcb7dbe42d57a89aca018993d7e87da85993cbccc6308"
+	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
+
+	/*-------------------examples:------------------*/
+	consensusFailuresStr, err := GetConsensusFailuresByConsensusId(consensusId)
+	var consensusFailures []model.ConsensusFailure
+	json.Unmarshal([]byte(consensusFailuresStr), &consensusFailures)
+
+	if err != nil {
+		fmt.Println("Test_GetConsensusFailuresByConsensusId fail!")
+	}
+	fmt.Println("records count is ", len(consensusFailures))
+	//fmt.Println(consensusFailures)
+	fmt.Println(common.SerializePretty(consensusFailures))
 }

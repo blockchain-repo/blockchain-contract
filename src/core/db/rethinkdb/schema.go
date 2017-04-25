@@ -13,7 +13,7 @@ const (
 	TABLE_CONTRACTS          = "Contracts"
 	TABLE_VOTES              = "Votes"
 	TABLE_CONTRACT_TASKS     = "ContractTasks"
-	TABLE_CONSENSUS_FAILURES = "ConsensusFailues"
+	TABLE_CONSENSUS_FAILURES = "ConsensusFailures"
 	TABLE_CONTRACT_OUTPUTS   = "ContractOutputs"
 	TABLE_SEND_FAILING_RECORDS = "SendFailingRecords"
 

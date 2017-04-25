@@ -207,13 +207,13 @@ func GetContractOutputByContractId(contractId string) (string, error) {
 /*----------------------------- contractOutputs end---------------------------------------*/
 
 /*----------------------------- contractTask start---------------------------------------*/
-// vote serialize contract string
-func InsertContractTask(vote string) bool {
-	if vote == "" {
+// contractTask serialize contractTask string
+func InsertContractTask(contractTask string) bool {
+	if contractTask == "" {
 		return false
 	}
 
-	res := Insert(DBNAME, TABLE_VOTES, vote)
+	res := Insert(DBNAME, TABLE_CONTRACT_TASKS, contractTask)
 	if res.Inserted >= 1 {
 		return true
 	}
@@ -222,21 +222,57 @@ func InsertContractTask(vote string) bool {
 
 /*----------------------------- contractTask end---------------------------------------*/
 
-/*----------------------------- consensusFail start---------------------------------------*/
-// vote serialize contract string
-func InsertConsensusFail(vote string) bool {
-	if vote == "" {
+/*----------------------------- consensusFailures start---------------------------------------*/
+// consensusFailures serialize consensusFailures string
+func InsertConsensusFailure(consensusFailures string) bool {
+	if consensusFailures == "" {
 		return false
 	}
 
-	res := Insert(DBNAME, TABLE_VOTES, vote)
+	res := Insert(DBNAME, TABLE_CONSENSUS_FAILURES, consensusFailures)
 	if res.Inserted >= 1 {
 		return true
 	}
 	return false
 }
 
-/*----------------------------- consensusFail end---------------------------------------*/
+func GetConsensusFailureById(id string) (string, error){
+	if id == "" {
+		return "", errors.New("id blank")
+	}
+
+	res := Get(DBNAME, TABLE_CONSENSUS_FAILURES, id)
+	var blo map[string]interface{}
+	err := res.One(&blo)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
+func GetConsensusFailuresByConsensusId(consensusId string) (string, error){
+	if consensusId == "" {
+		return "", errors.New("consensusId blank")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONSENSUS_FAILURES).Filter(r.Row.Field("ConsensusId").Eq(consensusId)).Run(session)
+
+	if err != nil {
+		log.Fatalf(err.Error())
+		return "", errors.New(err.Error())
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
+/*----------------------------- consensusFailures end---------------------------------------*/
 
 /*----------------------------- SendFailingRecords start---------------------------------------*/
 func GetAllRecords(db string, name string) ([]string, error) {

@@ -6,7 +6,7 @@ import (
 
 // table [contractTasks]
 type ContractTasks struct {
-	Id                 string //合约执行步骤唯一标识ID
+	Id                 string  `json:"id"`//合约执行步骤唯一标识ID, uuid
 	ContractId         string //合约ID
 	ContractStep       string //合约执行步骤描述
 	ContractCondiction string //合约步骤执行条件
