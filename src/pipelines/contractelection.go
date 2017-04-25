@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -23,16 +24,6 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 )
-
-//---------------------------------------------------------------------------
-type _MyContract struct {
-	model.ContractModel `json:"contract"`
-	SLVotes             []model.Vote `json:"votes"`
-}
-
-type _GetContractInput struct {
-	Id string `json:'id'`
-}
 
 //---------------------------------------------------------------------------
 const (
@@ -65,7 +56,6 @@ func ceChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := rethinkdb.Changefeed(_DBName, _TableNameVotes)
 	for res.Next(&value) {
-
 		time := monitor.Monitor.NewTiming()
 
 		mValue := value.(map[string]interface{})
@@ -96,11 +86,9 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	slVote := make([]byte, MaxSizeTX)
 	for {
-
-		time := monitor.Monitor.NewTiming()
-
 		// 读取new_val的值
 		nReadNum, err := rd.Read(slVote)
+		time := monitor.Monitor.NewTiming()
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
@@ -121,55 +109,46 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 		log.Println("8")
 
 		// 验证是否为头节点
-		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContract(
-			vote.VoteBody.VoteForContract)
+		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContract(vote.VoteBody.VoteFor)
 		//log.Printf("9.mainPubkey is %+v\n", mainPubkey)
 		log.Println("9")
 		if err == nil {
-			isHead, err := _verifyHeadNode(mainPubkey)
-			//log.Printf("11.isHead is %+v\n", isHead)
-			log.Println("11")
-			if err == nil {
-				if isHead {
-					slMyContract, pass, err :=
-						_verifyVotes(vote.VoteBody.VoteForContract)
+			if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
+				//log.Printf("11.isHead is %+v\n", isHead)
+				log.Println("11")
+
+				slMyContract, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
+				if err != nil {
+					if !pass { // 只有产生错误时才记录日志，当vote数量不够节点数量的一半时直接进入下次等待，不记录错误
+						beegoLog.Error(err.Error())
+					}
+					continue
+				}
+
+				if pass { // 合约合法
+					log.Printf("18.slMyContract is %+v\n", string(slMyContract))
+					//log.Println("18")
+					out.Write(slMyContract)
+				} else { // 合约不合法
+					var consensusFailure model.ConsensusFailure
+					consensusFailure.Id = common.GenerateUUID()
+					consensusFailure.ConsensusType = "contract"
+					consensusFailure.ConsensusId = vote.VoteBody.VoteFor
+					consensusFailure.ConsensusReason = "fail contract"
+					consensusFailure.Timestamp = common.GenTimestamp()
+
+					slConsensusFailure, err := json.Marshal(consensusFailure)
 					if err != nil {
-						if !pass { // 只有产生错误时才记录日志，当vote数量不够节点数量的一半时直接进入下次等待，不记录错误
-							beegoLog.Error(err.Error())
-						}
+						beegoLog.Error(err.Error())
 						continue
 					}
-
-					if pass { // 合约合法
-						log.Printf("18.slMyContract is %+v\n", string(slMyContract))
-						//log.Println("18")
-						out.Write(slMyContract)
-					} else { // 合约不合法
-						var consensusFailure model.ConsensusFailure
-						consensusFailure.Id = common.GenerateUUID()
-						consensusFailure.ConsensusType = "contract"
-						consensusFailure.ConsensusId = vote.VoteBody.VoteForContract
-						consensusFailure.ConsensusReason = "fail contract"
-						consensusFailure.Timestamp = common.GenTimestamp()
-
-						slConsensusFailure, err := json.Marshal(consensusFailure)
-						if err != nil {
-							beegoLog.Error(err.Error())
-							continue
-						}
-						if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
-							beegoLog.Error(err.Error())
-							continue
-						}
+					if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
+						beegoLog.Error(err.Error())
 					}
 				}
-			} else {
-				beegoLog.Error(err.Error())
-				continue
 			}
 		} else {
 			beegoLog.Error(err.Error())
-			continue
 		}
 
 		time.Send("ce_validate_head")
@@ -181,12 +160,10 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 	log.Printf("3.进入ceQueryEists\n")
 
 	rd := bufio.NewReader(in)
-	slMyContract := make([]byte, MaxSizeTX)
+	slContractOutput := make([]byte, MaxSizeTX)
 	for {
-
+		nReadNum, err := rd.Read(slContractOutput)
 		time := monitor.Monitor.NewTiming()
-
-		nReadNum, err := rd.Read(slMyContract)
 		log.Printf("读取到数据......\n")
 		if err != nil {
 			beegoLog.Error(err.Error())
@@ -195,10 +172,10 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		if nReadNum == 0 {
 			continue
 		}
-		slReadData := slMyContract[:nReadNum]
+		slRealData := slContractOutput[:nReadNum]
 
-		myContract := _MyContract{}
-		err = json.Unmarshal(slReadData, &myContract)
+		myContract := model.ContractOutput{}
+		err = json.Unmarshal(slRealData, &myContract)
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
@@ -206,26 +183,17 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		//log.Printf("19.myContract is %+v\n", myContract)
 		log.Println("19")
 
-		input := _GetContractInput{Id: myContract.Id}
-		slInput, err := json.Marshal(input)
-		if err != nil {
-			beegoLog.Error(err.Error())
-			continue
-		}
-		//log.Printf("20.input is %+v\n", input)
-		log.Println("20")
-
-		responseResult, err := chain.GetContract(string(slInput))
-		_ = responseResult
+		strInput := fmt.Sprintf("{\"id\":\"%s\"}", myContract.Transaction.ContractModel.Id)
+		responseResult, err := chain.GetContract(strInput)
 		//log.Printf("21.responseResult is %+v\n", responseResult)
 		log.Println("21")
 		if err != nil {
 			beegoLog.Error(err.Error())
-			continue
+			SaveOutputErrorData(_TableNameSendFailingRecords, slRealData)
 		} else {
 			if responseResult.Code == _HTTPOK {
 				if responseResult.Data == nil {
-					out.Write(slReadData)
+					out.Write(slRealData)
 				}
 			}
 		}
@@ -239,12 +207,10 @@ func ceSend(in io.Reader, out io.Writer) {
 	log.Printf("4.进入ceSend\n")
 
 	rd := bufio.NewReader(in)
-	slReadData := make([]byte, MaxSizeTX)
+	slContractOutput := make([]byte, MaxSizeTX)
 	for {
-
+		nReadNum, err := rd.Read(slContractOutput)
 		time := monitor.Monitor.NewTiming()
-
-		nReadNum, err := rd.Read(slReadData)
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
@@ -252,16 +218,17 @@ func ceSend(in io.Reader, out io.Writer) {
 		if nReadNum == 0 {
 			continue
 		}
-		slRealData := slReadData[:nReadNum]
+		slRealData := slContractOutput[:nReadNum]
 
 		responseResult, err := chain.CreateContract(slRealData)
 		if err != nil {
 			beegoLog.Error(err.Error())
+			SaveOutputErrorData(_TableNameSendFailingRecords, slRealData)
 			continue
 		}
 		if responseResult.Code != _HTTPOK {
 			beegoLog.Error(responseResult.Message)
-			continue
+			SaveOutputErrorData(_TableNameSendFailingRecords, slRealData)
 		}
 
 		out.Write(slRealData)
@@ -353,8 +320,8 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 			return nil, bValid, err
 		}
 
-		log.Printf("17.contractOutput is %+v\n", contractOutput)
-		//log.Println("17")
+		//log.Printf("17.contractOutput is %+v\n", contractOutput)
+		log.Println("17")
 		slMyContract, err := json.Marshal(contractOutput)
 		return slMyContract, bValid, err
 	} else {
