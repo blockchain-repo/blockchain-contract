@@ -153,7 +153,9 @@ func NewLogger(channelLens ...int64) *BeeLogger {
 	bl.setLogger(AdapterConsole)
 	return bl
 }
-
+func init(){
+	SetLogFuncCall(true)
+}
 // Async set the log to asynchronous and start the goroutine
 func (bl *BeeLogger) Async(msgLen ...int64) *BeeLogger {
 	bl.lock.Lock()
