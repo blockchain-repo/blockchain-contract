@@ -3,8 +3,168 @@ package model
 import (
 	"fmt"
 	"testing"
+	"unicontract/src/config"
 	"unicontract/src/common"
+	"unicontract/src/core/protos"
+	"unicontract/src/core/db/rethinkdb"
 )
+
+func GenerateOutput() string {
+
+	contractOutput := ContractOutput{}
+	contractOutput.Version = 2
+
+	transaction := Transaction{}
+	transaction.Asset = &Asset{}                 //todo
+	transaction.Conditions = []*ConditionsItem{} //todo
+	transaction.Fulfillments = []*Fulfillment{}  //todo
+	transaction.Metadata = &Metadata{}           //todo
+	transaction.Operation = "CONTRACT"
+	transaction.Timestamp = ""
+
+	//--------------------contract-------------------------
+	contractAsset := []*protos.ContractAsset{}
+	contractComponent := []*protos.ContractComponent{}
+	contractHead := &protos.ContractHead{config.Config.Keypair.PublicKey, 1}
+
+	contractOwners := []string{
+		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+	}
+	contractBody := &protos.ContractBody{
+		ContractId:         "feca0672-4ad7-4d9a-ad57-83d48db2269b",
+		Cname:              "test contract output",
+		Ctype:              "CREATE",
+		Caption:            "购智能手机返话费合约产品协议",
+		Description:        "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
+		ContractState:      "",
+		Creator:            common.GenTimestamp(),
+		CreatorTime:        "1493111926720",
+		StartTime:          "1493111926730",
+		EndTime:            "1493111926740",
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     contractAsset,
+		ContractComponents: contractComponent,
+	}
+	transaction.ContractModel.ContractHead = nil
+	transaction.ContractModel.ContractBody = contractBody
+
+	contractSignatures := []*protos.ContractSignature{
+		{
+			OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+			Signature:     transaction.ContractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+			SignTimestamp: "1493111926751",
+		},
+		{
+			OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+			Signature:     transaction.ContractModel.Sign("AnV4aa3KCpsNF8bEqQ8qF8T97iW4KnhMmPKwaFWgKhRo"),
+			SignTimestamp: "1493111926752",
+		},
+		{
+			OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+			Signature:     transaction.ContractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
+			SignTimestamp: "1493111926753",
+		},
+	}
+	contractBody.ContractSignatures = contractSignatures
+
+	transaction.ContractModel.Id = common.HashData(common.Serialize(contractBody))
+
+	//--------------------relaction-------------------------
+	transaction.Relaction = &Relaction{
+		ContractId: transaction.ContractModel.Id,
+		TaskId:     "task-id-123456789",
+		Voters: []string{
+			config.Config.Keypair.PublicKey, config.Config.Keypair.PublicKey, config.Config.Keypair.PublicKey,
+		},
+	}
+
+	contractOutput.Version = 2
+	contractOutput.Transaction = transaction
+	//fmt.Println("hash-pre: ",common.Serialize(transaction))
+	contractOutput.Id = common.HashData(common.Serialize(transaction))
+
+	//operation:transfer
+	//vote1 := &Vote{}
+	//vote1.Id = common.GenerateUUID()
+	//vote1.NodePubkey = config.Config.Keypair.PublicKey
+	//vote1.VoteBody.Timestamp = common.GenTimestamp()
+	//vote1.VoteBody.InvalidReason = "resion"
+	//vote1.VoteBody.IsValid = true
+	//vote1.VoteBody.VoteFor = contractOutput.Id
+	//vote1.VoteBody.VoteType = "TRANSACTION"
+	////NOTE: contractoutput(transaction) node signatrue : use the contractOutput.id
+	//vote1.Signature = common.Sign(config.Config.Keypair.PrivateKey, contractOutput.Id)
+	//vote2 := &Vote{}
+	//vote2.Id = common.GenerateUUID()
+	//vote2.NodePubkey = config.Config.Keypair.PublicKey
+	//vote2.VoteBody.Timestamp = common.GenTimestamp()
+	//vote2.VoteBody.InvalidReason = "resion"
+	//vote2.VoteBody.IsValid = true
+	//vote2.VoteBody.VoteFor = contractOutput.Id
+	//vote2.VoteBody.VoteType = "TRANSACTION"
+	//vote2.Signature = common.Sign(config.Config.Keypair.PrivateKey, contractOutput.Id)
+	//vote3 := &Vote{}
+	//vote3.Id = common.GenerateUUID()
+	//vote3.NodePubkey = config.Config.Keypair.PublicKey
+	//vote3.VoteBody.Timestamp = common.GenTimestamp()
+	//vote3.VoteBody.InvalidReason = "resion"
+	//vote3.VoteBody.IsValid = true
+	//vote3.VoteBody.VoteFor = contractOutput.Id
+	//vote3.VoteBody.VoteType = "TRANSACTION"
+	//vote3.Signature = common.Sign(config.Config.Keypair.PrivateKey, contractOutput.Id)
+	//transaction.Relaction.Votes = []*Vote{
+	//	vote1, vote2, vote3,
+	//}
+	//operation:contract
+	vote4 := &Vote{}
+	vote4.Id = common.GenerateUUID()
+	vote4.NodePubkey = config.Config.Keypair.PublicKey
+	vote4.VoteBody.Timestamp = common.GenTimestamp()
+	vote4.VoteBody.InvalidReason = "resion"
+	vote4.VoteBody.IsValid = true
+	vote4.VoteBody.VoteFor = transaction.ContractModel.Id
+	vote4.VoteBody.VoteType = "CONTRACT"
+	//note:contractoutput(contract) node signature : use the vote data
+	//logs.Info("voteSign: ",common.Serialize(vote4.VoteBody))
+	vote4.Signature = vote4.SignVote()
+	vote5 := &Vote{}
+	vote5.Id = common.GenerateUUID()
+	vote5.NodePubkey = config.Config.Keypair.PublicKey
+	vote5.VoteBody.Timestamp = common.GenTimestamp()
+	vote5.VoteBody.InvalidReason = "resion"
+	vote5.VoteBody.IsValid = true
+	vote5.VoteBody.VoteFor = transaction.ContractModel.Id
+	vote5.VoteBody.VoteType = "CONTRACT"
+	vote5.Signature = vote5.SignVote()
+	vote6 := &Vote{}
+	vote6.Id = common.GenerateUUID()
+	vote6.NodePubkey = config.Config.Keypair.PublicKey
+	vote6.VoteBody.Timestamp = common.GenTimestamp()
+	vote6.VoteBody.InvalidReason = "resion"
+	vote6.VoteBody.IsValid = true
+	vote6.VoteBody.VoteFor = transaction.ContractModel.Id
+	vote6.VoteBody.VoteType = "CONTRACT"
+	vote6.Signature = vote6.SignVote()
+	transaction.Relaction.Votes = []*Vote{
+		vote4, vote5, vote6,
+	}
+
+	//--------------------contract-out-put-------------------------
+	contractOutput.Transaction.Timestamp = common.GenTimestamp()
+	contractOutput.Transaction.ContractModel.ContractHead = contractHead
+
+	fmt.Println(common.Serialize(contractOutput))
+	return common.Serialize(contractOutput)
+}
+
+func Test_InserContractOutput(t *testing.T){
+	str := GenerateOutput()
+	b :=rethinkdb.InsertContractOutput(str)
+	fmt.Println(b)
+}
 
 func Test_ContractOutput(t *testing.T) {
 	contractOutput := ContractOutput{}
