@@ -323,7 +323,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 	log.Println("16")
 	// 统计vote并判断valid
 	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
-		return return nil, true, errors.New("vote not enough")
+		return nil, true, errors.New("vote not enough")
 	}
 	bValid := _verifyValid(eligible_votes)
 
