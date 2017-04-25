@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"fmt"
 	"errors"
 
 	r "unicontract/src/core/db/rethinkdb"
@@ -21,10 +20,10 @@ import (
 func txeChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := r.Changefeed("Unicontract", "ContractOutputs")
-	fmt.Printf("changefeed result : %s",res)
 	for res.Next(&value) {
 		time := monitor.Monitor.NewTiming()
 
+		logs.Info("txElection step1 : txeChangefeed ")
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
@@ -34,9 +33,8 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 		if bytes.Equal(v, []byte("null")) {
 			continue
 		}
-		fmt.Printf("change result : %s",v)
+		logs.Info("txeChangefeed result : %s",v)
 		out.Write(v)
-
 		time.Send("contractOutputs_changefeed")
 	}
 }
@@ -48,6 +46,7 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 	for {
 		time := monitor.Monitor.NewTiming()
 
+		logs.Info("txElection step2 : head filter",)
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -79,6 +78,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 	for {
 		time := monitor.Monitor.NewTiming()
 
+		logs.Info("txElection step3 : Validate")
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -118,6 +118,7 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 	for {
 		time := monitor.Monitor.NewTiming()
 
+		logs.Info("txElection step4 : query eists")
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -139,8 +140,7 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 		if result.Code != 200 {
 			errors.New("request send failed")
 		}
-
-		fmt.Print(result.Data)
+		logs.Info(result.Data)
 		//if the unichain already has the contractoutput ,do nothing
 		if result.Data == nil {
 			continue
@@ -158,6 +158,7 @@ func txeSend(in io.Reader, out io.Writer) {
 	for {
 		time := monitor.Monitor.NewTiming()
 
+		logs.Info("txElection step5 : send contractoutput")
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -168,7 +169,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		if err != nil{
 			logs.Error(err.Error())
 		}
-		fmt.Print(result.Data)
+		logs.Info(result.Data)
 		if result.Code != 200 {
 			errors.New("request send failed")
 			SaveOutputErrorData(_TableNameSendFailingRecords,t)
@@ -186,7 +187,8 @@ func starttxElection() {
 		txeHeadFilter,
 		txeValidate,
 		txeQueryEists,
-		txeSend)
+		txeSend,
+		)
 
 	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 	if err != nil {
