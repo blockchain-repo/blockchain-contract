@@ -17,6 +17,7 @@ import (
 
 import (
 	"unicontract/src/chain"
+	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
@@ -39,6 +40,8 @@ const (
 	_TableNameVotes = "Votes"
 	_NewVal         = "new_val"
 	_HTTPOK         = 200
+	_VERSION        = 2
+	_OPERATION      = "CONTRACT"
 )
 
 var (
@@ -118,7 +121,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 		log.Println("8")
 
 		// 验证是否为头节点
-		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContractId(
+		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContract(
 			vote.VoteBody.VoteForContract)
 		//log.Printf("9.mainPubkey is %+v\n", mainPubkey)
 		log.Println("9")
@@ -142,7 +145,22 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 						//log.Println("18")
 						out.Write(slMyContract)
 					} else { // 合约不合法
-						//TODO InValid情况
+						var consensusFailure model.ConsensusFailure
+						consensusFailure.Id = common.GenerateUUID()
+						consensusFailure.ConsensusType = "contract"
+						consensusFailure.ConsensusId = vote.VoteBody.VoteForContract
+						consensusFailure.ConsensusReason = "fail contract"
+						consensusFailure.Timestamp = common.GenTimestamp()
+
+						slConsensusFailure, err := json.Marshal(consensusFailure)
+						if err != nil {
+							beegoLog.Error(err.Error())
+							continue
+						}
+						if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
+							beegoLog.Error(err.Error())
+							continue
+						}
 					}
 				}
 			} else {
@@ -276,16 +294,16 @@ func startContractElection() {
 func _verifyHeadNode(mainPubkey string) (bool, error) {
 	//log.Printf("10.PublicKey  is %+v\n", mainPubkey)
 	log.Println("10")
+	ok := false
 	if mainPubkey == gstrPublicKey {
-		return true, nil
+		ok = true
 	}
-	return false, nil
+	return ok, nil
 }
 
 //---------------------------------------------------------------------------
 func _verifyVotes(contractId string) ([]byte, bool, error) {
 	// 查询所有的vote
-	var myContract _MyContract
 	strVotes, err := rethinkdb.GetVotesByContractId(contractId)
 	if err != nil {
 		return nil, false, err
@@ -322,33 +340,26 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 	//log.Printf("16.eligible_votes is %+v\n", eligible_votes)
 	log.Println("16")
 	// 统计vote并判断valid
-	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
-		return nil, true, errors.New("vote not enough")
-	}
+	// do not forget fix debug!!!!
+	//	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
+	//		log.Println("vote not enough")
+	//		return nil, true, errors.New("vote not enough")
+	//	}
 	bValid := _verifyValid(eligible_votes)
 
 	if bValid {
-		strContract, err := rethinkdb.GetContractById(contractId)
-		err = json.Unmarshal([]byte(strContract), &myContract.ContractModel)
+		contractOutput, err := _produceContractOutput(contractId, slVote)
 		if err != nil {
-			return nil, false, err
+			return nil, bValid, err
 		}
-		myContract.SLVotes = make([]model.Vote, 0)
-		for _, tmp := range slVote {
-			myContract.SLVotes = append(myContract.SLVotes, tmp)
-		}
+
+		log.Printf("17.contractOutput is %+v\n", contractOutput)
+		//log.Println("17")
+		slMyContract, err := json.Marshal(contractOutput)
+		return slMyContract, bValid, err
 	} else {
 		return nil, bValid, nil
 	}
-
-	//log.Printf("17.myContract is %+v\n", myContract)
-	log.Println("17")
-	slMyContract, err := json.Marshal(myContract)
-	if err != nil {
-		return nil, bValid, err
-	}
-
-	return slMyContract, bValid, nil
 }
 
 //---------------------------------------------------------------------------
@@ -386,6 +397,34 @@ func _verifyValid(mVotes map[string]model.Vote) bool {
 	}
 
 	return bValid
+}
+
+//---------------------------------------------------------------------------
+func _produceContractOutput(contractId string, slVote []model.Vote) (model.ContractOutput, error) {
+	var contractOutput model.ContractOutput
+	contractOutput.Version = _VERSION
+	contractOutput.Transaction.Operation = _OPERATION
+	strContract, err := rethinkdb.GetContractById(contractId)
+	if err != nil {
+		return contractOutput, err
+	}
+
+	err = json.Unmarshal([]byte(strContract),
+		&contractOutput.Transaction.ContractModel)
+	if err != nil {
+		log.Println(err)
+		return contractOutput, err
+	}
+
+	contractOutput.Transaction.Relaction = new(model.Relaction)
+	for key, value := range slVote {
+		contractOutput.Transaction.Relaction.Voters =
+			append(contractOutput.Transaction.Relaction.Voters, value.NodePubkey)
+		contractOutput.Transaction.Relaction.Votes =
+			append(contractOutput.Transaction.Relaction.Votes, &slVote[key])
+	}
+
+	return contractOutput, err
 }
 
 //---------------------------------------------------------------------------
