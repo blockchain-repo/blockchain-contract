@@ -101,6 +101,7 @@ func (c *ContractOutput) GenerateId() string {
 		serializeStr = common.Serialize(conBody)
 	} else {
 		temp.Relaction.Votes = nil
+		temp.ContractModel.ContractHead = nil
 		temp.Timestamp = ""
 		serializeStr = common.Serialize(temp)
 	}
@@ -191,8 +192,9 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		if operation == "CONTRACT" {
 			signData = common.Serialize(vote.VoteBody)
 		} else {
-			signData= vote.Id
+			signData= vote.VoteBody.VoteFor
 		}
+		//logs.Info("signData:",signData)
 		if common.Verify(nodePubkey, signData, nodeVoteSignature) {
 			validSignCount++
 		}
