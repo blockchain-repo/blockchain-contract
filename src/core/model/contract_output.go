@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
 	"unicontract/src/config"
+	"github.com/astaxie/beego/logs"
 )
 
 // An Asset is a fungible unit to spend and lock with Transactions
@@ -70,7 +71,7 @@ type Transaction struct {
 
 // table [ContractOutputs]
 type ContractOutput struct {
-	Id          string      `json:"id"`          //ContractOutput.Id
+	Id          string      `json:"id,omitempty"`          //ContractOutput.Id
 	Transaction Transaction `json:"transaction"` //ContractOutput.Transaction
 	Version     int16       `json:"version"`     //ContractOutput.Version
 }
@@ -83,28 +84,23 @@ func (c *ContractOutput) ToString() string {
 func (c *ContractOutput) GenerateId() string {
 
 	/*-------------module deep copy--------------*/
-	var transactionClone = c.Transaction
+	var contractOutput = c
 
 	// new obj
-	var temp Transaction
+	var temp ContractOutput
 
-	transactionCloneBytes, _ := json.Marshal(transactionClone)
+	transactionCloneBytes, _ := json.Marshal(contractOutput)
 	err := json.Unmarshal(transactionCloneBytes, &temp)
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
-
-	operation := c.Transaction.Operation
-	var serializeStr string
-	if operation == "CONTRACT" {
-		conBody := temp.ContractModel.ContractBody
-		serializeStr = common.Serialize(conBody)
-	} else {
-		temp.Relaction.Votes = nil
-		temp.ContractModel.ContractHead = nil
-		temp.Timestamp = ""
-		serializeStr = common.Serialize(temp)
-	}
+	logs.Info(common.Serialize(temp))
+	//operation := c.Transaction.Operation
+	temp.Id = ""
+	temp.Transaction.Relaction.Votes = nil
+	temp.Transaction.ContractModel.ContractHead = nil
+	temp.Transaction.Timestamp = ""
+	serializeStr := common.Serialize(temp)
 
 	return common.HashData(serializeStr)
 }
@@ -151,13 +147,14 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 
 // 判断hash，hash不包括voters的signatures
 func (c *ContractOutput) ValidateHash() bool {
-	operation := c.Transaction.Operation
+	//operation := c.Transaction.Operation
 	var hashId string
-	if operation == "CONTRACT" {
-		hashId = c.Transaction.ContractModel.Id
-	} else {
-		hashId = c.Id
-	}
+	//if operation == "CONTRACT" {
+	//	hashId = c.Transaction.ContractModel.Id
+	//} else {
+	//
+	//}
+	hashId = c.Id
 	rightId := c.GenerateId()
 
 	if hashId != rightId {

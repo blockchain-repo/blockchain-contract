@@ -83,8 +83,8 @@ func GenerateOutput() string {
 
 	contractOutput.Version = 2
 	contractOutput.Transaction = transaction
-	//fmt.Println("hash-pre: ",common.Serialize(transaction))
-	contractOutput.Id = common.HashData(common.Serialize(transaction))
+	fmt.Println("hash-pre: ",common.Serialize(contractOutput))
+	contractOutput.Id = common.HashData(common.Serialize(contractOutput))
 
 	//operation:transfer
 	//vote1 := &Vote{}
@@ -153,7 +153,7 @@ func GenerateOutput() string {
 	}
 
 	//--------------------contract-out-put-------------------------
-	contractOutput.Transaction.Timestamp = common.GenTimestamp()
+	//contractOutput.Transaction.Timestamp = common.GenTimestamp()
 	contractOutput.Transaction.ContractModel.ContractHead = contractHead
 
 	fmt.Println(common.Serialize(contractOutput))

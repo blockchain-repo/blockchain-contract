@@ -100,6 +100,13 @@ func txeValidate(in io.Reader, out io.Writer) {
 			logs.Error(errors.New("invalid hash"))
 			continue
 		}
+		if coModel.Transaction.Operation == "CONTRACT"{
+			//TODO ValidateVote
+			//if !coModel.ValidateVote(){
+			//	logs.Error(errors.New("invalid vote"))
+			//	continue
+			//}
+		}
 		logs.Debug("Validate Hash")
 		if !coModel.ValidateContractOutput() {
 			//invalid signature
@@ -168,6 +175,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		}
 		t := p[:n]
 		//write the contractoutput to unichain.
+		//result,err:= chain.CreateContractTx(common.Serialize(t))
 		result,err:= chain.CreateContractTx(t)
 		if err != nil{
 			logs.Error(err.Error())
