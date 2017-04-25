@@ -108,13 +108,14 @@ func Test_GetContractsByContractId(t *testing.T) {
 	fmt.Println(common.SerializePretty(contracts))
 }
 
-func Test_GetContractMainPubkeyById(t *testing.T) {
-	contractId := "834fbab3-9118-45a5-b6d4-31d7baad5e13"
-	main_pubkey, err := GetContractMainPubkeyByContractId(contractId)
+func Test_GetContractMainPubkeyByContract(t *testing.T) {
+	//contractId := "834fbab3-9118-45a5-b6d4-31d7baad5e13x"
+	id := "7f5b637b8ab485120659066bdc26f047702e90167f61f5d6e495a6a67a241f73"
+	main_pubkey, err := GetContractMainPubkeyByContract(id)
 	if err != nil {
 		fmt.Println("error Test_GetContractMainPubkeyById")
 	}
-	fmt.Println(main_pubkey)
+	fmt.Println("222", main_pubkey)
 }
 
 /*----------------------------- contracts end---------------------------------------*/
@@ -155,9 +156,9 @@ func Test_GetVoteById(t *testing.T) {
 
 	if err != nil {
 		fmt.Println("error Test_GetVoteById")
+	} else {
+		fmt.Println(common.SerializePretty(vote))
 	}
-	fmt.Println(vote)
-	fmt.Println(common.SerializePretty(vote))
 }
 
 func Test_GetVotesByContractId(t *testing.T) {
@@ -171,13 +172,15 @@ func Test_GetVotesByContractId(t *testing.T) {
 
 	if err != nil {
 		fmt.Println("GetVotesByContractId fail!")
+	} else {
+		fmt.Println("records count is ", len(votes))
+		if len(votes) > 0 {
+			fmt.Println(common.SerializePretty(votes))
+		}
 	}
-	fmt.Println("records count is ", len(votes))
-	fmt.Println(votes)
-	fmt.Println(common.SerializePretty(votes))
 }
-/*----------------------------- votes end---------------------------------------*/
 
+/*----------------------------- votes end---------------------------------------*/
 
 /*----------------------------- contractOutputs start---------------------------------------*/
 func Test_InsertContractOutput(t *testing.T) {
@@ -271,6 +274,7 @@ func Test_ContractOutput(t *testing.T) {
 	fmt.Println("records count is ", len(contractOutputs))
 	fmt.Println(common.SerializePretty(contractOutputs))
 }
+
 /*----------------------------- contractOutputs end---------------------------------------*/
 
 func Test_GetAllRecords(t *testing.T) {
@@ -279,7 +283,6 @@ func Test_GetAllRecords(t *testing.T) {
 		fmt.Println(value)
 	}
 }
-
 
 /*----------------------------- consensusFailures start---------------------------------------*/
 func Test_InsertConsensusFailure(t *testing.T) {
@@ -383,4 +386,5 @@ func Test_GetContractTasksByContractId(t *testing.T) {
 	//fmt.Println(consensusFailures)
 	fmt.Println(common.SerializePretty(contractTasks))
 }
+
 /*----------------------------- contractTask end---------------------------------------*/

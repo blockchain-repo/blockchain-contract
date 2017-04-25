@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"errors"
+	"github.com/astaxie/beego"
 	r "gopkg.in/gorethink/gorethink.v3"
 	"unicontract/src/common"
 )
@@ -91,24 +92,29 @@ func GetContractsByContractId(contractId string) (string, error) {
 	return common.Serialize(blo), nil
 }
 
-//根据合约[id]获取合约　处理主节点
-func GetContractMainPubkeyByContractId(contractId string) (string, error) {
+//根据 contract.id 获取合约处理主节点
+func GetContractMainPubkeyByContract(id string) (string, error) {
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_CONTRACTS).Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-		Field("ContractHead").Field("MainPubkey").Run(session)
+	res, err := r.Table(TABLE_CONTRACTS).Get(id).Count().Default(0).Run(session)
+
 	if err != nil {
-		log.Fatalf(err.Error())
+		beego.Error(err.Error())
 		return "", errors.New(err.Error())
 	}
-
-	var blo string
+	var blo int
 	err = res.One(&blo)
-
+	if blo == 0 {
+		return "", nil
+	}
+	// continue ...
+	res, err = r.Table(TABLE_CONTRACTS).Get(id).Field("ContractHead").Field("MainPubkey").Run(session)
+	var blo2 string
+	err = res.One(&blo2)
 	if err != nil {
 		log.Fatalf(err.Error())
 		return "", errors.New(err.Error())
 	}
-	return blo, nil
+	return blo2, nil
 }
 
 /*----------------------------- contracts end---------------------------------------*/
@@ -220,8 +226,7 @@ func InsertContractTask(contractTask string) bool {
 	return false
 }
 
-
-func GetContractTaskById(id string) (string, error){
+func GetContractTaskById(id string) (string, error) {
 	if id == "" {
 		return "", errors.New("id blank")
 	}
@@ -235,7 +240,7 @@ func GetContractTaskById(id string) (string, error){
 	return common.Serialize(blo), nil
 }
 
-func GetContractTasksByContractId(contractId string) (string, error){
+func GetContractTasksByContractId(contractId string) (string, error) {
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
@@ -273,7 +278,7 @@ func InsertConsensusFailure(consensusFailures string) bool {
 	return false
 }
 
-func GetConsensusFailureById(id string) (string, error){
+func GetConsensusFailureById(id string) (string, error) {
 	if id == "" {
 		return "", errors.New("id blank")
 	}
@@ -287,7 +292,7 @@ func GetConsensusFailureById(id string) (string, error){
 	return common.Serialize(blo), nil
 }
 
-func GetConsensusFailuresByConsensusId(consensusId string) (string, error){
+func GetConsensusFailuresByConsensusId(consensusId string) (string, error) {
 	if consensusId == "" {
 		return "", errors.New("consensusId blank")
 	}
