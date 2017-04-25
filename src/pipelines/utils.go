@@ -3,17 +3,18 @@ package pipelines
 import (
 	"io"
 	"encoding/json"
-	"log"
 	"time"
 
 	"unicontract/src/core/model"
 	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/common"
 
 	"github.com/astaxie/beego/logs"
 )
 
 const (
 	MaxSizeTX                    = 16 * 1024
+	_TableContractOutputs   = "ContractOutputs"
 	_TableNameSendFailingRecords = "SendFailingRecords"
 )
 
@@ -50,24 +51,25 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 func SaveOutputErrorData(tableName string, t []byte) bool {
 	coModel := model.ContractOutput{}
 	err := json.Unmarshal(t, &coModel)
+
+	logs.Info("in SaveOutputErrorData--dataid : ",common.Serialize(coModel.Id))
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
+		return false
 	}
 	dataId := coModel.Id
 
 	res := rethinkdb.Get(_DBName, tableName, dataId)
-	//TODO test nil data
-	if res != nil {
+	res.IsNil()
+
+	if !res.IsNil() {
 		return true
 	}
-
 	//insert
 	failTime := time.Now().String()
-	dataJson := `{"id":"`+dataId+`","tableName":"`+tableName+`","failTime":"`+failTime+`","sendTime":"","numSend":"1","status":"unsend"}`
+	dataJson := `{"id":"`+dataId+`","tableName":"`+_TableContractOutputs+`","failTime":"`+failTime+`","sendTime":"","sendCount":"1","status":"unsend"}`
 	logs.Info(dataJson)
-	var result = rethinkdb.Insert(_DBName, tableName, dataJson)
-	logs.Info(result)
-
+	rethinkdb.Insert(_DBName, tableName, dataJson)
 	return true
 }
 

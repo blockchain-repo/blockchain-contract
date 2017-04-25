@@ -95,7 +95,7 @@ func GenerateOutput() string {
 	//vote1.VoteBody.IsValid = true
 	//vote1.VoteBody.VoteFor = contractOutput.Id
 	//vote1.VoteBody.VoteType = "TRANSACTION"
-	////NOTE: contractoutput(transaction) node signatrue : use the contractOutput.id
+	////note: contractoutput(transaction) node signatrue : use the contractOutput.id
 	//vote1.Signature = common.Sign(config.Config.Keypair.PrivateKey, contractOutput.Id)
 	//vote2 := &Vote{}
 	//vote2.Id = common.GenerateUUID()

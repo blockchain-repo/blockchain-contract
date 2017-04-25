@@ -23,7 +23,7 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 	for res.Next(&value) {
 		time := monitor.Monitor.NewTiming()
 
-		logs.Info("txElection step1 : txeChangefeed ")
+		logs.Info(" txElection step1 : txeChangefeed ")
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
@@ -46,7 +46,7 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 	for {
 		time := monitor.Monitor.NewTiming()
 
-		logs.Info("txElection step2 : head filter",)
+		logs.Info(" txElection step2 : head filter",)
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -78,7 +78,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 	for {
 		time := monitor.Monitor.NewTiming()
 
-		logs.Info("txElection step3 : Validate")
+		logs.Info(" txElection step3 : Validate")
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -100,11 +100,13 @@ func txeValidate(in io.Reader, out io.Writer) {
 			logs.Error(errors.New("invalid hash"))
 			continue
 		}
+		logs.Debug("Validate Hash")
 		if !coModel.ValidateContractOutput() {
 			//invalid signature
 			logs.Error(errors.New("invalid signature"))
 			continue
 		}
+		logs.Debug("Validate sign")
 		out.Write(t)
 
 		time.Send("txe_contractOutput_validate")
@@ -135,16 +137,17 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 		result,err := chain.GetContractTx("{'id':"+id+"}")
 		if err != nil{
 			logs.Error(err.Error())
+		}else {
+			if result.Code != 200 {
+				logs.Error(errors.New("request send failed"))
+			}
+			logs.Info(result.Data)
+			//if the unichain already has the contractoutput ,do nothing
+			if result.Data == nil {
+				continue
+			}
 		}
 
-		if result.Code != 200 {
-			errors.New("request send failed")
-		}
-		logs.Info(result.Data)
-		//if the unichain already has the contractoutput ,do nothing
-		if result.Data == nil {
-			continue
-		}
 		out.Write(t)
 
 		time.Send("txe_query_contractOutput")
@@ -168,10 +171,11 @@ func txeSend(in io.Reader, out io.Writer) {
 		result,err:= chain.CreateContractTx(t)
 		if err != nil{
 			logs.Error(err.Error())
+			SaveOutputErrorData(_TableNameSendFailingRecords,t)
+			continue
 		}
-		logs.Info(result.Data)
 		if result.Code != 200 {
-			errors.New("request send failed")
+			logs.Error(errors.New("request send failed"))
 			SaveOutputErrorData(_TableNameSendFailingRecords,t)
 		}
 		out.Write(t)
