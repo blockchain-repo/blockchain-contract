@@ -138,7 +138,7 @@ func Test_InsertVote(t *testing.T) {
 	}
 
 	voteBody.VoteType = "CONTRACT"
-	voteBody.VoteForContract = "834fbab3-9118-45a5-b6d4-31d7baad5e13"
+	voteBody.VoteFor = "834fbab3-9118-45a5-b6d4-31d7baad5e13"
 	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	vote.Id = common.GenerateUUID()
 	isTrue := InsertVote(common.Serialize(vote))
@@ -211,7 +211,7 @@ func Test_InsertContractOutput(t *testing.T) {
 				InvalidReason: "",
 				//IsValid:         false,
 				//InvalidReason:   "random false",
-				VoteForContract: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
+				VoteFor: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
 				VoteType:        "None",
 				Timestamp:       common.GenTimestamp(),
 			},
@@ -223,7 +223,7 @@ func Test_InsertContractOutput(t *testing.T) {
 			VoteBody: model.VoteBody{
 				IsValid:         true,
 				InvalidReason:   "",
-				VoteForContract: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
+				VoteFor: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
 				VoteType:        "None",
 				Timestamp:       common.GenTimestamp(),
 			},

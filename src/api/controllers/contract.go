@@ -95,18 +95,16 @@ func (c *ContractController) AuthSignature() {
 		return
 	}
 
-	fromContractToContractModel(contract)
-	contractSignature :=
+	contractModel := fromContractToContractModel(*contract)
+	signatureValid := contractModel.IsSignatureValid()
+	if !signatureValid {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
+		return
+	}
 	//TODO func authSignature(...) 验证签名方法
 	beego.Debug("Token is " + token)
-	beego.Debug("contract signature is " + contractSignature)
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少验证签名方法![AuthSignature]")
-
-	//response := make(map[string]interface{})
-	//c.responseJsonBody(response, true, "signature is ok!")
-	//c.responseJsonBody(response, false, "缺少验证签名方法!")
-	//c.responseWithCode(403, "服务器拒绝请求")
-	c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
+	beego.Debug("contract signature is valid ", signatureValid)
+	c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, nil, false, "验证签名 success")
 }
 
 // API receive and transfer it to contractModel
@@ -143,28 +141,43 @@ func fromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 // @Failure 403 body is empty
 // @router /create [post]
 func (c *ContractController) Create() {
-	data, _ := c.parseProtoRequestBody()
-	if data == nil {
+	token, contract, err := c.parseProtoRequestBody()
+	if err == nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
+		return
+	}
+
+	if token == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
+		return
+	}
+
+	if contract == nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
 
 	// 1. 签名验证
 	//TODO 2. contract check 验证contract是否合法
-	token := data.Token
+
 	beego.Debug("Token is " + token)
 	if token == "" {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
 		return
 	}
 
-	contract := data.Data
+	contractModel := fromContractToContractModel(*contract)
+	contractValid := contractModel.Validate()
+	if !contractValid {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "contract error")
+		return
+	}
 	if contract == nil || contract.Id == "" {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "contract error!")
 		return
 	}
 
-	contractModel := fromContractDataToContractModel(contract)
+	contractModel := fromContractToContractModel(*contract)
 	beego.Warn(contractModel)
 	beego.Warn(contractModel.Id)
 	beego.Warn(contractModel.GenerateId())

@@ -154,7 +154,7 @@ func GetVotesByContractId(contractId string) (string, error) {
 	}
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("Vote").Field("VoteForContract").Eq(contractId)).Run(session)
+	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("Vote").Field("VoteFor").Eq(contractId)).Run(session)
 
 	if err != nil {
 		log.Fatalf(err.Error())

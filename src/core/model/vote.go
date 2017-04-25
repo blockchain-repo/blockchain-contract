@@ -6,11 +6,11 @@ import (
 )
 
 type VoteBody struct {
-	IsValid         bool   //合约、合约交易投票结果，如true,false
-	InvalidReason   string //合约、合约交易投无效票原因
-	VoteForContract string //contract.id
-	VoteType        string //投票对象的类型，如CONTRACT，TRANSACTION等
-	Timestamp       string //节点投票时间戳
+	IsValid       bool   //合约、合约交易投票结果，如true,false
+	InvalidReason string //合约、合约交易投无效票原因
+	VoteFor       string //contract.id
+	VoteType      string //投票对象的类型，如CONTRACT，TRANSACTION等
+	Timestamp     string //节点投票时间戳
 }
 
 // table [Votes]
