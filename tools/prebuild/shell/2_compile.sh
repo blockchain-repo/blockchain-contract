@@ -6,6 +6,10 @@ current_path=`pwd`
 target="./bin/unicontract"
 #默认的proto schema文件路径
 protos_file_path=$current_path/src/core/protos
+
+# remove the string <,omitempty> in generated .pb.go files[proto3]
+remove_omitempty=true
+
 # --------------------------------------------------
 
 # --------------------------------------------------
@@ -18,9 +22,14 @@ then
 
 	if [ $proto_count -ne 0 ]
 	then
-    	echo -e "reproduce the *.go files according the *.proto files"
+    	echo -e "reproduce the *.go files according to the ${protos_file_path}/*.proto files"
     	protoc -I=$protos_file_path --go_out=$protos_file_path $protos_file_path/*.proto
     	echo -e "reproduce success!"
+        if [ ${remove_omitempty} == true ]; then
+            echo -e "replace the <,omitempty> in ${protos_file_path}/*.pb.go files"
+            sed  -i 's/,omitempty//g' ${protos_file_path}/*.pb.go
+            echo -e "replace the <,omitempty> success!"
+        fi
 	else
     	echo -e "not exist the *.proto files in path $protos_file_path"
 	fi
