@@ -44,10 +44,10 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-		time := monitor.Monitor.NewTiming()
 
 		logs.Info(" txElection step2 : head filter",)
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -76,10 +76,10 @@ func txeValidate(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-		time := monitor.Monitor.NewTiming()
 
 		logs.Info(" txElection step3 : Validate")
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -118,10 +118,10 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-		time := monitor.Monitor.NewTiming()
 
 		logs.Info("txElection step4 : query eists")
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -159,10 +159,10 @@ func txeSend(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-		time := monitor.Monitor.NewTiming()
 
 		logs.Info("txElection step5 : send contractoutput")
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}

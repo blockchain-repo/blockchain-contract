@@ -122,6 +122,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 				if pass { // 合约合法
 					beegoLog.Debug("2.3 ceHeadFilter --->")
 					out.Write(slMyContract)
+					time.Send("ce_validate_head")
 				} else { // 合约不合法
 					beegoLog.Debug("2.3 contract invalid and insert consensusFailure")
 					var consensusFailure model.ConsensusFailure
@@ -145,7 +146,6 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 			beegoLog.Error(err.Error())
 		}
 
-		time.Send("ce_validate_head")
 	}
 }
 
@@ -186,13 +186,13 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 				if responseResult.Data == nil { // not exist
 					beegoLog.Debug("3.3 ceQueryEists --->")
 					out.Write(slRealData)
+					time.Send("ce_query_contract")
 				} else { // exist
 					beegoLog.Debug("3.3 exist")
 				}
 			}
 		}
 
-		time.Send("ce_query_contract")
 	}
 }
 

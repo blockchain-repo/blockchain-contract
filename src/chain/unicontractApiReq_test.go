@@ -12,7 +12,8 @@ import (
  * return : requestHandler.ResponseResult struct
  */
 func TestCreateContract(t *testing.T)  {
-	result,err:= CreateContract("")
+	jsonBody := `{"beginTime":"1487066476", "endTime":"1487066776"}`
+	result,err:= CreateContract(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -26,7 +27,8 @@ func TestCreateContract(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestCreateContractTx(t *testing.T) {
-	result,err := CreateContractTx("")
+	jsonBody := `{"beginTime":"1487066476", "endTime":"1487066776"}`
+	result,err := CreateContractTx(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -40,7 +42,8 @@ func TestCreateContractTx(t *testing.T) {
  * return : requestHandler.ResponseResult struct
  */
 func TestGetContract(t *testing.T)  {
-	result,err := GetContract("")
+	jsonBody := `{"contract_id":"1487066476"}`
+	result,err := GetContract(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -54,7 +57,8 @@ func TestGetContract(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestGetContractTx(t *testing.T)  {
-	result,err := GetContractTx("")
+	jsonBody := `{"contract_id":"1487066476"}`
+	result,err := GetContractTx(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -68,7 +72,8 @@ func TestGetContractTx(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestGetContractRecord(t *testing.T)  {
-	result,err := GetContractRecord("")
+	jsonBody := `{"contract_id":"1487066476"}`
+	result,err := GetContractRecord(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -82,7 +87,8 @@ func TestGetContractRecord(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestFreezeAsset(t *testing.T)  {
-	result,err := FreezeAsset("")
+	jsonBody := `{"contract_id":"1487066476"}`
+	result,err := FreezeAsset(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -96,7 +102,8 @@ func TestFreezeAsset(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestUnfreezeAsset(t *testing.T)  {
-	result,err := UnfreezeAsset("")
+	jsonBody := `{"contract_id":"1487066476"}`
+	result,err := UnfreezeAsset(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}
@@ -110,7 +117,8 @@ func TestUnfreezeAsset(t *testing.T)  {
  * return : requestHandler.ResponseResult struct
  */
 func TestFrozenAsset(t *testing.T)  {
-	result,err := FrozenAsset("")
+	jsonBody := `{"public_key":"1487066476"}`
+	result,err := FrozenAsset(jsonBody)
 	if err != nil{
 		fmt.Println(err)
 	}

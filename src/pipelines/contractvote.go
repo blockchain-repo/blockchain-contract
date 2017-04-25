@@ -19,9 +19,7 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := r.Changefeed("Unicontract", "Contracts")
 	for res.Next(&value) {
-
 		time := monitor.Monitor.NewTiming()
-
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
@@ -42,10 +40,8 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-
-		time := monitor.Monitor.NewTiming()
-
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -76,10 +72,8 @@ func cvVote(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-
-		time := monitor.Monitor.NewTiming()
-
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -106,9 +100,8 @@ func cvWriteVote(in io.Reader, out io.Writer) {
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
-		time := monitor.Monitor.NewTiming()
-
 		n, _ := rd.Read(p)
+		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
