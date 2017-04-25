@@ -41,9 +41,9 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type ContractSignature struct {
-	OwnerPubkey   string `protobuf:"bytes,1,opt,name=OwnerPubkey" json:"OwnerPubkey,omitempty"`
-	Signature     string `protobuf:"bytes,2,opt,name=Signature" json:"Signature,omitempty"`
-	SignTimestamp string `protobuf:"bytes,3,opt,name=SignTimestamp" json:"SignTimestamp,omitempty"`
+	OwnerPubkey   string `protobuf:"bytes,1,opt,name=OwnerPubkey" json:"OwnerPubkey"`
+	Signature     string `protobuf:"bytes,2,opt,name=Signature" json:"Signature"`
+	SignTimestamp string `protobuf:"bytes,3,opt,name=SignTimestamp" json:"SignTimestamp"`
 }
 
 func (m *ContractSignature) Reset()                    { *m = ContractSignature{} }
@@ -73,13 +73,13 @@ func (m *ContractSignature) GetSignTimestamp() string {
 }
 
 type ContractAsset struct {
-	AssetId     string  `protobuf:"bytes,1,opt,name=AssetId" json:"AssetId,omitempty"`
-	Name        string  `protobuf:"bytes,2,opt,name=Name" json:"Name,omitempty"`
-	Caption     string  `protobuf:"bytes,3,opt,name=Caption" json:"Caption,omitempty"`
-	Description string  `protobuf:"bytes,4,opt,name=Description" json:"Description,omitempty"`
-	Unit        string  `protobuf:"bytes,5,opt,name=Unit" json:"Unit,omitempty"`
-	Amount      float32 `protobuf:"fixed32,6,opt,name=Amount" json:"Amount,omitempty"`
-	MetaData    []byte  `protobuf:"bytes,7,opt,name=MetaData,proto3" json:"MetaData,omitempty"`
+	AssetId     string  `protobuf:"bytes,1,opt,name=AssetId" json:"AssetId"`
+	Name        string  `protobuf:"bytes,2,opt,name=Name" json:"Name"`
+	Caption     string  `protobuf:"bytes,3,opt,name=Caption" json:"Caption"`
+	Description string  `protobuf:"bytes,4,opt,name=Description" json:"Description"`
+	Unit        string  `protobuf:"bytes,5,opt,name=Unit" json:"Unit"`
+	Amount      float32 `protobuf:"fixed32,6,opt,name=Amount" json:"Amount"`
+	MetaData    []byte  `protobuf:"bytes,7,opt,name=MetaData,proto3" json:"MetaData"`
 }
 
 func (m *ContractAsset) Reset()                    { *m = ContractAsset{} }
@@ -137,8 +137,8 @@ func (m *ContractAsset) GetMetaData() []byte {
 }
 
 type ExpressionResult struct {
-	Messsage string `protobuf:"bytes,1,opt,name=Messsage" json:"Messsage,omitempty"`
-	Code     string `protobuf:"bytes,2,opt,name=Code" json:"Code,omitempty"`
+	Messsage string `protobuf:"bytes,1,opt,name=Messsage" json:"Messsage"`
+	Code     string `protobuf:"bytes,2,opt,name=Code" json:"Code"`
 }
 
 func (m *ExpressionResult) Reset()                    { *m = ExpressionResult{} }
@@ -161,13 +161,13 @@ func (m *ExpressionResult) GetCode() string {
 }
 
 type ComponentsExpression struct {
-	Cname            string            `protobuf:"bytes,1,opt,name=Cname" json:"Cname,omitempty"`
-	Ctype            string            `protobuf:"bytes,2,opt,name=Ctype" json:"Ctype,omitempty"`
-	Caption          string            `protobuf:"bytes,3,opt,name=Caption" json:"Caption,omitempty"`
-	Description      string            `protobuf:"bytes,4,opt,name=Description" json:"Description,omitempty"`
-	ExpressionStr    string            `protobuf:"bytes,5,opt,name=ExpressionStr" json:"ExpressionStr,omitempty"`
-	ExpressionResult *ExpressionResult `protobuf:"bytes,6,opt,name=ExpressionResult" json:"ExpressionResult,omitempty"`
-	LogicValue       string            `protobuf:"bytes,7,opt,name=LogicValue" json:"LogicValue,omitempty"`
+	Cname            string            `protobuf:"bytes,1,opt,name=Cname" json:"Cname"`
+	Ctype            string            `protobuf:"bytes,2,opt,name=Ctype" json:"Ctype"`
+	Caption          string            `protobuf:"bytes,3,opt,name=Caption" json:"Caption"`
+	Description      string            `protobuf:"bytes,4,opt,name=Description" json:"Description"`
+	ExpressionStr    string            `protobuf:"bytes,5,opt,name=ExpressionStr" json:"ExpressionStr"`
+	ExpressionResult *ExpressionResult `protobuf:"bytes,6,opt,name=ExpressionResult" json:"ExpressionResult"`
+	LogicValue       string            `protobuf:"bytes,7,opt,name=LogicValue" json:"LogicValue"`
 }
 
 func (m *ComponentsExpression) Reset()                    { *m = ComponentsExpression{} }
@@ -225,21 +225,21 @@ func (m *ComponentsExpression) GetLogicValue() string {
 }
 
 type ComponentData struct {
-	Cname        string `protobuf:"bytes,1,opt,name=Cname" json:"Cname,omitempty"`
-	Ctype        string `protobuf:"bytes,2,opt,name=Ctype" json:"Ctype,omitempty"`
-	Caption      string `protobuf:"bytes,3,opt,name=Caption" json:"Caption,omitempty"`
-	Description  string `protobuf:"bytes,4,opt,name=Description" json:"Description,omitempty"`
-	ModifyDate   string `protobuf:"bytes,5,opt,name=ModifyDate" json:"ModifyDate,omitempty"`
-	HardConvType string `protobuf:"bytes,6,opt,name=HardConvType" json:"HardConvType,omitempty"`
+	Cname        string `protobuf:"bytes,1,opt,name=Cname" json:"Cname"`
+	Ctype        string `protobuf:"bytes,2,opt,name=Ctype" json:"Ctype"`
+	Caption      string `protobuf:"bytes,3,opt,name=Caption" json:"Caption"`
+	Description  string `protobuf:"bytes,4,opt,name=Description" json:"Description"`
+	ModifyDate   string `protobuf:"bytes,5,opt,name=ModifyDate" json:"ModifyDate"`
+	HardConvType string `protobuf:"bytes,6,opt,name=HardConvType" json:"HardConvType"`
 	//    map<string,?> Category = 7; // map[string]interface{} Category
-	Parent    *ComponentData `protobuf:"bytes,8,opt,name=Parent" json:"Parent,omitempty"`
-	Mandatory bool           `protobuf:"varint,9,opt,name=Mandatory" json:"Mandatory,omitempty"`
+	Parent    *ComponentData `protobuf:"bytes,8,opt,name=Parent" json:"Parent"`
+	Mandatory bool           `protobuf:"varint,9,opt,name=Mandatory" json:"Mandatory"`
 	//    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-	Unit string `protobuf:"bytes,11,opt,name=Unit" json:"Unit,omitempty"`
+	Unit string `protobuf:"bytes,11,opt,name=Unit" json:"Unit"`
 	//    google.protobuf.Any Value = 12; // interface{} Value
-	Options map[string]int32 `protobuf:"bytes,13,rep,name=Options" json:"Options,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	Options map[string]int32 `protobuf:"bytes,13,rep,name=Options" json:"Options" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	//    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-	Format string `protobuf:"bytes,15,opt,name=Format" json:"Format,omitempty"`
+	Format string `protobuf:"bytes,15,opt,name=Format" json:"Format"`
 }
 
 func (m *ComponentData) Reset()                    { *m = ComponentData{} }
@@ -325,24 +325,24 @@ func (m *ComponentData) GetFormat() string {
 }
 
 type ContractComponent struct {
-	Cname                         string                  `protobuf:"bytes,1,opt,name=Cname" json:"Cname,omitempty"`
-	Ctype                         string                  `protobuf:"bytes,2,opt,name=Ctype" json:"Ctype,omitempty"`
-	Caption                       string                  `protobuf:"bytes,3,opt,name=Caption" json:"Caption,omitempty"`
-	Description                   string                  `protobuf:"bytes,4,opt,name=Description" json:"Description,omitempty"`
-	State                         string                  `protobuf:"bytes,5,opt,name=State" json:"State,omitempty"`
-	PreCondition                  []*ComponentsExpression `protobuf:"bytes,6,rep,name=PreCondition" json:"PreCondition,omitempty"`
-	CompleteCondition             []*ComponentsExpression `protobuf:"bytes,7,rep,name=CompleteCondition" json:"CompleteCondition,omitempty"`
-	DisgardCondition              []*ComponentsExpression `protobuf:"bytes,8,rep,name=DisgardCondition" json:"DisgardCondition,omitempty"`
-	NextTasks                     []string                `protobuf:"bytes,9,rep,name=NextTasks" json:"NextTasks,omitempty"`
-	DataList                      []*ComponentData        `protobuf:"bytes,10,rep,name=DataList" json:"DataList,omitempty"`
-	DataValueSetterExpressionList []*ComponentsExpression `protobuf:"bytes,11,rep,name=DataValueSetterExpressionList" json:"DataValueSetterExpressionList,omitempty"`
-	CandidateList                 *ContractComponent      `protobuf:"bytes,12,opt,name=CandidateList" json:"CandidateList,omitempty"`
-	DecisionResult                *ContractComponent      `protobuf:"bytes,13,opt,name=DecisionResult" json:"DecisionResult,omitempty"`
-	TaskList                      []string                `protobuf:"bytes,14,rep,name=TaskList" json:"TaskList,omitempty"`
-	SupportArguments              []string                `protobuf:"bytes,15,rep,name=SupportArguments" json:"SupportArguments,omitempty"`
-	AgainstArguments              []string                `protobuf:"bytes,16,rep,name=AgainstArguments" json:"AgainstArguments,omitempty"`
-	Support                       int32                   `protobuf:"varint,17,opt,name=Support" json:"Support,omitempty"`
-	Text                          []string                `protobuf:"bytes,18,rep,name=Text" json:"Text,omitempty"`
+	Cname                         string                  `protobuf:"bytes,1,opt,name=Cname" json:"Cname"`
+	Ctype                         string                  `protobuf:"bytes,2,opt,name=Ctype" json:"Ctype"`
+	Caption                       string                  `protobuf:"bytes,3,opt,name=Caption" json:"Caption"`
+	Description                   string                  `protobuf:"bytes,4,opt,name=Description" json:"Description"`
+	State                         string                  `protobuf:"bytes,5,opt,name=State" json:"State"`
+	PreCondition                  []*ComponentsExpression `protobuf:"bytes,6,rep,name=PreCondition" json:"PreCondition"`
+	CompleteCondition             []*ComponentsExpression `protobuf:"bytes,7,rep,name=CompleteCondition" json:"CompleteCondition"`
+	DisgardCondition              []*ComponentsExpression `protobuf:"bytes,8,rep,name=DisgardCondition" json:"DisgardCondition"`
+	NextTasks                     []string                `protobuf:"bytes,9,rep,name=NextTasks" json:"NextTasks"`
+	DataList                      []*ComponentData        `protobuf:"bytes,10,rep,name=DataList" json:"DataList"`
+	DataValueSetterExpressionList []*ComponentsExpression `protobuf:"bytes,11,rep,name=DataValueSetterExpressionList" json:"DataValueSetterExpressionList"`
+	CandidateList                 *ContractComponent      `protobuf:"bytes,12,opt,name=CandidateList" json:"CandidateList"`
+	DecisionResult                *ContractComponent      `protobuf:"bytes,13,opt,name=DecisionResult" json:"DecisionResult"`
+	TaskList                      []string                `protobuf:"bytes,14,rep,name=TaskList" json:"TaskList"`
+	SupportArguments              []string                `protobuf:"bytes,15,rep,name=SupportArguments" json:"SupportArguments"`
+	AgainstArguments              []string                `protobuf:"bytes,16,rep,name=AgainstArguments" json:"AgainstArguments"`
+	Support                       int32                   `protobuf:"varint,17,opt,name=Support" json:"Support"`
+	Text                          []string                `protobuf:"bytes,18,rep,name=Text" json:"Text"`
 }
 
 func (m *ContractComponent) Reset()                    { *m = ContractComponent{} }
@@ -477,20 +477,20 @@ func (m *ContractComponent) GetText() []string {
 }
 
 type ContractBody struct {
-	ContractId         string               `protobuf:"bytes,1,opt,name=ContractId" json:"ContractId,omitempty"`
-	Cname              string               `protobuf:"bytes,2,opt,name=Cname" json:"Cname,omitempty"`
-	Ctype              string               `protobuf:"bytes,3,opt,name=Ctype" json:"Ctype,omitempty"`
-	Caption            string               `protobuf:"bytes,4,opt,name=Caption" json:"Caption,omitempty"`
-	Description        string               `protobuf:"bytes,5,opt,name=Description" json:"Description,omitempty"`
-	ContractState      string               `protobuf:"bytes,6,opt,name=ContractState" json:"ContractState,omitempty"`
-	Creator            string               `protobuf:"bytes,7,opt,name=Creator" json:"Creator,omitempty"`
-	CreatorTime        string               `protobuf:"bytes,8,opt,name=CreatorTime" json:"CreatorTime,omitempty"`
-	StartTime          string               `protobuf:"bytes,9,opt,name=StartTime" json:"StartTime,omitempty"`
-	EndTime            string               `protobuf:"bytes,10,opt,name=EndTime" json:"EndTime,omitempty"`
-	ContractOwners     []string             `protobuf:"bytes,11,rep,name=ContractOwners" json:"ContractOwners,omitempty"`
-	ContractAssets     []*ContractAsset     `protobuf:"bytes,12,rep,name=ContractAssets" json:"ContractAssets,omitempty"`
-	ContractSignatures []*ContractSignature `protobuf:"bytes,13,rep,name=ContractSignatures" json:"ContractSignatures,omitempty"`
-	ContractComponents []*ContractComponent `protobuf:"bytes,14,rep,name=ContractComponents" json:"ContractComponents,omitempty"`
+	ContractId         string               `protobuf:"bytes,1,opt,name=ContractId" json:"ContractId"`
+	Cname              string               `protobuf:"bytes,2,opt,name=Cname" json:"Cname"`
+	Ctype              string               `protobuf:"bytes,3,opt,name=Ctype" json:"Ctype"`
+	Caption            string               `protobuf:"bytes,4,opt,name=Caption" json:"Caption"`
+	Description        string               `protobuf:"bytes,5,opt,name=Description" json:"Description"`
+	ContractState      string               `protobuf:"bytes,6,opt,name=ContractState" json:"ContractState"`
+	Creator            string               `protobuf:"bytes,7,opt,name=Creator" json:"Creator"`
+	CreatorTime        string               `protobuf:"bytes,8,opt,name=CreatorTime" json:"CreatorTime"`
+	StartTime          string               `protobuf:"bytes,9,opt,name=StartTime" json:"StartTime"`
+	EndTime            string               `protobuf:"bytes,10,opt,name=EndTime" json:"EndTime"`
+	ContractOwners     []string             `protobuf:"bytes,11,rep,name=ContractOwners" json:"ContractOwners"`
+	ContractAssets     []*ContractAsset     `protobuf:"bytes,12,rep,name=ContractAssets" json:"ContractAssets"`
+	ContractSignatures []*ContractSignature `protobuf:"bytes,13,rep,name=ContractSignatures" json:"ContractSignatures"`
+	ContractComponents []*ContractComponent `protobuf:"bytes,14,rep,name=ContractComponents" json:"ContractComponents"`
 }
 
 func (m *ContractBody) Reset()                    { *m = ContractBody{} }
@@ -597,8 +597,8 @@ func (m *ContractBody) GetContractComponents() []*ContractComponent {
 }
 
 type ContractHead struct {
-	MainPubkey string `protobuf:"bytes,1,opt,name=MainPubkey" json:"MainPubkey,omitempty"`
-	Version    int32  `protobuf:"varint,2,opt,name=Version" json:"Version,omitempty"`
+	MainPubkey string `protobuf:"bytes,1,opt,name=MainPubkey" json:"MainPubkey"`
+	Version    int32  `protobuf:"varint,2,opt,name=Version" json:"Version"`
 }
 
 func (m *ContractHead) Reset()                    { *m = ContractHead{} }
@@ -621,9 +621,9 @@ func (m *ContractHead) GetVersion() int32 {
 }
 
 type Contract struct {
-	Id           string        `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-	ContractHead *ContractHead `protobuf:"bytes,2,opt,name=ContractHead" json:"ContractHead,omitempty"`
-	ContractBody *ContractBody `protobuf:"bytes,3,opt,name=ContractBody" json:"ContractBody,omitempty"`
+	Id           string        `protobuf:"bytes,1,opt,name=id" json:"id"`
+	ContractHead *ContractHead `protobuf:"bytes,2,opt,name=ContractHead" json:"ContractHead"`
+	ContractBody *ContractBody `protobuf:"bytes,3,opt,name=ContractBody" json:"ContractBody"`
 }
 
 func (m *Contract) Reset()                    { *m = Contract{} }

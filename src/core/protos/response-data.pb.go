@@ -14,9 +14,9 @@ var _ = fmt.Errorf
 var _ = math.Inf
 
 type ResponseData struct {
-	Ok   bool   `protobuf:"varint,1,opt,name=ok" json:"ok,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data []byte `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Ok   bool   `protobuf:"varint,1,opt,name=ok" json:"ok"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data []byte `protobuf:"bytes,3,opt,name=data,proto3" json:"data"`
 }
 
 func (m *ResponseData) Reset()                    { *m = ResponseData{} }

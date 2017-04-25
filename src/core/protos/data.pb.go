@@ -14,8 +14,8 @@ var _ = fmt.Errorf
 var _ = math.Inf
 
 type ContractData struct {
-	Data  *Contract `protobuf:"bytes,1,opt,name=data" json:"data,omitempty"`
-	Token string    `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
+	Data  *Contract `protobuf:"bytes,1,opt,name=data" json:"data"`
+	Token string    `protobuf:"bytes,2,opt,name=token" json:"token"`
 }
 
 func (m *ContractData) Reset()                    { *m = ContractData{} }
