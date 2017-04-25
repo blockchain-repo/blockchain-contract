@@ -286,7 +286,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 	eligible_votes := make(map[string]model.Vote)
 	for _, tmpVote := range slVote {
 		//do not forget fix it !!!!!
-		if true /*tmpVote.VerifyVoteSignature()*/ {
+		if /*true*/ tmpVote.VerifyVoteSignature() {
 			if isExist, _ := _verifyPublicKey(tmpVote.NodePubkey); isExist {
 				eligible_votes[tmpVote.NodePubkey] = tmpVote
 			}
@@ -295,10 +295,10 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 
 	// 统计vote并判断valid
 	// do not forget fix debug!!!!
-	//	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
-	//		log.Println("vote not enough")
-	//		return nil, true, errors.New("vote not enough")
-	//	}
+	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
+		log.Println("vote not enough")
+		return nil, true, errors.New("vote not enough")
+	}
 	bValid := _verifyValid(eligible_votes)
 
 	if bValid {
