@@ -155,6 +155,7 @@ func NewLogger(channelLens ...int64) *BeeLogger {
 }
 func init(){
 	SetLogFuncCall(true)
+	SetLogFuncCallDepth(3)
 }
 // Async set the log to asynchronous and start the goroutine
 func (bl *BeeLogger) Async(msgLen ...int64) *BeeLogger {
