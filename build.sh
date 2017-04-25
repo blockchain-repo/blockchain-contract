@@ -25,6 +25,7 @@ Options:
                       如果本机没有go等开发环境建议首先选择此选项；否则不需要。
                       如果使用init参数，必须按照如下方法使用：
                       ./build.sh init && . ~/.bashrc
+    protoc            跟觉schema文件重新生成protoc
     buildd            编译整个项目(debug)。
     buildr            编译整个项目(release)。
     test              进行全部单元测试。
@@ -56,6 +57,9 @@ case $1 in
     init)
         $shell_path/1_env_init.sh | tee $build_log/1_env_init.log
     ;;
+    protoc)
+	    $shell_path/2_compile.sh protoc | tee $build_log/2_compile.log
+	;;
     buildd)
         $shell_path/2_compile.sh debug | tee $build_log/2_compile.log
     ;;
