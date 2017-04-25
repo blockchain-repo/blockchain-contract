@@ -51,6 +51,9 @@ func ceChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := rethinkdb.Changefeed(_DBName, _TableNameVotes)
 	for res.Next(&value) {
+
+		time := monitor.Monitor.NewTiming()
+
 		mValue := value.(map[string]interface{})
 		//log.Printf("5.mValue is %+v\n", mValue)
 		log.Println("5")
@@ -68,16 +71,20 @@ func ceChangefeed(in io.Reader, out io.Writer) {
 		}
 		log.Printf("7.ceChangefeed--->out.Write(slVote)\n")
 		out.Write(slVote)
+
+		time.Send("votes_changefeed")
 	}
 }
 
 //---------------------------------------------------------------------------
 func ceHeadFilter(in io.Reader, out io.Writer) {
 	log.Printf("2.进入ceHeadFilter\n")
-	defer monitor.Monitor.NewTiming().Send("ce_validate_head")
 	rd := bufio.NewReader(in)
 	slVote := make([]byte, MaxSizeTX)
 	for {
+
+		time := monitor.Monitor.NewTiming()
+
 		// 读取new_val的值
 		nReadNum, err := rd.Read(slVote)
 		if err != nil {
@@ -133,17 +140,21 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 			beegoLog.Error(err.Error())
 			continue
 		}
+
+		time.Send("ce_validate_head")
 	}
 }
 
 //---------------------------------------------------------------------------
 func ceQueryEists(in io.Reader, out io.Writer) {
 	log.Printf("3.进入ceQueryEists\n")
-	defer monitor.Monitor.NewTiming().Send("ce_query_contract")
 
 	rd := bufio.NewReader(in)
 	slMyContract := make([]byte, MaxSizeTX)
 	for {
+
+		time := monitor.Monitor.NewTiming()
+
 		nReadNum, err := rd.Read(slMyContract)
 		log.Printf("读取到数据......\n")
 		if err != nil {
@@ -187,17 +198,21 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 				}
 			}
 		}
+
+		time.Send("ce_query_contract")
 	}
 }
 
 //---------------------------------------------------------------------------
 func ceSend(in io.Reader, out io.Writer) {
 	log.Printf("4.进入ceSend\n")
-	defer monitor.Monitor.NewTiming().Send("ce_send_contract")
 
 	rd := bufio.NewReader(in)
 	slReadData := make([]byte, MaxSizeTX)
 	for {
+
+		time := monitor.Monitor.NewTiming()
+
 		nReadNum, err := rd.Read(slReadData)
 		if err != nil {
 			beegoLog.Error(err.Error())
@@ -219,6 +234,8 @@ func ceSend(in io.Reader, out io.Writer) {
 		}
 
 		out.Write(slRealData)
+
+		time.Send("ce_send_contract")
 	}
 }
 
