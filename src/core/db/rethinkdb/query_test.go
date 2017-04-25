@@ -38,8 +38,9 @@ func Test_Delete(t *testing.T) {
 	fmt.Printf("%d row deleted", res.Deleted)
 }
 
-/*----------------------------unicontract ops-------------------------------------*/
+/*----------------------------Unicontract ops-------------------------------------*/
 
+/*----------------------------- contracts start---------------------------------------*/
 func Test_InsertContractStruct(t *testing.T) {
 	//create new obj
 	contractModel := model.ContractModel{}
@@ -116,6 +117,9 @@ func Test_GetContractMainPubkeyById(t *testing.T) {
 	fmt.Println(main_pubkey)
 }
 
+/*----------------------------- contracts end---------------------------------------*/
+
+/*----------------------------- votes start---------------------------------------*/
 func Test_InsertVote(t *testing.T) {
 	vote := model.Vote{}
 
@@ -172,7 +176,10 @@ func Test_GetVotesByContractId(t *testing.T) {
 	fmt.Println(votes)
 	fmt.Println(common.SerializePretty(votes))
 }
+/*----------------------------- votes end---------------------------------------*/
 
+
+/*----------------------------- contractOutputs start---------------------------------------*/
 func Test_InsertContractOutput(t *testing.T) {
 	conotractOutput := model.ContractOutput{}
 	transaction := &conotractOutput.Transaction
@@ -264,6 +271,7 @@ func Test_ContractOutput(t *testing.T) {
 	fmt.Println("records count is ", len(contractOutputs))
 	fmt.Println(common.SerializePretty(contractOutputs))
 }
+/*----------------------------- contractOutputs end---------------------------------------*/
 
 func Test_GetAllRecords(t *testing.T) {
 	idList, _ := GetAllRecords("Unicontract", "SendFailingRecords")
@@ -272,6 +280,8 @@ func Test_GetAllRecords(t *testing.T) {
 	}
 }
 
+
+/*----------------------------- consensusFailures start---------------------------------------*/
 func Test_InsertConsensusFailure(t *testing.T) {
 	/*-------------------examples:------------------*/
 	consensusFailure := &model.ConsensusFailure{}
@@ -322,3 +332,55 @@ func Test_GetConsensusFailuresByConsensusId(t *testing.T) {
 	//fmt.Println(consensusFailures)
 	fmt.Println(common.SerializePretty(consensusFailures))
 }
+
+/*----------------------------- consensusFailures end---------------------------------------*/
+
+/*----------------------------- contractTask start---------------------------------------*/
+func Test_InsertContractTask(t *testing.T) {
+	/*-------------------examples:------------------*/
+	contractTask := &model.ContractTask{}
+	contractTask.Id = common.GenerateUUID()
+	contractTask.ContractStep = "contractTask step..."
+	contractTask.ContractCondiction = "contractTask condition..."
+	contractTask.ContractId = "123"
+	//contractTask.ContractState = "contractTask state..."
+	contractTask.ContractState = "contractTask state..." + strconv.Itoa(common.RandInt(0, 10))
+
+	ok := InsertContractTask(common.Serialize(contractTask))
+
+	if ok {
+		fmt.Println("Test_InsertContractTask success")
+	}
+}
+
+func Test_GetContractTaskById(t *testing.T) {
+	id := "de70dfdc-0d12-466e-94a7-a1c5cfed0e0e"
+	//id := "5c63f2c4-a578-450e-8714-66e99c1ad364"
+	/*-------------------examples:------------------*/
+	contractTaskStr, err := GetContractTaskById(id)
+	var contractTask model.ContractTask
+	json.Unmarshal([]byte(contractTaskStr), &contractTask)
+
+	if err != nil {
+		fmt.Println("error Test_GetContractTaskById")
+	}
+	fmt.Println(contractTask)
+	fmt.Println(common.SerializePretty(contractTask))
+}
+
+func Test_GetContractTasksByContractId(t *testing.T) {
+	contractId := "123"
+
+	/*-------------------examples:------------------*/
+	contractTasksStr, err := GetContractTasksByContractId(contractId)
+	var contractTasks []model.ContractTask
+	json.Unmarshal([]byte(contractTasksStr), &contractTasks)
+
+	if err != nil {
+		fmt.Println("Test_GetContractTasksByContractId fail!")
+	}
+	fmt.Println("records count is ", len(contractTasks))
+	//fmt.Println(consensusFailures)
+	fmt.Println(common.SerializePretty(contractTasks))
+}
+/*----------------------------- contractTask end---------------------------------------*/

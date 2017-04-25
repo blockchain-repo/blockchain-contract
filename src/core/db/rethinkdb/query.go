@@ -220,6 +220,43 @@ func InsertContractTask(contractTask string) bool {
 	return false
 }
 
+
+func GetContractTaskById(id string) (string, error){
+	if id == "" {
+		return "", errors.New("id blank")
+	}
+
+	res := Get(DBNAME, TABLE_CONTRACT_TASKS, id)
+	var blo map[string]interface{}
+	err := res.One(&blo)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
+func GetContractTasksByContractId(contractId string) (string, error){
+	if contractId == "" {
+		return "", errors.New("contractId blank")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACT_TASKS).Filter(r.Row.Field("ContractId").Eq(contractId)).Run(session)
+
+	if err != nil {
+		log.Fatalf(err.Error())
+		return "", errors.New(err.Error())
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
 /*----------------------------- contractTask end---------------------------------------*/
 
 /*----------------------------- consensusFailures start---------------------------------------*/
