@@ -64,7 +64,7 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			//vote flase
 			v.VoteBody.IsValid = false
 		}
-		v.VoteBody.VoteForContract = mod.Id
+		v.VoteBody.VoteFor = mod.Id
 		out.Write([]byte(v.ToString()))
 
 		time.Send("cv_validate_contract")
@@ -91,10 +91,10 @@ func cvVote(in io.Reader, out io.Writer) {
 			continue
 		}
 		v.NodePubkey = config.Config.Keypair.PublicKey
+		v.VoteBody.Timestamp = common.GenTimestamp()
+		v.VoteBody.VoteType = "Contract"
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
-		v.VoteBody.Timestamp = common.GenTimestamp()
-		v.VoteBody.VoteType = "node"
 		out.Write([]byte(v.ToString()))
 
 		time.Send("cv_validate_contract")
