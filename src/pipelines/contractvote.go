@@ -19,6 +19,9 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := r.Changefeed("Unicontract", "Contracts")
 	for res.Next(&value) {
+
+		time := monitor.Monitor.NewTiming()
+
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
@@ -29,16 +32,19 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 			continue
 		}
 		out.Write(v)
+
+		time.Send("contrant_changefeed")
 	}
 }
 
 func cvValidateContract(in io.Reader, out io.Writer) {
 
-	defer monitor.Monitor.NewTiming().Send("cv_validate_contract")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -60,16 +66,19 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 		}
 		v.VoteBody.VoteForContract = mod.Id
 		out.Write([]byte(v.ToString()))
+
+		time.Send("cv_validate_contract")
 	}
 }
 
 func cvVote(in io.Reader, out io.Writer) {
 
-	defer monitor.Monitor.NewTiming().Send("cv_vote_contract")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -87,16 +96,18 @@ func cvVote(in io.Reader, out io.Writer) {
 		v.VoteBody.Timestamp = common.GenTimestamp()
 		v.VoteBody.VoteType = "node"
 		out.Write([]byte(v.ToString()))
+
+		time.Send("cv_validate_contract")
 	}
 }
 
 func cvWriteVote(in io.Reader, out io.Writer) {
 
-	defer monitor.Monitor.NewTiming().Send("cv_write_vote")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -104,6 +115,8 @@ func cvWriteVote(in io.Reader, out io.Writer) {
 		t := p[:n]
 		r.Insert("Unicontract", "Votes", string(t))
 		out.Write(t)
+
+		time.Send("cv_vote_contract")
 	}
 }
 

@@ -23,6 +23,8 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 	res := r.Changefeed("Unicontract", "ContractOutputs")
 	fmt.Printf("changefeed result : %s",res)
 	for res.Next(&value) {
+		time := monitor.Monitor.NewTiming()
+
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
@@ -34,16 +36,18 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 		}
 		fmt.Printf("change result : %s",v)
 		out.Write(v)
+
+		time.Send("contractOutputs_changefeed")
 	}
 }
 
 func txeHeadFilter(in io.Reader, out io.Writer){
 
-	defer monitor.Monitor.NewTiming().Send("txe_validate_head")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -63,16 +67,18 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 			continue
 		}
 		out.Write(t)
+
+		time.Send("txe_validate_head")
 	}
 }
 
 func txeValidate(in io.Reader, out io.Writer) {
 
-	defer monitor.Monitor.NewTiming().Send("txe_contractOutput_validate")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -100,16 +106,18 @@ func txeValidate(in io.Reader, out io.Writer) {
 			continue
 		}
 		out.Write(t)
+
+		time.Send("txe_contractOutput_validate")
 	}
 }
 
 func txeQueryEists(in io.Reader, out io.Writer) {
 
-	defer monitor.Monitor.NewTiming().Send("txe_query_contractOutput")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -138,16 +146,18 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 			continue
 		}
 		out.Write(t)
+
+		time.Send("txe_query_contractOutput")
 	}
 }
 
 func txeSend(in io.Reader, out io.Writer) {
 
-	defer monitor.Monitor.NewTiming().Send("txe_send_contractOutput")
-
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
+		time := monitor.Monitor.NewTiming()
+
 		n, _ := rd.Read(p)
 		if n == 0 {
 			continue
@@ -164,6 +174,8 @@ func txeSend(in io.Reader, out io.Writer) {
 			SaveOutputErrorData(_TableNameSendFailingRecords,t)
 		}
 		out.Write(t)
+
+		time.Send("txe_send_contractOutput")
 	}
 }
 
