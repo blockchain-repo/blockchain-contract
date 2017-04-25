@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/golang/protobuf/proto"
 	"time"
@@ -9,7 +10,6 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
-	"fmt"
 )
 
 // Operations about Contract
@@ -85,7 +85,7 @@ func (c *ContractController) responseWithCode(status int, body string) {
 // @router /authSignature [post]
 func (c *ContractController) AuthSignature() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -142,7 +142,7 @@ func fromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 // @router /create [post]
 func (c *ContractController) Create() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -157,9 +157,6 @@ func (c *ContractController) Create() {
 		return
 	}
 
-	// 1. 签名验证
-	//TODO 2. contract check 验证contract是否合法
-
 	beego.Debug("Token is " + token)
 	if token == "" {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, nil, false, "服务器拒绝请求")
@@ -167,7 +164,8 @@ func (c *ContractController) Create() {
 	}
 
 	contractModel := fromContractToContractModel(*contract)
-	contractValid := contractModel.Validate()
+	contractValid := contractModel.Validate() //todo
+	//contractValid := true
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "contract error")
 		return
@@ -193,7 +191,7 @@ func (c *ContractController) Create() {
 // @router /signature [post]
 func (c *ContractController) Signature() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -234,7 +232,7 @@ func (c *ContractController) Signature() {
 // @router /terminate [post]
 func (c *ContractController) Terminate() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -262,8 +260,6 @@ func (c *ContractController) Terminate() {
 	beego.Warn(c.Ctx.Request.RequestURI, "缺少终止合约方法![Terminate]")
 	beego.Warn("合约Id: " + contract.Id)
 
-
-
 	beego.Info("合约(Id=" + contract.Id + ")存在: ")
 	c.responseJsonBody(response, true, "合约终止成功!")
 }
@@ -276,7 +272,7 @@ func (c *ContractController) Terminate() {
 // @router /query [post]
 func (c *ContractController) Query() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -328,7 +324,7 @@ func (c *ContractController) Query() {
 // @router /track [post]
 func (c *ContractController) Track() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -380,7 +376,7 @@ func (c *ContractController) Track() {
 // @router /update [post]
 func (c *ContractController) Update() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}
@@ -426,7 +422,7 @@ func (c *ContractController) Update() {
 // @router /test [post]
 func (c *ContractController) Test() {
 	token, contract, err := c.parseProtoRequestBody()
-	if err == nil {
+	if err != nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, nil, false, "服务器拒绝请求")
 		return
 	}

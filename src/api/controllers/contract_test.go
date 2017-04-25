@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
@@ -10,8 +11,6 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/core/protos"
 	"github.com/astaxie/beego"
-	"unicontract/src/core/model"
-	"encoding/json"
 )
 
 // application content-type
@@ -21,7 +20,7 @@ const (
 	APPLICATION_OCTET_STREAM = "application/octet-stream"
 )
 
-func httpRequest(method string, urlStr string, body []byte, contentType string) ([]byte, error) {
+func httpRequest(method string, urlStr string, body []byte, requestHead map[string]string) ([]byte, error) {
 	client := &http.Client{}
 	req_body := bytes.NewReader(body)
 
@@ -32,8 +31,22 @@ func httpRequest(method string, urlStr string, body []byte, contentType string) 
 	if err != nil {
 		// handle error
 	}
+	contentType := requestHead["Content-Type"]
+	if contentType == "" {
+		contentType = APPLICATION_X_PROTOBUF
+		//contentType = APPLICATION_JSON
+	}
+	requestDataType := requestHead["RequestDataType"]
+	if requestDataType == "" {
+		requestDataType = "proto"
+	}
+	token := requestHead["token"]
+	if token == "" {
+		token = "futurever"
+	}
 	req.Header.Set("Content-Type", contentType)
-	req.Header.Set("RequestDataType", "proto")
+	req.Header.Set("RequestDataType", requestDataType)
+	req.Header.Set("token", token)
 
 	resp, err := client.Do(req)
 
@@ -57,247 +70,251 @@ func httpRequest(method string, urlStr string, body []byte, contentType string) 
 	return responseBody, err
 }
 
-func Test_ContractProto(t *testing.T) {
-	contract := protos.ContractProto{ // golang
-		//contract := &ContractProto{ // proto-buf
-		Id:         "2",
-		NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
-		Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Voters: []string{
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+func Test_Contract(t *testing.T) {
+	contract := protos.Contract{ // golang
+		//Id: "2",
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
 		},
-		Timestamp: common.GenTimestamp(),
-		Version:   1,
-		Contract: &protos.Contract{
-			CreatorPubkey:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			CreateTimestamp: common.GenTimestamp(),
-			Operation:       "CREATE",
-			ContractAttributes: &protos.ContractAttributes{
-				Name:           "XXXXXX",
-				StartTimestamp: common.GenTimestamp(),
-				EndTimestamp:   common.GenTimestamp(),
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			ContractAssets: []*protos.ContractAsset{
+				{
+					AssetId:     "001",
+					Name:        "futurever-1",
+					Amount:      1000,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "003",
+					Name:        "futurever-3",
+					Amount:      452,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "002",
+					Name:        "futurever-2",
+					Amount:      99999,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
 			},
-			//ContractOwners: []string{
-			//	"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//	"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//	"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			//	"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
-			//},
-			//ContractSignatures: []*ContractSignature{
-			//	{
-			//		OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Timestamp:   common.GenTimestamp(),
-			//	},
-			//	{
-			//		OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Timestamp:   common.GenTimestamp(),
-			//	},
-			//	{
-			//		OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			//		Timestamp:   common.GenTimestamp(),
-			//	},
-			//},
-			//	ContractAsserts: []*ContractAssert{
-			//		{
-			//			Id:       "111",
-			//			Name:     "wx1",
-			//			Amount:   1000,
-			//			Metadata: nil,
-			//		},
-			//		{
-			//			Id:     "113",
-			//			Name:   "wx2",
-			//			Amount: 800,
-			//		},
-			//		{
-			//			Id:     "112",
-			//			Name:   "wx3",
-			//			Amount: 100,
-			//		},
-			//	},
-			//	ContractComponents: &ContractComponents{
-			//		Plans: []*Plan{
-			//			{
-			//				Id:          "ID_Axxxxxx",
-			//				Type:        "PLAN",
-			//				State:       "dormant",
-			//				Name:        "N_Axxxxx",
-			//				Description: "xxxxx",
-			//				Condition: []*PlanTaskCondition{
-			//					{
-			//						Id:          "1",
-			//						Type:        "PreCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "2",
-			//						Type:        "DisgardCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "3",
-			//						Type:        "CompleteCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//				},
-			//				Level:        1,
-			//				ContractType: "RIGHT",
-			//				NextTask:     []string{"1", "2"},
-			//			},
-			//			{
-			//				Id:          "ID_Bxxxxxx",
-			//				Type:        "PLAN",
-			//				State:       "dormant",
-			//				Name:        "N_Bxxxxx",
-			//				Description: "xxxxx",
-			//				Condition: []*PlanTaskCondition{
-			//					{
-			//						Id:          "1",
-			//						Type:        "PreCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "2",
-			//						Type:        "DisgardCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "3",
-			//						Type:        "CompleteCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//				},
-			//				Level:        1,
-			//				ContractType: "RIGHT",
-			//				NextTask:     nil,
-			//			},
-			//		},
-			//		Tasks: []*Task{
-			//			{
-			//				Id:          "ID_Cxxxxxx",
-			//				Type:        "ENQUIRY",
-			//				State:       "dormant",
-			//				Name:        "Axxxxxx",
-			//				Description: "xxxxx",
-			//				Condition: []*PlanTaskCondition{
-			//					{
-			//						Id:          "1",
-			//						Type:        "PreCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "2",
-			//						Type:        "DisgardCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "3",
-			//						Type:        "CompleteCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//				},
-			//				Level:        1,
-			//				ContractType: "RIGHT",
-			//				NextTask: []string{
-			//					"Axxxxxx",
-			//					"Bxxxxxx",
-			//				},
-			//			},
-			//			{
-			//				Id:          "ID_Cxxxxxx",
-			//				Type:        "ENQUIRY",
-			//				State:       "dormant",
-			//				Name:        "Bxxxxxx",
-			//				Description: "xxxxx",
-			//				Condition: []*PlanTaskCondition{
-			//					{
-			//						Id:          "1",
-			//						Type:        "PreCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "2",
-			//						Type:        "DisgardCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "3",
-			//						Type:        "CompleteCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//				},
-			//				Level:        1,
-			//				ContractType: "RIGHT",
-			//				NextTask:     []string{"", ""},
-			//			},
-			//			{Id: "ID_Cxxxxxx",
-			//				Type:        "ACTION",
-			//				State:       "dormant",
-			//				Name:        "Cxxxxxx",
-			//				Description: "xxxxx",
-			//				Condition: []*PlanTaskCondition{
-			//					{
-			//						Id:          "1",
-			//						Type:        "PreCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx"},
-			//					{
-			//						Id:          "2",
-			//						Type:        "DisgardCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//					{
-			//						Id:          "3",
-			//						Type:        "CompleteCondition",
-			//						Name:        "XXXX",
-			//						Value:       "XXXX",
-			//						Description: "xxxxx",
-			//					},
-			//				},
-			//				Level:        1,
-			//				ContractType: "DUTY",
-			//				NextTask:     []string{"", ""},
-			//			},
-			//		},
-			//},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
+				},
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
+			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
 		},
+
+		//	ContractComponents: &ContractComponents{
+		//		Plans: []*Plan{
+		//			{
+		//				Id:          "ID_Axxxxxx",
+		//				Type:        "PLAN",
+		//				State:       "dormant",
+		//				Name:        "N_Axxxxx",
+		//				Description: "xxxxx",
+		//				Condition: []*PlanTaskCondition{
+		//					{
+		//						Id:          "1",
+		//						Type:        "PreCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "2",
+		//						Type:        "DisgardCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "3",
+		//						Type:        "CompleteCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//				},
+		//				Level:        1,
+		//				ContractType: "RIGHT",
+		//				NextTask:     []string{"1", "2"},
+		//			},
+		//			{
+		//				Id:          "ID_Bxxxxxx",
+		//				Type:        "PLAN",
+		//				State:       "dormant",
+		//				Name:        "N_Bxxxxx",
+		//				Description: "xxxxx",
+		//				Condition: []*PlanTaskCondition{
+		//					{
+		//						Id:          "1",
+		//						Type:        "PreCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "2",
+		//						Type:        "DisgardCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "3",
+		//						Type:        "CompleteCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//				},
+		//				Level:        1,
+		//				ContractType: "RIGHT",
+		//				NextTask:     nil,
+		//			},
+		//		},
+		//		Tasks: []*Task{
+		//			{
+		//				Id:          "ID_Cxxxxxx",
+		//				Type:        "ENQUIRY",
+		//				State:       "dormant",
+		//				Name:        "Axxxxxx",
+		//				Description: "xxxxx",
+		//				Condition: []*PlanTaskCondition{
+		//					{
+		//						Id:          "1",
+		//						Type:        "PreCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "2",
+		//						Type:        "DisgardCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "3",
+		//						Type:        "CompleteCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//				},
+		//				Level:        1,
+		//				ContractType: "RIGHT",
+		//				NextTask: []string{
+		//					"Axxxxxx",
+		//					"Bxxxxxx",
+		//				},
+		//			},
+		//			{
+		//				Id:          "ID_Cxxxxxx",
+		//				Type:        "ENQUIRY",
+		//				State:       "dormant",
+		//				Name:        "Bxxxxxx",
+		//				Description: "xxxxx",
+		//				Condition: []*PlanTaskCondition{
+		//					{
+		//						Id:          "1",
+		//						Type:        "PreCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "2",
+		//						Type:        "DisgardCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "3",
+		//						Type:        "CompleteCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//				},
+		//				Level:        1,
+		//				ContractType: "RIGHT",
+		//				NextTask:     []string{"", ""},
+		//			},
+		//			{Id: "ID_Cxxxxxx",
+		//				Type:        "ACTION",
+		//				State:       "dormant",
+		//				Name:        "Cxxxxxx",
+		//				Description: "xxxxx",
+		//				Condition: []*PlanTaskCondition{
+		//					{
+		//						Id:          "1",
+		//						Type:        "PreCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx"},
+		//					{
+		//						Id:          "2",
+		//						Type:        "DisgardCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//					{
+		//						Id:          "3",
+		//						Type:        "CompleteCondition",
+		//						Name:        "XXXX",
+		//						Value:       "XXXX",
+		//						Description: "xxxxx",
+		//					},
+		//				},
+		//				Level:        1,
+		//				ContractType: "DUTY",
+		//				NextTask:     []string{"", ""},
+		//			},
+		//		},
+		//},
 	}
 
 	//fmt.Println(common.Serialize(contract))
 	//fmt.Println(common.SerializePretty(contract))
+
+	contract.Id = common.HashData(common.Serialize(contract.ContractBody))
+
 	data := protos.ContractData{
 		Data:  &contract,
 		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
@@ -315,18 +332,70 @@ var default_url = "http://192.168.1.14:8088/v1/contract/"
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
 	fmt.Println(url)
-	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
-		NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
-		Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Voters: []string{
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+	contract := protos.Contract{ // proto-buf
+		Id: "2",
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
 		},
-		Timestamp: common.GenTimestamp(),
-		Version:   1,
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			//ContractAssets: []*protos.ContractAsset{
+			//	{
+			//		AssetId:     "001",
+			//		Name:        "futurever-1",
+			//		Amount:      1000,
+			//		Caption:     "futurever",
+			//		Description: "",
+			//		Unit:        "int32",
+			//		MetaData:    nil,
+			//	},
+			//	{
+			//		AssetId:     "003",
+			//		Name:        "futurever-3",
+			//		Amount:      452,
+			//		Caption:     "futurever",
+			//		Description: "",
+			//		Unit:        "int32",
+			//		MetaData:    nil,
+			//	},
+			//	{
+			//		AssetId:     "002",
+			//		Name:        "futurever-2",
+			//		Amount:      99999,
+			//		Caption:     "futurever",
+			//		Description: "",
+			//		Unit:        "int32",
+			//		MetaData:    nil,
+			//	},
+			//},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
+				},
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
+			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
+		},
 	}
 
 	data := protos.ContractData{
@@ -338,7 +407,10 @@ func Test_AuthSignature(t *testing.T) {
 		fmt.Println("error ", err.Error())
 	}
 	fmt.Println(requestBody)
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
@@ -348,85 +420,83 @@ func Test_AuthSignature(t *testing.T) {
 func Test_Creat(t *testing.T) {
 	url := default_url + "create"
 	fmt.Println(url)
-	contract := protos.ContractProto{ // proto-buf
-		//Id:         "2",
-		//NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		MainPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-		//Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Voters: []string{
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+	contract := protos.Contract{ // proto-buf
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
 		},
-		//Timestamp: common.GenTimestamp(),
-		Version:   1,
-		Contract: &protos.Contract{
-			CreatorPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-			CreateTimestamp: common.GenTimestamp(),
-			Operation:       "CREATE",
-			ContractAttributes: &protos.ContractAttributes{
-				Name:           "XXXXXX",
-				//StartTimestamp: common.GenTimestamp(),
-				//EndTimestamp:   common.GenTimestamp(),
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			ContractAssets: []*protos.ContractAsset{
+				{
+					AssetId:     "001",
+					Name:        "futurever-1",
+					Amount:      1000,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "003",
+					Name:        "futurever-3",
+					Amount:      452,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "002",
+					Name:        "futurever-2",
+					Amount:      99999,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+			},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 			},
 			ContractSignatures: []*protos.ContractSignature{
 				{
-					OwnerPubkey: "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-					Signature:   "3XLffBVuFCZbZU1NcroQDSAgcdDtYQ2UK9ye9q9BzLaMiqjoHtJ3SirW5P9JJkjwAkC9CrguwKMRC36T2e769sqQ",
-					Timestamp:   common.GenTimestamp(),
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
 				},
-
-				//{
-				//	OwnerPubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-				//	Signature:   "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-				//	Timestamp:   common.GenTimestamp(),
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
 			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
 		},
 	}
 
-	/*-------------module deep copy start --------------*/
-	var contractClone = contract.Contract
+	contract.Id = common.HashData(common.Serialize(contract.ContractBody))
 
-	// new obj
-	var temp protos.Contract
-
-	contractCloneBytes, _ := json.Marshal(contractClone)
-	err := json.Unmarshal(contractCloneBytes, &temp)
-	if err != nil {
-		beego.Error("Unmarshal error ", err)
-	}
-	beego.Error(common.SerializePretty(temp))
-
-	temp.ContractSignatures = nil
-
-	beego.Error(common.SerializePretty(temp))
-
-	var tempContractModel model.ContractModel
-	tempContractModel.Contract = temp
-	id := tempContractModel.GenerateId()
-	contract.Id = id
-
-	/*-------------module deep copy end --------------*/
-
-
-	//requestBody, err := proto.Marshal(&contract)
-	//if err != nil {
-	//	fmt.Println("error ", err.Error())
-	//}
-	//fmt.Println(requestBody)
-
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
-	}
-	requestBody, err := proto.Marshal(&data)
+	requestBody, err := proto.Marshal(&contract)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-	fmt.Println(requestBody)
+	//fmt.Println(requestBody)
 
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
-	//_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	fmt.Println(requestBody)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
@@ -438,18 +508,69 @@ func Test_Creat(t *testing.T) {
 func Test_Signature(t *testing.T) {
 	url := default_url + "signature"
 
-	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
-		NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
-		//Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Voters: []string{
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+	contract := protos.Contract{ // proto-buf
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
 		},
-		Timestamp: common.GenTimestamp(),
-		Version:   1,
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			ContractAssets: []*protos.ContractAsset{
+				{
+					AssetId:     "001",
+					Name:        "futurever-1",
+					Amount:      1000,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "003",
+					Name:        "futurever-3",
+					Amount:      452,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "002",
+					Name:        "futurever-2",
+					Amount:      99999,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+			},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
+				},
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
+			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
+		},
 	}
 
 	data := protos.ContractData{
@@ -461,8 +582,9 @@ func Test_Signature(t *testing.T) {
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
@@ -473,18 +595,69 @@ func Test_Signature(t *testing.T) {
 func Test_Terminate(t *testing.T) {
 	url := default_url + "terminate"
 
-	contract := protos.ContractProto{ // proto-buf
-		Id: "2",
-		//NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
-		//Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//Voters: []string{
-		//	"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		//	"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-		//	"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
-		//},
-		//Timestamp: common.GenTimestamp(),
-		//Version:   "v1.0",
+	contract := protos.Contract{ // proto-buf
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
+		},
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			ContractAssets: []*protos.ContractAsset{
+				{
+					AssetId:     "001",
+					Name:        "futurever-1",
+					Amount:      1000,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "003",
+					Name:        "futurever-3",
+					Amount:      452,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "002",
+					Name:        "futurever-2",
+					Amount:      99999,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+			},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
+				},
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
+			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
+		},
 	}
 	data := protos.ContractData{
 		Data:  &contract,
@@ -495,8 +668,9 @@ func Test_Terminate(t *testing.T) {
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
@@ -507,36 +681,39 @@ func Test_Terminate(t *testing.T) {
 func Test_Query(t *testing.T) {
 	url := default_url + "query"
 
-	contract := protos.ContractProto{ // proto-buf
-		Id: "73544efa921145090f521672169dbdbd8ffa684f16988a40d1817b3a50d717d6",
-	}
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
+	contract := protos.Contract{ // proto-buf
+		Id: "d881e3f1a9b79c1d3ef7f7c5cf03a1965362367bf6823a6550b6c417211e1889",
 	}
 
-	requestBody, err := proto.Marshal(&data)
+	requestBody, err := proto.Marshal(&contract)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-
-	responseData, err := httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	responseData, err := httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
 	}
 	/*---------------------- response -----------------------*/
+	var responseResult protos.Contract
+	proto.Unmarshal(responseData, &responseResult)
+	beego.Error("result is ",responseResult)
+
+
 	var responseMap map[string]interface{}
 	json.Unmarshal(responseData, &responseMap)
 	fmt.Println("response is:", responseMap)
 	responseDataBody := responseMap["data"]
 	fmt.Println("responseDataBody is:", responseDataBody)
-	ress, ok :=responseDataBody.(string)
+	ress, ok := responseDataBody.(string)
 
-	if ok {}
+	if ok {
+	}
 	fmt.Println("ress is:", ress)
-	rrrr,_ := json.Marshal(ress)
-	fmt.Println("ress byte is:",rrrr )
+	rrrr, _ := json.Marshal(ress)
+	fmt.Println("ress byte is:", rrrr)
 
 	responseDataBodyByte, _ := json.Marshal(responseDataBody)
 	fmt.Println(responseDataBodyByte)
@@ -551,7 +728,7 @@ func Test_Query(t *testing.T) {
 func Test_Track(t *testing.T) {
 	url := default_url + "track"
 
-	contract := protos.ContractProto{ // proto-buf
+	contract := protos.Contract{ // proto-buf
 		Id: "2",
 	}
 	data := protos.ContractData{
@@ -562,8 +739,9 @@ func Test_Track(t *testing.T) {
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
@@ -574,18 +752,69 @@ func Test_Track(t *testing.T) {
 func Test_Update(t *testing.T) {
 	url := default_url + "update"
 
-	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
-		NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
-		Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Voters: []string{
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+	contract := protos.Contract{ // proto-buf
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
 		},
-		Timestamp: common.GenTimestamp(),
-		Version:   1,
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			ContractAssets: []*protos.ContractAsset{
+				{
+					AssetId:     "001",
+					Name:        "futurever-1",
+					Amount:      1000,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "003",
+					Name:        "futurever-3",
+					Amount:      452,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "002",
+					Name:        "futurever-2",
+					Amount:      99999,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+			},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
+				},
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
+			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
+		},
 	}
 	data := protos.ContractData{
 		Data:  &contract,
@@ -595,8 +824,9 @@ func Test_Update(t *testing.T) {
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())
@@ -607,18 +837,69 @@ func Test_Update(t *testing.T) {
 func Test_Test(t *testing.T) {
 	url := default_url + "test"
 
-	contract := protos.ContractProto{ // proto-buf
-		Id:         "2",
-		NodePubkey: "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		MainPubkey: "93TEovPuYo6BQFm4ia9ta4qtL1TbAmnk9fV5kxmesAG5",
-		Signature:  "2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-		Voters: []string{
-			"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",
-			"JBMja2vDAJxkj9bxxjGzxQpTtavLxajxij41geufRXzs",
-			"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+	contract := protos.Contract{ // proto-buf
+		ContractHead: &protos.ContractHead{
+			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			Version:    1,
 		},
-		Timestamp: common.GenTimestamp(),
-		Version:   1,
+		ContractBody: &protos.ContractBody{
+			Caption: "CREATE",
+			Cname:   "futurever",
+			ContractAssets: []*protos.ContractAsset{
+				{
+					AssetId:     "001",
+					Name:        "futurever-1",
+					Amount:      1000,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "003",
+					Name:        "futurever-3",
+					Amount:      452,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+				{
+					AssetId:     "002",
+					Name:        "futurever-2",
+					Amount:      99999,
+					Caption:     "futurever",
+					Description: "",
+					Unit:        "int32",
+					MetaData:    nil,
+				},
+			},
+			ContractComponents: nil,
+			ContractId:         common.GenerateUUID(),
+			ContractOwners: []string{
+				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+			},
+			ContractSignatures: []*protos.ContractSignature{
+				{
+					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
+					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
+					SignTimestamp: common.GenTimestamp(),
+				},
+				{
+					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
+					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
+					SignTimestamp: common.GenTimestamp(),
+				},
+			},
+			ContractState: "",
+			Creator:       "futurever",
+			CreatorTime:   common.GenTimestamp(),
+			Ctype:         "CONTRACT",
+			Description:   "CREATE CONTRACT BY futurever [合约创建]",
+			StartTime:     common.GenTimestamp(),
+			EndTime:       common.GenTimestamp(),
+		},
 	}
 	data := protos.ContractData{
 		Data:  &contract,
@@ -628,8 +909,9 @@ func Test_Test(t *testing.T) {
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
-
-	_, err = httpRequest("POST", url, requestBody, APPLICATION_X_PROTOBUF)
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	_, err = httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
 		// handle error
 		fmt.Println("error ", err.Error())

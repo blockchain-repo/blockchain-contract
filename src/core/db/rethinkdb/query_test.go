@@ -80,7 +80,7 @@ func Test_InsertContractStruct(t *testing.T) {
 }
 
 func Test_GetContractById(t *testing.T) {
-	id := "3a41fd46cfceb4a3eb691b841f6e42655fabbe7cc348bb46552074d6331e2308"
+	id := "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
 	/*-------------------examples:------------------*/
 	contractStr, err := GetContractById(id)
 	var contract model.ContractModel
@@ -94,7 +94,7 @@ func Test_GetContractById(t *testing.T) {
 }
 
 func Test_GetContractsByContractId(t *testing.T) {
-	contractId := "834fbab3-9118-45a5-b6d4-31d7baad5e13"
+	contractId := "aa3caafc-205d-480e-be39-b6e9e3213059"
 	/*-------------------examples:------------------*/
 	contractStr, err := GetContractsByContractId(contractId)
 	var contracts []model.ContractModel
@@ -110,7 +110,7 @@ func Test_GetContractsByContractId(t *testing.T) {
 
 func Test_GetContractMainPubkeyByContract(t *testing.T) {
 	//contractId := "834fbab3-9118-45a5-b6d4-31d7baad5e13x"
-	id := "7f5b637b8ab485120659066bdc26f047702e90167f61f5d6e495a6a67a241f73"
+	id := "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
 	main_pubkey, err := GetContractMainPubkeyByContract(id)
 	if err != nil {
 		fmt.Println("error Test_GetContractMainPubkeyById")
@@ -138,7 +138,7 @@ func Test_InsertVote(t *testing.T) {
 	}
 
 	voteBody.VoteType = "CONTRACT"
-	voteBody.VoteFor = "834fbab3-9118-45a5-b6d4-31d7baad5e13"
+	voteBody.VoteFor = "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
 	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	vote.Id = common.GenerateUUID()
 	isTrue := InsertVote(common.Serialize(vote))
@@ -148,7 +148,7 @@ func Test_InsertVote(t *testing.T) {
 }
 
 func Test_GetVoteById(t *testing.T) {
-	id := "5c63f2c4-a578-450e-8714-66e99c1ad364"
+	id := "032af183-5ffb-4091-bfe0-d4aae1af4b5c"
 	/*-------------------examples:------------------*/
 	voteStr, err := GetVoteById(id)
 	var vote model.Vote
@@ -162,8 +162,7 @@ func Test_GetVoteById(t *testing.T) {
 }
 
 func Test_GetVotesByContractId(t *testing.T) {
-	contractId := "834fbab3-9118-45a5-b6d4-31d7baad5e13"
-	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
+	contractId := "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
 
 	/*-------------------examples:------------------*/
 	votesStr, err := GetVotesByContractId(contractId)
