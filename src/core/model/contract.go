@@ -79,26 +79,18 @@ func (c *ContractModel) IsSignatureValid() bool {
 		return false
 	}
 
-	inValidSignatureCount := 0
 	for index, contractOwner := range contractOwners {
-		if inValidSignatureCount >= (contractOwners_len+1)/2 {
-			return false
-		}
-
 		if contractOwner == "" {
-			inValidSignatureCount++
-			continue
+			return false
 		}
 
 		contractSignature := contractSignatures[index]
 		if contractOwner != contractSignature.OwnerPubkey {
-			inValidSignatureCount++
-			continue
+			return false
 		}
 
 		if contractSignature.Signature == "" {
-			inValidSignatureCount++
-			continue
+			return false
 		}
 
 		// contract signature verify
@@ -106,13 +98,8 @@ func (c *ContractModel) IsSignatureValid() bool {
 		beego.Debug("contract verify[owner:", contractOwner, ",signature:",
 			contractSignature.Signature, "contractBody_serialized", contractBody_serialized, "]")
 		if !verifyFlag {
-			inValidSignatureCount++
-			continue
+			return false
 		}
-	}
-
-	if inValidSignatureCount >= (contractOwners_len+1)/2 {
-		return false
 	}
 
 	return true

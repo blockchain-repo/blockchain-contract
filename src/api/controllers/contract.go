@@ -177,7 +177,6 @@ func (c *ContractController) Create() {
 		return
 	}
 
-	contractModel := fromContractToContractModel(*contract)
 	beego.Warn(contractModel)
 	beego.Warn(contractModel.Id)
 	beego.Warn(contractModel.GenerateId())
