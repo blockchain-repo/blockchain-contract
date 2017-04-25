@@ -60,7 +60,7 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 			continue
 		}
 		//main node filter
-		mainNodeKey  := conout.Transaction.ContractModel.MainPubkey
+		mainNodeKey  := conout.Transaction.ContractModel.ContractHead.MainPubkey
 		myNodeKey := config.Config.Keypair.PublicKey
 		if mainNodeKey != myNodeKey {
 			logs.Info("I am not the mainnode of the C-output %s",conout.Id)
