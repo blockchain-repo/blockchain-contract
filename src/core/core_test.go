@@ -12,14 +12,12 @@ import (
 func TestWriteContract(t *testing.T) {
 	contractModel := model.ContractModel{}
 	//
-	contractAsset := []*protos.ContractAsset{}
-	contractComponent:=[]*protos.ContractComponent{}
 
 	contractHead := &protos.ContractHead{"",1}
 
 	contractOwners := []string{
 		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
-		"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
 		"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
 	contractBody := &protos.ContractBody{
@@ -35,8 +33,8 @@ func TestWriteContract(t *testing.T) {
 		EndTime:common.GenTimestamp(),
 		ContractOwners:contractOwners,
 		ContractSignatures:nil,
-		ContractAssets:contractAsset,
-		ContractComponents: contractComponent,
+		ContractAssets:nil,
+		ContractComponents: nil,
 	}
 
 	contractModel.ContractHead = contractHead
@@ -48,11 +46,11 @@ func TestWriteContract(t *testing.T) {
 			Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
 			SignTimestamp: common.GenTimestamp(),
 		},
-		{
-			OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
-			Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
-			SignTimestamp: common.GenTimestamp(),
-		},
+		//{
+		//	OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
 		{
 			OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 			Signature:     contractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
