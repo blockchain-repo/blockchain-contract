@@ -1,13 +1,12 @@
 package core
 
 import (
-	"time"
 	"math/rand"
+	"time"
 
+	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
-	"unicontract/src/config"
-//	"unicontract/src/core/protos"
 )
 
 func WriteContract(contract model.ContractModel) {
@@ -15,6 +14,5 @@ func WriteContract(contract model.ContractModel) {
 	pubs := config.GetAllPublicKey()
 
 	contract.ContractHead.MainPubkey = pubs[rand.Intn(len(pubs))]
-	str := contract.ToString()
-	r.Insert("Unicontract","Contracts",str)
+	r.InsertContract(contract.ToString())
 }

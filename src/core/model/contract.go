@@ -20,6 +20,9 @@ func (c *ContractModel) Validate() bool {
 		return false
 	}
 	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
+	beego.Error("gogogo",c.Contract.Id, c.GenerateId())
+	beego.Error(common.Serialize(c))
+	//beego.Error(common.SerializePretty(c))
 	if !idValid {
 		return false
 	}
@@ -112,6 +115,7 @@ func (c *ContractModel) ToString() string {
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
 	contractBodySerialized := common.Serialize(c.Contract.ContractBody)
+	beego.Warn("GenerateId ...", common.HashData(contractBodySerialized))
 	return common.HashData(contractBodySerialized)
 }
 

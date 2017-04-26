@@ -2,7 +2,7 @@ syntax = "proto3";
 package protos;
 
 message ResponseData {
-    bool ok = 1; //
-    string msg = 2;
-    bytes data = 3;
+    bool ok = 1; //true or false
+    string msg = 2; // attach infos
+    string data = 3;
 }
