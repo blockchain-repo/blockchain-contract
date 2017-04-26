@@ -17,8 +17,8 @@ type ContractModel struct {
 func (c *ContractModel) Validate() bool {
 	// 1. validate contract.id
 	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
-	beego.Debug("model.contract.go Validate, contract.id:",c.Contract.Id,"generateId:", c.GenerateId())
 	if !idValid {
+		beego.Error("Validate idValid false")
 		return false
 	}
 
@@ -63,39 +63,45 @@ func (c *ContractModel) IsSignatureValid() bool {
 	contractBodyCloneCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneCloneBytes, &temp)
 	if err != nil {
-		beego.Error("model.contract.go IsSignatureValid error ", err)
+		beego.Error("[module-model]IsSignatureValid error ", err)
 	}
 	temp.ContractSignatures = nil
 	contractBody_serialized := common.Serialize(temp)
 	/*-------------module deep copy end --------------*/
-
 	contractOwners := c.ContractBody.ContractOwners
-	contractSignatures := c.ContractBody.ContractSignatures
-
-	contractOwners_len := len(contractOwners)
-	if contractOwners_len != len(contractSignatures) {
+	// 合约 owners 不能存在重复的
+	len_contractOwners := len(contractOwners)
+	if len_contractOwners == 0 {
+		beego.Error("IsSignatureValid len_contractOwners 长度不能为0")
 		return false
 	}
+	contractOwnersSet := common.StrArrayToHashSet(c.ContractBody.ContractOwners)
+	if len_contractOwners != contractOwnersSet.Len() {
+		beego.Error("IsSignatureValid contractOwners 存在重复项")
+		return false
+	}
+	contractSignatures := c.ContractBody.ContractSignatures
+	for _, contractSignature := range contractSignatures {
 
-	for index, contractOwner := range contractOwners {
-		if contractOwner == "" {
+		ownerPubkey := contractSignature.OwnerPubkey
+		if !contractOwnersSet.Has(ownerPubkey) {
+			beego.Error("IsSignatureValid contractOwner ", ownerPubkey, " 不存在于", contractOwners)
 			return false
 		}
-
-		contractSignature := contractSignatures[index]
-		if contractOwner != contractSignature.OwnerPubkey {
+		if contractSignature.SignTimestamp == "" {
+			beego.Error("IsSignatureValid SignTimestamp is blank")
 			return false
 		}
-
-		if contractSignature.Signature == "" {
+		signature := contractSignature.Signature
+		if signature == "" {
+			beego.Error("IsSignatureValid signature is blank")
 			return false
 		}
-
 		// contract signature verify
-		verifyFlag := common.Verify(contractOwner, contractBody_serialized, contractSignature.Signature)
-		beego.Debug("contract verify[owner:", contractOwner, ",signature:",
-			contractSignature.Signature, "contractBody_serialized", contractBody_serialized, "]")
+		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
+		beego.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]")
 		if !verifyFlag {
+			beego.Error("IsSignatureValid contract signature verify fail")
 			return false
 		}
 	}
@@ -110,7 +116,6 @@ func (c *ContractModel) ToString() string {
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
 	contractBodySerialized := common.Serialize(c.Contract.ContractBody)
-	beego.Warn("GenerateId ...", common.HashData(contractBodySerialized))
 	return common.HashData(contractBodySerialized)
 }
 

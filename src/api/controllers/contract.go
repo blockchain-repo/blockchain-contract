@@ -2,15 +2,13 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/golang/protobuf/proto"
 	"time"
-	"unicontract/src/common"
+	"unicontract/src/core"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
-	"unicontract/src/core"
 )
 
 // Operations about Contract
@@ -43,8 +41,9 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 		if err != nil {
 			beego.Error("contract parseRequestBody unmarshal err ", err)
 		}
-		beego.Debug("Request for contract[Content-type=" + contentType + "]")
-		beego.Debug("contract content as follows:\n", contract)
+		beego.Debug("[API] Request for contract[Content-type=" + contentType + "]")
+		beego.Debug("[API] token is", token)
+		beego.Debug("[API] contract content as follows:\n", contract)
 		//fmt.Println(contract)
 	}
 	return token, contract, err
@@ -60,12 +59,10 @@ func (c *ContractController) responseJsonBody(data string, ok bool, msg string) 
 	//body, _ := json.Marshal(responseData)
 	body, err := proto.Marshal(responseData)
 	if err != nil {
-		beego.Error("responseJsonBodyCode ",err.Error())
+		beego.Error("responseJsonBodyCode ", err.Error())
 	}
 	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(body))
-	beego.Error(responseData)
-	//todo
 	//c.ServeJSON()
 }
 
@@ -74,10 +71,9 @@ func (c *ContractController) responseJsonBodyCode(status int, data string, ok bo
 	responseData.Ok = ok
 	responseData.Msg = msg
 	responseData.Data = data
-	//body, _ := json.Marshal(responseData)
 	body, err := proto.Marshal(responseData)
 	if err != nil {
-		beego.Error("responseJsonBodyCode ",err.Error())
+		beego.Error("responseJsonBodyCode ", err.Error())
 	}
 	c.Ctx.ResponseWriter.WriteHeader(status)
 	c.Ctx.ResponseWriter.Write([]byte(body))
@@ -90,7 +86,7 @@ func (c *ContractController) responseWithCode(status int, data string) {
 	responseData.Data = data
 	body, err := proto.Marshal(responseData)
 	if err != nil {
-		beego.Error("responseJsonBodyCode ",err.Error())
+		beego.Error("responseJsonBodyCode ", err.Error())
 	}
 	// last panic user string
 	c.Ctx.ResponseWriter.WriteHeader(status)
@@ -129,12 +125,8 @@ func (c *ContractController) AuthSignature() {
 
 // API receive and transfer it to contractModel
 func fromContractToContractModel(contract protos.Contract) model.ContractModel {
-
 	var contractModel model.ContractModel
 	contractModel.Contract = contract
-
-	beego.Error(common.SerializePretty(contractModel))
-
 	return contractModel
 }
 
@@ -176,25 +168,21 @@ func (c *ContractController) Create() {
 		return
 	}
 
-	beego.Debug("Token is " + token)
-
 	contractModel := fromContractToContractModel(*contract)
-	contractValid := contractModel.Validate() //todo
-	//contractValid := true
+	contractValid := contractModel.Validate()
 	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+		beego.Debug("API[Create] token is", token)
 		return
 	}
-	//beego.Warn(contractModel)
-	//beego.Warn(contractModel.Id)
-	//beego.Warn(contractModel.GenerateId())
-	core.WriteContract(contractModel)
-	//ok := rethinkdb.InsertContract(common.Serialize(contractModel))
-	//response := make(map[string]interface{})
-
-	beego.Info(c.Ctx.Request.RequestURI, "API Insert![Create Id:"+contractModel.Id+"]")
-	//response["id"] = contractModel.Id
-	c.responseJsonBody(contract.Id, true, "API Insert![Create Id:"+contractModel.Id+"]")
+	ok := core.WriteContract(contractModel)
+	if !ok {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Create] insert contract fail!")
+		beego.Debug(c.Ctx.Request.RequestURI, "API[Create] insert contract fail!")
+		return
+	}
+	beego.Info(c.Ctx.Request.RequestURI, "API[Create] Id:"+contractModel.Id)
+	c.responseJsonBody(contract.Id, true, "API[Create] insert contract Id "+contractModel.Id+"]")
 
 }
 
@@ -221,19 +209,21 @@ func (c *ContractController) Signature() {
 		return
 	}
 
-	beego.Debug("Token is " + token)
-
 	contractModel := fromContractToContractModel(*contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+		beego.Debug("API[Signature] token is", token)
 		return
 	}
-
-	rethinkdb.InsertContract(common.Serialize(contractModel))
-	beego.Info(c.Ctx.Request.RequestURI, "API Signature![Create Id:"+contractModel.Id+"]")
-
-	c.responseJsonBody(contractModel.Id, true, "API Signature![Create Id:"+contractModel.Id+"]")
+	ok := core.WriteContract(contractModel)
+	if !ok {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Signature] insert contract fail!")
+		beego.Debug(c.Ctx.Request.RequestURI, "API[Signature] insert contract fail!")
+		return
+	}
+	beego.Info(c.Ctx.Request.RequestURI, "API[Signature] Id:"+contractModel.Id)
+	c.responseJsonBody(contract.Id, true, "API[Signature] insert contract Id "+contractModel.Id+"]")
 }
 
 // @Title Terminate
@@ -260,19 +250,16 @@ func (c *ContractController) Terminate() {
 	}
 
 	if contract.Id == "" {
-		beego.Error("合约(Id=" + contract.Id + ")不存在: ")
+		beego.Debug("API[Terminate]合约(Id=" + contract.Id + ")不存在: ")
 		c.responseJsonBody("", false, "合约终止失败!")
 		return
 	}
 
-	beego.Debug("Token is " + token)
-
-	//beego.Warn("缺少查询合约方法![Terminate]")
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少终止合约方法![Terminate]")
-	beego.Warn("合约Id: " + contract.Id)
-
-	beego.Info("合约(Id=" + contract.Id + ")存在: ")
-	c.responseJsonBody(contract.Id, true, "合约终止成功!")
+	beego.Warn("Token is " + token)
+	beego.Warn(c.Ctx.Request.RequestURI, "API[Signature]缺少终止合约方法!")
+	beego.Warn("API[Terminate]合约Id: " + contract.Id)
+	c.responseJsonBody(contract.Id, false, "API[Terminate]合约终止失败!")
+	//c.responseJsonBody(contract.Id, true, "合约终止成功!")
 }
 
 // @Title Query
@@ -302,29 +289,31 @@ func (c *ContractController) Query() {
 
 	contractModelStr, err := rethinkdb.GetContractById(contract.Id)
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "查询错误!")
+		beego.Error("API[Query]合约(Id=" + contract.Id + ")查询错误: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
 		return
 	}
 
 	if contractModelStr == "" {
-		beego.Error("合约(Id=" + contract.Id + ")不存在: ")
+		beego.Error("API[Query]合约(Id=" + contract.Id + ")不存在: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contract.Id+")不存在: ")
+		return
 	}
 
 	contractProto, err := fromContractModelStrToContract(contractModelStr)
 	if err != nil {
+		beego.Error("API[Query]合约(Id=" + contract.Id + "), 转换失败(fromContractModelStrToContract)")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractProtoBytes, err := proto.Marshal(&contractProto)
 	if err != nil {
+		beego.Error("API[Query]合约(Id=" + contract.Id + "), 转换失败(proto.Marshal) ")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
-	beego.Error(contractProtoBytes)
-
-	beego.Warn("合约Id: " + contract.Id)
-	beego.Warn("合约: " + contractModelStr)
-	c.responseJsonBody(contract.Id, true, "查询合约成功!")
+	contractProtoStr := string(contractProtoBytes)
+	c.responseJsonBody(contractProtoStr, true, "API[Query]查询合约成功!")
 }
 
 // @Title Track
@@ -360,22 +349,27 @@ func (c *ContractController) Track() {
 	}
 	contractTasksStr, err := rethinkdb.GetContractTasksByContractId(contractId)
 	if err != nil {
+		beego.Error("API[Track] GetContractTasksByContractId 查询失败 ", contractId)
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		return
+	}
+	if contractTasksStr == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractTask 不存在")
 		return
 	}
 
 	var contractTasks []model.ContractTask
-	json.Unmarshal([]byte(contractTasksStr), &contractTasks)
+	err = json.Unmarshal([]byte(contractTasksStr), &contractTasks)
 
 	if err != nil {
-		fmt.Println("Unmarshal ContractTasks fail!")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "Unmarshal ContractTasks fail!")
+		return
 	}
 
-	//TODO 1. track contract 合约跟踪
-	//response := make(map[string]interface{})
-
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少合约跟踪方法![Track]")
-	c.responseJsonBody(contractTasksStr, true, "合约跟踪查询成功!")
+	//TODO track contract 合约跟踪
+	beego.Debug("Token is " + token)
+	beego.Info(c.Ctx.Request.RequestURI, "API[Track] 缺少合约跟踪查询方法!")
+	c.responseJsonBody(contract.Id, false, "API[Track] 缺少合约跟踪查询方法!")
 
 }
 
@@ -402,27 +396,17 @@ func (c *ContractController) Update() {
 		return
 	}
 
-	beego.Debug("Token is " + token)
-
 	contractModel := fromContractToContractModel(*contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract Validate error")
 		return
 	}
-	//beego.Warn(contractModel)
-	//beego.Warn(contractModel.Id)
-	//beego.Warn(contractModel.GenerateId())
 
-	ok := rethinkdb.InsertContract(common.Serialize(contractModel))
-	response := make(map[string]interface{})
-
-	beego.Info(c.Ctx.Request.RequestURI, "API Insert![Create Id:"+contractModel.Id+"]")
-	response["id"] = contractModel.Id
-
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少合约更新方法![Update]")
-	c.responseJsonBody(contract.Id, ok, "API Insert![Create Id:"+contractModel.Id+"]")
-
+	//ok := rethinkdb.InsertContract(common.Serialize(contractModel))
+	beego.Debug("Token is " + token)
+	beego.Info(c.Ctx.Request.RequestURI, "API[Update] 缺少测试合约方法!")
+	c.responseJsonBody(contract.Id, false, "API[Update] 缺少合约更新方法!")
 }
 
 // @Title Test
@@ -449,10 +433,7 @@ func (c *ContractController) Test() {
 	}
 
 	beego.Debug("Token is " + token)
-	beego.Warn(c.Ctx.Request.RequestURI, "缺少测试合约方法![Test]")
+	beego.Info(c.Ctx.Request.RequestURI, "API[Test] 缺少测试合约方法!")
+	c.responseJsonBody(string(time.Now().Unix()), false, "API[Test] 缺少测试合约方法!")
 
-	response := make(map[string]interface{})
-
-	response["id"] = time.Now().Unix()
-	c.responseJsonBody(contract.Id, true, "合约测试成功!")
 }

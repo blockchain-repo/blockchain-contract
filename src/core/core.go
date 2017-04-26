@@ -8,10 +8,11 @@ import (
 	"unicontract/src/core/model"
 )
 
-func WriteContract(contract model.ContractModel) {
+func WriteContract(contract model.ContractModel) bool {
 	rand.Seed(time.Now().UnixNano())
 	pubs := config.GetAllPublicKey()
 
 	contract.ContractHead.MainPubkey = pubs[rand.Intn(len(pubs))]
-	r.InsertContract(contract.ToString())
+	ok := r.InsertContract(contract.ToString())
+	return ok
 }

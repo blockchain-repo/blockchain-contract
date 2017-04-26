@@ -64,7 +64,7 @@ type Transaction struct {
 	Metadata      *Metadata         `json:"metadata"`
 	Operation     string            `json:"operation"`
 	Timestamp     string            `json:"timestamp"`
-	Relation     *Relation
+	Relation     *Relation		`json:"Relation"`
 	ContractModel ContractModel `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
 }
 

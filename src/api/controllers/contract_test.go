@@ -2,16 +2,15 @@ package controllers
 
 import (
 	"bytes"
-	"encoding/json"
+	//"encoding/json"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"net/http"
 	"testing"
 	"unicontract/src/common"
-	"unicontract/src/core/protos"
-	"github.com/astaxie/beego"
 	"unicontract/src/core/model"
+	"unicontract/src/core/protos"
 	//"unicontract/src/core"
 )
 
@@ -31,7 +30,7 @@ func httpRequest(method string, urlStr string, body []byte, requestHead map[stri
 	}
 	req, err := http.NewRequest(method, urlStr, req_body)
 	if err != nil {
-		// handle error
+		fmt.Println("request error", err)
 	}
 	contentType := requestHead["Content-Type"]
 	if contentType == "" {
@@ -42,6 +41,7 @@ func httpRequest(method string, urlStr string, body []byte, requestHead map[stri
 	if requestDataType == "" {
 		requestDataType = "proto"
 	}
+
 	token := requestHead["token"]
 	if token == "" {
 		token = "futurever"
@@ -51,25 +51,15 @@ func httpRequest(method string, urlStr string, body []byte, requestHead map[stri
 	req.Header.Set("token", token)
 
 	resp, err := client.Do(req)
-
-	//fmt.Printf("response: code:%v, header:%v\n", resp.StatusCode, resp.Header)
 	fmt.Printf("Request %s [%s] content-type=%s\n", urlStr, method, contentType)
 
-	defer resp.Body.Close()
-	//
-	responseBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		// handle error
+	if err == nil {
+		responseBody, err := ioutil.ReadAll(resp.Body)
+		fmt.Printf("Response code: %v\n", resp.StatusCode)
+		defer resp.Body.Close()
+		return responseBody, err
 	}
-	if responseBody == nil || string(responseBody) == "null" {
-		//fmt.Printf("Response: %v, body %v\n", resp.StatusCode, string(responseBody))
-		//fmt.Printf("Response: %v, body %v\n", resp.StatusCode, string(responseBody))
-	} else {
-		fmt.Printf("Response: %v\n", resp.StatusCode)
-		fmt.Printf("body:\n%s\n\n", responseBody)
-	}
-	//fmt.Println(string(responseBody))
-	return responseBody, err
+	return nil, err
 }
 
 func Test_Contract(t *testing.T) {
@@ -329,7 +319,8 @@ func Test_Contract(t *testing.T) {
 
 }
 
-var default_url = "http://192.168.1.14:8088/v1/contract/"
+//var default_url = "http://192.168.1.14:8088/v1/contract/"
+var default_url = "http://localhost:8088/v1/contract/"
 
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
@@ -419,39 +410,39 @@ func Test_AuthSignature(t *testing.T) {
 	}
 }
 
-func Test_CreatValid(t *testing.T) {
+func Test_CreatValidContract(t *testing.T) {
 	url := default_url + "create"
-	beego.Debug("请求地址", url)
 	contractModel := model.ContractModel{}
 	//contractAsset := []*protos.ContractAsset{}
 	//contractComponent:=[]*protos.ContractComponent{}
 
-	contractHead := &protos.ContractHead{"",1}
+	contractHead := &protos.ContractHead{"", 1}
 
 	contractOwners := []string{
 		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
 		//"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
-		"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+		//"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
 	contractBody := &protos.ContractBody{
-		ContractId:"UUID-1234-5678-90",
-		Cname:"test contract output",
-		Ctype:"CREATE",
-		Caption:"购智能手机返话费合约产品协议",
-		Description:"移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
-		ContractState:"",
-		Creator:common.GenTimestamp(),
-		CreatorTime:common.GenTimestamp(),
-		StartTime:common.GenTimestamp(),
-		EndTime:common.GenTimestamp(),
-		ContractOwners:contractOwners,
-		ContractSignatures:nil,
-		ContractAssets:nil,
+		ContractId:    "UUID-1234-5678-90",
+		Cname:         "test contract output",
+		Ctype:         "CREATE",
+		Caption:       "购智能手机返话费合约产品协议",
+		Description:   "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
+		ContractState: "",
+		Creator:       common.GenTimestamp(),
+		CreatorTime:   common.GenTimestamp(),
+		EndTime:       common.GenTimestamp(),
+		StartTime:     common.GenTimestamp(),
+
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     nil,
 		ContractComponents: nil,
 	}
 
 	contractModel.ContractHead = contractHead
-	contractModel.ContractBody =contractBody
+	contractModel.ContractBody = contractBody
 
 	contractSignatures := []*protos.ContractSignature{
 		{
@@ -460,37 +451,48 @@ func Test_CreatValid(t *testing.T) {
 			SignTimestamp: common.GenTimestamp(),
 		},
 		//{
+		//	OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{
 		//	OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
 		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
 		//	SignTimestamp: common.GenTimestamp(),
 		//},
-		{
-			OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
-			Signature:     contractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
-			SignTimestamp: common.GenTimestamp(),
-		},
+		//{Create
+		//	OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+		//	Signature:     contractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
 	}
 	contractBody.ContractSignatures = contractSignatures
 	contractModel.Id = contractModel.GenerateId()
-	beego.Info(common.Serialize(contractModel))
-	protoContract, _ := fromContractModelStrToContract(common.Serialize(contractModel))
+	serializeContractModel := common.Serialize(contractModel)
+	fmt.Println("produce the contractModel", serializeContractModel)
+
+	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
 	requestBody, err := proto.Marshal(&protoContract)
 	if err != nil {
-		beego.Error("proto.Marshal", err)
+		fmt.Println("proto.Marshal", err)
+		return
 	}
+
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
+	response, err := httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
-		fmt.Println("handle error ", err.Error())
+		fmt.Println("httpRequest error ", err.Error())
+		return
 	}
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.SerializePretty(responseData))
 
 }
 
-
-func Test_Creat(t *testing.T) {
+func Test_CreatContract(t *testing.T) {
 	url := default_url + "create"
 	fmt.Println(url)
 	contract := protos.Contract{ // proto-buf
@@ -668,79 +670,72 @@ func Test_Signature(t *testing.T) {
 func Test_Terminate(t *testing.T) {
 	url := default_url + "terminate"
 
-	contract := protos.Contract{ // proto-buf
-		ContractHead: &protos.ContractHead{
-			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Version:    1,
-		},
-		ContractBody: &protos.ContractBody{
-			Caption: "CREATE",
-			Cname:   "futurever",
-			ContractAssets: []*protos.ContractAsset{
-				{
-					AssetId:     "001",
-					Name:        "futurever-1",
-					Amount:      1000,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "003",
-					Name:        "futurever-3",
-					Amount:      452,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "002",
-					Name:        "futurever-2",
-					Amount:      99999,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-			},
-			ContractComponents: nil,
-			ContractId:         common.GenerateUUID(),
-			ContractOwners: []string{
-				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			},
-			ContractSignatures: []*protos.ContractSignature{
-				{
-					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
-					SignTimestamp: common.GenTimestamp(),
-				},
-				{
-					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
-					SignTimestamp: common.GenTimestamp(),
-				},
-			},
-			ContractState: "",
-			Creator:       "futurever",
-			CreatorTime:   common.GenTimestamp(),
-			Ctype:         "CONTRACT",
-			Description:   "CREATE CONTRACT BY futurever [合约创建]",
-			StartTime:     common.GenTimestamp(),
-			EndTime:       common.GenTimestamp(),
-		},
+	contractModel := model.ContractModel{}
+	//contractAsset := []*protos.ContractAsset{}
+	//contractComponent:=[]*protos.ContractComponent{}
+
+	contractHead := &protos.ContractHead{"", 1}
+
+	contractOwners := []string{
+		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
+	contractBody := &protos.ContractBody{
+		ContractId:    "UUID-1234-5678-90",
+		Cname:         "test contract output",
+		Ctype:         "CREATE",
+		Caption:       "购智能手机返话费合约产品协议",
+		Description:   "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
+		ContractState: "",
+		Creator:       common.GenTimestamp(),
+		CreatorTime:   common.GenTimestamp(),
+		EndTime:       common.GenTimestamp(),
+		StartTime:     common.GenTimestamp(),
+
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     nil,
+		ContractComponents: nil,
 	}
 
-	requestBody, err := proto.Marshal(&data)
-	if err != nil {
-		fmt.Println("error ", err.Error())
+	contractModel.ContractHead = contractHead
+	contractModel.ContractBody = contractBody
+
+	contractSignatures := []*protos.ContractSignature{
+		{
+			OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+			Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+			SignTimestamp: common.GenTimestamp(),
+		},
+		//{
+		//	OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{
+		//	OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{Create
+		//	OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+		//	Signature:     contractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
 	}
+	contractBody.ContractSignatures = contractSignatures
+	contractModel.Id = contractModel.GenerateId()
+	serializeContractModel := common.Serialize(contractModel)
+	fmt.Println("produce the contractModel", serializeContractModel)
+
+	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
+	requestBody, err := proto.Marshal(&protoContract)
+	if err != nil {
+		fmt.Println("proto.Marshal", err)
+		return
+	}
+
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 	_, err = httpRequest("POST", url, requestBody, requestHead)
@@ -755,233 +750,242 @@ func Test_Query(t *testing.T) {
 	url := default_url + "query"
 
 	contract := protos.Contract{ // proto-buf
-		Id: "d881e3f1a9b79c1d3ef7f7c5cf03a1965362367bf6823a6550b6c417211e1889",
+		Id: "64520eba60bde72f71b4646d6cc0872715e4717234ca6031c621d247e5c4553c",
 	}
 
 	requestBody, err := proto.Marshal(&contract)
 	if err != nil {
-		fmt.Println("error ", err.Error())
+		fmt.Println("proto.Marshal error ", err.Error())
+		return
 	}
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	responseData, err := httpRequest("POST", url, requestBody, requestHead)
+	response, err := httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
+		fmt.Println("httpRequest error ", err.Error())
+		return
 	}
-	/*---------------------- response -----------------------*/
-	var responseResult protos.Contract
-	proto.Unmarshal(responseData, &responseResult)
-	beego.Error("result is ",responseResult)
 
-
-	var responseMap map[string]interface{}
-	json.Unmarshal(responseData, &responseMap)
-	fmt.Println("response is:", responseMap)
-	responseDataBody := responseMap["data"]
-	fmt.Println("responseDataBody is:", responseDataBody)
-	ress, ok := responseDataBody.(string)
-
-	if ok {
+	/*---------------------- response 接受的响应数据-----------------------*/
+	var responseData protos.ResponseData
+	err = proto.Unmarshal(response, &responseData)
+	if err != nil {
+		fmt.Println("proto.Unmarshal protos.ResponseData error")
+		return
 	}
-	fmt.Println("ress is:", ress)
-	rrrr, _ := json.Marshal(ress)
-	fmt.Println("ress byte is:", rrrr)
+	fmt.Println("responseData content is: \n", common.SerializePretty(responseData))
 
-	responseDataBodyByte, _ := json.Marshal(responseDataBody)
-	fmt.Println(responseDataBodyByte)
-	var contractData protos.ContractData
-	proto.Unmarshal(responseDataBodyByte, &contractData)
-	fmt.Println("contractData is:", contractData)
+	ok := responseData.Ok
+	_ = ok
+	msg := responseData.Msg
+	_ = msg
+	data := responseData.Data
 
-	//conotractData := responseData["data"]
-	//contractData_str := common.Serialize(contractData.Data)
+	/*----------------- contract Unmarshal 数据库真实数据----------------------*/
+	// 返回的数据是 字节数组->字符串 ,所以需要 字符串->字节数组
+	// API response []byte -> string, resolve string -> []byte
+	var contractProtoBytes = []byte(data)
+	//fmt.Println(contractProtoBytes)
+
+	var contractQueryData protos.Contract
+	err = proto.Unmarshal(contractProtoBytes, &contractQueryData)
+	if err != nil {
+		fmt.Println("proto.Unmarshal protos.Contract error")
+		return
+	}
+	//fmt.Println("query contract is:\n", contractQueryData)
+	fmt.Println("Contract content is: \n", common.SerializePretty(contractQueryData))
+
 }
 
 func Test_Track(t *testing.T) {
 	url := default_url + "track"
 
 	contract := protos.Contract{ // proto-buf
-		Id: "2",
+		Id: "64520eba60bde72f71b4646d6cc0872715e4717234ca6031c621d247e5c4553c",
 	}
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
+
+	requestBody, err := proto.Marshal(&contract)
+	if err != nil {
+		fmt.Println("proto.Marshal error ", err.Error())
+		return
 	}
-	requestBody, err := proto.Marshal(&data)
 	if err != nil {
 		fmt.Println("error ", err.Error())
 	}
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
+	response, err := httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
-		// handle error
 		fmt.Println("error ", err.Error())
 	}
-	//fmt.Println("response is:", string(response))
+	/*---------------------- response 接受的响应数据-----------------------*/
+	var responseData protos.ResponseData
+	err = proto.Unmarshal(response, &responseData)
+	if err != nil {
+		fmt.Println("proto.Unmarshal protos.ResponseData error")
+		return
+	}
+	fmt.Println("responseData content is: \n", common.SerializePretty(responseData))
+
+	ok := responseData.Ok
+	_ = ok
+	msg := responseData.Msg
+	_ = msg
+	data := responseData.Data
+	fmt.Println(data)
 }
 
 func Test_Update(t *testing.T) {
 	url := default_url + "update"
+	contractModel := model.ContractModel{}
+	//contractAsset := []*protos.ContractAsset{}
+	//contractComponent:=[]*protos.ContractComponent{}
 
-	contract := protos.Contract{ // proto-buf
-		ContractHead: &protos.ContractHead{
-			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Version:    1,
-		},
-		ContractBody: &protos.ContractBody{
-			Caption: "CREATE",
-			Cname:   "futurever",
-			ContractAssets: []*protos.ContractAsset{
-				{
-					AssetId:     "001",
-					Name:        "futurever-1",
-					Amount:      1000,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "003",
-					Name:        "futurever-3",
-					Amount:      452,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "002",
-					Name:        "futurever-2",
-					Amount:      99999,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-			},
-			ContractComponents: nil,
-			ContractId:         common.GenerateUUID(),
-			ContractOwners: []string{
-				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			},
-			ContractSignatures: []*protos.ContractSignature{
-				{
-					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
-					SignTimestamp: common.GenTimestamp(),
-				},
-				{
-					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
-					SignTimestamp: common.GenTimestamp(),
-				},
-			},
-			ContractState: "",
-			Creator:       "futurever",
-			CreatorTime:   common.GenTimestamp(),
-			Ctype:         "CONTRACT",
-			Description:   "CREATE CONTRACT BY futurever [合约创建]",
-			StartTime:     common.GenTimestamp(),
-			EndTime:       common.GenTimestamp(),
-		},
+	contractHead := &protos.ContractHead{"", 1}
+
+	contractOwners := []string{
+		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
+	contractBody := &protos.ContractBody{
+		ContractId:    "UUID-1234-5678-90",
+		Cname:         "test contract output",
+		Ctype:         "CREATE",
+		Caption:       "购智能手机返话费合约产品协议",
+		Description:   "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
+		ContractState: "",
+		Creator:       common.GenTimestamp(),
+		CreatorTime:   common.GenTimestamp(),
+		EndTime:       common.GenTimestamp(),
+		StartTime:     common.GenTimestamp(),
+
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     nil,
+		ContractComponents: nil,
 	}
-	requestBody, err := proto.Marshal(&data)
+
+	contractModel.ContractHead = contractHead
+	contractModel.ContractBody = contractBody
+
+	contractSignatures := []*protos.ContractSignature{
+		{
+			OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+			Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+			SignTimestamp: common.GenTimestamp(),
+		},
+		//{
+		//	OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{
+		//	OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{Create
+		//	OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+		//	Signature:     contractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+	}
+	contractBody.ContractSignatures = contractSignatures
+	contractModel.Id = contractModel.GenerateId()
+	serializeContractModel := common.Serialize(contractModel)
+	fmt.Println("produce the contractModel", serializeContractModel)
+
+	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
+	requestBody, err := proto.Marshal(&protoContract)
 	if err != nil {
-		fmt.Println("error ", err.Error())
+		fmt.Println("proto.Marshal", err)
+		return
 	}
+
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
+	response, err := httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
+		fmt.Println("httpRequest error ", err.Error())
+		return
 	}
-	//fmt.Println("response is:", string(response))
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.SerializePretty(responseData))
 }
 
 func Test_Test(t *testing.T) {
 	url := default_url + "test"
 
-	contract := protos.Contract{ // proto-buf
-		ContractHead: &protos.ContractHead{
-			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Version:    1,
-		},
-		ContractBody: &protos.ContractBody{
-			Caption: "CREATE",
-			Cname:   "futurever",
-			ContractAssets: []*protos.ContractAsset{
-				{
-					AssetId:     "001",
-					Name:        "futurever-1",
-					Amount:      1000,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "003",
-					Name:        "futurever-3",
-					Amount:      452,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "002",
-					Name:        "futurever-2",
-					Amount:      99999,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-			},
-			ContractComponents: nil,
-			ContractId:         common.GenerateUUID(),
-			ContractOwners: []string{
-				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			},
-			ContractSignatures: []*protos.ContractSignature{
-				{
-					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
-					SignTimestamp: common.GenTimestamp(),
-				},
-				{
-					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
-					SignTimestamp: common.GenTimestamp(),
-				},
-			},
-			ContractState: "",
-			Creator:       "futurever",
-			CreatorTime:   common.GenTimestamp(),
-			Ctype:         "CONTRACT",
-			Description:   "CREATE CONTRACT BY futurever [合约创建]",
-			StartTime:     common.GenTimestamp(),
-			EndTime:       common.GenTimestamp(),
-		},
+	contractModel := model.ContractModel{}
+	//contractAsset := []*protos.ContractAsset{}
+	//contractComponent:=[]*protos.ContractComponent{}
+
+	contractHead := &protos.ContractHead{"", 1}
+
+	contractOwners := []string{
+		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
+	contractBody := &protos.ContractBody{
+		ContractId:    "UUID-1234-5678-90",
+		Cname:         "test contract output",
+		Ctype:         "CREATE",
+		Caption:       "购智能手机返话费合约产品协议",
+		Description:   "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
+		ContractState: "",
+		Creator:       common.GenTimestamp(),
+		CreatorTime:   common.GenTimestamp(),
+		EndTime:       common.GenTimestamp(),
+		StartTime:     common.GenTimestamp(),
+
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     nil,
+		ContractComponents: nil,
 	}
-	requestBody, err := proto.Marshal(&data)
+
+	contractModel.ContractHead = contractHead
+	contractModel.ContractBody = contractBody
+
+	contractSignatures := []*protos.ContractSignature{
+		{
+			OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+			Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+			SignTimestamp: common.GenTimestamp(),
+		},
+		//{
+		//	OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{
+		//	OwnerPubkey:   "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
+		//	Signature:     contractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+		//{Create
+		//	OwnerPubkey:   "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
+		//	Signature:     contractModel.Sign("9647UfPdDSwBf5kw7tUrSe7cmYY5RvVX47GrGqSh4XVi"),
+		//	SignTimestamp: common.GenTimestamp(),
+		//},
+	}
+	contractBody.ContractSignatures = contractSignatures
+	contractModel.Id = contractModel.GenerateId()
+	serializeContractModel := common.Serialize(contractModel)
+	fmt.Println("produce the contractModel", serializeContractModel)
+
+	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
+	requestBody, err := proto.Marshal(&protoContract)
 	if err != nil {
-		fmt.Println("error ", err.Error())
+		fmt.Println("proto.Marshal", err)
+		return
 	}
+
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 	_, err = httpRequest("POST", url, requestBody, requestHead)

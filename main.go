@@ -10,13 +10,15 @@ import (
 )
 
 func main() {
+	log := logs.NewLogger()
 	beego.LoadAppConfig("ini", "../conf/app.conf")
 
 	//日志默认不输出调用的文件名和文件行号,如果你期望输出调用的文件名和文件行号,可以如下设置
-	logs.SetLogFuncCall(true)
+	//logs.SetLogFuncCall(true)
 	//如果你的应用自己封装了调用 log 包,那么需要设置 SetLogFuncCallDepth,默认是 2,
 	// 也就是直接调用的层级,如果你封装了多层,那么需要根据自己的需求进行调整.
-	//logs.EnableFuncCallDepth(true)
+	log.EnableFuncCallDepth(true)
+	log.SetLogFuncCallDepth(4)
 
 	//如果不想在控制台输出log相关的，可以打开下面设置
 	//todo if u want not output to console, open following line!
@@ -36,9 +38,9 @@ func main() {
 
 	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
 	log_config_str := common.Serialize(log_config)
-	logs.Warn("log_config_str: " ,log_config_str)
+	log.Warn("log_config_str: " ,log_config_str)
 
-	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
+	log.SetLogger(logs.AdapterMultiFile, log_config_str)
 
 	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,
 	//"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
@@ -49,6 +51,6 @@ func main() {
 	//	beego.BConfig.WebConfig.DirectoryIndex = true
 	//	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	//}
-	logs.Info("unicontract start")
+	log.Info("unicontract start")
 	beego.Run()
 }

@@ -3,6 +3,7 @@ package rethinkdb
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego"
 	"strconv"
 	"testing"
 	"unicontract/src/common"
@@ -80,15 +81,23 @@ func Test_InsertContractStruct(t *testing.T) {
 }
 
 func Test_GetContractById(t *testing.T) {
-	id := "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
+	id := "9a596c277e80c59b4e70e6a1b53520ba3ccdd954d4e4d1e52c31de61dfbc3c75"
 	/*-------------------examples:------------------*/
 	contractStr, err := GetContractById(id)
-	fmt.Println(contractStr=="")
+	if err != nil {
+		beego.Debug(err)
+	}
+	if contractStr == "" {
+		beego.Debug("Test_GetContractById result is blank")
+		return
+	}
+
 	var contract model.ContractModel
 	json.Unmarshal([]byte(contractStr), &contract)
 
 	if err != nil {
-		fmt.Println("error Test_GetContractById")
+		beego.Debug("Error Test_GetContractById Unmarshal")
+		return
 	}
 	fmt.Println(contract)
 	fmt.Println(common.SerializePretty(contract))
@@ -152,7 +161,7 @@ func Test_GetVoteById(t *testing.T) {
 	id := "032af183-5ffb-4091-bfe0-d4aae1af4b5c"
 	/*-------------------examples:------------------*/
 	voteStr, err := GetVoteById(id)
-	fmt.Println(voteStr=="")
+	fmt.Println(voteStr == "")
 	var vote model.Vote
 	json.Unmarshal([]byte(voteStr), &vote)
 
@@ -213,9 +222,9 @@ func Test_InsertContractOutput(t *testing.T) {
 				InvalidReason: "",
 				//IsValid:         false,
 				//InvalidReason:   "random false",
-				VoteFor: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
-				VoteType:        "None",
-				Timestamp:       common.GenTimestamp(),
+				VoteFor:   "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
+				VoteType:  "None",
+				Timestamp: common.GenTimestamp(),
 			},
 			Signature: "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
 		},
@@ -223,11 +232,11 @@ func Test_InsertContractOutput(t *testing.T) {
 			Id:         common.GenerateUUID(),
 			NodePubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 			VoteBody: model.VoteBody{
-				IsValid:         true,
-				InvalidReason:   "",
-				VoteFor: "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
-				VoteType:        "None",
-				Timestamp:       common.GenTimestamp(),
+				IsValid:       true,
+				InvalidReason: "",
+				VoteFor:       "7fb5daf3548c2d0d9b71ce25ee962d164cbb87d82078d7361b8424a95c7c4b94",
+				VoteType:      "None",
+				Timestamp:     common.GenTimestamp(),
 			},
 			Signature: "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
 		},
@@ -253,11 +262,12 @@ func Test_InsertContractOutput(t *testing.T) {
 	transaction.ContractModel = contract
 	// sign for contract
 	conotractOutput.Id = conotractOutput.GenerateId()
-
-	isTrue := InsertContractOutput(common.Serialize(conotractOutput))
-	if isTrue {
-		fmt.Println("insert conotractOutput success!")
-	}
+	fmt.Println(common.Serialize(conotractOutput))
+	fmt.Println(common.Serialize(conotractOutput))
+	//isTrue := InsertContractOutput(common.Serialize(conotractOutput))
+	//if isTrue {
+	//	fmt.Println("insert conotractOutput success!")
+	//}
 }
 
 func Test_GetContractOutputById(t *testing.T) {
@@ -266,7 +276,7 @@ func Test_GetContractOutputById(t *testing.T) {
 
 	/*-------------------examples:------------------*/
 	contractOutputStr, err := GetContractOutputById(id)
-	fmt.Println(contractOutputStr=="")
+	fmt.Println(contractOutputStr == "")
 	var contractOutput model.ContractOutput
 	json.Unmarshal([]byte(contractOutputStr), &contractOutput)
 
@@ -275,7 +285,6 @@ func Test_GetContractOutputById(t *testing.T) {
 	}
 	fmt.Println(common.SerializePretty(contractOutput))
 }
-
 
 func Test_GetContractOutputByContractPrimaryId(t *testing.T) {
 	contract_Id := "99120e82996f17f6ff5a33c6a7fd0d84491a5653500e136fc14876c956435489"
@@ -325,7 +334,7 @@ func Test_GetConsensusFailureById(t *testing.T) {
 	//id := "5c63f2c4-a578-450e-8714-66e99c1ad364"
 	/*-------------------examples:------------------*/
 	consensusFailureStr, err := GetConsensusFailureById(id)
-	fmt.Println(consensusFailureStr=="")
+	fmt.Println(consensusFailureStr == "")
 	var consensusFailure model.ConsensusFailure
 	json.Unmarshal([]byte(consensusFailureStr), &consensusFailure)
 

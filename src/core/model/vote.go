@@ -95,7 +95,6 @@ func (v *Vote) DecideVotes(n_voters int, n_valid int, n_invalid int) string {
 	return "UNDECIDED"
 }
 
-// TODO Verify the signature of a vote
 func (v *Vote) VerifyVoteSignature() bool {
 	signature := v.Signature
 	pub := v.NodePubkey
@@ -104,7 +103,6 @@ func (v *Vote) VerifyVoteSignature() bool {
 }
 
 func (v *Vote) SignVote() string {
-	//TODO priv_key
 	priv_key := config.Config.Keypair.PrivateKey
 	msg := common.Serialize(v.VoteBody)
 	sig := common.Sign(priv_key, msg)
