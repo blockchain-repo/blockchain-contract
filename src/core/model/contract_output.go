@@ -5,7 +5,6 @@ import (
 	"github.com/astaxie/beego"
 	"unicontract/src/common"
 	"unicontract/src/config"
-	"github.com/astaxie/beego/logs"
 )
 
 // An Asset is a fungible unit to spend and lock with Transactions
@@ -94,7 +93,7 @@ func (c *ContractOutput) GenerateId() string {
 	if err != nil {
 		beego.Error("Unmarshal error ", err)
 	}
-	logs.Info(common.Serialize(temp))
+	//logs.Info(common.Serialize(temp))
 	//operation := c.Transaction.Operation
 	temp.Id = ""
 	temp.Transaction.Relation.Votes = nil

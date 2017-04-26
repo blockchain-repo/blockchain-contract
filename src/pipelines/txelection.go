@@ -45,8 +45,8 @@ func txeHeadFilter(in io.Reader, out io.Writer){
 	p := make([]byte, MaxSizeTX)
 	for {
 
-		logs.Info(" txElection step2 : head filter",)
 		n, _ := rd.Read(p)
+		logs.Info(" txElection step2 : head filter",)
 		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
@@ -77,8 +77,8 @@ func txeValidate(in io.Reader, out io.Writer) {
 	p := make([]byte, MaxSizeTX)
 	for {
 
-		logs.Info(" txElection step3 : Validate")
 		n, _ := rd.Read(p)
+		logs.Info(" txElection step3 : Validate")
 		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
@@ -126,8 +126,8 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 	p := make([]byte, MaxSizeTX)
 	for {
 
-		logs.Info("txElection step4 : query eists")
 		n, _ := rd.Read(p)
+		logs.Info("txElection step4 : query eists")
 		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
@@ -167,8 +167,8 @@ func txeSend(in io.Reader, out io.Writer) {
 	p := make([]byte, MaxSizeTX)
 	for {
 
-		logs.Info("txElection step5 : send contractoutput")
 		n, _ := rd.Read(p)
+		logs.Info("txElection step5 : send contractoutput")
 		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue

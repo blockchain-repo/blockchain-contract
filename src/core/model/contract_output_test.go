@@ -20,7 +20,7 @@ func GenerateOutput() string {
 	transaction.Fulfillments = []*Fulfillment{}  //todo
 	transaction.Metadata = &Metadata{}           //todo
 	transaction.Operation = "CONTRACT"
-	transaction.Timestamp = ""
+	//transaction.Timestamp = ""
 
 	//--------------------contract-------------------------
 	contractAsset := []*protos.ContractAsset{}
