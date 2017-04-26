@@ -472,8 +472,6 @@ func Test_CreatValid(t *testing.T) {
 		},
 	}
 	contractBody.ContractSignatures = contractSignatures
-
-	//contractModel.Id = common.HashData(common.Serialize(contractBody))
 	contractModel.Id = contractModel.GenerateId()
 	beego.Info(common.Serialize(contractModel))
 	protoContract, _ := fromContractModelStrToContract(common.Serialize(contractModel))

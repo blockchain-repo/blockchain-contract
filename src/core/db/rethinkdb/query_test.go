@@ -193,7 +193,7 @@ func Test_InsertContractOutput(t *testing.T) {
 	transaction.Operation = "OUTPUT"
 	transaction.Timestamp = common.GenTimestamp()
 
-	relaction := &model.Relaction{
+	relaction := &model.Relation{
 		ContractId: "834fbab3-9118-45a5-b6d4-31d7baad5e13",
 		Voters: []string{
 			"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
@@ -230,7 +230,7 @@ func Test_InsertContractOutput(t *testing.T) {
 		},
 	}
 	relaction.Votes = Votes
-	transaction.Relaction = relaction
+	transaction.Relation = relaction
 	//create new obj
 	contract := model.ContractModel{}
 	// modify and set value for reference obj with &

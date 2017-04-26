@@ -73,7 +73,7 @@ func GenerateOutput() string {
 	transaction.ContractModel.Id = common.HashData(common.Serialize(contractBody))
 
 	//--------------------relaction-------------------------
-	transaction.Relaction = &Relaction{
+	transaction.Relation = &Relation{
 		ContractId: transaction.ContractModel.Id,
 		TaskId:     "task-id-123456789",
 		Voters: []string{
@@ -148,7 +148,7 @@ func GenerateOutput() string {
 	vote6.VoteBody.VoteFor = transaction.ContractModel.Id
 	vote6.VoteBody.VoteType = "CONTRACT"
 	vote6.Signature = vote6.SignVote()
-	transaction.Relaction.Votes = []*Vote{
+	transaction.Relation.Votes = []*Vote{
 		vote4, vote5, vote6,
 	}
 
@@ -232,13 +232,13 @@ func Test_GenerateId(t *testing.T) {
 		},
 	}
 
-	relaction := &Relaction{
+	relaction := &Relation{
 		ContractId: "3ea445410f608e6453cdcb7dbe42d57a89aca018993d7e87da85993cbccc6308",
 		TaskId:     "123",
 		Voters:     []string{"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3", "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo"},
 		Votes:      Votes,
 	}
-	transaction.Relaction = relaction
+	transaction.Relation = relaction
 
 	transaction.Timestamp = common.GenTimestamp()
 	contractOutput.Transaction = transaction

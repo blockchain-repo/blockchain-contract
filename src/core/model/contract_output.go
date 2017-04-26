@@ -51,7 +51,7 @@ type Metadata struct {
 }
 
 // 合约&交易关系信息
-type Relaction struct {
+type Relation struct {
 	ContractId string
 	TaskId     string
 	Voters     []string
@@ -65,7 +65,7 @@ type Transaction struct {
 	Metadata      *Metadata         `json:"metadata"`
 	Operation     string            `json:"operation"`
 	Timestamp     string            `json:"timestamp"`
-	Relaction     *Relaction
+	Relation     *Relation
 	ContractModel ContractModel `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
 }
 
@@ -97,7 +97,7 @@ func (c *ContractOutput) GenerateId() string {
 	logs.Info(common.Serialize(temp))
 	//operation := c.Transaction.Operation
 	temp.Id = ""
-	temp.Transaction.Relaction.Votes = nil
+	temp.Transaction.Relation.Votes = nil
 	temp.Transaction.ContractModel.ContractHead = nil
 	temp.Transaction.Timestamp = ""
 	serializeStr := common.Serialize(temp)
@@ -107,8 +107,8 @@ func (c *ContractOutput) GenerateId() string {
 
 // judge has enough votes for ContractOutput
 func (c *ContractOutput) HasEnoughVotes() bool {
-	voters := c.Transaction.Relaction.Voters
-	votes := c.Transaction.Relaction.Votes
+	voters := c.Transaction.Relation.Voters
+	votes := c.Transaction.Relation.Votes
 	voters_len := len(voters)
 
 	if voters_len <= 0 {
@@ -165,8 +165,8 @@ func (c *ContractOutput) ValidateHash() bool {
 
 //  判断是否有>1/2的有效签名。 return bool
 func (c *ContractOutput) ValidateContractOutput() bool {
-	voters := c.Transaction.Relaction.Voters
-	votes := c.Transaction.Relaction.Votes
+	voters := c.Transaction.Relation.Voters
+	votes := c.Transaction.Relation.Votes
 	voters_len := len(voters)
 
 	/*----------------keyring----------------*/

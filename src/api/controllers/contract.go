@@ -143,15 +143,14 @@ func fromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 	// 1. to contractModel
 	var contractModel model.ContractModel
 	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
-	if err != nil {
-		beego.Error("error fromContractModelStrToContract", err)
-	}
-	beego.Error("new ", common.SerializePretty(contractModel))
-
 	// 2. to contract
 	contract := contractModel.Contract
+	if err != nil {
+		beego.Error("error fromContractModelStrToContract", err)
+		return contract, err
+	}
 
-	return contract, err
+	return contract, nil
 }
 
 // @Title CreateContract
@@ -180,12 +179,12 @@ func (c *ContractController) Create() {
 	beego.Debug("Token is " + token)
 
 	contractModel := fromContractToContractModel(*contract)
-	//contractValid := contractModel.Validate() //todo
+	contractValid := contractModel.Validate() //todo
 	//contractValid := true
-	//if !contractValid {
-	//	c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error")
-	//	return
-	//}
+	if !contractValid {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error")
+		return
+	}
 	//beego.Warn(contractModel)
 	//beego.Warn(contractModel.Id)
 	//beego.Warn(contractModel.GenerateId())

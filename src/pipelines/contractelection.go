@@ -364,12 +364,12 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 		return contractOutput, err
 	}
 
-	contractOutput.Transaction.Relaction = new(model.Relaction)
+	contractOutput.Transaction.Relation = new(model.Relation)
 	for key, value := range slVote {
-		contractOutput.Transaction.Relaction.Voters =
-			append(contractOutput.Transaction.Relaction.Voters, value.NodePubkey)
-		contractOutput.Transaction.Relaction.Votes =
-			append(contractOutput.Transaction.Relaction.Votes, &slVote[key])
+		contractOutput.Transaction.Relation.Voters =
+			append(contractOutput.Transaction.Relation.Voters, value.NodePubkey)
+		contractOutput.Transaction.Relation.Votes =
+			append(contractOutput.Transaction.Relation.Votes, &slVote[key])
 	}
 
 	return contractOutput, err

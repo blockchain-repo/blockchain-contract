@@ -15,14 +15,9 @@ type ContractModel struct {
 
 // validate the contract
 func (c *ContractModel) Validate() bool {
-	headeValid := c.validateContractHead()
-	if !headeValid {
-		return false
-	}
+	// 1. validate contract.id
 	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
-	beego.Error("gogogo",c.Contract.Id, c.GenerateId())
-	beego.Error(common.Serialize(c))
-	//beego.Error(common.SerializePretty(c))
+	beego.Debug("model.contract.go Validate, contract.id:",c.Contract.Id,"generateId:", c.GenerateId())
 	if !idValid {
 		return false
 	}
@@ -68,7 +63,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 	contractBodyCloneCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneCloneBytes, &temp)
 	if err != nil {
-		beego.Error("Unmarshal error ", err)
+		beego.Error("model.contract.go IsSignatureValid error ", err)
 	}
 	temp.ContractSignatures = nil
 	contractBody_serialized := common.Serialize(temp)
@@ -125,7 +120,6 @@ func (c *ContractModel) validateContractHead() bool {
 	pub_keys := config.GetAllPublicKey()
 	pub_keysSet := common.StrArrayToHashSet(pub_keys)
 	contractHead := c.Contract.ContractHead
-	//todo voters in keyring or not ?
 	if contractHead.MainPubkey == "" {
 		beego.Error("contract main_pubkey blank")
 		return false
@@ -135,12 +129,5 @@ func (c *ContractModel) validateContractHead() bool {
 		beego.Warn("main_pubkey ", contractHead.MainPubkey, " not in pubkeys")
 		return false
 	}
-
-	//_contract := &c.Contract
-	//if _contract == nil {
-	//	beego.Error("Empty contract is not allowed")
-	//	return false
-	//}
-
 	return true
 }

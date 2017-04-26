@@ -3,7 +3,6 @@ package core
 import (
 	"math/rand"
 	"time"
-
 	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
