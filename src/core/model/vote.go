@@ -99,7 +99,7 @@ func (v *Vote) DecideVotes(n_voters int, n_valid int, n_invalid int) string {
 func (v *Vote) VerifyVoteSignature() bool {
 	signature := v.Signature
 	pub := v.NodePubkey
-	body := v.ToString()
+	body := common.Serialize(v.VoteBody)
 	return common.Verify(pub, body, signature)
 }
 

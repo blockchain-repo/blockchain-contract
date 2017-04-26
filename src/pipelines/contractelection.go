@@ -113,8 +113,11 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 				beegoLog.Debug("2.2.3 verify vote")
 				slMyContract, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
 				if err != nil {
-					if !pass { // 只有产生错误时才记录日志，当vote数量不够节点数量的一半时直接进入下次等待，不记录错误
+					if !pass {
 						beegoLog.Error(err.Error())
+					} else {
+						// vote not enough
+						beegoLog.Debug(err.Error())
 					}
 					continue
 				}
@@ -238,8 +241,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 	beegoLog.Debug("2.2.3.1 verify vote signature")
 	eligible_votes := make(map[string]model.Vote)
 	for _, tmpVote := range slVote {
-		//do not forget fix it !!!!!
-		if /*true*/ tmpVote.VerifyVoteSignature() {
+		if tmpVote.VerifyVoteSignature() {
 			if isExist, _ := _verifyPublicKey(tmpVote.NodePubkey); isExist {
 				eligible_votes[tmpVote.NodePubkey] = tmpVote
 			}
@@ -247,9 +249,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 	}
 
 	beegoLog.Debug("2.2.3.2 count votes")
-	// do not forget fix debug!!!!
 	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
-		log.Println("vote not enough")
 		return nil, true, errors.New("vote not enough")
 	}
 
