@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"os"
 
+	"github.com/astaxie/beego/logs"
+
+	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/common"
 	"unicontract/src/config"
-	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/common/monitor"
 )
 
@@ -23,7 +24,7 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 		if bytes.Equal(v, []byte("null")) {
@@ -49,7 +50,7 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 		mod := model.ContractModel{}
 		err := json.Unmarshal(t,&mod)
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 		v := model.Vote{}
@@ -81,7 +82,7 @@ func cvVote(in io.Reader, out io.Writer) {
 		v :=model.Vote{}
 		err := json.Unmarshal(t,&v)
 		if err != nil {
-			log.Fatalf(err.Error())
+			logs.Error(err.Error())
 			continue
 		}
 		v.NodePubkey = config.Config.Keypair.PublicKey
@@ -123,7 +124,7 @@ func startContractVote() {
 
 	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	w := bufio.NewWriter(f)
 	p(nil, w)
