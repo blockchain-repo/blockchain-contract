@@ -168,6 +168,7 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		slRealData := slContractOutput[:nReadNum]
 
 		strOutputId := gmContractOutputId[string(slRealData)]
+		delete(gmContractOutputId, string(slRealData))
 
 		beegoLog.Debug("3.2 query contractoutput table")
 		output, err := rethinkdb.GetContractOutputById(strOutputId)
