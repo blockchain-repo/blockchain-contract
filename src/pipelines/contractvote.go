@@ -30,6 +30,7 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 		if bytes.Equal(v, []byte("null")) {
 			continue
 		}
+		logs.Debug("-------cvChangefeed:",common.Serialize(m))
 		out.Write(v)
 
 		time.Send("contrant_changefeed")
@@ -62,6 +63,7 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 			v.VoteBody.IsValid = false
 		}
 		v.VoteBody.VoteFor = mod.Id
+		logs.Debug("-------cvValidateContract:",common.Serialize(v))
 		out.Write([]byte(v.ToString()))
 
 		time.Send("cv_validate_contract")
@@ -90,6 +92,8 @@ func cvVote(in io.Reader, out io.Writer) {
 		v.VoteBody.VoteType = "Contract"
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
+
+		logs.Debug("-------cvVote:",common.Serialize(v))
 		out.Write([]byte(v.ToString()))
 
 		time.Send("cv_validate_contract")
@@ -107,8 +111,10 @@ func cvWriteVote(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
-		r.Insert("Unicontract", "Votes", string(t))
-		out.Write(t)
+		res :=r.Insert("Unicontract", "Votes", string(t))
+
+		logs.Debug("-------cvWriteVote:",common.Serialize(res))
+		out.Write(nil)
 
 		time.Send("cv_vote_contract")
 	}
