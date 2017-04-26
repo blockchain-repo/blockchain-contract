@@ -186,23 +186,38 @@ func InsertContractOutput(contractOutput string) bool {
 	return false
 }
 
-// 根据合约[id]获取所有 contractOutput
-func GetContractOutputByContractId(contractId string) (string, error) {
+func GetContractOutputById(id string) (string, error) {
+	if id == "" {
+		return "", errors.New("id blank")
+	}
 
-	if contractId == "" {
-		return "", errors.New("contractId blank")
+	res := Get(DBNAME, TABLE_CONTRACT_OUTPUTS, id)
+	var blo map[string]interface{}
+	err := res.One(&blo)
+	if err != nil {
+		return "", errors.New(err.Error())
+	}
+	return common.Serialize(blo), nil
+}
+
+
+// 根据合约 整体的[id] transaction.contract.id 或者 relation.contractId 获取所有 contractOutput
+func GetContractOutputByContractPrimaryId(id string) (string, error) {
+
+	if id == "" {
+		return "", errors.New("id blank")
 	}
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).Filter(r.Row.Field("transaction").Field("contracts").Field("id").Eq(contractId)).Run(session)
+	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).Filter(r.Row.Field("transaction").Field("Contract").Field("id").Eq(id)).Run(session)
 
 	if err != nil {
 		log.Fatalf(err.Error())
 		return "", errors.New(err.Error())
 	}
 
-	var blo []map[string]interface{}
-	err = res.All(&blo)
+	var blo map[string]interface{}
+	err = res.One(&blo)
 	if err != nil {
 		log.Fatalf(err.Error())
 		return "", errors.New(err.Error())

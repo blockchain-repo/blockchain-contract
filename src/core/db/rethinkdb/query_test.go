@@ -257,21 +257,35 @@ func Test_InsertContractOutput(t *testing.T) {
 	}
 }
 
-func Test_ContractOutput(t *testing.T) {
-	contractId := "3ea445410f608e6453cdcb7dbe42d57a89aca018993d7e87da85993cbccc6308"
+func Test_GetContractOutputById(t *testing.T) {
+	id := "4e162ce9d44e057b8e972dd316748bb61543c8f9c6075ff44c448a620557c13a"
 	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
 
 	/*-------------------examples:------------------*/
-	contractOutputStr, err := GetContractOutputByContractId(contractId)
-	var contractOutputs []model.ContractOutput
-	json.Unmarshal([]byte(contractOutputStr), &contractOutputs)
+	contractOutputStr, err := GetContractOutputById(id)
+	var contractOutput model.ContractOutput
+	json.Unmarshal([]byte(contractOutputStr), &contractOutput)
 
 	if err != nil {
-		fmt.Println("GetContractOutputByContractId fail!")
+		fmt.Println("Test_GetContractOutputById fail!")
 	}
-	//fmt.Println(votes)
-	fmt.Println("records count is ", len(contractOutputs))
-	fmt.Println(common.SerializePretty(contractOutputs))
+	fmt.Println(common.SerializePretty(contractOutput))
+}
+
+
+func Test_GetContractOutputByContractPrimaryId(t *testing.T) {
+	contract_Id := "99120e82996f17f6ff5a33c6a7fd0d84491a5653500e136fc14876c956435489"
+	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
+
+	/*-------------------examples:------------------*/
+	contractOutputStr, err := GetContractOutputByContractPrimaryId(contract_Id)
+	var contractOutput model.ContractOutput
+	json.Unmarshal([]byte(contractOutputStr), &contractOutput)
+
+	if err != nil {
+		fmt.Println("Test_GetContractOutputByContractPrimaryId fail!")
+	}
+	fmt.Println(common.SerializePretty(contractOutput))
 }
 
 /*----------------------------- contractOutputs end---------------------------------------*/
