@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -235,7 +235,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 
 	nTotalVoteNum := len(slVote)
 	if nTotalVoteNum == 0 {
-		return nil, false, errors.New("no vote")
+		return nil, false, fmt.Errorf("no vote")
 	}
 
 	beegoLog.Debug("2.2.3.1 verify vote signature")
@@ -250,7 +250,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 
 	beegoLog.Debug("2.2.3.2 count votes")
 	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
-		return nil, true, errors.New("vote not enough")
+		return nil, true, fmt.Errorf("vote not enough")
 	}
 
 	beegoLog.Debug("2.2.3.3 valid votes")
