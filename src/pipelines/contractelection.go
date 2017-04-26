@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -17,7 +16,6 @@ import (
 )
 
 import (
-	"unicontract/src/chain"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
@@ -38,9 +36,10 @@ const (
 )
 
 var (
-	gslPublicKeys   []string
-	gnPublicKeysNum int
-	gstrPublicKey   string
+	gslPublicKeys      []string
+	gnPublicKeysNum    int
+	gstrPublicKey      string
+	gmContractOutputId map[string]string
 )
 
 //---------------------------------------------------------------------------
@@ -48,6 +47,7 @@ func init() {
 	gslPublicKeys = config.GetAllPublicKey()
 	gnPublicKeysNum = len(gslPublicKeys)
 	gstrPublicKey = config.Config.Keypair.PublicKey
+	gmContractOutputId = make(map[string]string)
 }
 
 //---------------------------------------------------------------------------
@@ -167,70 +167,24 @@ func ceQueryEists(in io.Reader, out io.Writer) {
 		}
 		slRealData := slContractOutput[:nReadNum]
 
-		myContract := model.ContractOutput{}
-		err = json.Unmarshal(slRealData, &myContract)
+		strOutputId := gmContractOutputId[string(slRealData)]
+
+		beegoLog.Debug("3.2 query contractoutput table")
+		output, err := rethinkdb.GetContractOutputById(strOutputId)
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
 		}
 
-		beegoLog.Debug("3.2 query chain")
-		strInput := fmt.Sprintf("{\"id\":\"%s\"}", myContract.Transaction.ContractModel.Id)
-		responseResult, err := chain.GetContract(strInput)
-		if err != nil {
-			beegoLog.Error(err.Error())
-			beegoLog.Debug("3.3 query failed and SaveOutputErrorData")
-			SaveOutputErrorData(_TableNameSendFailingRecords, slRealData)
+		if len(output) == 0 {
+			beegoLog.Debug("3.3 insert contractoutput table")
+			rethinkdb.InsertContractOutput(string(slRealData))
 		} else {
-			if responseResult.Code == _HTTPOK {
-				if responseResult.Data == nil { // not exist
-					beegoLog.Debug("3.3 ceQueryEists --->")
-					out.Write(slRealData)
-					time.Send("ce_query_contract")
-				} else { // exist
-					beegoLog.Debug("3.3 exist")
-				}
-			}
+			beegoLog.Debug("3.3 contractoutput exist")
 		}
-
-	}
-}
-
-//---------------------------------------------------------------------------
-func ceSend(in io.Reader, out io.Writer) {
-	beegoLog.Debug("4.进入ceSend")
-	rd := bufio.NewReader(in)
-	slContractOutput := make([]byte, MaxSizeTX)
-	for {
-		nReadNum, err := rd.Read(slContractOutput)
-		time := monitor.Monitor.NewTiming()
-		beegoLog.Debug("4.1 ceSend get data")
-		if err != nil {
-			beegoLog.Error(err.Error())
-			continue
-		}
-		if nReadNum == 0 {
-			continue
-		}
-		slRealData := slContractOutput[:nReadNum]
-
-		beegoLog.Debug("4.2 CreateContract")
-		responseResult, err := chain.CreateContract(slRealData)
-		if err != nil {
-			beegoLog.Error(err.Error())
-			beegoLog.Debug("4.3 CreateContract failed and SaveOutputErrorData")
-			SaveOutputErrorData(_TableNameSendFailingRecords, slRealData)
-			continue
-		}
-		if responseResult.Code != _HTTPOK {
-			beegoLog.Error(responseResult.Message)
-			beegoLog.Debug("4.3 CreateContract failed and SaveOutputErrorData")
-			SaveOutputErrorData(_TableNameSendFailingRecords, slRealData)
-		}
-
-		beegoLog.Debug("4.4 ceSend --->")
+		beegoLog.Debug("3.4 ceQueryEists ---> /dev/null")
 		out.Write(slRealData)
-		time.Send("ce_send_contract")
+		time.Send("ce_query_contract")
 	}
 }
 
@@ -239,8 +193,7 @@ func startContractElection() {
 	p := Pipe(
 		ceChangefeed,
 		ceHeadFilter,
-		ceQueryEists,
-		ceSend)
+		ceQueryEists)
 
 	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 	if err != nil {
@@ -265,7 +218,6 @@ func _verifyHeadNode(mainPubkey string) (bool, error) {
 
 //---------------------------------------------------------------------------
 func _verifyVotes(contractId string) ([]byte, bool, error) {
-	// 查询所有的vote
 	strVotes, err := rethinkdb.GetVotesByContractId(contractId)
 	if err != nil {
 		return nil, false, err
@@ -282,7 +234,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 		return nil, false, errors.New("no vote")
 	}
 
-	// 验证vote
+	beegoLog.Debug("2.2.3.1 verify vote signature")
 	eligible_votes := make(map[string]model.Vote)
 	for _, tmpVote := range slVote {
 		//do not forget fix it !!!!!
@@ -293,12 +245,14 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 		}
 	}
 
-	// 统计vote并判断valid
+	beegoLog.Debug("2.2.3.2 count votes")
 	// do not forget fix debug!!!!
 	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
 		log.Println("vote not enough")
 		return nil, true, errors.New("vote not enough")
 	}
+
+	beegoLog.Debug("2.2.3.3 valid votes")
 	bValid := _verifyValid(eligible_votes)
 
 	if bValid {
@@ -307,6 +261,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 			return nil, bValid, err
 		}
 		slMyContract, err := json.Marshal(contractOutput)
+		gmContractOutputId[string(slMyContract)] = contractOutput.Id
 		return slMyContract, bValid, err
 	} else {
 		return nil, bValid, nil
@@ -351,25 +306,39 @@ func _verifyValid(mVotes map[string]model.Vote) bool {
 //---------------------------------------------------------------------------
 func _produceContractOutput(contractId string, slVote []model.Vote) (model.ContractOutput, error) {
 	var contractOutput model.ContractOutput
+
 	contractOutput.Version = _VERSION
 	contractOutput.Transaction.Operation = _OPERATION
+
 	strContract, err := rethinkdb.GetContractById(contractId)
 	if err != nil {
 		return contractOutput, err
 	}
-
-	err = json.Unmarshal([]byte(strContract),
-		&contractOutput.Transaction.ContractModel)
+	var contractModel model.ContractModel
+	err = json.Unmarshal([]byte(strContract), &contractModel)
 	if err != nil {
 		return contractOutput, err
 	}
+	contractOutput.Transaction.ContractModel = contractModel
+	contractOutput.Transaction.ContractModel.ContractHead = nil
 
 	contractOutput.Transaction.Relation = new(model.Relation)
-	for key, value := range slVote {
+	contractOutput.Transaction.Relation.ContractId = contractModel.Id
+	for _, value := range gslPublicKeys {
 		contractOutput.Transaction.Relation.Voters =
-			append(contractOutput.Transaction.Relation.Voters, value.NodePubkey)
-		contractOutput.Transaction.Relation.Votes =
-			append(contractOutput.Transaction.Relation.Votes, &slVote[key])
+			append(contractOutput.Transaction.Relation.Voters, value)
+	}
+	contractOutput.Id = common.HashData(common.Serialize(contractOutput))
+
+	contractOutput.Transaction.Timestamp = common.GenTimestamp()
+	contractOutput.Transaction.ContractModel.ContractHead = contractModel.ContractHead
+	contractOutput.Transaction.Relation.Votes = make([]*model.Vote, gnPublicKeysNum)
+	for key, _ := range slVote {
+		for index, _ := range gslPublicKeys {
+			if gslPublicKeys[index] == slVote[key].NodePubkey {
+				contractOutput.Transaction.Relation.Votes[index] = &slVote[key]
+			}
+		}
 	}
 
 	return contractOutput, err
