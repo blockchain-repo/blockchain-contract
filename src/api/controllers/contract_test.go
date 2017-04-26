@@ -421,9 +421,8 @@ func Test_AuthSignature(t *testing.T) {
 
 func Test_CreatValid(t *testing.T) {
 	url := default_url + "create"
-	fmt.Println(url)
+	beego.Debug("请求地址", url)
 	contractModel := model.ContractModel{}
-	//
 	//contractAsset := []*protos.ContractAsset{}
 	//contractComponent:=[]*protos.ContractComponent{}
 
@@ -477,7 +476,7 @@ func Test_CreatValid(t *testing.T) {
 	protoContract, _ := fromContractModelStrToContract(common.Serialize(contractModel))
 	requestBody, err := proto.Marshal(&protoContract)
 	if err != nil {
-		fmt.Println("error ", err.Error())
+		beego.Error("proto.Marshal", err)
 	}
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF

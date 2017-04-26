@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"errors"
-	"github.com/astaxie/beego"
 	r "gopkg.in/gorethink/gorethink.v3"
 	"unicontract/src/common"
 )
@@ -65,11 +64,16 @@ func GetContractById(id string) (string, error) {
 	if id == "" {
 		return "", errors.New("id blank")
 	}
+
 	res := Get(DBNAME, TABLE_CONTRACTS, id)
+	if res.IsNil() {
+		return "", nil
+	}
+
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -82,11 +86,17 @@ func GetContractsByContractId(contractId string) (string, error) {
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_CONTRACTS).Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
 
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return "", err
 	}
 
 	return common.Serialize(blo), nil
@@ -96,23 +106,29 @@ func GetContractsByContractId(contractId string) (string, error) {
 func GetContractMainPubkeyByContract(id string) (string, error) {
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_CONTRACTS).Get(id).Count().Default(0).Run(session)
-
 	if err != nil {
-		beego.Error(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
 	}
+
 	var blo int
 	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
 	if blo == 0 {
 		return "", nil
 	}
+
 	// continue ...
 	res, err = r.Table(TABLE_CONTRACTS).Get(id).Field("ContractHead").Field("MainPubkey").Run(session)
+	if err != nil {
+		return "", err
+	}
+
 	var blo2 string
 	err = res.One(&blo2)
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return blo2, nil
 }
@@ -138,10 +154,14 @@ func GetVoteById(id string) (string, error) {
 		return "", errors.New("id blank")
 	}
 	res := Get(DBNAME, TABLE_VOTES, id)
+	if res.IsNil() {
+		return "", nil
+	}
+
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -155,17 +175,17 @@ func GetVotesByContractId(contractId string) (string, error) {
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("Vote").Field("VoteFor").Eq(contractId)).Run(session)
-
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
 	}
 
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -192,14 +212,17 @@ func GetContractOutputById(id string) (string, error) {
 	}
 
 	res := Get(DBNAME, TABLE_CONTRACT_OUTPUTS, id)
+	if res.IsNil() {
+		return "", nil
+	}
+
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
-
 
 // 根据合约 整体的[id] transaction.contract.id 或者 relation.contractId 获取所有 contractOutput
 func GetContractOutputByContractPrimaryId(id string) (string, error) {
@@ -210,17 +233,17 @@ func GetContractOutputByContractPrimaryId(id string) (string, error) {
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).Filter(r.Row.Field("transaction").Field("Contract").Field("id").Eq(id)).Run(session)
-
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
 	}
 
 	var blo map[string]interface{}
 	err = res.One(&blo)
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -247,10 +270,14 @@ func GetContractTaskById(id string) (string, error) {
 	}
 
 	res := Get(DBNAME, TABLE_CONTRACT_TASKS, id)
+	if res.IsNil() {
+		return "", nil
+	}
+
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -262,17 +289,18 @@ func GetContractTasksByContractId(contractId string) (string, error) {
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_CONTRACT_TASKS).Filter(r.Row.Field("ContractId").Eq(contractId)).Run(session)
-
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
 	}
 
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
 		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -299,10 +327,14 @@ func GetConsensusFailureById(id string) (string, error) {
 	}
 
 	res := Get(DBNAME, TABLE_CONSENSUS_FAILURES, id)
+	if res.IsNil() {
+		return "", nil
+	}
+
 	var blo map[string]interface{}
 	err := res.One(&blo)
 	if err != nil {
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }
@@ -314,17 +346,18 @@ func GetConsensusFailuresByConsensusId(consensusId string) (string, error) {
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_CONSENSUS_FAILURES).Filter(r.Row.Field("ConsensusId").Eq(consensusId)).Run(session)
-
 	if err != nil {
-		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
 	}
 
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
 		log.Fatalf(err.Error())
-		return "", errors.New(err.Error())
+		return "", err
 	}
 	return common.Serialize(blo), nil
 }

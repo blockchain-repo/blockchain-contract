@@ -83,6 +83,7 @@ func Test_GetContractById(t *testing.T) {
 	id := "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
 	/*-------------------examples:------------------*/
 	contractStr, err := GetContractById(id)
+	fmt.Println(contractStr=="")
 	var contract model.ContractModel
 	json.Unmarshal([]byte(contractStr), &contract)
 
@@ -151,6 +152,7 @@ func Test_GetVoteById(t *testing.T) {
 	id := "032af183-5ffb-4091-bfe0-d4aae1af4b5c"
 	/*-------------------examples:------------------*/
 	voteStr, err := GetVoteById(id)
+	fmt.Println(voteStr=="")
 	var vote model.Vote
 	json.Unmarshal([]byte(voteStr), &vote)
 
@@ -166,6 +168,7 @@ func Test_GetVotesByContractId(t *testing.T) {
 
 	/*-------------------examples:------------------*/
 	votesStr, err := GetVotesByContractId(contractId)
+	fmt.Println(votesStr)
 	var votes []model.Vote
 	json.Unmarshal([]byte(votesStr), &votes)
 
@@ -258,11 +261,12 @@ func Test_InsertContractOutput(t *testing.T) {
 }
 
 func Test_GetContractOutputById(t *testing.T) {
-	id := "4e162ce9d44e057b8e972dd316748bb61543c8f9c6075ff44c448a620557c13a"
+	id := "4e162ce9d44e057b8e972dd316748bb61543c8f9c6075ff44c448a620557c13ax"
 	//contractId := "a888c9204173537aec1949dc8d5ecac718cadcc68966017d9e0ab6d62a5675692"
 
 	/*-------------------examples:------------------*/
 	contractOutputStr, err := GetContractOutputById(id)
+	fmt.Println(contractOutputStr=="")
 	var contractOutput model.ContractOutput
 	json.Unmarshal([]byte(contractOutputStr), &contractOutput)
 
@@ -321,6 +325,7 @@ func Test_GetConsensusFailureById(t *testing.T) {
 	//id := "5c63f2c4-a578-450e-8714-66e99c1ad364"
 	/*-------------------examples:------------------*/
 	consensusFailureStr, err := GetConsensusFailureById(id)
+	fmt.Println(consensusFailureStr=="")
 	var consensusFailure model.ConsensusFailure
 	json.Unmarshal([]byte(consensusFailureStr), &consensusFailure)
 
