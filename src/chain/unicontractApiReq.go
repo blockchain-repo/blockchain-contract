@@ -28,7 +28,6 @@ func CreateContract(jsonBody interface{})  (*requestHandler.ResponseResult,error
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -53,7 +52,6 @@ func CreateContractTx(jsonBody interface{}) (*requestHandler.ResponseResult,erro
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -78,7 +76,6 @@ func GetContract(jsonBody interface{})  (*requestHandler.ResponseResult,error){
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -103,7 +100,6 @@ func GetContractTx(jsonBody interface{})  (*requestHandler.ResponseResult,error)
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -128,7 +124,6 @@ func GetContractRecord(jsonBody interface{})  (*requestHandler.ResponseResult,er
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -153,7 +148,6 @@ func FreezeAsset(jsonBody interface{})  (*requestHandler.ResponseResult,error){
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -178,7 +172,6 @@ func UnfreezeAsset(jsonBody interface{})  (*requestHandler.ResponseResult,error)
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -203,7 +196,6 @@ func FrozenAsset(jsonBody interface{})  (*requestHandler.ResponseResult,error){
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err

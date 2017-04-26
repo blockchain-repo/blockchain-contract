@@ -28,7 +28,6 @@ func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult,error
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -53,7 +52,6 @@ func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -77,7 +75,6 @@ func QueryTxsTotal() (*requestHandler.ResponseResult,error){
 		res = requestHandler.GetRequestResult(yamlName, apiName, "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -102,7 +99,6 @@ func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -126,7 +122,6 @@ func QueryGroupByBlock() (*requestHandler.ResponseResult,error){
 		res = requestHandler.GetRequestResult(yamlName, apiName, "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -151,7 +146,6 @@ func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult,error)
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -176,7 +170,6 @@ func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -201,7 +194,6 @@ func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult,err
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -225,7 +217,6 @@ func QueryBlockCount() (*requestHandler.ResponseResult,error){
 		res = requestHandler.GetRequestResult(yamlName, apiName, "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -250,7 +241,6 @@ func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -274,7 +264,6 @@ func QueryInvalidBlockTotal() (*requestHandler.ResponseResult,error){
 		res = requestHandler.GetRequestResult(yamlName, apiName, "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -299,7 +288,6 @@ func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseRes
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -323,7 +311,6 @@ func PublickeySet() (*requestHandler.ResponseResult,error){
 		res = requestHandler.GetRequestResult(yamlName, apiName, "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -348,7 +335,6 @@ func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResul
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -373,7 +359,6 @@ func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseRe
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -398,7 +383,6 @@ func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult,err
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
@@ -423,7 +407,6 @@ func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
 		beegoLog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
-		beegoLog.Error(err)
 	})
 
 	return res, err
