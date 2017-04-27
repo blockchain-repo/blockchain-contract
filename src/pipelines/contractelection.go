@@ -25,8 +25,6 @@ import (
 
 //---------------------------------------------------------------------------
 const (
-	_DBName          = "Unicontract"
-	_TableNameVotes  = "Votes"
 	_NewVal          = "new_val"
 	_HTTPOK          = 200
 	_VERSION         = 2
@@ -54,7 +52,7 @@ func init() {
 func ceChangefeed(in io.Reader, out io.Writer) {
 	beegoLog.Debug("1.进入ceChangefeed")
 	var value interface{}
-	res := rethinkdb.Changefeed(_DBName, _TableNameVotes)
+	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
 	for res.Next(&value) {
 		time := monitor.Monitor.NewTiming()
 		beegoLog.Debug("1.1 ceChangefeed get new_val")
