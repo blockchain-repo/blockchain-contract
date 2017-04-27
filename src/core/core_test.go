@@ -59,7 +59,7 @@ func TestWriteContract(t *testing.T) {
 	}
 	contractBody.ContractSignatures = contractSignatures
 
-	contractModel.Id = common.HashData(common.Serialize(contractBody))
+	contractModel.Id = contractModel.GenerateId()
 	fmt.Print(common.Serialize(contractModel))
 	WriteContract(contractModel)
 }
