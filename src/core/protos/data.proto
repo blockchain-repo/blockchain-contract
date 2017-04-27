@@ -1,8 +1,0 @@
-syntax = "proto3";
-package protos;
-
-import "contract.proto";
-message ContractData {
-    Contract data = 1; //
-    string token = 2; //
-}

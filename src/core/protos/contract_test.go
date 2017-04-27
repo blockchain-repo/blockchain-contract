@@ -5,7 +5,6 @@ import (
 	"github.com/golang/protobuf/proto"
 	"testing"
 	"unicontract/src/common"
-	//"unicontract/src/config"
 )
 
 func Test_Contract(t *testing.T) {

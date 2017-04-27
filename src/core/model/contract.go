@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/protos"
@@ -18,7 +18,7 @@ func (c *ContractModel) Validate() bool {
 	// 1. validate contract.id
 	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
 	if !idValid {
-		beego.Error("Validate idValid false")
+		logs.Error("Validate idValid false")
 		return false
 	}
 
@@ -41,7 +41,7 @@ func (c *ContractModel) Sign(private_key string) string {
 	contractBodyCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneBytes, &temp)
 	if err != nil {
-		beego.Error("Unmarshal error ", err)
+		logs.Error("Unmarshal error ", err)
 	}
 	temp.ContractSignatures = nil
 	contractBodySerialized := common.StructSerialize(temp)
@@ -63,7 +63,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 	contractBodyCloneCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneCloneBytes, &temp)
 	if err != nil {
-		beego.Error("[module-model]IsSignatureValid error ", err)
+		logs.Error("[module-model]IsSignatureValid error ", err)
 	}
 	temp.ContractSignatures = nil
 	contractBody_serialized := common.StructSerialize(temp)
@@ -72,12 +72,12 @@ func (c *ContractModel) IsSignatureValid() bool {
 	// 合约 owners 不能存在重复的
 	len_contractOwners := len(contractOwners)
 	if len_contractOwners == 0 {
-		beego.Error("IsSignatureValid len_contractOwners 长度不能为0")
+		logs.Error("IsSignatureValid len_contractOwners 长度不能为0")
 		return false
 	}
 	contractOwnersSet := common.StrArrayToHashSet(c.ContractBody.ContractOwners)
 	if len_contractOwners != contractOwnersSet.Len() {
-		beego.Error("IsSignatureValid contractOwners 存在重复项")
+		logs.Error("IsSignatureValid contractOwners 存在重复项")
 		return false
 	}
 	contractSignatures := c.ContractBody.ContractSignatures
@@ -85,23 +85,23 @@ func (c *ContractModel) IsSignatureValid() bool {
 
 		ownerPubkey := contractSignature.OwnerPubkey
 		if !contractOwnersSet.Has(ownerPubkey) {
-			beego.Error("IsSignatureValid contractOwner ", ownerPubkey, " 不存在于", contractOwners)
+			logs.Error("IsSignatureValid contractOwner ", ownerPubkey, " 不存在于", contractOwners)
 			return false
 		}
 		if contractSignature.SignTimestamp == "" {
-			beego.Error("IsSignatureValid SignTimestamp is blank")
+			logs.Error("IsSignatureValid SignTimestamp is blank")
 			return false
 		}
 		signature := contractSignature.Signature
 		if signature == "" {
-			beego.Error("IsSignatureValid signature is blank")
+			logs.Error("IsSignatureValid signature is blank")
 			return false
 		}
 		// contract signature verify
 		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
-		beego.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]")
+		//logs.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]")
 		if !verifyFlag {
-			beego.Error("IsSignatureValid contract signature verify fail")
+			logs.Error("IsSignatureValid contract signature verify fail")
 			return false
 		}
 	}
@@ -126,12 +126,12 @@ func (c *ContractModel) validateContractHead() bool {
 	pub_keysSet := common.StrArrayToHashSet(pub_keys)
 	contractHead := c.Contract.ContractHead
 	if contractHead.MainPubkey == "" {
-		beego.Error("contract main_pubkey blank")
+		logs.Error("contract main_pubkey blank")
 		return false
 	}
 
 	if !pub_keysSet.Has(contractHead.MainPubkey) {
-		beego.Warn("main_pubkey ", contractHead.MainPubkey, " not in pubkeys")
+		logs.Warn("main_pubkey ", contractHead.MainPubkey, " not in pubkeys")
 		return false
 	}
 	return true

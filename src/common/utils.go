@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"time"
 	"unicontract/src/common/basic"
-	//"reflect"
-	"fmt"
 )
 
 func GenDate() string {
@@ -95,7 +93,6 @@ func StructSerializePretty(obj interface{}) string {
 /*------------- Structs keys are marshalled in the order defined in the struct ------------------*/
 func Serialize(obj interface{}) string {
 	str, err := json.Marshal(obj)
-	fmt.Println(StructToMap(obj))
 	if err != nil {
 		log.Fatalf(err.Error())
 	}

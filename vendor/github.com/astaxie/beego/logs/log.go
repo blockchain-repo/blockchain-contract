@@ -154,6 +154,11 @@ func NewLogger(channelLens ...int64) *BeeLogger {
 	return bl
 }
 
+func init(){
+	SetLogFuncCall(true)
+	SetLogFuncCallDepth(3)
+}
+
 // Async set the log to asynchronous and start the goroutine
 func (bl *BeeLogger) Async(msgLen ...int64) *BeeLogger {
 	bl.lock.Lock()
@@ -274,8 +279,17 @@ func (bl *BeeLogger) writeMsg(logLevel int, msg string, v ...interface{}) error 
 			file = "???"
 			line = 0
 		}
-		_, filename := path.Split(file)
-		msg = "[" + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
+
+		//_, filename := path.Split(file)
+		//msg = "[" + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
+		dir, filename := path.Split(file)
+		unicontractKeyWord := "unicontract"
+		unicontractPos := strings.Index(dir, unicontractKeyWord)
+		if unicontractPos > 0 {
+			msg = "[" + dir[unicontractPos:] + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
+		}else{
+			msg = "[" + dir + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
+		}
 	}
 
 	//set level info in front of filename info

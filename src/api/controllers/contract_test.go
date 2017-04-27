@@ -62,260 +62,7 @@ func httpRequest(method string, urlStr string, body []byte, requestHead map[stri
 	return nil, err
 }
 
-func Test_Contract(t *testing.T) {
-	contract := protos.Contract{ // golang
-		//Id: "2",
-		ContractHead: &protos.ContractHead{
-			MainPubkey: "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			Version:    1,
-		},
-		ContractBody: &protos.ContractBody{
-			Caption: "CREATE",
-			Cname:   "futurever",
-			ContractAssets: []*protos.ContractAsset{
-				{
-					AssetId:     "001",
-					Name:        "futurever-1",
-					Amount:      1000,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "003",
-					Name:        "futurever-3",
-					Amount:      452,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-				{
-					AssetId:     "002",
-					Name:        "futurever-2",
-					Amount:      99999,
-					Caption:     "futurever",
-					Description: "",
-					Unit:        "int32",
-					MetaData:    nil,
-				},
-			},
-			ContractComponents: nil,
-			ContractId:         common.GenerateUUID(),
-			ContractOwners: []string{
-				"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-				"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-			},
-			ContractSignatures: []*protos.ContractSignature{
-				{
-					OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-					Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
-					SignTimestamp: common.GenTimestamp(),
-				},
-				{
-					OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-					Signature:     "5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT",
-					SignTimestamp: common.GenTimestamp(),
-				},
-			},
-			ContractState: "",
-			Creator:       "futurever",
-			CreatorTime:   common.GenTimestamp(),
-			Ctype:         "CONTRACT",
-			Description:   "CREATE CONTRACT BY futurever [合约创建]",
-			StartTime:     common.GenTimestamp(),
-			EndTime:       common.GenTimestamp(),
-		},
-
-		//	ContractComponents: &ContractComponents{
-		//		Plans: []*Plan{
-		//			{
-		//				Id:          "ID_Axxxxxx",
-		//				Type:        "PLAN",
-		//				State:       "dormant",
-		//				Name:        "N_Axxxxx",
-		//				Description: "xxxxx",
-		//				Condition: []*PlanTaskCondition{
-		//					{
-		//						Id:          "1",
-		//						Type:        "PreCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "2",
-		//						Type:        "DisgardCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "3",
-		//						Type:        "CompleteCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//				},
-		//				Level:        1,
-		//				ContractType: "RIGHT",
-		//				NextTask:     []string{"1", "2"},
-		//			},
-		//			{
-		//				Id:          "ID_Bxxxxxx",
-		//				Type:        "PLAN",
-		//				State:       "dormant",
-		//				Name:        "N_Bxxxxx",
-		//				Description: "xxxxx",
-		//				Condition: []*PlanTaskCondition{
-		//					{
-		//						Id:          "1",
-		//						Type:        "PreCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "2",
-		//						Type:        "DisgardCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "3",
-		//						Type:        "CompleteCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//				},
-		//				Level:        1,
-		//				ContractType: "RIGHT",
-		//				NextTask:     nil,
-		//			},
-		//		},
-		//		Tasks: []*Task{
-		//			{
-		//				Id:          "ID_Cxxxxxx",
-		//				Type:        "ENQUIRY",
-		//				State:       "dormant",
-		//				Name:        "Axxxxxx",
-		//				Description: "xxxxx",
-		//				Condition: []*PlanTaskCondition{
-		//					{
-		//						Id:          "1",
-		//						Type:        "PreCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "2",
-		//						Type:        "DisgardCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "3",
-		//						Type:        "CompleteCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//				},
-		//				Level:        1,
-		//				ContractType: "RIGHT",
-		//				NextTask: []string{
-		//					"Axxxxxx",
-		//					"Bxxxxxx",
-		//				},
-		//			},
-		//			{
-		//				Id:          "ID_Cxxxxxx",
-		//				Type:        "ENQUIRY",
-		//				State:       "dormant",
-		//				Name:        "Bxxxxxx",
-		//				Description: "xxxxx",
-		//				Condition: []*PlanTaskCondition{
-		//					{
-		//						Id:          "1",
-		//						Type:        "PreCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "2",
-		//						Type:        "DisgardCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "3",
-		//						Type:        "CompleteCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//				},
-		//				Level:        1,
-		//				ContractType: "RIGHT",
-		//				NextTask:     []string{"", ""},
-		//			},
-		//			{Id: "ID_Cxxxxxx",
-		//				Type:        "ACTION",
-		//				State:       "dormant",
-		//				Name:        "Cxxxxxx",
-		//				Description: "xxxxx",
-		//				Condition: []*PlanTaskCondition{
-		//					{
-		//						Id:          "1",
-		//						Type:        "PreCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx"},
-		//					{
-		//						Id:          "2",
-		//						Type:        "DisgardCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//					{
-		//						Id:          "3",
-		//						Type:        "CompleteCondition",
-		//						Name:        "XXXX",
-		//						Value:       "XXXX",
-		//						Description: "xxxxx",
-		//					},
-		//				},
-		//				Level:        1,
-		//				ContractType: "DUTY",
-		//				NextTask:     []string{"", ""},
-		//			},
-		//		},
-		//},
-	}
-
-	//fmt.Println(common.Serialize(contract))
-	//fmt.Println(common.SerializePretty(contract))
-
-	contract.Id = common.HashData(common.StructSerialize(contract.ContractBody))
-
-	data := protos.ContractData{
-		Data:  &contract,
-		Token: "ZDNkM0xtWjFkSFZ5WlhabGNpNWpiMjA9",
-	}
-	result, err := proto.Marshal(&data)
-	if err != nil {
-		fmt.Println("error ", err.Error())
-	}
-	fmt.Println("input result is ", result)
+func test_CreateContract(t *testing.T) {
 
 }
 
@@ -392,11 +139,15 @@ func Test_AuthSignature(t *testing.T) {
 
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
+	response, err := httpRequest("POST", url, requestBody, requestHead)
 	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
+		fmt.Println("httpRequest error ", err.Error())
+		return
 	}
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.StructSerializePretty(responseData))
 }
 
 func Test_CreatValidContract(t *testing.T) {
@@ -484,8 +235,6 @@ func Test_CreatValidContract(t *testing.T) {
 func Test_CreatContract(t *testing.T) {
 	url := default_url + "create"
 	contractModel := model.ContractModel{}
-	//contractAsset := []*protos.ContractAsset{}
-	//contractComponent:=[]*protos.ContractComponent{}
 
 	contractHead := &protos.ContractHead{"", 1}
 
@@ -510,6 +259,9 @@ func Test_CreatContract(t *testing.T) {
 		ContractSignatures: nil,
 		ContractAssets:     nil,
 		ContractComponents: nil,
+		// 下面的用法是错误的,proto处理后,再次转换回来[] 会变成 null, 而不是json的 [], hash会出错
+		//ContractAssets:     []*protos.ContractAsset{},
+		//ContractComponents: []*protos.ContractComponent{},
 	}
 
 	contractModel.ContractHead = contractHead
@@ -551,13 +303,11 @@ func Test_CreatContract(t *testing.T) {
 
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
-	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
-		fmt.Println("handle error ", err.Error())
-	}
-
+	response, err := httpRequest("POST", url, requestBody, requestHead)
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.StructSerializePretty(responseData))
 }
 
 func Test_Signature(t *testing.T) {
@@ -631,12 +381,11 @@ func Test_Signature(t *testing.T) {
 
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
-	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
-	}
-	//fmt.Println("response is:", string(response))
+	response, err := httpRequest("POST", url, requestBody, requestHead)
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.StructSerializePretty(responseData))
 }
 
 func Test_Terminate(t *testing.T) {
@@ -710,12 +459,11 @@ func Test_Terminate(t *testing.T) {
 
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	_, err = httpRequest("POST", url, requestBody, requestHead)
-	if err != nil {
-		// handle error
-		fmt.Println("error ", err.Error())
-	}
-	//fmt.Println("response is:", string(response))
+	response, err := httpRequest("POST", url, requestBody, requestHead)
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.StructSerializePretty(responseData))
 }
 
 func Test_Query(t *testing.T) {

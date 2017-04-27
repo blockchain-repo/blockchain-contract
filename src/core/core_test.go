@@ -1,19 +1,18 @@
 package core
 
 import (
+	"fmt"
 	"testing"
 	"unicontract/src/common"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
-//	"unicontract/src/config"
-	"fmt"
 )
 
 func TestWriteContract(t *testing.T) {
 	contractModel := model.ContractModel{}
 	//
 
-	contractHead := &protos.ContractHead{"",1}
+	contractHead := &protos.ContractHead{"", 1}
 
 	contractOwners := []string{
 		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
@@ -21,24 +20,24 @@ func TestWriteContract(t *testing.T) {
 		"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
 	contractBody := &protos.ContractBody{
-		ContractId:"UUID-1234-5678-90",
-		Cname:"test contract output",
-		Ctype:"CREATE",
-		Caption:"购智能手机返话费合约产品协议",
-		Description:"移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
-		ContractState:"",
-		Creator:common.GenTimestamp(),
-		CreatorTime:common.GenTimestamp(),
-		StartTime:common.GenTimestamp(),
-		EndTime:common.GenTimestamp(),
-		ContractOwners:contractOwners,
-		ContractSignatures:nil,
-		ContractAssets:nil,
+		ContractId:         "UUID-1234-5678-90",
+		Cname:              "test contract output",
+		Ctype:              "CREATE",
+		Caption:            "购智能手机返话费合约产品协议",
+		Description:        "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
+		ContractState:      "",
+		Creator:            common.GenTimestamp(),
+		CreatorTime:        common.GenTimestamp(),
+		StartTime:          common.GenTimestamp(),
+		EndTime:            common.GenTimestamp(),
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     nil,
 		ContractComponents: nil,
 	}
 
 	contractModel.ContractHead = contractHead
-	contractModel.ContractBody =contractBody
+	contractModel.ContractBody = contractBody
 
 	contractSignatures := []*protos.ContractSignature{
 		{

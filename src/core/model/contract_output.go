@@ -2,9 +2,9 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego"
 	"unicontract/src/common"
 	"unicontract/src/config"
+	"github.com/astaxie/beego/logs"
 )
 
 // An Asset is a fungible unit to spend and lock with Transactions
@@ -91,7 +91,8 @@ func (c *ContractOutput) GenerateId() string {
 	transactionCloneBytes, _ := json.Marshal(contractOutput)
 	err := json.Unmarshal(transactionCloneBytes, &temp)
 	if err != nil {
-		beego.Error("Unmarshal error ", err)
+		logs.Error("Unmarshal error ", err)
+		return ""
 	}
 	//logs.Info(common.Serialize(temp))
 	//operation := c.Transaction.Operation
