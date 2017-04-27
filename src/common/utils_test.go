@@ -16,6 +16,17 @@ func Test_GenTimestamp(t *testing.T) {
 	fmt.Println("----------------------tim:", tim)
 }
 
+func Test_GenSpecialTimestamp(t *testing.T){
+	//the_time, err := time.Parse("2006-01-02 15:04:05", "2014-01-08 09:04:41")
+	fullTimeStr := "2017-04-08 00:12:00"
+	str, err := GenSpecialTimestamp(fullTimeStr)
+	if err != nil {
+		fmt.Println("Test_GenSpecialTimestamp error")
+		return
+	}
+	fmt.Println(fullTimeStr,"对应的时间戳为", str)
+}
+
 func Test_Deserialize(t *testing.T) {
 	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
 	data := Deserialize(jsonStr)

@@ -3,6 +3,7 @@ package common
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/google/uuid"
 	"log"
 	"math/rand"
@@ -22,6 +23,17 @@ func GenTimestamp() string {
 	nanos := t.UnixNano()
 	millis := nanos / 1000000 //ms len=13
 	return strconv.FormatInt(millis, 10)
+}
+
+func GenSpecialTimestamp(fullTimeStr string) (string, error) {
+	//the_time, err := time.Parse("2006-01-02 15:04:05", "2014-01-08 09:04:41")
+	the_time, err := time.Parse("2006-01-02 15:04:05", fullTimeStr)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	unix_time := the_time.Unix()
+	return strconv.FormatInt(unix_time, 10), nil
 }
 
 func StructToMap(obj interface{}) (map[string]interface{}, error) {
