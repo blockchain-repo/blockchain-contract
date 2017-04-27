@@ -11,7 +11,14 @@ import (
 
 func main() {
 	beego.LoadAppConfig("ini", "../conf/app.conf")
+	// log init
+	logInit()
 
+	logs.Info("unicontract start")
+	beego.Run()
+}
+
+func logInit() {
 	//日志默认不输出调用的文件名和文件行号,如果你期望输出调用的文件名和文件行号,可以如下设置
 	logs.SetLogFuncCall(true)
 	//如果你的应用自己封装了调用 log 包,那么需要设置 SetLogFuncCallDepth,默认是 2,
@@ -39,18 +46,17 @@ func main() {
 
 	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
 	log_config_str := common.Serialize(log_config)
-	logs.Info("beego log config: ", log_config_str)
+	//logs.Info("beego log config: ", log_config_str)
 
 	// order 顺序必须按照
 	// 1. logs.SetLevel(level)
 	// 2. logs.SetLogger(logs.AdapterMultiFile, log_config_str)
-	logs.SetLevel(logs.LevelDebug)
-	//logs.SetLevel(logs.LevelInfo)
+	//logs.SetLevel(logs.LevelDebug)
+	logs.SetLevel(logs.LevelInfo)
 	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
 
 	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,
 	//"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
 	//"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
-	logs.Info("unicontract start")
-	beego.Run()
+
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/golang/protobuf/proto"
@@ -42,9 +43,13 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 		if err != nil {
 			logs.Error("contract parseRequestBody unmarshal err ", err)
 		}
+		fmt.Sprintf("[API] match |%s [token =%s, Content-Type =%s]", c.Ctx.Request.Method, c.Ctx.Request.RequestURI,
+			contentType)
+		logs.Info(fmt.Sprintf("[API] match|%-32s \t[token = %s, Content-Type = %s]", c.Ctx.Request.RequestURI,
+			c.Ctx.Request.Method, contentType))
 		//logs.Info("[API] match |", c.Ctx.Request.Method,c.Ctx.Request.RequestURI)
-		logs.Info("[API] match |", c.Ctx.Request.Method, c.Ctx.Request.RequestURI,
-			"[token =", token, ",Content-Type =", contentType, "]")
+		//logs.Info("[API] match |", c.Ctx.Request.Method, c.Ctx.Request.RequestURI,
+		//	"\t[token =", token, ",Content-Type =", contentType, "]")
 	}
 	return token, contract, err
 }
