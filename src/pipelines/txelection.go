@@ -101,7 +101,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 			continue
 		}
 		if coModel.Transaction.Operation == "CONTRACT"{
-			//TODO ValidateVote
+			//TODO ValidateVote  no-need-tood
 			//if !coModel.ValidateVote(){
 			//	logs.Error(errors.New("invalid vote"))
 			//	continue

@@ -40,7 +40,7 @@ type ConditionsItem struct {
 type Fulfillment struct {
 	Fid          int32       `json:"fid"`
 	OwnersBefore []string    `json:"owners_before"`
-	Fulfillment  string      `json:"fulfillment"`
+	Fulfillment  interface{} `json:"fulfillment"`
 	Input        interface{} `json:"input"`
 }
 
@@ -100,11 +100,17 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Relation.Votes = nil
 	temp.Transaction.ContractModel.ContractHead = nil
 	temp.Transaction.Timestamp = ""
-	serializeStr := common.Serialize(temp)
+	temp.RemoveSignature()
+	serializeStr := common.StructSerialize(temp)
 
 	return common.HashData(serializeStr)
 }
 
+func (c *ContractOutput) RemoveSignature(){
+	for _,fulfillment := range c.Transaction.Fulfillments {
+		fulfillment.Fulfillment = nil
+	}
+}
 // judge has enough votes for ContractOutput
 func (c *ContractOutput) HasEnoughVotes() bool {
 	voters := c.Transaction.Relation.Voters
@@ -187,7 +193,7 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		var signData string
 		operation := c.Transaction.Operation
 		if operation == "CONTRACT" {
-			signData = common.Serialize(vote.VoteBody)
+			signData = common.StructSerialize(vote.VoteBody)
 		} else {
 			signData= vote.VoteBody.VoteFor
 		}

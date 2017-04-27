@@ -17,8 +17,35 @@ func GenerateOutput() string {
 	transaction := Transaction{}
 	transaction.Asset = &Asset{}                 //todo
 	transaction.Conditions = []*ConditionsItem{} //todo
-	transaction.Fulfillments = []*Fulfillment{}  //todo
-	transaction.Metadata = &Metadata{}           //todo
+	fulfillment := &Fulfillment{
+		Fid:0,
+		OwnersBefore:[]string{config.Config.Keypair.PublicKey},
+	}
+	transaction.Fulfillments = []*Fulfillment{
+		fulfillment,
+	}
+
+	//{
+	//
+	//	"fid": 0 ,
+	//	"fulfillment": "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD" ,
+	//	"input": null ,
+	//	"owners_before": [
+	//	"5mVrPtqUzXwKYL2JeZo4cQq2spt8qfGVx3qE2V7NqgyU"
+	//	]
+	//
+	//}
+	tempMap := make(map[string]interface{})
+	tempMap["a"] = "1"
+	tempMap["c"] = "3"
+	tempMap["b"] = "2"
+	tempMap["A"] = "4"
+	tempMap["6"] = 5
+
+	transaction.Metadata = &Metadata{
+		Id:"meta-data-id",
+		Data:tempMap,
+	}
 	transaction.Operation = "CONTRACT"
 	//transaction.Timestamp = ""
 
@@ -70,7 +97,7 @@ func GenerateOutput() string {
 	}
 	contractBody.ContractSignatures = contractSignatures
 
-	transaction.ContractModel.Id = common.HashData(common.Serialize(contractBody))
+	transaction.ContractModel.Id = common.HashData(common.StructSerialize(contractBody))
 
 	//--------------------relaction-------------------------
 	transaction.Relation = &Relation{
@@ -83,8 +110,9 @@ func GenerateOutput() string {
 
 	contractOutput.Version = 2
 	contractOutput.Transaction = transaction
-	fmt.Println("hash-pre: ",common.Serialize(contractOutput))
-	contractOutput.Id = common.HashData(common.Serialize(contractOutput))
+	fmt.Println("hash-pre: ",common.StructSerialize(contractOutput))
+	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
+	fulfillment.Fulfillment ="cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
 
 	//operation:transfer
 	//vote1 := &Vote{}
