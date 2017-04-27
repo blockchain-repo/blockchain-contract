@@ -3,13 +3,14 @@ package rethinkdb
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego"
 	"strconv"
 	"testing"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
+
+	"github.com/astaxie/beego"
 )
 
 func Test_Get(t *testing.T) {
@@ -207,8 +208,8 @@ func Test_InsertContractOutput(t *testing.T) {
 	tempMap["c"] = "3"
 	tempMap["b"] = "2"
 	transaction.Metadata = &model.Metadata{
-		Id:"meta-data-id",
-		Data:tempMap,
+		Id:   "meta-data-id",
+		Data: tempMap,
 	}
 	transaction.Operation = "OUTPUT"
 	transaction.Timestamp = common.GenTimestamp()
@@ -423,3 +424,109 @@ func Test_GetContractTasksByContractId(t *testing.T) {
 }
 
 /*----------------------------- contractTask end---------------------------------------*/
+
+/*----------------------------- TaskSchedule start---------------------------------------*/
+func Test_InsertTaskSchedule(t *testing.T) {
+	var strTaskSchedule string
+
+	//test 1
+	t.Logf("test strTaskSchedule is null\n")
+	err := InsertTaskSchedule(strTaskSchedule)
+	if err != nil {
+		t.Logf("pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Errorf("not pass\n")
+	}
+
+	//test 2
+	t.Logf("test strTaskSchedule is not null\n")
+	var taskSchedule model.TaskSchedule
+	taskSchedule.Id = common.GenerateUUID()
+	taskSchedule.ContractId = common.GenerateUUID()
+	taskSchedule.NodePubkey = config.Config.Keypair.PublicKey
+	taskSchedule.StartTime = common.GenTimestamp()
+	taskSchedule.EndTime = "1593281188956" //common.GenTimestamp()
+
+	slJson, _ := json.Marshal(taskSchedule)
+	strTaskSchedule = string(slJson)
+	err = InsertTaskSchedule(strTaskSchedule)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass\n")
+	}
+}
+
+func Test_GetTaskSchedules(t *testing.T) {
+	var strNodePubkey string
+
+	//test 1
+	t.Logf("test strNodePubkey is null\n")
+	_, err := GetTaskSchedules(strNodePubkey)
+	if err != nil {
+		t.Logf("pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Errorf("not pass\n")
+	}
+
+	//test 2
+	t.Logf("test strNodePubkey is not null\n")
+	strNodePubkey = config.Config.Keypair.PublicKey
+	retStr, err := GetTaskSchedules(strNodePubkey)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass\n")
+		var slTask []model.TaskSchedule
+		json.Unmarshal([]byte(retStr), &slTask)
+		t.Logf("%+v\n", slTask)
+	}
+}
+
+func Test_SetTaskScheduleSend(t *testing.T) {
+	var strID string
+
+	//test 1
+	t.Logf("test strID is null\n")
+	err := SetTaskScheduleSend(strID)
+	if err != nil {
+		t.Logf("pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Errorf("not pass\n")
+	}
+
+	//test 2
+	t.Logf("test strID is not null\n")
+	strID = "25291a3d-4082-4c83-998a-bc2db59dcd82"
+	err = SetTaskScheduleSend(strID)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass\n")
+	}
+}
+
+func Test_SetTaskScheduleNoSend(t *testing.T) {
+	var strID string
+
+	//test 1
+	t.Logf("test strID is null\n")
+	err := SetTaskScheduleSend(strID)
+	if err != nil {
+		t.Logf("pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Errorf("not pass\n")
+	}
+
+	//test 2
+	t.Logf("test strID is not null\n")
+	strID = "25291a3d-4082-4c83-998a-bc2db59dcd82"
+	err = SetTaskScheduleNoSend(strID)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass\n")
+	}
+}
+
+/*----------------------------- TaskSchedule end---------------------------------------*/

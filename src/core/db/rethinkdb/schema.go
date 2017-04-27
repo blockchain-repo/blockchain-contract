@@ -10,16 +10,22 @@ import (
 const DBNAME = "Unicontract"
 
 const (
-	TABLE_CONTRACTS          = "Contracts"
-	TABLE_VOTES              = "Votes"
-	TABLE_CONTRACT_TASKS     = "ContractTasks"
-	TABLE_CONSENSUS_FAILURES = "ConsensusFailures"
-	TABLE_CONTRACT_OUTPUTS   = "ContractOutputs"
+	TABLE_CONTRACTS            = "Contracts"
+	TABLE_VOTES                = "Votes"
+	TABLE_CONTRACT_TASKS       = "ContractTasks"
+	TABLE_CONSENSUS_FAILURES   = "ConsensusFailures"
+	TABLE_CONTRACT_OUTPUTS     = "ContractOutputs"
 	TABLE_SEND_FAILING_RECORDS = "SendFailingRecords"
-
+	TABLE_TASK_SCHEDULE        = "TaskSchedule"
 )
 
-var Tables = []string{TABLE_CONTRACTS, TABLE_VOTES, TABLE_CONTRACT_TASKS, TABLE_CONSENSUS_FAILURES,TABLE_CONTRACT_OUTPUTS,TABLE_SEND_FAILING_RECORDS}
+var Tables = []string{TABLE_CONTRACTS,
+	TABLE_VOTES,
+	TABLE_CONTRACT_TASKS,
+	TABLE_CONSENSUS_FAILURES,
+	TABLE_CONTRACT_OUTPUTS,
+	TABLE_SEND_FAILING_RECORDS,
+	TABLE_TASK_SCHEDULE}
 
 func CreateTable(db string, name string) {
 	session := ConnectDB(db)

@@ -1,11 +1,13 @@
 package rethinkdb
 
 import (
+	"fmt"
 	"log"
 
 	"errors"
-	r "gopkg.in/gorethink/gorethink.v3"
 	"unicontract/src/common"
+
+	r "gopkg.in/gorethink/gorethink.v3"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -381,3 +383,74 @@ func GetAllRecords(db string, name string) ([]string, error) {
 }
 
 /*----------------------------- SendFailingRecords end---------------------------------------*/
+
+/*----------------------------- TaskSchedule start---------------------------------------*/
+func InsertTaskSchedule(strTaskSchedule string) error {
+	if len(strTaskSchedule) == 0 {
+		return fmt.Errorf("strTaskSchedule is null")
+	}
+
+	res := Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
+	if res.Inserted >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("insert failed")
+	}
+}
+
+func GetTaskSchedules(strNodePubkey string) (string, error) {
+	if len(strNodePubkey) == 0 {
+		return "", fmt.Errorf("strNodePubkey is null")
+	}
+
+	now := common.GenTimestamp()
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
+		Filter(r.Row.Field("StartTime").Le(now)).
+		Filter(r.Row.Field("EndTime").Ge(now)).
+		Filter(r.Row.Field("SendFlag").Eq(0)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var tasks []map[string]interface{}
+	err = res.All(&tasks)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(tasks), nil
+}
+
+func SetTaskScheduleSend(strID string) error {
+	if len(strID) == 0 {
+		return fmt.Errorf("strID is null")
+	}
+
+	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, "{\"SendFlag\":1}")
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
+	}
+}
+
+func SetTaskScheduleNoSend(strID string) error {
+	if len(strID) == 0 {
+		return fmt.Errorf("strID is null")
+	}
+
+	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, "{\"SendFlag\":0}")
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
+	}
+}
+
+/*----------------------------- TaskSchedule end---------------------------------------*/
