@@ -44,7 +44,7 @@ func (c *ContractModel) Sign(private_key string) string {
 		beego.Error("Unmarshal error ", err)
 	}
 	temp.ContractSignatures = nil
-	contractBodySerialized := common.Serialize(temp)
+	contractBodySerialized := common.StructSerialize(temp)
 	/*-------------module deep copy end --------------*/
 
 	signatureContractBody := common.Sign(private_key, contractBodySerialized)
@@ -66,7 +66,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 		beego.Error("[module-model]IsSignatureValid error ", err)
 	}
 	temp.ContractSignatures = nil
-	contractBody_serialized := common.Serialize(temp)
+	contractBody_serialized := common.StructSerialize(temp)
 	/*-------------module deep copy end --------------*/
 	contractOwners := c.ContractBody.ContractOwners
 	// 合约 owners 不能存在重复的
@@ -110,12 +110,12 @@ func (c *ContractModel) IsSignatureValid() bool {
 }
 
 func (c *ContractModel) ToString() string {
-	return common.Serialize(c)
+	return common.StructSerialize(c)
 }
 
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
-	contractBodySerialized := common.Serialize(c.Contract.ContractBody)
+	contractBodySerialized := common.StructSerialize(c.Contract.ContractBody)
 	return common.HashData(contractBodySerialized)
 }
 

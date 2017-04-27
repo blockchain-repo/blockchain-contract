@@ -24,7 +24,7 @@ func ContractFilter(ctx *context.Context) {
 		result :=make(map[string]interface{})
 		result["msg"] = "error Headers"
 		result["status"] = 404
-		responseWithStatusCode(ctx, 404, common.Serialize(result))
+		responseWithStatusCode(ctx, 404, common.StructSerialize(result))
 		beego.Error("ContractFilter contentType or requestDataType is empty!")
 
 	} else if contentType == "application/json" && requestDataType == "json" {

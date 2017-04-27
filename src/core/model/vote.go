@@ -98,19 +98,19 @@ func (v *Vote) DecideVotes(n_voters int, n_valid int, n_invalid int) string {
 func (v *Vote) VerifyVoteSignature() bool {
 	signature := v.Signature
 	pub := v.NodePubkey
-	body := common.Serialize(v.VoteBody)
+	body := common.StructSerialize(v.VoteBody)
 	return common.Verify(pub, body, signature)
 }
 
 func (v *Vote) SignVote() string {
 	priv_key := config.Config.Keypair.PrivateKey
-	msg := common.Serialize(v.VoteBody)
+	msg := common.StructSerialize(v.VoteBody)
 	sig := common.Sign(priv_key, msg)
 	return sig
 }
 
 func (v *Vote) ToString() string {
-	return common.Serialize(v)
+	return common.StructSerialize(v)
 }
 
 // generate UUID

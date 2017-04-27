@@ -93,35 +93,6 @@ func (c *ContractController) responseWithCode(status int, data string) {
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
 
-// @Title AuthSignature
-// @Description AuthSignature for contract
-// @Param	body		body 	models.Contract	true		"body for contract content"
-// @Success 200 {} models.Contract.Head.Id
-// @Failure 403 body is empty
-// @router /authSignature [post]
-func (c *ContractController) AuthSignature() {
-	token, contract, err := c.parseProtoRequestBody()
-	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	contractModel := fromContractToContractModel(*contract)
-	signatureValid := contractModel.IsSignatureValid()
-	if !signatureValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-	//TODO func authSignature(...) 验证签名方法
-	beego.Debug("Token is " + token)
-	beego.Debug("contract signature is valid ", signatureValid)
-	c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "验证签名 success")
-}
 
 // API receive and transfer it to contractModel
 func fromContractToContractModel(contract protos.Contract) model.ContractModel {
@@ -144,6 +115,41 @@ func fromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 
 	return contract, nil
 }
+
+// @Title AuthSignature
+// @Description AuthSignature for contract
+// @Param	body		body 	models.Contract	true		"body for contract content"
+// @Success 200 {} models.Contract.Head.Id
+// @Failure 403 body is empty
+// @router /authSignature [post]
+func (c *ContractController) AuthSignature() {
+	token, contract, err := c.parseProtoRequestBody()
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		return
+	}
+
+	if token == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+	if contract == nil || contract.Id == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+		beego.Debug("API[AuthSignature] token is", token)
+		return
+	}
+
+	contractModel := fromContractToContractModel(*contract)
+	signatureValid := contractModel.IsSignatureValid()
+	if !signatureValid {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+	beego.Debug("Token is " + token)
+	beego.Debug("contract signature is valid ", signatureValid)
+	c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "验证签名 success")
+}
+
 
 // @Title CreateContract
 // @Description create contract
@@ -403,7 +409,7 @@ func (c *ContractController) Update() {
 		return
 	}
 
-	//ok := rethinkdb.InsertContract(common.Serialize(contractModel))
+	//ok := rethinkdb.InsertContract(common.StructSerialize(contractModel))
 	beego.Debug("Token is " + token)
 	beego.Info(c.Ctx.Request.RequestURI, "API[Update] 缺少测试合约方法!")
 	c.responseJsonBody(contract.Id, false, "API[Update] 缺少合约更新方法!")

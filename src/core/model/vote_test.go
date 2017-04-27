@@ -15,6 +15,6 @@ func Test_Votes(t *testing.T) {
 	vote.VoteBody.Timestamp = common.GenTimestamp()
 	vote.Signature = vote.SignVote()
 	fmt.Println(vote)
-	result := common.SerializePretty(vote)
+	result := common.StructSerializePretty(vote)
 	fmt.Println(result)
 }

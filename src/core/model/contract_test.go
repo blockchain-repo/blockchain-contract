@@ -28,13 +28,13 @@ func Test_Sign(t *testing.T) {
 	}
 	contractModel.ContractHead = contractHead
 	contractModel.ContractBody = contractBody
-	fmt.Println("contract is : ", common.Serialize(contract))
+	fmt.Println("contract is : ", common.StructSerialize(contract))
 	// sign for contract
 	signatureContract := contractModel.Sign(private_key)
 	contractModel.Id = contractModel.GenerateId()
-	//fmt.Println("contract is : ", common.SerializePretty(contract))
+	//fmt.Println("contract is : ", common.StructSerializePrettycontract))
 	fmt.Println("private_key is : ", private_key)
-	fmt.Println("contract is : ", common.Serialize(contract))
+	fmt.Println("contract is : ", common.StructSerialize(contract))
 	fmt.Println("signatureContract isTest_Validate : ", signatureContract)
 	// 65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34
 	// 5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT
@@ -79,7 +79,7 @@ func Test_IsSignatureValid(t *testing.T) {
 	_ = signatureContract
 
 	//fmt.Println("private_key is : ", private_key)
-	//fmt.Println("contract is : ", common.Serialize(contract))
+	//fmt.Println("contract is : ", common.StructSerializePretty(contract))
 	//fmt.Println("signatureContract is : ", signatureContract)
 	fmt.Println("contractModel is : ", contractModel)
 	isSignatureValid := contractModel.IsSignatureValid()
@@ -128,7 +128,7 @@ func Test_Validate(t *testing.T) {
 	signatureContract := contractModel.Sign(private_key)
 
 	fmt.Println("private_key is : ", private_key)
-	fmt.Println("contract is : ", common.Serialize(contractBody))
+	fmt.Println("contract is : ", common.StructSerialize(contractBody))
 	fmt.Println("signatureContract is : ", signatureContract)
 
 	//contractModel.ContractBody = contractBody

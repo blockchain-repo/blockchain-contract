@@ -201,7 +201,15 @@ func Test_InsertContractOutput(t *testing.T) {
 	transaction.Asset = nil
 	transaction.Conditions = nil
 	transaction.Fulfillments = nil
-	transaction.Metadata = nil
+
+	tempMap := make(map[string]interface{})
+	tempMap["a"] = "1"
+	tempMap["c"] = "3"
+	tempMap["b"] = "2"
+	transaction.Metadata = &model.Metadata{
+		Id:"meta-data-id",
+		Data:tempMap,
+	}
 	transaction.Operation = "OUTPUT"
 	transaction.Timestamp = common.GenTimestamp()
 
@@ -262,12 +270,12 @@ func Test_InsertContractOutput(t *testing.T) {
 	transaction.ContractModel = contract
 	// sign for contract
 	conotractOutput.Id = conotractOutput.GenerateId()
-	fmt.Println(common.Serialize(conotractOutput))
-	fmt.Println(common.Serialize(conotractOutput))
-	//isTrue := InsertContractOutput(common.Serialize(conotractOutput))
-	//if isTrue {
-	//	fmt.Println("insert conotractOutput success!")
-	//}
+	fmt.Println(common.StructSerialize(conotractOutput))
+	fmt.Println(common.StructSerializePretty(conotractOutput))
+	isTrue := InsertContractOutput(common.StructSerialize(conotractOutput))
+	if isTrue {
+		fmt.Println("insert conotractOutput success!")
+	}
 }
 
 func Test_GetContractOutputById(t *testing.T) {

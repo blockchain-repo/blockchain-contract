@@ -14,5 +14,5 @@ type ContractTask struct {
 }
 
 func (c *ContractTask) ToString() string {
-	return common.Serialize(c)
+	return common.StructSerialize(c)
 }
