@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"time"
 	"unicontract/src/common/basic"
+	//"reflect"
+	"fmt"
 )
 
 func GenDate() string {
@@ -24,8 +26,76 @@ func GenTimestamp() string {
 	return strconv.FormatInt(millis, 10)
 }
 
+func StructToMap(obj interface{}) (map[string]interface{}, error) {
+	var mapObj map[string]interface{}
+	objBytes, err := json.Marshal(obj)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return mapObj, err
+	}
+	json.Unmarshal(objBytes, &mapObj)
+	return mapObj, err
+}
+
+func MapToStruct(mapObj map[string]interface{}) (interface{}, error) {
+	var obj interface{}
+	mapObjBytes, err := json.Marshal(mapObj)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return obj, err
+	}
+	json.Unmarshal(mapObjBytes, &obj)
+	return obj, err
+}
+
+/*
+The json package always orders keys when marshalling. Specifically:
+
+Maps have their keys sorted lexicographically.
+Structs keys are marshalled in the order defined in the struct
+
+*/
+/*------------------------------ struct serialize must use this -----------------------------*/
+/*------------------------------ Hash and Sign use this -----------------------------*/
+func StructSerialize(obj interface{}) string {
+	objMap, err := StructToMap(obj)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return ""
+	}
+	str, err := json.Marshal(objMap)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return ""
+	}
+	return string(str)
+}
+
+//only for selfTest, format json output
+func StructSerializePretty(obj interface{}) string {
+	objMap, err := StructToMap(obj)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return ""
+	}
+	input, err := json.Marshal(objMap)
+	if err != nil {
+		log.Fatalf(err.Error())
+		return ""
+	}
+	var out bytes.Buffer
+	err = json.Indent(&out, input, "", "\t")
+
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	return string(out.String())
+}
+
+/*------------- Structs keys are marshalled in the order defined in the struct ------------------*/
 func Serialize(obj interface{}) string {
 	str, err := json.Marshal(obj)
+	fmt.Println(StructToMap(obj))
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
