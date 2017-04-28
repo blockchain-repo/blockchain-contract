@@ -1,6 +1,9 @@
 syntax = "proto3";
 package protos;
 
+option java_package = "com.uni-ledger.unicontract.protos";
+option java_outer_classname = "ProtoContract";
+
 message ContractSignature{
     string OwnerPubkey = 1;
     string Signature = 2;

@@ -1,6 +1,9 @@
 syntax = "proto3";
 package protos;
 
+option java_package = "com.uni-ledger.protos";
+option java_outer_classname = "ProtoResponseData";
+
 message ResponseData {
     bool ok = 1; //true or false
     string msg = 2; // attach infos
