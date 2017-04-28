@@ -42,7 +42,8 @@ fi
 echo "get govendor"
 cd $current_path
 go get github.com/kardianos/govendor
-govendor sync
+# 因为已经将三方包放在git上了，所以暂时不需要每次都进行sync
+#govendor sync
 # --------------------------------------------------
 
 # --------------------------------------------------
