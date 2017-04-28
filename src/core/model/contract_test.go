@@ -1,43 +1,192 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/logs"
+	"github.com/golang/protobuf/proto"
 	"testing"
 	"unicontract/src/common"
+	"unicontract/src/config"
 	"unicontract/src/core/protos"
 )
 
-func Test_Sign(t *testing.T) {
-	//create new obj
-	contractModel := ContractModel{}
-	//private_key := "Cnodz1gyhaNoFcPCr72G9brFrGFfNJQUPFchGXyL11Pt"
-	private_key := "GEXZrZShFsHKZB94mpRmaDBBtjWCDz6TgK17R9DXUwex"
+// API receive and transfer it to contractModel
+func fromContractToContractModel(contract protos.Contract) ContractModel {
+	var contractModel ContractModel
+	contractModel.Contract = contract
+	return contractModel
+}
 
-	// modify and set value for reference obj with &
-	contract := &contractModel.Contract
-	contractHead := &protos.ContractHead{}
-	contractBody := &protos.ContractBody{}
-	// modify and set value for reference obj with &
-	//contractHead.MainPubkey = "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3"
-	contractHead.MainPubkey = "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo"
-	contractBody.Cname = "star"
-	contractBody.ContractOwners = []string{
-		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
-		"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
-		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
+// go rethink get contractModel string and transfer it to contract
+func fromContractModelStrToContract(contractModelStr string) (protos.Contract, error) {
+	// 1. to contractModel
+	var contractModel ContractModel
+	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
+	// 2. to contract
+	contract := contractModel.Contract
+	if err != nil {
+		logs.Error("error fromContractModelStrToContract", err)
+		return contract, err
 	}
+
+	return contract, nil
+}
+
+func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) (string, error) {
+	contractOwnersLen := 1
+	if tempLen, ok := optArgs[0]["contractOwnersLen"]; ok {
+		contractOwnersLen, ok = tempLen.(int)
+		if !ok {
+			fmt.Println("optArgs type error for param contractOwnersLen")
+			return "", nil
+		}
+	}
+	// 生成的合约签名人个数
+	contractSignaturesLen := contractOwnersLen
+	if tempLen, ok := optArgs[0]["contractSignaturesLen"]; ok {
+		contractSignaturesLen, ok = tempLen.(int)
+		if !ok {
+			fmt.Println("optArgs type error for param contractSignaturesLen")
+			return "", nil
+		}
+	}
+
+	if contractSignaturesLen >= contractOwnersLen || contractSignaturesLen <= 0 {
+		contractSignaturesLen = contractOwnersLen
+	}
+
+	//generate contractOwnersLen keypair
+	owners := make(map[string]string)
+	ownersPubkeys := make([]string, contractOwnersLen)
+	for i := 0; i < contractOwnersLen; i++ {
+		publicKeyBase58, privateKeyBase58 := common.GenerateKeyPair()
+		owners[publicKeyBase58] = privateKeyBase58
+		ownersPubkeys[i] = publicKeyBase58
+	}
+
+	/*-------------------- generate contractModel ------------------*/
+	contractModel := ContractModel{}
+
+	//模拟用户发送的数据, mainpubkey 传入API 后,根据配置生成,此处请勿设置
+	mainPubkey := config.Config.Keypair.PublicKey
+	contractHead := &protos.ContractHead{mainPubkey, 1}
+
+	// random choose the creator
+	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen)]
+	//contractAsset := []*protos.ContractAsset{}
+	//contractComponent:=[]*protos.ContractComponent{}
+
+	startTime, err := common.GenSpecialTimestamp("2017-04-29 00:00:00")
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	endTime, err := common.GenSpecialTimestamp("2017-05-06 07:00:00")
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	// random contractOwners 随机生成的合约拥有者数组
+	contractOwners := ownersPubkeys
+
+	contractBody := &protos.ContractBody{
+		ContractId:         "UUID-1234-5678-90",
+		Cname:              "test create contract ",
+		Ctype:              "CREATE",
+		Caption:            "futurever",
+		Description:        "www.futurever.com",
+		ContractState:      "",
+		Creator:            randomCreator,
+		CreatorTime:        common.GenTimestamp(),
+		StartTime:          startTime,
+		EndTime:            endTime,
+		ContractOwners:     contractOwners,
+		ContractSignatures: nil,
+		ContractAssets:     nil,
+		ContractComponents: nil,
+	}
+
 	contractModel.ContractHead = contractHead
 	contractModel.ContractBody = contractBody
-	fmt.Println("contract is : ", common.StructSerialize(contract))
-	// sign for contract
-	signatureContract := contractModel.Sign(private_key)
+
+	// 生成 签名
+	contractSignatures := make([]*protos.ContractSignature, contractSignaturesLen)
+	for i := 0; i < contractSignaturesLen; i++ {
+		ownerPubkey := ownersPubkeys[i]
+		privateKey := owners[ownerPubkey]
+		contractSignatures[i] = &protos.ContractSignature{
+			OwnerPubkey:   ownerPubkey,
+			Signature:     contractModel.Sign(privateKey),
+			SignTimestamp: common.GenTimestamp(),
+		}
+		//contractSignatures[i] = &protos.ContractSignature{}
+		//contractSignatures[i].OwnerPubkey = ownerPubkey
+		//contractSignatures[i].Signature = contractModel.Sign(privateKey)
+		//contractSignatures[i].SignTimestamp = common.GenTimestamp()
+	}
+
+	contractBody.ContractSignatures = contractSignatures
 	contractModel.Id = contractModel.GenerateId()
-	//fmt.Println("contract is : ", common.StructSerializePrettycontract))
-	fmt.Println("private_key is : ", private_key)
-	fmt.Println("contract is : ", common.StructSerialize(contract))
-	fmt.Println("signatureContract isTest_Validate : ", signatureContract)
-	// 65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34
-	// 5i5dTtQseQjWZ8UdchqQtgttyeeFmB3LDFYzNKafvV2YvTqwv4wZ9mFsH7qgysV9ow893D1h2Xnt1uCXLHtbKrkT
+	if !produceValid {
+		contractModel.ContractBody.Description = "generate error contract for test"
+	}
+	serializeContractModel := common.StructSerialize(contractModel)
+	fmt.Println("produce the contractModel", serializeContractModel)
+
+	return serializeContractModel, nil
+
+}
+
+func generateProtoContract(produceValid bool, optArgs ...map[string]interface{}) ([]byte, error) {
+	contractOwnersLen := 1
+	if tempLen, ok := optArgs[0]["contractOwnersLen"]; ok {
+		contractOwnersLen, ok = tempLen.(int)
+		if !ok {
+			fmt.Println("generateProtoContract optArgs error for  contractOwnersLen")
+			optArgs[0]["contractOwnersLen"] = contractOwnersLen
+		}
+	}
+	// 生成的合约签名人个数
+	contractSignaturesLen := contractOwnersLen
+	if tempLen, ok := optArgs[0]["contractSignaturesLen"]; ok {
+		contractSignaturesLen, ok = tempLen.(int)
+		if !ok {
+			fmt.Println("optArgs type error for param contractSignaturesLen")
+			optArgs[0]["contractSignaturesLen"] = contractSignaturesLen
+		}
+	}
+	serializeContractModel, err := generatContractModel(produceValid, optArgs[0])
+	if err != nil {
+		return nil, err
+	}
+	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
+	requestBody, err := proto.Marshal(&protoContract)
+	if err != nil {
+		fmt.Println(requestBody, err)
+		return nil, err
+	}
+	return requestBody, nil
+}
+
+func Test_Sign(t *testing.T) {
+	contractOwnersLen := 2
+	contractSignaturesLen := contractOwnersLen
+	produceValid := true
+	optArgs := make(map[string]interface{})
+	optArgs["contractOwnersLen"] = contractOwnersLen
+	// 生成的合约签名人个数
+	optArgs["contractSignaturesLen"] = contractSignaturesLen
+
+	serializeContractModel, err := generatContractModel(produceValid, optArgs)
+	if err != nil {
+		fmt.Errorf("%v", err)
+	}
+	var contract ContractModel
+	json.Unmarshal([]byte(serializeContractModel), &contract)
+	fmt.Println("Generate", produceValid, "contractModel")
+	fmt.Printf("[Id=%s, contractSignatures=%v]", contract.Id, contract.ContractBody.ContractSignatures)
+	fmt.Println(common.StructSerializePretty(contract))
 }
 
 func Test_IsSignatureValid(t *testing.T) {

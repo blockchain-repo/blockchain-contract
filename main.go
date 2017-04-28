@@ -51,8 +51,8 @@ func logInit() {
 	// order 顺序必须按照
 	// 1. logs.SetLevel(level)
 	// 2. logs.SetLogger(logs.AdapterMultiFile, log_config_str)
-	//logs.SetLevel(logs.LevelDebug)
-	logs.SetLevel(logs.LevelInfo)
+	logs.SetLevel(logs.LevelDebug)
+	//logs.SetLevel(logs.LevelInfo)
 	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
 
 	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"testing"
 	"unicontract/src/common"
+	"unicontract/src/config"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
 )
@@ -96,10 +97,11 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractModel := model.ContractModel{}
 
 	//模拟用户发送的数据, mainpubkey 传入API 后,根据配置生成,此处请勿设置
-	contractHead := &protos.ContractHead{"", 1}
+	mainPubkey := config.Config.Keypair.PublicKey
+	contractHead := &protos.ContractHead{mainPubkey, 1}
 
 	// random choose the creator
-	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen-1)]
+	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen)]
 	//contractAsset := []*protos.ContractAsset{}
 	//contractComponent:=[]*protos.ContractComponent{}
 
@@ -200,11 +202,12 @@ var default_url = "http://localhost:8088/v1/contract/"
 
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
+	produceValid := true
 	extraAttr := make(map[string]interface{})
 	extraAttr["contractOwnersLen"] = 2
 	extraAttr["contractSignaturesLen"] = 2
 
-	requestBody, err := generateProtoContract(true, extraAttr)
+	requestBody, err := generateProtoContract(produceValid, extraAttr)
 	//requestBody, err := generateProtoContract(false, extraAttr)
 	if err != nil {
 		fmt.Println("generateProtoContract error ", err.Error())
@@ -225,11 +228,12 @@ func Test_AuthSignature(t *testing.T) {
 
 func Test_CreatContract(t *testing.T) {
 	url := default_url + "create"
+	produceValid := true
 	extraAttr := make(map[string]interface{})
 	extraAttr["contractOwnersLen"] = 2
 	extraAttr["contractSignaturesLen"] = 2
 
-	requestBody, err := generateProtoContract(true, extraAttr)
+	requestBody, err := generateProtoContract(produceValid, extraAttr)
 	//requestBody, err := generateProtoContract(false, extraAttr)
 	if err != nil {
 		fmt.Println("generateProtoContract error ", err.Error())
@@ -246,11 +250,12 @@ func Test_CreatContract(t *testing.T) {
 
 func Test_Signature(t *testing.T) {
 	url := default_url + "signature"
+	produceValid := true
 	extraAttr := make(map[string]interface{})
 	extraAttr["contractOwnersLen"] = 2
 	extraAttr["contractSignaturesLen"] = 2
 
-	requestBody, err := generateProtoContract(true, extraAttr)
+	requestBody, err := generateProtoContract(produceValid, extraAttr)
 	//requestBody, err := generateProtoContract(false, extraAttr)
 	if err != nil {
 		fmt.Println("generateProtoContract error ", err.Error())
@@ -268,12 +273,12 @@ func Test_Signature(t *testing.T) {
 
 func Test_Terminate(t *testing.T) {
 	url := default_url + "terminate"
-
+	produceValid := true
 	extraAttr := make(map[string]interface{})
 	extraAttr["contractOwnersLen"] = 2
 	extraAttr["contractSignaturesLen"] = 2
 
-	requestBody, err := generateProtoContract(true, extraAttr)
+	requestBody, err := generateProtoContract(produceValid, extraAttr)
 	//requestBody, err := generateProtoContract(false, extraAttr)
 	if err != nil {
 		fmt.Println("generateProtoContract error ", err.Error())
@@ -381,11 +386,12 @@ func Test_Track(t *testing.T) {
 
 func Test_Update(t *testing.T) {
 	url := default_url + "update"
+	produceValid := true
 	extraAttr := make(map[string]interface{})
 	extraAttr["contractOwnersLen"] = 2
 	extraAttr["contractSignaturesLen"] = 2
 
-	requestBody, err := generateProtoContract(true, extraAttr)
+	requestBody, err := generateProtoContract(produceValid, extraAttr)
 	//requestBody, err := generateProtoContract(false, extraAttr)
 	if err != nil {
 		fmt.Println("generateProtoContract error ", err.Error())
@@ -407,13 +413,12 @@ func Test_Update(t *testing.T) {
 
 func Test_Test(t *testing.T) {
 	url := default_url + "test"
-
+	produceValid := false
 	extraAttr := make(map[string]interface{})
 	extraAttr["contractOwnersLen"] = 2
 	extraAttr["contractSignaturesLen"] = 2
 
-	requestBody, err := generateProtoContract(true, extraAttr)
-	//requestBody, err := generateProtoContract(false, extraAttr)
+	requestBody, err := generateProtoContract(produceValid, extraAttr)
 	if err != nil {
 		fmt.Println("generateProtoContract error ", err.Error())
 		return
