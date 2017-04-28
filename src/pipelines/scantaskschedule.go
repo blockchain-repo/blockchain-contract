@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	_SLEEPTIME = 10
+	_SLEEPTIME = 10 // 单位是秒
 )
 
 func _ScanTaskSchedule() {
