@@ -1,11 +1,9 @@
 package pipelines
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"runtime"
@@ -31,13 +29,19 @@ const (
 	_OPERATION       = "CONTRACT"
 	_CONSENSUSTYPE   = "contract"
 	_CONSENSUSREASON = "contract illegal"
+	_THREADNUM       = 10
+	_INPUTLEN        = 20
+	_OUTPUTLEN       = 20
 )
 
 var (
-	gslPublicKeys      []string
-	gnPublicKeysNum    int
-	gstrPublicKey      string
-	gmContractOutputId map[string]string
+	gslPublicKeys   []string
+	gnPublicKeysNum int
+	gstrPublicKey   string
+
+	gPool     *ThreadPool
+	gchInput  chan string
+	gchOutput chan string
 )
 
 //---------------------------------------------------------------------------
@@ -45,11 +49,15 @@ func init() {
 	gslPublicKeys = config.GetAllPublicKey()
 	gnPublicKeysNum = len(gslPublicKeys)
 	gstrPublicKey = config.Config.Keypair.PublicKey
-	gmContractOutputId = make(map[string]string)
+
+	gchInput = make(chan string, _INPUTLEN)
+	gchOutput = make(chan string, _OUTPUTLEN)
+
+	gPool = new(ThreadPool)
 }
 
 //---------------------------------------------------------------------------
-func ceChangefeed(in io.Reader, out io.Writer) {
+func ceChangefeed() {
 	beegoLog.Debug("1.进入ceChangefeed")
 	var value interface{}
 	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
@@ -69,33 +77,26 @@ func ceChangefeed(in io.Reader, out io.Writer) {
 		}
 
 		beegoLog.Debug("1.2 ceChangefeed --->")
-		out.Write(slVote)
+		gchInput <- string(slVote)
 		time.Send("votes_changefeed")
 	}
 }
 
 //---------------------------------------------------------------------------
-func ceHeadFilter(in io.Reader, out io.Writer) {
+func ceHeadFilter() error {
 	beegoLog.Debug("2.进入ceHeadFilter")
-	rd := bufio.NewReader(in)
-	slVote := make([]byte, MaxSizeTX)
+	defer close(gchOutput)
 	for {
 		// 读取new_val的值
-		nReadNum, err := rd.Read(slVote)
 		time := monitor.Monitor.NewTiming()
-		beegoLog.Debug("2.1 ceHeadFilter get data")
-		if err != nil {
-			beegoLog.Error(err.Error())
-			continue
+		readData, ok := <-gchInput
+		if !ok {
+			break
 		}
-		if nReadNum == 0 {
-			continue
-		}
-		slReadData := slVote[:nReadNum]
 
 		// 将new_val转化为vote
 		vote := model.Vote{}
-		err = json.Unmarshal(slReadData, &vote)
+		err := json.Unmarshal([]byte(readData), &vote)
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
@@ -109,7 +110,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 			beegoLog.Debug("2.2.2 verify head node")
 			if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
 				beegoLog.Debug("2.2.3 verify vote")
-				slMyContract, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
+				pContractOutput, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
 				if err != nil {
 					if !pass {
 						beegoLog.Error(err.Error())
@@ -122,7 +123,7 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 
 				if pass { // 合约合法
 					beegoLog.Debug("2.3 ceHeadFilter --->")
-					out.Write(slMyContract)
+					ceQueryEists(*pContractOutput)
 					time.Send("ce_validate_head")
 				} else { // 合约不合法
 					beegoLog.Debug("2.3 contract invalid and insert consensusFailure")
@@ -146,63 +147,61 @@ func ceHeadFilter(in io.Reader, out io.Writer) {
 		} else {
 			beegoLog.Error(err.Error())
 		}
-
 	}
+	return nil
 }
 
 //---------------------------------------------------------------------------
-func ceQueryEists(in io.Reader, out io.Writer) {
+func ceQueryEists(contractOutput model.ContractOutput) {
 	beegoLog.Debug("3.进入ceQueryEists")
-	rd := bufio.NewReader(in)
-	slContractOutput := make([]byte, MaxSizeTX)
-	for {
-		nReadNum, err := rd.Read(slContractOutput)
-		time := monitor.Monitor.NewTiming()
-		beegoLog.Debug("3.1 ceQueryEists get data")
-		if err != nil {
-			beegoLog.Error(err.Error())
-			continue
-		}
-		if nReadNum == 0 {
-			continue
-		}
-		slRealData := slContractOutput[:nReadNum]
+	time := monitor.Monitor.NewTiming()
 
-		strOutputId := gmContractOutputId[string(slRealData)]
-		delete(gmContractOutputId, string(slRealData))
-
-		beegoLog.Debug("3.2 query contractoutput table")
-		output, err := rethinkdb.GetContractOutputById(strOutputId)
-		if err != nil {
-			beegoLog.Error(err.Error())
-			continue
-		}
-
-		if len(output) == 0 {
-			beegoLog.Debug("3.3 insert contractoutput table")
-			rethinkdb.InsertContractOutput(string(slRealData))
-		} else {
-			beegoLog.Debug("3.3 contractoutput exist")
-		}
-		beegoLog.Debug("3.4 ceQueryEists ---> /dev/null")
-		out.Write(slRealData)
-		time.Send("ce_query_contract")
+	beegoLog.Debug("3.2 query contractoutput table")
+	output, err := rethinkdb.GetContractOutputById(contractOutput.Id)
+	if err != nil {
+		beegoLog.Error(err.Error())
+		return
 	}
+
+	slContractOutput, _ := json.Marshal(contractOutput)
+
+	if len(output) == 0 {
+		beegoLog.Debug("3.3 insert contractoutput table")
+		rethinkdb.InsertContractOutput(string(slContractOutput))
+	} else {
+		beegoLog.Debug("3.3 contractoutput exist")
+	}
+	beegoLog.Debug("3.4 ceQueryEists ---> /dev/null")
+	gchOutput <- string(slContractOutput)
+	time.Send("ce_query_contract")
 }
 
 //---------------------------------------------------------------------------
 func startContractElection() {
-	p := Pipe(
-		ceChangefeed,
-		ceHeadFilter,
-		ceQueryEists)
+	defer gPool.Stop()
+	defer close(gchInput)
 
-	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
-	if err != nil {
-		beegoLog.Error(err.Error())
+	gPool.Init(_THREADNUM)
+	for i := 0; i < _THREADNUM; i++ {
+		gPool.AddTask(func() error {
+			return ceHeadFilter()
+		})
 	}
-	w := bufio.NewWriter(f)
-	p(nil, w)
+	go gPool.Start()
+
+	go ceChangefeed()
+
+	for {
+		if out, ok := <-gchOutput; ok {
+			f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
+			if err != nil {
+				beegoLog.Error(err.Error())
+			}
+			f.Write([]byte(out))
+		} else {
+			break
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -219,7 +218,7 @@ func _verifyHeadNode(mainPubkey string) (bool, error) {
 }
 
 //---------------------------------------------------------------------------
-func _verifyVotes(contractId string) ([]byte, bool, error) {
+func _verifyVotes(contractId string) (*model.ContractOutput, bool, error) {
 	strVotes, err := rethinkdb.GetVotesByContractId(contractId)
 	if err != nil {
 		return nil, false, err
@@ -259,9 +258,7 @@ func _verifyVotes(contractId string) ([]byte, bool, error) {
 		if err != nil {
 			return nil, bValid, err
 		}
-		slMyContract, err := json.Marshal(contractOutput)
-		gmContractOutputId[string(slMyContract)] = contractOutput.Id
-		return slMyContract, bValid, err
+		return &contractOutput, bValid, err
 	} else {
 		return nil, bValid, nil
 	}
