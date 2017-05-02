@@ -54,7 +54,7 @@ func Test_InsertContractStruct(t *testing.T) {
 	contractHead := &protos.ContractHead{}
 	contractBody := &protos.ContractBody{}
 
-	contractHead.MainPubkey = "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo"
+	contractHead.MainPubkey = config.Config.Keypair.PublicKey
 	contractHead.Version = 1
 	contractBody.Cname = "star"
 	contractBody.ContractOwners = []string{
