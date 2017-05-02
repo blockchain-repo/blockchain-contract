@@ -151,8 +151,8 @@ func Test_InsertVote(t *testing.T) {
 	}
 
 	voteBody.VoteType = "CONTRACT"
-	voteBody.VoteFor = "ba934f88cf20a3d440efdcc92e93d9722925502c268513187f6e5805e60c0e42"
-	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	voteBody.VoteFor = "676c5244facc65629dcfab324fbf8499724e6b685cad20a90db63ba47eddaf78"
+	vote.Signature = vote.SignVote() //"3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	vote.Id = common.GenerateUUID()
 	isTrue := InsertVote(common.Serialize(vote))
 	if isTrue {
