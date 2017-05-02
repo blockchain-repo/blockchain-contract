@@ -32,6 +32,7 @@ const (
 	_THREADNUM       = 10
 	_INPUTLEN        = 20
 	_OUTPUTLEN       = 20
+	_Fulfillment     = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
 )
 
 var (
@@ -324,7 +325,15 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 		contractOutput.Transaction.Relation.Voters =
 			append(contractOutput.Transaction.Relation.Voters, value)
 	}
+
+	beegoLog.Debug("contractOutput : %+v", contractOutput)
+
 	contractOutput.Id = common.HashData(common.Serialize(contractOutput))
+
+	fulfillment := new(model.Fulfillment)
+	fulfillment.Fulfillment = _Fulfillment
+	contractOutput.Transaction.Fulfillments =
+		append(contractOutput.Transaction.Fulfillments, fulfillment)
 
 	contractOutput.Transaction.Timestamp = common.GenTimestamp()
 	contractOutput.Transaction.ContractModel.ContractHead = contractModel.ContractHead
