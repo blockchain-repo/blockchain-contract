@@ -46,7 +46,10 @@ var (
 )
 
 //---------------------------------------------------------------------------
-func init() {
+func startContractElection() {
+	defer gPool.Stop()
+	defer close(gchInput)
+
 	gslPublicKeys = config.GetAllPublicKey()
 	gnPublicKeysNum = len(gslPublicKeys)
 	gstrPublicKey = config.Config.Keypair.PublicKey
@@ -55,6 +58,27 @@ func init() {
 	gchOutput = make(chan string, _OUTPUTLEN)
 
 	gPool = new(ThreadPool)
+	gPool.Init(_THREADNUM)
+	for i := 0; i < _THREADNUM; i++ {
+		gPool.AddTask(func() error {
+			return ceHeadFilter()
+		})
+	}
+	go gPool.Start()
+
+	go ceChangefeed()
+
+	for {
+		if out, ok := <-gchOutput; ok {
+			f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
+			if err != nil {
+				beegoLog.Error(err.Error())
+			}
+			f.Write([]byte(out))
+		} else {
+			break
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -175,34 +199,6 @@ func ceQueryEists(contractOutput model.ContractOutput) {
 	beegoLog.Debug("3.4 ceQueryEists ---> /dev/null")
 	gchOutput <- string(slContractOutput)
 	time.Send("ce_query_contract")
-}
-
-//---------------------------------------------------------------------------
-func startContractElection() {
-	defer gPool.Stop()
-	defer close(gchInput)
-
-	gPool.Init(_THREADNUM)
-	for i := 0; i < _THREADNUM; i++ {
-		gPool.AddTask(func() error {
-			return ceHeadFilter()
-		})
-	}
-	go gPool.Start()
-
-	go ceChangefeed()
-
-	for {
-		if out, ok := <-gchOutput; ok {
-			f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
-			if err != nil {
-				beegoLog.Error(err.Error())
-			}
-			f.Write([]byte(out))
-		} else {
-			break
-		}
-	}
 }
 
 //---------------------------------------------------------------------------
