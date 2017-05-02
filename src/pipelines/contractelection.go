@@ -323,8 +323,8 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 	}
 
 	fulfillment := &model.Fulfillment{
-		Fid:0,
-		OwnersBefore:[]string{config.Config.Keypair.PublicKey},
+		Fid:          0,
+		OwnersBefore: []string{config.Config.Keypair.PublicKey},
 	}
 	contractOutput.Transaction.Fulfillments = append(contractOutput.Transaction.Fulfillments, fulfillment)
 	contractOutput.Transaction.Conditions = []*model.ConditionsItem{}

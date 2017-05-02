@@ -44,6 +44,7 @@ func Test_Delete(t *testing.T) {
 
 /*----------------------------- contracts start---------------------------------------*/
 func Test_InsertContractStruct(t *testing.T) {
+	config.Init()
 	//create new obj
 	contractModel := model.ContractModel{}
 	//TODO
@@ -133,6 +134,7 @@ func Test_GetContractMainPubkeyByContract(t *testing.T) {
 
 /*----------------------------- votes start---------------------------------------*/
 func Test_InsertVote(t *testing.T) {
+	config.Init()
 	vote := model.Vote{}
 
 	vote.NodePubkey = config.Config.Keypair.PublicKey
@@ -149,7 +151,7 @@ func Test_InsertVote(t *testing.T) {
 	}
 
 	voteBody.VoteType = "CONTRACT"
-	voteBody.VoteFor = "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
+	voteBody.VoteFor = "ba934f88cf20a3d440efdcc92e93d9722925502c268513187f6e5805e60c0e42"
 	vote.Signature = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
 	vote.Id = common.GenerateUUID()
 	isTrue := InsertVote(common.Serialize(vote))
