@@ -15,6 +15,7 @@ import (
 	"unicontract/src/common/monitor"
 
 	"github.com/astaxie/beego/logs"
+	"unicontract/src/common"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
@@ -174,8 +175,29 @@ func txeSend(in io.Reader, out io.Writer) {
 			continue
 		}
 		t := p[:n]
+		//write the contract to the taskschedule
+		coModel := model.ContractOutput{}
+		err := json.Unmarshal(t,&coModel)
+		if err != nil {
+			logs.Error(err.Error())
+			continue
+		}
+		var taskSchedule model.TaskSchedule
+		taskSchedule.Id = common.GenerateUUID()
+		taskSchedule.ContractId = coModel.Transaction.ContractModel.ContractBody.ContractId
+		taskSchedule.NodePubkey = coModel.Transaction.ContractModel.ContractHead.MainPubkey
+		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
+		taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
+
+		slJson, _ := json.Marshal(taskSchedule)
+		strTaskSchedule := string(slJson)
+		err = r.InsertTaskSchedule(strTaskSchedule)
+		if err != nil {
+			logs.Error("not pass, return err is \" %s \"\n", err.Error())
+		} else {
+			logs.Info("pass\n")
+		}
 		//write the contractoutput to unichain.
-		//result,err:= chain.CreateContractTx(common.Serialize(t))
 		result,err:= chain.CreateContractTx(t)
 		if err != nil{
 			logs.Error(err.Error())
