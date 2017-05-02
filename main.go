@@ -1,21 +1,86 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
+	"os"
+	"strconv"
+
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common"
 	"unicontract/src/common/basic"
-	_ "unicontract/src/pipelines"
+	"unicontract/src/pipelines"
+	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/config"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 )
 
 func main() {
-	beego.LoadAppConfig("ini", "../conf/app.conf")
-	// log init
 	logInit()
 
-	logs.Info("unicontract start")
+	argsCount := len(os.Args)
+
+	if argsCount ==2 && os.Args[1] == "start" {
+		runStart()
+	} else if argsCount ==2 && os.Args[1] == "initdb" {
+		runInitDB()
+	} else if argsCount ==2 && os.Args[1] == "dropdb" {
+		runDropDB()
+	} else if argsCount ==4 && os.Args[1] == "reconfigdb" {
+		shards,error := strconv.Atoi(os.Args[2])
+		if error != nil{
+			logs.Error("shards should be int")
+		}
+		replicas,error := strconv.Atoi(os.Args[3])
+		if error != nil{
+			logs.Error("replicas should be int")
+		}
+		runReconfigDB(shards,replicas)
+	} else if argsCount ==2 && os.Args[1] == "config" {
+		runConfig()
+	} else if argsCount ==2 && os.Args[1] == "help" {
+		runHelp()
+	} else {
+		logs.Error("cmd should be " +
+			"unicontract start|initdb|dropdb|reconfigdb $shards $replicas|config")
+		os.Exit(2)
+	}
+}
+
+func runStart() {
+	beego.LoadAppConfig("ini", "../conf/app.conf")
+
+	config.Init()
+	logs.Info("config Init")
+	pipelines.Init()
+	logs.Info("pipelines Init")
 	beego.Run()
+	logs.Info("beego Run")
+}
+
+func runInitDB() {
+	//TODO
+	rethinkdb.InitDatabase()
+}
+
+func runDropDB() {
+	//TODO
+	rethinkdb.DropDatabase()
+}
+func runReconfigDB(shards int,replicas int) {
+	//TODO
+	rethinkdb.Reconfig(shards,replicas)
+}
+
+func runConfig() {
+	//TODO
+	config.WriteConToFile()
+}
+
+func runHelp() {
+	//TODO
+	logs.Info("cmd should be " +
+		"unicontract start|initdb|dropdb|reconfigdb $shards $replicas|config")
 }
 
 func logInit() {
@@ -58,5 +123,4 @@ func logInit() {
 	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,
 	//"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
 	//"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
-
 }

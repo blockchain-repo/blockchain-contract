@@ -6,6 +6,6 @@ import (
 )
 
 func Test_Reconfig(t *testing.T) {
-	res :=Reconfig("bigchain",5,1)
+	res :=Reconfig(5,1)
 	fmt.Printf("%s\n",res)
 }

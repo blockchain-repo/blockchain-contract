@@ -47,9 +47,10 @@ func CreateDatabase(name string) {
 	fmt.Printf("%d DB created\n", resp.DBsCreated)
 }
 
-func DropDatabase(name string) {
+func DropDatabase() {
+	dbname := DBNAME
 	session := Connect()
-	resp, err := r.DBDrop(name).RunWrite(session)
+	resp, err := r.DBDrop(dbname).RunWrite(session)
 	if err != nil {
 		log.Fatalf("Error dropping database: %s", err)
 	}

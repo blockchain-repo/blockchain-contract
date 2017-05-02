@@ -34,7 +34,7 @@ type Keypair struct{
  * param   :
  * return :
  */
-func init(){
+func Init(){
 	//获取当前用户目录
 	user,err := user.Current()
 	if err != nil{

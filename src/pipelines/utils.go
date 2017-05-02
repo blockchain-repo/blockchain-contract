@@ -74,7 +74,7 @@ func SaveOutputErrorData(tableName string, t []byte) bool {
 	return true
 }
 
-func init() {
+func Init() {
 	//TODO log
 	logs.Info("ContractVote Pipeline Start")
 	go startContractVote()
