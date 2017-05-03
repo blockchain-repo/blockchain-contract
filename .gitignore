@@ -36,3 +36,6 @@ unicontract
 #!vendor/README.md
 bin/
 buildLog/
+
+package/
+package.tar.gz

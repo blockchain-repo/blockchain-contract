@@ -11,6 +11,9 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
+	"encoding/base64"
+	"unicontract/src/common"
+
 )
 
 // Operations about Contract
@@ -36,7 +39,6 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 
 	requestBody := c.Ctx.Input.RequestBody
 	contract = &protos.Contract{}
-
 	// return err init
 	if contentType == "application/x-protobuf" {
 		err := proto.Unmarshal(requestBody, contract)
@@ -60,12 +62,15 @@ func (c *ContractController) responseJsonBody(data string, ok bool, msg string) 
 	responseData := new(protos.ResponseData)
 	responseData.Ok = ok
 	responseData.Msg = msg
+	//todo test
+	data = base64.StdEncoding.EncodeToString([]byte(data))
 	responseData.Data = data
 	//body, _ := json.Marshal(responseData)
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		logs.Error("responseJsonBodyCode ", err.Error())
 	}
+	//c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/x-protobuf")
 	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(body))
 	//c.ServeJSON()
@@ -75,11 +80,15 @@ func (c *ContractController) responseJsonBodyCode(status int, data string, ok bo
 	responseData := new(protos.ResponseData)
 	responseData.Ok = ok
 	responseData.Msg = msg
+	//todo test
+	data = base64.StdEncoding.EncodeToString([]byte(data))
 	responseData.Data = data
+
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		logs.Error("responseJsonBodyCode ", err.Error())
 	}
+	//c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/x-protobuf")
 	c.Ctx.ResponseWriter.WriteHeader(status)
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
@@ -88,12 +97,15 @@ func (c *ContractController) responseWithCode(status int, data string) {
 	responseData := new(protos.ResponseData)
 	responseData.Ok = true
 	responseData.Msg = ""
+	//todo test
+	data = base64.StdEncoding.EncodeToString([]byte(data))
 	responseData.Data = data
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		logs.Error("responseJsonBodyCode ", err.Error())
 	}
 	// last panic user string
+	//c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/x-protobuf")
 	c.Ctx.ResponseWriter.WriteHeader(status)
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
@@ -289,6 +301,8 @@ func (c *ContractController) Query() {
 	}
 
 	contractModelStr, err := rethinkdb.GetContractById(contract.Id)
+	logs.Warn(contractModelStr)
+
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contract.Id + ")查询错误: ")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
@@ -315,6 +329,7 @@ func (c *ContractController) Query() {
 	}
 	contractProtoStr := string(contractProtoBytes)
 	c.responseJsonBody(contractProtoStr, true, "API[Query]查询合约成功!")
+	//c.responseJsonBody(contractProtoStr, true, "API[Query] success!")
 }
 
 // @Title Track
@@ -368,7 +383,6 @@ func (c *ContractController) Track() {
 	//TODO track contract 合约跟踪
 	logs.Warn(c.Ctx.Request.RequestURI, "API[Track] 缺少合约跟踪查询方法!")
 	c.responseJsonBody(contract.Id, false, "API[Track] 缺少合约跟踪查询方法!")
-
 }
 
 // @Title Update
@@ -431,5 +445,86 @@ func (c *ContractController) Test() {
 	//TODO track contract 缺少测试合约方法
 	logs.Warn(c.Ctx.Request.RequestURI, "API[Test] 缺少测试合约方法!")
 	c.responseJsonBody(string(time.Now().Unix()), false, "API[Test] 缺少测试合约方法!")
+}
+
+// for press test [pressTest]
+func (c *ContractController) PressTest() {
+	token, contract, err := c.parseProtoRequestBody()
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		return
+	}
+
+
+	if token == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+
+	if contract == nil  {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
+		return
+	}
+
+	contractModel := fromContractToContractModel(*contract)
+	/*-------------------------- this for press test generate Id start---------------------*/
+	// add random string
+	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_" + token
+	contractModel.ContractBody.Caption = randomString
+	contractModel.ContractBody.Description = randomString
+
+
+	contractOwnersLen := 3
+	// 生成的合约签名人个数
+	contractSignaturesLen := contractOwnersLen
+
+	if contractSignaturesLen >= contractOwnersLen || contractSignaturesLen <= 0 {
+		contractSignaturesLen = contractOwnersLen
+	}
+
+	//generate contractOwnersLen keypair
+	owners := make(map[string]string)
+	ownersPubkeys := make([]string, contractOwnersLen)
+	for i := 0; i < contractOwnersLen; i++ {
+		publicKeyBase58, privateKeyBase58 := common.GenerateKeyPair()
+		owners[publicKeyBase58] = privateKeyBase58
+		ownersPubkeys[i] = publicKeyBase58
+	}
+
+	// random contractOwners 随机生成的合约拥有者数组
+	contractOwners := ownersPubkeys
+	contractModel.ContractBody.ContractOwners = contractOwners
+	// 生成 签名
+	contractSignatures := make([]*protos.ContractSignature, contractSignaturesLen)
+	for i := 0; i < contractSignaturesLen; i++ {
+		ownerPubkey := ownersPubkeys[i]
+		privateKey := owners[ownerPubkey]
+		contractSignatures[i] = &protos.ContractSignature{
+			OwnerPubkey:   ownerPubkey,
+			Signature:     contractModel.Sign(privateKey),
+			SignTimestamp: common.GenTimestamp(),
+		}
+	}
+
+	contractModel.ContractBody.ContractSignatures = contractSignatures
+	contractModel.Id = contractModel.GenerateId()
+
+	/*-------------------------- this for press test end----------------------*/
+
+	// no verify id again!
+	contractValid := contractModel.IsSignatureValid()
+	if !contractValid {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+		logs.Debug("API[PressTest] token is", token)
+		return
+	}
+	ok := core.WriteContract(contractModel)
+	if !ok {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[PressTest] insert contract fail!")
+		logs.Debug(c.Ctx.Request.RequestURI, "API[PressTest] insert contract fail!")
+		return
+	}
+	logs.Warn("API[PressTest] InsertContract success!")
+	c.responseJsonBody(contract.Id, true, "API[PressTest] insert contract Id "+contractModel.Id+"]")
 
 }

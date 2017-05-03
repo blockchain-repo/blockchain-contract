@@ -7,9 +7,9 @@ import (
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common"
 	"unicontract/src/common/basic"
-	"unicontract/src/pipelines"
-	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/config"
+	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/pipelines"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
@@ -19,25 +19,25 @@ func main() {
 	logInit()
 
 	argsCount := len(os.Args)
-	if argsCount ==2 && os.Args[1] == "start" {
+	if argsCount == 2 && os.Args[1] == "start" {
 		runStart()
-	} else if argsCount ==2 && os.Args[1] == "initdb" {
+	} else if argsCount == 2 && os.Args[1] == "initdb" {
 		runInitDB()
-	} else if argsCount ==2 && os.Args[1] == "dropdb" {
+	} else if argsCount == 2 && os.Args[1] == "dropdb" {
 		runDropDB()
-	} else if argsCount ==4 && os.Args[1] == "reconfigdb" {
-		shards,error := strconv.Atoi(os.Args[2])
-		if error != nil{
+	} else if argsCount == 4 && os.Args[1] == "reconfigdb" {
+		shards, error := strconv.Atoi(os.Args[2])
+		if error != nil {
 			logs.Error("shards should be int")
 		}
-		replicas,error := strconv.Atoi(os.Args[3])
-		if error != nil{
+		replicas, error := strconv.Atoi(os.Args[3])
+		if error != nil {
 			logs.Error("replicas should be int")
 		}
-		runReconfigDB(shards,replicas)
-	} else if argsCount ==2 && os.Args[1] == "config" {
+		runReconfigDB(shards, replicas)
+	} else if argsCount == 2 && os.Args[1] == "config" {
 		runConfig()
-	} else if argsCount ==2 && os.Args[1] == "help" {
+	} else if argsCount == 2 && os.Args[1] == "help" {
 		runHelp()
 	} else {
 		logs.Error("cmd should be " +
@@ -64,8 +64,8 @@ func runInitDB() {
 func runDropDB() {
 	rethinkdb.DropDatabase()
 }
-func runReconfigDB(shards int,replicas int) {
-	rethinkdb.Reconfig(shards,replicas)
+func runReconfigDB(shards int, replicas int) {
+	rethinkdb.Reconfig(shards, replicas)
 }
 
 func runConfig() {
@@ -85,6 +85,7 @@ func logInit() {
 	// logs 里面修改的话,此处请勿重复设置!
 	logs.EnableFuncCallDepth(true)
 	logs.SetLogFuncCallDepth(3)
+	beego.BConfig.Log.AccessLogs = true
 
 	//如果不想在控制台输出log相关的，可以打开下面设置
 	//todo if u want not output to console, open following line!

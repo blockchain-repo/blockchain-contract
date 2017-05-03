@@ -26,6 +26,7 @@ func init() {
 			beego.NSRouter("/track", &controllers.ContractController{}, "post:Track"),
 			beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
 			beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),
+			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),
 		),
 	)
 	beego.AddNamespace(ns)

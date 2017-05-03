@@ -161,6 +161,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	}
 	serializeContractModel := common.StructSerialize(contractModel)
 	fmt.Println("produce the contractModel", serializeContractModel)
+	fmt.Println("produce the contractModel", common.SerializePretty(contractModel))
 
 	return serializeContractModel, nil
 

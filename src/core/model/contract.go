@@ -136,3 +136,42 @@ func (c *ContractModel) validateContractHead() bool {
 	}
 	return true
 }
+
+//transfer contract(proto) to contractModel
+func FromContractToContractModel(contract protos.Contract) ContractModel {
+	var contractModel ContractModel
+	contractModel.Contract = contract
+	return contractModel
+}
+
+// transfer contractModel string to contract(proto)
+func FromContractModelStrToContract(contractModelStr string) (protos.Contract, error) {
+	// 1. to contractModel
+	var contractModel ContractModel
+	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
+	// 2. to contract
+	contract := contractModel.Contract
+	if err != nil {
+		logs.Error("error fromContractModelStrToContract", err)
+		return contract, err
+	}
+
+	return contract, nil
+}
+
+// transfer contractModel to contract(proto)
+func FromContractModelToContract(contractModel ContractModel) (protos.Contract) {
+	/*-------------module deep copy start --------------*/
+	var contractModelClone = contractModel
+
+	// new obj
+	var temp protos.Contract
+
+	contractModelCloneBytes, _ := json.Marshal(contractModelClone)
+	err := json.Unmarshal(contractModelCloneBytes, &temp)
+	if err != nil {
+		logs.Error("[module-model]FromContractModelToContract error ", err)
+	}
+	contract := contractModel.Contract
+	return contract
+}

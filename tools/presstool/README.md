@@ -1,4 +1,35 @@
 # press tool
+
+## Send binary from proto
+If u want test the contract API, you should generate the binary file according the json files
+```
+# tools/presstool/utils/proto_convert_utils_test.go:40
+# following method will generate the binary files
+func Test_ReadJsonToContractProtoSerialize(t *testing.T) {
+	file, _ := os.Getwd()
+	//fmt.Println("current path:", file)
+	dir := GetParentDirectory(file)
+	file = dir + "/data/contract_pb2.json"
+	byteFile := dir + "/data/contract_pb2_bytes"
+
+	contractProtoSerialize, err := ReadJsonToContractProtoSerialize(file)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	ioutil.WriteFile(byteFile, contractProtoSerialize, 0644)
+	fmt.Println("contractProtoSerialize", contractProtoSerialize)
+
+	var contractProto2 protos.Contract
+	proto.Unmarshal(contractProtoSerialize, &contractProto2)
+
+	fmt.Println("contractProtoDeSerialize\n", common.StructSerializePretty(contractProto2))
+
+}
+
+```
+
 ## [boom](https://github.com/rakyll/boom)
 
 ### Installation

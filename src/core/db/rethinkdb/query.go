@@ -54,7 +54,6 @@ func InsertContract(contract string) bool {
 	if contract == "" {
 		return false
 	}
-
 	res := Insert(DBNAME, TABLE_CONTRACTS, contract)
 	if res.Inserted >= 1 {
 		return true

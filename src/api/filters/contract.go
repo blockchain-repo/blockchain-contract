@@ -17,7 +17,8 @@ func ContractFilter(ctx *context.Context) {
 	contentType := ctx.Input.Header("Content-Type")
 	requestDataType := ctx.Input.Header("RequestDataType")
 
-	if contentType == "" || requestDataType == "" {
+	//if contentType == "" || requestDataType == "" {
+	if contentType == "" {
 		result :=make(map[string]interface{})
 		result["msg"] = "error Headers"
 		result["status"] = 404

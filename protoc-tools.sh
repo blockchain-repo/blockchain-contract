@@ -7,8 +7,8 @@ protos_file_path=${current_path}/src/core/protos
 # remove the string <,omitempty> in generated .pb.go files[proto3]
 remove_omitempty=true
 
-#proto_support_array=("go","java","js","python")
-proto_support_array=("go","java","js")
+proto_support_array=("go","java","js","python")
+#proto_support_array=("go","java","js")
 
 proto_js_libs_name="proto_contract_libs"
 
