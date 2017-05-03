@@ -531,4 +531,27 @@ func Test_SetTaskScheduleNoSend(t *testing.T) {
 	}
 }
 
+func Test_SetTaskScheduleFailedCount(t *testing.T) {
+	var strID string
+
+	//test 1
+	t.Logf("test strID is null\n")
+	failedCount, err := SetTaskScheduleFailedCount(strID)
+	if err != nil {
+		t.Logf("pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Errorf("not pass\n")
+	}
+
+	//test 2
+	t.Logf("test strID is not null\n")
+	strID = "1f61074b-d178-42ca-a32f-19ac1b495136"
+	failedCount, err = SetTaskScheduleFailedCount(strID)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass, failedCount is %d\n", failedCount)
+	}
+}
+
 /*----------------------------- TaskSchedule end---------------------------------------*/

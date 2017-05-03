@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	_SLEEPTIME = 10 // 单位是秒
+	_SLEEPTIME = 30 // 单位是秒
 )
 
 func _ScanTaskSchedule() {
@@ -43,16 +43,9 @@ func _ScanTaskSchedule() {
 		}
 
 		beegoLog.Debug("handle task")
-		for index, value := range slTasks {
-			slTask, err := json.Marshal(slTasks[index])
-			if err != nil {
-				beegoLog.Error(err.Error())
-				// TODO error handle
-				goto CONSUME
-			}
-
+		for _, value := range slTasks {
 			beegoLog.Debug("send task")
-			if _SendToList(string(slTask)) {
+			if _SendToList(value.ContractId) {
 				err = rethinkdb.SetTaskScheduleSend(value.Id)
 				if err != nil {
 					beegoLog.Error(err.Error())
@@ -70,7 +63,8 @@ func _ScanTaskSchedule() {
 	}
 }
 
-func _SendToList(strTaskSchedule string) bool {
+func _SendToList(strContractID string) bool {
+	gchTaskListID <- strContractID
 	return true
 }
 

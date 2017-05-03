@@ -1,8 +1,8 @@
 package rethinkdb
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
@@ -450,6 +450,40 @@ func SetTaskScheduleNoSend(strID string) error {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
+	}
+}
+
+func SetTaskScheduleFailedCount(strID string) (int, error) {
+	if len(strID) == 0 {
+		return -1, fmt.Errorf("strID is null")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("id").Eq(strID)).Run(session)
+	if err != nil {
+		return -1, err
+	}
+
+	if res.IsNil() {
+		return -1, fmt.Errorf("set is null")
+	}
+
+	var tasks map[string]interface{}
+	err = res.One(&tasks)
+	if err != nil {
+		return -1, err
+	}
+
+	failedCount := tasks["FailedCount"].(float64)
+	failedCount += 1
+
+	res1 := Update(DBNAME, TABLE_TASK_SCHEDULE, strID,
+		fmt.Sprintf("{\"FailedCount\":%f}", failedCount))
+	if res1.Replaced|res1.Unchanged >= 1 {
+		return int(failedCount), nil
+	} else {
+		return -1, fmt.Errorf("update failed")
 	}
 }
 
