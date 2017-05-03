@@ -16,33 +16,6 @@ type Asset struct {
 	Updatable  bool        `json:"updatable"`
 }
 
-type ConditionDetails struct {
-	Bitmask   int32  `json:"bitmask"`
-	PublicKey string `json:"public_key"`
-	Signature string `json:"signature"`
-	Type      string `json:"type"`
-	TypeId    int32  `json:"type_id"`
-}
-
-type Condition struct {
-	Details *ConditionDetails `json:"details"`
-	Uri     string            `json:"uri"`
-}
-
-type ConditionsItem struct {
-	Amount      int64      `json:"amount"`
-	Cid         int32      `json:"cid"`
-	Condition   *Condition `json:"condition"`
-	OwnersAfter []string   `json:"owners_after"`
-	Isfreeze    bool       `json:"isfreeze"`
-}
-
-type Fulfillment struct {
-	Fid          int32       `json:"fid"`
-	OwnersBefore []string    `json:"owners_before"`
-	Fulfillment  interface{} `json:"fulfillment"`
-	Input        interface{} `json:"input"`
-}
 
 type Metadata struct {
 	Id   string      `json:"id"`
