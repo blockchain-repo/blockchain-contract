@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
-	"log"
+	"github.com/astaxie/beego/logs"
 	"math/rand"
 	"strconv"
 	"time"
@@ -40,7 +40,7 @@ func StructToMap(obj interface{}) (map[string]interface{}, error) {
 	var mapObj map[string]interface{}
 	objBytes, err := json.Marshal(obj)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return mapObj, err
 	}
 	json.Unmarshal(objBytes, &mapObj)
@@ -51,7 +51,7 @@ func MapToStruct(mapObj map[string]interface{}) (interface{}, error) {
 	var obj interface{}
 	mapObjBytes, err := json.Marshal(mapObj)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return obj, err
 	}
 	json.Unmarshal(mapObjBytes, &obj)
@@ -70,12 +70,12 @@ Structs keys are marshalled in the order defined in the struct
 func StructSerialize(obj interface{}) string {
 	objMap, err := StructToMap(obj)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return ""
 	}
 	str, err := json.Marshal(objMap)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return ""
 	}
 	return string(str)
@@ -85,19 +85,19 @@ func StructSerialize(obj interface{}) string {
 func StructSerializePretty(obj interface{}) string {
 	objMap, err := StructToMap(obj)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return ""
 	}
 	input, err := json.Marshal(objMap)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return ""
 	}
 	var out bytes.Buffer
 	err = json.Indent(&out, input, "", "\t")
 
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return string(out.String())
 }
@@ -106,7 +106,7 @@ func StructSerializePretty(obj interface{}) string {
 func Serialize(obj interface{}) string {
 	str, err := json.Marshal(obj)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return string(str)
 }
@@ -115,13 +115,13 @@ func Serialize(obj interface{}) string {
 func SerializePretty(obj interface{}) string {
 	input, err := json.Marshal(obj)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	var out bytes.Buffer
 	err = json.Indent(&out, input, "", "\t")
 
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return string(out.String())
 }
@@ -130,7 +130,7 @@ func Deserialize(jsonStr string) interface{} {
 	var dat interface{}
 	err := json.Unmarshal([]byte(jsonStr), &dat)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return dat
 }
@@ -145,7 +145,7 @@ func TypeToString(name interface{}) string {
 
 	value, ok := name.(string)
 	if !ok {
-		log.Fatal("Type conversion error")
+		logs.Error("Type conversion error")
 	}
 	return value
 }
@@ -160,7 +160,7 @@ func TypeToInt(name interface{}) int {
 
 	value, ok := name.(int)
 	if !ok {
-		log.Fatal("Type conversion error")
+		logs.Error("Type conversion error")
 	}
 	return value
 }
@@ -175,7 +175,7 @@ func TypeToFloat32(name interface{}) float32 {
 
 	value, ok := name.(float32)
 	if !ok {
-		log.Fatal("Type conversion error")
+		logs.Error("Type conversion error")
 	}
 	return value
 }
@@ -190,7 +190,7 @@ func TypeToFloat64(name interface{}) float64 {
 
 	value, ok := name.(float64)
 	if !ok {
-		log.Fatal("Type conversion error")
+		logs.Error("Type conversion error")
 	}
 	return value
 }
@@ -205,7 +205,7 @@ func TypeToMap(name interface{}) map[interface{}]interface{} {
 
 	value, ok := name.(map[interface{}]interface{})
 	if !ok {
-		log.Fatal("Type conversion error")
+		logs.Error("Type conversion error")
 	}
 	return value
 }

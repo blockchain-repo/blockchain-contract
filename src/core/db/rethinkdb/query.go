@@ -2,19 +2,19 @@ package rethinkdb
 
 import (
 	"fmt"
-	"log"
-
 	"errors"
-	"unicontract/src/common"
 
+	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
+
+	"unicontract/src/common"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Get(id).Run(session)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return res
 }
@@ -23,7 +23,7 @@ func Insert(db string, name string, jsonstr string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Insert(r.JSON(jsonstr)).RunWrite(session)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return res
 }
@@ -32,7 +32,7 @@ func Update(db string, name string, id string, jsonstr string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Get(id).Update(r.JSON(jsonstr)).RunWrite(session)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return res
 }
@@ -41,7 +41,7 @@ func Delete(db string, name string, id string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Get(id).Delete().RunWrite(session)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	return res
 }
@@ -301,7 +301,7 @@ func GetContractTasksByContractId(contractId string) (string, error) {
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return "", err
 	}
 	return common.Serialize(blo), nil
@@ -358,7 +358,7 @@ func GetConsensusFailuresByConsensusId(consensusId string) (string, error) {
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return "", err
 	}
 	return common.Serialize(blo), nil
@@ -371,12 +371,12 @@ func GetAllRecords(db string, name string) ([]string, error) {
 	session := ConnectDB(db)
 	ids, err := r.Table(name).Field("id").Run(session)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	var idlist []string
 	err = ids.All(&idlist)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 		return nil, errors.New(err.Error())
 	}
 	return idlist, nil

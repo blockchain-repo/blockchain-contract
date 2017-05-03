@@ -3,11 +3,12 @@ package common
 import (
 	"bytes"
 	"encoding/hex"
+	"hash"
+
 	"github.com/btcsuite/btcutil/base58"
 	"golang.org/x/crypto/ed25519"
 	"golang.org/x/crypto/sha3"
-	"hash"
-	"log"
+	"github.com/astaxie/beego/logs"
 )
 
 func HashData(val string) string {
@@ -24,7 +25,7 @@ func HashData(val string) string {
 func GenerateKeyPair() (string, string) {
 	publicKeyBytes, privateKeyBytes, err := ed25519.GenerateKey(nil)
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	publicKeyBase58 := base58.Encode(publicKeyBytes)
 	privateKeyBase58 := base58.Encode(privateKeyBytes[0:32])
@@ -35,7 +36,7 @@ func GetPubByPriv(priv string) string {
 	privByte := base58.Decode(priv)
 	publicKeyBytes, _, err := ed25519.GenerateKey(bytes.NewReader(privByte))
 	if err != nil {
-		log.Fatalf(err.Error())
+		logs.Error(err.Error())
 	}
 	publicKeyBase58 := base58.Encode(publicKeyBytes)
 	return publicKeyBase58

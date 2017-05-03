@@ -1,7 +1,7 @@
 package rethinkdb
 
 import (
-	"log"
+	"github.com/astaxie/beego/logs"
 
 	r "gopkg.in/gorethink/gorethink.v3"
 )
@@ -22,7 +22,7 @@ func Connect() *r.Session { // FIXME: GetSession?
 	})
 
 	if err != nil {
-		log.Fatalln(err.Error())
+		logs.Error(err.Error())
 	}
 	return session
 }
@@ -44,7 +44,7 @@ func ConnectDB(dbname string) *r.Session { // FIXME: GetSession?
 	})
 
 	if err != nil {
-		log.Fatalln(err.Error())
+		logs.Error(err.Error())
 	}
 	return session
 }
