@@ -1,10 +1,8 @@
 package pipelines
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
-	"io"
 	"os"
 
 	"github.com/astaxie/beego/logs"
@@ -16,9 +14,18 @@ import (
 	"unicontract/src/common/monitor"
 )
 
-func cvChangefeed(in io.Reader, out io.Writer) {
+const (
+	_CVTHREADNUM = 10
+)
+var (
+	cvPool     *ThreadPool
+	cvInput  chan string
+	cvOutput chan string
+)
+
+func cvChangefeed() {
 	var value interface{}
-	res := r.Changefeed("Unicontract", "Contracts")
+	res := r.Changefeed(r.DBNAME, r.TABLE_CONTRACTS)
 	for res.Next(&value) {
 		time := monitor.Monitor.NewTiming()
 		m := value.(map[string]interface{})
@@ -31,25 +38,22 @@ func cvChangefeed(in io.Reader, out io.Writer) {
 			continue
 		}
 		logs.Debug("-------cvChangefeed:",common.Serialize(m))
-		out.Write(v)
+		cvInput <- string(v)
 
 		time.Send("contrant_changefeed")
 	}
 }
 
-func cvValidateContract(in io.Reader, out io.Writer) {
-
-	rd := bufio.NewReader(in)
-	p := make([]byte, MaxSizeTX)
+func cvValidateContract() error {
+	defer close(cvOutput)
 	for {
-		n, _ := rd.Read(p)
 		time := monitor.Monitor.NewTiming()
-		if n == 0 {
-			continue
+		t, ok := <-cvInput
+		if !ok {
+			break
 		}
-		t := p[:n]
 		mod := model.ContractModel{}
-		err := json.Unmarshal(t,&mod)
+		err := json.Unmarshal([]byte(t),&mod)
 		if err != nil {
 			logs.Error(err.Error())
 			continue
@@ -64,74 +68,103 @@ func cvValidateContract(in io.Reader, out io.Writer) {
 		}
 		v.VoteBody.VoteFor = mod.Id
 		logs.Debug("-------cvValidateContract:",common.Serialize(v))
-		out.Write([]byte(v.ToString()))
 
-		time.Send("cv_validate_contract")
-	}
-}
-
-func cvVote(in io.Reader, out io.Writer) {
-
-	rd := bufio.NewReader(in)
-	p := make([]byte, MaxSizeTX)
-	for {
-		n, _ := rd.Read(p)
-		time := monitor.Monitor.NewTiming()
-		if n == 0 {
-			continue
-		}
-		t := p[:n]
-		v :=model.Vote{}
-		err := json.Unmarshal(t,&v)
-		if err != nil {
-			logs.Error(err.Error())
-			continue
-		}
 		v.NodePubkey = config.Config.Keypair.PublicKey
 		v.VoteBody.Timestamp = common.GenTimestamp()
 		v.VoteBody.VoteType = "Contract"
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
 
-		logs.Debug("-------cvVote:",common.Serialize(v))
-		out.Write([]byte(v.ToString()))
+		logs.Debug("-------cvWriteVote:",common.Serialize(v))
+		res :=r.Insert("Unicontract", "Votes", v.ToString())
+
+		cvOutput <- common.Serialize(res)
 
 		time.Send("cv_validate_contract")
 	}
+	return nil
 }
 
-func cvWriteVote(in io.Reader, out io.Writer) {
 
-	rd := bufio.NewReader(in)
-	p := make([]byte, MaxSizeTX)
-	for {
-		n, _ := rd.Read(p)
-		time := monitor.Monitor.NewTiming()
-		if n == 0 {
-			continue
-		}
-		t := p[:n]
-		res :=r.Insert("Unicontract", "Votes", string(t))
-
-		logs.Debug("-------cvWriteVote:",common.Serialize(res))
-		out.Write(nil)
-
-		time.Send("cv_vote_contract")
-	}
-}
 
 func startContractVote() {
+	defer cvPool.Stop()
+	defer close(cvInput)
 
-	p := Pipe(
-		cvChangefeed,
-		cvValidateContract,
-		cvVote,
-		cvWriteVote)
+	cvInput = make(chan string, _INPUTLEN)
+	cvOutput = make(chan string, _OUTPUTLEN)
 
-	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
-	if err != nil {
-		logs.Error(err.Error())
+	cvPool = new(ThreadPool)
+	cvPool.Init(_CVTHREADNUM)
+
+	for i := 0; i < _CVTHREADNUM; i++ {
+		cvPool.AddTask(func() error {
+			return cvValidateContract()
+		})
 	}
-	w := bufio.NewWriter(f)
-	p(nil, w)
+
+	go cvPool.Start()
+	go cvChangefeed()
+
+	for {
+		if out, ok := <-cvOutput; ok {
+			f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
+			if err != nil {
+				logs.Error(err.Error())
+			}
+			f.Write([]byte(out))
+		} else {
+			break
+		}
+	}
 }
+
+//func cvVote(in io.Reader, out io.Writer) {
+//
+//	rd := bufio.NewReader(in)
+//	p := make([]byte, MaxSizeTX)
+//	for {
+//		n, _ := rd.Read(p)
+//		time := monitor.Monitor.NewTiming()
+//		if n == 0 {
+//			continue
+//		}
+//		t := p[:n]
+//		v :=model.Vote{}
+//		err := json.Unmarshal(t,&v)
+//		if err != nil {
+//			logs.Error(err.Error())
+//			continue
+//		}
+//		v.NodePubkey = config.Config.Keypair.PublicKey
+//		v.VoteBody.Timestamp = common.GenTimestamp()
+//		v.VoteBody.VoteType = "Contract"
+//		v.Id = v.GenerateId()
+//		v.Signature = v.SignVote()
+//
+//		logs.Debug("-------cvVote:",common.Serialize(v))
+//		out.Write([]byte(v.ToString()))
+//
+//		time.Send("cv_validate_contract")
+//	}
+//}
+//
+//func cvWriteVote(in io.Reader, out io.Writer) {
+//
+//	rd := bufio.NewReader(in)
+//	p := make([]byte, MaxSizeTX)
+//	for {
+//		n, _ := rd.Read(p)
+//		time := monitor.Monitor.NewTiming()
+//		if n == 0 {
+//			continue
+//		}
+//		t := p[:n]
+//		res :=r.Insert("Unicontract", "Votes", string(t))
+//
+//		logs.Debug("-------cvWriteVote:",common.Serialize(res))
+//		out.Write(nil)
+//
+//		time.Send("cv_vote_contract")
+//	}
+//}
