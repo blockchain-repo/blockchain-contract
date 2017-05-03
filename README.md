@@ -5,7 +5,7 @@
 2. mkdir -p go/src && cd go/src
 2. git clone https://git.oschina.net/uni-ledger/unicontract.git
 4. cd unicontract &&./build.sh init && . ~/.bashrc
-5. go run main.go
+5. go run main.go start
 
 ### Project Contents
 ```

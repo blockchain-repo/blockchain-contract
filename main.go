@@ -19,7 +19,6 @@ func main() {
 	logInit()
 
 	argsCount := len(os.Args)
-
 	if argsCount ==2 && os.Args[1] == "start" {
 		runStart()
 	} else if argsCount ==2 && os.Args[1] == "initdb" {
@@ -42,7 +41,7 @@ func main() {
 		runHelp()
 	} else {
 		logs.Error("cmd should be " +
-			"unicontract start|initdb|dropdb|reconfigdb $shards $replicas|config")
+			"unicontract start|initdb|dropdb|reconfigdb $shards $replicas|config|help")
 		os.Exit(2)
 	}
 }
@@ -59,28 +58,23 @@ func runStart() {
 }
 
 func runInitDB() {
-	//TODO
 	rethinkdb.InitDatabase()
 }
 
 func runDropDB() {
-	//TODO
 	rethinkdb.DropDatabase()
 }
 func runReconfigDB(shards int,replicas int) {
-	//TODO
 	rethinkdb.Reconfig(shards,replicas)
 }
 
 func runConfig() {
-	//TODO
 	config.WriteConToFile()
 }
 
 func runHelp() {
-	//TODO
 	logs.Info("cmd should be " +
-		"unicontract start|initdb|dropdb|reconfigdb $shards $replicas|config")
+		"unicontract start|initdb|dropdb|reconfigdb $shards $replicas|config|help")
 }
 
 func logInit() {
