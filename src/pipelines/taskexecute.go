@@ -41,26 +41,29 @@ func _TaskExecute() {
 			continue
 		}
 
-		// TODO 调用执行机接口进行load和start，根据返回结果决定后续操作
-		if true { // TODO 执行成功
+		contractData := responseResult.Data.(string)
+		go func(data string) {
+			// TODO 调用执行机接口进行load和start，根据返回结果决定后续操作
+			if true { // TODO 执行成功
 
-		} else { // TODO 执行失败
-			err = rethinkdb.SetTaskScheduleSend(strContractID)
-			if err != nil {
-				beegoLog.Error(err)
-				continue
-			}
+			} else { // TODO 执行失败
+				err = rethinkdb.SetTaskScheduleSend(strContractID)
+				if err != nil {
+					beegoLog.Error(err)
+					return
+				}
 
-			failedCount, err := rethinkdb.SetTaskScheduleFailedCount(strContractID)
-			if err != nil {
-				beegoLog.Error(err)
-				continue
-			}
+				failedCount, err := rethinkdb.SetTaskScheduleFailedCount(strContractID)
+				if err != nil {
+					beegoLog.Error(err)
+					return
+				}
 
-			if failedCount >= _THRESHOLD {
-				// TODO 执行失败次数超过阈值，要进行处理
+				if failedCount >= _THRESHOLD {
+					// TODO 执行失败次数超过阈值，要进行处理
+				}
 			}
-		}
+		}(contractData)
 	}
 }
 
