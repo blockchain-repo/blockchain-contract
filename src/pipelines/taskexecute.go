@@ -1,6 +1,8 @@
 // taskexecute
 package pipelines
 
+// 从任务待执行队列（gchTaskQueue）中取任务，然后放入执行机执行
+
 import (
 	"fmt"
 	"sync"
