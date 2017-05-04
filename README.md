@@ -1,13 +1,14 @@
 # unicontract
 
 ### Quick Start
-1. sudo apt-get install git
-2. mkdir -p go/src && cd go/src
-2. git clone https://git.oschina.net/uni-ledger/unicontract.git
-4. cd unicontract &&./build.sh init && . ~/.bashrc
-5. go run main.go config
-6. go run main.go initdb
-7. go run main.go start
+1. sudo apt-get update
+2. sudo apt-get install git
+3. mkdir -p go/src && cd go/src
+4. git clone https://git.oschina.net/uni-ledger/unicontract.git
+5. cd unicontract &&./build.sh init && . ~/.bashrc
+6. go run main.go config
+7. go run main.go initdb
+8. go run main.go start
 
 
 ### Project Contents
