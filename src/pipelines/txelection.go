@@ -4,18 +4,19 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"os"
-	"errors"
 
+	"unicontract/src/chain"
+	"unicontract/src/common/monitor"
+	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
-	"unicontract/src/chain"
-	"unicontract/src/config"
-	"unicontract/src/common/monitor"
+
+	//	"unicontract/src/common"
 
 	"github.com/astaxie/beego/logs"
-	"unicontract/src/common"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
@@ -34,36 +35,36 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 		if bytes.Equal(v, []byte("null")) {
 			continue
 		}
-		logs.Info("txeChangefeed result : %s",v)
+		logs.Info("txeChangefeed result : %s", v)
 		out.Write(v)
 		time.Send("contractOutputs_changefeed")
 	}
 }
 
-func txeHeadFilter(in io.Reader, out io.Writer){
+func txeHeadFilter(in io.Reader, out io.Writer) {
 
 	rd := bufio.NewReader(in)
 	p := make([]byte, MaxSizeTX)
 	for {
 
 		n, _ := rd.Read(p)
-		logs.Info(" txElection step2 : head filter",)
+		logs.Info(" txElection step2 : head filter")
 		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
 		t := p[:n]
 		conout := model.ContractOutput{}
-		err := json.Unmarshal(t,&conout)
+		err := json.Unmarshal(t, &conout)
 		if err != nil {
 			logs.Error(err.Error())
 			continue
 		}
 		//main node filter
-		mainNodeKey  := conout.Transaction.ContractModel.ContractHead.MainPubkey
+		mainNodeKey := conout.Transaction.ContractModel.ContractHead.MainPubkey
 		myNodeKey := config.Config.Keypair.PublicKey
 		if mainNodeKey != myNodeKey {
-			logs.Info("I am not the mainnode of the C-output %s",conout.Id)
+			logs.Info("I am not the mainnode of the C-output %s", conout.Id)
 			continue
 		}
 		out.Write(t)
@@ -86,7 +87,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 		}
 		t := p[:n]
 		coModel := model.ContractOutput{}
-		err := json.Unmarshal(t,&coModel)
+		err := json.Unmarshal(t, &coModel)
 		if err != nil {
 			logs.Error(err.Error())
 			continue
@@ -101,7 +102,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 			logs.Error(errors.New("invalid hash"))
 			continue
 		}
-		if coModel.Transaction.Operation == "CONTRACT"{
+		if coModel.Transaction.Operation == "CONTRACT" {
 			//TODO ValidateVote  no-need-tood
 			//if !coModel.ValidateVote(){
 			//	logs.Error(errors.New("invalid vote"))
@@ -135,17 +136,17 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 		}
 		t := p[:n]
 		coModel := model.ContractOutput{}
-		err := json.Unmarshal(t,&coModel)
+		err := json.Unmarshal(t, &coModel)
 		if err != nil {
 			logs.Error(err.Error())
 			continue
 		}
 		//check whether already exist
 		id := coModel.Id
-		result,err := chain.GetContractTx("{'id':"+id+"}")
-		if err != nil{
+		result, err := chain.GetContractTx("{'id':" + id + "}")
+		if err != nil {
 			logs.Error(err.Error())
-		}else {
+		} else {
 			if result.Code != 200 {
 				logs.Error(errors.New("request send failed"))
 			}
@@ -177,36 +178,31 @@ func txeSend(in io.Reader, out io.Writer) {
 		t := p[:n]
 		//write the contract to the taskschedule
 		coModel := model.ContractOutput{}
-		err := json.Unmarshal(t,&coModel)
+		err := json.Unmarshal(t, &coModel)
 		if err != nil {
 			logs.Error(err.Error())
 			continue
 		}
 		var taskSchedule model.TaskSchedule
-		taskSchedule.Id = common.GenerateUUID()
 		taskSchedule.ContractId = coModel.Transaction.ContractModel.ContractBody.ContractId
-		taskSchedule.NodePubkey = coModel.Transaction.ContractModel.ContractHead.MainPubkey
 		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
 		taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
 
-		slJson, _ := json.Marshal(taskSchedule)
-		strTaskSchedule := string(slJson)
-		err = r.InsertTaskSchedule(strTaskSchedule)
+		err = InsertTaskSchedule(taskSchedule)
 		if err != nil {
-			logs.Error("not pass, return err is \" %s \"\n", err.Error())
-		} else {
-			logs.Info("pass\n")
+			logs.Error("err is \" %s \"\n", err.Error())
 		}
+
 		//write the contractoutput to unichain.
-		result,err:= chain.CreateContractTx(t)
-		if err != nil{
+		result, err := chain.CreateContractTx(t)
+		if err != nil {
 			logs.Error(err.Error())
-			SaveOutputErrorData(_TableNameSendFailingRecords,t)
+			SaveOutputErrorData(_TableNameSendFailingRecords, t)
 			continue
 		}
 		if result.Code != 200 {
 			logs.Error(errors.New("request send failed"))
-			SaveOutputErrorData(_TableNameSendFailingRecords,t)
+			SaveOutputErrorData(_TableNameSendFailingRecords, t)
 		}
 		out.Write(t)
 
@@ -222,7 +218,7 @@ func starttxElection() {
 		txeValidate,
 		txeQueryEists,
 		txeSend,
-		)
+	)
 
 	f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 	if err != nil {

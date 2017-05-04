@@ -17,6 +17,7 @@ import (
 	"unicontract/src/core/model"
 )
 
+//---------------------------------------------------------------------------
 const (
 	_TASKQUEUELEN = 20
 	_THRESHOLD    = 50
@@ -27,10 +28,20 @@ var (
 	gwgTaskExe   sync.WaitGroup
 )
 
+//---------------------------------------------------------------------------
 func init() {
 	gchTaskQueue = make(chan model.TaskSchedule, _TASKQUEUELEN)
 }
 
+//---------------------------------------------------------------------------
+func startTaskExecute() {
+	beegoLog.Debug("TaskExecute start")
+	gwgTaskExe.Add(1)
+	go _TaskExecute()
+	gwgTaskExe.Wait()
+}
+
+//---------------------------------------------------------------------------
 func _TaskExecute() {
 	for {
 		beegoLog.Debug("wait for ContractTask ...")
@@ -83,9 +94,4 @@ func _TaskExecute() {
 	gwgTaskExe.Done()
 }
 
-func startTaskExecute() {
-	beegoLog.Debug("TaskExecute start")
-	gwgTaskExe.Add(1)
-	go _TaskExecute()
-	gwgTaskExe.Wait()
-}
+//---------------------------------------------------------------------------

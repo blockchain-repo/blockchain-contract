@@ -1,6 +1,8 @@
 // scantaskschedule
 package pipelines
 
+// 扫描任务待执行表（TaskSchedule），过滤出表内属于本节点的任务，放入任务待执行队列（gchTaskQueue）
+
 import (
 	"encoding/json"
 	"sync"
@@ -12,11 +14,13 @@ import (
 )
 
 import (
+	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 )
 
+//---------------------------------------------------------------------------
 const (
 	_SLEEPTIME = 30 // 单位是秒
 )
@@ -25,6 +29,15 @@ var (
 	gwgScan sync.WaitGroup
 )
 
+//---------------------------------------------------------------------------
+func startScanTaskSchedule() {
+	beegoLog.Debug("ScanTaskSchedule start")
+	gwgScan.Add(1)
+	go _ScanTaskSchedule()
+	gwgScan.Wait()
+}
+
+//---------------------------------------------------------------------------
 func _ScanTaskSchedule() {
 	for {
 		start := time.Now()
@@ -73,15 +86,37 @@ func _ScanTaskSchedule() {
 	gwgScan.Done()
 }
 
+//---------------------------------------------------------------------------
 func _SendToList(task model.TaskSchedule) bool {
 	beegoLog.Debug("contract [%s] enter queue", task.ContractId)
 	gchTaskQueue <- task
 	return true
 }
 
-func startScanTaskSchedule() {
-	beegoLog.Debug("ScanTaskSchedule start")
-	gwgScan.Add(1)
-	go _ScanTaskSchedule()
-	gwgScan.Wait()
+//---------------------------------------------------------------------------
+// 根据公钥环为每个节点插入带执行任务
+func InsertTaskSchedule(taskScheduleBase model.TaskSchedule) error {
+	var err error
+	allPublicKeys := config.GetAllPublicKey()
+	for index, _ := range allPublicKeys {
+		var taskSchedule model.TaskSchedule
+		taskSchedule.Id = common.GenerateUUID()
+		taskSchedule.ContractId = taskScheduleBase.ContractId
+		taskSchedule.NodePubkey = allPublicKeys[index]
+		taskSchedule.StartTime = taskScheduleBase.StartTime
+		taskSchedule.EndTime = taskScheduleBase.EndTime
+		taskSchedule.FailedCount = 0
+		taskSchedule.SendFlag = 0
+
+		slJson, _ := json.Marshal(taskSchedule)
+		err = rethinkdb.InsertTaskSchedule(string(slJson))
+		if err != nil {
+			beegoLog.Error("insert [%s] TaskSchedule is error, error is %s",
+				taskScheduleBase.ContractId, err.Error())
+			break
+		}
+	}
+	return err
 }
+
+//---------------------------------------------------------------------------
