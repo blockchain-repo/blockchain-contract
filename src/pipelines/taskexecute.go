@@ -68,7 +68,12 @@ func _TaskExecute() {
 		beegoLog.Debug("contract execute")
 		contractData := responseResult.Data.(string)
 		go func(data string) {
-			// TODO 调用执行机接口进行load和start，根据返回结果决定后续操作
+			// TODO 调用执行机接口进行load和start，返回结果分为三种：
+			//  1：整个合约执行成功
+			//  0：合约中某个步骤没有达到执行条件
+			// -1：合约中某个步骤执行失败
+
+			/* 以下修改数据库的部分挪到执行机内部操作
 			ret := false
 			if ret { // TODO 执行成功
 				beegoLog.Debug("execute success")
@@ -89,7 +94,7 @@ func _TaskExecute() {
 				if failedCount >= _THRESHOLD {
 					// TODO 执行失败次数超过阈值，要进行处理
 				}
-			}
+			}*/
 		}(contractData)
 	}
 

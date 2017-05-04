@@ -501,7 +501,7 @@ func Test_SetTaskScheduleSend(t *testing.T) {
 
 	//test 2
 	t.Logf("test strID is not null\n")
-	strID = "25291a3d-4082-4c83-998a-bc2db59dcd82"
+	strID = "5fe080cf-66ed-4595-ac1a-fb42f47c2c82"
 	err = SetTaskScheduleSend(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -524,7 +524,7 @@ func Test_SetTaskScheduleNoSend(t *testing.T) {
 
 	//test 2
 	t.Logf("test strID is not null\n")
-	strID = "6c522be7-37c7-4469-9a34-81ea41c316f6"
+	strID = "5fe080cf-66ed-4595-ac1a-fb42f47c2c82"
 	err = SetTaskScheduleNoSend(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -547,12 +547,35 @@ func Test_SetTaskScheduleFailedCount(t *testing.T) {
 
 	//test 2
 	t.Logf("test strID is not null\n")
-	strID = "1f61074b-d178-42ca-a32f-19ac1b495136"
+	strID = "5fe080cf-66ed-4595-ac1a-fb42f47c2c82"
 	failedCount, err = SetTaskScheduleFailedCount(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
 		t.Logf("pass, failedCount is %d\n", failedCount)
+	}
+}
+
+func Test_SetTaskScheduleSuccessCount(t *testing.T) {
+	var strID string
+
+	//test 1
+	t.Logf("test strID is null\n")
+	failedCount, err := SetTaskScheduleSuccessCount(strID)
+	if err != nil {
+		t.Logf("pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Errorf("not pass\n")
+	}
+
+	//test 2
+	t.Logf("test strID is not null\n")
+	strID = "5fe080cf-66ed-4595-ac1a-fb42f47c2c82"
+	failedCount, err = SetTaskScheduleSuccessCount(strID)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass, successCount is %d\n", failedCount)
 	}
 }
 

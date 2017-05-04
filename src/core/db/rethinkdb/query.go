@@ -397,6 +397,7 @@ func InsertTaskSchedule(strTaskSchedule string) error {
 	}
 }
 
+//---------------------------------------------------------------------------
 func GetTaskSchedules(strNodePubkey string) (string, error) {
 	if len(strNodePubkey) == 0 {
 		return "", fmt.Errorf("strNodePubkey is null")
@@ -426,33 +427,37 @@ func GetTaskSchedules(strNodePubkey string) (string, error) {
 	return common.Serialize(tasks), nil
 }
 
-func SetTaskScheduleSend(strID string) error {
+//---------------------------------------------------------------------------
+func _SetTaskScheduleFlag(strID string, alreadySend bool) error {
 	if len(strID) == 0 {
 		return fmt.Errorf("strID is null")
 	}
 
-	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, "{\"SendFlag\":1}")
+	var strJSON string
+	if alreadySend {
+		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}", 1, common.GenTimestamp())
+	} else {
+		strJSON = fmt.Sprintf("{\"SendFlag\":%d}", 0)
+	}
+
+	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if res.Replaced|res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
 	}
+}
+
+func SetTaskScheduleSend(strID string) error {
+	return _SetTaskScheduleFlag(strID, true)
 }
 
 func SetTaskScheduleNoSend(strID string) error {
-	if len(strID) == 0 {
-		return fmt.Errorf("strID is null")
-	}
-
-	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, "{\"SendFlag\":0}")
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
+	return _SetTaskScheduleFlag(strID, false)
 }
 
-func SetTaskScheduleFailedCount(strID string) (int, error) {
+//---------------------------------------------------------------------------
+func _SetTaskScheduleCount(strID string, success bool) (int, error) {
 	if len(strID) == 0 {
 		return -1, fmt.Errorf("strID is null")
 	}
@@ -477,13 +482,35 @@ func SetTaskScheduleFailedCount(strID string) (int, error) {
 	failedCount := tasks["FailedCount"].(float64)
 	failedCount += 1
 
-	res1 := Update(DBNAME, TABLE_TASK_SCHEDULE, strID,
-		fmt.Sprintf("{\"FailedCount\":%f}", failedCount))
+	successCount := tasks["SuccessCount"].(float64)
+	successCount += 1
+
+	var strJSON string
+	if success {
+		strJSON = fmt.Sprintf("{\"SuccessCount\":%f}", successCount)
+	} else {
+		strJSON = fmt.Sprintf("{\"FailedCount\":%f}", failedCount)
+	}
+
+	res1 := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if res1.Replaced|res1.Unchanged >= 1 {
-		return int(failedCount), nil
+		if success {
+			return int(successCount), nil
+		} else {
+			return int(failedCount), nil
+		}
+
 	} else {
 		return -1, fmt.Errorf("update failed")
 	}
+}
+
+func SetTaskScheduleFailedCount(strID string) (int, error) {
+	return _SetTaskScheduleCount(strID, false)
+}
+
+func SetTaskScheduleSuccessCount(strID string) (int, error) {
+	return _SetTaskScheduleCount(strID, true)
 }
 
 /*----------------------------- TaskSchedule end---------------------------------------*/
