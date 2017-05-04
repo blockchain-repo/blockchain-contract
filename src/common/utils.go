@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/astaxie/beego/logs"
 	"math/rand"
 	"strconv"
 	"time"
+
 	"unicontract/src/common/basic"
+
+	"github.com/google/uuid"
+	"github.com/astaxie/beego/logs"
 )
 
 func GenDate() string {

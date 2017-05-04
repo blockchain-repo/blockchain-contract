@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/astaxie/beego/logs"
-
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/common/monitor"
+
+	"github.com/astaxie/beego/logs"
 )
 
 const (
