@@ -3,6 +3,7 @@ package pipelines
 
 import (
 	"fmt"
+	"sync"
 )
 
 import (
@@ -11,49 +12,62 @@ import (
 
 import (
 	"unicontract/src/chain"
+	//"unicontract/src/common/requestHandler"
 	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/model"
 )
 
 const (
-	_TASKLISTLEN = 20
-	_THRESHOLD   = 50
+	_TASKQUEUELEN = 20
+	_THRESHOLD    = 50
 )
 
 var (
-	gchTaskListID chan string
+	gchTaskQueue chan model.TaskSchedule
+	gwgTaskExe   sync.WaitGroup
 )
 
 func init() {
-	gchTaskListID = make(chan string, _TASKLISTLEN)
+	gchTaskQueue = make(chan model.TaskSchedule, _TASKQUEUELEN)
 }
 
 func _TaskExecute() {
 	for {
-		strContractID, ok := <-gchTaskListID
+		beegoLog.Debug("wait for ContractTask ...")
+		strContractTask, ok := <-gchTaskQueue
 		if !ok {
 			break
 		}
+		beegoLog.Debug("get ContractTask")
 
-		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractID)
+		beegoLog.Debug("query contract base on contractId")
+		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractTask.ContractId)
 		responseResult, err := chain.GetContract(jsonBody)
 		if err != nil {
 			beegoLog.Error(err)
+			err := rethinkdb.SetTaskScheduleNoSend(strContractTask.Id)
+			if err != nil {
+				beegoLog.Error(err)
+			}
 			continue
 		}
 
+		beegoLog.Debug("contract execute")
 		contractData := responseResult.Data.(string)
 		go func(data string) {
 			// TODO 调用执行机接口进行load和start，根据返回结果决定后续操作
-			if true { // TODO 执行成功
-
+			ret := false
+			if ret { // TODO 执行成功
+				beegoLog.Debug("execute success")
 			} else { // TODO 执行失败
-				err = rethinkdb.SetTaskScheduleSend(strContractID)
+				beegoLog.Debug("execute failed")
+				err := rethinkdb.SetTaskScheduleNoSend(strContractTask.Id)
 				if err != nil {
 					beegoLog.Error(err)
 					return
 				}
 
-				failedCount, err := rethinkdb.SetTaskScheduleFailedCount(strContractID)
+				failedCount, err := rethinkdb.SetTaskScheduleFailedCount(strContractTask.Id)
 				if err != nil {
 					beegoLog.Error(err)
 					return
@@ -65,8 +79,13 @@ func _TaskExecute() {
 			}
 		}(contractData)
 	}
+
+	gwgTaskExe.Done()
 }
 
 func startTaskExecute() {
+	beegoLog.Debug("TaskExecute start")
+	gwgTaskExe.Add(1)
 	go _TaskExecute()
+	gwgTaskExe.Wait()
 }

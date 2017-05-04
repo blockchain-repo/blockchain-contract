@@ -3,6 +3,7 @@ package pipelines
 
 import (
 	"encoding/json"
+	"sync"
 	"time"
 )
 
@@ -20,6 +21,10 @@ const (
 	_SLEEPTIME = 30 // 单位是秒
 )
 
+var (
+	gwgScan sync.WaitGroup
+)
+
 func _ScanTaskSchedule() {
 	for {
 		start := time.Now()
@@ -30,7 +35,11 @@ func _ScanTaskSchedule() {
 		retStr, err := rethinkdb.GetTaskSchedules(strNodePubkey)
 		if err != nil {
 			beegoLog.Error(err.Error())
-			// TODO error handle
+			goto CONSUME
+		}
+
+		if len(retStr) == 0 {
+			beegoLog.Debug("query result is null")
 			goto CONSUME
 		}
 
@@ -45,11 +54,10 @@ func _ScanTaskSchedule() {
 		beegoLog.Debug("handle task")
 		for _, value := range slTasks {
 			beegoLog.Debug("send task")
-			if _SendToList(value.ContractId) {
+			if _SendToList(value) {
 				err = rethinkdb.SetTaskScheduleSend(value.Id)
 				if err != nil {
 					beegoLog.Error(err.Error())
-					// TODO error handle
 					goto CONSUME
 				}
 			}
@@ -57,17 +65,23 @@ func _ScanTaskSchedule() {
 
 	CONSUME:
 		consume := time.Since(start)
-		if consume < _SLEEPTIME {
-			time.Sleep((_SLEEPTIME - consume) * time.Second)
+		if consume.Seconds() < float64(_SLEEPTIME) {
+			time.Sleep((time.Duration(float64(_SLEEPTIME) - consume.Seconds())) * time.Second)
 		}
 	}
+
+	gwgScan.Done()
 }
 
-func _SendToList(strContractID string) bool {
-	gchTaskListID <- strContractID
+func _SendToList(task model.TaskSchedule) bool {
+	beegoLog.Debug("contract [%s] enter queue", task.ContractId)
+	gchTaskQueue <- task
 	return true
 }
 
 func startScanTaskSchedule() {
+	beegoLog.Debug("ScanTaskSchedule start")
+	gwgScan.Add(1)
 	go _ScanTaskSchedule()
+	gwgScan.Wait()
 }

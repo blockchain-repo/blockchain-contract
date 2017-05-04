@@ -13,6 +13,10 @@ import (
 	"github.com/astaxie/beego"
 )
 
+func init() {
+	config.Init()
+}
+
 func Test_Get(t *testing.T) {
 	res := Get("Unicontract", "Contracts", "123151f1ddassd")
 	var blo map[string]interface{}
@@ -44,7 +48,6 @@ func Test_Delete(t *testing.T) {
 
 /*----------------------------- contracts start---------------------------------------*/
 func Test_InsertContractStruct(t *testing.T) {
-	config.Init()
 	//create new obj
 	contractModel := model.ContractModel{}
 	//TODO
@@ -134,7 +137,6 @@ func Test_GetContractMainPubkeyByContract(t *testing.T) {
 
 /*----------------------------- votes start---------------------------------------*/
 func Test_InsertVote(t *testing.T) {
-	config.Init()
 	vote := model.Vote{}
 
 	vote.NodePubkey = config.Config.Keypair.PublicKey
@@ -522,7 +524,7 @@ func Test_SetTaskScheduleNoSend(t *testing.T) {
 
 	//test 2
 	t.Logf("test strID is not null\n")
-	strID = "25291a3d-4082-4c83-998a-bc2db59dcd82"
+	strID = "6c522be7-37c7-4469-9a34-81ea41c316f6"
 	err = SetTaskScheduleNoSend(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
