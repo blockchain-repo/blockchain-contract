@@ -2,9 +2,9 @@ package model
 
 import (
 	"encoding/json"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/common"
 	"unicontract/src/config"
-	"github.com/astaxie/beego/logs"
 )
 
 // An Asset is a fungible unit to spend and lock with Transactions
@@ -16,10 +16,9 @@ type Asset struct {
 	Updatable  bool        `json:"updatable"`
 }
 
-
 type Metadata struct {
-	Id   string      `json:"id"`
-	Data interface{} `json:"data"`
+	Id   string                 `json:"id"`
+	Data map[string]interface{} `json:"data"`
 }
 
 // 合约&交易关系信息
@@ -37,15 +36,15 @@ type Transaction struct {
 	Metadata      *Metadata         `json:"metadata"`
 	Operation     string            `json:"operation"`
 	Timestamp     string            `json:"timestamp"`
-	Relation     *Relation		`json:"Relation"`
-	ContractModel ContractModel `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
+	Relation      *Relation         `json:"Relation"`
+	ContractModel ContractModel     `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
 }
 
 // table [ContractOutputs]
 type ContractOutput struct {
-	Id          string      `json:"id,omitempty"`          //ContractOutput.Id
-	Transaction Transaction `json:"transaction"` //ContractOutput.Transaction
-	Version     int16       `json:"version"`     //ContractOutput.Version
+	Id          string      `json:"id,omitempty"` //ContractOutput.Id
+	Transaction Transaction `json:"transaction"`  //ContractOutput.Transaction
+	Version     int         `json:"version"`      //ContractOutput.Version
 }
 
 func (c *ContractOutput) ToString() string {
@@ -79,11 +78,12 @@ func (c *ContractOutput) GenerateId() string {
 	return common.HashData(serializeStr)
 }
 
-func (c *ContractOutput) RemoveSignature(){
-	for _,fulfillment := range c.Transaction.Fulfillments {
+func (c *ContractOutput) RemoveSignature() {
+	for _, fulfillment := range c.Transaction.Fulfillments {
 		fulfillment.Fulfillment = nil
 	}
 }
+
 // judge has enough votes for ContractOutput
 func (c *ContractOutput) HasEnoughVotes() bool {
 	voters := c.Transaction.Relation.Voters
@@ -168,7 +168,7 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		if operation == "CONTRACT" {
 			signData = common.StructSerialize(vote.VoteBody)
 		} else {
-			signData= vote.VoteBody.VoteFor
+			signData = vote.VoteBody.VoteFor
 		}
 		//logs.Info("signData:",signData)
 		if common.Verify(nodePubkey, signData, nodeVoteSignature) {
@@ -180,4 +180,37 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		return false
 	}
 	return true
+}
+
+/*
+type Transaction struct {
+	Asset         *Asset            `json:"asset"`
+	Conditions    []*ConditionsItem `json:"conditions"`
+	Fulfillments  []*Fulfillment    `json:"fulfillments"`
+	Metadata      *Metadata         `json:"metadata"`
+	Operation     string            `json:"operation"`
+	Timestamp     string            `json:"timestamp"`
+	Relation     *Relation		`json:"Relation"`
+	ContractModel ContractModel `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
+}
+*/
+
+func GenerateConOutput(operation string, asset Asset, inputs []*Fulfillment, outputs []*ConditionsItem, metadata Metadata, timestamp string, version int, relation Relation, contract ContractModel) ContractOutput {
+	tx := Transaction{
+		Asset:         &asset,
+		Conditions:    outputs,
+		Fulfillments:  inputs,
+		Metadata:      &metadata,
+		Operation:     operation,
+		Timestamp:     timestamp,
+		Relation:      &relation,
+		ContractModel: contract,
+	}
+	contractOutput := ContractOutput{
+		Transaction: tx,
+		Version:     version,
+	}
+	conOutId := contractOutput.GenerateId()
+	contractOutput.Id = conOutId
+	return contractOutput
 }

@@ -7,20 +7,28 @@ import (
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
 	"unicontract/src/config"
+	"fmt"
+	"unicontract/src/core/db/rethinkdb"
 )
 
 func Test_createTx(t *testing.T) {
+	config.Init()
 	tx_signers := []string{
-		"","",
+		"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",
 	}
 	recipients := [][2]interface{}{
-		{"aaa",1},{"bbb",2},
+		{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",300},
 	}
 
-
+	tempMap := make(map[string]interface{})
+	tempMap["a"] = "1"
+	tempMap["c"] = "3"
+	tempMap["b"] = "2"
+	tempMap["A"] = "4"
+	tempMap["6"] = map[string]string{"QQQQ":"9999"}
 	metadata := model.Metadata{
 		Id:"meta-data-id",
-		Data:"",
+		Data:tempMap,
 	}
 	asset := model.Asset{}
 
@@ -75,9 +83,11 @@ func Test_createTx(t *testing.T) {
 		},
 	}
 
-	version := 2
-	output := Create(tx_signers, recipients, metadata, asset, relation, contract, version)
+	output := Create(tx_signers, recipients, metadata, asset, relation, contract)
+	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
+	b :=rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	fmt.Println(b)
 }
 
 func Test_transferTx(t *testing.T) {

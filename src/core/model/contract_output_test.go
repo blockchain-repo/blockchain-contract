@@ -9,7 +9,7 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 )
 
-func GenerateOutput() string {
+func GenerateOutputTest() string {
 
 	contractOutput := ContractOutput{}
 	contractOutput.Version = 2
@@ -189,7 +189,7 @@ func GenerateOutput() string {
 }
 
 func Test_InserContractOutput(t *testing.T){
-	str := GenerateOutput()
+	str := GenerateOutputTest()
 	b :=rethinkdb.InsertContractOutput(str)
 	fmt.Println(b)
 }
