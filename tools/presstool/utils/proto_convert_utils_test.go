@@ -13,7 +13,7 @@ import (
 func Test_ReadJsonFromFile(t *testing.T) {
 	file, _ := os.Getwd()
 	//fmt.Println("current path:", file)
-	file = GetParentDirectory(file) + "/data/contract_pb2.json"
+	file = GetParentDirectory(file) + "/data/pb.json"
 
 	contractProto, err := ReadJsonToContractProto(file)
 	if err != nil {
@@ -49,6 +49,7 @@ func Test_ReadJsonToContractProtoSerialize(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
+
 
 	ioutil.WriteFile(byteFile, contractProtoSerialize, 0644)
 	fmt.Println("contractProtoSerialize", contractProtoSerialize)

@@ -4,7 +4,7 @@ function usage(){
     echo -e "Usage: $0 \$1 \$2 \$3"
     echo -e "\t\t \$1 每秒发送的压力大小"
     echo -e "\t\t \$2 统计阶段  压力持续时间 s"
-    echo -e "\t\t \$3 client(>=20)"
+    echo -e "\t\t \$3 client(>=0)"
     return 0
 }
 
@@ -58,8 +58,8 @@ function send_read(){
     local s_state=$1
     local s_range=$2
     local s_client=$3
-    if [[ $s_client -le 20  ]]; then
-        ((s_client = 20))
+    if [[ $s_client -le 0  ]]; then
+        ((s_client = 1))
     fi
     local s_loop_info=`get_req_loop_info $send_press`
     local s_loop=`echo "$s_loop_info"|awk -F"," '{print $1}'`

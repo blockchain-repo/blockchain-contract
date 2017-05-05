@@ -465,7 +465,7 @@ func (c *ContractController) PressTest() {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
 		return
 	}
-
+	//logs.Warn("Input contractDeserialize:\n", common.StructSerialize(contract))
 	contractModel := fromContractToContractModel(*contract)
 	/*-------------------------- this for press test generate Id start---------------------*/
 	// add random string

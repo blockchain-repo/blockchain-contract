@@ -41,6 +41,6 @@ func GenerateOutput(cid int, isFeeze bool, pub string, amount int) *ConditionsIt
 		OwnersAfter: []string{pub},
 		Isfreeze:    isFeeze,
 	}
-
 	return output
 }
+
