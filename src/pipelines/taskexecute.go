@@ -6,6 +6,7 @@ package pipelines
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 import (
@@ -23,6 +24,7 @@ import (
 const (
 	_TASKQUEUELEN = 20
 	_THRESHOLD    = 50
+	_CLEANTIME    = 30 // 单位是分钟
 )
 
 var (
@@ -106,7 +108,11 @@ func _TaskExecute() {
 //---------------------------------------------------------------------------
 func _CleanData() {
 	for {
-		// TODO 进行数据清理
+		ticker := time.NewTicker(time.Minute * _CLEANTIME)
+		select {
+		case <-ticker.C:
+			// TODO 进行数据清理
+		}
 	}
 	gwgTaskExe.Done()
 }
