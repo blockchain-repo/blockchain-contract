@@ -414,6 +414,22 @@ func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
 }
 
 
+func GetUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,error){
+	beegoLog.Debug(" begin invoking GetUnspentTxs Api")
+	yamlName := "unichainApiConf.yaml"
+	apiName := "GetUnspentTxs"
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		beegoLog.Debug("request finish....")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+}
+
 
 
 
