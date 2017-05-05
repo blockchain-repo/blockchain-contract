@@ -21,7 +21,7 @@ type ConditionsItem struct {
 	Isfreeze    bool       `json:"isfreeze"`
 }
 
-func GenerateOutput(cid int, isFeeze bool, pub string, amount int) *ConditionsItem {
+func (c *ConditionsItem)GenerateOutput(cid int, isFeeze bool, pub string, amount int) {
 	condetails := ConditionDetails{
 		Bitmask:   32,
 		PublicKey: pub,
@@ -31,16 +31,14 @@ func GenerateOutput(cid int, isFeeze bool, pub string, amount int) *ConditionsIt
 	}
 	cond := Condition{
 		Details: &condetails,
-		Uri:     "cc:4:20:QyiypbouZCBxSfwFLpITDnKvcXdLDGmKbVeFW546VFs:96",
+		Uri:     "",
 	}
 	//cc:4:20:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1c:96
-	output := &ConditionsItem{
-		Amount:      amount,
-		Cid:         cid,
-		Condition:   &cond,
-		OwnersAfter: []string{pub},
-		Isfreeze:    isFeeze,
-	}
-	return output
+	c.Amount=amount
+	c.Cid=cid
+	c.Condition=&cond
+	c.OwnersAfter=[]string{pub}
+	c.Isfreeze=isFeeze
+
 }
 

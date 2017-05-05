@@ -17,7 +17,7 @@ func Test_createTx(t *testing.T) {
 		"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",
 	}
 	recipients := [][2]interface{}{
-		{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",300},
+		{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 300},
 	}
 
 	tempMap := make(map[string]interface{})
@@ -25,10 +25,10 @@ func Test_createTx(t *testing.T) {
 	tempMap["c"] = "3"
 	tempMap["b"] = "2"
 	tempMap["A"] = "4"
-	tempMap["6"] = map[string]string{"QQQQ":"9999"}
+	tempMap["6"] = map[string]string{"QQQQ": "9999"}
 	metadata := model.Metadata{
-		Id:"meta-data-id",
-		Data:tempMap,
+		Id:   "meta-data-id",
+		Data: tempMap,
 	}
 	asset := model.Asset{}
 
@@ -47,7 +47,7 @@ func Test_createTx(t *testing.T) {
 		CreatorTime:        "1493111926720",
 		StartTime:          "1493111926730",
 		EndTime:            "1493111926740",
-		ContractOwners:     []string{"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443","4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy","9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",},
+		ContractOwners:     []string{"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443", "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy", "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ", },
 		ContractSignatures: nil,
 		ContractAssets:     contractAsset,
 		ContractComponents: contractComponent,
@@ -74,23 +74,40 @@ func Test_createTx(t *testing.T) {
 	contract.ContractBody = contractBody
 	contract.Id = common.HashData(common.StructSerialize(contractBody))
 
-
-	relation :=  model.Relation{
+	relation := model.Relation{
 		ContractId: contract.Id,
 		TaskId:     "task-id-123456789",
 		Voters: []string{
-			config.Config.Keypair.PublicKey, config.Config.Keypair.PublicKey, config.Config.Keypair.PublicKey,
+			config.Config.Keypair.PublicKey,
 		},
 	}
 
 	output := Create(tx_signers, recipients, metadata, asset, relation, contract)
 	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
-	b :=rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
 
 func Test_transferTx(t *testing.T) {
+	ownerbefore := "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
+	recipients := [][2]interface{}{
+		[2]interface{}{"EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", 100},
+	}
+	metadata := model.Metadata{}
+	asset := GetAsset(ownerbefore)
+	contract:= GetContract()
+	relation := GenerateRElation()
 
+	Transfer("FREEZE", ownerbefore, recipients, metadata, asset, relation, contract)
+	Transfer("TRANSFER", ownerbefore, recipients, metadata, asset, relation, contract)
+	Transfer("UNFREEZ", ownerbefore, recipients, metadata, asset, relation, contract)
 }
 
+func Test_GetUnspent(t *testing.T) {
+	config.Init()
+	//pubkey := config.Config.Keypair.PublicKey
+	inps, bal := GetUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
+	logs.Info(inps)
+	logs.Info(bal)
+}

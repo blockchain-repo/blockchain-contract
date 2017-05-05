@@ -74,7 +74,7 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Timestamp = ""
 	temp.RemoveSignature()
 	serializeStr := common.StructSerialize(temp)
-
+	//logs.Info("before-sign--",serializeStr)
 	return common.HashData(serializeStr)
 }
 
@@ -195,7 +195,7 @@ type Transaction struct {
 }
 */
 
-func GenerateConOutput(operation string, asset Asset, inputs []*Fulfillment, outputs []*ConditionsItem, metadata Metadata, timestamp string, version int, relation Relation, contract ContractModel) ContractOutput {
+func (c *ContractOutput)GenerateConOutput(operation string, asset Asset, inputs []*Fulfillment, outputs []*ConditionsItem, metadata Metadata, timestamp string, version int, relation Relation, contract ContractModel) {
 	tx := Transaction{
 		Asset:         &asset,
 		Conditions:    outputs,
@@ -206,11 +206,8 @@ func GenerateConOutput(operation string, asset Asset, inputs []*Fulfillment, out
 		Relation:      &relation,
 		ContractModel: contract,
 	}
-	contractOutput := ContractOutput{
-		Transaction: tx,
-		Version:     version,
-	}
-	conOutId := contractOutput.GenerateId()
-	contractOutput.Id = conOutId
-	return contractOutput
+	c.Transaction = tx
+	c.Version = version
+	conOutId := c.GenerateId()
+	c.Id = conOutId
 }
