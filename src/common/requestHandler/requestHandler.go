@@ -62,7 +62,10 @@ func RequestHandler(requestParam *RequestParam) (string,int){
  */
 func _Get(requestParam *RequestParam) (string,int) {
 
-	request := httplib.Get(requestParam.URL)
+	url := common.TypeToString(requestParam.URL)
+	param := common.TypeToString(requestParam.JsonBody)
+	url = url + "?" + param
+	request := httplib.Get(url)
 
 	return _GetResponse(request)
 }
