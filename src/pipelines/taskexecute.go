@@ -40,6 +40,8 @@ func startTaskExecute() {
 	beegoLog.Debug("TaskExecute start")
 	gwgTaskExe.Add(1)
 	go _TaskExecute()
+	gwgTaskExe.Add(1)
+	go _CleanData()
 	gwgTaskExe.Wait()
 }
 
@@ -98,6 +100,14 @@ func _TaskExecute() {
 		}(contractData)
 	}
 
+	gwgTaskExe.Done()
+}
+
+//---------------------------------------------------------------------------
+func _CleanData() {
+	for {
+		// TODO 进行数据清理
+	}
 	gwgTaskExe.Done()
 }
 
