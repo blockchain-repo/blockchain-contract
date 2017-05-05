@@ -154,7 +154,7 @@ func NewLogger(channelLens ...int64) *BeeLogger {
 	return bl
 }
 
-func init(){
+func init() {
 	SetLogFuncCall(true)
 	SetLogFuncCallDepth(3)
 }
@@ -287,7 +287,7 @@ func (bl *BeeLogger) writeMsg(logLevel int, msg string, v ...interface{}) error 
 		unicontractPos := strings.Index(dir, unicontractKeyWord)
 		if unicontractPos > 0 {
 			msg = "[" + dir[unicontractPos:] + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
-		}else{
+		} else {
 			msg = "[" + dir + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
 		}
 	}

@@ -2,6 +2,8 @@ package basic
 
 import (
 	"github.com/astaxie/beego/logs"
+	"os"
+	"path"
 )
 
 // logs.AdapterFile
@@ -96,6 +98,25 @@ func NewMyBeegoLogAdapterMultiFile(myBeego *MyBeegoLogAdapterMultiFile) *MyBeego
 	if myBeego.FileName != "" {
 		filename = myBeego.FileName
 	}
+	// create filepath if not exist!
+	var sepator string
+	if os.IsPathSeparator('\\') {  //前边的判断是否是系统的分隔符
+		sepator = "\\"
+	} else {
+		sepator = "/"
+	}
+	log_dir := path.Dir(filename)
+	_, err := os.Stat(log_dir)
+	if err != nil{
+		err := os.Mkdir(log_dir + sepator , os.ModePerm)
+		if err != nil {
+			logs.Error("create log dir error!", err)
+		}else{
+			logs.Info("API log dir", log_dir, " create success!")
+		}
+
+	}
+	logs.Info("API log will store in dir", log_dir)
 
 	if myBeego.MaxLines >= 0 {
 		maxlines = myBeego.MaxLines

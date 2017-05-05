@@ -301,8 +301,6 @@ func (c *ContractController) Query() {
 	}
 
 	contractModelStr, err := rethinkdb.GetContractById(contract.Id)
-	logs.Warn(contractModelStr)
-
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contract.Id + ")查询错误: ")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
@@ -454,7 +452,6 @@ func (c *ContractController) PressTest() {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
 		return
 	}
-
 
 	if token == "" {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")

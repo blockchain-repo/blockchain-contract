@@ -1,21 +1,22 @@
 package main
 
 import (
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"os"
 	"strconv"
-
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common"
 	"unicontract/src/common/basic"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/pipelines"
-
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
 )
 
 func main() {
+	//beego.BConfig.EnableGzip = true
+	beego.LoadAppConfig("ini", "../conf/app.conf")
+	// logInit must following the beego.LoadAppConfig
 	logInit()
 
 	argsCount := len(os.Args)
@@ -47,8 +48,6 @@ func main() {
 }
 
 func runStart() {
-	beego.LoadAppConfig("ini", "../conf/app.conf")
-
 	config.Init()
 	logs.Info("config Init")
 	pipelines.Init()
@@ -95,7 +94,7 @@ func logInit() {
 	//beego.BeeLogger.DelLogger("console")
 
 	myBeegoLogAdapterMultiFile := &basic.MyBeegoLogAdapterMultiFile{}
-	myBeegoLogAdapterMultiFile.FileName = "unicontract.log"
+	myBeegoLogAdapterMultiFile.FileName = "../log/unicontract.log"
 	//var levelPrefix = [LevelDebug + 1]string{"[M] ", "[A] ", "[C] ", "[E] ", "[W] ", "[N] ", "[I] ", "[D] "}
 	myBeegoLogAdapterMultiFile.Level = 7
 	myBeegoLogAdapterMultiFile.MaxDays = 10
@@ -109,16 +108,13 @@ func logInit() {
 
 	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
 	log_config_str := common.Serialize(log_config)
-	//logs.Info("beego log config: ", log_config_str)
+	logs.Info("beego log config: ", log_config_str)
 
 	// order 顺序必须按照
 	// 1. logs.SetLevel(level)
 	// 2. logs.SetLogger(logs.AdapterMultiFile, log_config_str)
 	logs.SetLevel(logs.LevelDebug)
 	//logs.SetLevel(logs.LevelInfo)
-	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
+	beego.SetLogger(logs.AdapterMultiFile, log_config_str)
 
-	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"unicontract.log","level":7,
-	//"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,
-	//"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
 }

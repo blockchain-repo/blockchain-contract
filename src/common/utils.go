@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/logs"
+	"github.com/google/uuid"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
-
 	"unicontract/src/common/basic"
-
-	"github.com/google/uuid"
-	"github.com/astaxie/beego/logs"
+	"path/filepath"
+	"os"
 )
 
 func GenDate() string {
@@ -260,4 +261,33 @@ func Try(execFunc func(), afterPanic func(interface{})) {
 func RandInt(min int, max int) int {
 	rand.Seed(time.Now().UTC().UnixNano())
 	return min + rand.Intn(max-min)
+}
+
+func substr(s string, pos, length int) string {
+	runes := []rune(s)
+	l := pos + length
+	if l > len(runes) {
+		l = len(runes)
+	}
+	return string(runes[pos:l])
+}
+
+func GetParentDirectory(dirctory string) string {
+	return substr(dirctory, 0, strings.LastIndex(dirctory, "/"))
+}
+
+func GetCurrentDirectory() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return strings.Replace(dir, "\\", "/", -1)
+}
+
+func IsExistFileOrDir(file string) bool {
+	_, err := os.Stat(file)
+	if err != nil {
+		return false
+	}
+	return true
 }

@@ -198,8 +198,10 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	return requestBody, nil
 }
 
+var default_url = "http://192.168.1.101:8088/v1/contract/"
+
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
-var default_url = "http://localhost:8088/v1/contract/"
+//var default_url = "http://localhost:8088/v1/contract/"
 
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
