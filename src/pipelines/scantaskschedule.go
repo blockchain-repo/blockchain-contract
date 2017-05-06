@@ -45,7 +45,7 @@ func _ScanTaskSchedule() {
 
 		beegoLog.Debug("query database")
 		strNodePubkey := config.Config.Keypair.PublicKey
-		retStr, err := rethinkdb.GetTaskSchedules(strNodePubkey)
+		retStr, err := rethinkdb.GetTaskSchedulesNoSend(strNodePubkey)
 		if err != nil {
 			beegoLog.Error(err.Error())
 			goto CONSUME

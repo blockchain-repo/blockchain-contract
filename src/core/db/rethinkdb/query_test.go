@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+	"time"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
@@ -449,7 +450,7 @@ func Test_InsertTaskSchedule(t *testing.T) {
 	taskSchedule.ContractId = common.GenerateUUID()
 	taskSchedule.NodePubkey = config.Config.Keypair.PublicKey
 	taskSchedule.StartTime = common.GenTimestamp()
-	taskSchedule.EndTime = "1593281188956" //common.GenTimestamp()
+	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
 
 	slJson, _ := json.Marshal(taskSchedule)
 	strTaskSchedule = string(slJson)
@@ -466,7 +467,7 @@ func Test_GetTaskSchedules(t *testing.T) {
 
 	//test 1
 	t.Logf("test strNodePubkey is null\n")
-	_, err := GetTaskSchedules(strNodePubkey)
+	_, err := GetTaskSchedulesNoSend(strNodePubkey)
 	if err != nil {
 		t.Logf("pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -476,7 +477,7 @@ func Test_GetTaskSchedules(t *testing.T) {
 	//test 2
 	t.Logf("test strNodePubkey is not null\n")
 	strNodePubkey = config.Config.Keypair.PublicKey
-	retStr, err := GetTaskSchedules(strNodePubkey)
+	retStr, err := GetTaskSchedulesNoSend(strNodePubkey)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -501,7 +502,7 @@ func Test_SetTaskScheduleSend(t *testing.T) {
 
 	//test 2
 	t.Logf("test strID is not null\n")
-	strID = "5fe080cf-66ed-4595-ac1a-fb42f47c2c82"
+	strID = "881768e1-6edd-4415-988b-b260694cba7d"
 	err = SetTaskScheduleSend(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -570,13 +571,37 @@ func Test_SetTaskScheduleSuccessCount(t *testing.T) {
 
 	//test 2
 	t.Logf("test strID is not null\n")
-	strID = "5fe080cf-66ed-4595-ac1a-fb42f47c2c82"
+	strID = "300e1465-6114-4183-9326-4437d5f1a6b0"
 	failedCount, err = SetTaskScheduleSuccessCount(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
 		t.Logf("pass, successCount is %d\n", failedCount)
 	}
+}
+
+func Test_DeleteTaskSchedules(t *testing.T) {
+	slID := make([]string, 0)
+	slID = append(slID, "5f492336-6a9b-43ca-9ec3-ca5057fa90e5")
+	slID = append(slID, "e7187c08-e397-4ace-a5b7-73b1143f19ba")
+	slID = append(slID, "3611899c-56d5-4d17-aefe-80f3a8cf5eb5")
+	slID = append(slID, "60adf9ff-cc74-4010-acc3-ccb4a91e650a")
+	slID = append(slID, "71c4ebeb-45da-4295-9cdc-08a8a5a6b454")
+
+	deleteNum, slerr := DeleteTaskSchedules(slID)
+	t.Logf("deleteNum is %d\n", deleteNum)
+	t.Logf("slerr is %+v\n", slerr)
+}
+
+func Test_GetTaskSchedulesSuccess(t *testing.T) {
+	str, err := GetTaskSchedulesSuccess()
+	if err != nil {
+		t.Error(err)
+	}
+
+	var slTask []model.TaskSchedule
+	json.Unmarshal([]byte(str), &slTask)
+	t.Logf("%+v\n", slTask)
 }
 
 /*----------------------------- TaskSchedule end---------------------------------------*/

@@ -398,7 +398,7 @@ func InsertTaskSchedule(strTaskSchedule string) error {
 }
 
 //---------------------------------------------------------------------------
-func GetTaskSchedules(strNodePubkey string) (string, error) {
+func GetTaskSchedulesNoSend(strNodePubkey string) (string, error) {
 	if len(strNodePubkey) == 0 {
 		return "", fmt.Errorf("strNodePubkey is null")
 	}
@@ -410,6 +410,28 @@ func GetTaskSchedules(strNodePubkey string) (string, error) {
 		Filter(r.Row.Field("StartTime").Le(now)).
 		Filter(r.Row.Field("EndTime").Ge(now)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var tasks []map[string]interface{}
+	err = res.All(&tasks)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(tasks), nil
+}
+
+//---------------------------------------------------------------------------
+func GetTaskSchedulesSuccess() (string, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("SuccessCount").Ge(1)).
 		Run(session)
 	if err != nil {
 		return "", err
@@ -511,6 +533,21 @@ func SetTaskScheduleFailedCount(strID string) (int, error) {
 
 func SetTaskScheduleSuccessCount(strID string) (int, error) {
 	return _SetTaskScheduleCount(strID, true)
+}
+
+//---------------------------------------------------------------------------
+func DeleteTaskSchedules(slID []string) (int, []error) {
+	var nDeleteNum int
+	slerr := make([]error, 0)
+	for _, value := range slID {
+		res := Delete(DBNAME, TABLE_TASK_SCHEDULE, value)
+		if res.Deleted >= 1 {
+			nDeleteNum += res.Deleted
+		} else {
+			slerr = append(slerr, fmt.Errorf(value))
+		}
+	}
+	return nDeleteNum, slerr
 }
 
 /*----------------------------- TaskSchedule end---------------------------------------*/
