@@ -599,9 +599,13 @@ func Test_GetTaskSchedulesSuccess(t *testing.T) {
 		t.Error(err)
 	}
 
-	var slTask []model.TaskSchedule
-	json.Unmarshal([]byte(str), &slTask)
-	t.Logf("%+v\n", slTask)
+	if len(str) == 0 {
+		t.Logf("is null\n")
+	} else {
+		var slTask []model.TaskSchedule
+		json.Unmarshal([]byte(str), &slTask)
+		t.Logf("%+v\n", slTask)
+	}
 }
 
 /*----------------------------- TaskSchedule end---------------------------------------*/

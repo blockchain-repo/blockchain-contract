@@ -538,7 +538,7 @@ func SetTaskScheduleSuccessCount(strID string) (int, error) {
 //---------------------------------------------------------------------------
 func DeleteTaskSchedules(slID []string) (int, []error) {
 	var nDeleteNum int
-	slerr := make([]error, 0)
+	var slerr []error
 	for _, value := range slID {
 		res := Delete(DBNAME, TABLE_TASK_SCHEDULE, value)
 		if res.Deleted >= 1 {

@@ -1,17 +1,19 @@
 // scantaskschedule_test
-package pipelines
+package taskexecute
 
 import (
+	"strconv"
 	"testing"
+	"time"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
 )
 
-func Test_startScanTaskSchedule(t *testing.T) {
+func Test_Start(t *testing.T) {
 	config.Init()
-	go startTaskExecute()
-	startScanTaskSchedule()
+
+	Start()
 }
 
 func Test_InsertTaskSchedule(t *testing.T) {
@@ -20,7 +22,7 @@ func Test_InsertTaskSchedule(t *testing.T) {
 	var taskSchedule model.TaskSchedule
 	taskSchedule.ContractId = common.GenerateUUID()
 	taskSchedule.StartTime = common.GenTimestamp()
-	taskSchedule.EndTime = common.GenTimestamp()
+	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
 
 	err := InsertTaskSchedule(taskSchedule)
 	if err != nil {

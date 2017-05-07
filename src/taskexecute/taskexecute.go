@@ -1,12 +1,10 @@
 // taskexecute
-package pipelines
+package taskexecute
 
 // 从任务待执行队列（gchTaskQueue）中取任务，然后放入执行机执行
 
 import (
 	"fmt"
-	"sync"
-	"time"
 )
 
 import (
@@ -17,35 +15,7 @@ import (
 	"unicontract/src/chain"
 	//"unicontract/src/common/requestHandler"
 	"unicontract/src/core/db/rethinkdb"
-	"unicontract/src/core/model"
 )
-
-//---------------------------------------------------------------------------
-const (
-	_TASKQUEUELEN = 20
-	_THRESHOLD    = 50
-	_CLEANTIME    = 30 // 单位是分钟
-)
-
-var (
-	gchTaskQueue chan model.TaskSchedule
-	gwgTaskExe   sync.WaitGroup
-)
-
-//---------------------------------------------------------------------------
-func init() {
-	gchTaskQueue = make(chan model.TaskSchedule, _TASKQUEUELEN)
-}
-
-//---------------------------------------------------------------------------
-func startTaskExecute() {
-	beegoLog.Debug("TaskExecute start")
-	gwgTaskExe.Add(1)
-	go _TaskExecute()
-	gwgTaskExe.Add(1)
-	go _CleanData()
-	gwgTaskExe.Wait()
-}
 
 //---------------------------------------------------------------------------
 func _TaskExecute() {
@@ -102,18 +72,6 @@ func _TaskExecute() {
 		}(contractData)
 	}
 
-	gwgTaskExe.Done()
-}
-
-//---------------------------------------------------------------------------
-func _CleanData() {
-	for {
-		ticker := time.NewTicker(time.Minute * _CLEANTIME)
-		select {
-		case <-ticker.C:
-			// TODO 进行数据清理
-		}
-	}
 	gwgTaskExe.Done()
 }
 
