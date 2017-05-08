@@ -1,6 +1,7 @@
 package rethinkdb
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -8,6 +9,7 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 
 	"unicontract/src/common"
+	"unicontract/src/core/model"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -383,12 +385,9 @@ func GetAllRecords(db string, name string) ([]string, error) {
 
 /*----------------------------- SendFailingRecords end---------------------------------------*/
 
-/*----------------------------- TaskSchedule start---------------------------------------*/
+/*TaskSchedule start-------------------------------------------------------*/
+// 插入一个nodepublickey的task方法
 func InsertTaskSchedule(strTaskSchedule string) error {
-	if len(strTaskSchedule) == 0 {
-		return fmt.Errorf("strTaskSchedule is null")
-	}
-
 	res := Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
 	if res.Inserted >= 1 {
 		return nil
@@ -398,9 +397,228 @@ func InsertTaskSchedule(strTaskSchedule string) error {
 }
 
 //---------------------------------------------------------------------------
+// 根据nodePubkey和contractID获得表内ID
+func _GetID(strNodePubkey, strContractID string) (string, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("ContractId").Eq(strContractID)).
+		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var tasks map[string]interface{}
+	err = res.One(&tasks)
+	if err != nil {
+		return "", err
+	}
+
+	return tasks["id"].(string), nil
+}
+
+//---------------------------------------------------------------------------
+// 根据ID获取starttime和endtime
+func _GetValidTime(strID string) (string, string, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("id").Eq(strID)).
+		Run(session)
+	if err != nil {
+		return "", "", err
+	}
+
+	if res.IsNil() {
+		return "", "", nil
+	}
+
+	var tasks map[string]interface{}
+	err = res.One(&tasks)
+	if err != nil {
+		return "", "", err
+	}
+
+	return tasks["StartTime"].(string), tasks["EndTime"].(string), nil
+}
+
+//---------------------------------------------------------------------------
+// 设置SendFlag字段，发送为1,未发送为0
+func _SetTaskScheduleFlag(strID string, alreadySend bool) error {
+	var send int
+	if alreadySend {
+		send = 1
+	} else {
+		send = 0
+	}
+	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+		send, common.GenTimestamp())
+
+	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
+	}
+}
+
+//---------------------------------------------------------------------------
+// 设置FailedCount(或者SuccessCount)字段加一
+func _SetTaskScheduleCount(strID string, success bool) (int, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("id").Eq(strID)).Run(session)
+	if err != nil {
+		return -1, err
+	}
+
+	if res.IsNil() {
+		return -1, fmt.Errorf("set is null")
+	}
+
+	var tasks map[string]interface{}
+	err = res.One(&tasks)
+	if err != nil {
+		return -1, err
+	}
+
+	failedCount := tasks["FailedCount"].(float64)
+	failedCount += 1
+
+	successCount := tasks["SuccessCount"].(float64)
+	successCount += 1
+
+	var strJSON string
+	if success {
+		strJSON = fmt.Sprintf("{\"SuccessCount\":%f,\"LastExecuteTime\":\"%s\"}",
+			successCount, common.GenTimestamp())
+	} else {
+		strJSON = fmt.Sprintf("{\"FailedCount\":%f,\"LastExecuteTime\":\"%s\"}",
+			failedCount, common.GenTimestamp())
+	}
+
+	res1 := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	if res1.Replaced|res1.Unchanged >= 1 {
+		if success {
+			return int(successCount), nil
+		} else {
+			return int(failedCount), nil
+		}
+
+	} else {
+		return -1, fmt.Errorf("update failed")
+	}
+}
+
+//---------------------------------------------------------------------------
+// 设置发送标志为“已发送”，在将任务插入待执行队列后调用
+func UpdateMonitorSend(strID string) error {
+	if len(strID) == 0 {
+		return fmt.Errorf("id is null")
+	}
+	return _SetTaskScheduleFlag(strID, true)
+}
+
+//---------------------------------------------------------------------------
+// 执行失败：1.更新strContractID 的SendFlag = 0, FailedCount + 1, LastExecuteTime
+// 返回FailedCount(或者SuccessCount)和error
+func UpdateMonitorFail(strNodePubkey, strContractID string) (int, error) {
+	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
+		return -1, fmt.Errorf("pubkey or contractid is null")
+	}
+
+	strID, err := _GetID(strNodePubkey, strContractID)
+	if err != nil {
+		return -1, err
+	}
+
+	if len(strID) == 0 {
+		return -1, fmt.Errorf("not find")
+	}
+
+	err = _SetTaskScheduleFlag(strID, false)
+	if err != nil {
+		return -1, err
+	}
+
+	return _SetTaskScheduleCount(strID, false)
+}
+
+//---------------------------------------------------------------------------
+// 执行条件不满足：1.更新strNodePubkey  的SendFlag = 0, LastExecuteTime
+func UpdateMonitorWait(strNodePubkey, strContractID string) error {
+	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
+		return fmt.Errorf("pubkey or contractid is null")
+	}
+
+	strID, err := _GetID(strNodePubkey, strContractID)
+	if err != nil {
+		return err
+	}
+
+	if len(strID) == 0 {
+		return fmt.Errorf("not find")
+	}
+
+	return _SetTaskScheduleFlag(strID, false)
+}
+
+//---------------------------------------------------------------------------
+// 执行成功：1.更新strContractIDold 的SendFlag=1, SuccessCount + 1, LastExecuteTime
+//         2.将strContractIDnew 插入到扫描监控表中
+func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string) error {
+	if len(strNodePubkey) == 0 ||
+		len(strContractIDold) == 0 ||
+		len(strContractIDnew) == 0 {
+		return fmt.Errorf("pubkey or contractid is null")
+	}
+
+	strID, err := _GetID(strNodePubkey, strContractIDold)
+	if err != nil {
+		return err
+	}
+
+	if len(strID) == 0 {
+		return fmt.Errorf("old contract id not find")
+	}
+
+	err = _SetTaskScheduleFlag(strID, true)
+	if err != nil {
+		return err
+	}
+
+	_, err = _SetTaskScheduleCount(strID, true)
+	if err != nil {
+		return err
+	}
+
+	startTime, endTime, err := _GetValidTime(strID)
+	if err != nil {
+		return err
+	}
+
+	if len(startTime) == 0 || len(endTime) == 0 {
+		return fmt.Errorf("old contract valid time not find")
+	}
+
+	var taskSchedule model.TaskSchedule
+	taskSchedule.Id = common.GenerateUUID()
+	taskSchedule.ContractId = strContractIDnew
+	taskSchedule.NodePubkey = strNodePubkey
+	taskSchedule.StartTime = startTime
+	taskSchedule.EndTime = endTime
+	slJson, _ := json.Marshal(taskSchedule)
+	return InsertTaskSchedule(string(slJson))
+}
+
+//---------------------------------------------------------------------------
+// 获取所有未发送的任务，用于放在待执行队列中
 func GetTaskSchedulesNoSend(strNodePubkey string) (string, error) {
 	if len(strNodePubkey) == 0 {
-		return "", fmt.Errorf("strNodePubkey is null")
+		return "", fmt.Errorf("pubkey is null")
 	}
 
 	now := common.GenTimestamp()
@@ -428,10 +646,16 @@ func GetTaskSchedulesNoSend(strNodePubkey string) (string, error) {
 }
 
 //---------------------------------------------------------------------------
-func GetTaskSchedulesSuccess() (string, error) {
+// 获取已经执行成功后的任务，用于清理数据
+func GetTaskSchedulesSuccess(strNodePubkey string) (string, error) {
+	if len(strNodePubkey) == 0 {
+		return "", fmt.Errorf("pubkey is null")
+	}
+
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("SuccessCount").Ge(1)).
+		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
 		Run(session)
 	if err != nil {
 		return "", err
@@ -450,92 +674,7 @@ func GetTaskSchedulesSuccess() (string, error) {
 }
 
 //---------------------------------------------------------------------------
-func _SetTaskScheduleFlag(strID string, alreadySend bool) error {
-	if len(strID) == 0 {
-		return fmt.Errorf("strID is null")
-	}
-
-	var strJSON string
-	if alreadySend {
-		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}", 1, common.GenTimestamp())
-	} else {
-		strJSON = fmt.Sprintf("{\"SendFlag\":%d}", 0)
-	}
-
-	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
-}
-
-func SetTaskScheduleSend(strID string) error {
-	return _SetTaskScheduleFlag(strID, true)
-}
-
-func SetTaskScheduleNoSend(strID string) error {
-	return _SetTaskScheduleFlag(strID, false)
-}
-
-//---------------------------------------------------------------------------
-func _SetTaskScheduleCount(strID string, success bool) (int, error) {
-	if len(strID) == 0 {
-		return -1, fmt.Errorf("strID is null")
-	}
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("id").Eq(strID)).Run(session)
-	if err != nil {
-		return -1, err
-	}
-
-	if res.IsNil() {
-		return -1, fmt.Errorf("set is null")
-	}
-
-	var tasks map[string]interface{}
-	err = res.One(&tasks)
-	if err != nil {
-		return -1, err
-	}
-
-	failedCount := tasks["FailedCount"].(float64)
-	failedCount += 1
-
-	successCount := tasks["SuccessCount"].(float64)
-	successCount += 1
-
-	var strJSON string
-	if success {
-		strJSON = fmt.Sprintf("{\"SuccessCount\":%f}", successCount)
-	} else {
-		strJSON = fmt.Sprintf("{\"FailedCount\":%f}", failedCount)
-	}
-
-	res1 := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res1.Replaced|res1.Unchanged >= 1 {
-		if success {
-			return int(successCount), nil
-		} else {
-			return int(failedCount), nil
-		}
-
-	} else {
-		return -1, fmt.Errorf("update failed")
-	}
-}
-
-func SetTaskScheduleFailedCount(strID string) (int, error) {
-	return _SetTaskScheduleCount(strID, false)
-}
-
-func SetTaskScheduleSuccessCount(strID string) (int, error) {
-	return _SetTaskScheduleCount(strID, true)
-}
-
-//---------------------------------------------------------------------------
+// 删除一系列id的任务
 func DeleteTaskSchedules(slID []string) (int, []error) {
 	var nDeleteNum int
 	var slerr []error
@@ -550,4 +689,4 @@ func DeleteTaskSchedules(slID []string) (int, []error) {
 	return nDeleteNum, slerr
 }
 
-/*----------------------------- TaskSchedule end---------------------------------------*/
+/*TaskSchedule end---------------------------------------------------------*/

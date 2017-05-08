@@ -1,5 +1,5 @@
 // scantaskschedule_test
-package taskexecute
+package scanengine
 
 import (
 	"strconv"
@@ -24,7 +24,7 @@ func Test_InsertTaskSchedule(t *testing.T) {
 	taskSchedule.StartTime = common.GenTimestamp()
 	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
 
-	err := InsertTaskSchedule(taskSchedule)
+	err := InsertTaskSchedules(taskSchedule)
 	if err != nil {
 		t.Error(err)
 	}

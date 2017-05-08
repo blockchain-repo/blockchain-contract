@@ -1,5 +1,14 @@
-// cleantaskschedule
-package taskexecute
+/*************************************************************************
+  > File Name: cleantaskschedule.go
+  > Module:
+  > Function: 清理数据表（TaskSchedule）中的过期或者已经执行成功的任务
+  > Author: wangyp
+  > Company:
+  > Department:
+  > Mail: wangyepeng87@163.com
+  > Created Time: 2017.05.08
+ ************************************************************************/
+package scanengine
 
 import (
 	"encoding/json"
@@ -12,6 +21,7 @@ import (
 )
 
 import (
+	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 )
@@ -24,7 +34,8 @@ func _CleanTaskSchedule() {
 		select {
 		case <-ticker.C:
 			beegoLog.Debug("query all success task")
-			strSuccessTask, err := rethinkdb.GetTaskSchedulesSuccess()
+			strSuccessTask, err :=
+				rethinkdb.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
 			if err != nil {
 				beegoLog.Error(err)
 				continue
@@ -60,10 +71,9 @@ func _CleanTaskSchedule() {
 
 //---------------------------------------------------------------------------
 func _TaskFilter(slTasks []model.TaskSchedule) []string {
-	mapID := make(map[string]int)
 	var slID []string
 
-	// 首先过滤时间点
+	// 过滤时间点
 	cleanTimePoint := time.Now().Add(-time.Hour*24*_CLEANDATATIME).UnixNano() / 1000000
 	for index, value := range slTasks {
 		nTimePoint, err := strconv.Atoi(value.LastExecuteTime)
@@ -72,14 +82,7 @@ func _TaskFilter(slTasks []model.TaskSchedule) []string {
 			continue
 		}
 		if int64(nTimePoint) < cleanTimePoint {
-			mapID[slTasks[index].ContractId]++
-		}
-	}
-
-	//再过滤某条合约的所有节点是否都执行完成
-	for index, value := range mapID {
-		if value == gnPublicKeysNum {
-			slID = append(slID, index)
+			slID = append(slID, slTasks[index].Id)
 		}
 	}
 

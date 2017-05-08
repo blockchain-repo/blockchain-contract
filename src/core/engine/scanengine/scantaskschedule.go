@@ -1,7 +1,15 @@
-// scantaskschedule
-package taskexecute
-
-// 扫描任务待执行表（TaskSchedule），过滤出表内属于本节点的任务，放入任务待执行队列（gchTaskQueue）
+/*************************************************************************
+  > File Name: scantaskschedule.go
+  > Module:
+  > Function: 扫描任务待执行表（TaskSchedule），过滤出表内属于本节点的任务，
+              放入任务待执行队列（gchTaskQueue）
+  > Author: wangyp
+  > Company:
+  > Department:
+  > Mail: wangyepeng87@163.com
+  > Created Time: 2017.05.08
+ ************************************************************************/
+package scanengine
 
 import (
 	"encoding/json"
@@ -44,7 +52,7 @@ func _ScanTaskSchedule() {
 		for _, value := range slTasks {
 			beegoLog.Debug("contract [%s] enter queue", value)
 			gchTaskQueue <- value
-			err = rethinkdb.SetTaskScheduleSend(value.Id)
+			err = rethinkdb.UpdateMonitorSend(value.Id)
 			if err != nil {
 				beegoLog.Error(err.Error())
 				goto CONSUME
