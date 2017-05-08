@@ -1,0 +1,192 @@
+{
+  "ContractId": "xxxxxxxxxxxxxxxxxxxxx",
+  "Cname": "contract_mobilecallback",
+  "Caption": "购智能手机返话费合约产品协议",
+  "Description": "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后，要求用户每月消费58元以上通信费，移动运营商B便可按月返还话费（即：每月1号返还移动用户A20元话费），连续返还12个月",
+  "MetaAttribute": {
+    "Test1": "aaaaaa",
+    "Test2": "bbbbbb"
+  },
+  "Creator": "ABCDEFGHIJKLMNIPQRSTUVWXYZ",
+  "CreatorTime": "2016-12-20 12:00:00",
+  "StartTime": "2017-01-01 12:00:00",
+  "EndTime": "2017-01-01 12:00:00",
+  "ContractOwners": [
+    "AXXXXXXXXXXX",
+    "BXXXXXXXXXXX"
+  ],
+  "ContractAssets": [
+    {
+      "AssetId": "xxxxxxxxxxx",
+      "Name": "asset_money",
+      "Caption": "理财产品",
+      "Description": "理财资产",
+      "Unit": "份",
+      "Amount": 1000,
+      "MetaData": {
+        "TestAsset1": "1111111111",
+        "TestAsset2": "2222222222"
+      }
+    }
+  ],
+  "ContractSignatures": [
+    {
+      "OwnerPubkey": "AXXXXXXXXXXX",
+      "Signature": "Axxxxxxxxxxxxxxxxxxxxxx",
+      "SignTimestamp": "1492619683"
+    },
+    {
+      "OwnerPubkey": "BXXXXXXXXXXX",
+      "Signature": "Bxxxxxxxxxxxxxxxxxxxxxx",
+      "SignTimestamp": "1492619983"
+    }
+  ],
+  "ContractComponents": [
+    {
+      "Cname": "enquiry_A",
+      "Caption": "查询用户账户",
+      "Description": "查询移动用户A账户是否有500元",
+      "Ctype": "Component_Task.Task_Enquiry",
+      "State": "TaskState_Dormant",
+      "PreCondition": [
+        {
+          "Cname": "expression_precond_A",
+          "Caption": "查询用户账户前提条件",
+          "Description": "当前日期大于等于合约生效起始日期",
+          "Ctype": "Expression_LogicArgument",
+          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "DisgardCondition": [
+        {
+          "Cname": "expression_discond_A",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Expression_LogicArgument",
+          "ExpressionStr": "true",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "CompleteCondition": [
+        {
+          "Cname": "expression_comcond_A",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Expression_LogicArgument",
+          "ExpressionStr": "expression_data_A.ExpressionResult['code']==200",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "NextTasks": [
+        "action_B",
+        "action_C"
+      ],
+      "DataValueSetterExpressionList": [
+        {
+          "Cname": "expression_data_A",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Expression_Function",
+          "ExpressionStr": "getBalance(AXXXXXXXXXX)",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "DataList": [
+        {
+          "Cname": "data_A",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Data_Float",
+          "Unit": "元",
+          "Value": "600",
+          "DefaultValue": "0",
+          "HardConvType": "float64"
+        }
+      ]
+    },
+    {
+      "Cname": "action_B",
+      "Caption": "A购置手机",
+      "Description": "移动用户A账户存在500元：用户A将500元转账给移动运营商B，运营商B将手机快递给用户A",
+      "Ctype": "Component_Task.Task_Action",
+      "State": "TaskState_Dormant",
+      "PreCondition": [
+        {
+          "Cname": "expression_precond_B",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Component_Expression.Expression_LogicArgument",
+          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&enquiry_A.data_A>500",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "DisgardCondition": [
+        {
+          "Cname": "expression_discond_B",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Component_Expression.Expression_LogicArgument",
+          "ExpressionStr": "true",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "CompleteCondition": [
+        {
+          "Cname": "expression_comcond_B",
+          "Caption": "",
+          "Description": "",
+          "Ctype": "Component_Expression.Expression_LogicArgument",
+          "ExpressionStr": "expression_data_B.ExpressionResult['code']==200",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "NextTasks": [
+        "enquiry_D"
+      ],
+      "DataValueSetterExpressionList": [
+        {
+          "Cname": "expression_data_B",
+          "Caption": "A转账500给B",
+          "Description": "用户A转账500元给移动运营商B(运营商B将手机快递给用户A,不在线上确认)",
+          "Ctype": "Component_Expression.Expression_Function",
+          "ExpressionStr": "tranferMoney(AXXXXXXXXXX,BXXXXXXXXXX,500)",
+          "ExpressionResult": {
+            "Message": "Operatesuccess.",
+            "Code": 200
+          },
+          "LogicValue": 1
+        }
+      ],
+      "DataList": []
+    }
+  ]
+}
