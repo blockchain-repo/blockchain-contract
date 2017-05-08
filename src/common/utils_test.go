@@ -124,3 +124,7 @@ func Test_Try(t *testing.T) {
 	})
 	fmt.Printf("%+v\n", err)
 }
+
+func TestGetIp(t *testing.T) {
+	fmt.Println(GetIp())
+}

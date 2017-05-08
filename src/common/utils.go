@@ -13,6 +13,7 @@ import (
 	"unicontract/src/common/basic"
 	"path/filepath"
 	"os"
+	"net"
 )
 
 func GenDate() string {
@@ -211,6 +212,33 @@ func TypeToMap(name interface{}) map[interface{}]interface{} {
 		logs.Error("Type conversion error")
 	}
 	return value
+}
+
+/**
+ * function : 获取本机回路ip
+ * param   :
+ * return : 返回string
+ */
+
+func GetIp()string {
+
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		logs.Error(err.Error())
+	}
+	ipList := make([]string,0)
+
+	for _, address := range addrs {
+		// 检查ip地址判断是否回环地址
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				ipList = append(ipList,ipnet.IP.String())
+			}
+
+		}
+	}
+	return ipList[0]
 }
 
 // UUID
