@@ -4,7 +4,6 @@ import (
 	"github.com/astaxie/beego/logs"
 
 	r "gopkg.in/gorethink/gorethink.v3"
-	"unicontract/src/common"
 )
 
 func Connect() *r.Session { // FIXME: GetSession?
@@ -17,9 +16,9 @@ func Connect() *r.Session { // FIXME: GetSession?
 			MaxOpen:    conf.DatabaseMaxOpen,
 		})
 	*/
-	ip := common.GetIp()
+
 	session, err := r.Connect(r.ConnectOpts{
-		Address: ip + ":28015",
+		Address: "localhost:28015",
 	})
 
 	if err != nil {
@@ -38,9 +37,9 @@ func ConnectDB(dbname string) *r.Session { // FIXME: GetSession?
 	           MaxOpen:    conf.DatabaseMaxOpen,
 	   })
 	*/
-	ip := common.GetIp()
+
 	session, err := r.Connect(r.ConnectOpts{
-		Address:  ip + ":28015",
+		Address:  "localhost:28015",
 		Database: dbname,
 	})
 
