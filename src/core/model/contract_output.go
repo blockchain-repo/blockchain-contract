@@ -21,13 +21,6 @@ type Metadata struct {
 	Data map[string]interface{} `json:"data"`
 }
 
-// 合约&交易关系信息
-type Relation struct {
-	ContractId string
-	TaskId     string
-	Voters     []string
-	Votes      []*Vote
-}
 
 type Transaction struct {
 	Asset         *Asset            `json:"asset"`
@@ -74,7 +67,7 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Timestamp = ""
 	temp.RemoveSignature()
 	serializeStr := common.StructSerialize(temp)
-	//logs.Info("before-sign--",serializeStr)
+	logs.Info("before-sign--",serializeStr)
 	return common.HashData(serializeStr)
 }
 

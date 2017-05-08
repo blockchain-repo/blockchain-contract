@@ -1,6 +1,6 @@
 #ip,port
-ip: "36.110.71.170"
-port: "28"
+ip: "192.168.159.101"
+port: "9984"
 
 #请求头
 head:
@@ -160,12 +160,19 @@ VoteAvgTimeByRange:
     endTime: "123"
 
 
+GetUnspentTxs:
+  method: "get"
+  path: "/uniledger/v1/condition/getUnspentTxs"
 
 
+GetFreezeUnspentTxs:
+  method: "get"
+  path: "/uniledger/v1/condition/getFreezeUnspentTx"
 
 
-
-
+GetContractById:
+  method: "post"
+  path: "/uniledger/v1/contract/getContract"
 
 
 

@@ -17,7 +17,7 @@ func Test_createTx(t *testing.T) {
 		"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",
 	}
 	recipients := [][2]interface{}{
-		{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 300},
+		{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 500},
 	}
 
 	tempMap := make(map[string]interface{})
@@ -82,26 +82,32 @@ func Test_createTx(t *testing.T) {
 		},
 	}
 
-	output := Create(tx_signers, recipients, metadata, asset, relation, contract)
+	output,_ := Create(tx_signers, recipients, metadata, asset, relation, contract)
 	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
 
-func Test_transferTx(t *testing.T) {
+func Test_FreezeTx(t *testing.T) {
+	config.Init()
 	ownerbefore := "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
 	recipients := [][2]interface{}{
-		[2]interface{}{"EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", 100},
+		[2]interface{}{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 300},
 	}
 	metadata := model.Metadata{}
 	asset := GetAsset(ownerbefore)
-	contract:= GetContract()
-	relation := GenerateRElation()
 
-	Transfer("FREEZE", ownerbefore, recipients, metadata, asset, relation, contract)
-	Transfer("TRANSFER", ownerbefore, recipients, metadata, asset, relation, contract)
-	Transfer("UNFREEZ", ownerbefore, recipients, metadata, asset, relation, contract)
+	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+
+	relation := model.Relation{}
+	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId")
+
+	output,_ := Transfer("FREEZE", ownerbefore, recipients, metadata, asset, relation, contract)
+	output = NodeSign(output)
+	logs.Info(common.StructSerialize(output))
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	fmt.Println(b)
 }
 
 func Test_GetUnspent(t *testing.T) {
@@ -110,4 +116,17 @@ func Test_GetUnspent(t *testing.T) {
 	inps, bal := GetUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
 	logs.Info(inps)
 	logs.Info(bal)
+}
+
+func Test_GetFreezespent(t *testing.T) {
+	config.Init()
+	//pubkey := config.Config.Keypair.PublicKey
+	inps, bal := GetFreezeUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
+	logs.Info(inps)
+	logs.Info(bal)
+}
+
+func Test_GetContractFromUnichain(t *testing.T) {
+	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	logs.Info(common.StructSerialize(contract))
 }

@@ -1,8 +1,8 @@
 package model
 
 type ContractOutputLink struct {
-	Cid  int
-	Txid string
+	Cid  int    `json:"cid"`
+	Txid string `json:"txid"`
 }
 
 type UnSpentOutput struct {
@@ -12,10 +12,10 @@ type UnSpentOutput struct {
 }
 
 type Fulfillment struct {
-	Fid          int              `json:"fid"`
-	OwnersBefore []string           `json:"owners_before"`
-	Fulfillment  interface{}        `json:"fulfillment"`
-	Input        ContractOutputLink `json:"input"`
+	Fid          int                 `json:"fid"`
+	OwnersBefore []string            `json:"owners_before"`
+	Fulfillment  interface{}         `json:"fulfillment"`
+	Input        *ContractOutputLink `json:"input"`
 }
 
 //only used in the `CREATE` operation. when the operation is `TRANSFER`, the `inputs` need to get from the `unichain`

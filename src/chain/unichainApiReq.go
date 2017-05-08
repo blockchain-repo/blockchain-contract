@@ -431,12 +431,38 @@ func GetUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,error){
 }
 
 
+func GetFreezeUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,error){
+	beegoLog.Debug(" begin invoking GetFreezeUnspentTxs Api")
+	yamlName := "unichainApiConf.yaml"
+	apiName := "GetFreezeUnspentTxs"
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		beegoLog.Debug("request finish....")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
+
+	return res, err
+}
 
 
+func GetContractById(jsonBody interface{})(*requestHandler.ResponseResult,error){
+	beegoLog.Debug(" begin invoking GetContractById Api")
+	yamlName := "unichainApiConf.yaml"
+	apiName := "GetContractById"
+	var res *requestHandler.ResponseResult
+	var err error
+	common.Try(func() {
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		beegoLog.Debug("request finish....")
+	}, func(e interface{}) {
+		err = errors.New("connect reflused")
+	})
 
-
-
-
+	return res, err
+}
 
 
 
