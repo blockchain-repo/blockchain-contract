@@ -21,7 +21,6 @@ type Metadata struct {
 	Data map[string]interface{} `json:"data"`
 }
 
-
 type Transaction struct {
 	Asset         *Asset            `json:"asset"`
 	Conditions    []*ConditionsItem `json:"conditions"`
@@ -67,7 +66,7 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Timestamp = ""
 	temp.RemoveSignature()
 	serializeStr := common.StructSerialize(temp)
-	logs.Info("before-sign--",serializeStr)
+	logs.Info("before-sign--", serializeStr)
 	return common.HashData(serializeStr)
 }
 
@@ -175,25 +174,17 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 	return true
 }
 
-/*
-type Transaction struct {
-	Asset         *Asset            `json:"asset"`
-	Conditions    []*ConditionsItem `json:"conditions"`
-	Fulfillments  []*Fulfillment    `json:"fulfillments"`
-	Metadata      *Metadata         `json:"metadata"`
-	Operation     string            `json:"operation"`
-	Timestamp     string            `json:"timestamp"`
-	Relation     *Relation		`json:"Relation"`
-	ContractModel ContractModel `json:"Contract"` //合约描述集合, (引用contract描述 for proto3)
-}
-*/
-
-func (c *ContractOutput)GenerateConOutput(operation string, asset Asset, inputs []*Fulfillment, outputs []*ConditionsItem, metadata Metadata, timestamp string, version int, relation Relation, contract ContractModel) {
+func (c *ContractOutput) GenerateConOutput(operation string, asset Asset, inputs []*Fulfillment, outputs []*ConditionsItem, metadata *Metadata, timestamp string, version int, relation Relation, contract ContractModel) {
+	if metadata.Data == nil {
+		metadata = nil
+	}
+	if operation == "TRANSFER" {
+	}
 	tx := Transaction{
 		Asset:         &asset,
 		Conditions:    outputs,
 		Fulfillments:  inputs,
-		Metadata:      &metadata,
+		Metadata:      metadata,
 		Operation:     operation,
 		Timestamp:     timestamp,
 		Relation:      &relation,

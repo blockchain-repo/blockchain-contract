@@ -1,13 +1,13 @@
 package transaction
 
 import (
+	"encoding/json"
+	"errors"
+	"github.com/astaxie/beego/logs"
+	"unicontract/src/chain"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
-	"unicontract/src/chain"
-	"github.com/astaxie/beego/logs"
-	"encoding/json"
-	"errors"
 )
 
 const (
@@ -23,8 +23,8 @@ const (
 var ALLOWED_OPERATIONS = [4]string{_GENESIS, _CREATE, _TRANSFER, _CONTRACT}
 
 //create asset
-func Create(tx_signers []string, recipients [][2]interface{}, metadata model.Metadata, asset model.Asset,
-	relation model.Relation, contract model.ContractModel) (model.ContractOutput,error) {
+func Create(tx_signers []string, recipients [][2]interface{}, metadata *model.Metadata, asset model.Asset,
+	relation model.Relation, contract model.ContractModel) (model.ContractOutput, error) {
 
 	isFeeze := false
 	operation := _CREATE
@@ -47,26 +47,24 @@ func Create(tx_signers []string, recipients [][2]interface{}, metadata model.Met
 
 	contractOutput := model.ContractOutput{}
 	contractOutput.GenerateConOutput(operation, asset, inputs, outputs, metadata, timestamp, version, relation, contract)
-	return contractOutput,nil
+	return contractOutput, nil
 }
 
 //transfer asset include:transfer/freeze/unfreeze
-func Transfer(operation string, ownerbefore string, recipients [][2]interface{}, metadata model.Metadata, asset model.Asset,
+func Transfer(operation string, ownerbefore string, recipients [][2]interface{}, metadata *model.Metadata, asset model.Asset,
 	relation model.Relation, contract model.ContractModel) (model.ContractOutput, error) {
 
+	contractId := contract.ContractBody.ContractId
 	isFeeze := false
 	//generate inputs
 	var inputs = []*model.Fulfillment{}
 	var balance = 0
-
+	var spentFlag = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
 	if operation == _FREEZE {
 		isFeeze = true
-		//TODO check the inputs is frozen or not ?
-
 		//generate inputs
-		inputs, balance = GetUnspent(ownerbefore)
-
-		//TODO check the owner ownerafter is the ownerbefore himself  and only one ownerafter
+		inputs, balance = GetUnfreezeUnspent(ownerbefore)
+		//TODO check the owner ownerafter is the ownerbefore himself and only one ownerafter
 
 	}
 
@@ -75,9 +73,15 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 
 	}
 	if operation == _TRANSFER {
-		//TODO `contract` can only transfer the asset which was frozzen
 		//generate inputs
-		inputs, balance = GetFreezeUnspent(ownerbefore)
+		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId)
+		if spentFlag == 0 {
+			// TODO no asset was frozen, can't transfer asset
+
+		} else if spentFlag == 2 {
+			// TODO the frozen asset had transfer, no need to do this transfer
+
+		}
 	}
 
 	//the operation in DB needs to be 'TRANSFER'
@@ -97,11 +101,16 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 		amounts += amount
 	}
 
-
 	if balance < amounts {
 		err := errors.New("not enough asset to do the operation !!!")
 		logs.Error(err)
 		return model.ContractOutput{}, err
+	} else if balance > amounts {
+		pubkey := ownerbefore
+		amount := balance - amounts
+		output := &model.ConditionsItem{}
+		output.GenerateOutput(1, false, pubkey, amount)
+		outputs = append(outputs, output)
 	}
 
 	contractOutput := model.ContractOutput{}
@@ -109,8 +118,14 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	return contractOutput, nil
 }
 
-func GetUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
-	param := "unspent=true&public_key=" + pubkey+"&contractId=1"
+// the all unspent asset include 'freeze'/'unfreeze'
+func GetAllUnspent(pubkey string, contractId string) {
+	//TODO when it needed
+}
+
+// the unspent asset only include 'unfreeze'
+func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
+	param := "unspent=true&public_key=" + pubkey
 	result, err := chain.GetUnspentTxs(param)
 	if err != nil {
 		logs.Error(err.Error())
@@ -148,12 +163,13 @@ func GetUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
 	return inputs, balance
 }
 
-func GetFreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
-	param := "unspent=true&public_key=" + pubkey+"&contractId=1"
+//the unspent asset only include 'freeze'
+func GetFrozenUnspent(pubkey string, contractId string) (inps []*model.Fulfillment, bal int, flag int) {
+	param := "unspent=true&public_key=" + pubkey + "&contract_id=" + contractId
 	result, err := chain.GetFreezeUnspentTxs(param)
 	if err != nil {
 		logs.Error(err.Error())
-		return nil, 0
+		return nil, 0, -1
 	}
 	inputs := []*model.Fulfillment{}
 	var balance int
@@ -182,23 +198,20 @@ func GetFreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
 	}
 	if result.Code != 200 {
 		logs.Error(errors.New("request send failed"))
-		return nil, 0
+		return nil, 0, -1
 	}
-	return inputs, balance
+	return inputs, balance, flag
 }
 
 func GetAsset(ownerbefore string) model.Asset {
 	asset := model.Asset{}
 	//TODO  get asset
 
-
-
-
 	return asset
 }
 
 func GetContractFromUnichain(contractId string) model.ContractModel {
-	param := `{"contract_id":"`+contractId+`"}`
+	param := `{"contract_id":"` + contractId + `"}`
 	result, err := chain.GetContractById(param)
 	if err != nil {
 		logs.Error(err.Error())
@@ -208,9 +221,9 @@ func GetContractFromUnichain(contractId string) model.ContractModel {
 
 	for index, contract := range result.Data.([]interface{}) {
 		contractStruct = model.ContractModel{}
-		contractBytes,_ := json.Marshal(contract)
+		contractBytes, _ := json.Marshal(contract)
 		json.Unmarshal(contractBytes, &contractStruct)
-		logs.Info("index=",index,"----contract=",common.StructSerialize(contractStruct))
+		logs.Info("index=", index, "----contract=", common.StructSerialize(contractStruct))
 	}
 	return contractStruct
 }

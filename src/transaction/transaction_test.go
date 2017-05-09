@@ -1,14 +1,14 @@
 package transaction
 
 import (
-	"testing"
+	"fmt"
 	"github.com/astaxie/beego/logs"
+	"testing"
 	"unicontract/src/common"
+	"unicontract/src/config"
+	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
-	"unicontract/src/config"
-	"fmt"
-	"unicontract/src/core/db/rethinkdb"
 )
 
 func Test_createTx(t *testing.T) {
@@ -47,7 +47,7 @@ func Test_createTx(t *testing.T) {
 		CreatorTime:        "1493111926720",
 		StartTime:          "1493111926730",
 		EndTime:            "1493111926740",
-		ContractOwners:     []string{"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443", "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy", "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ", },
+		ContractOwners:     []string{"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443", "4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy", "9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ"},
 		ContractSignatures: nil,
 		ContractAssets:     contractAsset,
 		ContractComponents: contractComponent,
@@ -82,7 +82,7 @@ func Test_createTx(t *testing.T) {
 		},
 	}
 
-	output,_ := Create(tx_signers, recipients, metadata, asset, relation, contract)
+	output, _ := Create(tx_signers, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
@@ -103,7 +103,7 @@ func Test_FreezeTx(t *testing.T) {
 	relation := model.Relation{}
 	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId")
 
-	output,_ := Transfer("FREEZE", ownerbefore, recipients, metadata, asset, relation, contract)
+	output, _ := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
@@ -113,15 +113,15 @@ func Test_FreezeTx(t *testing.T) {
 func Test_GetUnspent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal := GetUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
+	inps, bal := GetUnfreezeUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
 	logs.Info(inps)
 	logs.Info(bal)
 }
 
-func Test_GetFreezespent(t *testing.T) {
+func Test_GetFreezeSpent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal := GetFreezeUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
+	inps, bal,_ := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b")
 	logs.Info(inps)
 	logs.Info(bal)
 }
