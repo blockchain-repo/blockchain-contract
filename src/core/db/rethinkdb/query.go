@@ -5,11 +5,12 @@ import (
 	"errors"
 	"fmt"
 
+	"unicontract/src/common"
+	"unicontract/src/config"
+	"unicontract/src/core/model"
+
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
-
-	"unicontract/src/common"
-	"unicontract/src/core/model"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -387,7 +388,7 @@ func GetAllRecords(db string, name string) ([]string, error) {
 
 /*TaskSchedule start-------------------------------------------------------*/
 // 插入一个nodepublickey的task方法
-func InsertTaskSchedule(strTaskSchedule string) error {
+func _InsertTaskSchedule(strTaskSchedule string) error {
 	res := Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
 	if res.Inserted >= 1 {
 		return nil
@@ -611,7 +612,7 @@ func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string)
 	taskSchedule.StartTime = startTime
 	taskSchedule.EndTime = endTime
 	slJson, _ := json.Marshal(taskSchedule)
-	return InsertTaskSchedule(string(slJson))
+	return _InsertTaskSchedule(string(slJson))
 }
 
 //---------------------------------------------------------------------------
@@ -687,6 +688,32 @@ func DeleteTaskSchedules(slID []string) (int, []error) {
 		}
 	}
 	return nDeleteNum, slerr
+}
+
+//---------------------------------------------------------------------------
+// 只供头节点调用，根据公钥环为每个节点插入待执行任务
+func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
+	var err error
+	allPublicKeys := config.GetAllPublicKey()
+	for index, _ := range allPublicKeys {
+		var taskSchedule model.TaskSchedule
+		taskSchedule.Id = common.GenerateUUID()
+		taskSchedule.ContractId = taskScheduleBase.ContractId
+		taskSchedule.NodePubkey = allPublicKeys[index]
+		taskSchedule.StartTime = taskScheduleBase.StartTime
+		taskSchedule.EndTime = taskScheduleBase.EndTime
+		taskSchedule.FailedCount = 0
+		taskSchedule.SendFlag = 0
+
+		slJson, _ := json.Marshal(taskSchedule)
+		err = _InsertTaskSchedule(string(slJson))
+		if err != nil {
+			logs.Error("insert [%s] TaskSchedule is error, error is %s",
+				taskScheduleBase.ContractId, err.Error())
+			break
+		}
+	}
+	return err
 }
 
 /*TaskSchedule end---------------------------------------------------------*/

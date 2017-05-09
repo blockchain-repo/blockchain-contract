@@ -440,7 +440,7 @@ func Test_InsertTaskSchedule(t *testing.T) {
 	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
 
 	slJson, _ := json.Marshal(taskSchedule)
-	err := InsertTaskSchedule(string(slJson))
+	err := _InsertTaskSchedule(string(slJson))
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -571,6 +571,18 @@ func Test_DeleteTaskSchedules(t *testing.T) {
 	deleteNum, slerr := DeleteTaskSchedules(slID)
 	t.Logf("deleteNum is %d\n", deleteNum)
 	t.Logf("slerr is %+v\n", slerr)
+}
+
+func Test_InsertTaskSchedules(t *testing.T) {
+	var taskSchedule model.TaskSchedule
+	taskSchedule.ContractId = common.GenerateUUID()
+	taskSchedule.StartTime = common.GenTimestamp()
+	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
+
+	err := InsertTaskSchedules(taskSchedule)
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 /*TaskSchedule end---------------------------------------------------------*/
