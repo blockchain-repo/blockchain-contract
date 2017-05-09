@@ -17,7 +17,7 @@ import (
 )
 
 //---------------------------------------------------------------------------
-// 根据公钥环为每个节点插入待执行任务
+// 只供头节点调用，根据公钥环为每个节点插入待执行任务
 func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 	var err error
 	allPublicKeys := config.GetAllPublicKey()
