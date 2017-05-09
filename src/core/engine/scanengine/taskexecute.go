@@ -57,7 +57,7 @@ func _TaskExecute() {
 
 			execengine.Prepare()
 
-			ret, err = execengine.Start()
+			ret, err := execengine.Start()
 			if err != nil {
 				beegoLog.Error(err)
 				return

@@ -189,7 +189,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
 		taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
 
-		err = scanengine.InsertTaskSchedule(taskSchedule)
+		err = scanengine.InsertTaskSchedules(taskSchedule)
 		if err != nil {
 			logs.Error("err is \" %s \"\n", err.Error())
 		}
