@@ -2,13 +2,13 @@ package config
 
 import (
 	"os/user"
-	"github.com/astaxie/beego"
 	"os"
 	"unicontract/src/common"
 	"bufio"
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
+	"github.com/astaxie/beego/logs"
 )
 
 var Config UnicontractConfig
@@ -18,15 +18,16 @@ var Config UnicontractConfig
 type UnicontractConfig struct {
 	Keypair  Keypair
 	//切片
-	Keyring []string `json:"keyring"`
+	Keyring []string `json:"Keyring"`
+	LocalIp string `json:"LocalIp"`
 }
 
 /**
  * function : 公私钥
  */
 type Keypair struct{
-	PublicKey  string `json:"public"`
-	PrivateKey string `json:"private"`
+	PublicKey  string `json:"PublicKey"`
+	PrivateKey string `json:"PrivateKey"`
 }
 
 /**
@@ -38,32 +39,32 @@ func Init(){
 	//获取当前用户目录
 	user,err := user.Current()
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	fileName := user.HomeDir + "/.unicontract"
 
 	//判断文件是否存在
-	fileInfo,err := os.Stat(fileName)
-	if err != nil{	//文件不存在
-		//创建unictractConf
-		_CreatUnictractConf(fileName)
-	}
+	//fileInfo,err := os.Stat(fileName)
+	//if err != nil{	//文件不存在
+	//	//创建unictractConf
+	//	_CreatUnictractConf(fileName)
+	//}
 
 	//读取配置文件
 	unicontractFile,err := os.Open(fileName)
 	defer unicontractFile.Close()
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	unicontractStr,err := ioutil.ReadAll(unicontractFile)
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	//获取unicontractConfig 结构体
 	var unicontractConfig UnicontractConfig
 	err = json.Unmarshal(unicontractStr,&unicontractConfig)
 	if err != nil{
-		beego.Error(err.Error(),fileInfo)
+		logs.Error(err.Error())
 	}
 	Config = unicontractConfig
 }
@@ -77,7 +78,7 @@ func ReadUnicontractConfig() string{
 	//获取当前用户目录
 	user,err := user.Current()
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	fileName := user.HomeDir + "/.unicontract"
 
@@ -85,11 +86,11 @@ func ReadUnicontractConfig() string{
 	unicontractFile,err := os.Open(fileName)
 	defer unicontractFile.Close()
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	unicontractStr,err := ioutil.ReadAll(unicontractFile)
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	return string(unicontractStr)
 }
@@ -104,7 +105,7 @@ func WriteConToFile(){
 	//获取当前用户目录
 	user,err := user.Current()
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	fileName := user.HomeDir + "/.unicontract"
 
@@ -118,7 +119,7 @@ func WriteConToFile(){
 		inputReader.Read(p)
 
 		if p[0] != []byte("y")[0]{
-			beego.Debug("Give Up override unicontract!",fileInfo)
+			logs.Debug("Give Up override unicontract!",fileInfo)
 			return
 		}
 	}
@@ -137,7 +138,7 @@ func _CreatUnictractConf(fileName string){
 	defer unictractConf.Close()
 
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}
 	var unicontractConfig UnicontractConfig
 
@@ -151,9 +152,9 @@ func _CreatUnictractConf(fileName string){
 	unictractStr := common.Serialize(unicontractConfig)
 	n,err := unictractConf.Write([]byte(unictractStr))
 	if err != nil{
-		beego.Error(err.Error())
+		logs.Error(err.Error())
 	}else{
-		beego.Debug("crate unictractConfong File success",n)
+		logs.Debug("crate unictractConfong File success",n)
 	}
 }
 
@@ -169,12 +170,3 @@ func GetAllPublicKey() []string{
 	publicKey := Config.Keypair.PublicKey
 	return append(keyrings,publicKey)
 }
-
-
-
-
-
-
-
-
-

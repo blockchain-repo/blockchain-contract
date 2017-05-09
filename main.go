@@ -57,20 +57,24 @@ func runStart() {
 }
 
 func runInitDB() {
+	config.Init()
 	logs.Info("Database Init")
 	rethinkdb.InitDatabase()
 }
 
 func runDropDB() {
+	config.Init()
 	logs.Info("Database Dropped")
 	rethinkdb.DropDatabase()
 }
 func runReconfigDB(shards int, replicas int) {
+	config.Init()
 	logs.Info("Database Reconfigured")
 	rethinkdb.Reconfig(shards, replicas)
 }
 
 func runConfig() {
+	config.Init()
 	config.WriteConToFile()
 }
 
