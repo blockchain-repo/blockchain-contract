@@ -7,9 +7,11 @@ import (
 
 //---------------------------------------------------------------------------
 func Start() {
-	beegoLog.Info("CleanTaskSchedule start")
-	gwgTaskExe.Add(1)
-	go _CleanTaskSchedule()
+	if gParam.CleanData {
+		beegoLog.Info("CleanTaskSchedule start")
+		gwgTaskExe.Add(1)
+		go _CleanTaskSchedule()
+	}
 
 	beegoLog.Info("TaskExecute start")
 	gwgTaskExe.Add(1)

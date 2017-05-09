@@ -29,7 +29,7 @@ import (
 //---------------------------------------------------------------------------
 func _CleanTaskSchedule() {
 	for {
-		ticker := time.NewTicker(time.Minute * _CLEANTIME)
+		ticker := time.NewTicker(time.Minute * (time.Duration)(gParam.CleanTime))
 		beegoLog.Debug("wait for clean data...")
 		select {
 		case <-ticker.C:
@@ -74,7 +74,9 @@ func _TaskFilter(slTasks []model.TaskSchedule) []string {
 	var slID []string
 
 	// 过滤时间点
-	cleanTimePoint := time.Now().Add(-time.Hour*24*_CLEANDATATIME).UnixNano() / 1000000
+	cleanTimePoint := time.Now().
+		Add(-time.Hour*24*(time.Duration)(gParam.CleanDataTime)).
+		UnixNano() / 1000000
 	for index, value := range slTasks {
 		nTimePoint, err := strconv.Atoi(value.LastExecuteTime)
 		if err != nil {

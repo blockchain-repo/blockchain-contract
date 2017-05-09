@@ -2,21 +2,32 @@
 package scanengine
 
 import (
+	"os"
 	"sync"
 )
 
 import (
+	beegoLog "github.com/astaxie/beego/logs"
+)
+
+import (
+	"unicontract/src/common/yaml"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
 )
 
 //---------------------------------------------------------------------------
+type scanEngineParam struct {
+	SleepTime     int  `yaml:"sleep_time"`      // 数据表扫描间隔时间，单位是秒
+	TaskQueueLen  int  `yaml:"task_queue_len"`  // 待执行队列最大长度
+	CleanData     bool `yaml:"clean_data"`      // 是否进行数据清理
+	CleanTime     int  `yaml:"clean_time"`      // 数据表清理扫描间隔时间，单位是分钟
+	CleanDataTime int  `yaml:"clean_data_time"` // 数据表清理间隔时间，单位是天
+}
+
 const (
-	_TASKQUEUELEN  = 20
-	_THRESHOLD     = 50
-	_SLEEPTIME     = 30 // 数据表扫描间隔时间，单位是秒
-	_CLEANTIME     = 30 // 数据表清理扫描间隔时间，单位是分钟
-	_CLEANDATATIME = 30 // 数据表清理间隔时间，单位是天
+	_CONFIGFILENAME = "scanEngineConfig.yaml"
+	_CONFIGFILEENV  = "CONFIGPATH"
 )
 
 var (
@@ -24,11 +35,19 @@ var (
 	gwgTaskExe      sync.WaitGroup
 	gnPublicKeysNum int
 	gslPublicKeys   []string
+	gParam          scanEngineParam
 )
 
 //---------------------------------------------------------------------------
 func init() {
-	gchTaskQueue = make(chan model.TaskSchedule, _TASKQUEUELEN)
+	strConfigOSPath := os.Getenv(_CONFIGFILEENV)
+	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIGFILENAME
+	if err := yaml.Read(strConfigPath, &gParam); err != nil {
+		beegoLog.Error(err)
+		os.Exit(-1)
+	}
+
+	gchTaskQueue = make(chan model.TaskSchedule, gParam.TaskQueueLen)
 	gslPublicKeys = config.GetAllPublicKey()
 	gnPublicKeysNum = len(gslPublicKeys)
 }

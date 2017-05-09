@@ -61,8 +61,8 @@ func _ScanTaskSchedule() {
 
 	CONSUME:
 		consume := time.Since(start)
-		if consume.Seconds() < float64(_SLEEPTIME) {
-			time.Sleep((time.Duration(float64(_SLEEPTIME) - consume.Seconds())) * time.Second)
+		if consume.Seconds() < float64(gParam.SleepTime) {
+			time.Sleep((time.Duration(float64(gParam.SleepTime) - consume.Seconds())) * time.Second)
 		}
 	}
 
