@@ -1,8 +1,6 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
 	"os"
 	"strconv"
 	_ "unicontract/src/api/routers"
@@ -10,7 +8,11 @@ import (
 	"unicontract/src/common/basic"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/engine/scanengine"
 	"unicontract/src/pipelines"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 )
 
 func main() {
@@ -52,6 +54,8 @@ func runStart() {
 	logs.Info("config Init")
 	pipelines.Init()
 	logs.Info("pipelines Init")
+	scanengine.Start()
+	logs.Info("scanengine Init")
 	beego.Run()
 	logs.Info("beego Run")
 }
