@@ -23,6 +23,7 @@ import (
 import (
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
+	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
 )
 
@@ -52,7 +53,7 @@ func _ScanTaskSchedule() {
 		for _, value := range slTasks {
 			beegoLog.Debug("contract [%s] enter queue", value)
 			gchTaskQueue <- value
-			err = rethinkdb.UpdateMonitorSend(value.Id)
+			err = engineCommon.UpdateMonitorSend(value.Id)
 			if err != nil {
 				beegoLog.Error(err.Error())
 				goto CONSUME

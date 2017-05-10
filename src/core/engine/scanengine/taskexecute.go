@@ -20,7 +20,7 @@ import (
 
 import (
 	"unicontract/src/chain"
-	"unicontract/src/core/db/rethinkdb"
+	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine"
 )
 
@@ -39,7 +39,8 @@ func _TaskExecute() {
 		responseResult, err := chain.GetContract(jsonBody)
 		if err != nil {
 			beegoLog.Error(err)
-			err := rethinkdb.UpdateMonitorWait(strContractTask.NodePubkey, strContractTask.ContractId)
+			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
+				strContractTask.ContractId)
 			if err != nil {
 				beegoLog.Error(err)
 			}

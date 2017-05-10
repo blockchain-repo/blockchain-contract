@@ -1,13 +1,10 @@
 package rethinkdb
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 
 	"unicontract/src/common"
-	"unicontract/src/config"
-	"unicontract/src/core/model"
 
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
@@ -388,7 +385,7 @@ func GetAllRecords(db string, name string) ([]string, error) {
 
 /*TaskSchedule start-------------------------------------------------------*/
 // 插入一个nodepublickey的task方法
-func _InsertTaskSchedule(strTaskSchedule string) error {
+func InsertTaskSchedule(strTaskSchedule string) error {
 	res := Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
 	if res.Inserted >= 1 {
 		return nil
@@ -399,7 +396,7 @@ func _InsertTaskSchedule(strTaskSchedule string) error {
 
 //---------------------------------------------------------------------------
 // 根据nodePubkey和contractID获得表内ID
-func _GetID(strNodePubkey, strContractID string) (string, error) {
+func GetID(strNodePubkey, strContractID string) (string, error) {
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("ContractId").Eq(strContractID)).
@@ -424,7 +421,7 @@ func _GetID(strNodePubkey, strContractID string) (string, error) {
 
 //---------------------------------------------------------------------------
 // 根据ID获取starttime和endtime
-func _GetValidTime(strID string) (string, string, error) {
+func GetValidTime(strID string) (string, string, error) {
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("id").Eq(strID)).
@@ -448,7 +445,7 @@ func _GetValidTime(strID string) (string, string, error) {
 
 //---------------------------------------------------------------------------
 // 设置SendFlag字段，发送为1,未发送为0
-func _SetTaskScheduleFlag(strID string, alreadySend bool) error {
+func SetTaskScheduleFlag(strID string, alreadySend bool) error {
 	var send int
 	if alreadySend {
 		send = 1
@@ -468,7 +465,7 @@ func _SetTaskScheduleFlag(strID string, alreadySend bool) error {
 
 //---------------------------------------------------------------------------
 // 设置FailedCount(或者SuccessCount)字段加一
-func _SetTaskScheduleCount(strID string, success bool) (int, error) {
+func SetTaskScheduleCount(strID string, success bool) (int, error) {
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("id").Eq(strID)).Run(session)
@@ -512,107 +509,6 @@ func _SetTaskScheduleCount(strID string, success bool) (int, error) {
 	} else {
 		return -1, fmt.Errorf("update failed")
 	}
-}
-
-//---------------------------------------------------------------------------
-// 设置发送标志为“已发送”，在将任务插入待执行队列后调用
-func UpdateMonitorSend(strID string) error {
-	if len(strID) == 0 {
-		return fmt.Errorf("id is null")
-	}
-	return _SetTaskScheduleFlag(strID, true)
-}
-
-//---------------------------------------------------------------------------
-// 执行失败：1.更新strContractID 的SendFlag = 0, FailedCount + 1, LastExecuteTime
-// 返回FailedCount(或者SuccessCount)和error
-func UpdateMonitorFail(strNodePubkey, strContractID string) (int, error) {
-	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
-		return -1, fmt.Errorf("pubkey or contractid is null")
-	}
-
-	strID, err := _GetID(strNodePubkey, strContractID)
-	if err != nil {
-		return -1, err
-	}
-
-	if len(strID) == 0 {
-		return -1, fmt.Errorf("not find")
-	}
-
-	err = _SetTaskScheduleFlag(strID, false)
-	if err != nil {
-		return -1, err
-	}
-
-	return _SetTaskScheduleCount(strID, false)
-}
-
-//---------------------------------------------------------------------------
-// 执行条件不满足：1.更新strNodePubkey  的SendFlag = 0, LastExecuteTime
-func UpdateMonitorWait(strNodePubkey, strContractID string) error {
-	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
-		return fmt.Errorf("pubkey or contractid is null")
-	}
-
-	strID, err := _GetID(strNodePubkey, strContractID)
-	if err != nil {
-		return err
-	}
-
-	if len(strID) == 0 {
-		return fmt.Errorf("not find")
-	}
-
-	return _SetTaskScheduleFlag(strID, false)
-}
-
-//---------------------------------------------------------------------------
-// 执行成功：1.更新strContractIDold 的SendFlag=1, SuccessCount + 1, LastExecuteTime
-//         2.将strContractIDnew 插入到扫描监控表中
-func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string) error {
-	if len(strNodePubkey) == 0 ||
-		len(strContractIDold) == 0 ||
-		len(strContractIDnew) == 0 {
-		return fmt.Errorf("pubkey or contractid is null")
-	}
-
-	strID, err := _GetID(strNodePubkey, strContractIDold)
-	if err != nil {
-		return err
-	}
-
-	if len(strID) == 0 {
-		return fmt.Errorf("old contract id not find")
-	}
-
-	err = _SetTaskScheduleFlag(strID, true)
-	if err != nil {
-		return err
-	}
-
-	_, err = _SetTaskScheduleCount(strID, true)
-	if err != nil {
-		return err
-	}
-
-	startTime, endTime, err := _GetValidTime(strID)
-	if err != nil {
-		return err
-	}
-
-	if len(startTime) == 0 || len(endTime) == 0 {
-		return fmt.Errorf("old contract valid time not find")
-	}
-
-	var taskSchedule model.TaskSchedule
-	taskSchedule.Id = common.GenerateUUID()
-	taskSchedule.ContractId = strContractIDnew
-	taskSchedule.NodePubkey = strNodePubkey
-	taskSchedule.StartTime = startTime
-	taskSchedule.EndTime = endTime
-	slJson, _ := json.Marshal(taskSchedule)
-	return _InsertTaskSchedule(string(slJson))
 }
 
 //---------------------------------------------------------------------------
@@ -681,32 +577,6 @@ func DeleteTaskSchedules(slID []interface{}) (int, error) {
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		GetAll(slID...).Delete().RunWrite(session)
 	return res.Deleted, err
-}
-
-//---------------------------------------------------------------------------
-// 只供头节点调用，根据公钥环为每个节点插入待执行任务
-func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
-	var err error
-	allPublicKeys := config.GetAllPublicKey()
-	for index, _ := range allPublicKeys {
-		var taskSchedule model.TaskSchedule
-		taskSchedule.Id = common.GenerateUUID()
-		taskSchedule.ContractId = taskScheduleBase.ContractId
-		taskSchedule.NodePubkey = allPublicKeys[index]
-		taskSchedule.StartTime = taskScheduleBase.StartTime
-		taskSchedule.EndTime = taskScheduleBase.EndTime
-		taskSchedule.FailedCount = 0
-		taskSchedule.SendFlag = 0
-
-		slJson, _ := json.Marshal(taskSchedule)
-		err = _InsertTaskSchedule(string(slJson))
-		if err != nil {
-			logs.Error("insert [%s] TaskSchedule is error, error is %s",
-				taskScheduleBase.ContractId, err.Error())
-			break
-		}
-	}
-	return err
 }
 
 /*TaskSchedule end---------------------------------------------------------*/

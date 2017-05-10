@@ -12,6 +12,7 @@ import (
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
+	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
 
 	//	"unicontract/src/common"
@@ -188,7 +189,7 @@ func txeSend(in io.Reader, out io.Writer) {
 		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
 		taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
 
-		err = r.InsertTaskSchedules(taskSchedule)
+		err = engineCommon.InsertTaskSchedules(taskSchedule)
 		if err != nil {
 			logs.Error("err is \" %s \"\n", err.Error())
 		}

@@ -440,7 +440,7 @@ func Test_InsertTaskSchedule(t *testing.T) {
 	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
 
 	slJson, _ := json.Marshal(taskSchedule)
-	err := _InsertTaskSchedule(string(slJson))
+	err := InsertTaskSchedule(string(slJson))
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -450,9 +450,9 @@ func Test_InsertTaskSchedule(t *testing.T) {
 
 func Test_GetID(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	strContractID := "a504a095-022e-4d5f-abd1-ed4d19d265ed"
+	strContractID := "caa7ad61-f291-480f-aaeb-8237bb83088b"
 
-	strID, err := _GetID(strNodePubkey, strContractID)
+	strID, err := GetID(strNodePubkey, strContractID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -461,8 +461,8 @@ func Test_GetID(t *testing.T) {
 }
 
 func Test_GetValidTime(t *testing.T) {
-	strID := "68482ae9-dcbe-48d6-ae1d-bde919c36127"
-	startTime, endTime, err := _GetValidTime(strID)
+	strID := "a0d3b526-8708-4214-bb27-543712f8af42"
+	startTime, endTime, err := GetValidTime(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -471,8 +471,8 @@ func Test_GetValidTime(t *testing.T) {
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "68482ae9-dcbe-48d6-ae1d-bde919c36127"
-	err := _SetTaskScheduleFlag(strID, false)
+	strID := "a0d3b526-8708-4214-bb27-543712f8af42"
+	err := SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -481,56 +481,12 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 }
 
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "68482ae9-dcbe-48d6-ae1d-bde919c36127"
-	count, err := _SetTaskScheduleCount(strID, false)
+	strID := "ee34158d-c144-47e4-b2b4-4c24f8969304"
+	count, err := SetTaskScheduleCount(strID, true)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
 		t.Logf("pass, count is %d\n", count)
-	}
-}
-
-func Test_UpdateMonitorSend(t *testing.T) {
-	strID := "68482ae9-dcbe-48d6-ae1d-bde919c36127"
-	err := UpdateMonitorSend(strID)
-	if err != nil {
-		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
-	} else {
-		t.Logf("pass\n")
-	}
-}
-
-func Test_UpdateMonitorFail(t *testing.T) {
-	strNodePubkey := config.Config.Keypair.PublicKey
-	strContractID := "a504a095-022e-4d5f-abd1-ed4d19d265ed"
-	failedCount, err := UpdateMonitorFail(strNodePubkey, strContractID)
-	if err != nil {
-		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
-	} else {
-		t.Logf("pass, successCount is %d\n", failedCount)
-	}
-}
-
-func Test_UpdateMonitorWait(t *testing.T) {
-	strNodePubkey := config.Config.Keypair.PublicKey
-	strContractID := "a504a095-022e-4d5f-abd1-ed4d19d265ed"
-	err := UpdateMonitorWait(strNodePubkey, strContractID)
-	if err != nil {
-		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
-	} else {
-		t.Logf("pass \n")
-	}
-}
-
-func Test_UpdateMonitorSucc(t *testing.T) {
-	strNodePubkey := config.Config.Keypair.PublicKey
-	strContractID := "a504a095-022e-4d5f-abd1-ed4d19d265ed"
-	strContractIDnew := common.GenerateUUID()
-	err := UpdateMonitorSucc(strNodePubkey, strContractID, strContractIDnew)
-	if err != nil {
-		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
-	} else {
-		t.Logf("pass \n")
 	}
 }
 
@@ -564,25 +520,13 @@ func Test_GetTaskSchedulesSuccess(t *testing.T) {
 
 func Test_DeleteTaskSchedules(t *testing.T) {
 	slID := make([]interface{}, 0)
-	slID = append(slID, "5b86ce65-1be4-41fa-8f33-e5a7cc6944c0")
+	slID = append(slID, "ee34158d-c144-47e4-b2b4-4c24f8969304")
 	slID = append(slID, "03951e74-c89d-4d2f-a193-07e81cf0965a")
 	slID = append(slID, "95f1683e-09f2-41b6-83a7-ebdd52ebc6cf")
 
 	deleteNum, err := DeleteTaskSchedules(slID)
 	t.Logf("deleteNum is %d\n", deleteNum)
 	t.Logf("err is %+v\n", err)
-}
-
-func Test_InsertTaskSchedules(t *testing.T) {
-	var taskSchedule model.TaskSchedule
-	taskSchedule.ContractId = common.GenerateUUID()
-	taskSchedule.StartTime = common.GenTimestamp()
-	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
-
-	err := InsertTaskSchedules(taskSchedule)
-	if err != nil {
-		t.Error(err)
-	}
 }
 
 /*TaskSchedule end---------------------------------------------------------*/
