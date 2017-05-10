@@ -563,14 +563,14 @@ func Test_GetTaskSchedulesSuccess(t *testing.T) {
 }
 
 func Test_DeleteTaskSchedules(t *testing.T) {
-	slID := make([]string, 0)
-	slID = append(slID, "68482ae9-dcbe-48d6-ae1d-bde919c36127")
-	slID = append(slID, "b991f887-7004-4f1d-92a0-ab77737d4b08")
-	slID = append(slID, "441fb193-8db2-4f20-8303-0810013234a2")
+	slID := make([]interface{}, 0)
+	slID = append(slID, "5b86ce65-1be4-41fa-8f33-e5a7cc6944c0")
+	slID = append(slID, "03951e74-c89d-4d2f-a193-07e81cf0965a")
+	slID = append(slID, "95f1683e-09f2-41b6-83a7-ebdd52ebc6cf")
 
-	deleteNum, slerr := DeleteTaskSchedules(slID)
+	deleteNum, err := DeleteTaskSchedules(slID)
 	t.Logf("deleteNum is %d\n", deleteNum)
-	t.Logf("slerr is %+v\n", slerr)
+	t.Logf("err is %+v\n", err)
 }
 
 func Test_InsertTaskSchedules(t *testing.T) {

@@ -676,18 +676,11 @@ func GetTaskSchedulesSuccess(strNodePubkey string) (string, error) {
 
 //---------------------------------------------------------------------------
 // 删除一系列id的任务
-func DeleteTaskSchedules(slID []string) (int, []error) {
-	var nDeleteNum int
-	var slerr []error
-	for _, value := range slID {
-		res := Delete(DBNAME, TABLE_TASK_SCHEDULE, value)
-		if res.Deleted >= 1 {
-			nDeleteNum += res.Deleted
-		} else {
-			slerr = append(slerr, fmt.Errorf(value))
-		}
-	}
-	return nDeleteNum, slerr
+func DeleteTaskSchedules(slID []interface{}) (int, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		GetAll(slID...).Delete().RunWrite(session)
+	return res.Deleted, err
 }
 
 //---------------------------------------------------------------------------

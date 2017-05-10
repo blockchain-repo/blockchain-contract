@@ -58,11 +58,9 @@ func _CleanTaskSchedule() {
 			}
 
 			beegoLog.Debug("success task delete")
-			deleteNum, slerr := rethinkdb.DeleteTaskSchedules(slID)
+			deleteNum, err := rethinkdb.DeleteTaskSchedules(slID)
 			if deleteNum != len(slID) {
-				for _, value := range slerr {
-					beegoLog.Error("id is [%s] delete failed", value.Error())
-				}
+				beegoLog.Error(err)
 			}
 		}
 	}
@@ -70,8 +68,8 @@ func _CleanTaskSchedule() {
 }
 
 //---------------------------------------------------------------------------
-func _TaskFilter(slTasks []model.TaskSchedule) []string {
-	var slID []string
+func _TaskFilter(slTasks []model.TaskSchedule) []interface{} {
+	var slID []interface{}
 
 	// 过滤时间点
 	cleanTimePoint := time.Now().
