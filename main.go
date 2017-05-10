@@ -54,7 +54,7 @@ func runStart() {
 	logs.Info("config Init")
 	pipelines.Init()
 	logs.Info("pipelines Init")
-	scanengine.Start()
+	go scanengine.Start()
 	logs.Info("scanengine Init")
 	beego.Run()
 	logs.Info("beego Run")
