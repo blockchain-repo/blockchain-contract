@@ -23,16 +23,16 @@ import (
 
 //---------------------------------------------------------------------------
 const (
-	_NewVal          = "new_val"
-	_HTTPOK          = 200
-	_VERSION         = 2
-	_OPERATION       = "CONTRACT"
-	_CONSENSUSTYPE   = "contract"
-	_CONSENSUSREASON = "contract illegal"
-	_THREADNUM       = 10
-	_INPUTLEN        = 20
-	_OUTPUTLEN       = 20
-	_Fulfillment     = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
+	_NEW_VAL          = "new_val"
+	_HTTP_OK          = 200
+	_VERSION          = 2
+	_OPERATION        = "CONTRACT"
+	_CONSENSUS_TYPE   = "contract"
+	_CONSENSUS_REASON = "contract illegal"
+	_THREAD_NUM       = 10
+	_INPUT_LEN        = 20
+	_OUTPUT_LEN       = 20
+	_FULFILLMENT      = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
 )
 
 var (
@@ -54,12 +54,12 @@ func startContractElection() {
 	gnPublicKeysNum = len(gslPublicKeys)
 	gstrPublicKey = config.Config.Keypair.PublicKey
 
-	gchInput = make(chan string, _INPUTLEN)
-	gchOutput = make(chan string, _OUTPUTLEN)
+	gchInput = make(chan string, _INPUT_LEN)
+	gchOutput = make(chan string, _OUTPUT_LEN)
 
 	gPool = new(ThreadPool)
-	gPool.Init(_THREADNUM)
-	for i := 0; i < _THREADNUM; i++ {
+	gPool.Init(_THREAD_NUM)
+	for i := 0; i < _THREAD_NUM; i++ {
 		gPool.AddTask(func() error {
 			return ceHeadFilter()
 		})
@@ -91,7 +91,7 @@ func ceChangefeed() {
 		beegoLog.Debug("1.1 ceChangefeed get new_val")
 		mValue := value.(map[string]interface{})
 		// 提取new_val的值
-		slVote, err := json.Marshal(mValue[_NewVal])
+		slVote, err := json.Marshal(mValue[_NEW_VAL])
 		if err != nil {
 			beegoLog.Error(err.Error())
 			continue
@@ -154,9 +154,9 @@ func ceHeadFilter() error {
 					beegoLog.Debug("2.3 contract invalid and insert consensusFailure")
 					var consensusFailure model.ConsensusFailure
 					consensusFailure.Id = common.GenerateUUID()
-					consensusFailure.ConsensusType = _CONSENSUSTYPE
+					consensusFailure.ConsensusType = _CONSENSUS_TYPE
 					consensusFailure.ConsensusId = vote.VoteBody.VoteFor
-					consensusFailure.ConsensusReason = _CONSENSUSREASON
+					consensusFailure.ConsensusReason = _CONSENSUS_REASON
 					consensusFailure.Timestamp = common.GenTimestamp()
 
 					slConsensusFailure, err := json.Marshal(consensusFailure)
@@ -333,7 +333,7 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 	beegoLog.Debug("contractOutput : %+v", common.StructSerialize(contractOutput))
 	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
 
-	fulfillment.Fulfillment = _Fulfillment
+	fulfillment.Fulfillment = _FULFILLMENT
 	contractOutput.Transaction.Timestamp = common.GenTimestamp()
 	contractOutput.Transaction.ContractModel.ContractHead = contractModel.ContractHead
 	contractOutput.Transaction.Relation.Votes = make([]*model.Vote, gnPublicKeysNum)

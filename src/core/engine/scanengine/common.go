@@ -26,8 +26,8 @@ type scanEngineParam struct {
 }
 
 const (
-	_CONFIGFILENAME = "scanEngineConfig.yaml"
-	_CONFIGFILEENV  = "CONFIGPATH"
+	_CONFIG_FILE_NAME = "scanEngineConfig.yaml"
+	_CONFIG_FILE_ENV  = "CONFIGPATH"
 )
 
 var (
@@ -40,8 +40,8 @@ var (
 
 //---------------------------------------------------------------------------
 func init() {
-	strConfigOSPath := os.Getenv(_CONFIGFILEENV)
-	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIGFILENAME
+	strConfigOSPath := os.Getenv(_CONFIG_FILE_ENV)
+	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIG_FILE_NAME
 	if err := yaml.Read(strConfigPath, &gParam); err != nil {
 		beegoLog.Error(err)
 		os.Exit(-1)

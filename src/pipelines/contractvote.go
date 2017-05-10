@@ -91,8 +91,8 @@ func startContractVote() {
 	defer cvPool.Stop()
 	defer close(cvInput)
 
-	cvInput = make(chan string, _INPUTLEN)
-	cvOutput = make(chan string, _OUTPUTLEN)
+	cvInput = make(chan string, _INPUT_LEN)
+	cvOutput = make(chan string, _OUTPUT_LEN)
 
 	cvPool = new(ThreadPool)
 	cvPool.Init(_CVTHREADNUM)
