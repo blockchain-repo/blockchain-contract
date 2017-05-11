@@ -11,6 +11,9 @@ import (
 	"unicontract/src/core/protos"
 )
 
+func init(){
+	config.Init()
+}
 func Test_createTx(t *testing.T) {
 	config.Init()
 	tx_signers := []string{
@@ -30,7 +33,7 @@ func Test_createTx(t *testing.T) {
 		Id:   "meta-data-id",
 		Data: tempMap,
 	}
-	asset := model.Asset{}
+	asset := GetAsset(tx_signers[0])
 
 	//--------------------contract-------------------------
 	contract := model.ContractModel{}
@@ -70,14 +73,14 @@ func Test_createTx(t *testing.T) {
 		},
 	}
 	contractBody.ContractSignatures = contractSignatures
-	contract.ContractHead = &protos.ContractHead{config.Config.Keypair.PublicKey, 1,
-	common.GenTimestamp()}
+	contract.ContractHead = &protos.ContractHead{config.Config.Keypair.PublicKey, 1,common.GenTimestamp()}
 	contract.ContractBody = contractBody
 	contract.Id = common.HashData(common.StructSerialize(contractBody))
 
 	relation := model.Relation{
 		ContractId: contract.Id,
 		TaskId:     "task-id-123456789",
+		TaskExecuteIdx:0,
 		Voters: []string{
 			config.Config.Keypair.PublicKey,
 		},
@@ -94,7 +97,7 @@ func Test_FreezeTx(t *testing.T) {
 	config.Init()
 	ownerbefore := "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
 	recipients := [][2]interface{}{
-		[2]interface{}{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 300},
+		[2]interface{}{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 100},
 	}
 	metadata := model.Metadata{}
 	asset := GetAsset(ownerbefore)
@@ -102,15 +105,63 @@ func Test_FreezeTx(t *testing.T) {
 	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId")
+	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId",0)
 
-	output, _ := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
+	output, err := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
+	if err!= nil{
+		logs.Info(err)
+		return
+	}
+	output = NodeSign(output)
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	fmt.Println(b)
+}
+
+func TestTransfer(t *testing.T) {
+	ownerbefore := "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
+	recipients := [][2]interface{}{
+		[2]interface{}{"EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", 300},
+	}
+	metadata := model.Metadata{}
+	asset := GetAsset(ownerbefore)
+
+	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+
+	relation := model.Relation{}
+	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId",0)
+
+	output, err := Transfer("TRANSFER", ownerbefore, recipients, &metadata, asset, relation, contract)
+	if err!=nil {
+		logs.Info(err)
+		return
+	}
 	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
 
+func TestUnfreeze(t *testing.T) {
+	ownerbefore := "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
+	recipients := [][2]interface{}{}
+	metadata := model.Metadata{}
+	asset := GetAsset(ownerbefore)
+
+	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+
+	relation := model.Relation{}
+	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId",0)
+
+	output, err := Transfer("UNFREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
+	if err!=nil {
+		logs.Info(err)
+		return
+	}
+	output = NodeSign(output)
+	logs.Info(common.StructSerialize(output))
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	fmt.Println(b)
+}
 func Test_GetUnspent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
@@ -122,7 +173,7 @@ func Test_GetUnspent(t *testing.T) {
 func Test_GetFreezeSpent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal,_ := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	inps, bal,_ := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b","taskId",1)
 	logs.Info(inps)
 	logs.Info(bal)
 }

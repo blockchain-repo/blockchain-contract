@@ -9,6 +9,9 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 )
 
+func init(){
+	config.Init()
+}
 func GenerateOutputTest() string {
 
 	contractOutput := ContractOutput{}
