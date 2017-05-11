@@ -78,6 +78,7 @@ func GenerateOutputTest() string {
 		ContractSignatures: nil,
 		ContractAssets:     contractAsset,
 		ContractComponents: contractComponent,
+		MetaAttribute: nil,
 	}
 	transaction.ContractModel.ContractHead = nil
 	transaction.ContractModel.ContractBody = contractBody

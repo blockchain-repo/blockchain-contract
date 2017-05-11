@@ -60,32 +60,47 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	isFeeze := false
 	//generate inputs
 	var inputs = []*model.Fulfillment{}
-	var balance = 0
-	var spentFlag = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
+	var balance int = 0
+	var spentFlag float64 = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
 	if operation == _FREEZE {
 		isFeeze = true
 		//generate inputs
 		inputs, balance = GetUnfreezeUnspent(ownerbefore)
-		//TODO check the owner ownerafter is the ownerbefore himself and only one ownerafter
-
+		if (len(recipients)!=1 || recipients[0][0].(string)!=ownerbefore){
+			err := errors.New("The opertion `FREEZE` should has one ownerafter = ownerbefore !")
+			return model.ContractOutput{}, err
+		}
 	}
 
 	if operation == _UNFREEZ {
+		if len(recipients)>0{
+			err := errors.New("The opertion `UNFREEZE` should not has any ownner-afters !")
+			return model.ContractOutput{}, err
+		}
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
-		//NOTE I'm not sure whether I need to check the inputs is it has some frozen asset
+		//NOTE  not sure whether I need to check the inputs is it has some frozen asset or not
 
 	}
 	if operation == _TRANSFER {
 		//generate inputs
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
 		if spentFlag == 0 {
-			// TODO no asset was frozen, can't transfer asset
-			err := errors.New("can not find any frozen asset !!!")
+			err := errors.New("Can not find any frozen asset !")
 			return model.ContractOutput{}, err
 		} else if spentFlag == 2 {
 			// TODO the frozen asset had transfer, no need to do this transfer
 
+		}else if spentFlag==3{
+
+
+		}else if spentFlag==4{
+
+
 		}
+	}
+	if len(inputs) == 0 {
+		err := errors.New("Can not find any asset to operate !")
+		return model.ContractOutput{}, err
 	}
 	//the operation in DB needs to be 'TRANSFER'
 	operation = _TRANSFER
@@ -102,10 +117,6 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 		output.GenerateOutput(index, isFeeze, pubkey, amount)
 		outputs = append(outputs, output)
 		amounts += amount
-	}
-	if len(inputs) == 0 {
-		err := errors.New("can not find any asset !!!")
-		return model.ContractOutput{}, err
 	}
 	if balance < amounts {
 		err := errors.New("not enough asset to do the operation !!!")
@@ -168,17 +179,7 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
 	return inputs, balance
 }
 
-//the unspent asset only include 'freeze'
-/*
-return:
-	flag:
-		-1:request faild;
-		0:no asset was frozen;
-		1:get one frozen asset;
-		2:the frozen asset had unfreeze;
-		3:the frozen asset had transfer;
-		4:get muti-frozen-asset;
-*/
+
 func GetAsset(ownerbefore string) model.Asset {
 	asset := model.Asset{}
 	//TODO  get asset
@@ -192,8 +193,18 @@ func GetAsset(ownerbefore string) model.Asset {
 	asset.Refillable = false
 	return asset
 }
-
-func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum int) (inps []*model.Fulfillment, bal int, flag int) {
+//the unspent asset only include 'freeze'
+/*
+return:
+	flag:
+		-1:request faild;
+		0:no asset was frozen;
+		1:get one frozen asset;
+		2:the frozen asset had unfreeze;
+		3:the frozen asset had transfer;
+		4:get muti-frozen-asset;
+*/
+func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum int) (inps []*model.Fulfillment, bal int, flag float64) {
 
 	taskNumStr := strconv.Itoa(taskNum)
 	param := "unspent=true&public_key=" + pubkey + "&contract_id=" + contractId + "&task_id=" + taskId + "&task_num=" + taskNumStr
@@ -209,7 +220,8 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 
 	inputs := []*model.Fulfillment{}
 	var balance int
-	flag = result.Data.([]interface{})[0].(int)
+	logs.Info(result.Data)
+	flag = result.Data.([]interface{})[0].(float64)
 	unspendSlice := result.Data.([]interface{})[1].([]interface{})
 	for index, unspend := range unspendSlice {
 		//to map
