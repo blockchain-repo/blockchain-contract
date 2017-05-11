@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/logs"
+	"strconv"
 	"unicontract/src/chain"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
-	"strconv"
 )
 
 const (
@@ -66,14 +66,14 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 		isFeeze = true
 		//generate inputs
 		inputs, balance = GetUnfreezeUnspent(ownerbefore)
-		if (len(recipients)!=1 || recipients[0][0].(string)!=ownerbefore){
+		if len(recipients) != 1 || recipients[0][0].(string) != ownerbefore {
 			err := errors.New("The opertion `FREEZE` should has one ownerafter = ownerbefore !")
 			return model.ContractOutput{}, err
 		}
 	}
 
 	if operation == _UNFREEZ {
-		if len(recipients)>0{
+		if len(recipients) > 0 {
 			err := errors.New("The opertion `UNFREEZE` should not has any ownner-afters !")
 			return model.ContractOutput{}, err
 		}
@@ -84,22 +84,24 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	if operation == _TRANSFER {
 		//generate inputs
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
+
 		if spentFlag == 0 {
 			err := errors.New("Can not find any frozen asset !")
 			return model.ContractOutput{}, err
 		} else if spentFlag == 2 {
 			// TODO the frozen asset had transfer, no need to do this transfer
-
-		}else if spentFlag==3{
-
-
-		}else if spentFlag==4{
-
-
+			err := errors.New("The frozen asset had be unfreezed !")
+			return model.ContractOutput{}, err
+		} else if spentFlag == 3 {
+			err := errors.New("The frozen asset had be transfered !")
+			return model.ContractOutput{}, err
+		} else if spentFlag == 4 {
+			err := errors.New("There is muti-frozen asset ,please check on !")
+			return model.ContractOutput{}, err
 		}
 	}
 	if len(inputs) == 0 {
-		err := errors.New("Can not find any asset to operate !")
+		err := errors.New("Can not find any asset to do this operation!")
 		return model.ContractOutput{}, err
 	}
 	//the operation in DB needs to be 'TRANSFER'
@@ -119,7 +121,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 		amounts += amount
 	}
 	if balance < amounts {
-		err := errors.New("not enough asset to do the operation !!!")
+		err := errors.New("not enough asset to do the operation !")
 		return model.ContractOutput{}, err
 	} else if balance > amounts {
 		pubkey := ownerbefore
@@ -179,7 +181,6 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
 	return inputs, balance
 }
 
-
 func GetAsset(ownerbefore string) model.Asset {
 	asset := model.Asset{}
 	//TODO  get asset
@@ -193,6 +194,7 @@ func GetAsset(ownerbefore string) model.Asset {
 	asset.Refillable = false
 	return asset
 }
+
 //the unspent asset only include 'freeze'
 /*
 return:
