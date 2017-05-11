@@ -3,7 +3,6 @@ package controllers
 import (
 	"bytes"
 	"fmt"
-	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -11,6 +10,8 @@ import (
 	"unicontract/src/config"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
+
+	"github.com/golang/protobuf/proto"
 )
 
 // application content-type
@@ -19,6 +20,10 @@ const (
 	APPLICATION_JSON         = "application/json"
 	APPLICATION_OCTET_STREAM = "application/octet-stream"
 )
+
+func init() {
+	config.Init()
+}
 
 func httpRequest(method string, urlStr string, body []byte, requestHead map[string]string) ([]byte, error) {
 	client := &http.Client{}
