@@ -70,7 +70,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 
 	//模拟用户发送的数据, mainpubkey 传入API 后,根据配置生成,此处请勿设置
 	mainPubkey := config.Config.Keypair.PublicKey
-	contractHead := &protos.ContractHead{mainPubkey, 1}
+	contractHead := &protos.ContractHead{mainPubkey, 1, common.GenTimestamp()}
 
 	// random choose the creator
 	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen)]

@@ -70,7 +70,8 @@ func Test_createTx(t *testing.T) {
 		},
 	}
 	contractBody.ContractSignatures = contractSignatures
-	contract.ContractHead = &protos.ContractHead{config.Config.Keypair.PublicKey, 1}
+	contract.ContractHead = &protos.ContractHead{config.Config.Keypair.PublicKey, 1,
+	common.GenTimestamp()}
 	contract.ContractBody = contractBody
 	contract.Id = common.HashData(common.StructSerialize(contractBody))
 

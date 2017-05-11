@@ -12,7 +12,7 @@ func TestWriteContract(t *testing.T) {
 	contractModel := model.ContractModel{}
 	//
 
-	contractHead := &protos.ContractHead{"", 1}
+	contractHead := &protos.ContractHead{"", 1, common.GenTimestamp()}
 
 	contractOwners := []string{
 		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",

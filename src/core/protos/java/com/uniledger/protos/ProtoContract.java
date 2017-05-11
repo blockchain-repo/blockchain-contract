@@ -6522,6 +6522,15 @@ public final class ProtoContract {
      */
     com.google.protobuf.ByteString
         getTextBytes(int index);
+
+    /**
+     * <pre>
+     * add date: 2017-05-11 任务执行索引次数 int
+     * </pre>
+     *
+     * <code>int32 TaskExecuteIdx = 19;</code>
+     */
+    int getTaskExecuteIdx();
   }
   /**
    * Protobuf type {@code protos.ContractComponent}
@@ -6551,6 +6560,7 @@ public final class ProtoContract {
       againstArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       support_ = 0;
       text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      taskExecuteIdx_ = 0;
     }
 
     @java.lang.Override
@@ -6727,6 +6737,11 @@ public final class ProtoContract {
                 mutable_bitField0_ |= 0x00020000;
               }
               text_.add(s);
+              break;
+            }
+            case 152: {
+
+              taskExecuteIdx_ = input.readInt32();
               break;
             }
           }
@@ -7324,6 +7339,19 @@ public final class ProtoContract {
       return text_.getByteString(index);
     }
 
+    public static final int TASKEXECUTEIDX_FIELD_NUMBER = 19;
+    private int taskExecuteIdx_;
+    /**
+     * <pre>
+     * add date: 2017-05-11 任务执行索引次数 int
+     * </pre>
+     *
+     * <code>int32 TaskExecuteIdx = 19;</code>
+     */
+    public int getTaskExecuteIdx() {
+      return taskExecuteIdx_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -7389,6 +7417,9 @@ public final class ProtoContract {
       }
       for (int i = 0; i < text_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 18, text_.getRaw(i));
+      }
+      if (taskExecuteIdx_ != 0) {
+        output.writeInt32(19, taskExecuteIdx_);
       }
     }
 
@@ -7484,6 +7515,10 @@ public final class ProtoContract {
         size += dataSize;
         size += 2 * getTextList().size();
       }
+      if (taskExecuteIdx_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(19, taskExecuteIdx_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -7542,6 +7577,8 @@ public final class ProtoContract {
           == other.getSupport());
       result = result && getTextList()
           .equals(other.getTextList());
+      result = result && (getTaskExecuteIdx()
+          == other.getTaskExecuteIdx());
       return result;
     }
 
@@ -7612,6 +7649,8 @@ public final class ProtoContract {
         hash = (37 * hash) + TEXT_FIELD_NUMBER;
         hash = (53 * hash) + getTextList().hashCode();
       }
+      hash = (37 * hash) + TASKEXECUTEIDX_FIELD_NUMBER;
+      hash = (53 * hash) + getTaskExecuteIdx();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7799,6 +7838,8 @@ public final class ProtoContract {
 
         text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00020000);
+        taskExecuteIdx_ = 0;
+
         return this;
       }
 
@@ -7909,6 +7950,7 @@ public final class ProtoContract {
           bitField0_ = (bitField0_ & ~0x00020000);
         }
         result.text_ = text_;
+        result.taskExecuteIdx_ = taskExecuteIdx_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8159,6 +8201,9 @@ public final class ProtoContract {
             text_.addAll(other.text_);
           }
           onChanged();
+        }
+        if (other.getTaskExecuteIdx() != 0) {
+          setTaskExecuteIdx(other.getTaskExecuteIdx());
         }
         onChanged();
         return this;
@@ -10461,6 +10506,44 @@ public final class ProtoContract {
         onChanged();
         return this;
       }
+
+      private int taskExecuteIdx_ ;
+      /**
+       * <pre>
+       * add date: 2017-05-11 任务执行索引次数 int
+       * </pre>
+       *
+       * <code>int32 TaskExecuteIdx = 19;</code>
+       */
+      public int getTaskExecuteIdx() {
+        return taskExecuteIdx_;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 任务执行索引次数 int
+       * </pre>
+       *
+       * <code>int32 TaskExecuteIdx = 19;</code>
+       */
+      public Builder setTaskExecuteIdx(int value) {
+        
+        taskExecuteIdx_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 任务执行索引次数 int
+       * </pre>
+       *
+       * <code>int32 TaskExecuteIdx = 19;</code>
+       */
+      public Builder clearTaskExecuteIdx() {
+        
+        taskExecuteIdx_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -10720,6 +10803,15 @@ public final class ProtoContract {
      */
     com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getContractComponentsOrBuilder(
         int index);
+
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     * </pre>
+     *
+     * <code>bytes MetaAttribute = 15;</code>
+     */
+    com.google.protobuf.ByteString getMetaAttribute();
   }
   /**
    * Protobuf type {@code protos.ContractBody}
@@ -10747,6 +10839,7 @@ public final class ProtoContract {
       contractAssets_ = java.util.Collections.emptyList();
       contractSignatures_ = java.util.Collections.emptyList();
       contractComponents_ = java.util.Collections.emptyList();
+      metaAttribute_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -10868,6 +10961,11 @@ public final class ProtoContract {
               }
               contractComponents_.add(
                   input.readMessage(com.uniledger.protos.ProtoContract.ContractComponent.parser(), extensionRegistry));
+              break;
+            }
+            case 122: {
+
+              metaAttribute_ = input.readBytes();
               break;
             }
           }
@@ -11396,6 +11494,19 @@ public final class ProtoContract {
       return contractComponents_.get(index);
     }
 
+    public static final int METAATTRIBUTE_FIELD_NUMBER = 15;
+    private com.google.protobuf.ByteString metaAttribute_;
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     * </pre>
+     *
+     * <code>bytes MetaAttribute = 15;</code>
+     */
+    public com.google.protobuf.ByteString getMetaAttribute() {
+      return metaAttribute_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -11449,6 +11560,9 @@ public final class ProtoContract {
       }
       for (int i = 0; i < contractComponents_.size(); i++) {
         output.writeMessage(14, contractComponents_.get(i));
+      }
+      if (!metaAttribute_.isEmpty()) {
+        output.writeBytes(15, metaAttribute_);
       }
     }
 
@@ -11507,6 +11621,10 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, contractComponents_.get(i));
       }
+      if (!metaAttribute_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(15, metaAttribute_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -11551,6 +11669,8 @@ public final class ProtoContract {
           .equals(other.getContractSignaturesList());
       result = result && getContractComponentsList()
           .equals(other.getContractComponentsList());
+      result = result && getMetaAttribute()
+          .equals(other.getMetaAttribute());
       return result;
     }
 
@@ -11597,6 +11717,8 @@ public final class ProtoContract {
         hash = (37 * hash) + CONTRACTCOMPONENTS_FIELD_NUMBER;
         hash = (53 * hash) + getContractComponentsList().hashCode();
       }
+      hash = (37 * hash) + METAATTRIBUTE_FIELD_NUMBER;
+      hash = (53 * hash) + getMetaAttribute().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -11758,6 +11880,8 @@ public final class ProtoContract {
         } else {
           contractComponentsBuilder_.clear();
         }
+        metaAttribute_ = com.google.protobuf.ByteString.EMPTY;
+
         return this;
       }
 
@@ -11824,6 +11948,7 @@ public final class ProtoContract {
         } else {
           result.contractComponents_ = contractComponentsBuilder_.build();
         }
+        result.metaAttribute_ = metaAttribute_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -11993,6 +12118,9 @@ public final class ProtoContract {
               contractComponentsBuilder_.addAllMessages(other.contractComponents_);
             }
           }
+        }
+        if (other.getMetaAttribute() != com.google.protobuf.ByteString.EMPTY) {
+          setMetaAttribute(other.getMetaAttribute());
         }
         onChanged();
         return this;
@@ -13564,6 +13692,47 @@ public final class ProtoContract {
         }
         return contractComponentsBuilder_;
       }
+
+      private com.google.protobuf.ByteString metaAttribute_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       * </pre>
+       *
+       * <code>bytes MetaAttribute = 15;</code>
+       */
+      public com.google.protobuf.ByteString getMetaAttribute() {
+        return metaAttribute_;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       * </pre>
+       *
+       * <code>bytes MetaAttribute = 15;</code>
+       */
+      public Builder setMetaAttribute(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        metaAttribute_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       * </pre>
+       *
+       * <code>bytes MetaAttribute = 15;</code>
+       */
+      public Builder clearMetaAttribute() {
+        
+        metaAttribute_ = getDefaultInstance().getMetaAttribute();
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -13631,6 +13800,24 @@ public final class ProtoContract {
      * <code>int32 Version = 2;</code>
      */
     int getVersion();
+
+    /**
+     * <pre>
+     * add date: 2017-05-11 合约执行时间戳
+     * </pre>
+     *
+     * <code>string Timestamp = 3;</code>
+     */
+    java.lang.String getTimestamp();
+    /**
+     * <pre>
+     * add date: 2017-05-11 合约执行时间戳
+     * </pre>
+     *
+     * <code>string Timestamp = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getTimestampBytes();
   }
   /**
    * Protobuf type {@code protos.ContractHead}
@@ -13646,6 +13833,7 @@ public final class ProtoContract {
     private ContractHead() {
       mainPubkey_ = "";
       version_ = 0;
+      timestamp_ = "";
     }
 
     @java.lang.Override
@@ -13682,6 +13870,12 @@ public final class ProtoContract {
             case 16: {
 
               version_ = input.readInt32();
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              timestamp_ = s;
               break;
             }
           }
@@ -13750,6 +13944,48 @@ public final class ProtoContract {
       return version_;
     }
 
+    public static final int TIMESTAMP_FIELD_NUMBER = 3;
+    private volatile java.lang.Object timestamp_;
+    /**
+     * <pre>
+     * add date: 2017-05-11 合约执行时间戳
+     * </pre>
+     *
+     * <code>string Timestamp = 3;</code>
+     */
+    public java.lang.String getTimestamp() {
+      java.lang.Object ref = timestamp_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        timestamp_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * add date: 2017-05-11 合约执行时间戳
+     * </pre>
+     *
+     * <code>string Timestamp = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTimestampBytes() {
+      java.lang.Object ref = timestamp_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        timestamp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -13768,6 +14004,9 @@ public final class ProtoContract {
       if (version_ != 0) {
         output.writeInt32(2, version_);
       }
+      if (!getTimestampBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, timestamp_);
+      }
     }
 
     public int getSerializedSize() {
@@ -13781,6 +14020,9 @@ public final class ProtoContract {
       if (version_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, version_);
+      }
+      if (!getTimestampBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, timestamp_);
       }
       memoizedSize = size;
       return size;
@@ -13802,6 +14044,8 @@ public final class ProtoContract {
           .equals(other.getMainPubkey());
       result = result && (getVersion()
           == other.getVersion());
+      result = result && getTimestamp()
+          .equals(other.getTimestamp());
       return result;
     }
 
@@ -13816,6 +14060,8 @@ public final class ProtoContract {
       hash = (53 * hash) + getMainPubkey().hashCode();
       hash = (37 * hash) + VERSION_FIELD_NUMBER;
       hash = (53 * hash) + getVersion();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -13938,6 +14184,8 @@ public final class ProtoContract {
 
         version_ = 0;
 
+        timestamp_ = "";
+
         return this;
       }
 
@@ -13962,6 +14210,7 @@ public final class ProtoContract {
         com.uniledger.protos.ProtoContract.ContractHead result = new com.uniledger.protos.ProtoContract.ContractHead(this);
         result.mainPubkey_ = mainPubkey_;
         result.version_ = version_;
+        result.timestamp_ = timestamp_;
         onBuilt();
         return result;
       }
@@ -14009,6 +14258,10 @@ public final class ProtoContract {
         }
         if (other.getVersion() != 0) {
           setVersion(other.getVersion());
+        }
+        if (!other.getTimestamp().isEmpty()) {
+          timestamp_ = other.timestamp_;
+          onChanged();
         }
         onChanged();
         return this;
@@ -14127,6 +14380,95 @@ public final class ProtoContract {
       public Builder clearVersion() {
         
         version_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object timestamp_ = "";
+      /**
+       * <pre>
+       * add date: 2017-05-11 合约执行时间戳
+       * </pre>
+       *
+       * <code>string Timestamp = 3;</code>
+       */
+      public java.lang.String getTimestamp() {
+        java.lang.Object ref = timestamp_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          timestamp_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 合约执行时间戳
+       * </pre>
+       *
+       * <code>string Timestamp = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTimestampBytes() {
+        java.lang.Object ref = timestamp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          timestamp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 合约执行时间戳
+       * </pre>
+       *
+       * <code>string Timestamp = 3;</code>
+       */
+      public Builder setTimestamp(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 合约执行时间戳
+       * </pre>
+       *
+       * <code>string Timestamp = 3;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = getDefaultInstance().getTimestamp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 合约执行时间戳
+       * </pre>
+       *
+       * <code>string Timestamp = 3;</code>
+       */
+      public Builder setTimestampBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        timestamp_ = value;
         onChanged();
         return this;
       }
@@ -15185,7 +15527,7 @@ public final class ProtoContract {
       "\001(\t\0223\n\007Options\030\r \003(\0132\".protos.ComponentD" +
       "ata.OptionsEntry\022\016\n\006Format\030\017 \001(\t\032.\n\014Opti" +
       "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001",
-      "\"\326\004\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
+      "\"\356\004\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
       "\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descrip" +
       "tion\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreConditio" +
       "n\030\006 \003(\0132\034.protos.ComponentsExpression\0227\n" +
@@ -15200,21 +15542,23 @@ public final class ProtoContract {
       "os.ContractComponent\022\020\n\010TaskList\030\016 \003(\t\022\030" +
       "\n\020SupportArguments\030\017 \003(\t\022\030\n\020AgainstArgum" +
       "ents\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(" +
-      "\t\"\374\002\n\014ContractBody\022\022\n\nContractId\030\001 \001(\t\022\r" +
-      "\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(\t\022\017\n\007Caption\030" +
-      "\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022\025\n\rContractSt" +
-      "ate\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022\023\n\013CreatorTim" +
-      "e\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017\n\007EndTime\030\n ",
-      "\001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022-\n\016ContractA" +
-      "ssets\030\014 \003(\0132\025.protos.ContractAsset\0225\n\022Co" +
-      "ntractSignatures\030\r \003(\0132\031.protos.Contract" +
-      "Signature\0225\n\022ContractComponents\030\016 \003(\0132\031." +
-      "protos.ContractComponent\"3\n\014ContractHead" +
-      "\022\022\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\"n\n" +
-      "\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014ContractHead\030\002 " +
-      "\001(\0132\024.protos.ContractHead\022*\n\014ContractBod" +
-      "y\030\003 \001(\0132\024.protos.ContractBodyB%\n\024com.uni" +
-      "ledger.protosB\rProtoContractb\006proto3"
+      "\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\"\223\003\n\014ContractBo" +
+      "dy\022\022\n\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n" +
+      "\005Ctype\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Descrip" +
+      "tion\030\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Cre" +
+      "ator\030\007 \001(\t\022\023\n\013CreatorTime\030\010 \001(\t\022\021\n\tStart",
+      "Time\030\t \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractO" +
+      "wners\030\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.pr" +
+      "otos.ContractAsset\0225\n\022ContractSignatures" +
+      "\030\r \003(\0132\031.protos.ContractSignature\0225\n\022Con" +
+      "tractComponents\030\016 \003(\0132\031.protos.ContractC" +
+      "omponent\022\025\n\rMetaAttribute\030\017 \001(\014\"F\n\014Contr" +
+      "actHead\022\022\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002" +
+      " \001(\005\022\021\n\tTimestamp\030\003 \001(\t\"n\n\010Contract\022\n\n\002i" +
+      "d\030\001 \001(\t\022*\n\014ContractHead\030\002 \001(\0132\024.protos.C" +
+      "ontractHead\022*\n\014ContractBody\030\003 \001(\0132\024.prot",
+      "os.ContractBodyB%\n\024com.uniledger.protosB" +
+      "\rProtoContractb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -15269,19 +15613,19 @@ public final class ProtoContract {
     internal_static_protos_ContractComponent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponent_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DisgardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", });
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DisgardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", });
     internal_static_protos_ContractBody_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_protos_ContractBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractBody_descriptor,
-        new java.lang.String[] { "ContractId", "Cname", "Ctype", "Caption", "Description", "ContractState", "Creator", "CreatorTime", "StartTime", "EndTime", "ContractOwners", "ContractAssets", "ContractSignatures", "ContractComponents", });
+        new java.lang.String[] { "ContractId", "Cname", "Ctype", "Caption", "Description", "ContractState", "Creator", "CreatorTime", "StartTime", "EndTime", "ContractOwners", "ContractAssets", "ContractSignatures", "ContractComponents", "MetaAttribute", });
     internal_static_protos_ContractHead_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_protos_ContractHead_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractHead_descriptor,
-        new java.lang.String[] { "MainPubkey", "Version", });
+        new java.lang.String[] { "MainPubkey", "Version", "Timestamp", });
     internal_static_protos_Contract_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_protos_Contract_fieldAccessorTable = new

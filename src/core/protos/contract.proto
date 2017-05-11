@@ -75,6 +75,8 @@ message ContractComponent{
     repeated string AgainstArguments = 16;
     int32 Support = 17;
     repeated string Text = 18;
+    // add date: 2017-05-11 任务执行索引次数 int
+    int32 TaskExecuteIdx = 19;
 }
 
 message ContractBody {
@@ -92,11 +94,15 @@ message ContractBody {
     repeated ContractAsset ContractAssets = 12;
     repeated ContractSignature ContractSignatures = 13;
     repeated ContractComponent ContractComponents = 14;
+    // add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+    bytes MetaAttribute = 15;
 }
 
 message ContractHead {
     string MainPubkey = 1;
     int32 Version = 2;
+    // add date: 2017-05-11 合约执行时间戳
+    string Timestamp =3;
 }
 
 message Contract {
