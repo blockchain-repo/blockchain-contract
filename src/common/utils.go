@@ -30,8 +30,12 @@ func GenTimestamp() string {
 }
 
 func GenSpecialTimestamp(fullTimeStr string) (string, error) {
-	//the_time, err := time.Parse("2006-01-02 15:04:05", "2014-01-08 09:04:41")
-	the_time, err := time.Parse("2006-01-02 15:04:05", fullTimeStr)
+	local, err := time.LoadLocation("Local")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	the_time, err := time.ParseInLocation("2006-01-02 15:04:05", fullTimeStr, local)
 	if err != nil {
 		fmt.Println(err)
 		return "", err
