@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/logs"
-	"github.com/google/uuid"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 	"unicontract/src/common/basic"
-	"path/filepath"
-	"os"
+
+	"github.com/astaxie/beego/logs"
+	"github.com/google/uuid"
 )
 
 func GenDate() string {
@@ -35,7 +36,7 @@ func GenSpecialTimestamp(fullTimeStr string) (string, error) {
 		fmt.Println(err)
 		return "", err
 	}
-	unix_time := the_time.Unix()
+	unix_time := the_time.UnixNano() / 1000000
 	return strconv.FormatInt(unix_time, 10), nil
 }
 
@@ -62,10 +63,10 @@ func MapToStruct(mapObj map[string]interface{}) (interface{}, error) {
 }
 
 /*
-The json package always orders keys when marshalling. Specifically:
+The json package always orders keys when marshalling. Specifically:
 
-Maps have their keys sorted lexicographically.
-Structs keys are marshalled in the order defined in the struct
+Maps have their keys sorted lexicographically.
+Structs keys are marshalled in the order defined in the struct
 
 */
 /*------------------------------ struct serialize must use this -----------------------------*/
@@ -105,7 +106,7 @@ func StructSerializePretty(obj interface{}) string {
 	return string(out.String())
 }
 
-/*------------- Structs keys are marshalled in the order defined in the struct ------------------*/
+/*------------- Structs keys are marshalled in the order defined in the struct ------------------*/
 func Serialize(obj interface{}) string {
 	str, err := json.Marshal(obj)
 	if err != nil {

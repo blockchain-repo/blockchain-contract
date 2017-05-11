@@ -51,7 +51,7 @@ func _ScanTaskSchedule() {
 
 		beegoLog.Debug("handle task")
 		for _, value := range slTasks {
-			beegoLog.Debug("contract [%s] enter queue", value)
+			beegoLog.Debug("contract [%v] enter queue", value)
 			gchTaskQueue <- value
 			err = engineCommon.UpdateMonitorSend(value.Id)
 			if err != nil {
