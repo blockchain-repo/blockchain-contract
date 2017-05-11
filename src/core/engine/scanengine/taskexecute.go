@@ -47,6 +47,11 @@ func _TaskExecute() {
 			continue
 		}
 
+		if responseResult.Code != _HTTP_OK {
+			beegoLog.Error(responseResult.Message)
+			continue
+		}
+
 		beegoLog.Debug("contract execute")
 		contractData := responseResult.Data.(string)
 		/*go*/ func(data string) {

@@ -28,6 +28,7 @@ type scanEngineParam struct {
 const (
 	_CONFIG_FILE_NAME = "scanEngineConfig.yaml"
 	_CONFIG_FILE_ENV  = "CONFIGPATH"
+	_HTTP_OK          = 200
 )
 
 var (

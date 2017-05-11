@@ -1,4 +1,13 @@
-// taskDBHandle
+/*************************************************************************
+  > File Name: taskDBHandle.go
+  > Module:
+  > Function: 提供对TaskSchedule表的一些操作函数
+  > Author: wangyp
+  > Company:
+  > Department:
+  > Mail: wangyepeng87@163.com
+  > Created Time: 2017.05.10
+ ************************************************************************/
 package common
 
 import (
