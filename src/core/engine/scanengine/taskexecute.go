@@ -37,7 +37,7 @@ func _TaskExecute() {
 		beegoLog.Debug("query contract base on contractId")
 		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractTask.ContractId)
 		responseResult, err := chain.GetContract(jsonBody)
-		if err != nil {
+		if err != nil || responseResult.Data == nil {
 			beegoLog.Error(err)
 			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
 				strContractTask.ContractId)
