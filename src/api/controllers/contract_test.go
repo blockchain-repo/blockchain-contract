@@ -114,7 +114,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 		fmt.Println(err)
 		return "", err
 	}
-	endTime, err := common.GenSpecialTimestamp("2017-05-06 07:00:00")
+	endTime, err := common.GenSpecialTimestamp("2018-05-06 07:00:00")
 	if err != nil {
 		fmt.Println(err)
 		return "", err

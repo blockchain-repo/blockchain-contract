@@ -11,6 +11,7 @@
 package scanengine
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -53,9 +54,9 @@ func _TaskExecute() {
 		}
 
 		beegoLog.Debug("contract execute")
-		contractData, ok := responseResult.Data.(string)
+		contractData, ok := responseResult.Data.([]interface{})
 		if !ok {
-			beegoLog.Error("responseResult.Data is not ok for type string")
+			beegoLog.Error("responseResult.Data is not ok for type string. type is %T", responseResult.Data)
 			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
 				strContractTask.ContractId)
 			if err != nil {
@@ -63,7 +64,12 @@ func _TaskExecute() {
 			}
 			continue
 		}
-		/*go*/ func(data string) {
+
+		slContractData, _ := json.Marshal(contractData)
+		beegoLog.Debug(string(slContractData))
+
+		/*go*/
+		func(data string) {
 			_, err := execengine.Load(data)
 			if err != nil {
 				beegoLog.Error(err)
@@ -84,7 +90,7 @@ func _TaskExecute() {
 			} else if ret == 1 {
 				beegoLog.Debug("合约执行完成")
 			}
-		}(contractData)
+		}(string(slContractData))
 	}
 
 	gwgTaskExe.Done()
