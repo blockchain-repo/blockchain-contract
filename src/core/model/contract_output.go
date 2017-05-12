@@ -97,7 +97,9 @@ func (c *ContractOutput) HasEnoughVotes() bool {
 		}
 
 		vote := votes[index]
-
+		if vote == nil {
+			continue
+		}
 		ContractOutputNodePubkey := vote.NodePubkey
 		signature := vote.Signature
 
