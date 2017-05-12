@@ -131,6 +131,7 @@ func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string)
 // 只供头节点调用，根据公钥环为每个节点插入待执行任务
 func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 	var err error
+	var slMapTaskSchedule []interface{}
 	allPublicKeys := config.GetAllPublicKey()
 	for index, _ := range allPublicKeys {
 		var taskSchedule model.TaskSchedule
@@ -139,17 +140,13 @@ func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 		taskSchedule.NodePubkey = allPublicKeys[index]
 		taskSchedule.StartTime = taskScheduleBase.StartTime
 		taskSchedule.EndTime = taskScheduleBase.EndTime
-		taskSchedule.FailedCount = 0
-		taskSchedule.SendFlag = 0
 
-		slJson, _ := json.Marshal(taskSchedule)
-		err = rethinkdb.InsertTaskSchedule(string(slJson))
-		if err != nil {
-			beegoLog.Error("insert [%s] TaskSchedule is error, error is %s",
-				taskScheduleBase.ContractId, err.Error())
-			break
-		}
+		mapObj, _ := common.StructToMap(taskSchedule)
+		slMapTaskSchedule = append(slMapTaskSchedule, mapObj)
 	}
+
+	nInsertCount, err := rethinkdb.InsertTaskSchedules(slMapTaskSchedule)
+	beegoLog.Debug("insert taskScheduled count is %d, err is %v", nInsertCount, err)
 	return err
 }
 

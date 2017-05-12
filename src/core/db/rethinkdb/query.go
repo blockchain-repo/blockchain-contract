@@ -395,6 +395,14 @@ func InsertTaskSchedule(strTaskSchedule string) error {
 }
 
 //---------------------------------------------------------------------------
+// 插入task方法
+func InsertTaskSchedules(slTaskSchedule []interface{}) (int, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).Insert(slTaskSchedule).RunWrite(session)
+	return res.Inserted, err
+}
+
+//---------------------------------------------------------------------------
 // 根据nodePubkey和contractID获得表内ID
 func GetID(strNodePubkey, strContractID string) (string, error) {
 	session := ConnectDB(DBNAME)

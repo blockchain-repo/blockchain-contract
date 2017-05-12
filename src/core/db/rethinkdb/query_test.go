@@ -448,6 +448,40 @@ func Test_InsertTaskSchedule(t *testing.T) {
 	}
 }
 
+func Test_InsertTaskSchedules(t *testing.T) {
+	var taskSchedule model.TaskSchedule
+	taskSchedule.Id = common.GenerateUUID()
+	taskSchedule.ContractId = common.GenerateUUID()
+	taskSchedule.NodePubkey = config.Config.Keypair.PublicKey
+	taskSchedule.StartTime = common.GenTimestamp()
+	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
+
+	mapObj1, _ := common.StructToMap(taskSchedule)
+	taskSchedule.Id = common.GenerateUUID()
+	mapObj2, _ := common.StructToMap(taskSchedule)
+	taskSchedule.Id = common.GenerateUUID()
+	mapObj3, _ := common.StructToMap(taskSchedule)
+	taskSchedule.Id = common.GenerateUUID()
+	mapObj4, _ := common.StructToMap(taskSchedule)
+	taskSchedule.Id = common.GenerateUUID()
+	mapObj5, _ := common.StructToMap(taskSchedule)
+	taskSchedule.Id = common.GenerateUUID()
+
+	var slMapTaskSchedule []interface{}
+	slMapTaskSchedule = append(slMapTaskSchedule, mapObj1)
+	slMapTaskSchedule = append(slMapTaskSchedule, mapObj2)
+	slMapTaskSchedule = append(slMapTaskSchedule, mapObj3)
+	slMapTaskSchedule = append(slMapTaskSchedule, mapObj4)
+	slMapTaskSchedule = append(slMapTaskSchedule, mapObj5)
+
+	insertCount, err := InsertTaskSchedules(slMapTaskSchedule)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass. insertCount is %d\n", insertCount)
+	}
+}
+
 func Test_GetID(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
 	strContractID := "caa7ad61-f291-480f-aaeb-8237bb83088b"
@@ -481,7 +515,7 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 }
 
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "ee34158d-c144-47e4-b2b4-4c24f8969304"
+	strID := "92281121-b5ee-4cbd-8ceb-fe9e7b72fae3"
 	count, err := SetTaskScheduleCount(strID, true)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -497,9 +531,20 @@ func Test_GetTaskSchedulesNoSend(t *testing.T) {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
 		t.Logf("pass\n")
-		var slTask []model.TaskSchedule
+		//var slTask []model.TaskSchedule
+		var slTask []map[string]interface{}
 		json.Unmarshal([]byte(retStr), &slTask)
 		t.Logf("%+v\n", slTask)
+
+		t.Logf("Id type is %T\n", slTask[0]["id"])
+		t.Logf("ContractId type is %T\n", slTask[0]["ContractId"])
+		t.Logf("NodePubkey type is %T\n", slTask[0]["NodePubkey"])
+		t.Logf("SendFlag type is %T\n", slTask[0]["SendFlag"])
+		t.Logf("StartTime type is %T\n", slTask[0]["StartTime"])
+		t.Logf("EndTime type is %T\n", slTask[0]["EndTime"])
+		t.Logf("FailedCount type is %T\n", slTask[0]["FailedCount"])
+		t.Logf("SuccessCount type is %T\n", slTask[0]["SuccessCount"])
+		t.Logf("LastExecuteTime type is %T\n", slTask[0]["LastExecuteTime"])
 	}
 }
 
