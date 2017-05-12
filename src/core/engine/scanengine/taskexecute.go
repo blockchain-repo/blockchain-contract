@@ -55,7 +55,7 @@ func _TaskExecute() {
 
 		beegoLog.Debug("contract execute")
 		contractData, ok := responseResult.Data.([]interface{})
-		if !ok {
+		if !ok || len(contractData) == 0 {
 			beegoLog.Error("responseResult.Data is not ok for type string. type is %T", responseResult.Data)
 			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
 				strContractTask.ContractId)
@@ -65,7 +65,7 @@ func _TaskExecute() {
 			continue
 		}
 
-		slContractData, _ := json.Marshal(contractData)
+		slContractData, _ := json.Marshal(contractData[0])
 		beegoLog.Debug(string(slContractData))
 
 		/*go*/
