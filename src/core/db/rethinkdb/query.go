@@ -491,10 +491,16 @@ func SetTaskScheduleCount(strID string, success bool) (int, error) {
 		return -1, err
 	}
 
-	failedCount := tasks["FailedCount"].(float64)
+	failedCount, ok := tasks["FailedCount"].(float64)
+	if !ok {
+		return -1, fmt.Errorf("failedCount is not ok for type float64")
+	}
 	failedCount += 1
 
-	successCount := tasks["SuccessCount"].(float64)
+	successCount, ok := tasks["SuccessCount"].(float64)
+	if !ok {
+		return -1, fmt.Errorf("successCount is not ok for type float64")
+	}
 	successCount += 1
 
 	var strJSON string

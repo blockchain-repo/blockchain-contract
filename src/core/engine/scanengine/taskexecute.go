@@ -53,7 +53,16 @@ func _TaskExecute() {
 		}
 
 		beegoLog.Debug("contract execute")
-		contractData := responseResult.Data.(string)
+		contractData, ok := responseResult.Data.(string)
+		if !ok {
+			beegoLog.Error("responseResult.Data is not ok for type string")
+			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
+				strContractTask.ContractId)
+			if err != nil {
+				beegoLog.Error(err)
+			}
+			continue
+		}
 		/*go*/ func(data string) {
 			_, err := execengine.Load(data)
 			if err != nil {
