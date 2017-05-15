@@ -1,38 +1,29 @@
 package pipelines
 
 import (
-	r "unicontract/src/core/db/rethinkdb"
 	"github.com/astaxie/beego/logs"
-	"encoding/json"
-	"bytes"
+	r "unicontract/src/core/db/rethinkdb"
 )
 
 type ChangeFeed struct {
 	node      Node
+	db        string
 	table     string
 	operation []string
 }
 
-func (c *ChangeFeed)runForever(){
+func (c *ChangeFeed) runForever() {
 	c.runChangeFeed()
 }
 
 func (c *ChangeFeed) runChangeFeed() {
 	logs.Info("change feed run")
 	var value interface{}
-	res := r.Changefeed("Unicontract", "ContractOutputs")
+	res := r.Changefeed(c.db, c.table)
 	for res.Next(&value) {
-		logs.Info(" txElection step1 : txeChangefeed ")
 		m := value.(map[string]interface{})
-		v, err := json.Marshal(m["new_val"])
-		if err != nil {
-			logs.Error(err.Error())
-			continue
-		}
-		if bytes.Equal(v, []byte("null")) {
-			continue
-		}
-		logs.Info("txeChangefeed result : %s", v)
-		c.node.output <- v
+		logs.Info(c.table, "Changefeed result : %s", m["new_val"])
+		c.node.output <- m["new_val"]
 	}
+	logs.Info("change feed out")
 }

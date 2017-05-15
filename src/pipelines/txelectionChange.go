@@ -3,14 +3,15 @@ package pipelines
 import (
 	"encoding/json"
 
-	"unicontract/src/common/monitor"
-	"unicontract/src/config"
-	"unicontract/src/core/model"
-	engineCommon "unicontract/src/core/engine/common"
 	"errors"
 	"github.com/astaxie/beego/logs"
-	"unicontract/src/common"
+	"sync"
 	"unicontract/src/chain"
+	"unicontract/src/common"
+	"unicontract/src/common/monitor"
+	"unicontract/src/config"
+	engineCommon "unicontract/src/core/engine/common"
+	"unicontract/src/core/model"
 )
 
 const (
@@ -23,7 +24,7 @@ var (
 	txOutput chan string
 )
 
-func txHeadFilter(args ... interface{}) {
+func txHeadFilter(args ...interface{}) {
 	defer close(txOutput)
 	for {
 		t, ok := <-txInput
@@ -173,48 +174,32 @@ func txSend() {
 	}
 }
 
-func pip1(i int) interface{} {
-	var p1 = "p1"
-	logs.Info("p1", i)
-	return p1
-}
-func pip2(f float32, a string) interface{} {
-
-	var p2 = "p2"
-	logs.Info(p2)
-	return p2
+func pip3(arg interface{}) interface{} {
+	logs.Info("P3 param:", arg)
+	s := common.Serialize(arg)
+	logs.Info("P3 return:===", s)
+	return s
 }
 
-func pip3(args ... interface{}) interface{} {
-	var p3 = "p3"
-	logs.Info(p3)
-	return p3
+func pip4(arg interface{}) interface{} {
+	logs.Info("P4 param:===", arg)
+	return arg
 }
 
-func pip4(args ... interface{}) interface{} {
-	var p4 = "p4"
-	logs.Info(p4)
-	return p4
-}
-
-func getChangefeed() Node {
-	//todo  fix
-	change := ChangeFeed{
-		node:Node{target: pip3, processes: 1,name:"pip3"},
-		table:"ContractOutputs",
-		operation:[]string{"insert"},
+func getChangefeed() *ChangeFeed {
+	change := &ChangeFeed{
+		db:        "Unicontract",
+		table:     "ContractOutputs",
+		operation: []string{"insert"},
 	}
-	change.runChangeFeed()
-	return 	change.node
+	go change.runChangeFeed()
+	return change
 }
 
 func createTxPip() (txPip Pipeline) {
-	logs.Info("createTxPip")
-	txNodeSlice := make([]Node, 0, 5)
-	//txNodeSlice = append(txNodeSlice, Node{target: pip1, processes: 1})
-	//txNodeSlice = append(txNodeSlice, Node{target: pip2, processes: 2})
-	txNodeSlice = append(txNodeSlice, Node{target: pip3, processes: 1,name:"pip3"})
-	txNodeSlice = append(txNodeSlice, Node{target: pip4, processes: 2,name:"pip4"})
+	txNodeSlice := make([]*Node, 0)
+	txNodeSlice = append(txNodeSlice, &Node{target: pip3, routineNum: 1, name: "pip3"})
+	txNodeSlice = append(txNodeSlice, &Node{target: pip4, routineNum: 1, name: "pip4"})
 	txPip = Pipeline{
 		nodes: txNodeSlice,
 	}
@@ -222,11 +207,13 @@ func createTxPip() (txPip Pipeline) {
 }
 
 func start() {
-	logs.Info("start1")
 	txPip := createTxPip()
-	logs.Info("start2")
-	txPip.setup(getChangefeed())
-	logs.Info("start3")
+	changefeed := getChangefeed()
+	txPip.setup(&changefeed.node)
+	waitRoutine := sync.WaitGroup{}
+	waitRoutine.Add(1)
 	txPip.start()
-	logs.Info("start4")
+	waitRoutine.Wait()
 }
+
+//runtime.NumGoroutine()
