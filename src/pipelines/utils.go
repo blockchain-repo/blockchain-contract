@@ -2,11 +2,9 @@
 package pipelines
 
 import (
-	"encoding/json"
 	"io"
 	"time"
 
-	"unicontract/src/common"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 
@@ -49,15 +47,9 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 	return app
 }
 
-func SaveOutputErrorData(tableName string, t []byte) bool {
-	coModel := model.ContractOutput{}
-	err := json.Unmarshal(t, &coModel)
+func SaveOutputErrorData(tableName string, coModel model.ContractOutput) bool {
 
-	logs.Info("in SaveOutputErrorData--dataid : ", common.Serialize(coModel.Id))
-	if err != nil {
-		logs.Error(err.Error())
-		return false
-	}
+	//logs.Info("in SaveOutputErrorData--dataid : ", common.Serialize(coModel.Id))
 	dataId := coModel.Id
 
 	res := rethinkdb.Get(rethinkdb.DBNAME, tableName, dataId)
@@ -81,5 +73,4 @@ func Init() {
 	logs.Info("ContractElection Pipeline Start")
 	go startContractElection()
 	logs.Info("txElection Pipeline Start")
-	go starttxElection()
 }

@@ -1,6 +1,7 @@
 package pipelines
 
 import (
+	"errors"
 	"github.com/astaxie/beego/logs"
 )
 
@@ -20,6 +21,7 @@ func (n *Node) start() {
 
 func (n *Node) runForever() {
 	for {
+		//logs.Info(n.name, ",in run forever")
 		err := n.run()
 		if err != nil {
 			logs.Error(err)
@@ -31,11 +33,15 @@ func (n *Node) runForever() {
 func (n *Node) run() error {
 	x, ok := <-n.input
 	if !ok {
-		logs.Info("null data ")
+		logs.Error(errors.New("read data from inputchannel error"))
 		return nil
 	}
 	//TODO  not good enough, how to support multi params and returns
-	n.output <- n.target(x)
+	out := n.target(x)
+	if n.output == nil {
+		return nil
+	}
+	n.output <- out
 	return nil
 }
 
@@ -68,4 +74,3 @@ func (p *Pipeline) start() {
 		p.nodes[index].start()
 	}
 }
-

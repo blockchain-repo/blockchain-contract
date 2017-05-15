@@ -66,7 +66,7 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Timestamp = ""
 	temp.RemoveSignature()
 	serializeStr := common.StructSerialize(temp)
-	logs.Info("before-sign--", serializeStr)
+	//logs.Info("before-sign--", serializeStr)
 	return common.HashData(serializeStr)
 }
 
