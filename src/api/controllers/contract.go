@@ -1,19 +1,20 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/golang/protobuf/proto"
 	"time"
+	"unicontract/src/common"
 	"unicontract/src/core"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
-	"encoding/base64"
-	"unicontract/src/common"
 
+	"unicontract/src/common/monitor"
 )
 
 // Operations about Contract
@@ -194,7 +195,9 @@ func (c *ContractController) Create() {
 		logs.Debug("API[Create] token is", token)
 		return
 	}
+	contract_write_time := monitor.Monitor.NewTiming()
 	ok := core.WriteContract(contractModel)
+	contract_write_time.Send("contract_write")
 	if !ok {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Create] insert contract fail!")
 		logs.Debug(c.Ctx.Request.RequestURI, "API[Create] insert contract fail!")
@@ -458,7 +461,7 @@ func (c *ContractController) PressTest() {
 		return
 	}
 
-	if contract == nil  {
+	if contract == nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
 		return
 	}
@@ -469,7 +472,6 @@ func (c *ContractController) PressTest() {
 	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_" + token
 	contractModel.ContractBody.Caption = randomString
 	contractModel.ContractBody.Description = randomString
-
 
 	contractOwnersLen := 3
 	// 生成的合约签名人个数

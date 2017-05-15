@@ -18,13 +18,14 @@ import (
 	//	"unicontract/src/common"
 
 	"github.com/astaxie/beego/logs"
+	"unicontract/src/core/db/rethinkdb"
 )
 
 func txeChangefeed(in io.Reader, out io.Writer) {
 	var value interface{}
 	res := r.Changefeed("Unicontract", "ContractOutputs")
 	for res.Next(&value) {
-		time := monitor.Monitor.NewTiming()
+		contractOutputs_changefeed_time := monitor.Monitor.NewTiming()
 
 		logs.Info(" txElection step1 : txeChangefeed ")
 		m := value.(map[string]interface{})
@@ -38,7 +39,7 @@ func txeChangefeed(in io.Reader, out io.Writer) {
 		}
 		logs.Info("txeChangefeed result : %s", v)
 		out.Write(v)
-		time.Send("contractOutputs_changefeed")
+		contractOutputs_changefeed_time.Send("contractOutputs_changefeed")
 	}
 }
 
@@ -50,7 +51,6 @@ func txeHeadFilter(in io.Reader, out io.Writer) {
 
 		n, _ := rd.Read(p)
 		logs.Info(" txElection step2 : head filter")
-		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -69,8 +69,6 @@ func txeHeadFilter(in io.Reader, out io.Writer) {
 			continue
 		}
 		out.Write(t)
-
-		time.Send("txe_validate_head")
 	}
 }
 
@@ -82,7 +80,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 
 		n, _ := rd.Read(p)
 		logs.Info(" txElection step3 : Validate")
-		time := monitor.Monitor.NewTiming()
+		contractOutput_validate_time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -119,7 +117,7 @@ func txeValidate(in io.Reader, out io.Writer) {
 		logs.Debug("Validate sign")
 		out.Write(t)
 
-		time.Send("txe_contractOutput_validate")
+		contractOutput_validate_time.Send("contractOutput_validate")
 	}
 }
 
@@ -131,7 +129,6 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 
 		n, _ := rd.Read(p)
 		logs.Info("txElection step4 : query eists")
-		time := monitor.Monitor.NewTiming()
 		if n == 0 {
 			continue
 		}
@@ -160,7 +157,6 @@ func txeQueryEists(in io.Reader, out io.Writer) {
 
 		out.Write(t)
 
-		time.Send("txe_query_contractOutput")
 	}
 }
 
@@ -189,7 +185,9 @@ func txeSend(in io.Reader, out io.Writer) {
 		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
 		taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
 
+		taskSchedule_write_time := monitor.Monitor.NewTiming()
 		err = engineCommon.InsertTaskSchedules(taskSchedule)
+		taskSchedule_write_time.Send("taskSchedule_write")
 		if err != nil {
 			logs.Error("err is \" %s \"\n", err.Error())
 		}
@@ -199,11 +197,23 @@ func txeSend(in io.Reader, out io.Writer) {
 		if err != nil {
 			logs.Error(err.Error())
 			SaveOutputErrorData(_TableNameSendFailingRecords, t)
+			sendFailRecording_count, err := rethinkdb.GetSendFailingRecordsCount()
+			if err != nil {
+				logs.Error(err.Error())
+				continue
+			}
+			monitor.Monitor.Gauge("sendFailRecording_count", sendFailRecording_count)
 			continue
 		}
 		if result.Code != 200 {
 			logs.Error(errors.New("request send failed"))
 			SaveOutputErrorData(_TableNameSendFailingRecords, t)
+			sendFailRecording_count, err := rethinkdb.GetSendFailingRecordsCount()
+			if err != nil {
+				logs.Error(err.Error())
+				continue
+			}
+			monitor.Monitor.Gauge("sendFailRecording_count", sendFailRecording_count)
 		}
 		out.Write(t)
 

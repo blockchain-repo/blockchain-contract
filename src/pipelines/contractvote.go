@@ -5,20 +5,22 @@ import (
 	"encoding/json"
 	"os"
 
+	"unicontract/src/common"
+	"unicontract/src/common/monitor"
+	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
-	"unicontract/src/common"
-	"unicontract/src/config"
-	"unicontract/src/common/monitor"
 
 	"github.com/astaxie/beego/logs"
+	"time"
 )
 
 const (
 	_CVTHREADNUM = 10
 )
+
 var (
-	cvPool     *ThreadPool
+	cvPool   *ThreadPool
 	cvInput  chan string
 	cvOutput chan string
 )
@@ -27,7 +29,7 @@ func cvChangefeed() {
 	var value interface{}
 	res := r.Changefeed(r.DBNAME, r.TABLE_CONTRACTS)
 	for res.Next(&value) {
-		time := monitor.Monitor.NewTiming()
+		contrant_changefeed_time := monitor.Monitor.NewTiming()
 		m := value.(map[string]interface{})
 		v, err := json.Marshal(m["new_val"])
 		if err != nil {
@@ -37,28 +39,29 @@ func cvChangefeed() {
 		if bytes.Equal(v, []byte("null")) {
 			continue
 		}
-		logs.Debug("-------cvChangefeed:",common.Serialize(m))
+		logs.Debug("-------cvChangefeed:", common.Serialize(m))
 		cvInput <- string(v)
 
-		time.Send("contrant_changefeed")
+		contrant_changefeed_time.Send("contrant_changefeed")
 	}
 }
 
 func cvValidateContract() error {
 	defer close(cvOutput)
 	for {
-		time := monitor.Monitor.NewTiming()
+		contract_vote_time := monitor.Monitor.NewTiming()
 		t, ok := <-cvInput
 		if !ok {
 			break
 		}
 		mod := model.ContractModel{}
-		err := json.Unmarshal([]byte(t),&mod)
+		err := json.Unmarshal([]byte(t), &mod)
 		if err != nil {
 			logs.Error(err.Error())
 			continue
 		}
 		v := model.Vote{}
+		contract_validate_time := monitor.Monitor.NewTiming()
 		if mod.Validate() {
 			//vote true
 			v.VoteBody.IsValid = true
@@ -66,8 +69,9 @@ func cvValidateContract() error {
 			//vote flase
 			v.VoteBody.IsValid = false
 		}
+		contract_validate_time.Send("contract_validate")
 		v.VoteBody.VoteFor = mod.Id
-		logs.Debug("-------cvValidateContract:",common.Serialize(v))
+		logs.Debug("-------cvValidateContract:", common.Serialize(v))
 
 		v.NodePubkey = config.Config.Keypair.PublicKey
 		v.VoteBody.Timestamp = common.GenTimestamp()
@@ -75,17 +79,17 @@ func cvValidateContract() error {
 		v.Id = v.GenerateId()
 		v.Signature = v.SignVote()
 
-		logs.Debug("-------cvWriteVote:",common.Serialize(v))
-		res :=r.Insert("Unicontract", "Votes", v.ToString())
+		logs.Debug("-------cvWriteVote:", common.Serialize(v))
+		vote_write_time := monitor.Monitor.NewTiming()
+		res := r.Insert("Unicontract", "Votes", v.ToString())
+		vote_write_time.Send("vote_write")
 
 		cvOutput <- common.Serialize(res)
 
-		time.Send("cv_validate_contract")
+		contract_vote_time.Send("contract_vote")
 	}
 	return nil
 }
-
-
 
 func startContractVote() {
 	defer cvPool.Stop()

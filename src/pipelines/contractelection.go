@@ -87,7 +87,7 @@ func ceChangefeed() {
 	var value interface{}
 	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
 	for res.Next(&value) {
-		time := monitor.Monitor.NewTiming()
+		votes_changefeed_time := monitor.Monitor.NewTiming()
 		beegoLog.Debug("1.1 ceChangefeed get new_val")
 		mValue := value.(map[string]interface{})
 		// 提取new_val的值
@@ -103,7 +103,7 @@ func ceChangefeed() {
 
 		beegoLog.Debug("1.2 ceChangefeed --->")
 		gchInput <- string(slVote)
-		time.Send("votes_changefeed")
+		votes_changefeed_time.Send("votes_changefeed")
 	}
 }
 
@@ -113,7 +113,7 @@ func ceHeadFilter() error {
 	defer close(gchOutput)
 	for {
 		// 读取new_val的值
-		time := monitor.Monitor.NewTiming()
+		contract_election_time := monitor.Monitor.NewTiming()
 		readData, ok := <-gchInput
 		if !ok {
 			break
@@ -135,7 +135,9 @@ func ceHeadFilter() error {
 			beegoLog.Debug("2.2.2 verify head node")
 			if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
 				beegoLog.Debug("2.2.3 verify vote")
+				vote_validate_time := monitor.Monitor.NewTiming()
 				pContractOutput, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
+				vote_validate_time.Send("vote_validate")
 				if err != nil {
 					if !pass {
 						beegoLog.Error(err.Error())
@@ -149,7 +151,7 @@ func ceHeadFilter() error {
 				if pass { // 合约合法
 					beegoLog.Debug("2.3 ceHeadFilter --->")
 					ceQueryEists(*pContractOutput)
-					time.Send("ce_validate_head")
+					contract_election_time.Send("contract_election")
 				} else { // 合约不合法
 					beegoLog.Debug("2.3 contract invalid and insert consensusFailure")
 					var consensusFailure model.ConsensusFailure
@@ -167,6 +169,12 @@ func ceHeadFilter() error {
 					if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
 						beegoLog.Error(err.Error())
 					}
+					consensus_failure_count, err := rethinkdb.GetConsensusFailuresCount()
+					if err != nil {
+						beegoLog.Error(err.Error())
+						continue
+					}
+					monitor.Monitor.Gauge("consensus_failure", consensus_failure_count)
 				}
 			}
 		} else {

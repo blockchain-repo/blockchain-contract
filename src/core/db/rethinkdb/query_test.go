@@ -377,6 +377,11 @@ func Test_GetConsensusFailuresByConsensusId(t *testing.T) {
 	fmt.Println(common.SerializePretty(consensusFailures))
 }
 
+func Test_GetConsensusFailuresCount(t *testing.T) {
+	count, _ := GetConsensusFailuresCount()
+	fmt.Println(count)
+}
+
 /*----------------------------- consensusFailures end---------------------------------------*/
 
 /*----------------------------- contractTask start---------------------------------------*/
