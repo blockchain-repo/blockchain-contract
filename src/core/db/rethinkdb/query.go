@@ -363,6 +363,25 @@ func GetConsensusFailuresByConsensusId(consensusId string) (string, error) {
 	return common.Serialize(blo), nil
 }
 
+func GetConsensusFailuresCount() (int, error) {
+	session := ConnectDB(DBNAME)
+	count, err := r.Table(TABLE_CONSENSUS_FAILURES).Count().Run(session)
+	if err != nil {
+		return -1, err
+	}
+	if count.IsNil() {
+		return -1, nil
+	}
+
+	var blo int
+	err = count.One(&blo)
+	if err != nil {
+		logs.Error(err.Error())
+		return -1, err
+	}
+	return blo, nil
+}
+
 /*----------------------------- consensusFailures end---------------------------------------*/
 
 /*----------------------------- SendFailingRecords start---------------------------------------*/
@@ -379,6 +398,25 @@ func GetAllRecords(db string, name string) ([]string, error) {
 		return nil, errors.New(err.Error())
 	}
 	return idlist, nil
+}
+
+func GetSendFailingRecordsCount() (int, error) {
+	session := ConnectDB(DBNAME)
+	count, err := r.Table(TABLE_SEND_FAILING_RECORDS).Count().Run(session)
+	if err != nil {
+		return -1, err
+	}
+	if count.IsNil() {
+		return -1, nil
+	}
+
+	var blo int
+	err = count.One(&blo)
+	if err != nil {
+		logs.Error(err.Error())
+		return -1, err
+	}
+	return blo, nil
 }
 
 /*----------------------------- SendFailingRecords end---------------------------------------*/
