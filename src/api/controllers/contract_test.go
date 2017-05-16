@@ -97,6 +97,12 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 		owners[publicKeyBase58] = privateKeyBase58
 		ownersPubkeys[i] = publicKeyBase58
 	}
+	//owners["8qi3Zy655uowWQUhXoRdQs1zyvVapr6KdpXsbp8YTFhM"] = "8pMZFfx6MXMjxii5dY9KkVFUNUqSA8WpGUu1pHXTTewe"
+	//ownersPubkeys[0] = "8qi3Zy655uowWQUhXoRdQs1zyvVapr6KdpXsbp8YTFhM"
+	//owners["F2P8cmiNbzr79QserzAh2LktZLdR6AgnNRfjQd6eMbB9"] = "EGAw5J3xTX2jZFCPjrSHxNLdkjq5TpZmn7Nb7bFnakyk"
+	//ownersPubkeys[1] = "F2P8cmiNbzr79QserzAh2LktZLdR6AgnNRfjQd6eMbB9"
+	//owners["6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu"] = "2JW9e1iGP2Hhi2rarj43oJAiNn9VL3MvtiWvwBd3CUjw"
+	//ownersPubkeys[2] = "6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu"
 
 	/*-------------------- generate contractModel ------------------*/
 	contractModel := model.ContractModel{}

@@ -6,8 +6,10 @@ import (
 
 	"unicontract/src/common"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
+	"strings"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -100,6 +102,57 @@ func GetContractsByContractId(contractId string) (string, error) {
 		return "", err
 	}
 
+	return common.Serialize(blo), nil
+}
+
+// 根据传入条件查询合约
+func GetContractsByMapCondition(conditions map[string]interface{}) (string, error) {
+	contractId, _ := conditions["contractId"].(string)
+	owner, _ := conditions["owner"].(string)
+	if owner == "" {
+		return "", errors.New("owner blank")
+	}
+	//signatureStatus, _ := conditions["signatureStatus"].(string)
+	name, _ := conditions["name"].(string)
+	name = strings.Trim(name, " ")
+	_ = name
+	session := ConnectDB(DBNAME)
+
+	var res *r.Cursor
+	var err error
+	if contractId != "" && name != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).Run(session)
+		//Filter(r.Row.Field("ContractBody").Field("Cname").Contains(name)).Run(session) //must sequence, not use this
+	} else if contractId == "" && name != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).Run(session)
+
+	} else if contractId != "" && name == "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).Run(session)
+	} else {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).Run(session)
+
+	}
+	beego.Warn(contractId, owner, name)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return "", err
+	}
+	beego.Warn("queryAll list is ", len(blo))
 	return common.Serialize(blo), nil
 }
 

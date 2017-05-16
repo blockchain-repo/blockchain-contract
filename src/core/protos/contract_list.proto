@@ -1,0 +1,11 @@
+syntax = "proto3";
+package protos;
+
+option java_package = "com.uniledger.protos";
+option java_outer_classname = "ProtoContractList";
+
+import "contract.proto";
+
+message ContractList {
+    repeated Contract contracts = 1; //for []Contract
+}

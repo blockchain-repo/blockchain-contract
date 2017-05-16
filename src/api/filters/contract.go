@@ -1,8 +1,8 @@
 package filters
 
 import (
-	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/common"
 )
 
@@ -15,19 +15,18 @@ func responseWithStatusCode(ctx *context.Context, status int, output string) {
 //签名身份验证
 func ContractFilter(ctx *context.Context) {
 	contentType := ctx.Input.Header("Content-Type")
-	requestDataType := ctx.Input.Header("RequestDataType")
 
 	//if contentType == "" || requestDataType == "" {
 	if contentType == "" {
-		result :=make(map[string]interface{})
+		result := make(map[string]interface{})
 		result["msg"] = "error Headers"
 		result["status"] = 404
 		responseWithStatusCode(ctx, 404, common.StructSerialize(result))
 		logs.Error("ContractFilter contentType or requestDataType is empty!")
 
-	} else if contentType == "application/json" && requestDataType == "json" {
-		logs.Debug("RequestDataType is json!")
-	} else if contentType == "application/octet-stream" && requestDataType == "proto" {
+	} else if contentType == "application/json" {
+		//logs.Debug("RequestDataType is json!")
+	} else if contentType == "application/octet-stream" {
 		//input := ctx.Input.RequestBody
 		//
 		//contract := &protos.ContractProto{}
@@ -40,7 +39,7 @@ func ContractFilter(ctx *context.Context) {
 		//
 		//fmt.Println(contract.Id)
 
-	}else if contentType == "application/x-protobuf" && requestDataType == "proto" {
+	} else if contentType == "application/x-protobuf" {
 		//logs.Debug("RequestDataType is proto!")
 		//input := ctx.Input.RequestBody
 		//contract := &protos.ContractProto{}

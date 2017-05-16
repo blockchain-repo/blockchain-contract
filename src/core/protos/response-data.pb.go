@@ -22,7 +22,7 @@ type ResponseData struct {
 func (m *ResponseData) Reset()                    { *m = ResponseData{} }
 func (m *ResponseData) String() string            { return proto.CompactTextString(m) }
 func (*ResponseData) ProtoMessage()               {}
-func (*ResponseData) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (*ResponseData) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
 
 func (m *ResponseData) GetOk() bool {
 	if m != nil {
@@ -49,9 +49,9 @@ func init() {
 	proto.RegisterType((*ResponseData)(nil), "protos.ResponseData")
 }
 
-func init() { proto.RegisterFile("response-data.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("response-data.proto", fileDescriptor2) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor2 = []byte{
 	// 135 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x4a, 0x2d, 0x2e,
 	0xc8, 0xcf, 0x2b, 0x4e, 0xd5, 0x4d, 0x49, 0x2c, 0x49, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17,
