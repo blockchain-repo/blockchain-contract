@@ -13,6 +13,10 @@ func Start() {
 		go _CleanTaskSchedule()
 	}
 
+	beegoLog.Info("ScanFailedTask start")
+	gwgTaskExe.Add(1)
+	go _ScanFailedTask()
+
 	beegoLog.Info("TaskExecute start")
 	gwgTaskExe.Add(1)
 	go _TaskExecute()

@@ -531,25 +531,53 @@ func Test_SetTaskScheduleCount(t *testing.T) {
 
 func Test_GetTaskSchedulesNoSend(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	retStr, err := GetTaskSchedulesNoSend(strNodePubkey)
+	retStr, err := GetTaskSchedulesNoSend(strNodePubkey, 500)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
 		t.Logf("pass\n")
-		//var slTask []model.TaskSchedule
-		var slTask []map[string]interface{}
-		json.Unmarshal([]byte(retStr), &slTask)
-		t.Logf("%+v\n", slTask)
+		if len(retStr) != 0 {
+			//var slTask []model.TaskSchedule
+			var slTask []map[string]interface{}
+			json.Unmarshal([]byte(retStr), &slTask)
+			t.Logf("%+v\n", slTask)
 
-		t.Logf("Id type is %T\n", slTask[0]["id"])
-		t.Logf("ContractId type is %T\n", slTask[0]["ContractId"])
-		t.Logf("NodePubkey type is %T\n", slTask[0]["NodePubkey"])
-		t.Logf("SendFlag type is %T\n", slTask[0]["SendFlag"])
-		t.Logf("StartTime type is %T\n", slTask[0]["StartTime"])
-		t.Logf("EndTime type is %T\n", slTask[0]["EndTime"])
-		t.Logf("FailedCount type is %T\n", slTask[0]["FailedCount"])
-		t.Logf("SuccessCount type is %T\n", slTask[0]["SuccessCount"])
-		t.Logf("LastExecuteTime type is %T\n", slTask[0]["LastExecuteTime"])
+			t.Logf("Id type is %T\n", slTask[0]["id"])
+			t.Logf("ContractId type is %T\n", slTask[0]["ContractId"])
+			t.Logf("NodePubkey type is %T\n", slTask[0]["NodePubkey"])
+			t.Logf("SendFlag type is %T\n", slTask[0]["SendFlag"])
+			t.Logf("StartTime type is %T\n", slTask[0]["StartTime"])
+			t.Logf("EndTime type is %T\n", slTask[0]["EndTime"])
+			t.Logf("FailedCount type is %T\n", slTask[0]["FailedCount"])
+			t.Logf("SuccessCount type is %T\n", slTask[0]["SuccessCount"])
+			t.Logf("LastExecuteTime type is %T\n", slTask[0]["LastExecuteTime"])
+		}
+	}
+}
+
+func Test_GetTaskSchedulesFailed(t *testing.T) {
+	strNodePubkey := config.Config.Keypair.PublicKey
+	retStr, err := GetTaskSchedulesFailed(strNodePubkey, 500)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass\n")
+		if len(retStr) != 0 {
+			//var slTask []model.TaskSchedule
+			var slTask []map[string]interface{}
+			json.Unmarshal([]byte(retStr), &slTask)
+			t.Logf("%+v\n", slTask)
+
+			t.Logf("Id type is %T\n", slTask[0]["id"])
+			t.Logf("ContractId type is %T\n", slTask[0]["ContractId"])
+			t.Logf("NodePubkey type is %T\n", slTask[0]["NodePubkey"])
+			t.Logf("SendFlag type is %T\n", slTask[0]["SendFlag"])
+			t.Logf("StartTime type is %T\n", slTask[0]["StartTime"])
+			t.Logf("EndTime type is %T\n", slTask[0]["EndTime"])
+			t.Logf("FailedCount type is %T\n", slTask[0]["FailedCount"])
+			t.Logf("SuccessCount type is %T\n", slTask[0]["SuccessCount"])
+			t.Logf("LastExecuteTime type is %T\n", slTask[0]["LastExecuteTime"])
+		}
 	}
 }
 

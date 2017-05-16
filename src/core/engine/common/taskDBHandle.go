@@ -27,6 +27,35 @@ import (
 )
 
 //---------------------------------------------------------------------------
+// 查询没有发送的task
+func GetMonitorNoSendData(strNodePubkey string, nThreshold int) (string, error) {
+	if len(strNodePubkey) == 0 {
+		return "", fmt.Errorf("pubkey is null")
+	}
+
+	return rethinkdb.GetTaskSchedulesNoSend(strNodePubkey, nThreshold)
+}
+
+//---------------------------------------------------------------------------
+// 查询失败次数已经超过阈值的task
+func GetMonitorFailedData(strNodePubkey string, nThreshold int) (string, error) {
+	if len(strNodePubkey) == 0 {
+		return "", fmt.Errorf("pubkey is null")
+	}
+
+	return rethinkdb.GetTaskSchedulesFailed(strNodePubkey, nThreshold)
+}
+
+//---------------------------------------------------------------------------
+// 批量设置发送标志为“已发送”，在查询到失败任务时调用
+func UpdateMonitorSendBatch(slID []string) error {
+	if len(slID) == 0 {
+		return fmt.Errorf("id slice is null")
+	}
+	return rethinkdb.SetTaskScheduleFlagBatch(slID, true)
+}
+
+//---------------------------------------------------------------------------
 // 设置发送标志为“已发送”，在将任务插入待执行队列后调用
 func UpdateMonitorSend(strID string) error {
 	if len(strID) == 0 {

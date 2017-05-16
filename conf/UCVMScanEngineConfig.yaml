@@ -4,3 +4,4 @@ task_queue_len: 20
 clean_data: true
 clean_time: 30
 clean_data_time: 30
+failed_count_threshold: 500

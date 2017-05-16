@@ -1,13 +1,12 @@
 /*************************************************************************
-  > File Name: scantaskschedule.go
+  > File Name: scanfailedtask.go
   > Module:
-  > Function: 扫描任务待执行表（TaskSchedule），过滤出表内属于本节点的任务，
-              放入任务待执行队列（gchTaskQueue）
+  > Function: 扫描任务待执行表（TaskSchedule），过滤出表内执行次数已经超过阈值的任务
   > Author: wangyp
   > Company:
   > Department:
   > Mail: wangyepeng87@163.com
-  > Created Time: 2017.05.08
+  > Created Time: 2017.05.16
  ************************************************************************/
 package scanengine
 
@@ -28,14 +27,15 @@ import (
 )
 
 //---------------------------------------------------------------------------
-func _ScanTaskSchedule() {
+func _ScanFailedTask() {
 	for {
 		start := time.Now()
 		var slTasks []model.TaskSchedule
+		var slID []string
 
-		beegoLog.Debug("query no send data")
+		beegoLog.Debug("query failed data")
 		strNodePubkey := config.Config.Keypair.PublicKey
-		retStr, err := engineCommon.GetMonitorNoSendData(strNodePubkey,
+		retStr, err := engineCommon.GetMonitorFailedData(strNodePubkey,
 			gParam.FailedCountThreshold)
 		if err != nil {
 			beegoLog.Error(err.Error())
@@ -43,23 +43,18 @@ func _ScanTaskSchedule() {
 		}
 
 		if len(retStr) == 0 {
-			beegoLog.Debug("all send")
+			beegoLog.Debug("no failed data")
 			goto CONSUME
 		}
 
-		beegoLog.Debug("get no send tasks")
+		beegoLog.Debug("get failed tasks")
 		json.Unmarshal([]byte(retStr), &slTasks)
 
 		beegoLog.Debug("handle task")
-		for _, value := range slTasks {
-			beegoLog.Debug("contract [%v] enter queue", value)
-			gchTaskQueue <- value
-			err = engineCommon.UpdateMonitorSend(value.Id)
-			if err != nil {
-				beegoLog.Error(err.Error())
-				goto CONSUME
-			}
-		}
+		slID = getFailedTaskID(slTasks)
+
+		beegoLog.Debug("handle task")
+		engineCommon.UpdateMonitorSendBatch(slID)
 
 		//task fail count send to monitor,modify value
 		monitor.Monitor.Gauge("task_fail_count", 1)
@@ -73,6 +68,15 @@ func _ScanTaskSchedule() {
 	}
 
 	gwgTaskExe.Done()
+}
+
+//---------------------------------------------------------------------------
+func getFailedTaskID(slTasks []model.TaskSchedule) []string {
+	var slID []string
+	for index, _ := range slTasks {
+		slID = append(slID, slTasks[index].Id)
+	}
+	return slID
 }
 
 //---------------------------------------------------------------------------

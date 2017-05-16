@@ -18,11 +18,12 @@ import (
 
 //---------------------------------------------------------------------------
 type scanEngineParam struct {
-	SleepTime     int  `yaml:"sleep_time"`      // 数据表扫描间隔时间，单位是秒
-	TaskQueueLen  int  `yaml:"task_queue_len"`  // 待执行队列最大长度
-	CleanData     bool `yaml:"clean_data"`      // 是否进行数据清理
-	CleanTime     int  `yaml:"clean_time"`      // 数据表清理扫描间隔时间，单位是分钟
-	CleanDataTime int  `yaml:"clean_data_time"` // 数据表清理间隔时间，单位是天
+	SleepTime            int  `yaml:"sleep_time"`             // 数据表扫描间隔时间，单位是秒
+	TaskQueueLen         int  `yaml:"task_queue_len"`         // 待执行队列最大长度
+	CleanData            bool `yaml:"clean_data"`             // 是否进行数据清理
+	CleanTime            int  `yaml:"clean_time"`             // 数据表清理扫描间隔时间，单位是分钟
+	CleanDataTime        int  `yaml:"clean_data_time"`        // 数据表清理间隔时间，单位是天
+	FailedCountThreshold int  `yaml:"failed_count_threshold"` // 失败次数阈值
 }
 
 const (

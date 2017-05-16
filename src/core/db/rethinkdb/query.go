@@ -6,10 +6,11 @@ import (
 
 	"unicontract/src/common"
 
+	"strings"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
-	"strings"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -543,6 +544,12 @@ func GetValidTime(strID string) (string, string, error) {
 }
 
 //---------------------------------------------------------------------------
+// 批量设置SendFlag字段，发送为1,未发送为0
+func SetTaskScheduleFlagBatch(strID []string, alreadySend bool) error {
+	return nil
+}
+
+//---------------------------------------------------------------------------
 // 设置SendFlag字段，发送为1,未发送为0
 func SetTaskScheduleFlag(strID string, alreadySend bool) error {
 	var send int
@@ -618,17 +625,39 @@ func SetTaskScheduleCount(strID string, success bool) (int, error) {
 
 //---------------------------------------------------------------------------
 // 获取所有未发送的任务，用于放在待执行队列中
-func GetTaskSchedulesNoSend(strNodePubkey string) (string, error) {
-	if len(strNodePubkey) == 0 {
-		return "", fmt.Errorf("pubkey is null")
-	}
-
+func GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error) {
 	now := common.GenTimestamp()
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
 		Filter(r.Row.Field("StartTime").Le(now)).
 		Filter(r.Row.Field("EndTime").Ge(now)).
+		Filter(r.Row.Field("FailedCount").Lt(nThreshold)).
+		Filter(r.Row.Field("SendFlag").Eq(0)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var tasks []map[string]interface{}
+	err = res.All(&tasks)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(tasks), nil
+}
+
+//---------------------------------------------------------------------------
+// 获取所有失败次数超过阈值的task
+func GetTaskSchedulesFailed(strNodePubkey string, nThreshold int) (string, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
+		Filter(r.Row.Field("FailedCount").Ge(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
 		Run(session)
 	if err != nil {
