@@ -38,10 +38,11 @@ func (n *Node) run() error {
 		return nil
 	}
 	//TODO  not good enough, how to support multi params and returns
+	out := n.target(x)
 	if n.output == nil {
 		return nil
 	}
-	n.output <- n.target(x)
+	n.output <- out
 	return nil
 }
 
