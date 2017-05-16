@@ -21,6 +21,7 @@ import (
 )
 
 import (
+	"unicontract/src/common/monitor"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	engineCommon "unicontract/src/core/engine/common"
@@ -59,6 +60,9 @@ func _ScanTaskSchedule() {
 				goto CONSUME
 			}
 		}
+
+		//task fail count send to monitor,modify value
+		monitor.Monitor.Gauge("task_fail_count", 1)
 
 	CONSUME:
 		consume := time.Since(start)

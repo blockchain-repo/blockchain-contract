@@ -175,6 +175,7 @@ func (c *ContractController) Create() {
 	token, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
 		c.responseJsonBodyCode(status, "", false, err.Error())
+		monitor.Monitor.Count("request_fail", 1)
 		return
 	}
 
@@ -183,16 +184,18 @@ func (c *ContractController) Create() {
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
 		logs.Debug("API[Create] token is", token)
+		monitor.Monitor.Count("request_fail", 1)
 		return
 	}
 	contract_write_time := monitor.Monitor.NewTiming()
 	ok := core.WriteContract(contractModel)
-	contract_write_time.Send("contract_write")
 	if !ok {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Create] insert contract fail!")
 		logs.Debug(c.Ctx.Request.RequestURI, "API[Create] insert contract fail!")
+		monitor.Monitor.Count("request_fail", 1)
 		return
 	}
+	contract_write_time.Send("contract_write")
 	c.responseJsonBody(contract.Id, true, "API[Create] insert contract Id "+contractModel.Id+"]")
 
 }

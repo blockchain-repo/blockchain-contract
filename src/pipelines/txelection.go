@@ -9,7 +9,6 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
-	"unicontract/src/core/db/rethinkdb"
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
 
@@ -113,21 +112,23 @@ func txSend(arg interface{}) interface{} {
 	if err != nil {
 		logs.Error(err.Error())
 		SaveOutputErrorData(_TableNameSendFailingRecords, coModel)
-		count, err := rethinkdb.GetSendFailingRecordsCount()
-		if err != nil {
-			logs.Error(err.Error())
-		}
-		monitor.Monitor.Gauge("sendFailingRecords_count", count)
+		//count, err := rethinkdb.GetSendFailingRecordsCount()
+		//if err != nil {
+		//	logs.Error(err.Error())
+		//}
+		//monitor.Monitor.Gauge("sendFailingRecords_count", count)
+		monitor.Monitor.Count("sendFailingRecords_count", 1)
 		return nil
 	}
 	if result.Code != 200 {
 		logs.Error(errors.New("request send failed"))
 		SaveOutputErrorData(_TableNameSendFailingRecords, coModel)
-		count, err := rethinkdb.GetSendFailingRecordsCount()
-		if err != nil {
-			logs.Error(err.Error())
-		}
-		monitor.Monitor.Gauge("sendFailingRecords_count", count)
+		//count, err := rethinkdb.GetSendFailingRecordsCount()
+		//if err != nil {
+		//	logs.Error(err.Error())
+		//}
+		//monitor.Monitor.Gauge("sendFailingRecords_count", count)
+		monitor.Monitor.Count("sendFailingRecords_count", 1)
 	}
 	return coModel
 }

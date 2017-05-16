@@ -21,6 +21,7 @@ import (
 
 import (
 	"unicontract/src/chain"
+	"unicontract/src/common/monitor"
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine"
 )
@@ -70,6 +71,7 @@ func _TaskExecute() {
 
 		/*go*/
 		func(data string) {
+			task_execute_time := monitor.Monitor.NewTiming()
 			_, err := execengine.Load(data)
 			if err != nil {
 				beegoLog.Error(err)
@@ -85,11 +87,14 @@ func _TaskExecute() {
 			}
 			if ret == 0 {
 				beegoLog.Error("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
+				monitor.Monitor.Count("task_execute_fail", 1)
 			} else if ret == -1 {
 				beegoLog.Error("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
+				monitor.Monitor.Count("task_execute_fail", 1)
 			} else if ret == 1 {
 				beegoLog.Debug("合约执行完成")
 			}
+			task_execute_time.Send("task_execute")
 		}(string(slContractData))
 	}
 
