@@ -2,8 +2,8 @@ package transaction
 
 import (
 	"github.com/astaxie/beego/logs"
-	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/common"
+	"unicontract/src/core/db/rethinkdb"
 )
 
 func ExecuteCreate(tx_signers []string, recipients [][2]interface{}, metadataStr string,
