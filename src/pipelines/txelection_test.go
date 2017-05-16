@@ -1,11 +1,13 @@
 package pipelines
 
 import (
-	"github.com/astaxie/beego/logs"
 	"testing"
 	"time"
+
 	"unicontract/src/common"
 	"unicontract/src/config"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func init() {

@@ -1,8 +1,9 @@
 package pipelines
 
 import (
-	"github.com/astaxie/beego/logs"
 	r "unicontract/src/core/db/rethinkdb"
+
+	"github.com/astaxie/beego/logs"
 )
 
 type ChangeFeed struct {

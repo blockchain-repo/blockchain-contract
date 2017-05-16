@@ -2,18 +2,18 @@ package pipelines
 
 import (
 	"encoding/json"
-
 	"errors"
-	"github.com/astaxie/beego/logs"
 	"sync"
-	engineCommon "unicontract/src/core/engine/common"
 
 	"unicontract/src/chain"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
+	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func txHeadFilter(arg interface{}) interface{} {

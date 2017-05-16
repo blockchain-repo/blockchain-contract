@@ -1,8 +1,9 @@
 package pipelines
 
 import (
-	"testing"
 	"fmt"
+	"testing"
+
 	"github.com/astaxie/beego/logs"
 )
 
@@ -20,7 +21,7 @@ func TestSun(t *testing.T) {
 	sum(a, b)
 }
 
-func sum(nums ... interface{}) {
+func sum(nums ...interface{}) {
 	//fmt.Print(nums, " ")
 
 	//for{
@@ -46,9 +47,9 @@ func sum(nums ... interface{}) {
 	//ss=append(ss,rear...)
 	//logs.Info(ss)
 
-	var ss []string=[]string{"1","2","3","4","5","6","7","8"};
+	var ss []string = []string{"1", "2", "3", "4", "5", "6", "7", "8"}
 
 	var s = []string{"!!"}
-	ss = append(s,ss...)
+	ss = append(s, ss...)
 	logs.Info(ss)
 }

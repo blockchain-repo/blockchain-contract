@@ -2,6 +2,7 @@ package pipelines
 
 import (
 	"errors"
+
 	"github.com/astaxie/beego/logs"
 )
 
