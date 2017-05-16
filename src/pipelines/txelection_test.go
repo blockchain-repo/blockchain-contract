@@ -26,8 +26,9 @@ func pip4(arg interface{}) interface{} {
 	logs.Info("P4 return:===", s)
 	return s
 }
+
 func TestStart(t *testing.T) {
-	start()
+	startTxElection()
 	time.Sleep(time.Second * 2)
 	logs.Info("down")
 }

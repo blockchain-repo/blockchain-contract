@@ -39,6 +39,7 @@ func txHeadFilter(arg interface{}) interface{} {
 	time.Send("txe_validate_head")
 	return conout
 }
+
 func txValidate(arg interface{}) interface{} {
 
 	logs.Info(" txElection step3 : Validate", arg)
@@ -62,13 +63,13 @@ func txValidate(arg interface{}) interface{} {
 		//	continue
 		//}
 	}
-	logs.Debug("Validate Hash")
+	//logs.Debug("Validate Hash")
 	if !coModel.ValidateContractOutput() {
 		//invalid signature
 		logs.Error(errors.New("invalid signature"))
 		return nil
 	}
-	logs.Debug("Validate sign")
+	//logs.Debug("Validate sign")
 	time.Send("txe_contractOutput_validate")
 	return coModel
 }
@@ -94,6 +95,7 @@ func txQueryEists(arg interface{}) interface{} {
 	time.Send("txe_query_contractOutput")
 	return coModel
 }
+
 func txSend(arg interface{}) interface{} {
 	logs.Info("txElection step5 : send contractoutput")
 	time := monitor.Monitor.NewTiming()
@@ -146,15 +148,14 @@ func createTxPip() (txPip Pipeline) {
 	return txPip
 }
 
-func start() {
-	waitRoutine := sync.WaitGroup{}
-	waitRoutine.Add(1)
-
+func startTxElection() {
 	txPip := createTxPip()
 	changefeed := getChangefeed()
 	txPip.setup(&changefeed.node)
 	txPip.start()
-	//TODO how to run in main.go
+
+	waitRoutine := sync.WaitGroup{}
+	waitRoutine.Add(1)
 	waitRoutine.Wait()
 }
 

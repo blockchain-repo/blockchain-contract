@@ -73,4 +73,5 @@ func Init() {
 	logs.Info("ContractElection Pipeline Start")
 	go startContractElection()
 	logs.Info("txElection Pipeline Start")
+	go startTxElection()
 }
