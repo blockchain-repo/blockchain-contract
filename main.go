@@ -78,7 +78,6 @@ func runReconfigDB(shards int, replicas int) {
 }
 
 func runConfig() {
-	config.Init()
 	config.WriteConToFile()
 }
 

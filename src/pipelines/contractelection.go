@@ -169,12 +169,13 @@ func ceHeadFilter() error {
 					if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
 						beegoLog.Error(err.Error())
 					}
-					consensus_failure_count, err := rethinkdb.GetConsensusFailuresCount()
-					if err != nil {
-						beegoLog.Error(err.Error())
-						continue
-					}
-					monitor.Monitor.Gauge("consensus_failure", consensus_failure_count)
+					//consensus_failure_count, err := rethinkdb.GetConsensusFailuresCount()
+					//if err != nil {
+					//	beegoLog.Error(err.Error())
+					//	continue
+					//}
+					//monitor.Monitor.Gauge("consensus_failure", consensus_failure_count)
+					monitor.Monitor.Count("consensus_failure", 1)
 				}
 			}
 		} else {
@@ -187,7 +188,6 @@ func ceHeadFilter() error {
 //---------------------------------------------------------------------------
 func ceQueryEists(contractOutput model.ContractOutput) {
 	beegoLog.Debug("3.进入ceQueryEists")
-	time := monitor.Monitor.NewTiming()
 
 	beegoLog.Debug("3.2 query contractoutput table")
 	output, err := rethinkdb.GetContractOutputById(contractOutput.Id)
@@ -206,7 +206,6 @@ func ceQueryEists(contractOutput model.ContractOutput) {
 	}
 	beegoLog.Debug("3.4 ceQueryEists ---> /dev/null")
 	gchOutput <- string(slContractOutput)
-	time.Send("ce_query_contract")
 }
 
 //---------------------------------------------------------------------------

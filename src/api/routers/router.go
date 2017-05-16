@@ -16,6 +16,7 @@ import (
 func init() {
 
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.ContractFilter, false)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	ns := beego.NewNamespace("/v1",
 		beego.NSNamespace("/contract",
 			beego.NSRouter("/authSignature", &controllers.ContractController{}, "post:AuthSignature"),
