@@ -4,17 +4,18 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/golang/protobuf/proto"
 	"time"
+
 	"unicontract/src/common"
+	"unicontract/src/common/monitor"
 	"unicontract/src/core"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
 
-	"unicontract/src/common/monitor"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"github.com/golang/protobuf/proto"
 )
 
 // Operations about Contract
@@ -32,29 +33,38 @@ const (
 	HTTP_STATUS_CODE_RequestTimeout = 408 //408 - 在服务器许可的等待时间内，客户一直没有发出任何请求。客户可以在以后重复同一请求。
 )
 
-func (c *ContractController) parseProtoRequestBody() (token string, contract *protos.Contract, err error) {
-
+func (c *ContractController) parseProtoRequestBody() (token string, contract *protos.Contract, err error, status int) {
 	contentType := c.Ctx.Input.Header("Content-Type")
 	//requestDataType := c.Ctx.Input.Header("RequestDataType")
 	token = c.Ctx.Input.Header("token")
+	if token == "" {
+		err = fmt.Errorf("服务器拒绝请求")
+		status = HTTP_STATUS_CODE_Forbidden
+		return
+	}
 
 	requestBody := c.Ctx.Input.RequestBody
 	contract = &protos.Contract{}
 	// return err init
 	if contentType == "application/x-protobuf" {
-		err := proto.Unmarshal(requestBody, contract)
+		err = proto.Unmarshal(requestBody, contract)
 		if err != nil {
 			logs.Error("contract parseRequestBody unmarshal err ", err)
+			err = fmt.Errorf("服务器拒绝请求")
+			status = HTTP_STATUS_CODE_BadRequest
+			return
 		}
-		fmt.Sprintf("[API] match |%s [token =%s, Content-Type =%s]", c.Ctx.Request.Method, c.Ctx.Request.RequestURI,
-			contentType)
+
+		if contract == nil || contract.Id == "" {
+			err = fmt.Errorf("contract error")
+			status = HTTP_STATUS_CODE_BadRequest
+			return
+		}
+
 		logs.Info(fmt.Sprintf("[API] match|%-32s \t[token = %s, Content-Type = %s]", c.Ctx.Request.RequestURI,
 			c.Ctx.Request.Method, contentType))
-		//logs.Info("[API] match |", c.Ctx.Request.Method,c.Ctx.Request.RequestURI)
-		//logs.Info("[API] match |", c.Ctx.Request.Method, c.Ctx.Request.RequestURI,
-		//	"\t[token =", token, ",Content-Type =", contentType, "]")
 	}
-	return token, contract, err
+	return
 }
 
 //response the json body
@@ -112,9 +122,9 @@ func (c *ContractController) responseWithCode(status int, data string) {
 }
 
 // API receive and transfer it to contractModel
-func fromContractToContractModel(contract protos.Contract) model.ContractModel {
+func fromContractToContractModel(contract *protos.Contract) model.ContractModel {
 	var contractModel model.ContractModel
-	contractModel.Contract = contract
+	contractModel.Contract = *contract
 	return contractModel
 }
 
@@ -140,23 +150,13 @@ func fromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 // @Failure 403 body is empty
 // @router /authSignature [post]
 func (c *ContractController) AuthSignature() {
-	token, contract, err := c.parseProtoRequestBody()
+	_, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
-		logs.Debug("API[AuthSignature] token is", token)
-		return
-	}
-
-	contractModel := fromContractToContractModel(*contract)
+	contractModel := fromContractToContractModel(contract)
 	signatureValid := contractModel.IsSignatureValid()
 	if !signatureValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "合约签名验证失败")
@@ -172,23 +172,13 @@ func (c *ContractController) AuthSignature() {
 // @Failure 403 body is empty
 // @router /create [post]
 func (c *ContractController) Create() {
-	token, contract, err := c.parseProtoRequestBody()
+	token, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
-		return
-	}
-
-	contractModel := fromContractToContractModel(*contract)
+	contractModel := fromContractToContractModel(contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
@@ -214,23 +204,13 @@ func (c *ContractController) Create() {
 // @Failure 403 body is empty
 // @router /signature [post]
 func (c *ContractController) Signature() {
-	token, contract, err := c.parseProtoRequestBody()
+	token, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
-		return
-	}
-
-	contractModel := fromContractToContractModel(*contract)
+	contractModel := fromContractToContractModel(contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
@@ -253,19 +233,9 @@ func (c *ContractController) Signature() {
 // @Failure 403 body is empty
 // @router /terminate [post]
 func (c *ContractController) Terminate() {
-	token, contract, err := c.parseProtoRequestBody()
+	_, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
@@ -287,19 +257,9 @@ func (c *ContractController) Terminate() {
 // @Failure 403 cid is empty
 // @router /query [post]
 func (c *ContractController) Query() {
-	token, contract, err := c.parseProtoRequestBody()
+	_, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "请输入合约Id!")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
@@ -340,19 +300,9 @@ func (c *ContractController) Query() {
 // @Failure 403 cid is empty
 // @router /track [post]
 func (c *ContractController) Track() {
-	token, contract, err := c.parseProtoRequestBody()
+	_, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "请输入合约Id!")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
@@ -393,23 +343,13 @@ func (c *ContractController) Track() {
 // @Failure 403 cid is empty
 // @router /update [post]
 func (c *ContractController) Update() {
-	token, contract, err := c.parseProtoRequestBody()
+	_, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
-		return
-	}
-
-	contractModel := fromContractToContractModel(*contract)
+	contractModel := fromContractToContractModel(contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract Validate error")
@@ -428,21 +368,12 @@ func (c *ContractController) Update() {
 // @Failure 403 cid is empty
 // @router /test [post]
 func (c *ContractController) Test() {
-	token, contract, err := c.parseProtoRequestBody()
+	_, _, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil || contract.Id == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
-		return
-	}
 	//TODO track contract 缺少测试合约方法
 	logs.Warn(c.Ctx.Request.RequestURI, "API[Test] 缺少测试合约方法!")
 	c.responseJsonBody(string(time.Now().Unix()), false, "API[Test] 缺少测试合约方法!")
@@ -450,23 +381,14 @@ func (c *ContractController) Test() {
 
 // for press test [pressTest]
 func (c *ContractController) PressTest() {
-	token, contract, err := c.parseProtoRequestBody()
+	token, contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
 
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
-
-	if contract == nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract error!")
-		return
-	}
 	//logs.Warn("Input contractDeserialize:\n", common.StructSerialize(contract))
-	contractModel := fromContractToContractModel(*contract)
+	contractModel := fromContractToContractModel(contract)
 	/*-------------------------- this for press test generate Id start---------------------*/
 	// add random string
 	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_" + token
