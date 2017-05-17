@@ -8,6 +8,7 @@ import (
 	"unicontract/src/core/engine/execengine/property"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
 )
 
 type GeneralData struct{
@@ -66,7 +67,7 @@ func (gd GeneralData) GetValue() interface{}{
 		case string:
 			v_default = gd.GetDefaultValue().(string)
 			v_contract := gd.GeneralComponent.GetContract()
-			v_default = v_contract.EvaluateExpression(gd.GetDefaultValue().(string))
+			v_default,_ = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Constant], gd.GetDefaultValue().(string))
 		default:
 			v_default = gd.GetDefaultValue()
 		}
@@ -87,6 +88,13 @@ func (gc GeneralData)GetCtype()string{
 	ctype_property := gc.PropertyTable["_Ctype"].(property.PropertyT)
 	return ctype_property.GetValue().(string)
 }
+
+func (gd *GeneralData) SetValue(p_Value interface{}){
+	gd.Value = p_Value
+	value_property := gd.PropertyTable[_Value].(property.PropertyT)
+	value_property.SetValue(p_Value)
+	gd.PropertyTable[_Value] = value_property
+}
 //===============描述态=====================
 func (gd *GeneralData)ToString() interface{}{
 	value_property := gd.PropertyTable[_Value].(property.PropertyT)
@@ -95,41 +103,30 @@ func (gd *GeneralData)ToString() interface{}{
 //===============运行态=====================
 func (gd *GeneralData) InitGeneralData()error {
 	var err error = nil
-	/*
-	if gd.Value == nil {
-		//TODO log
-		err = errors.New("GeneralData need Value!")
-		return err
-	}
-	if gd.DefaultValue == nil {
-		//TODO log
-		err = errors.New("GeneralData need DefaultValue!")
-		return err
-	}*/
 	err = gd.InitGeneralComponent()
 	if err != nil {
-		//TODO log
+		logs.Error("InitGeneralData fail["+err.Error()+"]")
 		return err
 	}
 	gd.SetCtype(constdef.ComponentType[constdef.Component_Data])
 
-	gd.AddProperty(gd, _Value, gd.Value)
-	gd.AddProperty(gd, _DefaultValue, gd.DefaultValue)
-	gd.AddProperty(gd, _HardConvType, gd.HardConvType)
-	gd.AddProperty(gd, _Unit, gd.Unit)
-	gd.AddProperty(gd, _ModifyDate, gd.ModifyDate)
-	gd.AddProperty(gd, _Mandatory, gd.Mandatory)
+	common.AddProperty(gd, gd.PropertyTable, _Value, gd.Value)
+	common.AddProperty(gd, gd.PropertyTable, _DefaultValue, gd.DefaultValue)
+	common.AddProperty(gd, gd.PropertyTable, _HardConvType, gd.HardConvType)
+	common.AddProperty(gd, gd.PropertyTable, _Unit, gd.Unit)
+	common.AddProperty(gd, gd.PropertyTable, _ModifyDate, gd.ModifyDate)
+	common.AddProperty(gd, gd.PropertyTable, _Mandatory, gd.Mandatory)
 	if gd.Category == nil {
-		gd.AddProperty(gd, _Category, make([]string, 0))
+		common.AddProperty(gd, gd.PropertyTable, _Category, make([]string, 0))
 	} else {
-		gd.AddProperty(gd, _Category, gd.Category)
+		common.AddProperty(gd, gd.PropertyTable, _Category, gd.Category)
 	}
 	if gd.Options == nil {
-		gd.AddProperty(gd, _Options, make(map[string]int, 0))
+		common.AddProperty(gd, gd.PropertyTable, _Options, make(map[string]int, 0))
 	} else {
-		gd.AddProperty(gd, _Options, gd.Options)
+		common.AddProperty(gd, gd.PropertyTable, _Options, gd.Options)
 	}
-	gd.AddProperty(gd, _Parent, gd.Parent)
+	common.AddProperty(gd, gd.PropertyTable, _Parent, gd.Parent)
 
 	return err
 }
@@ -309,13 +306,6 @@ func (gd *GeneralData) SetDefaultValue(p_DefaultValue interface{}){
 	defaultvalue_property := gd.PropertyTable[_DefaultValue].(property.PropertyT)
 	defaultvalue_property.SetValue(p_DefaultValue)
 	gd.PropertyTable[_DefaultValue] = defaultvalue_property
-}
-
-func (gd *GeneralData) SetValue(p_Value interface{}){
-	gd.Value = p_Value
-	value_property := gd.PropertyTable[_Value].(property.PropertyT)
-	value_property.SetValue(p_Value)
-	gd.PropertyTable[_Value] = value_property
 }
 
 func (gd *GeneralData) SetUnit(p_Unit string){

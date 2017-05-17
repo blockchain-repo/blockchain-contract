@@ -15,6 +15,22 @@ func NewContractAsset()*ContractAsset{
 	return ca
 }
 
+/*
+func (ca *ContractAsset) GetItem(p_propertyname string)interface{}{
+	var r_result interface{}
+	//Get Value By reflect
+	v_refl_object := reflect.ValueOf(ca).Elem()
+	v_refl_field := v_refl_object.FieldByName(p_propertyname)
+	switch v_refl_field.Kind(){
+	case reflect.Map:
+		r_result = v_refl_field.MapIndex(reflect.ValueOf(p_propertyname))
+	default:
+		r_result = v_refl_field.Interface()
+	}
+	return r_result
+}
+*/
+
 func (ca *ContractAsset) GetAssetId() string{
     return  ca.AssetId
 }

@@ -65,14 +65,15 @@ func UpdateMonitorSend(strID string) error {
 }
 
 //---------------------------------------------------------------------------
-// 执行失败：1.更新strContractID 的SendFlag = 0, FailedCount + 1, LastExecuteTime
+// 执行失败：1.更新strContractID & strContractHashOldID的SendFlag = 0, FailedCount + 1, LastExecuteTime
 // 返回FailedCount(或者SuccessCount)和error
-func UpdateMonitorFail(strNodePubkey, strContractID string) error {
-	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
+func UpdateMonitorFail(strContractID string, strContractHashOldID string) error {
+	strNodePubkey := config.UnicontractConfig.Keypair.PublicKey
+	if len(strNodePubkey) == 0 || len(strContractID) == 0 || len(strContractHashOldID) == 0 {
 		return fmt.Errorf("pubkey or contractid is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
 	if err != nil {
 		return err
 	}
@@ -90,13 +91,14 @@ func UpdateMonitorFail(strNodePubkey, strContractID string) error {
 }
 
 //---------------------------------------------------------------------------
-// 执行条件不满足：1.更新strNodePubkey  的SendFlag = 0, LastExecuteTime
-func UpdateMonitorWait(strNodePubkey, strContractID string) error {
-	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
+// 执行条件不满足：1.更新strContractID & strContractHashOldID的SendFlag = 0, LastExecuteTime
+func UpdateMonitorWait(strContractID string, strContractHashOldID string) error {
+	strNodePubkey := config.UnicontractConfig.Keypair.PublicKey
+	if len(strNodePubkey) == 0 || len(strContractID) == 0 || len(strContractHashOldID) == 0 {
 		return fmt.Errorf("pubkey or contractid is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
 	if err != nil {
 		return err
 	}
@@ -109,16 +111,18 @@ func UpdateMonitorWait(strNodePubkey, strContractID string) error {
 }
 
 //---------------------------------------------------------------------------
-// 执行成功：1.更新strContractIDold 的SendFlag=1, SuccessCount + 1, LastExecuteTime
-//         2.将strContractIDnew 插入到扫描监控表中
-func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string) error {
+// 执行成功：1.更新strContractID & strContractHashOldID的的SendFlag=1, SuccessCount + 1, LastExecuteTime
+//           2.将strContractID & strContractHashNewID插入到扫描监控表中
+func UpdateMonitorSucc(strContractID, strContractHashOldID string, strContractHashNewID string) error {
+	strNodePubkey := config.UnicontractConfig.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
-		len(strContractIDold) == 0 ||
-		len(strContractIDnew) == 0 {
-		return fmt.Errorf("pubkey or contractid is null")
+		len(strContractID) == 0 ||
+		len(strContractHashOldID) == 0 ||
+		len(strContractHashNewID) == 0 {
+		return fmt.Errorf("pubkey or contractid or hashid is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractIDold)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
 	if err != nil {
 		return err
 	}
@@ -148,7 +152,8 @@ func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string)
 
 	var taskSchedule model.TaskSchedule
 	taskSchedule.Id = common.GenerateUUID()
-	taskSchedule.ContractId = strContractIDnew
+	taskSchedule.ContractId = strContractID
+	taskSchedule.ContractHashId = strContractHashNewID
 	taskSchedule.NodePubkey = strNodePubkey
 	taskSchedule.StartTime = startTime
 	taskSchedule.EndTime = endTime
@@ -165,6 +170,7 @@ func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 	for index, _ := range allPublicKeys {
 		var taskSchedule model.TaskSchedule
 		taskSchedule.Id = common.GenerateUUID()
+		taskSchedule.ContractHashId = taskScheduleBase.ContractHashId
 		taskSchedule.ContractId = taskScheduleBase.ContractId
 		taskSchedule.NodePubkey = allPublicKeys[index]
 		taskSchedule.StartTime = taskScheduleBase.StartTime

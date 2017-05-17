@@ -7,6 +7,8 @@ import (
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
 	"fmt"
+	"github.com/astaxie/beego/logs"
+	"unicontract/src/core/engine/common"
 )
 
 //支持int中的各种类型uint8, uint16, uint32, uint64; 不可直接用unit
@@ -20,19 +22,8 @@ func NewUintData()*UintData{
 	return n
 }
 //====================接口方法========================
-func (nd UintData)GetName()string{
-	if nd.PropertyTable[_Parent] != nil  {
-		parent_property := nd.PropertyTable[_Parent].(property.PropertyT)
-		if parent_property.GetValue() != nil {
-			v_general_data := parent_property.GetValue().(inf.IData)
-			if v_general_data.GetName() != "" {
-				return v_general_data.GetName() + "." + nd.GetCname()
-			} else {
-				return nd.GetCname()
-			}
-		}
-	}
-	return nd.GetCname()
+func (ud UintData)GetName()string{
+	return ud.GeneralData.GetName()
 }
 
 func (ud UintData) GetValue() interface{}{
@@ -52,12 +43,15 @@ func (ud UintData)GetContract() inf.ICognitiveContract {
 func (ud UintData)SetContract(p_contract inf.ICognitiveContract) {
 	ud.GeneralComponent.SetContract(p_contract)
 }
-func (gc UintData)GetCtype()string{
-	if gc.PropertyTable["_Ctype"] == nil {
+func (ud UintData)GetCtype()string{
+	if ud.PropertyTable["_Ctype"] == nil {
 		return ""
 	}
-	ctype_property := gc.PropertyTable["_Ctype"].(property.PropertyT)
+	ctype_property := ud.PropertyTable["_Ctype"].(property.PropertyT)
 	return ctype_property.GetValue().(string)
+}
+func (ud UintData) SetValue(p_Value interface{}){
+	ud.GeneralData.SetValue(p_Value)
 }
 //====================描述态==========================
 
@@ -66,16 +60,16 @@ func (ud *UintData) InitUintData()error{
 	var err error = nil
 	err = ud.InitGeneralData()
 	if err != nil {
-        //TODO log
+        logs.Error("InitUintData fail["+err.Error()+"]")
 		return err
 	}
 	ud.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Uint])
 	fmt.Println(ud.GetCtype())
 	var data_range [2]uint = [2]uint{0, 2147483647}
 	if ud.DataRange[0] == 0 && ud.DataRange[1] == 0  {
-		ud.AddProperty(ud, _DataRange, data_range)
+		common.AddProperty(ud, ud.PropertyTable, _DataRange, data_range)
 	} else {
-		ud.AddProperty(ud, _DataRange, ud.DataRange)
+		common.AddProperty(ud, ud.PropertyTable, _DataRange, ud.DataRange)
 	}
 	ud.SetHardConvType("uint")
 	return err

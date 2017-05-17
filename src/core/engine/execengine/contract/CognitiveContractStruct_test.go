@@ -10,33 +10,33 @@ func PrintContrract(v_contract CognitiveContract){
 	fmt.Println("=======constract init=========")
 	v_contract.InitCognitiveContract()
 	fmt.Println("=======constract print=========")
-	fmt.Println("Cname: ", v_contract.Cname)
+	fmt.Println("Cname: ", v_contract.ContractBody.Cname)
 	fmt.Println("  PropertyTable[_Cname]: ", v_contract.GetPropertyTable()["_Cname"])
-	fmt.Println("Ctype: ", v_contract.Ctype)
+	fmt.Println("Ctype: ", v_contract.ContractBody.Ctype)
 	fmt.Println("  PropertyTable[_Ctype]: ", v_contract.GetPropertyTable()["_Ctype"])
-	fmt.Println("Caption: ", v_contract.Caption)
+	fmt.Println("Caption: ", v_contract.ContractBody.Caption)
 	fmt.Println("  PropertyTable[_Caption]: ", v_contract.GetPropertyTable()["_Caption"])
-	fmt.Println("Description: ", v_contract.Description)
+	fmt.Println("Description: ", v_contract.ContractBody.Description)
 	fmt.Println("  PropertyTable[_Description]: ", v_contract.GetPropertyTable()["_Description"])
-	fmt.Println("Creator: ", v_contract.Creator)
+	fmt.Println("Creator: ", v_contract.ContractBody.Creator)
 	fmt.Println("  PropertyTable[_Creator]: ", v_contract.GetPropertyTable()["_Creator"])
-	fmt.Println("CreatorTime: ", v_contract.CreatorTime)
+	fmt.Println("CreatorTime: ", v_contract.ContractBody.CreatorTime)
 	fmt.Println("  PropertyTable[_CreatorTime]: ", v_contract.GetPropertyTable()["_CreatorTime"])
-	fmt.Println("StartTime: ", v_contract.StartTime)
+	fmt.Println("StartTime: ", v_contract.ContractBody.StartTime)
 	fmt.Println("  PropertyTable[_StartTime]: ", v_contract.GetPropertyTable()["_StartTime"])
-	fmt.Println("EndTime: ", v_contract.EndTime)
+	fmt.Println("EndTime: ", v_contract.ContractBody.EndTime)
 	fmt.Println("  PropertyTable[_EndTime]: ", v_contract.GetPropertyTable()["_EndTime"])
-	fmt.Println("ContractOwners: ", v_contract.ContractOwners)
+	fmt.Println("ContractOwners: ", v_contract.ContractBody.ContractOwners)
 	fmt.Println("  PropertyTable[_ContractOwners]: ", v_contract.GetPropertyTable()["_ContractOwners"])
 	fmt.Println("  All Owners: ")
-	for p_idx,p_owner := range v_contract.ContractOwners {
+	for p_idx,p_owner := range v_contract.ContractBody.ContractOwners {
 		fmt.Println("  owner[",p_idx, "]: ", p_owner)
 	}
 	fmt.Println("")
-	fmt.Println("ContractAssets: ", v_contract.ContractAssets)
+	fmt.Println("ContractAssets: ", v_contract.ContractBody.ContractAssets)
 	fmt.Println("  PropertyTable[_ContractAssets]: ", v_contract.GetPropertyTable()["_ContractAssets"])
 	fmt.Println("  All Assets: ")
-	for p_idx,p_assert := range v_contract.ContractAssets {
+	for p_idx,p_assert := range v_contract.ContractBody.ContractAssets {
 		fmt.Println("  Asset.AssetId[",p_idx, "]: ", p_assert.AssetId)
 		fmt.Println("  Asset.Name[",p_idx, "]: ", p_assert.Name)
 		fmt.Println("  Asset.Caption[",p_idx, "]: ", p_assert.Caption)
@@ -45,21 +45,21 @@ func PrintContrract(v_contract CognitiveContract){
 		fmt.Println("  Asset.Amount[",p_idx, "]: ", p_assert.Amount)
 		fmt.Println("  Asset.MetaData[",p_idx, "]: ", p_assert.MetaData)
 	}
-	fmt.Println("ContractSignatures: ", v_contract.ContractSignatures)
+	fmt.Println("ContractSignatures: ", v_contract.ContractBody.ContractSignatures)
 	fmt.Println("  PropertyTable[_ContractSignatures]: ", v_contract.GetPropertyTable()["_ContractSignatures"])
 	fmt.Println("  All Signatures: ")
-	for p_idx,p_signature := range v_contract.ContractSignatures {
+	for p_idx,p_signature := range v_contract.ContractBody.ContractSignatures {
 		fmt.Println("  Signatures.OwnerPubkey[",p_idx, "]: ", p_signature.OwnerPubkey)
 		fmt.Println("  Signatures.Signature[",p_idx, "]: ", p_signature.Signature)
 		fmt.Println("  Signatures.SignTimestamp[",p_idx, "]: ", p_signature.SignTimestamp)
 	}
-	fmt.Println("MetaAttribute: ", v_contract.MetaAttribute)
+	fmt.Println("MetaAttribute: ", v_contract.ContractBody.MetaAttribute)
 	fmt.Println("  PropertyTable[_MetaAttribute]: ", v_contract.GetPropertyTable()["_MetaAttribute"])
 	fmt.Println("  All MetaAttribute: ")
-	for p_key,p_value := range v_contract.MetaAttribute {
+	for p_key,p_value := range v_contract.ContractBody.MetaAttribute {
 		fmt.Println("  Attribute[", p_key, "]", p_value)
 	}
-	fmt.Println("ContractComponent: ", v_contract.ContractComponents)
+	fmt.Println("ContractComponent: ", v_contract.ContractBody.ContractComponents)
 }
 /*
 func TestContractStruct_simple(t *testing.T)  {
@@ -106,44 +106,44 @@ func TestContractStruct_simple(t *testing.T)  {
   "Test2":"bbbbbb"
 }}`
 	fmt.Println("====================================")
-	var v_contract CognitiveContract = *new(CognitiveContract)
-	if err := json.Unmarshal([]byte(str_contract), &v_contract); err == nil {
+	var v_contract.ContractBody CognitiveContract = *new(CognitiveContract)
+	if err := json.Unmarshal([]byte(str_contract), &v_contract.ContractBody); err == nil {
 		fmt.Println("=======constract object=========")
-		fmt.Println(v_contract)
+		fmt.Println(v_contract.ContractBody)
 	}else {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println("=======constract init=========")
-	v_contract.InitCognitiveContract()
+	v_contract.ContractBody.InitCognitiveContract()
 	fmt.Println("=======constract print=========")
-	fmt.Println("Cname: ", v_contract.Cname)
-	fmt.Println("  PropertyTable[_Cname]: ", v_contract.GetPropertyTable()["_Cname"])
-	fmt.Println("Ctype: ", v_contract.Ctype)
-	fmt.Println("  PropertyTable[_Ctype]: ", v_contract.GetPropertyTable()["_Ctype"])
-	fmt.Println("Caption: ", v_contract.Caption)
-	fmt.Println("  PropertyTable[_Caption]: ", v_contract.GetPropertyTable()["_Caption"])
-	fmt.Println("Description: ", v_contract.Description)
-	fmt.Println("  PropertyTable[_Description]: ", v_contract.GetPropertyTable()["_Description"])
-	fmt.Println("Creator: ", v_contract.Creator)
-	fmt.Println("  PropertyTable[_Creator]: ", v_contract.GetPropertyTable()["_Creator"])
-	fmt.Println("CreatorTime: ", v_contract.CreatorTime)
-	fmt.Println("  PropertyTable[_CreatorTime]: ", v_contract.GetPropertyTable()["_CreatorTime"])
-	fmt.Println("StartTime: ", v_contract.StartTime)
-	fmt.Println("  PropertyTable[_StartTime]: ", v_contract.GetPropertyTable()["_StartTime"])
-	fmt.Println("EndTime: ", v_contract.EndTime)
-	fmt.Println("  PropertyTable[_EndTime]: ", v_contract.GetPropertyTable()["_EndTime"])
-	fmt.Println("ContractOwners: ", v_contract.ContractOwners)
-	fmt.Println("  PropertyTable[_ContractOwners]: ", v_contract.GetPropertyTable()["_ContractOwners"])
+	fmt.Println("Cname: ", v_contract.ContractBody.Cname)
+	fmt.Println("  PropertyTable[_Cname]: ", v_contract.ContractBody.GetPropertyTable()["_Cname"])
+	fmt.Println("Ctype: ", v_contract.ContractBody.Ctype)
+	fmt.Println("  PropertyTable[_Ctype]: ", v_contract.ContractBody.GetPropertyTable()["_Ctype"])
+	fmt.Println("Caption: ", v_contract.ContractBody.Caption)
+	fmt.Println("  PropertyTable[_Caption]: ", v_contract.ContractBody.GetPropertyTable()["_Caption"])
+	fmt.Println("Description: ", v_contract.ContractBody.Description)
+	fmt.Println("  PropertyTable[_Description]: ", v_contract.ContractBody.GetPropertyTable()["_Description"])
+	fmt.Println("Creator: ", v_contract.ContractBody.Creator)
+	fmt.Println("  PropertyTable[_Creator]: ", v_contract.ContractBody.GetPropertyTable()["_Creator"])
+	fmt.Println("CreatorTime: ", v_contract.ContractBody.CreatorTime)
+	fmt.Println("  PropertyTable[_CreatorTime]: ", v_contract.ContractBody.GetPropertyTable()["_CreatorTime"])
+	fmt.Println("StartTime: ", v_contract.ContractBody.StartTime)
+	fmt.Println("  PropertyTable[_StartTime]: ", v_contract.ContractBody.GetPropertyTable()["_StartTime"])
+	fmt.Println("EndTime: ", v_contract.ContractBody.EndTime)
+	fmt.Println("  PropertyTable[_EndTime]: ", v_contract.ContractBody.GetPropertyTable()["_EndTime"])
+	fmt.Println("ContractOwners: ", v_contract.ContractBody.ContractOwners)
+	fmt.Println("  PropertyTable[_ContractOwners]: ", v_contract.ContractBody.GetPropertyTable()["_ContractOwners"])
 	fmt.Println("  All Owners: ")
-	for p_idx,p_owner := range v_contract.ContractOwners {
+	for p_idx,p_owner := range v_contract.ContractBody.ContractOwners {
 		fmt.Println("  owner[",p_idx, "]: ", p_owner)
 	}
 	fmt.Println("")
-	fmt.Println("ContractAssets: ", v_contract.ContractAssets)
-	fmt.Println("  PropertyTable[_ContractAssets]: ", v_contract.GetPropertyTable()["_ContractAssets"])
+	fmt.Println("ContractAssets: ", v_contract.ContractBody.ContractAssets)
+	fmt.Println("  PropertyTable[_ContractAssets]: ", v_contract.ContractBody.GetPropertyTable()["_ContractAssets"])
 	fmt.Println("  All Assets: ")
-	for p_idx,p_assert := range v_contract.ContractAssets {
+	for p_idx,p_assert := range v_contract.ContractBody.ContractAssets {
 		fmt.Println("  Asset.AssetId[",p_idx, "]: ", p_assert.AssetId)
 		fmt.Println("  Asset.Name[",p_idx, "]: ", p_assert.Name)
 		fmt.Println("  Asset.Caption[",p_idx, "]: ", p_assert.Caption)
@@ -152,18 +152,18 @@ func TestContractStruct_simple(t *testing.T)  {
 		fmt.Println("  Asset.Amount[",p_idx, "]: ", p_assert.Amount)
 		fmt.Println("  Asset.MetaData[",p_idx, "]: ", p_assert.MetaData)
 	}
-	fmt.Println("ContractSignatures: ", v_contract.ContractSignatures)
-	fmt.Println("  PropertyTable[_ContractSignatures]: ", v_contract.GetPropertyTable()["_ContractSignatures"])
+	fmt.Println("ContractSignatures: ", v_contract.ContractBody.ContractSignatures)
+	fmt.Println("  PropertyTable[_ContractSignatures]: ", v_contract.ContractBody.GetPropertyTable()["_ContractSignatures"])
 	fmt.Println("  All Signatures: ")
-	for p_idx,p_signature := range v_contract.ContractSignatures {
+	for p_idx,p_signature := range v_contract.ContractBody.ContractSignatures {
 		fmt.Println("  Signatures.OwnerPubkey[",p_idx, "]: ", p_signature.OwnerPubkey)
 		fmt.Println("  Signatures.Signature[",p_idx, "]: ", p_signature.Signature)
 		fmt.Println("  Signatures.SignTimestamp[",p_idx, "]: ", p_signature.SignTimestamp)
 	}
-	fmt.Println("MetaAttribute: ", v_contract.MetaAttribute)
-	fmt.Println("  PropertyTable[_MetaAttribute]: ", v_contract.GetPropertyTable()["_MetaAttribute"])
+	fmt.Println("MetaAttribute: ", v_contract.ContractBody.MetaAttribute)
+	fmt.Println("  PropertyTable[_MetaAttribute]: ", v_contract.ContractBody.GetPropertyTable()["_MetaAttribute"])
 	fmt.Println("  All MetaAttribute: ")
-	for p_key,p_value := range v_contract.MetaAttribute {
+	for p_key,p_value := range v_contract.ContractBody.MetaAttribute {
 		fmt.Println("  Attribute[", p_key, "]", p_value)
 	}
 }*/
@@ -634,9 +634,9 @@ func TestContractStruct_all(t *testing.T)  {
 `
 	fmt.Println("+++++++++++manual Unmarshal++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	var v_contract CognitiveContract = *new(CognitiveContract)
-	if err := json.Unmarshal([]byte(str_contract), &v_contract); err == nil {
+	if err := json.Unmarshal([]byte(str_contract), &v_contract.ContractBody); err == nil {
 		fmt.Println("=======constract object=========")
-		fmt.Println(v_contract)
+		fmt.Println(v_contract.ContractBody)
 	}else {
 		fmt.Println(err)
 		return

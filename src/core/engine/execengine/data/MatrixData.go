@@ -4,6 +4,7 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/property"
 	"unicontract/src/core/engine/execengine/inf"
+	"github.com/astaxie/beego/logs"
 )
 
 //TODO
@@ -17,18 +18,7 @@ func NewMatrixData() *MatrixData{
 }
 //====================接口方法========================
 func (nd MatrixData)GetName()string{
-	if nd.PropertyTable[_Parent] != nil  {
-		parent_property := nd.PropertyTable[_Parent].(property.PropertyT)
-		if parent_property.GetValue() != nil {
-			v_general_data := parent_property.GetValue().(inf.IData)
-			if v_general_data.GetName() != "" {
-				return v_general_data.GetName() + "." + nd.GetCname()
-			} else {
-				return nd.GetCname()
-			}
-		}
-	}
-	return nd.GetCname()
+	return nd.GeneralData.GetName()
 }
 
 func (nd MatrixData) GetValue() interface{}{
@@ -42,12 +32,11 @@ func (nd MatrixData)GetContract() inf.ICognitiveContract {
 func (nd MatrixData)SetContract(p_contract inf.ICognitiveContract) {
 	nd.GeneralComponent.SetContract(p_contract)
 }
-func (gc MatrixData)GetCtype()string{
-	if gc.PropertyTable["_Ctype"] == nil {
-		return ""
-	}
-	ctype_property := gc.PropertyTable["_Ctype"].(property.PropertyT)
-	return ctype_property.GetValue().(string)
+func (nd MatrixData)GetCtype()string{
+	return nd.GeneralData.GetCtype()
+}
+func (nd MatrixData) SetValue(p_Value interface{}){
+	nd.GeneralData.SetValue(p_Value)
 }
 //====================描述态==========================
 
@@ -57,7 +46,7 @@ func (md *MatrixData) InitMatrixData()error{
     var err error = nil
 	err = md.InitGeneralData()
 	if err != nil {
-		//TODO log
+		logs.Error("InitMatrixData fail["+err.Error()+"]")
 		return err
 	}
 	md.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Matrix])

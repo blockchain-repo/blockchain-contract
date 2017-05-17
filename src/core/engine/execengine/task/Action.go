@@ -3,6 +3,7 @@ package task
 import (
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
 )
 //表示场景：1. 执行一个动作 2. 查询一个数据，但不会根据结果分支
 type Action struct {
@@ -56,7 +57,7 @@ func (a *Action)InitAction() error{
 	var err error = nil
 	err = a.InitEnquriy()
 	if err != nil {
-		//TODO log
+		logs.Error("InitAction fail["+err.Error()+"]")
 		return err
 	}
 	a.SetCtype(constdef.ComponentType[constdef.Component_Task] +  "." + constdef.TaskType[constdef.Task_Action])

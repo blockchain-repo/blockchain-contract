@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
+	"unicontract/src/core/engine/common"
 )
 
 type Plan struct {
@@ -64,7 +66,7 @@ func (p *Plan) InitPlan() error{
 	var err error = nil
 	err = p.InitGeneralTask()
 	if err != nil {
-		//TODO log
+		logs.Error("InitPlan fail["+err.Error()+"]")
 		return err
 	}
 	p.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Plan])
@@ -77,7 +79,7 @@ func (p *Plan) InitPlan() error{
 			fmt.Println(p_task)
 		}
 	}
-	p.AddProperty(p, _TaskList, map_tasklist)
+	common.AddProperty(p, p.PropertyTable, _TaskList, map_tasklist)
 	return err
 }
 

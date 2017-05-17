@@ -1,30 +1,28 @@
 package component
 
 import (
-	"fmt"
-	"time"
+	"errors"
+	"github.com/astaxie/beego/logs"
 
 	"unicontract/src/core/engine/execengine/property"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/common"
-	"strings"
 	"unicontract/src/core/engine/execengine/constdef"
-	"reflect"
+	"bytes"
 )
 
+//描述态只在序列化和反序列化时使用；过程中都是执行态
+//描述态：gc.xxxxx 是描述态获取值的方式；Set方法时，需要给gc.xxxx赋值，保证可以正常序列化出来
+//运行态：gc.PropertyTable["xxxx"] 是运行态获取值的方式；Get方法返回的是propertyTable中存储的值
 type GeneralComponent struct{
 	Cname string  `json:"Cname"`
 	Ctype string  `json:"Ctype"`
 	Caption string `json:"Caption"`
     Description string `json:"Description"`
 	MetaAttribute map[string]string `json:"MetaAttribute"`
+
     //inf.ICognitiveContract
 	Contract inf.ICognitiveContract  `json:"-"`
-	//TODO
-	//EnactmentComponent property.PropertyT `json:"EnactmentComponent"`
-	//TODO
-	//Event_handler property.PropertyAttributeEvent `json:"Event_handler"`
-
 	PropertyTable map[string] interface{}  `json:"-"`
 }
 
@@ -53,7 +51,7 @@ func (gc *GeneralComponent) GetContract() inf.ICognitiveContract{
 func (gc *GeneralComponent) SetContract(contract  inf.ICognitiveContract){
 	gc.Contract = contract
 	if gc.PropertyTable[_Contract] == nil {
-		//TODO: need
+		gc.PropertyTable[_Contract] = property.PropertyT{}
 	}
 	contract_property := gc.PropertyTable[_Contract].(property.PropertyT)
 	contract_property.SetValue(contract)
@@ -74,168 +72,62 @@ func (gc *GeneralComponent)GetCtype()string{
 //===============描述态=====================
 //====ToString方法
 func (nc *GeneralComponent)ToString() string{
-	var str_res string
-	str_res = strings.Join([]string{"Cname:", nc.Cname,
-									", Ctype:", nc.Ctype,
-									", Caption:", nc.Caption,
-									", Description:", nc.Description},  "")
-	return str_res
+	var str_res bytes.Buffer = bytes.Buffer{}
+	str_res.WriteString("Cname:" + nc.Cname)
+	str_res.WriteString(", Ctype:" + nc.Ctype)
+	str_res.WriteString(", Caption:" + nc.Caption)
+	str_res.WriteString(", Description:" + nc.Description)
+    for v_key,v_value := range nc.MetaAttribute {
+		str_res.WriteString(", " + v_key + ":" + v_value)
+	}
+	return str_res.String()
 }
 //===============运行态=====================
 func (gc *GeneralComponent) InitGeneralComponent()error{
 	var err error = nil
-	/*
 	if gc.Cname == "" {
-		//TODO log
+		logs.Warning("GeneralComponent Need Cname!")
 		err = errors.New("GeneralComponent Need Cname!")
 		return err
-	}*/
-	if gc.PropertyTable == nil {
+	}
+	if gc.PropertyTable == nil{
 		gc.PropertyTable = make(map[string]interface{}, 0)
 	}
-	//Take Care: map or [] need init
-	if gc.MetaAttribute == nil || len(gc.MetaAttribute) == 0 {
+	if gc.MetaAttribute == nil{
 		gc.MetaAttribute = make(map[string]string, 0)
 	}
-	//Take Care: Value must be gc.xxxxxx, because method init is State[runnable], need use value of State[description]
-	gc.AddProperty(gc, _Cname, gc.Cname)
+	//将描述态数据加载成运行态，因此value都是gc.xxxx(描述态的)
+	common.AddProperty(gc, gc.PropertyTable, _Cname, gc.Cname)
 	gc.Ctype = common.TernaryOperator(gc.Ctype == "", constdef.ComponentType[constdef.Component_Unknown], gc.Ctype).(string)
-	gc.AddProperty(gc, _Ctype, gc.Ctype)
-	gc.AddProperty(gc, _Caption, gc.Caption)
-	gc.AddProperty(gc, _Description, gc.Description)
-	gc.AddProperty(gc, _Contract, gc.Contract)
-	gc.AddProperty(gc, _MetaAttribute, gc.MetaAttribute)
+	common.AddProperty(gc,gc.PropertyTable,  _Ctype, gc.Ctype)
+	common.AddProperty(gc, gc.PropertyTable, _Caption, gc.Caption)
+	common.AddProperty(gc, gc.PropertyTable, _Description, gc.Description)
+	common.AddProperty(gc, gc.PropertyTable, _Contract, gc.Contract)
+	common.AddProperty(gc, gc.PropertyTable, _MetaAttribute, gc.MetaAttribute)
 	return err
 }
-//反序列化时用到，将table中的默认值设置到对象中
-//TODO: 非数组结构的默认值可以实现，类型为数组的再property_table中对应为map类型，不可直接用
-func (gc *GeneralComponent)ReflectSetValue(object interface{}, str_name string, value interface{}) {
-	v_value := reflect.ValueOf(value)
-	if reflect.ValueOf(object).Elem().CanSet() {
-		mutable := reflect.ValueOf(object).Elem()
-		if mutable.FieldByName(strings.Replace(str_name, "_", "", 1)).IsValid() {
-			mutable.FieldByName(strings.Replace(str_name, "_", "", 1)).Set(v_value)
-		}
-	} else {
-		mutable := reflect.ValueOf(&object).Elem()
-		if mutable.FieldByName(strings.Replace(str_name, "_", "", 1)).IsValid() {
-			mutable.FieldByName(strings.Replace(str_name, "_", "", 1)).Set(v_value)
-		}
-	}
-}
 
-//====属性动态初始化
-//NOTE: importance, need support type,one see log "value type not support!!!"
-func (gc *GeneralComponent) AddProperty(object interface{}, str_name string, value interface{})property.PropertyT {
-	var pro_object property.PropertyT
-	if value == nil {
-		pro_object = *property.NewPropertyT(str_name)
-		gc.PropertyTable[str_name] = pro_object
-		return pro_object
-	}
-	switch value.(type) {
-	case string:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(string))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case uint:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(uint))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case int:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(int))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case bool:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(bool))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case [2]int:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.([2]int))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case [2]uint:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.([2]uint))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case [2]float64:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.([2]float64))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case float64:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(float64))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case time.Time:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(time.Time))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case inf.ICognitiveContract:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(inf.ICognitiveContract))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case common.OperateResult:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(common.OperateResult))
-		gc.PropertyTable[str_name] = pro_object
-		gc.ReflectSetValue(object, str_name, value)
-	case []string:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.([]string))
-		gc.PropertyTable[str_name] = pro_object
-	case map[string]string:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(map[string]string))
-		gc.PropertyTable[str_name] = pro_object
-	case map[string]int:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(map[string]int))
-		gc.PropertyTable[str_name] = pro_object
-	case map[string]inf.IExpression:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(map[string]inf.IExpression))
-		gc.PropertyTable[str_name] = pro_object
-	case map[string]inf.IData:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(map[string]inf.IData))
-		gc.PropertyTable[str_name] = pro_object
-	case map[string]inf.ITask:
-		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(map[string]inf.ITask))
-		gc.PropertyTable[str_name] = pro_object
-	default:
-		fmt.Println("[", str_name, ":", value, "]value type not support!!!")
-	}
-	return pro_object
-}
-//Note: 获取PropertyTable
-//Return: map[string]property.PropertyT
+//获取PropertyTable
+//return: map[string]property.propertyT
 func (gc *GeneralComponent)GetPropertyTable()map[string] interface{}{
 	return gc.PropertyTable
 }
+
 //Note: PropertyTable的key为属性变量名大写加_前缀，如：_NAME
-//Return: property.PropertyT
+//return: property.propertyT
 func (gc *GeneralComponent) GetProperty(p_name string)interface{}{
 	if p_name != "" && gc.PropertyTable != nil {
 		return gc.PropertyTable[p_name].(property.PropertyT)
 	}
 	return nil
 }
-//Note:获取PropertyTable中的属性
-//Return: property.PropertyT
+
+//Note:获取PropertyTable中的属性的值，为了保持统一的获取对象元素的方法
+//Return: interface{}
 func (gc *GeneralComponent)GetItem(p_name string)interface{}{
 	if p_name != "" && gc.PropertyTable != nil {
-		return gc.PropertyTable[p_name].(property.PropertyT)
+		v_property := gc.PropertyTable[p_name].(property.PropertyT)
+		return v_property.GetValue()
 	}
 	return nil
 }
@@ -257,6 +149,7 @@ func (gc *GeneralComponent) AddMetaAttribute(metaProperty interface{}){
 //====属性Get方法
 func (gc *GeneralComponent)GetCname()string {
 	if gc.PropertyTable[_Cname] == nil {
+		logs.Warning("property[Cname] is nil!")
 		return ""
 	}
 	cname_property := gc.PropertyTable[_Cname].(property.PropertyT)
@@ -265,16 +158,12 @@ func (gc *GeneralComponent)GetCname()string {
 
 func (gc *GeneralComponent) GetCaption()string {
 	var r_res string = ""
-	if gc.PropertyTable[_Caption] == nil {
-		r_res = ""
-	} else {
+	if gc.PropertyTable[_Caption] != nil {
 		caption_property := gc.PropertyTable[_Caption].(property.PropertyT)
 		r_res = caption_property.GetValue().(string)
-		/*
-		if gc.Contract.GetValue() != nil {
-			v_Contract := gc.Contract.GetValue().(inf.ICognitiveContract)
-			r_res = v_Contract.ProcessString(gc.Caption.GetValue().(string))
-		}*/
+		if gc.Contract != nil {
+			r_res = gc.Contract.ProcessString(gc.Caption)
+		}
 	}
 	return r_res
 }
@@ -284,11 +173,9 @@ func (gc *GeneralComponent) GetDescription()string{
 	if gc.PropertyTable[_Description] != nil {
 		description_property := gc.PropertyTable[_Description].(property.PropertyT)
 		r_res = description_property.GetValue().(string)
-		/*
-		if gc.Contract.GetValue() != nil {
-			v_Contract := gc.Contract.GetValue().(inf.ICognitiveContract)
-			r_res = v_Contract.ProcessString(gc.Description.GetValue().(string))
-		}*/
+		if gc.Contract != nil {
+			r_res = gc.Contract.ProcessString(gc.Description)
+		}
 	}
 	return r_res
 }
@@ -302,11 +189,9 @@ func (gc *GeneralComponent) GetMetaAttribute()map[string]string {
 }
 //属性Set方法
 func (gc *GeneralComponent)SetCname(str_name string){
-	//Take case: Setter method need set value for gc.xxxxxx
 	gc.Cname = str_name
 	cname_property := gc.PropertyTable[_Cname].(property.PropertyT)
 	cname_property.SetValue(str_name)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	gc.PropertyTable[_Cname] = cname_property
 }
 

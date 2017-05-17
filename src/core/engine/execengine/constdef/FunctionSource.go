@@ -1,0 +1,13 @@
+package constdef
+
+const (
+	FUNCTION_SRC_DEMO = iota
+	FUNCTION_SRC_TIANJS
+	FUNCTION_SRC_GUANGXIBIANMAO
+)
+
+var FunctionSource = map[int]string{
+	FUNCTION_SRC_DEMO:           "DEMO_SRC",
+	FUNCTION_SRC_TIANJS:         "TIANJS_SRC",
+	FUNCTION_SRC_GUANGXIBIANMAO: "GUANGXIBIANMAO_SRC",
+}

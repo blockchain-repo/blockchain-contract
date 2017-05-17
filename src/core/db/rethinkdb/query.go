@@ -546,9 +546,10 @@ func InsertTaskSchedules(slTaskSchedule []interface{}) (int, error) {
 
 //---------------------------------------------------------------------------
 // 根据nodePubkey和contractID获得表内ID
-func GetID(strNodePubkey, strContractID string) (string, error) {
+func GetID(strNodePubkey, strContractID string, strContractHashId string) (string, error) {
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("ContractHashId").Eq(strContractHashId)).
 		Filter(r.Row.Field("ContractId").Eq(strContractID)).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
 		Run(session)

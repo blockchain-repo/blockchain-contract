@@ -11,7 +11,7 @@ import (
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //测试方法
-func TestMethod(args ...interface{}) (common.OperateResult, error) {
+func FuncTestMethod(args...interface{})(common.OperateResult,error){
 	var v_result common.OperateResult
 	var v_err error = nil
 	var v_map_args map[string]interface{} = nil

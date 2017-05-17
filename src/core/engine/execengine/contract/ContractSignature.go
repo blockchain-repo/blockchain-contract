@@ -1,5 +1,7 @@
 package contract
 
+import "reflect"
+
 type ContractSignature struct {
 	OwnerPubkey string `json:"OwnerPubkey"`
 	Signature string `json:"Signature"`
@@ -11,6 +13,14 @@ func NewContractSignature() *ContractSignature {
 	return cs
 }
 
+func (ca *ContractSignature) GetItem(p_propertyname string)interface{}{
+	var r_result interface{}
+	//Get Value By reflect
+	v_refl_object := reflect.ValueOf(ca).Elem()
+	v_refl_field := v_refl_object.FieldByName(p_propertyname)
+	r_result = v_refl_field.Interface()
+	return r_result
+}
 func (cs *ContractSignature) GetOwnerPubkey()string {
 	return cs.OwnerPubkey
 }

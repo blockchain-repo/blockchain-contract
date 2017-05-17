@@ -6,7 +6,9 @@ import (
 	"math"
 	"unicontract/src/core/engine/execengine/inf"
 	"strconv"
+	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
 )
 
 //支持int中的各种类型float32, float64
@@ -21,19 +23,8 @@ func NewFloatData()*FloatData{
 	return n
 }
 //====================接口方法========================
-func (nd FloatData)GetName()string{
-	if nd.PropertyTable[_Parent] != nil  {
-		parent_property := nd.PropertyTable[_Parent].(property.PropertyT)
-		if parent_property.GetValue() != nil {
-			v_general_data := parent_property.GetValue().(inf.IData)
-			if v_general_data.GetName() != "" {
-				return v_general_data.GetName() + "." + nd.GetCname()
-			} else {
-				return nd.GetCname()
-			}
-		}
-	}
-	return nd.GetCname()
+func (fd FloatData)GetName()string{
+	return fd.GeneralData.GetName()
 }
 
 func (fd FloatData) GetValue() interface{}{
@@ -52,12 +43,11 @@ func (fd FloatData)SetContract(p_contract inf.ICognitiveContract) {
 func (fd FloatData)GetContract() inf.ICognitiveContract {
 	return fd.GeneralComponent.GetContract()
 }
-func (gc FloatData)GetCtype()string{
-	if gc.PropertyTable["_Ctype"] == nil {
-		return ""
-	}
-	ctype_property := gc.PropertyTable["_Ctype"].(property.PropertyT)
-	return ctype_property.GetValue().(string)
+func (fd FloatData)GetCtype()string{
+	return fd.GeneralData.GetCtype()
+}
+func (fd FloatData) SetValue(p_Value interface{}){
+	fd.GeneralData.SetValue(p_Value)
 }
 //====================描述态==========================
 
@@ -67,15 +57,15 @@ func (fd *FloatData) InitFloatData()error{
 	var err error = nil
 	err = fd.InitGeneralData ()
 	if err != nil {
-		//TODO log
+		logs.Error("InitFloatData fail["+err.Error()+"]")
 		return err
 	}
 	fd.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Float])
 	var data_range [2]float64 = [2]float64{-math.MaxFloat64, math.MaxFloat64}
 	if fd.DataRange[0] == 0 && fd.DataRange[1] == 0{
-		fd.AddProperty(fd, _DataRange, data_range)
+		common.AddProperty(fd, fd.PropertyTable, _DataRange, data_range)
 	} else {
-		fd.AddProperty(fd, _DataRange, fd.DataRange)
+		common.AddProperty(fd, fd.PropertyTable, _DataRange, fd.DataRange)
 	}
 
 	var hard_conv_type string = "float64"

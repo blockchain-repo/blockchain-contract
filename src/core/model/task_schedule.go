@@ -5,6 +5,7 @@ package model
 type TaskSchedule struct {
 	Id              string `json:"id"`
 	ContractId      string
+	ContractHashId  string
 	NodePubkey      string
 	StartTime       string
 	EndTime         string

@@ -72,15 +72,16 @@ func _TaskExecute() {
 		/*go*/
 		func(data string) {
 			task_execute_time := monitor.Monitor.NewTiming()
-			_, err := execengine.Load(data)
+			contractExecuter := execengine.NewContractExecuter()
+			err := contractExecuter.Load(data)
 			if err != nil {
 				beegoLog.Error(err)
 				return
 			}
-
-			execengine.Prepare()
-
-			ret, err := execengine.Start()
+			//执行引擎初始化环境
+			contractExecuter.Prepare()
+			//执行机启动合约执行
+			ret, err := contractExecuter.Start()
 			if err != nil {
 				beegoLog.Error(err)
 				return
@@ -94,6 +95,8 @@ func _TaskExecute() {
 			} else if ret == 1 {
 				beegoLog.Debug("合约执行完成")
 			}
+			//执行机销毁合约
+			contractExecuter.Destory()
 			task_execute_time.Send("task_execute")
 		}(string(slContractData))
 	}

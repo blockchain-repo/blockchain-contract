@@ -1,495 +1,505 @@
 {
-  "ContractId": "xxxxxxxxxxxxxxxxxxxxx",
-  "Cname": "contract_mobilecallback",
-  "Caption": "购智能手机返话费合约产品协议",
-  "Description": "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后，要求用户每月消费58元以上通信费，移动运营商B便可按月返还话费（即：每月1号返还移动用户A20元话费），连续返还12个月",
-  "MetaAttribute": {
-    "Test1": "aaaaaa",
-    "Test2": "bbbbbb"
+  "id": "bfdb4bf1bbf13183d6637f8bab295038b39326b82cce8acff947042deb3ccc13",
+  "ContractHead": {
+    "MainPubkey": "HdaBUgpzpW7MicbspTe3kd2nLYk6f2WtpKTPzDULC9mK",
+    "Timestamp": "1494578190560",
+    "Version": 1
   },
-  "Creator": "ABCDEFGHIJKLMNIPQRSTUVWXYZ",
-  "CreatorTime": "2016-12-20 12:00:00",
-  "StartTime": "2017-01-01 12:00:00",
-  "EndTime": "2017-01-01 12:00:00",
-  "ContractOwners": [
-    "AXXXXXXXXXXX",
-    "BXXXXXXXXXXX"
-  ],
-  "ContractAssets": [
-    {
-      "AssetId": "xxxxxxxxxxx",
-      "Name": "asset_money",
-      "Caption": "理财产品",
-      "Description": "理财资产",
-      "Unit": "份",
-      "Amount": 1000,
-      "MetaData": {
-        "TestAsset1": "1111111111",
-        "TestAsset2": "2222222222"
+  "ContractBody": {
+    "ContractId": "xxxxxxxxxxxxxxxxxxxxx",
+    "Cname": "contract_mobilecallback",
+    "Caption": "购智能手机返话费合约产品协议",
+    "Description": "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后，要求用户每月消费58元以上通信费，移动运营商B便可按月返还话费（即：每月1号返还移动用户A20元话费），连续返还12个月",
+    "MetaAttribute": {
+      "Test1": "aaaaaa",
+      "Test2": "bbbbbb"
+    },
+    "Creator": "ABCDEFGHIJKLMNIPQRSTUVWXYZ",
+    "CreatorTime": "2016-12-20 12:00:00",
+    "StartTime": "2017-01-01 12:00:00",
+    "EndTime": "2017-01-01 12:00:00",
+    "ContractOwners": [
+      "AXXXXXXXXXXX",
+      "BXXXXXXXXXXX"
+    ],
+    "ContractAssets": [
+      {
+        "AssetId": "xxxxxxxxxxx",
+        "Name": "asset_money",
+        "Caption": "理财产品",
+        "Description": "理财资产",
+        "Unit": "份",
+        "Amount": 1000,
+        "MetaData": {
+          "TestAsset1": "1111111111",
+          "TestAsset2": "2222222222"
+        }
       }
-    }
-  ],
-  "ContractSignatures": [
-    {
-      "OwnerPubkey": "AXXXXXXXXXXX",
-      "Signature": "Axxxxxxxxxxxxxxxxxxxxxx",
-      "SignTimestamp": "1492619683"
-    },
-    {
-      "OwnerPubkey": "BXXXXXXXXXXX",
-      "Signature": "Bxxxxxxxxxxxxxxxxxxxxxx",
-      "SignTimestamp": "1492619983"
-    }
-  ],
-  "NextTasks":["enquiry_A"],
-  "ContractComponents": [
-    {
-      "Cname": "enquiry_A",
-      "Caption": "查询用户账户",
-      "Description": "查询移动用户A账户是否有500元",
-      "Ctype": "Component_Task.Task_Enquiry",
-      "State": "TaskState_Disgarded",
-      "PreCondition": [
-        {
-          "Cname": "expression_precond_A",
-          "Caption": "查询用户账户前提条件",
-          "Description": "当前日期大于等于合约生效起始日期",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DisgardCondition": [
-        {
-          "Cname": "expression_discond_A",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "CompleteCondition": [
-        {
-          "Cname": "expression_comcond_A",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "expression_data_A.ExpressionResult['code']==200",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "NextTasks": [
-        "action_B",
-        "action_C"
-      ],
-      "DataValueSetterExpressionList": [
-        {
-          "Cname": "expression_data_A",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_Function",
-          "ExpressionStr": "getBalance(AXXXXXXXXXX)",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DataList": [
-        {
-          "Cname": "data_A",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Data.Data_Float",
-          "Unit": "元",
-          "Value": "600",
-          "DefaultValue": "0",
-          "HardConvType": "float64"
-        }
-      ]
-    },
-    {
-      "Cname": "action_B",
-      "Caption": "A购置手机",
-      "Description": "移动用户A账户存在500元：用户A将500元转账给移动运营商B，运营商B将手机快递给用户A",
-      "Ctype": "Component_Task.Task_Action",
-      "State": "TaskState_Dormant",
-      "PreCondition": [
-        {
-          "Cname": "expression_precond_B",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&enquiry_A.data_A>500",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DisgardCondition": [
-        {
-          "Cname": "expression_discond_B",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "CompleteCondition": [
-        {
-          "Cname": "expression_comcond_B",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "expression_data_B.ExpressionResult['code']==200",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "NextTasks": [
-        "enquiry_D"
-      ],
-      "DataValueSetterExpressionList": [
-        {
-          "Cname": "expression_data_B",
-          "Caption": "A转账500给B",
-          "Description": "用户A转账500元给移动运营商B(运营商B将手机快递给用户A,不在线上确认)",
-          "Ctype": "Component_Expression.Expression_Function",
-          "ExpressionStr": "tranferMoney(AXXXXXXXXXX,BXXXXXXXXXX,500)",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DataList": []
-    },
-    {
-      "Cname": "action_C",
-      "Caption": "A账户存款500元",
-      "Description": "移动用户A账户不存在500元：用户Ａ往账户存入500元，然后将500元转账给移动运营商B",
-      "Ctype": "Component_Task.Task_Action",
-      "State": "TaskState_Disgarded",
-      "PreCondition": [
-        {
-          "Cname": "expression_precond_C",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Exporess_LogicArgument",
-          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&enquiry_A.data_A<500",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DisgardCondition": [
-        {
-          "Cname": "expression_discond_C",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Exporess_LogicArgument",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "CompleteCondition": [
-        {
-          "Cname": "expression_comcond_C",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Exporess_LogicArgument",
-          "ExpressionStr": "expression_data_C.ExpressionResult['code']==200",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "NextTasks": [
-        "action_B"
-      ],
-      "DataValueSetterExpressionList": [
-        {
-          "Cname": "expression_data_C",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Exporess_Function",
-          "ExpressionStr": "deposit(AXXXXXXXXXX)",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DataList": []
-    },
-    {
-      "Cname": "enquiry_D",
-      "Caption": "查询用户月消费额",
-      "Description": "查询用户A当月消费额度，是否大于58元",
-      "Ctype": "Component_Task.Task_Enquiry",
-      "State": "TaskState_Dormant",
-      "PreCondition": [
-        {
-          "Cname": "expression_precond_D",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DisgardCondition": [
-        {
-          "Cname": "expression_discond_D",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "CompleteCondition": [
-        {
-          "Cname": "expression_comcond_D",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "expression_data_D.ExpressionResult['code']==200",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "NextTasks": [
-        "action_E",
-        "actionF"
-      ],
-      "DataValueSetterExpressionList": [
-        {
-          "Cname": "expression_data_D",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_Function",
-          "ExpressionStr": "queryMonthConsumption(AXXXXXXXXXX)",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DataList": [
-        {
-          "Cname": "data_D",
-          "Caption": "用户A月消费额",
-          "Description": "",
-          "Ctype": "Component_Data.Data_Float",
-          "Unit": "元",
-          "Value": "80",
-          "DefaultValue": "0",
-          "HardConvType": "float64"
-        }
-      ]
-    },
-    {
-      "Cname": "action_E",
-      "Caption": "移动运营商下月1号返移动用户A20元",
-      "Description": "移动用户A当月消费58元以上：移动运营商B下月1号返还话费20元；连续返还12个月",
-      "Ctype": "Component_Task.Task_Action",
-      "State": "TaskState_Dormant",
-      "PreCondition": [
-        {
-          "Cname": "expression_precond_E",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&getNowDay()==1&&getNowDate()!=action_E.data_E&&enquiry_D.data_D>=58",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DisgardCondition": [
-        {
-          "Cname": "expression_discond_E",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "CompleteCondition": [
-        {
-          "Cname": "expression_comcond_E",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "expression_data_E.ExpressionResult['code']==200",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "NextTasks": [
-        "enquiry_D"
-      ],
-      "DataValueSetterExpressionList": [
-        {
-          "Cname": "expression_data_E",
-          "Caption": "B返话费给A20元",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_Function",
-          "ExpressionStr": "backTelephoneFare(BXXXXXXXXXX,AXXXXXXXXXX,20)",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DataList": [
-        {
-          "Cname": "data_E",
-          "Caption": "B返话费给A日期",
-          "Description": "",
-          "Ctype": "Component_Data.Data_Date",
-          "Unit": "",
-          "Value": "2017-02-0112:00:00",
-          "DefaultValue": "",
-          "HardConvType": "string"
-        }
-      ]
-    },
-    {
-      "Cname": "action_F",
-      "Caption": "移动运行商不返话费",
-      "Description": "移动用户A当月消费不足58元：移动运营商B下月1号不返还话费",
-      "Ctype": "Component_Task.Task_Action",
-      "State": "TaskState_Dormant",
-      "PreCondition": [
-        {
-          "Cname": "expression_precond_F",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&getNowDay()==1&&getNowDate()!=action_E.data_E&&enquiry_D.data_D<58",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DisgardCondition": [
-        {
-          "Cname": "expression_discond_F",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "CompleteCondition": [
-        {
-          "Cname": "expression_discond_F",
-          "Caption": "",
-          "Description": "",
-          "Ctype": "Component_Expression.Expression_LogicArgument",
-          "ExpressionStr": "expression_data_F.ExpressionResult['code']==200",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "NextTasks": [
-        "enquiry_D"
-      ],
-      "DataValueSetterExpressionList": [
-        {
-          "Cname": "expression_data_F",
-          "Caption": "不执行动作",
-          "Description": "消费不足58元，不执行动作",
-          "Ctype": "Component_Expression.Expression_Function",
-          "ExpressionStr": "true",
-          "ExpressionResult": {
-            "Message": "Operatesuccess.",
-            "Code": 200
-          },
-          "LogicValue": 1
-        }
-      ],
-      "DataList": [
-        {
-          "Cname": "data_F",
-          "Caption": "B返话费给A执行日期",
-          "Description": "移动运营商B返话费给用户A的操作日期",
-          "Ctype": "Component_Data.Data_Date",
-          "Unit": "",
-          "Value": "2017-02-0112:00:00",
-          "DefaultValue": "",
-          "HardConvType": "string"
-        }
-      ]
-    }
-  ]
+    ],
+    "ContractSignatures": [
+      {
+        "OwnerPubkey": "AXXXXXXXXXXX",
+        "Signature": "Axxxxxxxxxxxxxxxxxxxxxx",
+        "SignTimestamp": "1492619683"
+      },
+      {
+        "OwnerPubkey": "BXXXXXXXXXXX",
+        "Signature": "Bxxxxxxxxxxxxxxxxxxxxxx",
+        "SignTimestamp": "1492619983"
+      }
+    ],
+    "NextTasks": [
+      "enquiry_A"
+    ],
+    "ContractComponents": [
+      {
+        "Cname": "enquiry_A",
+        "Caption": "查询用户账户",
+        "Description": "查询移动用户A账户是否有500元",
+        "Ctype": "Component_Task.Task_Enquiry",
+        "State": "TaskState_Disgarded",
+        "PreCondition": [
+          {
+            "Cname": "expression_precond_A",
+            "Caption": "查询用户账户前提条件",
+            "Description": "当前日期大于等于合约生效起始日期",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DisgardCondition": [
+          {
+            "Cname": "expression_discond_A",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "CompleteCondition": [
+          {
+            "Cname": "expression_comcond_A",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "expression_data_A.ExpressionResult['code']==200",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "NextTasks": [
+          "action_B",
+          "action_C"
+        ],
+        "DataValueSetterExpressionList": [
+          {
+            "Cname": "expression_data_A",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_Function",
+            "ExpressionStr": "getBalance(AXXXXXXXXXX)",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DataList": [
+          {
+            "Cname": "data_A",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Data.Data_Float",
+            "Unit": "元",
+            "Value": "600",
+            "DefaultValue": "0",
+            "HardConvType": "float64"
+          }
+        ]
+      },
+      {
+        "Cname": "action_B",
+        "Caption": "A购置手机",
+        "Description": "移动用户A账户存在500元：用户A将500元转账给移动运营商B，运营商B将手机快递给用户A",
+        "Ctype": "Component_Task.Task_Action",
+        "State": "TaskState_Dormant",
+        "PreCondition": [
+          {
+            "Cname": "expression_precond_B",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&enquiry_A.data_A>500",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DisgardCondition": [
+          {
+            "Cname": "expression_discond_B",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "CompleteCondition": [
+          {
+            "Cname": "expression_comcond_B",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "expression_data_B.ExpressionResult['code']==200",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "NextTasks": [
+          "enquiry_D"
+        ],
+        "DataValueSetterExpressionList": [
+          {
+            "Cname": "expression_data_B",
+            "Caption": "A转账500给B",
+            "Description": "用户A转账500元给移动运营商B(运营商B将手机快递给用户A,不在线上确认)",
+            "Ctype": "Component_Expression.Expression_Function",
+            "ExpressionStr": "tranferMoney(AXXXXXXXXXX,BXXXXXXXXXX,500)",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DataList": []
+      },
+      {
+        "Cname": "action_C",
+        "Caption": "A账户存款500元",
+        "Description": "移动用户A账户不存在500元：用户Ａ往账户存入500元，然后将500元转账给移动运营商B",
+        "Ctype": "Component_Task.Task_Action",
+        "State": "TaskState_Disgarded",
+        "PreCondition": [
+          {
+            "Cname": "expression_precond_C",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Exporess_LogicArgument",
+            "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&enquiry_A.data_A<500",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DisgardCondition": [
+          {
+            "Cname": "expression_discond_C",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Exporess_LogicArgument",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "CompleteCondition": [
+          {
+            "Cname": "expression_comcond_C",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Exporess_LogicArgument",
+            "ExpressionStr": "expression_data_C.ExpressionResult['code']==200",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "NextTasks": [
+          "action_B"
+        ],
+        "DataValueSetterExpressionList": [
+          {
+            "Cname": "expression_data_C",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Exporess_Function",
+            "ExpressionStr": "deposit(AXXXXXXXXXX)",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DataList": []
+      },
+      {
+        "Cname": "enquiry_D",
+        "Caption": "查询用户月消费额",
+        "Description": "查询用户A当月消费额度，是否大于58元",
+        "Ctype": "Component_Task.Task_Enquiry",
+        "State": "TaskState_Dormant",
+        "PreCondition": [
+          {
+            "Cname": "expression_precond_D",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DisgardCondition": [
+          {
+            "Cname": "expression_discond_D",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "CompleteCondition": [
+          {
+            "Cname": "expression_comcond_D",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "expression_data_D.ExpressionResult['code']==200",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "NextTasks": [
+          "action_E",
+          "actionF"
+        ],
+        "DataValueSetterExpressionList": [
+          {
+            "Cname": "expression_data_D",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_Function",
+            "ExpressionStr": "queryMonthConsumption(AXXXXXXXXXX)",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DataList": [
+          {
+            "Cname": "data_D",
+            "Caption": "用户A月消费额",
+            "Description": "",
+            "Ctype": "Component_Data.Data_Float",
+            "Unit": "元",
+            "Value": "80",
+            "DefaultValue": "0",
+            "HardConvType": "float64"
+          }
+        ]
+      },
+      {
+        "Cname": "action_E",
+        "Caption": "移动运营商下月1号返移动用户A20元",
+        "Description": "移动用户A当月消费58元以上：移动运营商B下月1号返还话费20元；连续返还12个月",
+        "Ctype": "Component_Task.Task_Action",
+        "State": "TaskState_Dormant",
+        "PreCondition": [
+          {
+            "Cname": "expression_precond_E",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&getNowDay()==1&&getNowDate()!=action_E.data_E&&enquiry_D.data_D>=58",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DisgardCondition": [
+          {
+            "Cname": "expression_discond_E",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "CompleteCondition": [
+          {
+            "Cname": "expression_comcond_E",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "expression_data_E.ExpressionResult['code']==200",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "NextTasks": [
+          "enquiry_D"
+        ],
+        "DataValueSetterExpressionList": [
+          {
+            "Cname": "expression_data_E",
+            "Caption": "B返话费给A20元",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_Function",
+            "ExpressionStr": "backTelephoneFare(BXXXXXXXXXX,AXXXXXXXXXX,20)",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DataList": [
+          {
+            "Cname": "data_E",
+            "Caption": "B返话费给A日期",
+            "Description": "",
+            "Ctype": "Component_Data.Data_Date",
+            "Unit": "",
+            "Value": "2017-02-0112:00:00",
+            "DefaultValue": "",
+            "HardConvType": "string"
+          }
+        ]
+      },
+      {
+        "Cname": "action_F",
+        "Caption": "移动运行商不返话费",
+        "Description": "移动用户A当月消费不足58元：移动运营商B下月1号不返还话费",
+        "Ctype": "Component_Task.Task_Action",
+        "State": "TaskState_Dormant",
+        "PreCondition": [
+          {
+            "Cname": "expression_precond_F",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&getNowDay()==1&&getNowDate()!=action_E.data_E&&enquiry_D.data_D<58",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DisgardCondition": [
+          {
+            "Cname": "expression_discond_F",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "CompleteCondition": [
+          {
+            "Cname": "expression_discond_F",
+            "Caption": "",
+            "Description": "",
+            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "ExpressionStr": "expression_data_F.ExpressionResult['code']==200",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "NextTasks": [
+          "enquiry_D"
+        ],
+        "DataValueSetterExpressionList": [
+          {
+            "Cname": "expression_data_F",
+            "Caption": "不执行动作",
+            "Description": "消费不足58元，不执行动作",
+            "Ctype": "Component_Expression.Expression_Function",
+            "ExpressionStr": "true",
+            "ExpressionResult": {
+              "Message": "Operatesuccess.",
+              "Code": 200
+            },
+            "LogicValue": 1
+          }
+        ],
+        "DataList": [
+          {
+            "Cname": "data_F",
+            "Caption": "B返话费给A执行日期",
+            "Description": "移动运营商B返话费给用户A的操作日期",
+            "Ctype": "Component_Data.Data_Date",
+            "Unit": "",
+            "Value": "2017-02-0112:00:00",
+            "DefaultValue": "",
+            "HardConvType": "string"
+          }
+        ]
+      }
+    ]
+  }
 }

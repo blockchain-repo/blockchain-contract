@@ -1,26 +1,38 @@
 package inf
 
+import "unicontract/src/core/engine/common"
+
 //contract interface
 type ICognitiveContract interface {
 	/*
-	SetData(IData)
-	SetTask(ITask)
-	SetExpression(IExpression)
-	SetEvent(IEvent)
+		SetData(IData)
+		SetTask(ITask)
+		SetExpression(IExpression)
+		SetEvent(IEvent)
 	*/
-	GetContractId()string
-	GetVersion()string
-	GetCopyRight()string
-	GetTask(string)interface{}
-	AddComponent(IComponent)
-	EvaluateExpression(interface{})interface{}
-	ProcessString(string)string
+	GetContractId() string
+	GetVersion() string
+	GetCopyRight() string
+	GetTask(string) interface{}
+	GetComponentTtem(p_name string) interface{}
+	GetPropertyItem(p_name string) interface{}
+	AddComponent(p_component IComponent)
+	EvaluateExpression(p_exprtype string, p_expression string) (interface{}, error)
+	ProcessString(string) string
+
+	SetContract(constract ICognitiveContract)
+	GetContract() ICognitiveContract
+	GetName() string
+	GetCtype() string
+	GetId() string
+	SetOutputId(p_outputId string)
+	GetOutputId() string
 }
 
 //component
-type IComponent interface{
+type IComponent interface {
 	SetContract(constract ICognitiveContract)
-	GetContract()ICognitiveContract
+	GetContract() ICognitiveContract
 	GetName() string
 	GetCtype() string
 }
@@ -29,18 +41,19 @@ type IComponent interface{
 type IData interface {
 	SetContract(constract ICognitiveContract)
 	GetContract() ICognitiveContract
-	GetName()string
+	GetName() string
 	GetCtype() string
-	GetValue()interface{}
+	GetValue() interface{}
+	SetValue(interface{})
 }
 
 //task interface
 type ITask interface {
 	SetContract(constract ICognitiveContract)
 	GetContract() ICognitiveContract
-	GetName()string
+	GetName() string
 	GetCtype() string
-	GetDescription()string
+	GetDescription() string
 	GetState() string
 	SetState(string)
 	GetNextTasks() []string
@@ -51,13 +64,8 @@ type ITask interface {
 type IExpression interface {
 	SetContract(constract ICognitiveContract)
 	GetContract() ICognitiveContract
-	GetName()string
+	GetName() string
 	GetCtype() string
-	GetExpressionStr()string
-}
-
-//event interface
-type IEvent interface {
-	SetContract(constract ICognitiveContract)
-	GetContract() ICognitiveContract
+	GetExpressionStr() string
+	SetExpressionResult(p_expresult common.OperateResult)
 }

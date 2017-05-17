@@ -6,6 +6,8 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/common"
+	"github.com/astaxie/beego/logs"
+	"errors"
 )
 
 type GeneralExpression struct {
@@ -41,6 +43,13 @@ func (ge GeneralExpression)GetCtype()string{
 	ctype_property := ge.PropertyTable["_Ctype"].(property.PropertyT)
 	return ctype_property.GetValue().(string)
 }
+
+func (ge *GeneralExpression)SetExpressionResult(p_expresult common.OperateResult){
+	ge.ExpressionResult = p_expresult
+	result_property := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
+	result_property.SetValue(p_expresult)
+	ge.PropertyTable[_ExpressionResult] = result_property
+}
 //===============描述态=====================
 func (ge *GeneralExpression)ToString()string{
 	return ge.GetCname() + ": " + ge.GetExpressionStr()
@@ -48,21 +57,20 @@ func (ge *GeneralExpression)ToString()string{
 //===============运行态=====================
 func (ge *GeneralExpression) InitExpression() error{
 	var err error= nil
-	/*
 	if ge.ExpressionStr == "" {
-		//TODO log
+		logs.Error("ExpressionStr is nil!")
 		errors.New("Expression need ExpressionStr!")
 		return err
-	}*/
+	}
 	err = ge.InitGeneralComponent()
 	if err != nil {
-		//TODO log
+		logs.Error("InitExpression fail["+err.Error()+"]")
 		return err
 	}
 	ge.Ctype = common.TernaryOperator(ge.Ctype == "", constdef.ComponentType[constdef.Component_Expression], ge.Ctype).(string)
 	ge.SetCtype(ge.Ctype)
-	ge.AddProperty(ge, _ExpressionStr, ge.ExpressionStr)
-	ge.AddProperty(ge, _ExpressionResult, ge.ExpressionResult)
+	common.AddProperty(ge, ge.PropertyTable, _ExpressionStr, ge.ExpressionStr)
+	common.AddProperty(ge, ge.PropertyTable, _ExpressionResult, ge.ExpressionResult)
 	return err
 }
 //====属性Get方法
@@ -81,16 +89,4 @@ func (ge *GeneralExpression)SetExpressionStr(p_expression string){
 	express_property := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	express_property.SetValue(p_expression)
 	ge.PropertyTable[_ExpressionStr] = express_property
-}
-
-func (ge *GeneralExpression)SetExpressionResult(p_expresult common.OperateResult){
-	ge.ExpressionResult = p_expresult
-	result_property := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
-	result_property.SetValue(p_expresult)
-	ge.PropertyTable[_ExpressionResult] = result_property
-}
-
-//TODO
-func (ge *GeneralExpression)Eval(){
-
 }

@@ -7,7 +7,7 @@ import (
 
 //---------------------------------------------------------------------------
 func Start() {
-	if gParam.CleanData {
+	if scanEngineConf["clean_data_on"].(int) == 1 {
 		beegoLog.Info("CleanTaskSchedule start")
 		gwgTaskExe.Add(1)
 		go _CleanTaskSchedule()

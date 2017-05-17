@@ -45,7 +45,7 @@ func TestArgsReflect(t *testing.T){
 	var v_arg_0 int = 1
 	var v_arg_1 string = "abc"
 	var v_arg_2 map[string]string = map[string]string{"a":"aValue", "b":"bValue", "c":"cValue"}
-	v_result,_ := TestMethod(v_arg_0, v_arg_1, v_arg_2)
+	v_result,_ := FuncTestMethod(v_arg_0, v_arg_1, v_arg_2)
 	fmt.Println("result: ", v_result)
 	fmt.Println()
 }
@@ -53,7 +53,7 @@ func TestArgsReflect(t *testing.T){
 //测试：方法反射
 func TestMethodReflect(t *testing.T){
 	var func_set map[string]func(arg...interface{})(common.OperateResult,error) = make(map[string]func(arg...interface{})(common.OperateResult,error) , 0)
-	func_set["TestMethod"] = TestMethod
+	func_set["TestMethod"] = FuncTestMethod
 
 	//反射机制 1.1
 	var func_name string = "TestMethod"

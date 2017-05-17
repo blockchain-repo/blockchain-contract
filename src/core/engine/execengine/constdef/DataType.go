@@ -11,6 +11,7 @@ const (
 	Data_Compound
 	Data_Matrix
 	Data_DecisionCandidate
+	Data_OperateResultData
 )
 
 var DataType = map[int]string{
@@ -24,4 +25,5 @@ var DataType = map[int]string{
 	Data_Compound: "Data_Compound",
 	Data_Matrix: "Data_Matrix",
 	Data_DecisionCandidate: "Data_DecisionCandidate",
+	Data_OperateResultData: "Data_OperateResultData",
 }

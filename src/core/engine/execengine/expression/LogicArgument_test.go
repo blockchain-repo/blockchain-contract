@@ -17,7 +17,7 @@ func TestLogicArgument(t *testing.T) {
 	if g_logicargument.GetCname() != "LogicArgument" {
 		t.Error("InitLogicArgument Error, GetCname Error!")
 	}
-	if g_logicargument.GetCtype() != constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_LogicArgument] {
+	if g_logicargument.GetCtype() != constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Condition] {
 		t.Error("InitLogicArgument Error, GetCtype Error!")
 	}
 	if g_logicargument.GetCaption() != "LogicArgument" {

@@ -3,6 +3,7 @@ package task
 import (
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
 )
 //表示场景：查询一个数据，并且会根据查询结果进行分支处理
 //    为保证多节点执行结果一致性，需要在结果赋值时，使用分支条件赋值
@@ -60,7 +61,7 @@ func (e *Enquiry) InitEnquriy() error{
 	var err error = nil
 	err = e.InitGeneralTask()
 	if err != nil {
-		//TODO log
+		logs.Error("InitEnquriy fail["+err.Error()+"]")
 		return err
 	}
 	e.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry])

@@ -12,6 +12,11 @@ type ComponentTable struct{
 	CompTable map[string][]map[string]interface{} `json:"CompTable"`
 }
 
+func NewComponentTable() *ComponentTable{
+	ct := &ComponentTable{}
+	return ct
+}
+
 func (ct *ComponentTable) getComponentType(p_component interface{})(string, string){
 	var r_type string = ""
 	var r_name string = ""

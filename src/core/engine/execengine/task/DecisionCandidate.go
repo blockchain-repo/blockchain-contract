@@ -2,10 +2,11 @@ package task
 
 import (
 	"unicontract/src/core/engine/execengine/property"
-
+	"unicontract/src/core/engine/common"
 	"fmt"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
 )
 
 type DecisionCandidate struct {
@@ -54,7 +55,7 @@ func (dc *DecisionCandidate) InitDecisionCandidate()error{
 	for _,p_support := range dc.SupportArguments {
 		map_supportArgument[p_support] = p_support
 	}
-	dc.AddProperty(dc, _SupportArguments, map_supportArgument)
+	common.AddProperty(dc, dc.PropertyTable, _SupportArguments, map_supportArgument)
 	//againstArguments
 	if dc.AgainstArguments == nil {
 		dc.AgainstArguments = make([]string, 0)
@@ -63,9 +64,9 @@ func (dc *DecisionCandidate) InitDecisionCandidate()error{
 	for _,p_against := range dc.AgainstArguments {
 		map_againstArgument[p_against] = p_against
 	}
-	dc.AddProperty(dc, _AgainstArguments, map_againstArgument)
+	common.AddProperty(dc, dc.PropertyTable, _AgainstArguments, map_againstArgument)
 	//support
-	dc.AddProperty(dc, _Support, 0)
+	common.AddProperty(dc, dc.PropertyTable, _Support, 0)
 	//text
 	if dc.Text == nil {
 		dc.Text = make([]string, 0)
@@ -74,7 +75,7 @@ func (dc *DecisionCandidate) InitDecisionCandidate()error{
 	for _,p_text := range dc.Text {
 		map_Text[p_text] = p_text
 	}
-	dc.AddProperty(dc, _Text, map_Text)
+	common.AddProperty(dc, dc.PropertyTable, _Text, map_Text)
 	return err
 }
 
@@ -137,14 +138,18 @@ func (dc *DecisionCandidate) GetSupport() int{
 func (dc *DecisionCandidate) Eval()int{
 	var Support_sum int = 0
 	var against_sum int = 0
-	var Support_bool bool = false
-	var against_bool bool = false
+	var Support_bool interface{}
+	var against_bool interface{}
+	var err error = nil
 	supports_property := dc.PropertyTable[_SupportArguments].(property.PropertyT)
 	if supports_property.GetValue() != nil {
 		for _, v_Support := range supports_property.GetValue().(map[string]string) {
 			v_contract := dc.GetContract()
-			Support_bool = v_contract.EvaluateExpression(v_Support).(bool)
-			if Support_bool {
+			Support_bool,err = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_Support)
+			if err != nil {
+				logs.Warning("DecisionCandidate.Eval fail["+err.Error()+"]")
+			}
+			if Support_bool.(bool) {
 				Support_sum += 1
 			}
 		}
@@ -153,8 +158,11 @@ func (dc *DecisionCandidate) Eval()int{
 	if against_property.GetValue() != nil {
 		for _,v_against := range against_property.GetValue().(map[string]string){
 			v_contract := dc.GetContract()
-			against_bool = v_contract.EvaluateExpression(v_against).(bool)
-			if against_bool {
+			against_bool,err = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_against)
+			if err != nil {
+				logs.Warning("DecisionCandidate.Eval fail["+err.Error()+"]")
+			}
+			if against_bool.(bool) {
 				against_sum += 1
 			}
 		}

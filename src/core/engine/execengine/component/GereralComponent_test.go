@@ -3,8 +3,10 @@ package component
 import (
 	"testing"
 	"fmt"
-	"unicontract/src/core/engine/execengine/property"
+	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/property"
+	"reflect"
 )
 
 func TestGeneralComponent(t *testing.T) {
@@ -53,8 +55,8 @@ func TestGeneralComponent(t *testing.T) {
 	if len(g_component.GetPropertyTable()) != 6{
 		t.Error("AddProperty Error!")
 	}
-	g_component.AddProperty(g_component,"Int", 100)
-	g_component.AddProperty(g_component,"String", "test property")
+	common.AddProperty(g_component, g_component.PropertyTable,"Int", 100)
+	common.AddProperty(g_component, g_component.PropertyTable,"String", "test property")
 	if len(g_component.GetPropertyTable()) != 8{
 		t.Error("AddProperty Error!")
 	}
@@ -62,4 +64,45 @@ func TestGeneralComponent(t *testing.T) {
 	if test_property.GetValue().(int) != 100 {
 		t.Error("GetProperty Error!")
 	}
+	//Test GetItem()
+	v_cname := g_component.GetItem(_Cname)
+	if v_cname.(string) != "TestComponent" {
+		t.Error("GetItem[Cname] Error!")
+	}
+	v_ctype := g_component.GetItem(_Ctype)
+	if v_ctype.(string) != "Component_Unknown" {
+		t.Error("GetItem[Cname] Error!")
+	}
+	v_caption := g_component.GetItem(_Caption)
+	if v_caption.(string) != "GeneralComponent" {
+		t.Error("GetItem[Caption] Error!")
+	}
+	v_description := g_component.GetItem(_Description)
+	if v_description.(string) != "GeneralComponent Test" {
+		t.Error("GetItem[Description] Error!")
+	}
+    //Get Value By reflect
+	fmt.Println(reflect.TypeOf(g_component))
+	v_refl_object := reflect.ValueOf(g_component).Elem()
+	v_refl_field := v_refl_object.FieldByName("MetaAttribute")
+	fmt.Println(v_refl_field.Kind(),v_refl_field.Type(),v_refl_field.Interface())
+
+	v_metadata := g_component.GetItem(_MetaAttribute)
+	fmt.Println(v_metadata)
+
+	fmt.Println("GetItem[version]", GetItem2(v_refl_field, "version"))
+	fmt.Println("GetItem[copyright]",GetItem2(v_refl_field, "copyright"))
+	fmt.Println(v_refl_field.Kind() == reflect.Map)
+	fmt.Println(v_refl_field.MapKeys())
+	fmt.Println(v_refl_field.MapIndex(reflect.ValueOf("version")))
+	fmt.Println(v_refl_field.MapIndex(reflect.ValueOf("copyright")))
+}
+
+
+func GetItem2(p_object reflect.Value, p_item string) interface{}{
+	switch p_object.Kind(){
+	case reflect.Map:
+		return (p_object.MapIndex(reflect.ValueOf(p_item)))
+	}
+	return nil
 }

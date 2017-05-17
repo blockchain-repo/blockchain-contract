@@ -9,6 +9,7 @@ import (
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/scanengine"
+	"unicontract/src/core/engine"
 	"unicontract/src/pipelines"
 
 	"github.com/astaxie/beego"
@@ -54,8 +55,10 @@ func runStart() {
 	logs.Info("config Init")
 	pipelines.Init()
 	logs.Info("pipelines Init")
+	engine.Init()
+	logs.Info("UCVM Init")
 	go scanengine.Start()
-	logs.Info("scanengine Init")
+	logs.Info("UCVM ScanEngine Init")
 	beego.Run()
 	logs.Info("beego Run")
 }

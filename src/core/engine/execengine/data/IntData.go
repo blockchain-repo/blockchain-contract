@@ -6,6 +6,8 @@ import (
 	"errors"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
+	"github.com/astaxie/beego/logs"
+	"unicontract/src/core/engine/common"
 )
 
 //支持int中的各种类型int8, int16, int32, int64; 不可直接用int
@@ -25,31 +27,11 @@ func NewIntData()*IntData{
 }
 //====================接口方法========================
 func (nd IntData)GetName()string{
-	if nd.PropertyTable[_Parent] != nil  {
-		parent_property := nd.PropertyTable[_Parent].(property.PropertyT)
-		if parent_property.GetValue() != nil {
-			v_general_data := parent_property.GetValue().(inf.IData)
-			if v_general_data.GetName() != "" {
-				return v_general_data.GetName() + "." + nd.GetCname()
-			} else {
-				return nd.GetCname()
-			}
-		}
-	}
-	return nd.GetCname()
+	return nd.GeneralData.GetName()
 }
 
 func (nd IntData) GetValue() interface{}{
-	value_property := nd.PropertyTable[_Value].(property.PropertyT)
-	if value_property.GetValue() == nil {
-		contract_property := nd.PropertyTable[_Contract].(property.PropertyT)
-		if contract_property.GetValue() != nil {
-			v_contract := contract_property.GetValue().(inf.ICognitiveContract)
-			v_default := v_contract.ProcessString(nd.GetDefaultValue().(string))
-			return v_default
-		}
-	}
-	return value_property.GetValue()
+	return nd.GeneralData.GetValue()
 }
 
 func (nd IntData)GetContract() inf.ICognitiveContract {
@@ -58,12 +40,11 @@ func (nd IntData)GetContract() inf.ICognitiveContract {
 func (nd IntData)SetContract(p_contract inf.ICognitiveContract) {
 	nd.GeneralData.SetContract(p_contract)
 }
-func (gc IntData)GetCtype()string{
-	if gc.PropertyTable["_Ctype"] == nil {
-		return ""
-	}
-	ctype_property := gc.PropertyTable["_Ctype"].(property.PropertyT)
-	return ctype_property.GetValue().(string)
+func (nd IntData)GetCtype()string{
+	return nd.GeneralData.GetCtype()
+}
+func (nd IntData) SetValue(p_Value interface{}){
+	nd.GeneralData.SetValue(p_Value)
 }
 //====================描述态==========================
 
@@ -73,15 +54,15 @@ func (nd *IntData) InitIntData()error{
 	var err error = nil
 	err = nd.InitGeneralData()
     if err != nil {
-		//TODO log
+		logs.Error("InitIntData fail["+err.Error()+"]")
 		return err
 	}
 	nd.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Int])
 	var data_range [2]int = [2]int{-2147483647, 2147483647}
 	if nd.DataRange[0] ==  0 && nd.DataRange[1] == 0 {
-		nd.AddProperty(nd, _DataRange, data_range)
+		common.AddProperty(nd, nd.PropertyTable, _DataRange, data_range)
 	} else {
-		nd.AddProperty(nd, _DataRange, nd.DataRange)
+		common.AddProperty(nd, nd.PropertyTable, _DataRange, nd.DataRange)
 	}
 	nd.SetHardConvType("int")
 	return err

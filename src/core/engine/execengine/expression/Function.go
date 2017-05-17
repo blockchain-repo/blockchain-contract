@@ -36,6 +36,9 @@ func (f Function)GetCtype()string{
 func (f Function)GetExpressionStr()string{
 	return f.GeneralExpression.GetExpressionStr()
 }
+func (f Function)SetExpressionResult(p_expresult common.OperateResult){
+	f.GeneralExpression.SetExpressionResult(p_expresult)
+}
 //===============描述态=====================
 func (f *Function)ToString()string{
 	return f.GetCname()
@@ -54,14 +57,10 @@ func (f *Function) InitFunction()error{
 	if f.SelectBranchs == nil {
 		f.SelectBranchs = make([]string, 0)
 	}
-	f.AddProperty(f, _SelectBranchs, f.SelectBranchs)
+	common.AddProperty(f, f.PropertyTable, _SelectBranchs, f.SelectBranchs)
 	return err
 }
 
-//TODO
-func (f *Function)Call(){
-	f.Eval()
-}
 //====Get方法
 func (f *Function) GetSelectBranchs()[]string{
 	selectbranch_property := f.PropertyTable[_LogicValue].(property.PropertyT)
