@@ -91,7 +91,6 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 			err := errors.New("Can not find any frozen asset !")
 			return model.ContractOutput{}, err
 		} else if spentFlag == 2 {
-			// TODO the frozen asset had transfer, no need to do this transfer
 			err := errors.New("The frozen asset had be unfreezed !")
 			return model.ContractOutput{}, err
 		} else if spentFlag == 3 {
