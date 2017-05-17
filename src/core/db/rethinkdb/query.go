@@ -8,7 +8,6 @@ import (
 
 	"strings"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
 )
@@ -106,6 +105,59 @@ func GetContractsByContractId(contractId string) (string, error) {
 	return common.Serialize(blo), nil
 }
 
+// 根据传入条件查询合约, 仅取出一条
+func GetOneContractByMapCondition(conditions map[string]interface{}) (string, error) {
+	contractId, _ := conditions["contractId"].(string)
+	owner, _ := conditions["owner"].(string)
+	if owner == "" {
+		return "", errors.New("owner blank")
+	}
+	//signatureStatus, _ := conditions["signatureStatus"].(string)
+	name, _ := conditions["name"].(string)
+	name = strings.Trim(name, " ")
+	_ = name
+	session := ConnectDB(DBNAME)
+
+	var res *r.Cursor
+	var err error
+	if contractId != "" && name != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).
+			Limit(1).Run(session)
+		//Filter(r.Row.Field("ContractBody").Field("Cname").Contains(name)).Run(session) //must sequence, not use this
+	} else if contractId == "" && name != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).
+			Limit(1).Run(session)
+
+	} else if contractId != "" && name == "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Limit(1).Run(session)
+	} else {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Limit(1).Run(session)
+
+	}
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+	var blo map[string]interface{}
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(blo), nil
+}
+
 // 根据传入条件查询合约
 func GetContractsByMapCondition(conditions map[string]interface{}) (string, error) {
 	contractId, _ := conditions["contractId"].(string)
@@ -141,7 +193,6 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).Run(session)
 
 	}
-	beego.Warn(contractId, owner, name)
 	if err != nil {
 		return "", err
 	}
@@ -153,7 +204,6 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 	if err != nil {
 		return "", err
 	}
-	beego.Warn("queryAll list is ", len(blo))
 	return common.Serialize(blo), nil
 }
 

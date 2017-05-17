@@ -73,7 +73,6 @@ func (c *ContractController) responseJsonBody(data string, ok bool, msg string) 
 	responseData := new(protos.ResponseData)
 	responseData.Ok = ok
 	responseData.Msg = msg
-	//todo test
 	data = base64.StdEncoding.EncodeToString([]byte(data))
 	responseData.Data = data
 	//body, _ := json.Marshal(responseData)
@@ -83,7 +82,8 @@ func (c *ContractController) responseJsonBody(data string, ok bool, msg string) 
 	}
 	//c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/x-protobuf")
 	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
-	c.Ctx.ResponseWriter.Write([]byte(body))
+	//c.Ctx.ResponseWriter.Write([]byte(body))
+	c.Ctx.ResponseWriter.Write(body)
 	//c.ServeJSON()
 }
 
@@ -292,10 +292,7 @@ func (c *ContractController) Query() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	/*------------------- requestParams start ------------------*/
-	contractId, ok := requestParamMap["contractId"].(string)
-	if !ok {
-		logs.Error("contractId type error")
-	}
+	contractId, _ := requestParamMap["contractId"].(string)
 	owner, _ := requestParamMap["owner"].(string)
 	signatureStatus, _ := requestParamMap["signatureStatus"].(string)
 	flag, _ := requestParamMap["flag"].(string)
@@ -313,7 +310,8 @@ func (c *ContractController) Query() {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId!")
 		return
 	}
-	contractModelStr, err := rethinkdb.GetContractsByMapCondition(requestParamMap)
+	//todo
+	contractModelStr, err := rethinkdb.GetOneContractByMapCondition(requestParamMap)
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
