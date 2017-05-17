@@ -31,7 +31,7 @@ func _ScanFailedTask() {
 	for {
 		start := time.Now()
 		var slTasks []model.TaskSchedule
-		var slID []string
+		var slID []interface{}
 
 		beegoLog.Debug("query failed data")
 		strNodePubkey := config.Config.Keypair.PublicKey
@@ -71,8 +71,8 @@ func _ScanFailedTask() {
 }
 
 //---------------------------------------------------------------------------
-func getFailedTaskID(slTasks []model.TaskSchedule) []string {
-	var slID []string
+func getFailedTaskID(slTasks []model.TaskSchedule) []interface{} {
+	var slID []interface{}
 	for index, _ := range slTasks {
 		slID = append(slID, slTasks[index].Id)
 	}

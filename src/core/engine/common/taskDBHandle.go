@@ -48,7 +48,7 @@ func GetMonitorFailedData(strNodePubkey string, nThreshold int) (string, error) 
 
 //---------------------------------------------------------------------------
 // 批量设置发送标志为“已发送”，在查询到失败任务时调用
-func UpdateMonitorSendBatch(slID []string) error {
+func UpdateMonitorSendBatch(slID []interface{}) error {
 	if len(slID) == 0 {
 		return fmt.Errorf("id slice is null")
 	}
@@ -67,23 +67,23 @@ func UpdateMonitorSend(strID string) error {
 //---------------------------------------------------------------------------
 // 执行失败：1.更新strContractID 的SendFlag = 0, FailedCount + 1, LastExecuteTime
 // 返回FailedCount(或者SuccessCount)和error
-func UpdateMonitorFail(strNodePubkey, strContractID string) (int, error) {
+func UpdateMonitorFail(strNodePubkey, strContractID string) error {
 	if len(strNodePubkey) == 0 || len(strContractID) == 0 {
-		return -1, fmt.Errorf("pubkey or contractid is null")
+		return fmt.Errorf("pubkey or contractid is null")
 	}
 
 	strID, err := rethinkdb.GetID(strNodePubkey, strContractID)
 	if err != nil {
-		return -1, err
+		return err
 	}
 
 	if len(strID) == 0 {
-		return -1, fmt.Errorf("not find")
+		return fmt.Errorf("not find")
 	}
 
 	err = rethinkdb.SetTaskScheduleFlag(strID, false)
 	if err != nil {
-		return -1, err
+		return err
 	}
 
 	return rethinkdb.SetTaskScheduleCount(strID, false)
@@ -132,7 +132,7 @@ func UpdateMonitorSucc(strNodePubkey, strContractIDold, strContractIDnew string)
 		return err
 	}
 
-	_, err = rethinkdb.SetTaskScheduleCount(strID, true)
+	err = rethinkdb.SetTaskScheduleCount(strID, true)
 	if err != nil {
 		return err
 	}

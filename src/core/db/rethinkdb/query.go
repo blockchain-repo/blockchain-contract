@@ -595,8 +595,28 @@ func GetValidTime(strID string) (string, string, error) {
 
 //---------------------------------------------------------------------------
 // 批量设置SendFlag字段，发送为1,未发送为0
-func SetTaskScheduleFlagBatch(strID []string, alreadySend bool) error {
-	return nil
+func SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error {
+	var send int
+	if alreadySend {
+		send = 1
+	} else {
+		send = 0
+	}
+
+	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+		send, common.GenTimestamp())
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		GetAll(slID...).Update(r.JSON(strJSON)).RunWrite(session)
+	if err != nil {
+		return err
+	}
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -621,55 +641,37 @@ func SetTaskScheduleFlag(strID string, alreadySend bool) error {
 
 //---------------------------------------------------------------------------
 // 设置FailedCount(或者SuccessCount)字段加一
-func SetTaskScheduleCount(strID string, success bool) (int, error) {
+func SetTaskScheduleCount(strID string, success bool) error {
+	var strFS string
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("id").Eq(strID)).Run(session)
-	if err != nil {
-		return -1, err
-	}
-
-	if res.IsNil() {
-		return -1, fmt.Errorf("set is null")
-	}
-
-	var tasks map[string]interface{}
-	err = res.One(&tasks)
-	if err != nil {
-		return -1, err
-	}
-
-	failedCount, ok := tasks["FailedCount"].(float64)
-	if !ok {
-		return -1, fmt.Errorf("failedCount is not ok for type float64")
-	}
-	failedCount += 1
-
-	successCount, ok := tasks["SuccessCount"].(float64)
-	if !ok {
-		return -1, fmt.Errorf("successCount is not ok for type float64")
-	}
-	successCount += 1
-
-	var strJSON string
 	if success {
-		strJSON = fmt.Sprintf("{\"SuccessCount\":%f,\"LastExecuteTime\":\"%s\"}",
-			successCount, common.GenTimestamp())
+		strFS = "SuccessCount"
 	} else {
-		strJSON = fmt.Sprintf("{\"FailedCount\":%f,\"LastExecuteTime\":\"%s\"}",
-			failedCount, common.GenTimestamp())
+		strFS = "FailedCount"
 	}
 
-	res1 := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res1.Replaced|res1.Unchanged >= 1 {
-		if success {
-			return int(successCount), nil
-		} else {
-			return int(failedCount), nil
-		}
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Get(strID).
+		Update(map[string]interface{}{strFS: r.Row.Field(strFS).Add(1)}).
+		RunWrite(session)
+
+	if err != nil {
+		return err
+	}
+
+	if res.Replaced|res.Unchanged >= 1 {
 
 	} else {
-		return -1, fmt.Errorf("update failed")
+		return fmt.Errorf("update failed")
+	}
+
+	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
+
+	res = Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
 	}
 }
 

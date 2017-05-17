@@ -509,6 +509,14 @@ func Test_GetValidTime(t *testing.T) {
 	}
 }
 
+func Test_SetTaskScheduleFlagBatch(t *testing.T) {
+	slID := make([]interface{}, 0)
+	slID = append(slID, "db02e343-0e86-4823-9a27-1e45251ad0c6")
+	slID = append(slID, "bce8ca74-64cd-4c81-9439-e3c464a5fbc4")
+	slID = append(slID, "9fd041b3-a85b-4e81-bd76-df396619fe07")
+	SetTaskScheduleFlagBatch(slID, true)
+}
+
 func Test_SetTaskScheduleFlag(t *testing.T) {
 	strID := "a0d3b526-8708-4214-bb27-543712f8af42"
 	err := SetTaskScheduleFlag(strID, false)
@@ -520,12 +528,12 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 }
 
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "92281121-b5ee-4cbd-8ceb-fe9e7b72fae3"
-	count, err := SetTaskScheduleCount(strID, true)
+	strID := "7300d2d1-9822-48f9-b62c-cd869a0eba38"
+	err := SetTaskScheduleCount(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
-		t.Logf("pass, count is %d\n", count)
+		t.Logf("pass\n")
 	}
 }
 
