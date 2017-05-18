@@ -26,7 +26,7 @@ var (
 )
 
 //---------------------------------------------------------------------------
-func init() {
+func Init() {
 	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
 	gchTaskQueue = make(chan model.TaskSchedule, scanEngineConf["task_queue_len"].(int))
 	gslPublicKeys = config.GetAllPublicKey()

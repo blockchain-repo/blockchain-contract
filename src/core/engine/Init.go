@@ -19,11 +19,11 @@ const (
 )
 
 var (
-	UCVMConf     map[interface{}]interface{}
+	UCVMConf map[interface{}]interface{}
 )
 
 //---------------------------------------------------------------------------
-func init() {
+func Init() {
 	strConfigOSPath := os.Getenv(_CONFIG_FILE_ENV)
 	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIG_FILE_NAME
 	if err := yaml.Read(strConfigPath, &UCVMConf); err != nil {
@@ -31,4 +31,5 @@ func init() {
 		os.Exit(-1)
 	}
 }
+
 //---------------------------------------------------------------------------
