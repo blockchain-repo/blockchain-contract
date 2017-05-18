@@ -72,9 +72,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 			err := errors.New("The opertion `FREEZE` should has one ownerafter = ownerbefore !")
 			return model.ContractOutput{}, err
 		}
-	}
-
-	if operation == _UNFREEZ {
+	} else if operation == _UNFREEZ {
 		if len(recipients) > 0 {
 			err := errors.New("The opertion `UNFREEZE` should not has any ownner-afters !")
 			return model.ContractOutput{}, err
@@ -82,8 +80,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
 		//NOTE  not sure whether I need to check the inputs is it has some frozen asset or not
 
-	}
-	if operation == _TRANSFER {
+	} else if operation == _TRANSFER {
 		//generate inputs
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
 

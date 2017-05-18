@@ -10,7 +10,7 @@ import (
 	"unicontract/src/core/model"
 )
 
-func init(){
+func init() {
 	config.Init()
 }
 func Test_createTx(t *testing.T) {
@@ -79,9 +79,9 @@ func Test_createTx(t *testing.T) {
 	//contract.Id = common.HashData(common.StructSerialize(contractBody))
 
 	relation := model.Relation{
-		ContractId: contract.Id,
-		TaskId:     "task-id-123456789",
-		TaskExecuteIdx:1,
+		ContractId:     contract.Id,
+		TaskId:         "task-id-123456789",
+		TaskExecuteIdx: 1,
 		Voters: []string{
 			config.Config.Keypair.PublicKey,
 		},
@@ -106,10 +106,10 @@ func Test_FreezeTx(t *testing.T) {
 	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId",0)
+	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
 
 	output, err := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
-	if err!= nil{
+	if err != nil {
 		logs.Info(err)
 		return
 	}
@@ -129,10 +129,10 @@ func TestTransfer(t *testing.T) {
 	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId",0)
+	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
 
 	output, err := Transfer("TRANSFER", ownerbefore, recipients, &metadata, asset, relation, contract)
-	if err!=nil {
+	if err != nil {
 		logs.Info(err)
 		return
 	}
@@ -151,10 +151,10 @@ func TestUnfreeze(t *testing.T) {
 	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId",0)
+	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
 
 	output, err := Transfer("UNFREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
-	if err!=nil {
+	if err != nil {
 		logs.Info(err)
 		return
 	}
@@ -174,7 +174,7 @@ func Test_GetUnspent(t *testing.T) {
 func Test_GetFreezeSpent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal,flag := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b","taskId",1)
+	inps, bal, flag := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 1)
 	logs.Info(inps)
 	logs.Info(bal)
 	logs.Info(flag)

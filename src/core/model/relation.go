@@ -1,6 +1,7 @@
 package model
 
 import (
+	"sort"
 	"unicontract/src/config"
 )
 
@@ -14,9 +15,10 @@ type Relation struct {
 	Votes          []*Vote
 }
 
-func (r *Relation) GenerateRelation(contractid string, taskid string, taskExecuteIdx int) {
+func (r *Relation) GenerateRelation(contracHashId string, contractid string, taskid string, taskExecuteIdx int) {
+	r.ContractHashId = contracHashId
 	r.ContractId = contractid
 	r.TaskId = taskid
 	r.TaskExecuteIdx = taskExecuteIdx
-	r.Voters = config.GetAllPublicKey()
+	r.Voters = sort.StringSlice(config.GetAllPublicKey())
 }
