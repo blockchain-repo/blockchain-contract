@@ -1,7 +1,5 @@
 package inf
 
-import "unicontract/src/core/engine/common"
-
 //contract interface
 type ICognitiveContract interface {
 	/*
@@ -67,5 +65,5 @@ type IExpression interface {
 	GetName() string
 	GetCtype() string
 	GetExpressionStr() string
-	SetExpressionResult(p_expresult common.OperateResult)
+	SetExpressionResult(p_expresult interface{})
 }

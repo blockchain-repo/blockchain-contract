@@ -1,42 +1,43 @@
 package expression
 
 import (
-	"unicontract/src/core/engine/execengine/property"
-	"unicontract/src/core/engine/execengine/inf"
-	"unicontract/src/core/engine/execengine/constdef"
-	"unicontract/src/core/engine/execengine/component"
-	"unicontract/src/core/engine/common"
-	"github.com/astaxie/beego/logs"
 	"errors"
+	"github.com/astaxie/beego/logs"
+	"unicontract/src/core/engine/common"
+	"unicontract/src/core/engine/execengine/component"
+	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/inf"
+	"unicontract/src/core/engine/execengine/property"
 )
 
 type GeneralExpression struct {
 	component.GeneralComponent
-	ExpressionStr string  `json:"ExpressionStr"`
+	ExpressionStr    string               `json:"ExpressionStr"`
 	ExpressionResult common.OperateResult `json:"ExpressionResult"`
 }
 
 const (
-	_ExpressionStr = "_ExpressionStr"
+	_ExpressionStr    = "_ExpressionStr"
 	_ExpressionResult = "_ExpressionResult"
 )
 
-func NewGeneralExpression(str_expression string) *GeneralExpression{
+func NewGeneralExpression(str_expression string) *GeneralExpression {
 	v_expression := &GeneralExpression{}
-    v_expression.ExpressionStr = str_expression
+	v_expression.ExpressionStr = str_expression
 	return v_expression
 }
+
 //===============接口实现===================
-func (ge GeneralExpression)SetContract(p_contract inf.ICognitiveContract) {
+func (ge GeneralExpression) SetContract(p_contract inf.ICognitiveContract) {
 	ge.GeneralComponent.SetContract(p_contract)
 }
-func (ge GeneralExpression)GetContract() inf.ICognitiveContract {
+func (ge GeneralExpression) GetContract() inf.ICognitiveContract {
 	return ge.GeneralComponent.GetContract()
 }
-func (ge GeneralExpression)GetName()string{
+func (ge GeneralExpression) GetName() string {
 	return ge.GeneralComponent.GetCname()
 }
-func (ge GeneralExpression)GetCtype()string{
+func (ge GeneralExpression) GetCtype() string {
 	if ge.PropertyTable["_Ctype"] == nil {
 		return ""
 	}
@@ -44,19 +45,21 @@ func (ge GeneralExpression)GetCtype()string{
 	return ctype_property.GetValue().(string)
 }
 
-func (ge *GeneralExpression)SetExpressionResult(p_expresult common.OperateResult){
-	ge.ExpressionResult = p_expresult
+func (ge *GeneralExpression) SetExpressionResult(p_expresult interface{}) {
+	ge.ExpressionResult = p_expresult.(common.OperateResult)
 	result_property := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	result_property.SetValue(p_expresult)
 	ge.PropertyTable[_ExpressionResult] = result_property
 }
+
 //===============描述态=====================
-func (ge *GeneralExpression)ToString()string{
+func (ge *GeneralExpression) ToString() string {
 	return ge.GetCname() + ": " + ge.GetExpressionStr()
 }
+
 //===============运行态=====================
-func (ge *GeneralExpression) InitExpression() error{
-	var err error= nil
+func (ge *GeneralExpression) InitExpression() error {
+	var err error = nil
 	if ge.ExpressionStr == "" {
 		logs.Error("ExpressionStr is nil!")
 		errors.New("Expression need ExpressionStr!")
@@ -64,7 +67,7 @@ func (ge *GeneralExpression) InitExpression() error{
 	}
 	err = ge.InitGeneralComponent()
 	if err != nil {
-		logs.Error("InitExpression fail["+err.Error()+"]")
+		logs.Error("InitExpression fail[" + err.Error() + "]")
 		return err
 	}
 	ge.Ctype = common.TernaryOperator(ge.Ctype == "", constdef.ComponentType[constdef.Component_Expression], ge.Ctype).(string)
@@ -73,18 +76,20 @@ func (ge *GeneralExpression) InitExpression() error{
 	common.AddProperty(ge, ge.PropertyTable, _ExpressionResult, ge.ExpressionResult)
 	return err
 }
+
 //====属性Get方法
-func (ge *GeneralExpression)GetExpressionStr()string {
+func (ge *GeneralExpression) GetExpressionStr() string {
 	express_property := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	return express_property.GetValue().(string)
 }
 
-func (ge *GeneralExpression)GetExpressionResult()common.OperateResult{
+func (ge *GeneralExpression) GetExpressionResult() common.OperateResult {
 	result_property := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	return result_property.GetValue().(common.OperateResult)
 }
+
 //====属性Set方法
-func (ge *GeneralExpression)SetExpressionStr(p_expression string){
+func (ge *GeneralExpression) SetExpressionStr(p_expression string) {
 	ge.ExpressionStr = p_expression
 	express_property := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	express_property.SetValue(p_expression)
