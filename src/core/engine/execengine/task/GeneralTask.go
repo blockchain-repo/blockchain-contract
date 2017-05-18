@@ -7,7 +7,6 @@ package task
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"github.com/astaxie/beego/logs"
 	"time"
 	"unicontract/src/core/engine/common"

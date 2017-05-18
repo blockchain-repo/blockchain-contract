@@ -36,7 +36,7 @@ func _ScanFailedTask() {
 		beegoLog.Debug("query failed data")
 		strNodePubkey := config.Config.Keypair.PublicKey
 		retStr, err := engineCommon.GetMonitorFailedData(strNodePubkey,
-			gParam.FailedCountThreshold)
+			scanEngineConf["failed_count_threshold"].(int))
 		if err != nil {
 			beegoLog.Error(err.Error())
 			goto CONSUME
@@ -61,8 +61,8 @@ func _ScanFailedTask() {
 
 	CONSUME:
 		consume := time.Since(start)
-		if consume.Seconds() < float64(gParam.SleepTime) {
-			time.Sleep((time.Duration(float64(gParam.SleepTime) -
+		if consume.Seconds() < float64(scanEngineConf["sleep_time"].(int)) {
+			time.Sleep((time.Duration(float64(scanEngineConf["sleep_time"].(int)) -
 				consume.Seconds())) * time.Second)
 		}
 	}

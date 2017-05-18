@@ -23,7 +23,7 @@ var (
 )
 
 //---------------------------------------------------------------------------
-func Init() {
+func init() {
 	strConfigOSPath := os.Getenv(_CONFIG_FILE_ENV)
 	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIG_FILE_NAME
 	if err := yaml.Read(strConfigPath, &UCVMConf); err != nil {
