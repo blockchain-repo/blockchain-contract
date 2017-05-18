@@ -209,9 +209,10 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 }
 
 //var default_url = "http://36.110.71.170:66/v1/contract/"
-
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
 var default_url = "http://localhost:8088/v1/contract/"
+
+//var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"
 
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
@@ -311,7 +312,7 @@ func Test_Query(t *testing.T) {
 	url := default_url + "query"
 
 	contract := protos.Contract{ // proto-buf
-		Id: "c6a6ee0758dfbb78afc2143b77d30202843a74952865f4146e014d4ddbc6a37f",
+		Id: "64520eba60bde72f71b4646d6cc0872715e4717234ca6031c621d247e5c4553c",
 	}
 
 	requestBody, err := proto.Marshal(&contract)
@@ -363,7 +364,7 @@ func Test_Track(t *testing.T) {
 	url := default_url + "track"
 
 	contract := protos.Contract{ // proto-buf
-		Id: "c6a6ee0758dfbb78afc2143b77d30202843a74952865f4146e014d4ddbc6a37f",
+		Id: "64520eba60bde72f71b4646d6cc0872715e4717234ca6031c621d247e5c4553c",
 	}
 
 	requestBody, err := proto.Marshal(&contract)

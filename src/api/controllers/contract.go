@@ -307,7 +307,7 @@ func (c *ContractController) Query() {
 		return
 	}
 	if contractId == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId!")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 	//todo
