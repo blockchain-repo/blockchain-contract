@@ -1536,7 +1536,8 @@ proto.protos.ContractComponent.toObject = function(includeInstance, msg) {
     againstargumentsList: jspb.Message.getField(msg, 16),
     support: jspb.Message.getFieldWithDefault(msg, 17, 0),
     textList: jspb.Message.getField(msg, 18),
-    taskexecuteidx: jspb.Message.getFieldWithDefault(msg, 19, 0)
+    taskexecuteidx: jspb.Message.getFieldWithDefault(msg, 19, 0),
+    taskid: jspb.Message.getFieldWithDefault(msg, 20, "")
   };
 
   if (includeInstance) {
@@ -1655,6 +1656,10 @@ proto.protos.ContractComponent.deserializeBinaryFromReader = function(msg, reade
     case 19:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setTaskexecuteidx(value);
+      break;
+    case 20:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTaskid(value);
       break;
     default:
       reader.skipField();
@@ -1821,6 +1826,13 @@ proto.protos.ContractComponent.serializeBinaryToWriter = function(message, write
   if (f !== 0) {
     writer.writeInt32(
       19,
+      f
+    );
+  }
+  f = message.getTaskid();
+  if (f.length > 0) {
+    writer.writeString(
+      20,
       f
     );
   }
@@ -2309,6 +2321,21 @@ proto.protos.ContractComponent.prototype.getTaskexecuteidx = function() {
 /** @param {number} value */
 proto.protos.ContractComponent.prototype.setTaskexecuteidx = function(value) {
   jspb.Message.setField(this, 19, value);
+};
+
+
+/**
+ * optional string TaskId = 20;
+ * @return {string}
+ */
+proto.protos.ContractComponent.prototype.getTaskid = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 20, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ContractComponent.prototype.setTaskid = function(value) {
+  jspb.Message.setField(this, 20, value);
 };
 
 

@@ -6531,6 +6531,16 @@ public final class ProtoContract {
      * <code>int32 TaskExecuteIdx = 19;</code>
      */
     int getTaskExecuteIdx();
+
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    java.lang.String getTaskId();
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    com.google.protobuf.ByteString
+        getTaskIdBytes();
   }
   /**
    * Protobuf type {@code protos.ContractComponent}
@@ -6561,6 +6571,7 @@ public final class ProtoContract {
       support_ = 0;
       text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       taskExecuteIdx_ = 0;
+      taskId_ = "";
     }
 
     @java.lang.Override
@@ -6742,6 +6753,12 @@ public final class ProtoContract {
             case 152: {
 
               taskExecuteIdx_ = input.readInt32();
+              break;
+            }
+            case 162: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              taskId_ = s;
               break;
             }
           }
@@ -7352,6 +7369,40 @@ public final class ProtoContract {
       return taskExecuteIdx_;
     }
 
+    public static final int TASKID_FIELD_NUMBER = 20;
+    private volatile java.lang.Object taskId_;
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    public java.lang.String getTaskId() {
+      java.lang.Object ref = taskId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        taskId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTaskIdBytes() {
+      java.lang.Object ref = taskId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        taskId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -7420,6 +7471,9 @@ public final class ProtoContract {
       }
       if (taskExecuteIdx_ != 0) {
         output.writeInt32(19, taskExecuteIdx_);
+      }
+      if (!getTaskIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 20, taskId_);
       }
     }
 
@@ -7519,6 +7573,9 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(19, taskExecuteIdx_);
       }
+      if (!getTaskIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, taskId_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -7579,6 +7636,8 @@ public final class ProtoContract {
           .equals(other.getTextList());
       result = result && (getTaskExecuteIdx()
           == other.getTaskExecuteIdx());
+      result = result && getTaskId()
+          .equals(other.getTaskId());
       return result;
     }
 
@@ -7651,6 +7710,8 @@ public final class ProtoContract {
       }
       hash = (37 * hash) + TASKEXECUTEIDX_FIELD_NUMBER;
       hash = (53 * hash) + getTaskExecuteIdx();
+      hash = (37 * hash) + TASKID_FIELD_NUMBER;
+      hash = (53 * hash) + getTaskId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7840,6 +7901,8 @@ public final class ProtoContract {
         bitField0_ = (bitField0_ & ~0x00020000);
         taskExecuteIdx_ = 0;
 
+        taskId_ = "";
+
         return this;
       }
 
@@ -7951,6 +8014,7 @@ public final class ProtoContract {
         }
         result.text_ = text_;
         result.taskExecuteIdx_ = taskExecuteIdx_;
+        result.taskId_ = taskId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8204,6 +8268,10 @@ public final class ProtoContract {
         }
         if (other.getTaskExecuteIdx() != 0) {
           setTaskExecuteIdx(other.getTaskExecuteIdx());
+        }
+        if (!other.getTaskId().isEmpty()) {
+          taskId_ = other.taskId_;
+          onChanged();
         }
         onChanged();
         return this;
@@ -10541,6 +10609,75 @@ public final class ProtoContract {
       public Builder clearTaskExecuteIdx() {
         
         taskExecuteIdx_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object taskId_ = "";
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public java.lang.String getTaskId() {
+        java.lang.Object ref = taskId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          taskId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTaskIdBytes() {
+        java.lang.Object ref = taskId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          taskId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public Builder setTaskId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        taskId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public Builder clearTaskId() {
+        
+        taskId_ = getDefaultInstance().getTaskId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public Builder setTaskIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        taskId_ = value;
         onChanged();
         return this;
       }
@@ -15527,7 +15664,7 @@ public final class ProtoContract {
       "\001(\t\0223\n\007Options\030\r \003(\0132\".protos.ComponentD" +
       "ata.OptionsEntry\022\016\n\006Format\030\017 \001(\t\032.\n\014Opti" +
       "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001",
-      "\"\356\004\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
+      "\"\376\004\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
       "\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descrip" +
       "tion\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreConditio" +
       "n\030\006 \003(\0132\034.protos.ComponentsExpression\0227\n" +
@@ -15542,23 +15679,23 @@ public final class ProtoContract {
       "os.ContractComponent\022\020\n\010TaskList\030\016 \003(\t\022\030" +
       "\n\020SupportArguments\030\017 \003(\t\022\030\n\020AgainstArgum" +
       "ents\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(" +
-      "\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\"\223\003\n\014ContractBo" +
-      "dy\022\022\n\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n" +
-      "\005Ctype\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Descrip" +
-      "tion\030\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Cre" +
-      "ator\030\007 \001(\t\022\023\n\013CreatorTime\030\010 \001(\t\022\021\n\tStart",
-      "Time\030\t \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractO" +
-      "wners\030\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.pr" +
-      "otos.ContractAsset\0225\n\022ContractSignatures" +
-      "\030\r \003(\0132\031.protos.ContractSignature\0225\n\022Con" +
-      "tractComponents\030\016 \003(\0132\031.protos.ContractC" +
-      "omponent\022\025\n\rMetaAttribute\030\017 \001(\014\"F\n\014Contr" +
-      "actHead\022\022\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002" +
-      " \001(\005\022\021\n\tTimestamp\030\003 \001(\t\"n\n\010Contract\022\n\n\002i" +
-      "d\030\001 \001(\t\022*\n\014ContractHead\030\002 \001(\0132\024.protos.C" +
-      "ontractHead\022*\n\014ContractBody\030\003 \001(\0132\024.prot",
-      "os.ContractBodyB%\n\024com.uniledger.protosB" +
-      "\rProtoContractb\006proto3"
+      "\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(" +
+      "\t\"\223\003\n\014ContractBody\022\022\n\nContractId\030\001 \001(\t\022\r" +
+      "\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(\t\022\017\n\007Caption\030" +
+      "\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022\025\n\rContractSt" +
+      "ate\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022\023\n\013CreatorTim",
+      "e\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017\n\007EndTime\030\n " +
+      "\001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022-\n\016ContractA" +
+      "ssets\030\014 \003(\0132\025.protos.ContractAsset\0225\n\022Co" +
+      "ntractSignatures\030\r \003(\0132\031.protos.Contract" +
+      "Signature\0225\n\022ContractComponents\030\016 \003(\0132\031." +
+      "protos.ContractComponent\022\025\n\rMetaAttribut" +
+      "e\030\017 \001(\014\"F\n\014ContractHead\022\022\n\nMainPubkey\030\001 " +
+      "\001(\t\022\017\n\007Version\030\002 \001(\005\022\021\n\tTimestamp\030\003 \001(\t\"" +
+      "n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014ContractHead\030" +
+      "\002 \001(\0132\024.protos.ContractHead\022*\n\014ContractB",
+      "ody\030\003 \001(\0132\024.protos.ContractBodyB%\n\024com.u" +
+      "niledger.protosB\rProtoContractb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -15613,7 +15750,7 @@ public final class ProtoContract {
     internal_static_protos_ContractComponent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponent_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DisgardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", });
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DisgardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", });
     internal_static_protos_ContractBody_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_protos_ContractBody_fieldAccessorTable = new

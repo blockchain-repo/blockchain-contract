@@ -77,6 +77,7 @@ message ContractComponent{
     repeated string Text = 18;
     // add date: 2017-05-11 任务执行索引次数 int
     int32 TaskExecuteIdx = 19;
+    string TaskId = 20;
 }
 
 message ContractBody {
