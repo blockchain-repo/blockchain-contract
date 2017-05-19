@@ -22,7 +22,6 @@ import (
 
 type CognitiveContract struct {
 	Id           string                `json:"id"`
-	OutputId     string                `json:"OutputId"`
 	ContractHead CognitiveContractHead `json:"ContractHead"`
 	ContractBody CognitiveContractBody `json:"ContractBody"`
 
@@ -32,6 +31,14 @@ type CognitiveContract struct {
 	ComponentTable        *table.ComponentTable                  `json:"-"`
 	ExpressionParseEngine *expressionutils.ExpressionParseEngine `json:"-"`
 	FunctionParseEngine   *function.FunctionParseEngine          `json:"-"`
+	//任务执行过程中需要的临时存储变量
+	OrgId                string      `json:"-"`
+	OrgTaskId            string      `json:"-"`
+	OrgTaskExecuteIdx    int         `json:"-"`
+	OutputId             string      `json:"-"`
+	OutputTaskId         string      `json:"-"`
+	OutputTaskExecuteIdx int         `json:"-"`
+	OutputStruct         interface{} `json:"-"`
 }
 
 type CognitiveContractHead struct {
@@ -63,7 +70,6 @@ type CognitiveContractBody struct {
 
 const (
 	_Id           = "_Id"
-	_OutputId     = "_OutputId"
 	_ContractHead = "_ContractHead"
 	_ContractBody = "_ContractBody"
 
@@ -90,6 +96,14 @@ const (
 	_UCVM_Version       = "_UCVM_Version"
 	_UCVM_CopyRight     = "_UCVM_CopyRight"
 	_UCVM_Date          = "_UCVM_Date"
+
+	_OrgId                = "_OrgId"
+	_OrgTaskId            = "_OrgTaskId"
+	_OrgTaskExecuteIdx    = "_OrgTaskExecuteIdx"
+	_OutputId             = "_OutputId"
+	_OutputTaskId         = "_OutputTaskId"
+	_OutputTaskExecuteIdx = "_OutputTaskExecuteIdx"
+	_OutputStruct         = "_OutputStruct"
 )
 
 func NewCognitiveContract() *CognitiveContract {
@@ -254,7 +268,6 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	}
 	//ID初始化
 	common.AddProperty(cc, cc.PropertyTable, _Id, cc.Id)
-	common.AddProperty(cc, cc.PropertyTable, _OutputId, cc.OutputId)
 	//ContractHead初始化
 	common.AddProperty(cc, cc.PropertyTable, _MainPubkey, cc.ContractHead.MainPubkey)
 	common.AddProperty(cc, cc.PropertyTable, _Timestamp, cc.ContractHead.Timestamp)
@@ -332,6 +345,15 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	//自有类型，自己解决添加
 	cc.AddProperty(cc, _ContractAssets, cc.ContractBody.ContractAssets)
 	cc.AddProperty(cc, _ContractSignatures, cc.ContractBody.ContractSignatures)
+
+	//过程中的临时变量
+	common.AddProperty(cc, cc.PropertyTable, _OrgId, cc.OrgId)
+	common.AddProperty(cc, cc.PropertyTable, _OrgTaskId, cc.OrgTaskId)
+	common.AddProperty(cc, cc.PropertyTable, _OrgTaskExecuteIdx, cc.OrgTaskExecuteIdx)
+	common.AddProperty(cc, cc.PropertyTable, _OutputId, cc.OutputId)
+	common.AddProperty(cc, cc.PropertyTable, _OutputTaskId, cc.OutputTaskId)
+	common.AddProperty(cc, cc.PropertyTable, _OutputTaskExecuteIdx, cc.OutputTaskExecuteIdx)
+	common.AddProperty(cc, cc.PropertyTable, _OutputStruct, cc.OutputStruct)
 
 	var meta_map map[string]string = make(map[string]string, 0)
 	meta_map[_UCVM_Version] = constdef.UCVM_Version
@@ -449,7 +471,47 @@ func (cc *CognitiveContract) GetProperty(p_name string) interface{} {
 	return nil
 }
 
-//====属性Get方法
+//====属性Get方法	common.AddProperty(cc, cc.PropertyTable, _OrgId, cc.OrgId)
+func (gc *CognitiveContract) GetOrgTaskId() string {
+	if gc.PropertyTable[_OrgTaskId] == nil {
+		return ""
+	}
+	orgtaskid_property := gc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	return orgtaskid_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOrgTaskExecuteIdx() string {
+	if gc.PropertyTable[_OrgTaskExecuteIdx] == nil {
+		return ""
+	}
+	orgtaskexecuteidx_property := gc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	return orgtaskexecuteidx_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOutputTaskId() string {
+	if gc.PropertyTable[_OutputTaskId] == nil {
+		return ""
+	}
+	OutputTaskId_property := gc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	return OutputTaskId_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOutputTaskExecuteIdx() string {
+	if gc.PropertyTable[_OutputTaskExecuteIdx] == nil {
+		return ""
+	}
+	OutputTaskExecuteIdx_property := gc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	return OutputTaskExecuteIdx_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOutputStruct() string {
+	if gc.PropertyTable[_OutputStruct] == nil {
+		return ""
+	}
+	outputstruct_property := gc.PropertyTable[_OutputStruct].(property.PropertyT)
+	return outputstruct_property.GetValue().(string)
+}
+
 func (gc *CognitiveContract) GetCname() string {
 	if gc.PropertyTable[_Cname] == nil {
 		return ""
@@ -487,6 +549,51 @@ func (gc *CognitiveContract) GetMetaAttribute() map[string]string {
 }
 
 //属性Set方法
+func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OrgTaskId = p_OrgTaskId
+	OrgTaskId_property := cc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	OrgTaskId_property.SetValue(p_OrgTaskId)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OrgTaskId] = OrgTaskId_property
+}
+
+func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OrgTaskExecuteIdx = p_OrgTaskExecuteIdx
+	OrgTaskExecuteIdx_property := cc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	OrgTaskExecuteIdx_property.SetValue(p_OrgTaskExecuteIdx)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OrgTaskExecuteIdx] = OrgTaskExecuteIdx_property
+}
+
+func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OutputTaskId = p_OutputTaskId
+	OutputTaskId_property := cc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	OutputTaskId_property.SetValue(p_OutputTaskId)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OutputTaskId] = OutputTaskId_property
+}
+
+func (cc CognitiveContract) SetOutputTaskExecuteIdx(p_OutputTaskExecuteIdx int) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OutputTaskExecuteIdx = p_OutputTaskExecuteIdx
+	OutputTaskExecuteIdx_property := cc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	OutputTaskExecuteIdx_property.SetValue(p_OutputTaskExecuteIdx)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OutputTaskExecuteIdx] = OutputTaskExecuteIdx_property
+}
+
+func (cc CognitiveContract) SetOutputStruct(p_OutputStruct interface{}) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OutputStruct = p_OutputStruct
+	OutputStruct_property := cc.PropertyTable[_OutputStruct].(property.PropertyT)
+	OutputStruct_property.SetValue(p_OutputStruct)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OutputStruct] = OutputStruct_property
+}
+
 func (cc CognitiveContract) SetId(p_Id string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.Id = p_Id
