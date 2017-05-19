@@ -490,8 +490,9 @@ func Test_InsertTaskSchedules(t *testing.T) {
 func Test_GetID(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
 	strContractID := "caa7ad61-f291-480f-aaeb-8237bb83088b"
+	strContractHashId := ""
 
-	strID, err := GetID(strNodePubkey, strContractID)
+	strID, err := GetID(strNodePubkey, strContractID, strContractHashId)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {

@@ -66,14 +66,16 @@ func UpdateMonitorSend(strID string) error {
 
 //---------------------------------------------------------------------------
 // 执行失败：1.更新strContractID & strContractHashOldID的SendFlag = 0, FailedCount + 1, LastExecuteTime
-// 返回FailedCount(或者SuccessCount)和error
 func UpdateMonitorFail(strContractID string, strContractHashOldID string) error {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	if len(strNodePubkey) == 0 || len(strContractID) == 0 || len(strContractHashOldID) == 0 {
+	if len(strNodePubkey) == 0 ||
+		len(strContractID) == 0 ||
+		len(strContractHashOldID) == 0 {
 		return fmt.Errorf("pubkey or contractid is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+		strContractHashOldID)
 	if err != nil {
 		return err
 	}
@@ -94,11 +96,14 @@ func UpdateMonitorFail(strContractID string, strContractHashOldID string) error 
 // 执行条件不满足：1.更新strContractID & strContractHashOldID的SendFlag = 0, LastExecuteTime
 func UpdateMonitorWait(strContractID string, strContractHashOldID string) error {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	if len(strNodePubkey) == 0 || len(strContractID) == 0 || len(strContractHashOldID) == 0 {
+	if len(strNodePubkey) == 0 ||
+		len(strContractID) == 0 ||
+		len(strContractHashOldID) == 0 {
 		return fmt.Errorf("pubkey or contractid is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+		strContractHashOldID)
 	if err != nil {
 		return err
 	}
@@ -113,7 +118,7 @@ func UpdateMonitorWait(strContractID string, strContractHashOldID string) error 
 //---------------------------------------------------------------------------
 // 执行成功：1.更新strContractID & strContractHashOldID的的SendFlag=1, SuccessCount + 1, LastExecuteTime
 //           2.将strContractID & strContractHashNewID插入到扫描监控表中
-func UpdateMonitorSucc(strContractID, strContractHashOldID string, strContractHashNewID string) error {
+func UpdateMonitorSucc(strContractID, strContractHashOldID, strContractHashNewID string) error {
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
@@ -122,7 +127,8 @@ func UpdateMonitorSucc(strContractID, strContractHashOldID string, strContractHa
 		return fmt.Errorf("pubkey or contractid or hashid is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+		strContractHashOldID)
 	if err != nil {
 		return err
 	}

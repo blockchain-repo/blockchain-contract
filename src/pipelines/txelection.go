@@ -96,6 +96,7 @@ func txSend(arg interface{}) interface{} {
 	//write the contract to the taskschedule
 	coModel := arg.(model.ContractOutput)
 	var taskSchedule model.TaskSchedule
+	taskSchedule.ContractHashId = coModel.Transaction.ContractModel.Id
 	taskSchedule.ContractId = coModel.Transaction.ContractModel.ContractBody.ContractId
 	taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
 	taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
