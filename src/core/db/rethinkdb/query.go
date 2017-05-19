@@ -641,19 +641,34 @@ func SetTaskScheduleFlag(strID string, alreadySend bool) error {
 }
 
 //---------------------------------------------------------------------------
-// 设置FailedCount(或者SuccessCount)字段加一
-func SetTaskScheduleCount(strID string, success bool) error {
-	var strFS string
-	session := ConnectDB(DBNAME)
-	if success {
-		strFS = "SuccessCount"
+// 设置TaskState字段的值
+func SetTaskState(strID, strState string) error {
+	strJSON := fmt.Sprintf("{\"TaskState\":\"%s\"}", strState)
+
+	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
 	} else {
-		strFS = "FailedCount"
+		return fmt.Errorf("update failed")
+	}
+}
+
+//---------------------------------------------------------------------------
+// 设置FailedCount\SuccessCount\WaitCount字段加一
+func SetTaskScheduleCount(strID string, flag int) error {
+	var strFSW string
+	if flag == 0 {
+		strFSW = "SuccessCount"
+	} else if flag == 1 {
+		strFSW = "FailedCount"
+	} else {
+		strFSW = "WaitCount"
 	}
 
+	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Get(strID).
-		Update(map[string]interface{}{strFS: r.Row.Field(strFS).Add(1)}).
+		Update(map[string]interface{}{strFSW: r.Row.Field(strFSW).Add(1)}).
 		RunWrite(session)
 
 	if err != nil {

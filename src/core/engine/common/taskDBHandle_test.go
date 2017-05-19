@@ -70,9 +70,10 @@ func Test_UpdateMonitorSend(t *testing.T) {
 }
 
 func Test_UpdateMonitorFail(t *testing.T) {
-	strContractID := "e38b0a4c-374b-4ad8-b27e-93eb6c0d633c"
-	strContractHashID := "053d7d59-60be-4c18-8efd-afd0b3385e74"
-	err := UpdateMonitorFail(strContractID, strContractHashID)
+	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
+	strContractHashID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	strTaskState := "asdfasdfasdf"
+	err := UpdateMonitorFail(strContractID, strContractHashID, strTaskState)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -81,9 +82,10 @@ func Test_UpdateMonitorFail(t *testing.T) {
 }
 
 func Test_UpdateMonitorWait(t *testing.T) {
-	strContractID := "e212353c-36cd-4c3c-ad8a-239767d53b40"
-	strContractHashID := "94059f17-6dbe-4901-b958-c3758b1e6ecb"
-	err := UpdateMonitorWait(strContractID, strContractHashID)
+	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
+	strContractHashID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	strTaskState := "asdfasdfasdf"
+	err := UpdateMonitorWait(strContractID, strContractHashID, strTaskState)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -92,10 +94,16 @@ func Test_UpdateMonitorWait(t *testing.T) {
 }
 
 func Test_UpdateMonitorSucc(t *testing.T) {
-	strContractID := "e212353c-36cd-4c3c-ad8a-239767d53b40"
-	strContractHashOldID := "94059f17-6dbe-4901-b958-c3758b1e6ecb"
+	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
+	strContractHashOldID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
 	strContractHashNewID := common.GenerateUUID()
-	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strContractHashNewID)
+	strTaskStateOld := "old"
+	strTaskStateNew := "new"
+	strTaskId := "1000000"
+	nTaskExecuteIndex := 23
+	err := UpdateMonitorSucc(strContractID, strContractHashOldID,
+		strContractHashNewID, strTaskStateOld,
+		strTaskStateNew, strTaskId, nTaskExecuteIndex)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
