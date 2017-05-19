@@ -171,8 +171,10 @@
 			"revisionTime": "2017-04-08T17:54:05Z"
 		},
 		{
+			"checksumSHA1": "d/XOW1WDPBv+C4NlrbZys7V1z9c=",
 			"path": "gopkg.in/Knetic/govaluate.v2",
-			"revision": ""
+			"revision": "4598e72a5762f7e683b840482a8bf9d19b1eb5e2",
+			"revisionTime": "2017-02-24T18:17:23Z"
 		},
 		{
 			"checksumSHA1": "1xrcK4/LiP98awGcvqTL5CClTIc=",
