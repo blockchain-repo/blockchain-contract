@@ -8,6 +8,7 @@ import (
 	"unicontract/src/config"
 
 	"github.com/astaxie/beego/logs"
+	"unicontract/src/chain"
 )
 
 func init() {
@@ -99,4 +100,12 @@ func TestNode(t *testing.T) {
 	nodes_all[1].name = "change2"
 	nodes_all[2].name = "change3"
 	logs.Info(nodes_all[0].name, "----", node1.name)
+}
+
+func TestTxQueryEists(t *testing.T) {
+	tx_id := "126ff745192eea5873fe0b18559035e06a360e57785083579889bfaaa254b0c"
+	jsonBody := `{"tx_id":"` + tx_id + `"}`
+	result, _ := chain.GetContractTx(jsonBody)
+	logs.Info(result)
+	logs.Info(len(result.Data.([]interface{})))
 }

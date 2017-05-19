@@ -10,16 +10,17 @@ import (
 	"unicontract/src/core/model"
 )
 
-func ExecuteCreate(tx_signers []string, recipients [][2]interface{}, metadataStr string,
-	relationStr string, contractStr string) {
-	asset := GetAsset(tx_signers[0])
-	metadata, relation, contract := GenModelByExecStr(metadataStr, relationStr, contractStr)
+func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr string,
+	relationStr string, contractStr string) (outputStr string, err error) {
 
-	output, _ := Create(tx_signers, recipients, &metadata, asset, relation, contract)
+	asset := GetAsset(tx_signers)
+	metadata, relation, contract := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	ownerbefore := append([]string{}, tx_signers)
+	output, _ := Create(ownerbefore, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	logs.Info(b)
-	//TODO return
+	return common.StructSerialize(common.Serialize(output)), err
 }
 
 func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interface{},

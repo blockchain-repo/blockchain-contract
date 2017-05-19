@@ -77,17 +77,22 @@ func txQueryEists(arg interface{}) interface{} {
 	coModel := arg.(model.ContractOutput)
 	//check whether already exist
 	id := coModel.Id
-	result, err := chain.GetContractTx("{'id':" + id + "}")
+	result, err := chain.GetContractTx(`{"tx_id":"` + id + `"}`)
 	if err != nil {
 		logs.Error(err.Error())
+		return coModel
 	} else {
 		if result.Code != 200 {
 			logs.Error(errors.New("request send failed"))
-		}
-		//if the unichain already has the contractoutput ,do nothing
-		if result.Data == nil {
 			return coModel
 		}
+	}
+	res, ok := result.Data.([]interface{})
+	if !ok {
+		return coModel
+	}
+	if len(res) != 0 {
+		return nil
 	}
 	return coModel
 }

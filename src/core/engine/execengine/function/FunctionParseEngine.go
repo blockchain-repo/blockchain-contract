@@ -36,7 +36,10 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 	//Add Common Method,Here
 	//TODO: when add method in ContractFunctionForCommon.go，must add it here
 	bif.ContractFunctions["FuncTestMethod"] = FuncTestMethod
-
+	bif.ContractFunctions["CreateAsset"] = CreateAsset
+	bif.ContractFunctions["TransferAsset"] = TransferAsset
+	bif.ContractFunctions["TransferAssetComplete"] = TransferAssetComplete
+	bif.ContractFunctions["UnfreezeAsset"] = UnfreezeAsset
 	return v_err
 }
 

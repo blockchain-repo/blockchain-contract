@@ -6,9 +6,9 @@ type ContractOutputLink struct {
 }
 
 type UnSpentOutput struct {
-	Cid    int		`json:"cid"`
-	Txid   string	`json:"txid"`
-	Amount int		`json:"amount"`
+	Cid    int    `json:"cid"`
+	Txid   string `json:"txid"`
+	Amount int    `json:"amount"`
 }
 
 type Fulfillment struct {

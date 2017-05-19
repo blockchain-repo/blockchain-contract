@@ -133,6 +133,29 @@ func CreateAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
+	//user provide
+	var ownerBefore string = args[0].(string)
+	var recipients [][2]interface{} = [][2]interface{}{}
+	//executer provide
+	var contractStr string = args[2].(string)
+	var contractHashId string = args[3].(string)
+	var contractId string = args[4].(string)
+	var taskId string = args[5].(string)
+	var taskIndex int = args[6].(int)
+	//var mainPubkey string = args[7].(string)
+	var metadataStr string = ""
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	//tx_signers []string, recipients [][2]interface{}, metadataStr string,
+	//relationStr string, contractStr string
+	outputStr, v_err := transaction.ExecuteCreate(ownerBefore, recipients, metadataStr, relationStr, contractStr)
+
+	if v_err != nil {
+		return v_result, v_err
+	}
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(outputStr)
 	return v_result, v_err
 }
 
