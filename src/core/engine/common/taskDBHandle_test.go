@@ -29,7 +29,7 @@ func Test_GetMonitorNoSendData(t *testing.T) {
 
 	var slTasks []model.TaskSchedule
 	json.Unmarshal([]byte(str), &slTasks)
-	t.Logf("%+v\n", slTasks)
+	t.Logf("slTask count is %d, %+v\n", len(slTasks), slTasks)
 }
 
 func Test_GetMonitorFailedData(t *testing.T) {
@@ -45,12 +45,14 @@ func Test_GetMonitorFailedData(t *testing.T) {
 
 	var slTasks []model.TaskSchedule
 	json.Unmarshal([]byte(str), &slTasks)
-	t.Logf("%+v\n", slTasks)
+	t.Logf("slTask count is %d, %+v\n", len(slTasks), slTasks)
 }
 
 func Test_UpdateMonitorSendBatch(t *testing.T) {
 	var slID []interface{}
-	slID = append(slID, "95971bd5-189c-4feb-9bcb-60f8d24594a9")
+	slID = append(slID, "172a6bd7-f502-46fd-aba9-a6c098a9ee28")
+	slID = append(slID, "28f0b597-4403-4082-a9a1-cd765099faa6")
+	slID = append(slID, "d5501c6f-3f74-47d7-bcaa-1f7050aa8196")
 	err := UpdateMonitorSendBatch(slID)
 	if err != nil {
 		t.Error(err)
@@ -58,7 +60,7 @@ func Test_UpdateMonitorSendBatch(t *testing.T) {
 }
 
 func Test_UpdateMonitorSend(t *testing.T) {
-	strID := "12667eff-6bff-4cb1-983d-3958c3c5d6a2"
+	strID := "d5501c6f-3f74-47d7-bcaa-1f7050aa8196"
 	err := UpdateMonitorSend(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -68,8 +70,8 @@ func Test_UpdateMonitorSend(t *testing.T) {
 }
 
 func Test_UpdateMonitorFail(t *testing.T) {
-	strContractID := "5a5ac312-9231-434c-8c0b-850e86dae9ef"
-	strContractHashID := ""
+	strContractID := "e38b0a4c-374b-4ad8-b27e-93eb6c0d633c"
+	strContractHashID := "053d7d59-60be-4c18-8efd-afd0b3385e74"
 	err := UpdateMonitorFail(strContractID, strContractHashID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -79,8 +81,8 @@ func Test_UpdateMonitorFail(t *testing.T) {
 }
 
 func Test_UpdateMonitorWait(t *testing.T) {
-	strContractID := "5a5ac312-9231-434c-8c0b-850e86dae9ef"
-	strContractHashID := ""
+	strContractID := "e212353c-36cd-4c3c-ad8a-239767d53b40"
+	strContractHashID := "94059f17-6dbe-4901-b958-c3758b1e6ecb"
 	err := UpdateMonitorWait(strContractID, strContractHashID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -90,8 +92,8 @@ func Test_UpdateMonitorWait(t *testing.T) {
 }
 
 func Test_UpdateMonitorSucc(t *testing.T) {
-	strContractID := "5a5ac312-9231-434c-8c0b-850e86dae9ef"
-	strContractHashOldID := ""
+	strContractID := "e212353c-36cd-4c3c-ad8a-239767d53b40"
+	strContractHashOldID := "94059f17-6dbe-4901-b958-c3758b1e6ecb"
 	strContractHashNewID := common.GenerateUUID()
 	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strContractHashNewID)
 	if err != nil {

@@ -439,6 +439,7 @@ func Test_GetContractTasksByContractId(t *testing.T) {
 func Test_InsertTaskSchedule(t *testing.T) {
 	var taskSchedule model.TaskSchedule
 	taskSchedule.Id = common.GenerateUUID()
+	taskSchedule.ContractHashId = common.GenerateUUID()
 	taskSchedule.ContractId = common.GenerateUUID()
 	taskSchedule.NodePubkey = config.Config.Keypair.PublicKey
 	taskSchedule.StartTime = common.GenTimestamp()
@@ -457,6 +458,7 @@ func Test_InsertTaskSchedules(t *testing.T) {
 	var taskSchedule model.TaskSchedule
 	taskSchedule.Id = common.GenerateUUID()
 	taskSchedule.ContractId = common.GenerateUUID()
+	taskSchedule.ContractHashId = common.GenerateUUID()
 	taskSchedule.NodePubkey = config.Config.Keypair.PublicKey
 	taskSchedule.StartTime = common.GenTimestamp()
 	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
@@ -489,8 +491,8 @@ func Test_InsertTaskSchedules(t *testing.T) {
 
 func Test_GetID(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	strContractID := "caa7ad61-f291-480f-aaeb-8237bb83088b"
-	strContractHashId := ""
+	strContractID := "e212353c-36cd-4c3c-ad8a-239767d53b40"
+	strContractHashId := "94059f17-6dbe-4901-b958-c3758b1e6ecb"
 
 	strID, err := GetID(strNodePubkey, strContractID, strContractHashId)
 	if err != nil {
@@ -501,7 +503,7 @@ func Test_GetID(t *testing.T) {
 }
 
 func Test_GetValidTime(t *testing.T) {
-	strID := "a0d3b526-8708-4214-bb27-543712f8af42"
+	strID := "172a6bd7-f502-46fd-aba9-a6c098a9ee28"
 	startTime, endTime, err := GetValidTime(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -512,14 +514,14 @@ func Test_GetValidTime(t *testing.T) {
 
 func Test_SetTaskScheduleFlagBatch(t *testing.T) {
 	slID := make([]interface{}, 0)
-	slID = append(slID, "db02e343-0e86-4823-9a27-1e45251ad0c6")
-	slID = append(slID, "bce8ca74-64cd-4c81-9439-e3c464a5fbc4")
-	slID = append(slID, "9fd041b3-a85b-4e81-bd76-df396619fe07")
-	SetTaskScheduleFlagBatch(slID, true)
+	slID = append(slID, "172a6bd7-f502-46fd-aba9-a6c098a9ee28")
+	slID = append(slID, "28f0b597-4403-4082-a9a1-cd765099faa6")
+	slID = append(slID, "d5501c6f-3f74-47d7-bcaa-1f7050aa8196")
+	SetTaskScheduleFlagBatch(slID, false)
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "a0d3b526-8708-4214-bb27-543712f8af42"
+	strID := "d5501c6f-3f74-47d7-bcaa-1f7050aa8196"
 	err := SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -529,7 +531,7 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 }
 
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "7300d2d1-9822-48f9-b62c-cd869a0eba38"
+	strID := "d5501c6f-3f74-47d7-bcaa-1f7050aa8196"
 	err := SetTaskScheduleCount(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -549,7 +551,7 @@ func Test_GetTaskSchedulesNoSend(t *testing.T) {
 			//var slTask []model.TaskSchedule
 			var slTask []map[string]interface{}
 			json.Unmarshal([]byte(retStr), &slTask)
-			t.Logf("%+v\n", slTask)
+			t.Logf("slTask count is %d, %+v\n", len(slTask), slTask)
 
 			t.Logf("Id type is %T\n", slTask[0]["id"])
 			t.Logf("ContractId type is %T\n", slTask[0]["ContractId"])
@@ -575,7 +577,7 @@ func Test_GetTaskSchedulesFailed(t *testing.T) {
 			//var slTask []model.TaskSchedule
 			var slTask []map[string]interface{}
 			json.Unmarshal([]byte(retStr), &slTask)
-			t.Logf("%+v\n", slTask)
+			t.Logf("slTask count is %d, %+v\n", len(slTask), slTask)
 
 			t.Logf("Id type is %T\n", slTask[0]["id"])
 			t.Logf("ContractId type is %T\n", slTask[0]["ContractId"])
@@ -601,7 +603,7 @@ func Test_GetTaskSchedulesSuccess(t *testing.T) {
 	} else {
 		var slTask []model.TaskSchedule
 		json.Unmarshal([]byte(str), &slTask)
-		t.Logf("%+v\n", slTask)
+		t.Logf("slTask count is %d, %+v\n", len(slTask), slTask)
 	}
 }
 
