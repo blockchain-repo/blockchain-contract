@@ -48,9 +48,9 @@ var ExpressionRegexp = map[int]string{
 	Regexp_Float:     "[+-]*[0-9]+[.][0-9]+",
 	Regexp_Bool:      "[true|false]+",
 	Regexp_String:    "[\"\\'\\`][a-zA-Z0-9_]+[\"\\'\\`]",
-	Regexp_Date:      "",
-	Regexp_Array:     "",
-	Regexp_Condition: ``,
+	Regexp_Date:      "[0-9][0-9][0-9][0-9]-[0-1][0-2]-[0-3][0-9] [0-2][0-3]:[0-5][0-9]:[0-5][0-9]",
+	Regexp_Array:     `^\[[0-9, ]+[0-9]+]$`,
+	Regexp_Condition: `\w+[ ]*[&&|||]+[ ]*\w+`,
 	Regexp_Func:      "Func[a-zA-Z0-9_]+",
 	Regexp_Name:      "[0-9a-zA-Z_.]*",
 
