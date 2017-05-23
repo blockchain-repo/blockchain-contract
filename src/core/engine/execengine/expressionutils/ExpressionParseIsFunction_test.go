@@ -126,9 +126,9 @@ func Test_IsExprBool(t *testing.T) {
 		"True",
 		"Flase",
 		"asdf",
-		"truetrue",   //TODO ?
-		"falsefalse", //TODO ?
-		"truefalse",  //TODO ?
+		"truetrue",
+		"falsefalse",
+		"truefalse",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprBool(value) {
@@ -187,6 +187,8 @@ func Test_IsExprDate(t *testing.T) {
 		"2017-5-22 10:51:09",
 		"2017-05-22-10:51:09",
 		"2017-35-22 34:51:34",
+		"2017-05-32 34:51:34",
+		"2017-02-30 34:51:34",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprDate(value) {
@@ -195,16 +197,20 @@ func Test_IsExprDate(t *testing.T) {
 	}
 }
 
-func Test_IsExprArray(t *testing.T) { // TODO ?
+func Test_IsExprArray(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
 		"",
+		"[1,2]",
 		"[1,2,3,4,5]",
 		"[100,2,3,4,500]",
 		"[100 ,2, 3,4,500]",
-		"[,,,,1]",
-		"[1 2 3 4,1]",
+		"[a,b,c]", "[ a,b,c]", "[a ,b , c]", "[a, b,c ]", "[a, b, c ]",
+		"[1,2,3,4.1]",
+		"[_,_,_]",
+
+		"[.,.,.]", "[_.,._,.]", "[a.,b.,c.]", //TODO 此种正则处理不了类似这种
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprArray(value) {
@@ -213,7 +219,11 @@ func Test_IsExprArray(t *testing.T) { // TODO ?
 	}
 
 	slTestErrorStr := []string{
-		"",
+		"[]",
+		"[,,,,1]",
+		"[1 2 3 4,1]",
+		"[1,2,3,4 1]",
+		"[1,2,3,4|1]",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprArray(value) {
@@ -222,15 +232,24 @@ func Test_IsExprArray(t *testing.T) { // TODO ?
 	}
 }
 
-func Test_IsExprCondition(t *testing.T) { // TODO ?
+func Test_IsExprCondition(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
 		"",
-		"a && b",
-		"a&&b",
-		"a || b",
-		"a||b",
+		"a&&b", "a&&b||c", "!a", "!a&&!b", "!a&&!b||!c",
+		"a && b", "a&&b",
+		"a || b", "a||b",
+		"!a && !b", "!a &&!b", " !a &&!b", " ! a &&!b", "!a && ! b", " ! a && ! b ",
+		"a>b", "a >b", "a> b",
+		"a<b", "a <b", "a< b",
+		"a==b", "a ==b", "a== b",
+		"a>=b", "a >=b", "a>= b",
+		"a<=b", "a <=b", "a<= b",
+		"!a", " !a", "! a", "!a ", "!!!!!!!a",
+		"a && b || c",
+
+		"a. && b. || c.", ". && . || .", //TODO 此种正则处理不了类似这种
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprCondition(value) {
@@ -239,7 +258,10 @@ func Test_IsExprCondition(t *testing.T) { // TODO ?
 	}
 
 	slTestErrorStr := []string{
-		"",
+		"a&&", "a &&", " a &&", "a && ", " a && ",
+		"a><=b",
+		"a> =b",
+		" !! !!!!!a",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprCondition(value) {
@@ -282,21 +304,21 @@ func Test_IsExprVariable(t *testing.T) {
 	slTestRightStr := []string{
 		"",
 		"asdf.asdf",
+		"asdf.asdf.asdf",
+		"_dddd",
 		"_",
+		"_22222",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprVariable(value) {
 			t.Errorf("index is [ %d ], value is [ %s ] is not Variable, Check Error!", index, value)
 		}
 	}
-
 	slTestErrorStr := []string{
-		"asdf.",  //TODO ?
-		"_.",     //TODO ?
-		"3333",   //TODO ?
-		"3333.",  //TODO ?
-		"_dddd",  //TODO ?
-		"_22222", //TODO ?
+		"asdf.",
+		"_.",
+		"3333",
+		"3333.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprVariable(value) {
@@ -324,12 +346,12 @@ func Test_IsNameContract(t *testing.T) {
 		"_contract_",
 		"asdfasdfasdfcontract_",
 		"contracteeeeeee",
-		"contract_.",      //TODO ?
-		"contract_+",      //TODO ?
-		"contract_=",      //TODO ?
-		"contract__",      //TODO ?
-		"contract_ ",      //TODO ?
-		"contract_ kkkk.", //TODO ?
+		"contract_.",
+		"contract_+",
+		"contract_=",
+		"contract__",
+		"contract_ ",
+		"contract_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameContract(value) {
@@ -357,12 +379,12 @@ func Test_IsNameTaskEnquiry(t *testing.T) {
 		"_task_enquiry_",
 		"asdfasdfasdftask_enquiry_",
 		"task_enquiryeeeeeee",
-		"task_enquiry_.",      //TODO ?
-		"task_enquiry_+",      //TODO ?
-		"task_enquiry_=",      //TODO ?
-		"task_enquiry__",      //TODO ?
-		"task_enquiry_ ",      //TODO ?
-		"task_enquiry_ kkkk.", //TODO ?
+		"task_enquiry_.",
+		"task_enquiry_+",
+		"task_enquiry_=",
+		"task_enquiry__",
+		"task_enquiry_ ",
+		"task_enquiry_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskEnquiry(value) {
@@ -390,12 +412,12 @@ func Test_IsNameTaskAction(t *testing.T) {
 		"_task_action_",
 		"asdfasdfasdftask_action_",
 		"task_actioneeeeeee",
-		"task_action_.",      //TODO ?
-		"task_action_+",      //TODO ?
-		"task_action_=",      //TODO ?
-		"task_action__",      //TODO ?
-		"task_action_ ",      //TODO ?
-		"task_action_ kkkk.", //TODO ?
+		"task_action_.",
+		"task_action_+",
+		"task_action_=",
+		"task_action__",
+		"task_action_ ",
+		"task_action_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskAction(value) {
@@ -423,12 +445,12 @@ func Test_IsNameTaskDecision(t *testing.T) {
 		"_task_decision_",
 		"asdfasdfasdftask_decision_",
 		"task_decisioneeeeeee",
-		"task_decision_.",      //TODO ?
-		"task_decision_+",      //TODO ?
-		"task_decision_=",      //TODO ?
-		"task_decision__",      //TODO ?
-		"task_decision_ ",      //TODO ?
-		"task_decision_ kkkk.", //TODO ?
+		"task_decision_.",
+		"task_decision_+",
+		"task_decision_=",
+		"task_decision__",
+		"task_decision_ ",
+		"task_decision_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskDecision(value) {
@@ -456,12 +478,12 @@ func Test_IsNameTaskPlan(t *testing.T) {
 		"_task_plan_",
 		"asdfasdfasdftask_plan_",
 		"task_planeeeeeee",
-		"task_plan_.",      //TODO ?
-		"task_plan_+",      //TODO ?
-		"task_plan_=",      //TODO ?
-		"task_plan__",      //TODO ?
-		"task_plan_ ",      //TODO ?
-		"task_plan_ kkkk.", //TODO ?
+		"task_plan_.",
+		"task_plan_+",
+		"task_plan_=",
+		"task_plan__",
+		"task_plan_ ",
+		"task_plan_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskPlan(value) {
@@ -489,12 +511,12 @@ func Test_IsNameTaskCandidate(t *testing.T) {
 		"_task_candidate_",
 		"asdfasdfasdftask_candidate_",
 		"task_candidateeeeeeee",
-		"task_candidate_.",      //TODO ?
-		"task_candidate_+",      //TODO ?
-		"task_candidate_=",      //TODO ?
-		"task_candidate__",      //TODO ?
-		"task_candidate_ ",      //TODO ?
-		"task_candidate_ kkkk.", //TODO ?
+		"task_candidate_.",
+		"task_candidate_+",
+		"task_candidate_=",
+		"task_candidate__",
+		"task_candidate_ ",
+		"task_candidate_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskCandidate(value) {
@@ -522,12 +544,12 @@ func Test_IsNameDataInt(t *testing.T) {
 		"_data_intdata_",
 		"asdfasdfasdfdata_intdata_",
 		"data_intdataeeeeeeee",
-		"data_intdata_.",      //TODO ?
-		"data_intdata_+",      //TODO ?
-		"data_intdata_=",      //TODO ?
-		"data_intdata__",      //TODO ?
-		"data_intdata_ ",      //TODO ?
-		"data_intdata_ kkkk.", //TODO ?
+		"data_intdata_.",
+		"data_intdata_+",
+		"data_intdata_=",
+		"data_intdata__",
+		"data_intdata_ ",
+		"data_intdata_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataInt(value) {
@@ -555,12 +577,12 @@ func Test_IsNameDataUint(t *testing.T) {
 		"_data_uintdata_",
 		"asdfasdfasdfdata_uintdata_",
 		"data_uintdataeeeeeeee",
-		"data_uintdata_.",      //TODO ?
-		"data_uintdata_+",      //TODO ?
-		"data_uintdata_=",      //TODO ?
-		"data_uintdata__",      //TODO ?
-		"data_uintdata_ ",      //TODO ?
-		"data_uintdata_ kkkk.", //TODO ?
+		"data_uintdata_.",
+		"data_uintdata_+",
+		"data_uintdata_=",
+		"data_uintdata__",
+		"data_uintdata_ ",
+		"data_uintdata_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataUint(value) {
@@ -588,12 +610,12 @@ func Test_IsNameDataFloat(t *testing.T) {
 		"_data_float_",
 		"asdfasdfasdfdata_float_",
 		"data_floateeeeeeee",
-		"data_float_.",      //TODO ?
-		"data_float_+",      //TODO ?
-		"data_float_=",      //TODO ?
-		"data_float__",      //TODO ?
-		"data_float_ ",      //TODO ?
-		"data_float_ kkkk.", //TODO ?
+		"data_float_.",
+		"data_float_+",
+		"data_float_=",
+		"data_float__",
+		"data_float_ ",
+		"data_float_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataFloat(value) {
@@ -621,12 +643,12 @@ func Test_IsNameDataText(t *testing.T) {
 		"_data_text_",
 		"asdfasdfasdfdata_text_",
 		"data_texteeeeeeee",
-		"data_text_.",      //TODO ?
-		"data_text_+",      //TODO ?
-		"data_text_=",      //TODO ?
-		"data_text__",      //TODO ?
-		"data_text_ ",      //TODO ?
-		"data_text_ kkkk.", //TODO ?
+		"data_text_.",
+		"data_text_+",
+		"data_text_=",
+		"data_text__",
+		"data_text_ ",
+		"data_text_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataText(value) {
@@ -654,12 +676,12 @@ func Test_IsNameDataDate(t *testing.T) {
 		"_data_date_",
 		"asdfasdfasdfdata_date_",
 		"data_dateeeeeeeee",
-		"data_date_.",      //TODO ?
-		"data_date_+",      //TODO ?
-		"data_date_=",      //TODO ?
-		"data_date__",      //TODO ?
-		"data_date_ ",      //TODO ?
-		"data_date_ kkkk.", //TODO ?
+		"data_date_.",
+		"data_date_+",
+		"data_date_=",
+		"data_date__",
+		"data_date_ ",
+		"data_date_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataDate(value) {
@@ -687,12 +709,12 @@ func Test_IsNameDataArray(t *testing.T) {
 		"_data_array_",
 		"asdfasdfasdfdata_array_",
 		"data_arrayeeeeeeee",
-		"data_array_.",      //TODO ?
-		"data_array_+",      //TODO ?
-		"data_array_=",      //TODO ?
-		"data_array__",      //TODO ?
-		"data_array_ ",      //TODO ?
-		"data_array_ kkkk.", //TODO ?
+		"data_array_.",
+		"data_array_+",
+		"data_array_=",
+		"data_array__",
+		"data_array_ ",
+		"data_array_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataArray(value) {
@@ -720,12 +742,12 @@ func Test_IsNameDataMatrix(t *testing.T) {
 		"_data_matrix_",
 		"asdfasdfasdfdata_matrix_",
 		"data_matrixeeeeeeee",
-		"data_matrix_.",      //TODO ?
-		"data_matrix_+",      //TODO ?
-		"data_matrix_=",      //TODO ?
-		"data_matrix__",      //TODO ?
-		"data_matrix_ ",      //TODO ?
-		"data_matrix_ kkkk.", //TODO ?
+		"data_matrix_.",
+		"data_matrix_+",
+		"data_matrix_=",
+		"data_matrix__",
+		"data_matrix_ ",
+		"data_matrix_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataMatrix(value) {
@@ -753,12 +775,12 @@ func Test_IsNameDataCompound(t *testing.T) {
 		"_data_compound_",
 		"asdfasdfasdfdata_compound_",
 		"data_compoundeeeeeeee",
-		"data_compound_.",      //TODO ?
-		"data_compound_+",      //TODO ?
-		"data_compound_=",      //TODO ?
-		"data_compound__",      //TODO ?
-		"data_compound_ ",      //TODO ?
-		"data_compound_ kkkk.", //TODO ?
+		"data_compound_.",
+		"data_compound_+",
+		"data_compound_=",
+		"data_compound__",
+		"data_compound_ ",
+		"data_compound_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataCompound(value) {
@@ -786,12 +808,12 @@ func Test_IsNameDataOperateResult(t *testing.T) {
 		"_data_operateresult_",
 		"asdfasdfasdfdata_operateresult_",
 		"data_operateresult_eeeeeeee",
-		"data_operateresult_.",      //TODO ?
-		"data_operateresult_+",      //TODO ?
-		"data_operateresult_=",      //TODO ?
-		"data_operateresult__",      //TODO ?
-		"data_operateresult_ ",      //TODO ?
-		"data_operateresult_ kkkk.", //TODO ?
+		"data_operateresult_.",
+		"data_operateresult_+",
+		"data_operateresult_=",
+		"data_operateresult__",
+		"data_operateresult_ ",
+		"data_operateresult_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataOperateResult(value) {
@@ -819,12 +841,12 @@ func Test_IsNameExprFunc(t *testing.T) {
 		"_expression_function_",
 		"asdfasdfasdfexpression_function_",
 		"expression_function_eeeeeeee",
-		"expression_function_.",      //TODO ?
-		"expression_function_+",      //TODO ?
-		"expression_function_=",      //TODO ?
-		"expression_function__",      //TODO ?
-		"expression_function_ ",      //TODO ?
-		"expression_function_ kkkk.", //TODO ?
+		"expression_function_.",
+		"expression_function_+",
+		"expression_function_=",
+		"expression_function__",
+		"expression_function_ ",
+		"expression_function_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameExprFunc(value) {
@@ -852,12 +874,12 @@ func Test_IsNameExprArgu(t *testing.T) {
 		"_expression_logicargument_",
 		"asdfasdfasdfexpression_logicargument_",
 		"expression_logicargument_eeeeeeee",
-		"expression_logicargument_.",      //TODO ?
-		"expression_logicargument_+",      //TODO ?
-		"expression_logicargument_=",      //TODO ?
-		"expression_logicargument__",      //TODO ?
-		"expression_logicargument_ ",      //TODO ?
-		"expression_logicargument_ kkkk.", //TODO ?
+		"expression_logicargument_.",
+		"expression_logicargument_+",
+		"expression_logicargument_=",
+		"expression_logicargument__",
+		"expression_logicargument_ ",
+		"expression_logicargument_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameExprArgu(value) {
