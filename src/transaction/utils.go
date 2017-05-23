@@ -1,33 +1,31 @@
 package transaction
 
-import "unicontract/src/core/model"
+import (
+	"encoding/json"
+	"unicontract/src/core/model"
+)
 
-func GenModelByExecStr(m string,r string,c string)(model.Metadata,model.Relation,model.ContractModel){
-	metadata:=GenMetadataByExecStr(m)
-	relation:=GenRelationByExecStr(r)
-	contract:=GenContractByExecStr(c)
-
-	return 	metadata,relation,contract
+func GenModelByExecStr(m string, r string, c string) (model.Metadata, model.Relation, model.ContractModel, error) {
+	metadata, err := GenMetadataByExecStr(m)
+	relation, err := GenRelationByExecStr(r)
+	contract, err := GenContractByExecStr(c)
+	return metadata, relation, contract, err
 }
 
-
-func GenMetadataByExecStr(m string) model.Metadata {
+func GenMetadataByExecStr(m string) (met model.Metadata, err error) {
 	metadata := model.Metadata{}
-	//TODO
-
-	return metadata
+	err = json.Unmarshal([]byte(m), &metadata)
+	return metadata, err
 }
 
-func GenRelationByExecStr(r string) model.Relation {
+func GenRelationByExecStr(r string) (rela model.Relation, err error) {
 	relation := model.Relation{}
-	//TODO
-
-	return relation
+	err = json.Unmarshal([]byte(r), &relation)
+	return relation, err
 }
 
-func GenContractByExecStr(c string) model.ContractModel {
+func GenContractByExecStr(c string) (con model.ContractModel, err error) {
 	contract := model.ContractModel{}
-	//TODO
-
-	return contract
+	err = json.Unmarshal([]byte(c), &contract)
+	return contract, err
 }

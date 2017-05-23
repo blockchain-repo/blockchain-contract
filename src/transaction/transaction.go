@@ -292,3 +292,24 @@ func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
 	contractOutput.Transaction.Relation.Votes = votes
 	return contractOutput
 }
+
+func GetTxByConHashId(contractHashId string) (bool, error) {
+	param := `{"contract_hash_id":"` + contractHashId + `"}`
+	result, err := chain.GetTxByConHashId(param)
+	if err != nil {
+		logs.Error(err.Error())
+		return false, err
+	}
+	logs.Info(result.Data)
+	output, ok := result.Data.([]interface{})
+	if !ok {
+		err = errors.New("type error")
+		logs.Error(err)
+		return false, err
+	}
+	logs.Info(len(output))
+	if len(output) == 1 {
+		return true, nil
+	}
+	return false, err
+}

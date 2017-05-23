@@ -14,7 +14,7 @@ func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr s
 	relationStr string, contractStr string) (outputStr string, err error) {
 
 	asset := GetAsset(tx_signers)
-	metadata, relation, contract := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 	ownerbefore := append([]string{}, tx_signers)
 	output, _ := Create(ownerbefore, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
@@ -26,7 +26,7 @@ func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr s
 func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interface{},
 	metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	asset := GetAsset(ownerbefore)
-	metadata, relation, contract := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
@@ -38,7 +38,7 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 func ExecuteTransfer(operation string, ownerbefore string, recipients [][2]interface{},
 	metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	asset := GetAsset(ownerbefore)
-	metadata, relation, contract := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
 	return common.StructSerialize(output), err
@@ -62,7 +62,7 @@ func ExecuteTransferComplete(contractOutPut string, taskStatus string) (outputSt
 func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]interface{},
 	metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	asset := GetAsset(ownerbefore)
-	metadata, relation, contract := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
@@ -93,3 +93,4 @@ func UpdateTaskStauts(contractModel *model.ContractOutput, taskId string, taskSt
 		}
 	}
 }
+

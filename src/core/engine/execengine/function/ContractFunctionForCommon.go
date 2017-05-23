@@ -41,7 +41,7 @@ func FuncTestMethod(args ...interface{}) (common.OperateResult, error) {
 }
 
 //资产转移方法
-func TransferAsset(args ...interface{}) (common.OperateResult, error) {
+func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
@@ -82,10 +82,10 @@ func TransferAsset(args ...interface{}) (common.OperateResult, error) {
 			return v_result, v_err
 		}
 		//wait for the freeze asset write into the unichain
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 3)
 	} else {
 		// not mainNode, wait for the main node write the freeze-asset into the unchain
-		time.Sleep(time.Second * 3)
+		time.Sleep(time.Second * 5)
 	}
 	/*
 		do transfer
@@ -110,7 +110,7 @@ func TransferAsset(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-func TransferAssetComplete(args ...interface{}) (common.OperateResult, error) {
+func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 2 {
@@ -129,7 +129,7 @@ func TransferAssetComplete(args ...interface{}) (common.OperateResult, error) {
 }
 
 //create asset
-func CreateAsset(args ...interface{}) (common.OperateResult, error) {
+func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
@@ -160,7 +160,7 @@ func CreateAsset(args ...interface{}) (common.OperateResult, error) {
 }
 
 //解冻资产方法
-func UnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
+func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//userPubKey string, contractId string, taskId string, taskNum int
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -191,10 +191,31 @@ func UnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 }
 
 //根据合约ContractID查找合约
-func GetContractById() (common.OperateResult, error) {
+func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error) {
 	//contractId string
 	var v_err error = nil
 
 	v_result := common.OperateResult{}
+	return v_result, v_err
+}
+
+func FuncIsConPutInUnichian(args ...interface{}) (common.OperateResult, error) {
+
+	var v_result common.OperateResult = common.OperateResult{}
+	var v_err error = nil
+
+	contractHashId := args[0].(string)
+
+	flag, v_err := transaction.GetTxByConHashId(contractHashId)
+	if v_err != nil {
+		v_result.SetCode(400)
+		v_result.SetMessage("query error!")
+		v_result.SetData(strconv.FormatBool(false))
+		return v_result, v_err
+	}
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(strconv.FormatBool(flag))
 	return v_result, v_err
 }

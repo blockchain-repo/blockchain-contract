@@ -163,6 +163,7 @@ func TestUnfreeze(t *testing.T) {
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
+
 func Test_GetUnspent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
@@ -183,4 +184,11 @@ func Test_GetFreezeSpent(t *testing.T) {
 func Test_GetContractFromUnichain(t *testing.T) {
 	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 	logs.Info(common.StructSerialize(contract))
+}
+
+func TestGetTxByConHashId(t *testing.T) {
+	contractHahsId := "2"
+	res, err := GetTxByConHashId(contractHahsId)
+	logs.Info(res)
+	logs.Info(err)
 }

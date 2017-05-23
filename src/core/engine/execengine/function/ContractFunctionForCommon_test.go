@@ -1,6 +1,8 @@
 package function
 
 import (
+	"github.com/astaxie/beego/logs"
+	"strconv"
 	"testing"
 )
 
@@ -18,5 +20,12 @@ func TestTransferAsset(t *testing.T) {
 	   	var taskIndex int = args[6].(int)
 	   	var mainPubkey string = args[7].(string)
 	*/
-	TransferAsset()
+	FuncTransferAsset()
+}
+
+func TestBoo(t *testing.T) {
+	var b bool = true
+	var s string = strconv.FormatBool(b)
+	logs.Info(b)
+	logs.Info(s)
 }
