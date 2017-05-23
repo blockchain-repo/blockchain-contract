@@ -203,12 +203,13 @@ func Test_IsExprArray(t *testing.T) {
 	slTestRightStr := []string{
 		"",
 		"[1,2]",
-		"[1,2,3,4,5]",
+		"[1,2,a,4,1q1q1]",
 		"[100,2,3,4,500]",
 		"[100 ,2, 3,4,500]",
 		"[a,b,c]", "[ a,b,c]", "[a ,b , c]", "[a, b,c ]", "[a, b, c ]",
 		"[1,2,3,4.1]",
 		"[_,_,_]",
+		"[a.a.a,b.b,c.c.c.c]",
 
 		"[.,.,.]", "[_.,._,.]", "[a.,b.,c.]", //TODO 此种正则处理不了类似这种
 	}
@@ -221,9 +222,8 @@ func Test_IsExprArray(t *testing.T) {
 	slTestErrorStr := []string{
 		"[]",
 		"[,,,,1]",
-		"[1 2 3 4,1]",
-		"[1,2,3,4 1]",
-		"[1,2,3,4|1]",
+		"[1 2 3 4,1]", "[1,2,3,4 1]", "[1,2,3,4|1]",
+		"[a b c d,1]", "[a,x,e,3 1]", "[r,g,s,w|1]",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprArray(value) {
@@ -317,6 +317,7 @@ func Test_IsExprVariable(t *testing.T) {
 	slTestErrorStr := []string{
 		"asdf.",
 		"_.",
+		"__.",
 		"3333",
 		"3333.",
 	}
