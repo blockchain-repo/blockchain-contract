@@ -94,3 +94,7 @@ func UpdateTaskStauts(contractModel *model.ContractOutput, taskId string, taskSt
 	}
 }
 
+func ExecuteGetContract(contractId string) (string, error) {
+	con, err := GetContractFromUnichain(contractId)
+	return common.StructSerialize(con), err
+}

@@ -78,6 +78,14 @@ FrozenAsset:
     beginTime: "123"
     endTime: "123"
 
+GetTxByConHashId:
+  method: "post"
+  path: "/uniledger/v1/contract/getTxByConHashId"
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
 
 
 
