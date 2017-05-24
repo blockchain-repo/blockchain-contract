@@ -24,7 +24,10 @@ func (c *ChangeFeed) runChangeFeed() {
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
 		logs.Info(c.table, "Changefeed result : %s", m["new_val"])
-		c.node.output <- m["new_val"]
+		if m["new_val"]!=nil{
+			c.node.output <- m["new_val"]
+		}
+
 	}
 	logs.Info("change feed out")
 }

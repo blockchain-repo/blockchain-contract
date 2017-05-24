@@ -139,7 +139,7 @@ func txSend(arg interface{}) interface{} {
 	return coModel
 }
 
-func getChangefeed() *ChangeFeed {
+func getTxChangefeed() *ChangeFeed {
 	change := &ChangeFeed{
 		db:        "Unicontract",
 		table:     "ContractOutputs",
@@ -163,7 +163,7 @@ func createTxPip() (txPip Pipeline) {
 
 func startTxElection() {
 	txPip := createTxPip()
-	changefeed := getChangefeed()
+	changefeed := getTxChangefeed()
 	txPip.setup(&changefeed.node)
 	txPip.start()
 
