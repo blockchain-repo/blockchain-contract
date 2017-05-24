@@ -614,7 +614,7 @@ _CONTRACTBODY = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='CreatorTime', full_name='protos.ContractBody.CreatorTime', index=7,
+      name='CreateTime', full_name='protos.ContractBody.CreateTime', index=7,
       number=8, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,

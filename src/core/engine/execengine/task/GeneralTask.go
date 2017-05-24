@@ -9,15 +9,14 @@ import (
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"time"
+	//"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/execengine/constdef"
-	"unicontract/src/core/engine/execengine/inf"
-	"unicontract/src/core/engine/execengine/property"
-	//"unicontract/src/config"
-	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/execengine/expression"
 	"unicontract/src/core/engine/execengine/function"
+	"unicontract/src/core/engine/execengine/inf"
+	"unicontract/src/core/engine/execengine/property"
 )
 
 type GeneralTask struct {
@@ -29,7 +28,7 @@ type GeneralTask struct {
 	//type:inf.IExpression
 	CompleteCondition []interface{} `json:"CompleteCondition"`
 	//type:inf.IExpression
-	DisgardCondition []interface{} `json:"DisgardCondition"`
+	DiscardCondition []interface{} `json:"DiscardCondition"`
 	//type:inf.IData
 	DataList []interface{} `json:"DataList"`
 	//type:inf.IExpression
@@ -37,6 +36,8 @@ type GeneralTask struct {
 	//type:int
 	TaskExecuteIdx int      `json:"TaskExecuteIdx"`
 	NextTasks      []string `json:"NextTasks"`
+	//选择分支条件，查询操作后，根据查询结果进行分支判定，以分支判定的值为最终值，保持多节点一致性
+	SelectBranchs []common.SelectBranchExpression `json:"SelectBranchs"`
 }
 
 const (
@@ -44,11 +45,12 @@ const (
 	_State                         = "_State"
 	_PreCondition                  = "_PreCondition"
 	_CompleteCondition             = "_CompleteCondition"
-	_DisgardCondition              = "_DisgardCondition"
+	_DiscardCondition              = "_DiscardCondition"
 	_DataList                      = "_DataList"
 	_DataValueSetterExpressionList = "_DataValueSetterExpressionList"
 	_TaskExecuteIdx                = "_TaskExecuteIdx"
 	_NextTasks                     = "_NextTasks"
+	_SelectBranchs                 = "_SelectBranchs"
 )
 
 func NewGeneralTask() *GeneralTask {
@@ -100,7 +102,7 @@ func (gt *GeneralTask) GetNextTasks() []string {
 }
 
 //当前任务生命周期的执行：（根据任务状态选择相应的执行态方法进入）
-//执行过程：PreProcess => Start or Complete or Digcard => PostProcess
+//执行过程：PreProcess => Start or Complete or Discard => PostProcess
 //执行结果：
 //    1. ret = -1：执行失败, 需要回滚
 //    2. ret = 0 ：执行条件未达到
@@ -198,22 +200,22 @@ func (gt *GeneralTask) InitGeneralTask() error {
 		}
 	}
 	common.AddProperty(gt, gt.PropertyTable, _CompleteCondition, map_completecondition)
-	//DisgardCondition arrat to map
-	if gt.DisgardCondition == nil {
-		gt.DisgardCondition = make([]interface{}, 0)
+	//DiscardCondition arrat to map
+	if gt.DiscardCondition == nil {
+		gt.DiscardCondition = make([]interface{}, 0)
 	}
-	map_digardcondition := make(map[string]inf.IExpression, 0)
-	for _, p_digardcondition := range gt.DisgardCondition {
-		if p_digardcondition != nil {
-			switch p_digardcondition.(type) {
+	map_discardcondition := make(map[string]inf.IExpression, 0)
+	for _, p_discardcondition := range gt.DiscardCondition {
+		if p_discardcondition != nil {
+			switch p_discardcondition.(type) {
 			case inf.IExpression:
 			case *inf.IExpression:
-				tmp_digardcondition := p_digardcondition.(inf.IExpression)
-				map_digardcondition[tmp_digardcondition.GetExpressionStr()] = tmp_digardcondition
+				tmp_discardcondition := p_discardcondition.(inf.IExpression)
+				map_discardcondition[tmp_discardcondition.GetExpressionStr()] = tmp_discardcondition
 			}
 		}
 	}
-	common.AddProperty(gt, gt.PropertyTable, _DisgardCondition, map_digardcondition)
+	common.AddProperty(gt, gt.PropertyTable, _DiscardCondition, map_discardcondition)
 	//DataList arr to map
 	if gt.DataList == nil {
 		gt.DataList = make([]interface{}, 0)
@@ -252,13 +254,17 @@ func (gt *GeneralTask) InitGeneralTask() error {
 	}
 	common.AddProperty(gt, gt.PropertyTable, _NextTasks, gt.NextTasks)
 
+	if gt.SelectBranchs == nil {
+		gt.SelectBranchs = make([]common.SelectBranchExpression, 0)
+	}
+	common.AddProperty(gt, gt.PropertyTable, _SelectBranchs, gt.SelectBranchs)
 	return err
 }
 
 //====属性Get方法
 func (gt *GeneralTask) GetTaskId() string {
 	if gt.PropertyTable[_TaskId] == nil {
-		return nil
+		return ""
 	}
 	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
 	return taskid_property.GetValue().(string)
@@ -280,12 +286,12 @@ func (gt *GeneralTask) GetCompleteCondition() map[string]inf.IExpression {
 	return completecondition_property.GetValue().(map[string]inf.IExpression)
 }
 
-func (gt *GeneralTask) GetDisgardCondition() map[string]inf.IExpression {
-	if gt.PropertyTable[_DisgardCondition] == nil {
+func (gt *GeneralTask) GetDiscardCondition() map[string]inf.IExpression {
+	if gt.PropertyTable[_DiscardCondition] == nil {
 		return nil
 	}
-	disgardcondition_property := gt.PropertyTable[_DisgardCondition].(property.PropertyT)
-	return disgardcondition_property.GetValue().(map[string]inf.IExpression)
+	Discardcondition_property := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
+	return Discardcondition_property.GetValue().(map[string]inf.IExpression)
 }
 
 func (gt *GeneralTask) GetTaskExecuteIdx() int {
@@ -301,6 +307,11 @@ func (gt *GeneralTask) GetDataList() map[string]inf.IData {
 func (gt *GeneralTask) GetDataValueSetterExpressionList() map[string]inf.IExpression {
 	dataexpress_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
 	return dataexpress_property.GetValue().(map[string]inf.IExpression)
+}
+
+func (gt *GeneralTask) GetSelectBranchs() []common.SelectBranchExpression {
+	selectbranch_property := gt.PropertyTable[_SelectBranchs].(property.PropertyT)
+	return selectbranch_property.GetValue().([]common.SelectBranchExpression)
 }
 
 //====属性动态初始化
@@ -345,16 +356,16 @@ func (gt *GeneralTask) AddCompleteCondition(p_condition string) {
 	gt.PropertyTable[_CompleteCondition] = completecondition_property
 }
 
-func (gt *GeneralTask) AddDisgardCondition(p_condition string) {
-	disgardcondition_property := gt.PropertyTable[_DisgardCondition].(property.PropertyT)
-	if disgardcondition_property.GetValue() == nil {
-		disgardcondition_property.SetValue(make([]inf.IExpression, 0))
+func (gt *GeneralTask) AddDiscardCondition(p_condition string) {
+	Discardcondition_property := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
+	if Discardcondition_property.GetValue() == nil {
+		Discardcondition_property.SetValue(make([]inf.IExpression, 0))
 	}
-	map_disgardcondition := disgardcondition_property.GetValue().(map[string]inf.IExpression)
-	map_disgardcondition[p_condition] = expression.NewGeneralExpression(p_condition)
+	map_Discardcondition := Discardcondition_property.GetValue().(map[string]inf.IExpression)
+	map_Discardcondition[p_condition] = expression.NewGeneralExpression(p_condition)
 
-	disgardcondition_property.SetValue(map_disgardcondition)
-	gt.PropertyTable[_DisgardCondition] = disgardcondition_property
+	Discardcondition_property.SetValue(map_Discardcondition)
+	gt.PropertyTable[_DiscardCondition] = Discardcondition_property
 }
 
 //====属性Set方法
@@ -374,6 +385,13 @@ func (gt *GeneralTask) SetTaskExecuteIdx(int_idx int) {
 	taskexecuteidx_property.SetValue(int_idx)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	gt.PropertyTable[_TaskExecuteIdx] = taskexecuteidx_property
+}
+
+func (gt *GeneralTask) SetSelectBranchs(p_selectbranchs []common.SelectBranchExpression) {
+	gt.SelectBranchs = p_selectbranchs
+	selectbranch_property := gt.PropertyTable[_SelectBranchs].(property.PropertyT)
+	selectbranch_property.SetValue(p_selectbranchs)
+	gt.PropertyTable[_SelectBranchs] = selectbranch_property
 }
 
 //TODO: 缺少Compounddata考虑
@@ -478,17 +496,17 @@ func (gt *GeneralTask) testCompleteCondition() bool {
 	return r_flag
 }
 
-func (gt *GeneralTask) testDisgardCondition() bool {
+func (gt *GeneralTask) testDiscardCondition() bool {
 	var r_flag bool = false
-	if len(gt.GetDisgardCondition()) == 0 {
+	if len(gt.GetDiscardCondition()) == 0 {
 		r_flag = true
 	}
 	//合约录入的终止条件
-	for _, value := range gt.GetDisgardCondition() {
+	for _, value := range gt.GetDiscardCondition() {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			logs.Warning("DisgardCondition EvaluateExpression[" + value.GetExpressionStr() + "] fail, [" + v_err.Error() + "]")
+			logs.Warning("DiscardCondition EvaluateExpression[" + value.GetExpressionStr() + "] fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -500,10 +518,14 @@ func (gt *GeneralTask) testDisgardCondition() bool {
 	}
 	//默认的合约终止条件（当前合约步骤入链查询判定）
 	v_contract := gt.GetContract()
-	v_default_function := "FuncQueryContractExecuterFromChain(" + v_contract.GetOutputId() + ")"
+	v_default_function := "FuncIsConPutInUnichian(" + v_contract.GetOutputId() + ")"
 	v_result, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_default_function)
-	if v_err != nil || !v_result.(bool) {
-		logs.Warning("DisgardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
+	if v_err != nil{
+		logs.Warning("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
+		r_flag = false
+	}
+	if !v_result.(bool) {
+		logs.Warning("DiscardCondition EvaluateExpression[" + v_default_function + "] result is false!")
 		r_flag = false
 	}
 	return r_flag
@@ -544,14 +566,15 @@ func (gt *GeneralTask) IsCompleted() bool {
 	return gt.GetState() == constdef.TaskState[constdef.TaskState_Completed]
 }
 
-func (gt *GeneralTask) IsDisgarded() bool {
+func (gt *GeneralTask) IsDiscarded() bool {
 	return gt.GetState() == constdef.TaskState[constdef.TaskState_Discard]
 }
 
 //任务运行前进行的预处理
 func (gt *GeneralTask) PreProcess() error {
 	var r_err error = nil
-	//TODO
+	//当前合约执行任务的Org信息赋值：OrgId, OrgTaskId, OrgTaskExecuteIdx,
+
 	return r_err
 }
 
@@ -585,7 +608,8 @@ func (gt *GeneralTask) Start() (int8, error) {
 		var exec_flag bool = true
 		//var data_array []interface{} = gt.DataList
 		//循环遍历函数表达式列表，执行函数
-		for v_idx, v_dataValueSetterExpression := range gt.DataValueSetterExpressionList {
+		var v_idx int8 = 0
+		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
 			//函数识别 & 执行
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], v_expr_object.GetExpressionStr())
@@ -600,6 +624,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				exec_flag = false
 				break
 			}
+			v_idx = v_idx + 1
 		}
 		//执行失败，返回 -1
 		if !exec_flag {
@@ -646,8 +671,35 @@ func (gt *GeneralTask) Complete() (int8, error) {
 	//   任务执行失败，该任务需要重新执行
 	if gt.IsInProgress() && gt.testCompleteCondition() {
 		//Dormant中： 1. 执行函数，产出Output对象； 2.将函数执行结果赋值到对应结构中
-		//TODO:
-		v_reslt, r_err := function.FuncTestMethod()
+		//判断OutputStruct 是否为空，为空则需要在此构造产出结构体
+		if gt.GetContract().GetOutputStruct() == "" {
+
+		}
+		tmp_contract, r_err := gt.GetContract().Deserialize(gt.GetContract().GetOutputStruct())
+		if tmp_contract == nil {
+			r_ret = -1
+			r_buf.WriteString("[Result]: Deserialize OutputStruct fail;")
+			r_buf.WriteString("[Error]: outputStruct is nil;")
+			r_buf.WriteString("fail....")
+			logs.Error(r_buf.String())
+			return r_ret, r_err
+		}
+		if r_err != nil {
+			r_ret = -1
+			r_buf.WriteString("[Result]: Deserialize OutputStruct fail;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			r_buf.WriteString("fail....")
+			logs.Error(r_buf.String())
+			return r_ret, r_err
+		}
+		//构造产出信息的赋值: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
+		output_struct := tmp_contract.(inf.ICognitiveContract)
+
+		gt.GetContract().SetOutputId(output_struct.GetId())
+		gt.GetContract().SetOutputTaskId(output_struct.GetOutputTaskId())
+		gt.GetContract().SetOutputTaskExecuteIdx(output_struct.GetOutputTaskExecuteIdx())
+
+		v_reslt, r_err := function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
 		//执行结果判断
 		if r_err != nil || v_reslt.GetCode() != 200 {
 			r_ret = -1
@@ -666,8 +718,15 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		return r_ret, r_err
 	}
 	//保证顺利执行，给执行方法留下执行时间，需要多次sleep等待执行
-	var executeEngineConf map[interface{}]interface{} = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
-	var v_sleep_num uint8 = executeEngineConf["task_complete_sleep_count"].(uint8)
+	//TODO
+	//var executeEngineConf map[interface{}]interface{} = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
+	var executeEngineConf map[interface{}]interface{}
+	if executeEngineConf == nil {
+		executeEngineConf = make(map[interface{}]interface{}, 0)
+		executeEngineConf["task_complete_sleep_count"] = 3
+		executeEngineConf["task_complete_sleep_time"] = 5
+	}
+	var v_sleep_num int = executeEngineConf["task_complete_sleep_count"].(int)
 	for v_sleep_num > 0 {
 		v_sleep_num = v_sleep_num - 1
 		r_ret, r_err = gt.Discard()
@@ -689,12 +748,12 @@ func (gt *GeneralTask) Discard() (int8, error) {
 	logs.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
-	// DisgardCondition 需要包含多节点共识结果标识 (默认条件)
+	// DiscardCondition 需要包含多节点共识结果标识 (默认条件)
 	//   任务执行结果共识通过后，继续往下执行；
 	//   任务执行结果共识不通过，该任务需要重新执行；
-	if gt.IsCompleted() && gt.testDisgardCondition() {
-		//DisgardCondition中需要默认添加任务执行结果入链判断条件
-		logs.Info(r_buf.String(), " Complete to Digcard....")
+	if gt.IsCompleted() && gt.testDiscardCondition() {
+		//DiscardCondition中需要默认添加任务执行结果入链判断条件
+		logs.Info(r_buf.String(), " Complete to Discard....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Discard])
 		r_ret = 1
 	}
@@ -715,7 +774,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case -1:
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
 		//    调用扫描引擎接口： UpdateMonitorFail(contractID_old)
-		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId())
+		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId(), gt.GetState())
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -727,7 +786,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case 0:
 		//执行条件不满足：1.更新contractID1 的flag=0，timestamp
 		//    调用扫描引擎接口： UpdateMonitorWait(contractID_old)
-		r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId())
+		r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId(), gt.GetState())
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -739,8 +798,17 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case 1:
 		//执行成功：1 更新contractID1 的flag=1, succNum+1, timestamp, 2.将contractID2插入到扫描监控表中
 		//    调用扫描引擎接口： UpdateMonitorSucc(contractID_old, contractID_new)
+		//TODO 过程中数据赋值
 		r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
-		r_err = common.UpdateMonitorSucc(v_contract.GetContractId(), v_contract.GetId(), v_contract.GetOutputId())
+		output_taskIdx := v_contract.GetOutputTaskExecuteIdx()
+		r_err = common.UpdateMonitorSucc(
+			v_contract.GetContractId(),
+			v_contract.GetId(),
+			v_contract.GetOutputId(),
+			gt.GetState(),
+			constdef.TaskState[constdef.TaskState_Dormant],
+			v_contract.GetOutputTaskId(),
+			output_taskIdx)
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorSucc] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -753,10 +821,42 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	return r_err
 }
 
-func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int, p_result common.OperateResult) {
+//由于查询分支结果的不确定性，使用分支条件赋予预估值，使得多节点 不同时运行结果一致性
+func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int8, p_result common.OperateResult) {
+	var r_buf bytes.Buffer = bytes.Buffer{}
 	switch gt.GetCtype() {
 	case constdef.TaskType[constdef.Task_Enquiry]:
-		//TODO: 根据函数执行结果和分支情况决定最终的结果值
+		// 根据函数执行结果和分支情况决定最终的结果值
+		v_data := p_dataList[p_idx].(inf.IData)
+
+		select_branchs := gt.GetSelectBranchs()
+		if len(select_branchs) != 0 {
+			for _, select_expression := range select_branchs {
+				select_object := select_expression
+				select_value, select_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], select_object.GetBranchExpressionStr())
+				if select_err != nil {
+					r_buf.WriteString("[Result]: ConsistentValue fail;")
+					r_buf.WriteString("[ContractId]: " + gt.GetContract().GetContractId() + ";")
+					r_buf.WriteString("[ConstractHashId]: " + gt.GetContract().GetOutputId() + ";")
+					r_buf.WriteString("[Error]: " + select_err.Error() + ";")
+					logs.Error(r_buf.String())
+					break
+				}
+				if select_value.(bool) {
+					v_data.SetValue(select_object.GetBranchExpressionValue())
+					break
+				}
+			}
+		} else {
+			v_data.SetValue(p_result.GetData())
+		}
+	case constdef.TaskType[constdef.Task_Action]:
+		v_data := p_dataList[p_idx].(inf.IData)
+		v_data.SetValue(p_result.GetData())
+	case constdef.TaskType[constdef.Task_Decision]:
+		v_data := p_dataList[p_idx].(inf.IData)
+		v_data.SetValue(p_result.GetData())
+	case constdef.TaskType[constdef.Task_Plan]:
 		v_data := p_dataList[p_idx].(inf.IData)
 		v_data.SetValue(p_result.GetData())
 	default:

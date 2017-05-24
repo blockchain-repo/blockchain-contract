@@ -74,6 +74,7 @@ func (ge *GeneralExpression) InitExpression() error {
 	ge.SetCtype(ge.Ctype)
 	common.AddProperty(ge, ge.PropertyTable, _ExpressionStr, ge.ExpressionStr)
 	common.AddProperty(ge, ge.PropertyTable, _ExpressionResult, ge.ExpressionResult)
+
 	return err
 }
 
@@ -88,7 +89,7 @@ func (ge *GeneralExpression) GetExpressionResult() common.OperateResult {
 	return result_property.GetValue().(common.OperateResult)
 }
 
-//====属性Set方法
+//====Set方法
 func (ge *GeneralExpression) SetExpressionStr(p_expression string) {
 	ge.ExpressionStr = p_expression
 	express_property := ge.PropertyTable[_ExpressionStr].(property.PropertyT)

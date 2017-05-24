@@ -88,7 +88,7 @@ message ContractBody {
     string Description = 5;
     string ContractState = 6;
     string Creator = 7;
-    string CreatorTime = 8;
+    string CreateTime = 8;
     string StartTime = 9;
     string EndTime = 10;
     repeated string ContractOwners = 11;

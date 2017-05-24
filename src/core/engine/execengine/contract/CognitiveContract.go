@@ -49,14 +49,14 @@ type CognitiveContractHead struct {
 
 type CognitiveContractBody struct {
 	//合约默认属性
+	ContractId         string              `json:"ContractId"`
 	Cname              string              `json:"Cname"`
 	Ctype              string              `json:"Ctype"`
 	Caption            string              `json:"Caption"`
 	Description        string              `json:"Description"`
-	ContractId         string              `json:"ContractId"`
 	ContractState      string              `json:"ContractState"`
 	Creator            string              `json:"Creator"`
-	CreatorTime        string              `json:"CreatorTime"`
+	CreateTime         string              `json:"CreateTime"`
 	StartTime          string              `json:"StartTime"`
 	EndTime            string              `json:"EndTime"`
 	ContractOwners     []string            `json:"ContractOwners"`
@@ -85,7 +85,7 @@ const (
 	_ContractId         = "_ContractId"
 	_ContractState      = "_ContractState"
 	_Creator            = "_Creator"
-	_CreatorTime        = "_CreatorTime"
+	_CreateTime         = "_CreateTime"
 	_StartTime          = "_StartTime"
 	_EndTime            = "_EndTime"
 	_ContractOwners     = "_ContractOwners"
@@ -224,7 +224,8 @@ func (model *CognitiveContract) Serialize() (string, error) {
 }
 
 //合约对象反序列化
-func (model *CognitiveContract) Deserialize(p_str string) (*CognitiveContract, error) {
+//return: *CognitiveContract
+func (model *CognitiveContract) Deserialize(p_str string) (interface{}, error) {
 	var err error = nil
 	if p_str == "" || model == nil {
 		return nil, err
@@ -293,9 +294,9 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 		err = errors.New("Contract Need Creator!")
 		return err
 	}
-	if cc.ContractBody.CreatorTime == "" {
-		logs.Warning("Contract Need CreatorTime!")
-		err = errors.New("Contract Need CreatorTime!")
+	if cc.ContractBody.CreateTime == "" {
+		logs.Warning("Contract Need CreateTime!")
+		err = errors.New("Contract Need CreateTime!")
 		return err
 	}
 	if cc.ContractBody.StartTime == "" {
@@ -337,7 +338,7 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	cc.ContractBody.ContractState = common.TernaryOperator(cc.ContractBody.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractBody.ContractState).(string)
 	common.AddProperty(cc, cc.PropertyTable, _ContractState, cc.ContractBody.ContractState)
 	common.AddProperty(cc, cc.PropertyTable, _Creator, cc.ContractBody.Creator)
-	common.AddProperty(cc, cc.PropertyTable, _CreatorTime, cc.ContractBody.CreatorTime)
+	common.AddProperty(cc, cc.PropertyTable, _CreateTime, cc.ContractBody.CreateTime)
 	common.AddProperty(cc, cc.PropertyTable, _StartTime, cc.ContractBody.StartTime)
 	common.AddProperty(cc, cc.PropertyTable, _EndTime, cc.ContractBody.EndTime)
 	common.AddProperty(cc, cc.PropertyTable, _ContractOwners, cc.ContractBody.ContractOwners)
@@ -480,12 +481,12 @@ func (gc *CognitiveContract) GetOrgTaskId() string {
 	return orgtaskid_property.GetValue().(string)
 }
 
-func (gc *CognitiveContract) GetOrgTaskExecuteIdx() string {
+func (gc *CognitiveContract) GetOrgTaskExecuteIdx() int {
 	if gc.PropertyTable[_OrgTaskExecuteIdx] == nil {
-		return ""
+		return 0
 	}
 	orgtaskexecuteidx_property := gc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
-	return orgtaskexecuteidx_property.GetValue().(string)
+	return orgtaskexecuteidx_property.GetValue().(int)
 }
 
 func (gc *CognitiveContract) GetOutputTaskId() string {
@@ -496,12 +497,12 @@ func (gc *CognitiveContract) GetOutputTaskId() string {
 	return OutputTaskId_property.GetValue().(string)
 }
 
-func (gc *CognitiveContract) GetOutputTaskExecuteIdx() string {
+func (gc *CognitiveContract) GetOutputTaskExecuteIdx() int {
 	if gc.PropertyTable[_OutputTaskExecuteIdx] == nil {
-		return ""
+		return 0
 	}
 	OutputTaskExecuteIdx_property := gc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
-	return OutputTaskExecuteIdx_property.GetValue().(string)
+	return OutputTaskExecuteIdx_property.GetValue().(int)
 }
 
 func (gc *CognitiveContract) GetOutputStruct() string {
@@ -509,6 +510,9 @@ func (gc *CognitiveContract) GetOutputStruct() string {
 		return ""
 	}
 	outputstruct_property := gc.PropertyTable[_OutputStruct].(property.PropertyT)
+	if outputstruct_property.GetValue() == nil {
+		return ""
+	}
 	return outputstruct_property.GetValue().(string)
 }
 
@@ -619,9 +623,9 @@ func (cc *CognitiveContract) GetCreator() string {
 	creator_property := cc.PropertyTable[_Creator].(property.PropertyT)
 	return creator_property.GetValue().(string)
 }
-func (cc *CognitiveContract) GetCreatorTime() string {
-	creatorTime_property := cc.PropertyTable[_CreatorTime].(property.PropertyT)
-	return creatorTime_property.GetValue().(string)
+func (cc *CognitiveContract) GetCreateTime() string {
+	CreateTime_property := cc.PropertyTable[_CreateTime].(property.PropertyT)
+	return CreateTime_property.GetValue().(string)
 }
 func (cc *CognitiveContract) GetStartTime() string {
 	startTime_property := cc.PropertyTable[_StartTime].(property.PropertyT)
@@ -698,11 +702,11 @@ func (cc *CognitiveContract) SetCreator(p_Creator string) {
 	creator_property.SetValue(p_Creator)
 	cc.PropertyTable[_Creator] = creator_property
 }
-func (cc *CognitiveContract) SetCreatorTime(p_CreatorTime string) {
-	cc.ContractBody.CreatorTime = p_CreatorTime
-	creatortime_property := cc.PropertyTable[_CreatorTime].(property.PropertyT)
-	creatortime_property.SetValue(p_CreatorTime)
-	cc.PropertyTable[_CreatorTime] = creatortime_property
+func (cc *CognitiveContract) SetCreateTime(p_CreateTime string) {
+	cc.ContractBody.CreateTime = p_CreateTime
+	CreateTime_property := cc.PropertyTable[_CreateTime].(property.PropertyT)
+	CreateTime_property.SetValue(p_CreateTime)
+	cc.PropertyTable[_CreateTime] = CreateTime_property
 }
 func (cc *CognitiveContract) SetStartTime(p_StartTime string) {
 	cc.ContractBody.StartTime = p_StartTime
@@ -847,8 +851,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			break
 		}
 		if f_err != nil {
-			//TODO log
-			fmt.Println("Error: [" + f_err.Error() + "]")
+			logs.Error("Contract Task Execute has error" + f_err.Error())
 		}
 	}
 	return r_ret, r_err

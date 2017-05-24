@@ -71,7 +71,7 @@ func GenerateOutputTest() string {
 		Description:        "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
 		ContractState:      "",
 		Creator:            common.GenTimestamp(),
-		CreatorTime:        "1493111926720",
+		CreateTime:        "1493111926720",
 		StartTime:          "1493111926730",
 		EndTime:            "1493111926740",
 		ContractOwners:     contractOwners,

@@ -27,7 +27,7 @@ func TestWriteContract(t *testing.T) {
 		Description:        "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
 		ContractState:      "",
 		Creator:            common.GenTimestamp(),
-		CreatorTime:        common.GenTimestamp(),
+		CreateTime:        common.GenTimestamp(),
 		StartTime:          common.GenTimestamp(),
 		EndTime:            common.GenTimestamp(),
 		ContractOwners:     contractOwners,

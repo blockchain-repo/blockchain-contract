@@ -88,7 +88,7 @@ type ContractCase struct {
 	//根据实际业务场景增加的属性
 	ContractState string `json:"ContractState"`
 	Creator string `json:"Creator"`
-	CreatorTime string `json:"CreatorTime"`
+	CreateTime string `json:"CreateTime"`
 	StartTime string `json:"StartTime"`
 	EndTime string `json:"EndTime"`
 	ContractOwners []string `json:"ContractOwners"`
@@ -149,9 +149,9 @@ func (cc *ContractCase)InitContractCase()error{
 		err = errors.New("Contract Need Creator!")
 		return err
 	}
-	if cc.CreatorTime == "" {
+	if cc.CreateTime == "" {
 		//TODO log
-		err = errors.New("Contract Need CreatorTime!")
+		err = errors.New("Contract Need CreateTime!")
 		return err
 	}
 	if cc.StartTime == "" {
@@ -182,7 +182,7 @@ func (cc *ContractCase)InitContractCase()error{
 	cc.InitGeneralComponentCase(constdef.ComponentType[constdef.Component_Contract])
 	cc.AddProperty(cc,"_ContractState", common.TernaryOperator(cc.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractState))
 	cc.AddProperty(cc,"_Creator", cc.Creator)
-	cc.AddProperty(cc,"_CreatorTime", cc.CreatorTime)
+	cc.AddProperty(cc,"_CreateTime", cc.CreateTime)
 	cc.AddProperty(cc,"_StartTime", cc.StartTime)
 	cc.AddProperty(cc,"_EndTime", cc.EndTime)
 	cc.AddProperty(cc,"_ContractOwners", cc.ContractOwners)
@@ -220,7 +220,7 @@ func TestM(t *testing.T)  {
 "Caption":"购智能手机返话费合约产品协议",
 "Description":"移动用户A花费500元购买移动运营商B的提供的合约智能手机C后，要求用户每月消费58元以上通信费，移动运营商B便可按月返还话费（即：每月1号返还移动用户A20元话费），连续返还12个月",
 "Creator":"ABCDEFGHIJKLMNIPQRSTUVWXYZ",
-"CreatorTime":"2016-12-2012:00:00",
+"CreateTime":"2016-12-2012:00:00",
 "StartTime":"2017-01-0112:00:00",
 "EndTime":"2017-01-0112:00:00",
 "TestAA":"",
@@ -265,7 +265,7 @@ func TestM(t *testing.T)  {
 	fmt.Println("Description: ", v_model.Description)
 	fmt.Println("ContractState: ", v_model.ContractState)
 	fmt.Println("Creator: ", v_model.Creator)
-	fmt.Println("CreatorTime: ", v_model.CreatorTime)
+	fmt.Println("CreateTime: ", v_model.CreateTime)
 	fmt.Println("StartTime: ", v_model.StartTime)
 	fmt.Println("EndTime: ", v_model.EndTime)
 	fmt.Println("ContractOwners: ", v_model.ContractOwners)
@@ -282,7 +282,7 @@ func TestM(t *testing.T)  {
 	fmt.Println("Description: ", v_model.Description)
 	fmt.Println("ContractState: ", v_model.ContractState)
 	fmt.Println("Creator: ", v_model.Creator)
-	fmt.Println("CreatorTime: ", v_model.CreatorTime)
+	fmt.Println("CreateTime: ", v_model.CreateTime)
 	fmt.Println("StartTime: ", v_model.StartTime)
 	fmt.Println("EndTime: ", v_model.EndTime)
 	fmt.Println("ContractOwners: ", v_model.ContractOwners)

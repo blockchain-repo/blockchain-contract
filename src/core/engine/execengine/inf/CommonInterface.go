@@ -25,6 +25,17 @@ type ICognitiveContract interface {
 	GetId() string
 	SetOutputId(p_outputId string)
 	GetOutputId() string
+
+	GetOrgTaskId() string
+	GetOrgTaskExecuteIdx() int
+	GetOutputTaskId() string
+	GetOutputTaskExecuteIdx() int
+	GetOutputStruct() string
+
+	Serialize() (string, error)
+	Deserialize(p_str string) (interface{}, error)
+    SetOutputTaskId(string)
+    SetOutputTaskExecuteIdx(int)
 }
 
 //component

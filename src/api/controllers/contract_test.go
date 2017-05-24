@@ -136,7 +136,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 		Description:        "www.futurever.com",
 		ContractState:      "",
 		Creator:            randomCreator,
-		CreatorTime:        common.GenTimestamp(),
+		CreateTime:        common.GenTimestamp(),
 		StartTime:          startTime,
 		EndTime:            endTime,
 		ContractOwners:     contractOwners,

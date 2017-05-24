@@ -1,12 +1,12 @@
 package contract
 
 import (
-	"testing"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"testing"
 )
 
-func PrintContrract(v_contract CognitiveContract){
+func PrintContrract(v_contract CognitiveContract) {
 	fmt.Println("=======constract init=========")
 	v_contract.InitCognitiveContract()
 	fmt.Println("=======constract print=========")
@@ -20,8 +20,8 @@ func PrintContrract(v_contract CognitiveContract){
 	fmt.Println("  PropertyTable[_Description]: ", v_contract.GetPropertyTable()["_Description"])
 	fmt.Println("Creator: ", v_contract.ContractBody.Creator)
 	fmt.Println("  PropertyTable[_Creator]: ", v_contract.GetPropertyTable()["_Creator"])
-	fmt.Println("CreatorTime: ", v_contract.ContractBody.CreatorTime)
-	fmt.Println("  PropertyTable[_CreatorTime]: ", v_contract.GetPropertyTable()["_CreatorTime"])
+	fmt.Println("CreateTime: ", v_contract.ContractBody.CreateTime)
+	fmt.Println("  PropertyTable[_CreateTime]: ", v_contract.GetPropertyTable()["_CreateTime"])
 	fmt.Println("StartTime: ", v_contract.ContractBody.StartTime)
 	fmt.Println("  PropertyTable[_StartTime]: ", v_contract.GetPropertyTable()["_StartTime"])
 	fmt.Println("EndTime: ", v_contract.ContractBody.EndTime)
@@ -29,38 +29,39 @@ func PrintContrract(v_contract CognitiveContract){
 	fmt.Println("ContractOwners: ", v_contract.ContractBody.ContractOwners)
 	fmt.Println("  PropertyTable[_ContractOwners]: ", v_contract.GetPropertyTable()["_ContractOwners"])
 	fmt.Println("  All Owners: ")
-	for p_idx,p_owner := range v_contract.ContractBody.ContractOwners {
-		fmt.Println("  owner[",p_idx, "]: ", p_owner)
+	for p_idx, p_owner := range v_contract.ContractBody.ContractOwners {
+		fmt.Println("  owner[", p_idx, "]: ", p_owner)
 	}
 	fmt.Println("")
 	fmt.Println("ContractAssets: ", v_contract.ContractBody.ContractAssets)
 	fmt.Println("  PropertyTable[_ContractAssets]: ", v_contract.GetPropertyTable()["_ContractAssets"])
 	fmt.Println("  All Assets: ")
-	for p_idx,p_assert := range v_contract.ContractBody.ContractAssets {
-		fmt.Println("  Asset.AssetId[",p_idx, "]: ", p_assert.AssetId)
-		fmt.Println("  Asset.Name[",p_idx, "]: ", p_assert.Name)
-		fmt.Println("  Asset.Caption[",p_idx, "]: ", p_assert.Caption)
-		fmt.Println("  Asset.Description[",p_idx, "]: ", p_assert.Description)
-		fmt.Println("  Asset.Unit[",p_idx, "]: ", p_assert.Unit)
-		fmt.Println("  Asset.Amount[",p_idx, "]: ", p_assert.Amount)
-		fmt.Println("  Asset.MetaData[",p_idx, "]: ", p_assert.MetaData)
+	for p_idx, p_assert := range v_contract.ContractBody.ContractAssets {
+		fmt.Println("  Asset.AssetId[", p_idx, "]: ", p_assert.AssetId)
+		fmt.Println("  Asset.Name[", p_idx, "]: ", p_assert.Name)
+		fmt.Println("  Asset.Caption[", p_idx, "]: ", p_assert.Caption)
+		fmt.Println("  Asset.Description[", p_idx, "]: ", p_assert.Description)
+		fmt.Println("  Asset.Unit[", p_idx, "]: ", p_assert.Unit)
+		fmt.Println("  Asset.Amount[", p_idx, "]: ", p_assert.Amount)
+		fmt.Println("  Asset.MetaData[", p_idx, "]: ", p_assert.MetaData)
 	}
 	fmt.Println("ContractSignatures: ", v_contract.ContractBody.ContractSignatures)
 	fmt.Println("  PropertyTable[_ContractSignatures]: ", v_contract.GetPropertyTable()["_ContractSignatures"])
 	fmt.Println("  All Signatures: ")
-	for p_idx,p_signature := range v_contract.ContractBody.ContractSignatures {
-		fmt.Println("  Signatures.OwnerPubkey[",p_idx, "]: ", p_signature.OwnerPubkey)
-		fmt.Println("  Signatures.Signature[",p_idx, "]: ", p_signature.Signature)
-		fmt.Println("  Signatures.SignTimestamp[",p_idx, "]: ", p_signature.SignTimestamp)
+	for p_idx, p_signature := range v_contract.ContractBody.ContractSignatures {
+		fmt.Println("  Signatures.OwnerPubkey[", p_idx, "]: ", p_signature.OwnerPubkey)
+		fmt.Println("  Signatures.Signature[", p_idx, "]: ", p_signature.Signature)
+		fmt.Println("  Signatures.SignTimestamp[", p_idx, "]: ", p_signature.SignTimestamp)
 	}
 	fmt.Println("MetaAttribute: ", v_contract.ContractBody.MetaAttribute)
 	fmt.Println("  PropertyTable[_MetaAttribute]: ", v_contract.GetPropertyTable()["_MetaAttribute"])
 	fmt.Println("  All MetaAttribute: ")
-	for p_key,p_value := range v_contract.ContractBody.MetaAttribute {
+	for p_key, p_value := range v_contract.ContractBody.MetaAttribute {
 		fmt.Println("  Attribute[", p_key, "]", p_value)
 	}
 	fmt.Println("ContractComponent: ", v_contract.ContractBody.ContractComponents)
 }
+
 /*
 func TestContractStruct_simple(t *testing.T)  {
 	str_contract :=  `{
@@ -69,7 +70,7 @@ func TestContractStruct_simple(t *testing.T)  {
 "Caption":"购智能手机返话费合约产品协议",
 "Description":"移动用户A花费500元购买移动运营商B的提供的合约智能手机C后，要求用户每月消费58元以上通信费，移动运营商B便可按月返还话费（即：每月1号返还移动用户A20元话费），连续返还12个月",
 "Creator":"ABCDEFGHIJKLMNIPQRSTUVWXYZ",
-"CreatorTime":"2016-12-20 12:00:00",
+"CreateTime":"2016-12-20 12:00:00",
 "StartTime":"2017-01-01 12:00:00",
 "EndTime":"2017-01-01 12:00:00",
 "ContractOwners":[
@@ -127,8 +128,8 @@ func TestContractStruct_simple(t *testing.T)  {
 	fmt.Println("  PropertyTable[_Description]: ", v_contract.ContractBody.GetPropertyTable()["_Description"])
 	fmt.Println("Creator: ", v_contract.ContractBody.Creator)
 	fmt.Println("  PropertyTable[_Creator]: ", v_contract.ContractBody.GetPropertyTable()["_Creator"])
-	fmt.Println("CreatorTime: ", v_contract.ContractBody.CreatorTime)
-	fmt.Println("  PropertyTable[_CreatorTime]: ", v_contract.ContractBody.GetPropertyTable()["_CreatorTime"])
+	fmt.Println("CreateTime: ", v_contract.ContractBody.CreateTime)
+	fmt.Println("  PropertyTable[_CreateTime]: ", v_contract.ContractBody.GetPropertyTable()["_CreateTime"])
 	fmt.Println("StartTime: ", v_contract.ContractBody.StartTime)
 	fmt.Println("  PropertyTable[_StartTime]: ", v_contract.ContractBody.GetPropertyTable()["_StartTime"])
 	fmt.Println("EndTime: ", v_contract.ContractBody.EndTime)
@@ -168,9 +169,9 @@ func TestContractStruct_simple(t *testing.T)  {
 	}
 }*/
 
-func TestContractStruct_all(t *testing.T)  {
+func TestContractStruct_all(t *testing.T) {
 
-	str_contract :=  `{
+	str_contract := `{
 "ContractId":"xxxxxxxxxxxxxxxxxxxxx",
 "Cname":"contract_mobilecallback",
 "Caption":"购智能手机返话费合约产品协议",
@@ -180,7 +181,7 @@ func TestContractStruct_all(t *testing.T)  {
 "Copyright":"uni-ledger"
 },
 "Creator":"ABCDEFGHIJKLMNIPQRSTUVWXYZ",
-"CreatorTime":"2016-12-20 12:00:00",
+"CreateTime":"2016-12-20 12:00:00",
 "StartTime":"2017-01-01 12:00:00",
 "EndTime":"2017-01-01 12:00:00",
 "ContractOwners":[
@@ -637,7 +638,7 @@ func TestContractStruct_all(t *testing.T)  {
 	if err := json.Unmarshal([]byte(str_contract), &v_contract.ContractBody); err == nil {
 		fmt.Println("=======constract object=========")
 		fmt.Println(v_contract.ContractBody)
-	}else {
+	} else {
 		fmt.Println(err)
 		return
 	}
@@ -645,13 +646,14 @@ func TestContractStruct_all(t *testing.T)  {
 
 	fmt.Println("+++++++++++Deserialize method+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	v2_contract := new(CognitiveContract)
-	v2_contract,err := v2_contract.Deserialize(str_contract)
+	tmp_contract, err := v2_contract.Deserialize(str_contract)
+	v2_contract = tmp_contract.(*CognitiveContract)
 	if err != nil {
 		t.Error("Deserialize Error!")
 	}
 	PrintContrract(*v2_contract)
 	fmt.Println("+++++++++++Serialize method++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-	v_str,err := v2_contract.Serialize()
+	v_str, err := v2_contract.Serialize()
 	if err != nil {
 		t.Error("Serialize Error!")
 	}

@@ -1,16 +1,16 @@
 package common
 
 import (
-	"encoding/json"
-	"log"
 	"bytes"
-	"time"
-	"strconv"
+	"encoding/json"
 	"fmt"
+	"log"
 	"reflect"
+	"strconv"
 	"strings"
-	"unicontract/src/core/engine/execengine/property"
+	"time"
 	"unicontract/src/core/engine/execengine/inf"
+	"unicontract/src/core/engine/execengine/property"
 )
 
 func GenDate() string {
@@ -102,7 +102,7 @@ func ReflectSetValue(object interface{}, str_name string, value interface{}) {
 //      str_name        => property对应的name
 //      value           => property对应的value
 //NOTE: importance, need support type,one see log "value type not support!!!"
-func AddProperty(object interface{}, p_propertyTable map[string] interface{}, str_name string, value interface{})property.PropertyT {
+func AddProperty(object interface{}, p_propertyTable map[string]interface{}, str_name string, value interface{}) property.PropertyT {
 	var pro_object property.PropertyT
 	if p_propertyTable == nil {
 		//TODO
@@ -168,6 +168,11 @@ func AddProperty(object interface{}, p_propertyTable map[string] interface{}, st
 	case OperateResult:
 		pro_object = property.PropertyT{Name: str_name}
 		pro_object.SetValue(value.(OperateResult))
+		p_propertyTable[str_name] = pro_object
+		ReflectSetValue(object, str_name, value)
+	case SelectBranchExpression:
+		pro_object = property.PropertyT{Name: str_name}
+		pro_object.SetValue(value.(SelectBranchExpression))
 		p_propertyTable[str_name] = pro_object
 		ReflectSetValue(object, str_name, value)
 	case []string:

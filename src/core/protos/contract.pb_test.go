@@ -27,7 +27,7 @@ func Test_ContractPb(t *testing.T) {
 	contractBody.Caption = "XXOOXX"
 	contractBody.Description = "XXOOXX"
 	contractBody.Creator = "XINGSTAR"
-	contractBody.CreatorTime = common.GenTimestamp()
+	contractBody.CreateTime = common.GenTimestamp()
 	contractBody.StartTime = common.GenTimestamp()
 	contractBody.EndTime = common.GenTimestamp()
 	contractBody.ContractOwners = []string{"2kdD14DHpccekjRgK55bgzEuAF5JLubhq3tBRm1sXqDc",

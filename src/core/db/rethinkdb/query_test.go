@@ -67,7 +67,7 @@ func Test_InsertContractStruct(t *testing.T) {
 		"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 		//"EtQVTBXJ8onJmXLnkzGBhbxhE3bSPgqvCkeaKtT22Cet",
 	}
-	contractBody.CreatorTime = common.GenTimestamp()
+	contractBody.CreateTime = common.GenTimestamp()
 	contractBody.Creator = "wangxin"
 	contractBody.Caption = "CREATOR"
 	contractBody.Description = "合约创建"

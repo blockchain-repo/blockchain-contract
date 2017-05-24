@@ -2754,7 +2754,7 @@ proto.protos.ContractBody.prototype.setCreator = function(value) {
 
 
 /**
- * optional string CreatorTime = 8;
+ * optional string CreateTime = 8;
  * @return {string}
  */
 proto.protos.ContractBody.prototype.getCreatortime = function() {

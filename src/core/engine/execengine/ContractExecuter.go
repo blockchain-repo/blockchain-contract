@@ -55,12 +55,12 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	r_buf.WriteString("Contract Executeor:Load.")
 	//l 反序列化
-	ce.contract_executer, err = ce.contract_executer.Deserialize(p_str_json)
+	ret_contract, err := ce.contract_executer.Deserialize(p_str_json)
+	ce.contract_executer = ret_contract.(*contract.CognitiveContract)
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:Error in Load(Deserialize)," + err.Error())
 		logs.Error(r_buf.String())
-		fmt.Println(r_buf.String())
 		return err
 	}
 	//2 Init初始化, 填充contract property_table
@@ -69,7 +69,6 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:Error in Load(InitCognitiveContract)," + err.Error())
 		logs.Error(r_buf.String())
-		fmt.Println(r_buf.String())
 		return err
 	}
 	r_buf.WriteString("[CName]:" + ce.contract_executer.GetCname() + "; ")
@@ -180,7 +179,6 @@ func (ce *ContractExecuter) ExportToJson() (string, error) {
 		r_buf.WriteString("[Result]:Export Fail;")
 		r_buf.WriteString("[Error]:" + err.Error())
 		logs.Warning(r_buf.String())
-		fmt.Println(r_buf.String())
 		return r_str_json, err
 	}
 	r_buf.WriteString("[Result]:Export Success;")
@@ -211,7 +209,7 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 	contractOwner := ce.contract_executer.PropertyTable["_ContractOwners"].(property.PropertyT)
 	r_bytes.WriteString(contractOwner.GetName() + ":" + contractOwner.GetValue().([]string)[0] + "  " + contractOwner.GetValue().([]string)[1] + "\n")
 
-	contractCreateTime := ce.contract_executer.PropertyTable["_CreatorTime"].(property.PropertyT)
+	contractCreateTime := ce.contract_executer.PropertyTable["_CreateTime"].(property.PropertyT)
 	r_bytes.WriteString(contractCreateTime.GetName() + ":" + contractCreateTime.GetValue().(string) + "\n")
 	contractStartTime := ce.contract_executer.PropertyTable["_StartTime"].(property.PropertyT)
 	r_bytes.WriteString(contractStartTime.GetName() + ":" + contractStartTime.GetValue().(string) + "\n")

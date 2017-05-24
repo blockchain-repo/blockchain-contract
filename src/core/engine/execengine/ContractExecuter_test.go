@@ -32,6 +32,8 @@ func PrintContract(v_contract *contract.CognitiveContract) {
 	fmt.Println("Version: ", v_contract.ContractHead.Version)
 	fmt.Println("  PropertyTable[_Version]: ", v_contract.GetPropertyTable()["_Version"])
 	fmt.Println("========constract Body=========")
+	fmt.Println("ContractId: ", v_contract.ContractBody.ContractId)
+	fmt.Println("  PropertyTable[_ContractId]: ", v_contract.GetPropertyTable()["_ContractId"])
 	fmt.Println("Cname: ", v_contract.ContractBody.Cname)
 	fmt.Println("  PropertyTable[_Cname]: ", v_contract.GetPropertyTable()["_Cname"])
 	fmt.Println("Ctype: ", v_contract.ContractBody.Ctype)
@@ -40,10 +42,12 @@ func PrintContract(v_contract *contract.CognitiveContract) {
 	fmt.Println("  PropertyTable[_Caption]: ", v_contract.GetPropertyTable()["_Caption"])
 	fmt.Println("Description: ", v_contract.ContractBody.Description)
 	fmt.Println("  PropertyTable[_Description]: ", v_contract.GetPropertyTable()["_Description"])
+	fmt.Println("ContractState: ", v_contract.ContractBody.ContractState)
+	fmt.Println("  PropertyTable[_ContractState]: ", v_contract.GetPropertyTable()["_ContractState"])
 	fmt.Println("Creator: ", v_contract.ContractBody.Creator)
 	fmt.Println("  PropertyTable[_Creator]: ", v_contract.GetPropertyTable()["_Creator"])
-	fmt.Println("CreatorTime: ", v_contract.ContractBody.CreatorTime)
-	fmt.Println("  PropertyTable[_CreatorTime]: ", v_contract.GetPropertyTable()["_CreatorTime"])
+	fmt.Println("CreateTime: ", v_contract.ContractBody.CreateTime)
+	fmt.Println("  PropertyTable[_CreateTime]: ", v_contract.GetPropertyTable()["_CreateTime"])
 	fmt.Println("StartTime: ", v_contract.ContractBody.StartTime)
 	fmt.Println("  PropertyTable[_StartTime]: ", v_contract.GetPropertyTable()["_StartTime"])
 	fmt.Println("EndTime: ", v_contract.ContractBody.EndTime)
@@ -169,8 +173,8 @@ func TestContractAllLife_New(t *testing.T) {
 
 	//3. Test Start
 	fmt.Println("=============Test Start ========================================================")
-	//_, err = v_contract_execute.Start()
-	//fmt.Println(err)
+	_, err = v_contract_execute.Start()
+	fmt.Println(err)
 }
 
 func TestContractAllLife_HasInprocess(t *testing.T) {

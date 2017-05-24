@@ -474,7 +474,7 @@ type ContractBody struct {
 	Description        string               `protobuf:"bytes,5,opt,name=Description" json:"Description"`
 	ContractState      string               `protobuf:"bytes,6,opt,name=ContractState" json:"ContractState"`
 	Creator            string               `protobuf:"bytes,7,opt,name=Creator" json:"Creator"`
-	CreatorTime        string               `protobuf:"bytes,8,opt,name=CreatorTime" json:"CreatorTime"`
+	CreateTime         string               `protobuf:"bytes,8,opt,name=CreateTime" json:"CreateTime"`
 	StartTime          string               `protobuf:"bytes,9,opt,name=StartTime" json:"StartTime"`
 	EndTime            string               `protobuf:"bytes,10,opt,name=EndTime" json:"EndTime"`
 	ContractOwners     []string             `protobuf:"bytes,11,rep,name=ContractOwners" json:"ContractOwners"`
@@ -539,9 +539,9 @@ func (m *ContractBody) GetCreator() string {
 	return ""
 }
 
-func (m *ContractBody) GetCreatorTime() string {
+func (m *ContractBody) GetCreateTime() string {
 	if m != nil {
-		return m.CreatorTime
+		return m.CreateTime
 	}
 	return ""
 }
