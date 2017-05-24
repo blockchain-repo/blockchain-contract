@@ -66,7 +66,7 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Timestamp = ""
 	temp.RemoveSignature()
 	serializeStr := common.StructSerialize(temp)
-	//logs.Info("before-sign--", serializeStr)
+	logs.Info("before-sign--", serializeStr)
 	return common.HashData(serializeStr)
 }
 
@@ -181,6 +181,7 @@ func (c *ContractOutput) GenerateConOutput(operation string, asset Asset, inputs
 		metadata = nil
 	}
 	if operation == "TRANSFER" {
+
 	}
 	tx := Transaction{
 		Asset:         &asset,

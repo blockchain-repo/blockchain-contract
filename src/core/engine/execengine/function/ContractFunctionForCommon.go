@@ -194,8 +194,18 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error) {
 	//contractId string
 	var v_err error = nil
-
 	v_result := common.OperateResult{}
+	var conId string = args[0].(string)
+	conStr, v_err := transaction.ExecuteGetContract(conId)
+	if v_err != nil {
+		v_result.SetCode(400)
+		v_result.SetMessage("get error")
+		v_result.SetData(conStr)
+		return v_result, v_err
+	}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(conStr)
 	return v_result, v_err
 }
 
@@ -206,7 +216,7 @@ func FuncIsConPutInUnichian(args ...interface{}) (common.OperateResult, error) {
 
 	contractHashId := args[0].(string)
 
-	flag, v_err := transaction.GetTxByConHashId(contractHashId)
+	flag, v_err := transaction.IsOutputInUnichain(contractHashId)
 	if v_err != nil {
 		v_result.SetCode(400)
 		v_result.SetMessage("query error!")

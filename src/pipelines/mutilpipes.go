@@ -42,6 +42,9 @@ func (n *Node) run() error {
 	if n.output == nil {
 		return nil
 	}
+	if out == nil {
+		return nil
+	}
 	n.output <- out
 	return nil
 }

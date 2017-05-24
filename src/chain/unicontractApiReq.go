@@ -203,7 +203,7 @@ func FrozenAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 }
 
 func GetTxByConHashId(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
-	beegoLog.Debug(" begin invoking FrozenAsset Api")
+	beegoLog.Debug(" begin invoking GetTxByConHashId Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "GetTxByConHashId"
 

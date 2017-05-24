@@ -3,13 +3,13 @@ package model
 import (
 	"fmt"
 	"testing"
-	"unicontract/src/config"
 	"unicontract/src/common"
-	"unicontract/src/core/protos"
+	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/protos"
 )
 
-func init(){
+func init() {
 	config.Init()
 }
 func GenerateOutputTest() string {
@@ -21,8 +21,8 @@ func GenerateOutputTest() string {
 	transaction.Asset = &Asset{}                 //todo
 	transaction.Conditions = []*ConditionsItem{} //todo
 	fulfillment := &Fulfillment{
-		Fid:0,
-		OwnersBefore:[]string{config.Config.Keypair.PublicKey},
+		Fid:          0,
+		OwnersBefore: []string{config.Config.Keypair.PublicKey},
 	}
 	transaction.Fulfillments = []*Fulfillment{
 		fulfillment,
@@ -46,8 +46,8 @@ func GenerateOutputTest() string {
 	tempMap["6"] = 5
 
 	transaction.Metadata = &Metadata{
-		Id:"meta-data-id",
-		Data:tempMap,
+		Id:   "meta-data-id",
+		Data: tempMap,
 	}
 	transaction.Operation = "CONTRACT"
 	//transaction.Timestamp = ""
@@ -56,7 +56,7 @@ func GenerateOutputTest() string {
 	contractAsset := []*protos.ContractAsset{}
 	contractComponent := []*protos.ContractComponent{}
 	contractHead := &protos.ContractHead{config.Config.Keypair.PublicKey, 1,
-	common.GenTimestamp()}
+		common.GenTimestamp()}
 
 	contractOwners := []string{
 		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
@@ -71,14 +71,14 @@ func GenerateOutputTest() string {
 		Description:        "移动用户A花费500元购买移动运营商B的提供的合约智能手机C后",
 		ContractState:      "",
 		Creator:            common.GenTimestamp(),
-		CreateTime:        "1493111926720",
+		CreateTime:         "1493111926720",
 		StartTime:          "1493111926730",
 		EndTime:            "1493111926740",
 		ContractOwners:     contractOwners,
 		ContractSignatures: nil,
 		ContractAssets:     contractAsset,
 		ContractComponents: contractComponent,
-		MetaAttribute: nil,
+		MetaAttribute:      nil,
 	}
 	transaction.ContractModel.ContractHead = nil
 	transaction.ContractModel.ContractBody = contractBody
@@ -115,9 +115,9 @@ func GenerateOutputTest() string {
 
 	contractOutput.Version = 2
 	contractOutput.Transaction = transaction
-	fmt.Println("hash-pre: ",common.StructSerialize(contractOutput))
+	fmt.Println("hash-pre: ", common.StructSerialize(contractOutput))
 	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
-	fulfillment.Fulfillment ="cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
+	fulfillment.Fulfillment = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
 
 	//operation:transfer
 	//vote1 := &Vote{}
@@ -193,9 +193,9 @@ func GenerateOutputTest() string {
 	return common.Serialize(contractOutput)
 }
 
-func Test_InserContractOutput(t *testing.T){
+func Test_InserContractOutput(t *testing.T) {
 	str := GenerateOutputTest()
-	b :=rethinkdb.InsertContractOutput(str)
+	b := rethinkdb.InsertContractOutput(str)
 	fmt.Println(b)
 }
 
