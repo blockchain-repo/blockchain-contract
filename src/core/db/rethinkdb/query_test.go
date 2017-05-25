@@ -525,8 +525,8 @@ func Test_SetTaskScheduleFlagBatch(t *testing.T) {
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "c01d7385-dfa6-41a3-ae28-72dcf36ef229"
-	err := SetTaskScheduleFlag(strID, true)
+	strID := "71c2c014-4cc6-414b-9160-59aa31e98cf9"
+	err := SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -535,8 +535,8 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 }
 
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "c01d7385-dfa6-41a3-ae28-72dcf36ef229"
-	err := SetTaskScheduleCount(strID, 0)
+	strID := "9c0d0cd9-7dc8-4085-9a9d-acf5a0539f05"
+	err := SetTaskScheduleCount(strID, 2)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {

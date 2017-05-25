@@ -61,10 +61,13 @@ func _ScanFailedTask(flag int) {
 		json.Unmarshal([]byte(retStr), &slTasks)
 
 		beegoLog.Debug("get task id slice")
-		slID = getTaskID(slTasks)
+		slID = _GetTaskID(slTasks)
 
 		beegoLog.Debug("handle task")
 		engineCommon.UpdateMonitorSendBatch(slID)
+
+		beegoLog.Debug("record task")
+		_Record(flag, slID)
 
 		//task fail count send to monitor,modify value
 		monitor.Monitor.Gauge(fmt.Sprintf("task_%s_count", strLogFlag), 1)
@@ -81,12 +84,35 @@ func _ScanFailedTask(flag int) {
 }
 
 //---------------------------------------------------------------------------
-func getTaskID(slTasks []model.TaskSchedule) []interface{} {
+func _GetTaskID(slTasks []model.TaskSchedule) []interface{} {
 	var slID []interface{}
 	for index, _ := range slTasks {
 		slID = append(slID, slTasks[index].Id)
 	}
 	return slID
+}
+
+//---------------------------------------------------------------------------
+func _Record(flag int, slID []interface{}) {
+	var strRecordFile string
+	if flag == 0 {
+		strRecordFile = scanEngineConf["record_f_file_path"].(string)
+	} else if flag == 1 {
+		strRecordFile = scanEngineConf["record_w_file_path"].(string)
+	}
+
+	var strID string
+	for _, v := range slID {
+		strID = fmt.Sprintf("%s\n%s", strID, v.(string))
+	}
+
+	writeCount, err := _WriteFile(strRecordFile, strID)
+	if err != nil {
+		beegoLog.Error(err)
+	}
+	if writeCount != len(strID) {
+		beegoLog.Error("write count is error")
+	}
 }
 
 //---------------------------------------------------------------------------

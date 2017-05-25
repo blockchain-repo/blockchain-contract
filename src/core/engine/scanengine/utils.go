@@ -2,6 +2,10 @@
 package scanengine
 
 import (
+	"os"
+)
+
+import (
 	beegoLog "github.com/astaxie/beego/logs"
 )
 
@@ -30,6 +34,16 @@ func Start() {
 	go _ScanTaskSchedule()
 
 	gwgTaskExe.Wait()
+}
+
+//---------------------------------------------------------------------------
+func _WriteFile(fileName string, content string) (int, error) {
+	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+	return file.WriteString(content)
 }
 
 //---------------------------------------------------------------------------

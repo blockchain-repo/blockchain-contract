@@ -1,12 +1,14 @@
 ##扫描引擎配置项
 ScanEngine:
-  sleep_time: 30               # 数据表扫描间隔时间，单位是秒
-  task_queue_len: 20           # 待执行队列最大长度
-  clean_time: 30               # 数据表清理扫描间隔时间，单位是分钟
-  clean_data_time: 30          # 数据表清理间隔时间，单位是天
-  failed_count_threshold: 50   # 失败次数阈值
-  wait_count_threshold: 50     # 等待次数阈值
-  clean_data_on: 1             # 是否进行数据清理,1 开关打开，进行清理  0 开关关闭，不进行清理
+  sleep_time: 30                                         # 数据表扫描间隔时间，单位是秒
+  task_queue_len: 20                                     # 待执行队列最大长度
+  clean_time: 30                                         # 数据表清理扫描间隔时间，单位是分钟
+  clean_data_time: 30                                    # 数据表清理间隔时间，单位是天
+  failed_count_threshold: 50                             # 失败次数阈值
+  record_f_file_path: "../data/failedCountBeyond.txt"         # 记录失败次数超出阈值的记录的文件
+  wait_count_threshold: 50                               # 等待次数阈值
+  record_w_file_path: "../data/waitCountBeyond.txt"           # 记录等待次数超出阈值的记录的文件
+  clean_data_on: 1                                       # 是否进行数据清理,1 开关打开，进行清理  0 开关关闭，不进行清理
 
 ##执行引擎配置项
 ExecuteEngine:
