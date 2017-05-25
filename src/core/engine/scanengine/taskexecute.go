@@ -37,12 +37,12 @@ func _TaskExecute() {
 		beegoLog.Debug("get ContractTask")
 
 		beegoLog.Debug("query contract base on contractId")
-		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractTask.ContractId)
-		responseResult, err := chain.GetContract(jsonBody)
+		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractTask.ContractHashId)
+		responseResult, err := chain.GetContractById(jsonBody)
 		if err != nil || responseResult.Data == nil {
 			beegoLog.Error(err)
-			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
-				strContractTask.ContractId, "")
+			err := engineCommon.UpdateMonitorWait(strContractTask.ContractId,
+				strContractTask.ContractHashId, "")
 			if err != nil {
 				beegoLog.Error(err)
 			}
@@ -57,9 +57,10 @@ func _TaskExecute() {
 		beegoLog.Debug("contract execute")
 		contractData, ok := responseResult.Data.([]interface{})
 		if !ok || len(contractData) == 0 {
-			beegoLog.Error("responseResult.Data is not ok for type string. type is %T", responseResult.Data)
-			err := engineCommon.UpdateMonitorWait(strContractTask.NodePubkey,
-				strContractTask.ContractId, "")
+			beegoLog.Error("responseResult.Data is not ok for type []interface {}. type is %T, or value is [], value is %+v",
+				responseResult.Data, responseResult.Data)
+			err := engineCommon.UpdateMonitorWait(strContractTask.ContractId,
+				strContractTask.ContractHashId, "")
 			if err != nil {
 				beegoLog.Error(err)
 			}

@@ -720,12 +720,19 @@ func GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error
 }
 
 //---------------------------------------------------------------------------
-// 获取所有失败次数超过阈值的task
-func GetTaskSchedulesFailed(strNodePubkey string, nThreshold int) (string, error) {
+// 获取所有失败次数(等待次数)超过阈值的task
+func GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error) {
+	var strCount string
+	if flag == 0 {
+		strCount = "FailedCount"
+	} else if flag == 1 {
+		strCount = "WaitCount"
+	}
+
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Filter(r.Row.Field("FailedCount").Ge(nThreshold)).
+		Filter(r.Row.Field(strCount).Ge(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
 		Run(session)
 	if err != nil {

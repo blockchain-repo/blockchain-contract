@@ -525,8 +525,8 @@ func Test_SetTaskScheduleFlagBatch(t *testing.T) {
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "355c42b2-ff2f-442c-b833-7dc02a277de9"
-	err := SetTaskScheduleFlag(strID, false)
+	strID := "c01d7385-dfa6-41a3-ae28-72dcf36ef229"
+	err := SetTaskScheduleFlag(strID, true)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -535,8 +535,8 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 }
 
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "355c42b2-ff2f-442c-b833-7dc02a277de9"
-	err := SetTaskScheduleCount(strID, 2)
+	strID := "c01d7385-dfa6-41a3-ae28-72dcf36ef229"
+	err := SetTaskScheduleCount(strID, 0)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -581,9 +581,9 @@ func Test_GetTaskSchedulesNoSend(t *testing.T) {
 	}
 }
 
-func Test_GetTaskSchedulesFailed(t *testing.T) {
+func Test_GetTaskSchedulesNoSuccess(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	retStr, err := GetTaskSchedulesFailed(strNodePubkey, 500)
+	retStr, err := GetTaskSchedulesNoSuccess(strNodePubkey, 500, 0)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {

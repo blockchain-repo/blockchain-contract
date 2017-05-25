@@ -32,9 +32,9 @@ func Test_GetMonitorNoSendData(t *testing.T) {
 	t.Logf("slTask count is %d, %+v\n", len(slTasks), slTasks)
 }
 
-func Test_GetMonitorFailedData(t *testing.T) {
+func Test_GetMonitorNoSuccessData(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	str, err := GetMonitorFailedData(strNodePubkey, 50)
+	str, err := GetMonitorNoSuccessData(strNodePubkey, 50, 0)
 	if err != nil {
 		t.Error(err)
 	}
