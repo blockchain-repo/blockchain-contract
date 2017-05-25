@@ -159,6 +159,45 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+func FuncInterim(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult = common.OperateResult{}
+	var v_err error = nil
+
+	var contractStr string = args[0].(string)
+	var contractHashId string = args[1].(string)
+	var contractId string = args[2].(string)
+	var taskId string = args[3].(string)
+	var taskIndex int = args[4].(int)
+	var metadataStr string = ""
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	outputStr, v_err := transaction.ExecuteInterim(metadataStr, relationStr, contractStr)
+	if v_err != nil {
+		return v_result, v_err
+	}
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(outputStr)
+	return v_result, v_err
+}
+
+func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult = common.OperateResult{}
+	var v_err error = nil
+
+	var contractOutPut string = args[0].(string)
+	var taskStatus string = args[1].(string)
+	outputStr, v_err := transaction.ExecuteInterimComplete(contractOutPut, taskStatus)
+	if v_err != nil {
+		return v_result, v_err
+	}
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(outputStr)
+	return v_result, v_err
+}
+
 //解冻资产方法
 func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//userPubKey string, contractId string, taskId string, taskNum int

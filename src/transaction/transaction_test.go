@@ -77,15 +77,8 @@ func Test_createTx(t *testing.T) {
 	//contract.ContractHead = &protos.ContractHead{config.Config.Keypair.PublicKey, 1,common.GenTimestamp()}
 	//contract.ContractBody = contractBody
 	//contract.Id = common.HashData(common.StructSerialize(contractBody))
-
-	relation := model.Relation{
-		ContractId:     contract.Id,
-		TaskId:         "task-id-1234567890",
-		TaskExecuteIdx: 1,
-		Voters: []string{
-			config.Config.Keypair.PublicKey,
-		},
-	}
+	relation := model.Relation{}
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, _ := Create(tx_signers, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
@@ -117,14 +110,8 @@ func TestInterim(t *testing.T) {
 
 	//--------------------contract-------------------------
 	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
-	relation := model.Relation{
-		ContractId:     contract.Id,
-		TaskId:         "task-id-123456789",
-		TaskExecuteIdx: 1,
-		Voters: []string{
-			config.Config.Keypair.PublicKey,
-		},
-	}
+	relation := model.Relation{}
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, _ := Interim(&metadata, relation, contract)
 	output = NodeSign(output)
@@ -145,7 +132,7 @@ func Test_FreezeTx(t *testing.T) {
 	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, err := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
@@ -168,7 +155,7 @@ func TestTransfer(t *testing.T) {
 	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, err := Transfer("TRANSFER", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
@@ -190,7 +177,7 @@ func TestUnfreeze(t *testing.T) {
 	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, err := Transfer("UNFREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
@@ -221,7 +208,7 @@ func Test_GetFreezeSpent(t *testing.T) {
 }
 
 func Test_GetContractFromUnichain(t *testing.T) {
-	contract, err := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	contract, err := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-8db2269b")
 
 	logs.Info(err)
 	logs.Info(common.StructSerialize(contract))

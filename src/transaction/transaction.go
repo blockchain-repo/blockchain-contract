@@ -139,22 +139,12 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 func Interim(metadata *model.Metadata,
 	relation model.Relation, contract model.ContractModel) (model.ContractOutput, error) {
 
-	//isFeeze := false
 	operation := _INTERIM
 	version := _VERSION
 	timestamp := common.GenTimestamp()
 	//generate outputs
 	outputs := []*model.ConditionsItem{}
-	output := &model.ConditionsItem{}
-	output.GenerateOutputForIm()
-	outputs = append(outputs, output)
-	//generate inputs
 	inputs := []*model.Fulfillment{}
-	input := &model.Fulfillment{}
-	tx_signers := []string{""}
-	input.GenerateInput(tx_signers)
-	inputs = append(inputs, input)
-
 	contractOutput := model.ContractOutput{}
 	asset := model.Asset{}
 	contractOutput.GenerateConOutput(operation, asset, inputs, outputs, metadata, timestamp, version, relation, contract)
