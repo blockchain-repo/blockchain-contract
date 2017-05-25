@@ -15,6 +15,7 @@ type OperateResult struct {
 	Code    int         `json:"Code"`
 	Message string      `json:"Message"`
 	Data    interface{} `json:"Data"`
+	Output  interface{} `json:"Output"`
 }
 
 func (or *OperateResult) GetMessage() string {
@@ -26,6 +27,9 @@ func (or *OperateResult) GetCode() int {
 func (or *OperateResult) GetData() interface{} {
 	return or.Data
 }
+func (or *OperateResult) GetOutput() interface{} {
+	return or.Output
+}
 func (or *OperateResult) SetMessage(p_message string) {
 	or.Message = p_message
 }
@@ -34,6 +38,9 @@ func (or *OperateResult) SetCode(p_code int) {
 }
 func (or *OperateResult) SetData(p_data interface{}) {
 	or.Data = p_data
+}
+func (or *OperateResult) SetOutput(p_output interface{}) {
+	or.Output = p_output
 }
 func (or *OperateResult) ToString() string {
 	var r_buf bytes.Buffer = bytes.Buffer{}
