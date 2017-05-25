@@ -29,6 +29,11 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
+	if err != nil {
+		return "", err
+	}
+	logs.Info(err)
+	logs.Info(output)
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	logs.Info(b)
@@ -65,6 +70,11 @@ func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]inter
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
+	logs.Info(err)
+	logs.Info(output)
+	if err != nil {
+		return "", err
+	}
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	logs.Info(b)

@@ -46,7 +46,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_err error = nil
 
 	//var v_map_args map[string]interface{} = nil
-	if len(args) != 4 {
+	if len(args) != 8 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
@@ -74,13 +74,16 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	//check main pubkey
 	if mainPubkey == mykey {
 		//if mainNode, do freeze;
-		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, recipients, metadataStr, relationStr, contractStr)
-		if v_err != nil {
-			logs.Error(v_err)
-			v_result.SetCode(400)
-			v_result.SetMessage(v_err.Error())
-			return v_result, v_err
+		var reciForFre [][2]interface{} = [][2]interface{}{
+			[2]interface{}{ownerBefore, 100},
 		}
+		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
+		//if v_err != nil {
+		//	logs.Error(v_err)
+		//	v_result.SetCode(400)
+		//	v_result.SetMessage(v_err.Error())
+		//	return v_result, v_err
+		//}
 		//wait for the freeze asset write into the unichain
 		time.Sleep(time.Second * 3)
 	} else {
@@ -90,6 +93,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	/*
 		do transfer
 	*/
+	logs.Info("for ")
 	for i := 0; i <= 3; i++ {
 		//transfer asset
 		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
@@ -98,6 +102,9 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 			v_result.SetCode(400)
 			v_result.SetMessage(v_err.Error())
 			return v_result, v_err
+		}
+		if v_err == nil {
+			break
 		}
 		if i != 3 {
 			time.Sleep(time.Second * 5)
@@ -135,7 +142,7 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 
 	//user provide
 	var ownerBefore string = args[0].(string)
-	var recipients [][2]interface{} = [][2]interface{}{}
+	var recipients [][2]interface{} = args[1].([][2]interface{})
 	//executer provide
 	var contractStr string = args[2].(string)
 	var contractHashId string = args[3].(string)
@@ -215,8 +222,15 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//var mainPubkey string = args[7].(string)
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	logs.Info(ownerBefore)
+	logs.Info(recipients)
+	logs.Info(contractStr)
+	logs.Info(contractHashId)
+	logs.Info(contractId)
+	logs.Info(taskId)
+	logs.Info(taskIndex)
 
-	outputStr, v_err := transaction.ExecuteUnfreeze("UNREEZE", ownerBefore, recipients,
+	outputStr, v_err := transaction.ExecuteUnfreeze("UNFREEZE", ownerBefore, recipients,
 		metadataStr, relationStr, contractStr)
 
 	if v_err != nil {
@@ -245,6 +259,7 @@ func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(conStr)
+	logs.Info(conStr)
 	return v_result, v_err
 }
 

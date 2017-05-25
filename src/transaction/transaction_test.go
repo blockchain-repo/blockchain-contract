@@ -193,7 +193,7 @@ func TestUnfreeze(t *testing.T) {
 func Test_GetUnspent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal := GetUnfreezeUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
+	inps, bal := GetUnfreezeUnspent("EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W")
 	logs.Info(inps)
 	logs.Info(bal)
 }
@@ -201,7 +201,7 @@ func Test_GetUnspent(t *testing.T) {
 func Test_GetFreezeSpent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal, flag := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 1)
+	inps, bal, flag := GetFrozenUnspent("EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "task_id", 1)
 	logs.Info(inps)
 	logs.Info(bal)
 	logs.Info(flag)
