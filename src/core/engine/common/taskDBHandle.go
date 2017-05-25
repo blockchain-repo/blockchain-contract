@@ -104,8 +104,7 @@ func UpdateMonitorWait(strContractID, strContractHashID, strTaskState string) er
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
-		len(strContractHashID) == 0 ||
-		len(strTaskState) == 0 {
+		len(strContractHashID) == 0 {
 		return fmt.Errorf("param is null")
 	}
 
