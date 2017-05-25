@@ -38,12 +38,12 @@ func GetMonitorNoSendData(strNodePubkey string, nThreshold int) (string, error) 
 
 //---------------------------------------------------------------------------
 // 查询失败次数已经超过阈值的task
-func GetMonitorFailedData(strNodePubkey string, nThreshold int) (string, error) {
+func GetMonitorNoSuccessData(strNodePubkey string, nThreshold int, flag int) (string, error) {
 	if len(strNodePubkey) == 0 {
 		return "", fmt.Errorf("pubkey is null")
 	}
 
-	return rethinkdb.GetTaskSchedulesFailed(strNodePubkey, nThreshold)
+	return rethinkdb.GetTaskSchedulesNoSuccess(strNodePubkey, nThreshold, flag)
 }
 
 //---------------------------------------------------------------------------
@@ -70,8 +70,7 @@ func UpdateMonitorFail(strContractID, strContractHashID, strTaskState string) er
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
-		len(strContractHashID) == 0 ||
-		len(strTaskState) == 0 {
+		len(strContractHashID) == 0 {
 		return fmt.Errorf("param is null")
 	}
 
@@ -147,8 +146,6 @@ func UpdateMonitorSucc(strContractID string,
 		len(strContractID) == 0 ||
 		len(strContractHashOldID) == 0 ||
 		len(strContractHashNewID) == 0 ||
-		len(strTaskStateOld) == 0 ||
-		len(strTaskStateNew) == 0 ||
 		len(strTaskId) == 0 {
 		return fmt.Errorf("param is null")
 	}

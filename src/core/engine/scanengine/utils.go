@@ -15,7 +15,11 @@ func Start() {
 
 	beegoLog.Info("ScanFailedTask start")
 	gwgTaskExe.Add(1)
-	go _ScanFailedTask()
+	go _ScanFailedTask(0)
+
+	beegoLog.Info("ScanWaitTask start")
+	gwgTaskExe.Add(1)
+	go _ScanFailedTask(1)
 
 	beegoLog.Info("TaskExecute start")
 	gwgTaskExe.Add(1)

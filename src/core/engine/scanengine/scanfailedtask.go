@@ -12,6 +12,7 @@ package scanengine
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -27,37 +28,46 @@ import (
 )
 
 //---------------------------------------------------------------------------
-func _ScanFailedTask() {
+func _ScanFailedTask(flag int) {
+	var strThresholdName, strLogFlag string
+	if flag == 0 { // fail
+		strThresholdName = "failed_count_threshold"
+		strLogFlag = "failed"
+	} else if flag == 1 { // wait
+		strThresholdName = "wait_count_threshold"
+		strLogFlag = "wait"
+	}
+
 	for {
 		start := time.Now()
 		var slTasks []model.TaskSchedule
 		var slID []interface{}
 
-		beegoLog.Debug("query failed data")
+		beegoLog.Debug("query " + strLogFlag + " data")
 		strNodePubkey := config.Config.Keypair.PublicKey
-		retStr, err := engineCommon.GetMonitorFailedData(strNodePubkey,
-			scanEngineConf["failed_count_threshold"].(int))
+		retStr, err := engineCommon.GetMonitorNoSuccessData(strNodePubkey,
+			scanEngineConf[strThresholdName].(int), flag)
 		if err != nil {
 			beegoLog.Error(err.Error())
 			goto CONSUME
 		}
 
 		if len(retStr) == 0 {
-			beegoLog.Debug("no failed data")
+			beegoLog.Debug("no " + strLogFlag + " data")
 			goto CONSUME
 		}
 
-		beegoLog.Debug("get failed tasks")
+		beegoLog.Debug("get " + strLogFlag + " tasks")
 		json.Unmarshal([]byte(retStr), &slTasks)
 
-		beegoLog.Debug("handle task")
-		slID = getFailedTaskID(slTasks)
+		beegoLog.Debug("get task id slice")
+		slID = getTaskID(slTasks)
 
 		beegoLog.Debug("handle task")
 		engineCommon.UpdateMonitorSendBatch(slID)
 
 		//task fail count send to monitor,modify value
-		monitor.Monitor.Gauge("task_fail_count", 1)
+		monitor.Monitor.Gauge(fmt.Sprintf("task_%s_count", strLogFlag), 1)
 
 	CONSUME:
 		consume := time.Since(start)
@@ -71,7 +81,7 @@ func _ScanFailedTask() {
 }
 
 //---------------------------------------------------------------------------
-func getFailedTaskID(slTasks []model.TaskSchedule) []interface{} {
+func getTaskID(slTasks []model.TaskSchedule) []interface{} {
 	var slID []interface{}
 	for index, _ := range slTasks {
 		slID = append(slID, slTasks[index].Id)
