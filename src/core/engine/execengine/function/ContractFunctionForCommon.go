@@ -46,7 +46,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_err error = nil
 
 	//var v_map_args map[string]interface{} = nil
-	if len(args) != 4 {
+	if len(args) != 8 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
@@ -74,13 +74,16 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	//check main pubkey
 	if mainPubkey == mykey {
 		//if mainNode, do freeze;
-		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, recipients, metadataStr, relationStr, contractStr)
-		if v_err != nil {
-			logs.Error(v_err)
-			v_result.SetCode(400)
-			v_result.SetMessage(v_err.Error())
-			return v_result, v_err
+		var reciForFre [][2]interface{} = [][2]interface{}{
+			[2]interface{}{ownerBefore, 100},
 		}
+		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
+		//if v_err != nil {
+		//	logs.Error(v_err)
+		//	v_result.SetCode(400)
+		//	v_result.SetMessage(v_err.Error())
+		//	return v_result, v_err
+		//}
 		//wait for the freeze asset write into the unichain
 		time.Sleep(time.Second * 3)
 	} else {
@@ -90,6 +93,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	/*
 		do transfer
 	*/
+	logs.Info("for ")
 	for i := 0; i <= 3; i++ {
 		//transfer asset
 		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
@@ -98,6 +102,9 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 			v_result.SetCode(400)
 			v_result.SetMessage(v_err.Error())
 			return v_result, v_err
+		}
+		if v_err == nil {
+			break
 		}
 		if i != 3 {
 			time.Sleep(time.Second * 5)
@@ -135,7 +142,7 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 
 	//user provide
 	var ownerBefore string = args[0].(string)
-	var recipients [][2]interface{} = [][2]interface{}{}
+	var recipients [][2]interface{} = args[1].([][2]interface{})
 	//executer provide
 	var contractStr string = args[2].(string)
 	var contractHashId string = args[3].(string)
@@ -149,6 +156,45 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	//relationStr string, contractStr string
 	outputStr, v_err := transaction.ExecuteCreate(ownerBefore, recipients, metadataStr, relationStr, contractStr)
 
+	if v_err != nil {
+		return v_result, v_err
+	}
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(outputStr)
+	return v_result, v_err
+}
+
+func FuncInterim(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult = common.OperateResult{}
+	var v_err error = nil
+
+	var contractStr string = args[0].(string)
+	var contractHashId string = args[1].(string)
+	var contractId string = args[2].(string)
+	var taskId string = args[3].(string)
+	var taskIndex int = args[4].(int)
+	var metadataStr string = ""
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	outputStr, v_err := transaction.ExecuteInterim(metadataStr, relationStr, contractStr)
+	if v_err != nil {
+		return v_result, v_err
+	}
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(outputStr)
+	return v_result, v_err
+}
+
+func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult = common.OperateResult{}
+	var v_err error = nil
+
+	var contractOutPut string = args[0].(string)
+	var taskStatus string = args[1].(string)
+	outputStr, v_err := transaction.ExecuteInterimComplete(contractOutPut, taskStatus)
 	if v_err != nil {
 		return v_result, v_err
 	}
@@ -176,8 +222,15 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//var mainPubkey string = args[7].(string)
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	logs.Info(ownerBefore)
+	logs.Info(recipients)
+	logs.Info(contractStr)
+	logs.Info(contractHashId)
+	logs.Info(contractId)
+	logs.Info(taskId)
+	logs.Info(taskIndex)
 
-	outputStr, v_err := transaction.ExecuteUnfreeze("UNREEZE", ownerBefore, recipients,
+	outputStr, v_err := transaction.ExecuteUnfreeze("UNFREEZE", ownerBefore, recipients,
 		metadataStr, relationStr, contractStr)
 
 	if v_err != nil {
@@ -194,8 +247,19 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error) {
 	//contractId string
 	var v_err error = nil
-
 	v_result := common.OperateResult{}
+	var conId string = args[0].(string)
+	conStr, v_err := transaction.ExecuteGetContract(conId)
+	if v_err != nil {
+		v_result.SetCode(400)
+		v_result.SetMessage("get error")
+		v_result.SetData(conStr)
+		return v_result, v_err
+	}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(conStr)
+	logs.Info(conStr)
 	return v_result, v_err
 }
 
@@ -206,7 +270,7 @@ func FuncIsConPutInUnichian(args ...interface{}) (common.OperateResult, error) {
 
 	contractHashId := args[0].(string)
 
-	flag, v_err := transaction.GetTxByConHashId(contractHashId)
+	flag, v_err := transaction.IsOutputInUnichain(contractHashId)
 	if v_err != nil {
 		v_result.SetCode(400)
 		v_result.SetMessage("query error!")

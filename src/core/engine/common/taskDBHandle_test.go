@@ -32,9 +32,9 @@ func Test_GetMonitorNoSendData(t *testing.T) {
 	t.Logf("slTask count is %d, %+v\n", len(slTasks), slTasks)
 }
 
-func Test_GetMonitorFailedData(t *testing.T) {
+func Test_GetMonitorNoSuccessData(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	str, err := GetMonitorFailedData(strNodePubkey, 50)
+	str, err := GetMonitorNoSuccessData(strNodePubkey, 50, 0)
 	if err != nil {
 		t.Error(err)
 	}
@@ -94,8 +94,8 @@ func Test_UpdateMonitorWait(t *testing.T) {
 }
 
 func Test_UpdateMonitorSucc(t *testing.T) {
-	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
-	strContractHashOldID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	strContractID := "5355fb6b-d56c-417d-b75e-7f85b26832d6"
+	strContractHashOldID := "224f6ca3-430a-4ffb-90bf-d523614a7501"
 	strContractHashNewID := common.GenerateUUID()
 	strTaskStateOld := "old"
 	strTaskStateNew := "new"

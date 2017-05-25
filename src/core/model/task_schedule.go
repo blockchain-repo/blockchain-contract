@@ -14,6 +14,7 @@ type TaskSchedule struct {
 	FailedCount      int
 	WaitCount        int
 	SendFlag         int
+	OverFlag         int
 	StartTime        string
 	EndTime          string
 	LastExecuteTime  string

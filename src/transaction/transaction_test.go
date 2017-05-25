@@ -35,7 +35,7 @@ func Test_createTx(t *testing.T) {
 	asset := GetAsset(tx_signers[0])
 
 	//--------------------contract-------------------------
-	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	//contract := model.ContractModel{}
 	//contractAsset := []*protos.ContractAsset{}
@@ -77,17 +77,43 @@ func Test_createTx(t *testing.T) {
 	//contract.ContractHead = &protos.ContractHead{config.Config.Keypair.PublicKey, 1,common.GenTimestamp()}
 	//contract.ContractBody = contractBody
 	//contract.Id = common.HashData(common.StructSerialize(contractBody))
-
-	relation := model.Relation{
-		ContractId:     contract.Id,
-		TaskId:         "task-id-123456789",
-		TaskExecuteIdx: 1,
-		Voters: []string{
-			config.Config.Keypair.PublicKey,
-		},
-	}
+	relation := model.Relation{}
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, _ := Create(tx_signers, recipients, &metadata, asset, relation, contract)
+	output = NodeSign(output)
+	logs.Info(common.StructSerialize(output))
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	fmt.Println(b)
+}
+
+func TestInterim(t *testing.T) {
+	config.Init()
+	//tx_signers := []string{
+	//	"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",
+	//}
+	//recipients := [][2]interface{}{
+	//	{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 500},
+	//}
+
+	tempMap := make(map[string]interface{})
+	tempMap["a"] = "1"
+	tempMap["c"] = "3"
+	tempMap["b"] = "2"
+	tempMap["A"] = "4"
+	tempMap["6"] = map[string]string{"QQQQ": "9999"}
+	metadata := model.Metadata{
+		Id:   "meta-data-id",
+		Data: tempMap,
+	}
+	//asset := GetAsset(tx_signers[0])
+
+	//--------------------contract-------------------------
+	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	relation := model.Relation{}
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
+
+	output, _ := Interim(&metadata, relation, contract)
 	output = NodeSign(output)
 	logs.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
@@ -103,10 +129,10 @@ func Test_FreezeTx(t *testing.T) {
 	metadata := model.Metadata{}
 	asset := GetAsset(ownerbefore)
 
-	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, err := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
@@ -121,15 +147,15 @@ func Test_FreezeTx(t *testing.T) {
 func TestTransfer(t *testing.T) {
 	ownerbefore := "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
 	recipients := [][2]interface{}{
-		[2]interface{}{"EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", 200},
+		[2]interface{}{"EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", 100},
 	}
 	metadata := model.Metadata{}
 	asset := GetAsset(ownerbefore)
 
-	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, err := Transfer("TRANSFER", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
@@ -148,10 +174,10 @@ func TestUnfreeze(t *testing.T) {
 	metadata := model.Metadata{}
 	asset := GetAsset(ownerbefore)
 
-	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	contract, _ := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
 
 	relation := model.Relation{}
-	relation.GenerateRelation("", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 0)
+	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, err := Transfer("UNFREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
@@ -167,7 +193,7 @@ func TestUnfreeze(t *testing.T) {
 func Test_GetUnspent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal := GetUnfreezeUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL")
+	inps, bal := GetUnfreezeUnspent("EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W")
 	logs.Info(inps)
 	logs.Info(bal)
 }
@@ -175,20 +201,22 @@ func Test_GetUnspent(t *testing.T) {
 func Test_GetFreezeSpent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
-	inps, bal, flag := GetFrozenUnspent("5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "taskId", 1)
+	inps, bal, flag := GetFrozenUnspent("EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "task_id", 1)
 	logs.Info(inps)
 	logs.Info(bal)
 	logs.Info(flag)
 }
 
 func Test_GetContractFromUnichain(t *testing.T) {
-	contract := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-83d48db2269b")
+	contract, err := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-8db2269b")
+
+	logs.Info(err)
 	logs.Info(common.StructSerialize(contract))
 }
 
-func TestGetTxByConHashId(t *testing.T) {
+func TestIsOutputInUnichain(t *testing.T) {
 	contractHahsId := "2"
-	res, err := GetTxByConHashId(contractHahsId)
+	res, err := IsOutputInUnichain(contractHahsId)
 	logs.Info(res)
 	logs.Info(err)
 }

@@ -17,6 +17,7 @@ const (
 	_GENESIS  = "GENESIS"
 	_CREATE   = "CREATE"
 	_TRANSFER = "TRANSFER"
+	_INTERIM  = "INTERIM"
 	_CONTRACT = "CONTRACT"
 	_FREEZE   = "FREEZE"
 	_UNFREEZ  = "UNFREEZE"
@@ -64,8 +65,14 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	var inputs = []*model.Fulfillment{}
 	var balance int = 0
 	var spentFlag float64 = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
+	logs.Info(operation)
 	if operation == _FREEZE {
 		isFeeze = true
+		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
+		if spentFlag == 1 || spentFlag == 3 || spentFlag == 4 {
+			err := errors.New("there had one/mutil frozen asset , step over 'FREEZE' ")
+			return model.ContractOutput{}, err
+		}
 		//generate inputs
 		inputs, balance = GetUnfreezeUnspent(ownerbefore)
 		if len(recipients) != 1 || recipients[0][0].(string) != ownerbefore {
@@ -77,6 +84,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 			err := errors.New("The opertion `UNFREEZE` should not has any ownner-afters !")
 			return model.ContractOutput{}, err
 		}
+
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
 		//NOTE  not sure whether I need to check the inputs is it has some frozen asset or not
 
@@ -132,6 +140,21 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	contractOutput := model.ContractOutput{}
 	contractOutput.GenerateConOutput(operation, asset, inputs, outputs, metadata, timestamp, version, relation, contract)
 	//logs.Info("down---",common.StructSerialize(contractOutput))
+	return contractOutput, nil
+}
+
+func Interim(metadata *model.Metadata,
+	relation model.Relation, contract model.ContractModel) (model.ContractOutput, error) {
+
+	operation := _INTERIM
+	version := _VERSION
+	timestamp := common.GenTimestamp()
+	//generate outputs
+	outputs := []*model.ConditionsItem{}
+	inputs := []*model.Fulfillment{}
+	contractOutput := model.ContractOutput{}
+	asset := model.Asset{}
+	contractOutput.GenerateConOutput(operation, asset, inputs, outputs, metadata, timestamp, version, relation, contract)
 	return contractOutput, nil
 }
 
@@ -208,6 +231,7 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 
 	taskNumStr := strconv.Itoa(taskNum)
 	param := "unspent=true&public_key=" + pubkey + "&contract_id=" + contractId + "&task_id=" + taskId + "&task_num=" + taskNumStr
+	logs.Info(param)
 	result, err := chain.GetFreezeUnspentTxs(param)
 	if err != nil {
 		logs.Error(err.Error())
@@ -252,22 +276,30 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 	return inputs, balance, flag
 }
 
-func GetContractFromUnichain(contractId string) model.ContractModel {
+func GetContractFromUnichain(contractId string) (model.ContractModel, error) {
 	param := `{"contract_id":"` + contractId + `"}`
 	result, err := chain.GetContractById(param)
 	if err != nil {
 		logs.Error(err.Error())
-		return model.ContractModel{}
+		return model.ContractModel{}, err
 	}
-	contractStruct := model.ContractModel{}
-
-	for _, contract := range result.Data.([]interface{}) {
+	var contractStruct model.ContractModel
+	res, ok := result.Data.([]interface{})
+	if !ok {
+		err = errors.New("type error")
+		return contractStruct, err
+	}
+	if len(res) == 0 {
+		err = errors.New("not find the contract")
+		return contractStruct, err
+	}
+	for _, contract := range res {
 		contractStruct = model.ContractModel{}
 		contractBytes, _ := json.Marshal(contract)
 		json.Unmarshal(contractBytes, &contractStruct)
 		//logs.Info("index=", index, "----contract=", common.StructSerialize(contractStruct))
 	}
-	return contractStruct
+	return contractStruct, nil
 }
 
 func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
@@ -293,7 +325,7 @@ func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
 	return contractOutput
 }
 
-func GetTxByConHashId(contractHashId string) (bool, error) {
+func IsOutputInUnichain(contractHashId string) (bool, error) {
 	param := `{"contract_hash_id":"` + contractHashId + `"}`
 	result, err := chain.GetTxByConHashId(param)
 	if err != nil {

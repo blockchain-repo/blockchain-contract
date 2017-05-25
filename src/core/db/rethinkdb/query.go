@@ -597,15 +597,14 @@ func GetValidTime(strID string) (string, string, error) {
 //---------------------------------------------------------------------------
 // 批量设置SendFlag字段，发送为1,未发送为0
 func SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error {
-	var send int
+	var strJSON string
 	if alreadySend {
-		send = 1
+		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+			1, 1, common.GenTimestamp())
 	} else {
-		send = 0
+		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+			0, common.GenTimestamp())
 	}
-
-	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-		send, common.GenTimestamp())
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
@@ -623,14 +622,45 @@ func SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error {
 //---------------------------------------------------------------------------
 // 设置SendFlag字段，发送为1,未发送为0
 func SetTaskScheduleFlag(strID string, alreadySend bool) error {
-	var send int
+	var sendflag int
 	if alreadySend {
-		send = 1
+		sendflag = 1
 	} else {
-		send = 0
+		res := Get(DBNAME, TABLE_TASK_SCHEDULE, strID)
+		if res.IsNil() {
+			return fmt.Errorf("null")
+		}
+
+		var task map[string]interface{}
+		err := res.One(&task)
+		if err != nil {
+			return err
+		}
+
+		overFlag := task["OverFlag"].(float64)
+		if overFlag != 1 {
+			sendflag = 0
+		} else {
+			return nil
+		}
 	}
+
 	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-		send, common.GenTimestamp())
+		sendflag, common.GenTimestamp())
+
+	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
+	}
+}
+
+//---------------------------------------------------------------------------
+// 设置OverFlag字段为1
+func SetTaskScheduleOverFlag(strID string) error {
+	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+		1, common.GenTimestamp())
 
 	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if res.Replaced|res.Unchanged >= 1 {
@@ -720,12 +750,19 @@ func GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error
 }
 
 //---------------------------------------------------------------------------
-// 获取所有失败次数超过阈值的task
-func GetTaskSchedulesFailed(strNodePubkey string, nThreshold int) (string, error) {
+// 获取所有失败次数(等待次数)超过阈值的task
+func GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error) {
+	var strCount string
+	if flag == 0 {
+		strCount = "FailedCount"
+	} else if flag == 1 {
+		strCount = "WaitCount"
+	}
+
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Filter(r.Row.Field("FailedCount").Ge(nThreshold)).
+		Filter(r.Row.Field(strCount).Ge(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
 		Run(session)
 	if err != nil {

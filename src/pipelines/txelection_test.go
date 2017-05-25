@@ -103,7 +103,7 @@ func TestNode(t *testing.T) {
 }
 
 func TestTxQueryEists(t *testing.T) {
-	tx_id := "126ff745192eea5873fe0b18559035e06a360e57785083579889bfaaa254b0c"
+	tx_id := "1235be2235f4514bc24c26c43e2d93d59ced6ab5470f4fafc9187d43469cfc66"
 	jsonBody := `{"tx_id":"` + tx_id + `"}`
 	result, _ := chain.GetContractTx(jsonBody)
 	logs.Info(result)

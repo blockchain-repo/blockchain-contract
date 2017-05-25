@@ -29,6 +29,11 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
+	if err != nil {
+		return "", err
+	}
+	logs.Info(err)
+	logs.Info(output)
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	logs.Info(b)
@@ -56,7 +61,7 @@ func ExecuteTransferComplete(contractOutPut string, taskStatus string) (outputSt
 
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
 	logs.Info(b)
-	return common.StructSerialize(common.Serialize(contractModel)), err
+	return common.StructSerialize(contractModel), err
 }
 
 func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]interface{},
@@ -65,10 +70,40 @@ func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]inter
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
+	logs.Info(err)
+	logs.Info(output)
+	if err != nil {
+		return "", err
+	}
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	logs.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
+}
+
+func ExecuteInterim(metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
+	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	output, _ := Interim(&metadata, relation, contract)
+	//TODO need split?
+	output = NodeSign(output)
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	logs.Info(b)
+	return common.StructSerialize(output), err
+}
+
+func ExecuteInterimComplete(contractOutPut string, taskStatus string) (outputStr string, err error) {
+	var contractModel model.ContractOutput
+	err = json.Unmarshal([]byte(contractOutPut), &contractModel)
+	taskId := contractModel.Transaction.Relation.TaskId
+
+	UpdateTaskStauts(&contractModel, taskId, taskStatus)
+
+	contractModel.Id = contractModel.GenerateId()
+	contractModel = NodeSign(contractModel)
+
+	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
+	logs.Info(b)
+	return common.StructSerialize(contractModel), err
 }
 
 func GenerateRelation(contractHashId string, contractId string, taskId string, taskIndex int) string {
@@ -94,3 +129,7 @@ func UpdateTaskStauts(contractModel *model.ContractOutput, taskId string, taskSt
 	}
 }
 
+func ExecuteGetContract(contractId string) (string, error) {
+	con, err := GetContractFromUnichain(contractId)
+	return common.StructSerialize(con), err
+}

@@ -28,9 +28,11 @@ src:
                  |__ conf    合约配置文件
                  |__ control 合约进程控制等
                  |__ db      合约db处理
+                 |__ engine  合约虚拟机
                  |__ model   合约模型处理
                  |__ protos  合约接口描述proto
-            |__ pipelines: 流水线管道
+            |__ pipelines:   流水线管道
+            |__ transaction: 交易
        |__ tools:  语法检查、逻辑检查等工具
        |__ verdor: 第三方包管理工具 govendor
 ```

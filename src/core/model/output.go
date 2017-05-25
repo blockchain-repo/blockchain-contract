@@ -9,7 +9,7 @@ type ConditionDetails struct {
 }
 
 type Condition struct {
-	Details *ConditionDetails `json:"details"`
+	Details *ConditionDetails `json:"details,omitempty"`
 	Uri     string            `json:"uri"`
 }
 
@@ -21,7 +21,7 @@ type ConditionsItem struct {
 	Isfreeze    bool       `json:"isfreeze"`
 }
 
-func (c *ConditionsItem)GenerateOutput(cid int, isFeeze bool, pub string, amount int) {
+func (c *ConditionsItem) GenerateOutput(cid int, isFeeze bool, pub string, amount int) {
 	condetails := ConditionDetails{
 		Bitmask:   32,
 		PublicKey: pub,
@@ -34,11 +34,24 @@ func (c *ConditionsItem)GenerateOutput(cid int, isFeeze bool, pub string, amount
 		Uri:     "",
 	}
 	//cc:4:20:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1c:96
-	c.Amount=amount
-	c.Cid=cid
-	c.Condition=&cond
-	c.OwnersAfter=[]string{pub}
-	c.Isfreeze=isFeeze
+	c.Amount = amount
+	c.Cid = cid
+	c.Condition = &cond
+	c.OwnersAfter = []string{pub}
+	c.Isfreeze = isFeeze
 
 }
 
+func (c *ConditionsItem) GenerateOutputForIm() {
+
+	cond := Condition{
+		//Details: nil,
+		Uri: "",
+	}
+	//cc:4:20:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1c:96
+	c.Amount = 0
+	c.Cid = 0
+	c.Condition = &cond
+	c.OwnersAfter = []string{""}
+	c.Isfreeze = false
+}

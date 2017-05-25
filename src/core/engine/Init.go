@@ -24,9 +24,9 @@ var (
 
 //---------------------------------------------------------------------------
 func Init() {
-	//strConfigOSPath := os.Getenv(_CONFIG_FILE_ENV)
-	//strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIG_FILE_NAME
-	strConfigPath := _CONFIG_FILE_NAME
+	strConfigOSPath := os.Getenv(_CONFIG_FILE_ENV)
+	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIG_FILE_NAME
+	//strConfigPath := _CONFIG_FILE_NAME
 	if err := yaml.Read(strConfigPath, &UCVMConf); err != nil {
 		beegoLog.Error(err)
 		os.Exit(-1)
