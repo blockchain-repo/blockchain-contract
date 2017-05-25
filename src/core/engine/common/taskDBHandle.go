@@ -174,6 +174,11 @@ func UpdateMonitorSucc(strContractID string,
 		return err
 	}
 
+	err = rethinkdb.SetTaskScheduleOverFlag(strID)
+	if err != nil {
+		return err
+	}
+
 	startTime, endTime, err := rethinkdb.GetValidTime(strID)
 	if err != nil {
 		return err
