@@ -69,9 +69,9 @@ func SaveOutputErrorData(tableName string, coModel model.ContractOutput) bool {
 func Init() {
 	//TODO log
 	logs.Info("ContractVote Pipeline Start")
-	//go startContractVote()
-	//logs.Info("ContractElection Pipeline Start")
-	//go startContractElection()
-	//logs.Info("txElection Pipeline Start")
-	startTxElection()
+	go startContractVote()
+	logs.Info("ContractElection Pipeline Start")
+	go startContractElection()
+	logs.Info("txElection Pipeline Start")
+	go startTxElection()
 }
