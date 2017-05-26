@@ -331,7 +331,8 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 	contractOutput.Transaction.ContractModel.ContractHead = nil
 
 	contractOutput.Transaction.Relation = new(model.Relation)
-	contractOutput.Transaction.Relation.ContractId = contractModel.Id
+	contractOutput.Transaction.Relation.ContractHashId = contractModel.Id
+	contractOutput.Transaction.Relation.ContractId = contractModel.ContractBody.ContractId
 	for _, value := range gslPublicKeys {
 		contractOutput.Transaction.Relation.Voters =
 			append(contractOutput.Transaction.Relation.Voters, value)

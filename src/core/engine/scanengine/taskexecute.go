@@ -37,7 +37,7 @@ func _TaskExecute() {
 		beegoLog.Debug("get ContractTask")
 
 		beegoLog.Debug("query contract base on contractId")
-		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractTask.ContractHashId)
+		jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", strContractTask.ContractHashId)
 		responseResult, err := chain.GetTxByConHashId(jsonBody)
 		if err != nil || responseResult.Data == nil {
 			beegoLog.Error(err)
