@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"sort"
 )
 
 import (
@@ -51,6 +52,7 @@ func startContractElection() {
 	defer close(gchInput)
 
 	gslPublicKeys = config.GetAllPublicKey()
+	sort.Strings(gslPublicKeys)
 	gnPublicKeysNum = len(gslPublicKeys)
 	gstrPublicKey = config.Config.Keypair.PublicKey
 
