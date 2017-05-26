@@ -151,5 +151,8 @@ func TestFuncGetContracOutputtById(t *testing.T) {
 }
 
 func TestFuncIsConPutInUnichian(t *testing.T) {
-
+	conhashId := "63841426ea1c501745d56ce47a4e7b93bf85841d54f2c77102ce488ac0ce8b51"
+	res, _ := FuncIsConPutInUnichian(conhashId)
+	logs.Info(res.Code)
+	logs.Info(res.Data)
 }
