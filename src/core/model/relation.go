@@ -20,5 +20,6 @@ func (r *Relation) GenerateRelation(contracHashId string, contractid string, tas
 	r.ContractId = contractid
 	r.TaskId = taskid
 	r.TaskExecuteIdx = taskExecuteIdx
-	r.Voters = sort.StringSlice(config.GetAllPublicKey())
+	r.Voters = config.GetAllPublicKey()
+	sort.Strings(r.Voters)
 }
