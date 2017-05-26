@@ -329,18 +329,21 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 			append(contractOutput.Transaction.Relation.Voters, value)
 	}
 
-	fulfillment := &model.Fulfillment{
-		Fid:          0,
-		OwnersBefore: []string{config.Config.Keypair.PublicKey},
-	}
-	contractOutput.Transaction.Fulfillments = append(contractOutput.Transaction.Fulfillments, fulfillment)
-	contractOutput.Transaction.Conditions = []*model.ConditionsItem{}
+	//fulfillment := &model.Fulfillment{
+	//	Fid:          0,
+	//	OwnersBefore: []string{config.Config.Keypair.PublicKey},
+	//}
+	//contractOutput.Transaction.Fulfillments = append(contractOutput.Transaction.Fulfillments, fulfillment)
+	//contractOutput.Transaction.Conditions = []*model.ConditionsItem{}
+
+	contractOutput.Transaction.Conditions = []*model.ConditionsItem{} //todo
+	contractOutput.Transaction.Fulfillments = []*model.Fulfillment{}
 	contractOutput.Transaction.Asset = &model.Asset{}
 
 	beegoLog.Debug("contractOutput : %+v", common.StructSerialize(contractOutput))
 	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
 
-	fulfillment.Fulfillment = _FULFILLMENT
+	//fulfillment.Fulfillment = _FULFILLMENT
 	contractOutput.Transaction.Timestamp = common.GenTimestamp()
 	contractOutput.Transaction.ContractModel.ContractHead = contractModel.ContractHead
 	contractOutput.Transaction.Relation.Votes = make([]*model.Vote, gnPublicKeysNum)
