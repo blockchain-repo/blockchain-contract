@@ -145,7 +145,7 @@ func ceHeadFilter() error {
 						beegoLog.Error(err.Error())
 					} else {
 						// vote not enough
-						beegoLog.Debug(err.Error())
+						beegoLog.Info(err.Error())
 					}
 					continue
 				}
@@ -257,17 +257,20 @@ func _verifyVotes(contractId string) (*model.ContractOutput, bool, error) {
 	}
 
 	beegoLog.Debug("2.2.3.3 valid votes")
-	bValid := _verifyValid(eligible_votes)
+	nValid := _verifyValid(eligible_votes)
 
-	if bValid {
+	if nValid == 0 {
+		return nil, true, fmt.Errorf("vote not enough")
+	} else if nValid == 1 {
 		contractOutput, err := _produceContractOutput(contractId, slVote)
 		if err != nil {
-			return nil, bValid, err
+			return nil, false, err
 		}
-		return &contractOutput, bValid, err
-	} else {
-		return nil, bValid, nil
+		return &contractOutput, true, nil
+	} else if nValid == 2 {
+		return nil, false, nil
 	}
+	return nil, false, fmt.Errorf("unknow error")
 }
 
 //---------------------------------------------------------------------------
@@ -283,7 +286,10 @@ func _verifyPublicKey(NodePubkey string) (bool, error) {
 }
 
 //---------------------------------------------------------------------------
-func _verifyValid(mVotes map[string]model.Vote) bool {
+// 0 投票不够（例如三个节点，已投两个，一个true，一个false）
+// 1 达成共识，合约有效
+// 2 达成共识，合约无效
+func _verifyValid(mVotes map[string]model.Vote) int {
 	var nValidNum, nInValidNum int
 	for _, value := range mVotes {
 		if value.VoteBody.IsValid {
@@ -293,16 +299,16 @@ func _verifyValid(mVotes map[string]model.Vote) bool {
 		}
 	}
 
-	bValid := false
+	nValid := 0
 	nTotalVoteNum := len(mVotes)
 	if nValidNum*2 > nTotalVoteNum {
-		bValid = true
+		nValid = 1
 	}
 	if nInValidNum*2 > nTotalVoteNum {
-		bValid = false
+		nValid = 2
 	}
 
-	return bValid
+	return nValid
 }
 
 //---------------------------------------------------------------------------
