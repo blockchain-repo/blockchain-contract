@@ -40,6 +40,8 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 	bif.ContractFunctions["FuncTransferAsset"] = FuncTransferAsset
 	bif.ContractFunctions["FuncTransferAssetComplete"] = FuncTransferAssetComplete
 	bif.ContractFunctions["FuncUnfreezeAsset"] = FuncUnfreezeAsset
+	bif.ContractFunctions["FuncInterim"] = FuncInterim
+	bif.ContractFunctions["FuncInterimComplete"] = FuncInterimComplete
 	bif.ContractFunctions["FuncIsConPutInUnichian"] = FuncIsConPutInUnichian
 	return v_err
 }

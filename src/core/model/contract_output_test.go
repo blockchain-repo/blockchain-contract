@@ -20,13 +20,14 @@ func GenerateOutputTest() string {
 	transaction := Transaction{}
 	transaction.Asset = &Asset{}                 //todo
 	transaction.Conditions = []*ConditionsItem{} //todo
-	fulfillment := &Fulfillment{
-		Fid:          0,
-		OwnersBefore: []string{config.Config.Keypair.PublicKey},
-	}
-	transaction.Fulfillments = []*Fulfillment{
-		fulfillment,
-	}
+	transaction.Fulfillments = []*Fulfillment{}
+	//fulfillment := &Fulfillment{
+	//	Fid:          0,
+	//	OwnersBefore: []string{config.Config.Keypair.PublicKey},
+	//}
+	//transaction.Fulfillments = []*Fulfillment{
+	//	fulfillment,
+	//}
 
 	//{
 	//
@@ -106,8 +107,10 @@ func GenerateOutputTest() string {
 
 	//--------------------relaction-------------------------
 	transaction.Relation = &Relation{
-		ContractId: transaction.ContractModel.Id,
-		TaskId:     "task-id-123456789",
+		ContractHashId: transaction.ContractModel.Id,
+		ContractId:     transaction.ContractModel.ContractBody.ContractId,
+		TaskId:         "task-id-123456789",
+		TaskExecuteIdx: 0,
 		Voters: []string{
 			config.Config.Keypair.PublicKey, config.Config.Keypair.PublicKey, config.Config.Keypair.PublicKey,
 		},
@@ -117,7 +120,7 @@ func GenerateOutputTest() string {
 	contractOutput.Transaction = transaction
 	fmt.Println("hash-pre: ", common.StructSerialize(contractOutput))
 	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
-	fulfillment.Fulfillment = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
+	//fulfillment.Fulfillment = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
 
 	//operation:transfer
 	//vote1 := &Vote{}

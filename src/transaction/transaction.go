@@ -65,8 +65,14 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	var inputs = []*model.Fulfillment{}
 	var balance int = 0
 	var spentFlag float64 = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
+	logs.Info(operation)
 	if operation == _FREEZE {
 		isFeeze = true
+		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
+		if spentFlag == 1 || spentFlag == 3 || spentFlag == 4 {
+			err := errors.New("there had one/mutil frozen asset , step over 'FREEZE' ")
+			return model.ContractOutput{}, err
+		}
 		//generate inputs
 		inputs, balance = GetUnfreezeUnspent(ownerbefore)
 		if len(recipients) != 1 || recipients[0][0].(string) != ownerbefore {
@@ -78,6 +84,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 			err := errors.New("The opertion `UNFREEZE` should not has any ownner-afters !")
 			return model.ContractOutput{}, err
 		}
+
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
 		//NOTE  not sure whether I need to check the inputs is it has some frozen asset or not
 
@@ -139,22 +146,12 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 func Interim(metadata *model.Metadata,
 	relation model.Relation, contract model.ContractModel) (model.ContractOutput, error) {
 
-	//isFeeze := false
 	operation := _INTERIM
 	version := _VERSION
 	timestamp := common.GenTimestamp()
 	//generate outputs
 	outputs := []*model.ConditionsItem{}
-	output := &model.ConditionsItem{}
-	output.GenerateOutputForIm()
-	outputs = append(outputs, output)
-	//generate inputs
 	inputs := []*model.Fulfillment{}
-	input := &model.Fulfillment{}
-	tx_signers := []string{""}
-	input.GenerateInput(tx_signers)
-	inputs = append(inputs, input)
-
 	contractOutput := model.ContractOutput{}
 	asset := model.Asset{}
 	contractOutput.GenerateConOutput(operation, asset, inputs, outputs, metadata, timestamp, version, relation, contract)

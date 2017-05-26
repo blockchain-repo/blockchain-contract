@@ -518,14 +518,14 @@ func Test_GetValidTime(t *testing.T) {
 
 func Test_SetTaskScheduleFlagBatch(t *testing.T) {
 	slID := make([]interface{}, 0)
-	slID = append(slID, "172a6bd7-f502-46fd-aba9-a6c098a9ee28")
-	slID = append(slID, "28f0b597-4403-4082-a9a1-cd765099faa6")
-	slID = append(slID, "d5501c6f-3f74-47d7-bcaa-1f7050aa8196")
-	SetTaskScheduleFlagBatch(slID, false)
+	slID = append(slID, "906d9d14-915f-4c75-8896-000e1371e018")
+	slID = append(slID, "f55e19d1-56e6-4efc-b2b1-01ea037a9d51")
+	slID = append(slID, "d6df0d59-5285-459b-b67d-65108d603497")
+	SetTaskScheduleFlagBatch(slID, true)
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "355c42b2-ff2f-442c-b833-7dc02a277de9"
+	strID := "466eecfb-6352-4af8-b81d-a4a88f0c8432"
 	err := SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -534,8 +534,18 @@ func Test_SetTaskScheduleFlag(t *testing.T) {
 	}
 }
 
+func Test_SetTaskScheduleOverFlag(t *testing.T) {
+	strID := "466eecfb-6352-4af8-b81d-a4a88f0c8432"
+	err := SetTaskScheduleOverFlag(strID)
+	if err != nil {
+		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
+	} else {
+		t.Logf("pass\n")
+	}
+}
+
 func Test_SetTaskScheduleCount(t *testing.T) {
-	strID := "355c42b2-ff2f-442c-b833-7dc02a277de9"
+	strID := "6fdeccf5-5d77-4416-b96e-dd26700db739"
 	err := SetTaskScheduleCount(strID, 2)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -581,9 +591,9 @@ func Test_GetTaskSchedulesNoSend(t *testing.T) {
 	}
 }
 
-func Test_GetTaskSchedulesFailed(t *testing.T) {
+func Test_GetTaskSchedulesNoSuccess(t *testing.T) {
 	strNodePubkey := config.Config.Keypair.PublicKey
-	retStr, err := GetTaskSchedulesFailed(strNodePubkey, 500)
+	retStr, err := GetTaskSchedulesNoSuccess(strNodePubkey, 500, 0)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
