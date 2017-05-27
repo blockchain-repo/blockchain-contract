@@ -290,13 +290,6 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//var mainPubkey string = args[7].(string)
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
-	logs.Info(ownerBefore)
-	logs.Info(recipients)
-	logs.Info(contractStr)
-	logs.Info(contractHashId)
-	logs.Info(contractId)
-	logs.Info(taskId)
-	logs.Info(taskIndex)
 
 	outputStr, v_err := transaction.ExecuteUnfreeze("UNFREEZE", ownerBefore, recipients,
 		metadataStr, relationStr, contractStr)
