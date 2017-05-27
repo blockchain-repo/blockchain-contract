@@ -17,6 +17,7 @@ goog.provide('proto.protos.ContractList');
 goog.provide('proto.protos.ContractSignature');
 goog.provide('proto.protos.ExpressionResult');
 goog.provide('proto.protos.ResponseData');
+goog.provide('proto.protos.SelectBranchExpression');
 
 goog.require('jspb.Message');
 goog.require('jspb.BinaryReader');
@@ -1471,6 +1472,173 @@ proto.protos.ComponentData.prototype.setFormat = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
+proto.protos.SelectBranchExpression = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.protos.SelectBranchExpression, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.protos.SelectBranchExpression.displayName = 'proto.protos.SelectBranchExpression';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.protos.SelectBranchExpression.prototype.toObject = function(opt_includeInstance) {
+  return proto.protos.SelectBranchExpression.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.protos.SelectBranchExpression} msg The msg instance to transform.
+ * @return {!Object}
+ */
+proto.protos.SelectBranchExpression.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    branchexpressionstr: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    branchexpressionvalue: jspb.Message.getFieldWithDefault(msg, 2, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.protos.SelectBranchExpression}
+ */
+proto.protos.SelectBranchExpression.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.protos.SelectBranchExpression;
+  return proto.protos.SelectBranchExpression.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.protos.SelectBranchExpression} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.protos.SelectBranchExpression}
+ */
+proto.protos.SelectBranchExpression.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setBranchexpressionstr(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setBranchexpressionvalue(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.protos.SelectBranchExpression.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.protos.SelectBranchExpression.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.protos.SelectBranchExpression} message
+ * @param {!jspb.BinaryWriter} writer
+ */
+proto.protos.SelectBranchExpression.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getBranchexpressionstr();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getBranchexpressionvalue();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string BranchExpressionStr = 1;
+ * @return {string}
+ */
+proto.protos.SelectBranchExpression.prototype.getBranchexpressionstr = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.SelectBranchExpression.prototype.setBranchexpressionstr = function(value) {
+  jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * optional string BranchExpressionValue = 2;
+ * @return {string}
+ */
+proto.protos.SelectBranchExpression.prototype.getBranchexpressionvalue = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.SelectBranchExpression.prototype.setBranchexpressionvalue = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
 proto.protos.ContractComponent = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, proto.protos.ContractComponent.repeatedFields_, null);
 };
@@ -1483,7 +1651,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.protos.ContractComponent.repeatedFields_ = [6,7,8,9,10,11,14,15,16,18];
+proto.protos.ContractComponent.repeatedFields_ = [6,7,8,9,10,11,14,15,16,18,21];
 
 
 
@@ -1537,7 +1705,9 @@ proto.protos.ContractComponent.toObject = function(includeInstance, msg) {
     support: jspb.Message.getFieldWithDefault(msg, 17, 0),
     textList: jspb.Message.getField(msg, 18),
     taskexecuteidx: jspb.Message.getFieldWithDefault(msg, 19, 0),
-    taskid: jspb.Message.getFieldWithDefault(msg, 20, "")
+    taskid: jspb.Message.getFieldWithDefault(msg, 20, ""),
+    selectbranchesList: jspb.Message.toObjectList(msg.getSelectbranchesList(),
+    proto.protos.SelectBranchExpression.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1660,6 +1830,11 @@ proto.protos.ContractComponent.deserializeBinaryFromReader = function(msg, reade
     case 20:
       var value = /** @type {string} */ (reader.readString());
       msg.setTaskid(value);
+      break;
+    case 21:
+      var value = new proto.protos.SelectBranchExpression;
+      reader.readMessage(value,proto.protos.SelectBranchExpression.deserializeBinaryFromReader);
+      msg.addSelectbranches(value);
       break;
     default:
       reader.skipField();
@@ -1834,6 +2009,14 @@ proto.protos.ContractComponent.serializeBinaryToWriter = function(message, write
     writer.writeString(
       20,
       f
+    );
+  }
+  f = message.getSelectbranchesList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      21,
+      f,
+      proto.protos.SelectBranchExpression.serializeBinaryToWriter
     );
   }
 };
@@ -2339,6 +2522,39 @@ proto.protos.ContractComponent.prototype.setTaskid = function(value) {
 };
 
 
+/**
+ * repeated SelectBranchExpression SelectBranches = 21;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<!proto.protos.SelectBranchExpression>}
+ */
+proto.protos.ContractComponent.prototype.getSelectbranchesList = function() {
+  return /** @type{!Array.<!proto.protos.SelectBranchExpression>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.protos.SelectBranchExpression, 21));
+};
+
+
+/** @param {!Array.<!proto.protos.SelectBranchExpression>} value */
+proto.protos.ContractComponent.prototype.setSelectbranchesList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 21, value);
+};
+
+
+/**
+ * @param {!proto.protos.SelectBranchExpression=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.protos.SelectBranchExpression}
+ */
+proto.protos.ContractComponent.prototype.addSelectbranches = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 21, opt_value, proto.protos.SelectBranchExpression, opt_index);
+};
+
+
+proto.protos.ContractComponent.prototype.clearSelectbranchesList = function() {
+  this.setSelectbranchesList([]);
+};
+
+
 
 /**
  * Generated by JsPbCodeGenerator.
@@ -2399,7 +2615,7 @@ proto.protos.ContractBody.toObject = function(includeInstance, msg) {
     description: jspb.Message.getFieldWithDefault(msg, 5, ""),
     contractstate: jspb.Message.getFieldWithDefault(msg, 6, ""),
     creator: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    creatortime: jspb.Message.getFieldWithDefault(msg, 8, ""),
+    createtime: jspb.Message.getFieldWithDefault(msg, 8, ""),
     starttime: jspb.Message.getFieldWithDefault(msg, 9, ""),
     endtime: jspb.Message.getFieldWithDefault(msg, 10, ""),
     contractownersList: jspb.Message.getField(msg, 11),
@@ -2476,7 +2692,7 @@ proto.protos.ContractBody.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 8:
       var value = /** @type {string} */ (reader.readString());
-      msg.setCreatortime(value);
+      msg.setCreatetime(value);
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
@@ -2586,7 +2802,7 @@ proto.protos.ContractBody.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getCreatortime();
+  f = message.getCreatetime();
   if (f.length > 0) {
     writer.writeString(
       8,
@@ -2757,13 +2973,13 @@ proto.protos.ContractBody.prototype.setCreator = function(value) {
  * optional string CreateTime = 8;
  * @return {string}
  */
-proto.protos.ContractBody.prototype.getCreatortime = function() {
+proto.protos.ContractBody.prototype.getCreatetime = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
 };
 
 
 /** @param {string} value */
-proto.protos.ContractBody.prototype.setCreatortime = function(value) {
+proto.protos.ContractBody.prototype.setCreatetime = function(value) {
   jspb.Message.setField(this, 8, value);
 };
 
@@ -3015,7 +3231,8 @@ proto.protos.ContractHead.toObject = function(includeInstance, msg) {
   var f, obj = {
     mainpubkey: jspb.Message.getFieldWithDefault(msg, 1, ""),
     version: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    timestamp: jspb.Message.getFieldWithDefault(msg, 3, "")
+    assigntime: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    operatetime: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -3062,7 +3279,11 @@ proto.protos.ContractHead.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setTimestamp(value);
+      msg.setAssigntime(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setOperatetime(value);
       break;
     default:
       reader.skipField();
@@ -3106,10 +3327,17 @@ proto.protos.ContractHead.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getTimestamp();
+  f = message.getAssigntime();
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getOperatetime();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
       f
     );
   }
@@ -3147,17 +3375,32 @@ proto.protos.ContractHead.prototype.setVersion = function(value) {
 
 
 /**
- * optional string Timestamp = 3;
+ * optional string AssignTime = 3;
  * @return {string}
  */
-proto.protos.ContractHead.prototype.getTimestamp = function() {
+proto.protos.ContractHead.prototype.getAssigntime = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /** @param {string} value */
-proto.protos.ContractHead.prototype.setTimestamp = function(value) {
+proto.protos.ContractHead.prototype.setAssigntime = function(value) {
   jspb.Message.setField(this, 3, value);
+};
+
+
+/**
+ * optional string OperateTime = 4;
+ * @return {string}
+ */
+proto.protos.ContractHead.prototype.getOperatetime = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ContractHead.prototype.setOperatetime = function(value) {
+  jspb.Message.setField(this, 4, value);
 };
 
 
