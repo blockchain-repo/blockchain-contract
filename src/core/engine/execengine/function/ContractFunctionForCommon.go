@@ -156,7 +156,7 @@ func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error
   Desc:create asset, generate the output and insert into db
   Args:
   	0: ownerbefore(string):	the pubkey who transfer assets
-  	1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer. it should be nil
+  	1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer.
 	2: contractStr(string):the contract str which this task execute
 	3: contractHashId(string): contractHashId
 	4: contractId(string): contractId
