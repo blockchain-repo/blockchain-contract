@@ -4,6 +4,7 @@ import (
 	r "unicontract/src/core/db/rethinkdb"
 
 	"github.com/astaxie/beego/logs"
+	"time"
 )
 
 type ChangeFeed struct {
@@ -13,10 +14,6 @@ type ChangeFeed struct {
 	operation []string
 }
 
-func (c *ChangeFeed) runForever() {
-	c.runChangeFeed()
-}
-
 func (c *ChangeFeed) runChangeFeed() {
 	logs.Info("change feed run")
 	var value interface{}
@@ -24,10 +21,16 @@ func (c *ChangeFeed) runChangeFeed() {
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
 		logs.Info(c.table, "Changefeed result : %s", m["new_val"])
-		if m["new_val"]!=nil{
+		if m["new_val"] != nil {
 			c.node.output <- m["new_val"]
 		}
-
 	}
 	logs.Info("change feed out")
+}
+
+func (c *ChangeFeed) runForever() {
+	for {
+		c.runChangeFeed()
+		time.Sleep(time.Second)
+	}
 }

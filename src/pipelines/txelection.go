@@ -145,7 +145,7 @@ func getTxChangefeed() *ChangeFeed {
 		table:     "ContractOutputs",
 		operation: []string{"insert"},
 	}
-	go change.runChangeFeed()
+	go change.runForever()
 	return change
 }
 
