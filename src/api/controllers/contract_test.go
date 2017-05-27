@@ -97,12 +97,12 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 		owners[publicKeyBase58] = privateKeyBase58
 		ownersPubkeys[i] = publicKeyBase58
 	}
-	//owners["8qi3Zy655uowWQUhXoRdQs1zyvVapr6KdpXsbp8YTFhM"] = "8pMZFfx6MXMjxii5dY9KkVFUNUqSA8WpGUu1pHXTTewe"
-	//ownersPubkeys[0] = "8qi3Zy655uowWQUhXoRdQs1zyvVapr6KdpXsbp8YTFhM"
-	//owners["F2P8cmiNbzr79QserzAh2LktZLdR6AgnNRfjQd6eMbB9"] = "EGAw5J3xTX2jZFCPjrSHxNLdkjq5TpZmn7Nb7bFnakyk"
-	//ownersPubkeys[1] = "F2P8cmiNbzr79QserzAh2LktZLdR6AgnNRfjQd6eMbB9"
-	//owners["6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu"] = "2JW9e1iGP2Hhi2rarj43oJAiNn9VL3MvtiWvwBd3CUjw"
-	//ownersPubkeys[2] = "6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu"
+	owners["3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"] = "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	ownersPubkeys[0] = "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	owners["3JYvp8FrDvrhMVjGURoZvD5oVDnug3HZcotYG4AdvvSP"] = "2GY6Rif9NMSdQ7JPBSGqFPKggBi1Kaa2ru11wrCdiv6V"
+	ownersPubkeys[1] = "3JYvp8FrDvrhMVjGURoZvD5oVDnug3HZcotYG4AdvvSP"
+	//owners["Vn3aq7YcTWFjRXEUFKpzZvseeQuYMzAM6NZkGFzeBUY"] = "5cg11pBp193AkbEJ5CL36z5eDGgMtsaFeyVSaJwG7rSy"
+	//ownersPubkeys[2] = "Vn3aq7YcTWFjRXEUFKpzZvseeQuYMzAM6NZkGFzeBUY"
 
 	/*-------------------- generate contractModel ------------------*/
 	contractModel := model.ContractModel{}
@@ -208,9 +208,13 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	return requestBody, nil
 }
 
-var default_url = "http://36.110.71.170:66/v1/contract/"
+//var default_url = "http://36.110.71.170:66/v1/contract/"
+//var default_url = "http://192.168.1.14:8088/v1/contract/"
+//var default_url = "http://36.110.71.170:66/v1/contract/"
+var default_url = "http://localhost:8088/v1/contract/"
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
+
 //var default_url = "http://localhost:8088/v1/contract/"
 
 //var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"

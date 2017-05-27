@@ -281,10 +281,6 @@ func (c *ContractController) Terminate() {
 // @Failure 403 cid is empty
 // @router /query [post]
 func (c *ContractController) Query() {
-	// java client StringEntity JsonStr
-	// c.Ctx.Request.Body //java client httpEntity
-	// c.Ctx.Request.Form //postman choose this
-	//logs.Warn("Form: ", c.Ctx.Request.Form) // here map[]
 
 	var requestParamMap map[string]interface{}
 	requestBody := c.Ctx.Input.RequestBody
@@ -292,16 +288,15 @@ func (c *ContractController) Query() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	/*------------------- requestParams start ------------------*/
+	contractState, _ := requestParamMap["status"].(string)
 	contractId, _ := requestParamMap["contractId"].(string)
 	owner, _ := requestParamMap["owner"].(string)
-	signatureStatus, _ := requestParamMap["signatureStatus"].(string)
-	flag, _ := requestParamMap["flag"].(string)
 	/*------------------- requestParams end ------------------*/
 	logs.Warn("Body: ", c.Ctx.Request.Body)
 	//logs.Warn("Header: ", c.Ctx.Request.Header)
 
-	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, signatureStatus=%s, flag=%s, contractId=%s]",
-		c.Ctx.Request.RequestURI, token, owner, signatureStatus, flag, contractId))
+	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s]",
+		c.Ctx.Request.RequestURI, token, owner, contractState, contractId))
 	if token == "" {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
@@ -310,7 +305,6 @@ func (c *ContractController) Query() {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
-	//todo
 	contractModelStr, err := rethinkdb.GetOneContractByMapCondition(requestParamMap)
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
@@ -354,20 +348,20 @@ func (c *ContractController) QueryAll() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	/*------------------- requestParams start ------------------*/
-	contractId, ok := requestParamMap["contractId"].(string)
-	if !ok {
-		logs.Error("contractId type error")
-	}
+	contractState, _ := requestParamMap["status"].(string)
 	owner, _ := requestParamMap["owner"].(string)
-	signatureStatus, _ := requestParamMap["signatureStatus"].(string)
-	name, _ := requestParamMap["name"].(string)
+
+	contractId, _ := requestParamMap["contractId"].(string)
+	//if !ok {
+	//	logs.Error("contractId type error")
+	//}
+	contractName, _ := requestParamMap["contractName"].(string)
 	/*------------------- requestParams end ------------------*/
 	logs.Warn("Body: ", c.Ctx.Request.Body)
 	//logs.Warn("Header: ", c.Ctx.Request.Header)
 
-	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, signatureStatus=%s, name=%s, contractId=%s]",
-		c.Ctx.Request.RequestURI, token, owner, signatureStatus, name, contractId))
-	// todo
+	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s, contractName=%s]",
+		c.Ctx.Request.RequestURI, token, owner, contractState, contractId, contractName))
 	if token == "" {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
