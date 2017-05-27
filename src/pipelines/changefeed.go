@@ -1,10 +1,11 @@
 package pipelines
 
 import (
+	"time"
+
 	r "unicontract/src/core/db/rethinkdb"
 
 	"github.com/astaxie/beego/logs"
-	"time"
 )
 
 type ChangeFeed struct {
