@@ -152,6 +152,9 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 			continue
 		}
 		vote := votes[index]
+		if vote == nil {
+			continue
+		}
 		nodePubkey := vote.NodePubkey
 		if nodePubkey != voter {
 			continue
