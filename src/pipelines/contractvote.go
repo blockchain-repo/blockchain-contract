@@ -74,7 +74,7 @@ func getcvChangefeed() *ChangeFeed {
 		table:     r.TABLE_CONTRACTS,
 		operation: []string{"insert"},
 	}
-	go change.runChangeFeed()
+	go change.runForever()
 	return change
 }
 

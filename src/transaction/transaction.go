@@ -340,7 +340,7 @@ func IsOutputInUnichain(contractHashId string) (bool, error) {
 		return false, err
 	}
 	logs.Info(len(output))
-	if len(output) == 1 {
+	if len(output) > 0 {
 		return true, nil
 	}
 	return false, err

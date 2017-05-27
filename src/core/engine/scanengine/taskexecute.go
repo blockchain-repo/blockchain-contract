@@ -37,20 +37,18 @@ func _TaskExecute() {
 		beegoLog.Debug("get ContractTask")
 
 		beegoLog.Debug("query contract base on contractId")
-		jsonBody := fmt.Sprintf("{\"contract_id\":\"%s\"}", strContractTask.ContractHashId)
-		responseResult, err := chain.GetContractById(jsonBody)
+		jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", strContractTask.ContractHashId)
+		responseResult, err := chain.GetTxByConHashId(jsonBody)
 		if err != nil || responseResult.Data == nil {
 			beegoLog.Error(err)
-			err := engineCommon.UpdateMonitorWait(strContractTask.ContractId,
-				strContractTask.ContractHashId, "")
-			if err != nil {
-				beegoLog.Error(err)
-			}
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId, "")
 			continue
 		}
 
 		if responseResult.Code != _HTTP_OK {
-			beegoLog.Error(responseResult.Message)
+			beegoLog.Error("responseResult.Code is [ %d ]", responseResult.Code)
+			beegoLog.Error("responseResult.Message is [ %s ]", responseResult.Message)
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId, "")
 			continue
 		}
 
@@ -59,11 +57,7 @@ func _TaskExecute() {
 		if !ok || len(contractData) == 0 {
 			beegoLog.Error("responseResult.Data is not ok for type []interface {}. type is %T, or value is [], value is %+v",
 				responseResult.Data, responseResult.Data)
-			err := engineCommon.UpdateMonitorWait(strContractTask.ContractId,
-				strContractTask.ContractHashId, "")
-			if err != nil {
-				beegoLog.Error(err)
-			}
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId, "")
 			continue
 		}
 
@@ -83,13 +77,7 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	err := contractExecuter.Load(strData)
 	if err != nil {
 		beegoLog.Error(err)
-
-		err := engineCommon.UpdateMonitorFail(strContractID,
-			strContractHashID, "")
-		if err != nil {
-			beegoLog.Error(err)
-		}
-
+		_UpdateToFailed(strContractID, strContractHashID, "")
 		return
 	}
 	//执行引擎初始化环境
@@ -98,13 +86,7 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	ret, err := contractExecuter.Start()
 	if err != nil {
 		beegoLog.Error(err)
-
-		err := engineCommon.UpdateMonitorFail(strContractID,
-			strContractHashID, "")
-		if err != nil {
-			beegoLog.Error(err)
-		}
-
+		_UpdateToFailed(strContractID, strContractHashID, "")
 		return
 	}
 	if ret == 0 {
@@ -119,6 +101,22 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	//执行机销毁合约
 	contractExecuter.Destory()
 	task_execute_time.Send("task_execute")
+}
+
+//---------------------------------------------------------------------------
+func _UpdateToWait(strContractID, strContractHashID, strTaskState string) {
+	err := engineCommon.UpdateMonitorWait(strContractID, strContractHashID, strTaskState)
+	if err != nil {
+		beegoLog.Error(err)
+	}
+}
+
+//---------------------------------------------------------------------------
+func _UpdateToFailed(strContractID, strContractHashID, strTaskState string) {
+	err := engineCommon.UpdateMonitorFail(strContractID, strContractHashID, strTaskState)
+	if err != nil {
+		beegoLog.Error(err)
+	}
 }
 
 //---------------------------------------------------------------------------

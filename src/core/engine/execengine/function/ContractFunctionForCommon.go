@@ -53,9 +53,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 
 	//user provide
 	var ownerBefore string = args[0].(string)
-	var recipients [][2]interface{} = [][2]interface{}{
-		[2]interface{}{"5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL", 100},
-	}
+	var recipients [][2]interface{} = args[1].([][2]interface{})
 	//executer provide
 	var contractStr string = args[2].(string)
 	var contractHashId string = args[3].(string)

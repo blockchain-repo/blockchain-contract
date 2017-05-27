@@ -16,6 +16,7 @@ func TestSort(t *testing.T) {
 	sort.Strings(silce)
 	//sliceSort := sort.StringSlice(silce)
 	logs.Info(silce)
+	//logs.Info(sliceSort)
 }
 
 func TestTransferAssetComplete(t *testing.T) {

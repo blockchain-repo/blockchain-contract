@@ -7,6 +7,7 @@ import (
 	"unicontract/src/config"
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
+	"unicontract/src/common"
 )
 
 func WriteContract(contract model.ContractModel) bool {
@@ -14,6 +15,7 @@ func WriteContract(contract model.ContractModel) bool {
 	pubs := config.GetAllPublicKey()
 
 	contract.ContractHead.MainPubkey = pubs[rand.Intn(len(pubs))]
+	contract.ContractHead.Timestamp = common.GenTimestamp()
 	ok := r.InsertContract(contract.ToString())
 	return ok
 }

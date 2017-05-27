@@ -84,10 +84,6 @@ func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]inter
 func ExecuteInterim(metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 	output, _ := Interim(&metadata, relation, contract)
-	//TODO need split?
-	output = NodeSign(output)
-	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
-	logs.Info(b)
 	return common.StructSerialize(output), err
 }
 
