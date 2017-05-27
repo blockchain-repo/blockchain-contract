@@ -107,6 +107,9 @@ func ceChangefeed() {
 		gchInput <- string(slVote)
 		votes_changefeed_time.Send("votes_changefeed")
 	}
+	beegoLog.Error("--------------------------------------------------------")
+	beegoLog.Error("changfeed exit")
+	beegoLog.Error("--------------------------------------------------------")
 }
 
 //---------------------------------------------------------------------------
