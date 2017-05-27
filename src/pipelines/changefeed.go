@@ -27,19 +27,21 @@ func (c *ChangeFeed) runChangeFeed() {
 	res := r.Changefeed(c.db, c.table)
 	for res.Next(&value) {
 		m := value.(map[string]interface{})
-		isInsert := (m["new_val"] == nil)
-		isDelete := (m["old_val"] == nil)
+		//logs.Info(m)
+		isInsert := (m["old_val"] == nil)
+		isDelete := (m["new_val"] == nil)
 		isUpdate := !isInsert && !isDelete
+		//logs.Info(isInsert, isDelete, isUpdate)
 		if isInsert && ((c.operation & INSERT) != 0) {
-			logs.Info(c.table, "Changefeed result : %s", m["new_val"])
+			logs.Info(c.table, "insert Changefeed result : %s", m["new_val"])
 			c.node.output <- m["new_val"]
 		}
 		if isDelete && ((c.operation & DELETE) != 0) {
-			logs.Info(c.table, "Changefeed result : %s", m["old_val"])
+			logs.Info(c.table, "delete Changefeed result : %s", m["old_val"])
 			c.node.output <- m["old_val"]
 		}
 		if isUpdate && ((c.operation & UPDATE) != 0) {
-			logs.Info(c.table, "Changefeed result : %s", m["new_val"])
+			logs.Info(c.table, "update Changefeed result : %s", m["new_val"])
 			c.node.output <- m["new_val"]
 		}
 	}
