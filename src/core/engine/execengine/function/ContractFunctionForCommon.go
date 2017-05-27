@@ -41,6 +41,18 @@ func FuncTestMethod(args ...interface{}) (common.OperateResult, error) {
 }
 
 //资产转移方法
+/*
+  Desc:transfer asset, only generate the output,Not insert into the db
+  Args:
+  	0: ownerbefore(string):	the pubkey who transfer assets
+  	1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer.
+	2: contractStr(string):the contract str which this task execute
+	3: contractHashId(string): contractHashId
+	4: contractId(string): contractId
+	5: taskId(string): taskId
+	6: TaskExecuteIdx(int): TaskExecuteIdx
+	7: mainPubkey(string): the node pubkey which will freeze asset
+*/
 func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -115,6 +127,12 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+/*
+  Desc:transfer asset, update the output and insert into the db
+  Args:
+	0: contractStr(string): the return from the func `FuncTransferAsset`
+	1: taskStatus(string): the taskStatus need to update
+*/
 func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -134,10 +152,24 @@ func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error
 }
 
 //create asset
+/*
+  Desc:create asset, generate the output and insert into db
+  Args:
+  	0: ownerbefore(string):	the pubkey who transfer assets
+  	1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer. it should be nil
+	2: contractStr(string):the contract str which this task execute
+	3: contractHashId(string): contractHashId
+	4: contractId(string): contractId
+	5: taskId(string): taskId
+	6: TaskExecuteIdx(int): TaskExecuteIdx
+*/
 func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-
+	if len(args) != 7 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
 	//user provide
 	var ownerBefore string = args[0].(string)
 	var recipients [][2]interface{} = args[1].([][2]interface{})
@@ -164,10 +196,24 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+/*
+  Desc: generate an empty output as a interim, Not insert into the db
+  Args:
+  	0: ownerbefore(string):	the pubkey who transfer assets
+  	1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer. it should be nil
+	2: contractStr(string):the contract str which this task execute
+	3: contractHashId(string): contractHashId
+	4: contractId(string): contractId
+	5: taskId(string): taskId
+	6: TaskExecuteIdx(int): TaskExecuteIdx
+*/
 func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-
+	if len(args) != 5 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
 	var contractStr string = args[0].(string)
 	var contractHashId string = args[1].(string)
 	var contractId string = args[2].(string)
@@ -186,10 +232,19 @@ func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+/*
+  Desc:update tasksStatus in the empty output and insert into the db
+  Args:
+	0: contractStr(string): the return from the func `FuncInterim`
+	1: taskStatus(string): the taskStatus need to update
+*/
 func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-
+	if len(args) != 2 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
 	var contractOutPut string = args[0].(string)
 	var taskStatus string = args[1].(string)
 	outputStr, v_err := transaction.ExecuteInterimComplete(contractOutPut, taskStatus)
@@ -204,10 +259,25 @@ func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
 }
 
 //解冻资产方法
+/*
+  Desc: unfreeze the asset
+  Args:
+  	0: ownerbefore(string):	the pubkey who need unfereeze assets
+  	1: recipients([][2]interface{}): it should be nil here
+	2: contractStr(string):the contract str which the freeze task execute
+	3: contractHashId(string): contractHashId
+	4: contractId(string): contractId
+	5: taskId(string): taskId
+	6: TaskExecuteIdx(int): TaskExecuteIdx
+*/
 func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//userPubKey string, contractId string, taskId string, taskNum int
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
+	if len(args) != 7 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
 	//user provide
 	var ownerBefore string = args[0].(string)
 	var recipients [][2]interface{} = [][2]interface{}{}
@@ -241,11 +311,20 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//根据合约ContractID查找合约
+/*
+Desc:根据合约ContractID查找合约
+Args:
+	0: contract id
+return: only the operation of the output is "CONTRACT" ,get its contract model
+*/
 func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error) {
 	//contractId string
 	var v_err error = nil
 	v_result := common.OperateResult{}
+	if len(args) != 1 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
 	var conId string = args[0].(string)
 	conStr, v_err := transaction.ExecuteGetContract(conId)
 	if v_err != nil {
@@ -261,11 +340,21 @@ func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error
 	return v_result, v_err
 }
 
+/*
+Desc: check out is the output in unichain with the contracthashid
+Args:
+	0:contracthashid
+return:
+	true/false
+*/
 func FuncIsConPutInUnichian(args ...interface{}) (common.OperateResult, error) {
 
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-
+	if len(args) != 1 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
 	contractHashId := args[0].(string)
 
 	flag, v_err := transaction.IsOutputInUnichain(contractHashId)
