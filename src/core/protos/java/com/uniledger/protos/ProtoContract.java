@@ -6966,27 +6966,27 @@ public final class ProtoContract {
         int index);
 
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
     java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> 
-        getDisgardConditionList();
+        getDiscardConditionList();
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    com.uniledger.protos.ProtoContract.ComponentsExpression getDisgardCondition(int index);
+    com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index);
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    int getDisgardConditionCount();
+    int getDiscardConditionCount();
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
     java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-        getDisgardConditionOrBuilderList();
+        getDiscardConditionOrBuilderList();
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDisgardConditionOrBuilder(
+    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
         int index);
 
     /**
@@ -7245,7 +7245,7 @@ public final class ProtoContract {
       state_ = "";
       preCondition_ = java.util.Collections.emptyList();
       completeCondition_ = java.util.Collections.emptyList();
-      disgardCondition_ = java.util.Collections.emptyList();
+      discardCondition_ = java.util.Collections.emptyList();
       nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       dataList_ = java.util.Collections.emptyList();
       dataValueSetterExpressionList_ = java.util.Collections.emptyList();
@@ -7334,10 +7334,10 @@ public final class ProtoContract {
             }
             case 66: {
               if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-                disgardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
+                discardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
                 mutable_bitField0_ |= 0x00000080;
               }
-              disgardCondition_.add(
+              discardCondition_.add(
                   input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpression.parser(), extensionRegistry));
               break;
             }
@@ -7470,7 +7470,7 @@ public final class ProtoContract {
           completeCondition_ = java.util.Collections.unmodifiableList(completeCondition_);
         }
         if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-          disgardCondition_ = java.util.Collections.unmodifiableList(disgardCondition_);
+          discardCondition_ = java.util.Collections.unmodifiableList(discardCondition_);
         }
         if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
           nextTasks_ = nextTasks_.getUnmodifiableView();
@@ -7752,39 +7752,39 @@ public final class ProtoContract {
       return completeCondition_.get(index);
     }
 
-    public static final int DISGARDCONDITION_FIELD_NUMBER = 8;
-    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> disgardCondition_;
+    public static final int DISCARDCONDITION_FIELD_NUMBER = 8;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> discardCondition_;
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDisgardConditionList() {
-      return disgardCondition_;
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDiscardConditionList() {
+      return discardCondition_;
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
     public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-        getDisgardConditionOrBuilderList() {
-      return disgardCondition_;
+        getDiscardConditionOrBuilderList() {
+      return discardCondition_;
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public int getDisgardConditionCount() {
-      return disgardCondition_.size();
+    public int getDiscardConditionCount() {
+      return discardCondition_.size();
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentsExpression getDisgardCondition(int index) {
-      return disgardCondition_.get(index);
+    public com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index) {
+      return discardCondition_.get(index);
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDisgardConditionOrBuilder(
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
         int index) {
-      return disgardCondition_.get(index);
+      return discardCondition_.get(index);
     }
 
     public static final int NEXTTASKS_FIELD_NUMBER = 9;
@@ -8188,8 +8188,8 @@ public final class ProtoContract {
       for (int i = 0; i < completeCondition_.size(); i++) {
         output.writeMessage(7, completeCondition_.get(i));
       }
-      for (int i = 0; i < disgardCondition_.size(); i++) {
-        output.writeMessage(8, disgardCondition_.get(i));
+      for (int i = 0; i < discardCondition_.size(); i++) {
+        output.writeMessage(8, discardCondition_.get(i));
       }
       for (int i = 0; i < nextTasks_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, nextTasks_.getRaw(i));
@@ -8260,9 +8260,9 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, completeCondition_.get(i));
       }
-      for (int i = 0; i < disgardCondition_.size(); i++) {
+      for (int i = 0; i < discardCondition_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, disgardCondition_.get(i));
+          .computeMessageSize(8, discardCondition_.get(i));
       }
       {
         int dataSize = 0;
@@ -8365,8 +8365,8 @@ public final class ProtoContract {
           .equals(other.getPreConditionList());
       result = result && getCompleteConditionList()
           .equals(other.getCompleteConditionList());
-      result = result && getDisgardConditionList()
-          .equals(other.getDisgardConditionList());
+      result = result && getDiscardConditionList()
+          .equals(other.getDiscardConditionList());
       result = result && getNextTasksList()
           .equals(other.getNextTasksList());
       result = result && getDataListList()
@@ -8427,9 +8427,9 @@ public final class ProtoContract {
         hash = (37 * hash) + COMPLETECONDITION_FIELD_NUMBER;
         hash = (53 * hash) + getCompleteConditionList().hashCode();
       }
-      if (getDisgardConditionCount() > 0) {
-        hash = (37 * hash) + DISGARDCONDITION_FIELD_NUMBER;
-        hash = (53 * hash) + getDisgardConditionList().hashCode();
+      if (getDiscardConditionCount() > 0) {
+        hash = (37 * hash) + DISCARDCONDITION_FIELD_NUMBER;
+        hash = (53 * hash) + getDiscardConditionList().hashCode();
       }
       if (getNextTasksCount() > 0) {
         hash = (37 * hash) + NEXTTASKS_FIELD_NUMBER;
@@ -8593,7 +8593,7 @@ public final class ProtoContract {
                 .alwaysUseFieldBuilders) {
           getPreConditionFieldBuilder();
           getCompleteConditionFieldBuilder();
-          getDisgardConditionFieldBuilder();
+          getDiscardConditionFieldBuilder();
           getDataListFieldBuilder();
           getDataValueSetterExpressionListFieldBuilder();
           getSelectBranchesFieldBuilder();
@@ -8623,11 +8623,11 @@ public final class ProtoContract {
         } else {
           completeConditionBuilder_.clear();
         }
-        if (disgardConditionBuilder_ == null) {
-          disgardCondition_ = java.util.Collections.emptyList();
+        if (discardConditionBuilder_ == null) {
+          discardCondition_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000080);
         } else {
-          disgardConditionBuilder_.clear();
+          discardConditionBuilder_.clear();
         }
         nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
@@ -8722,14 +8722,14 @@ public final class ProtoContract {
         } else {
           result.completeCondition_ = completeConditionBuilder_.build();
         }
-        if (disgardConditionBuilder_ == null) {
+        if (discardConditionBuilder_ == null) {
           if (((bitField0_ & 0x00000080) == 0x00000080)) {
-            disgardCondition_ = java.util.Collections.unmodifiableList(disgardCondition_);
+            discardCondition_ = java.util.Collections.unmodifiableList(discardCondition_);
             bitField0_ = (bitField0_ & ~0x00000080);
           }
-          result.disgardCondition_ = disgardCondition_;
+          result.discardCondition_ = discardCondition_;
         } else {
-          result.disgardCondition_ = disgardConditionBuilder_.build();
+          result.discardCondition_ = discardConditionBuilder_.build();
         }
         if (((bitField0_ & 0x00000100) == 0x00000100)) {
           nextTasks_ = nextTasks_.getUnmodifiableView();
@@ -8910,29 +8910,29 @@ public final class ProtoContract {
             }
           }
         }
-        if (disgardConditionBuilder_ == null) {
-          if (!other.disgardCondition_.isEmpty()) {
-            if (disgardCondition_.isEmpty()) {
-              disgardCondition_ = other.disgardCondition_;
+        if (discardConditionBuilder_ == null) {
+          if (!other.discardCondition_.isEmpty()) {
+            if (discardCondition_.isEmpty()) {
+              discardCondition_ = other.discardCondition_;
               bitField0_ = (bitField0_ & ~0x00000080);
             } else {
-              ensureDisgardConditionIsMutable();
-              disgardCondition_.addAll(other.disgardCondition_);
+              ensureDiscardConditionIsMutable();
+              discardCondition_.addAll(other.discardCondition_);
             }
             onChanged();
           }
         } else {
-          if (!other.disgardCondition_.isEmpty()) {
-            if (disgardConditionBuilder_.isEmpty()) {
-              disgardConditionBuilder_.dispose();
-              disgardConditionBuilder_ = null;
-              disgardCondition_ = other.disgardCondition_;
+          if (!other.discardCondition_.isEmpty()) {
+            if (discardConditionBuilder_.isEmpty()) {
+              discardConditionBuilder_.dispose();
+              discardConditionBuilder_ = null;
+              discardCondition_ = other.discardCondition_;
               bitField0_ = (bitField0_ & ~0x00000080);
-              disgardConditionBuilder_ = 
+              discardConditionBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getDisgardConditionFieldBuilder() : null;
+                   getDiscardConditionFieldBuilder() : null;
             } else {
-              disgardConditionBuilder_.addAllMessages(other.disgardCondition_);
+              discardConditionBuilder_.addAllMessages(other.discardCondition_);
             }
           }
         }
@@ -9932,244 +9932,244 @@ public final class ProtoContract {
         return completeConditionBuilder_;
       }
 
-      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> disgardCondition_ =
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> discardCondition_ =
         java.util.Collections.emptyList();
-      private void ensureDisgardConditionIsMutable() {
+      private void ensureDiscardConditionIsMutable() {
         if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-          disgardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(disgardCondition_);
+          discardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(discardCondition_);
           bitField0_ |= 0x00000080;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> disgardConditionBuilder_;
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> discardConditionBuilder_;
 
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDisgardConditionList() {
-        if (disgardConditionBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(disgardCondition_);
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDiscardConditionList() {
+        if (discardConditionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(discardCondition_);
         } else {
-          return disgardConditionBuilder_.getMessageList();
+          return discardConditionBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public int getDisgardConditionCount() {
-        if (disgardConditionBuilder_ == null) {
-          return disgardCondition_.size();
+      public int getDiscardConditionCount() {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.size();
         } else {
-          return disgardConditionBuilder_.getCount();
+          return discardConditionBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression getDisgardCondition(int index) {
-        if (disgardConditionBuilder_ == null) {
-          return disgardCondition_.get(index);
+      public com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index) {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.get(index);
         } else {
-          return disgardConditionBuilder_.getMessage(index);
+          return discardConditionBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder setDisgardCondition(
+      public Builder setDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
-        if (disgardConditionBuilder_ == null) {
+        if (discardConditionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.set(index, value);
+          ensureDiscardConditionIsMutable();
+          discardCondition_.set(index, value);
           onChanged();
         } else {
-          disgardConditionBuilder_.setMessage(index, value);
+          discardConditionBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder setDisgardCondition(
+      public Builder setDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.set(index, builderForValue.build());
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.set(index, builderForValue.build());
           onChanged();
         } else {
-          disgardConditionBuilder_.setMessage(index, builderForValue.build());
+          discardConditionBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
-        if (disgardConditionBuilder_ == null) {
+      public Builder addDiscardCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (discardConditionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(value);
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(value);
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(value);
+          discardConditionBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(
+      public Builder addDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
-        if (disgardConditionBuilder_ == null) {
+        if (discardConditionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(index, value);
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(index, value);
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(index, value);
+          discardConditionBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(
+      public Builder addDiscardCondition(
           com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(builderForValue.build());
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(builderForValue.build());
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(builderForValue.build());
+          discardConditionBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(
+      public Builder addDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(index, builderForValue.build());
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(index, builderForValue.build());
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(index, builderForValue.build());
+          discardConditionBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addAllDisgardCondition(
+      public Builder addAllDiscardCondition(
           java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentsExpression> values) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, disgardCondition_);
+              values, discardCondition_);
           onChanged();
         } else {
-          disgardConditionBuilder_.addAllMessages(values);
+          discardConditionBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder clearDisgardCondition() {
-        if (disgardConditionBuilder_ == null) {
-          disgardCondition_ = java.util.Collections.emptyList();
+      public Builder clearDiscardCondition() {
+        if (discardConditionBuilder_ == null) {
+          discardCondition_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000080);
           onChanged();
         } else {
-          disgardConditionBuilder_.clear();
+          discardConditionBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder removeDisgardCondition(int index) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.remove(index);
+      public Builder removeDiscardCondition(int index) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.remove(index);
           onChanged();
         } else {
-          disgardConditionBuilder_.remove(index);
+          discardConditionBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getDisgardConditionBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getDiscardConditionBuilder(
           int index) {
-        return getDisgardConditionFieldBuilder().getBuilder(index);
+        return getDiscardConditionFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDisgardConditionOrBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
           int index) {
-        if (disgardConditionBuilder_ == null) {
-          return disgardCondition_.get(index);  } else {
-          return disgardConditionBuilder_.getMessageOrBuilder(index);
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.get(index);  } else {
+          return discardConditionBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
       public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-           getDisgardConditionOrBuilderList() {
-        if (disgardConditionBuilder_ != null) {
-          return disgardConditionBuilder_.getMessageOrBuilderList();
+           getDiscardConditionOrBuilderList() {
+        if (discardConditionBuilder_ != null) {
+          return discardConditionBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(disgardCondition_);
+          return java.util.Collections.unmodifiableList(discardCondition_);
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDisgardConditionBuilder() {
-        return getDisgardConditionFieldBuilder().addBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDiscardConditionBuilder() {
+        return getDiscardConditionFieldBuilder().addBuilder(
             com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDisgardConditionBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDiscardConditionBuilder(
           int index) {
-        return getDisgardConditionFieldBuilder().addBuilder(
+        return getDiscardConditionFieldBuilder().addBuilder(
             index, com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
       public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression.Builder> 
-           getDisgardConditionBuilderList() {
-        return getDisgardConditionFieldBuilder().getBuilderList();
+           getDiscardConditionBuilderList() {
+        return getDiscardConditionFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
           com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-          getDisgardConditionFieldBuilder() {
-        if (disgardConditionBuilder_ == null) {
-          disgardConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getDiscardConditionFieldBuilder() {
+        if (discardConditionBuilder_ == null) {
+          discardConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder>(
-                  disgardCondition_,
+                  discardCondition_,
                   ((bitField0_ & 0x00000080) == 0x00000080),
                   getParentForChildren(),
                   isClean());
-          disgardCondition_ = null;
+          discardCondition_ = null;
         }
-        return disgardConditionBuilder_;
+        return discardConditionBuilder_;
       }
 
       private com.google.protobuf.LazyStringList nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -16977,7 +16977,7 @@ public final class ProtoContract {
       "escription\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCo" +
       "ndition\030\006 \003(\0132\034.protos.ComponentsExpress" +
       "ion\0227\n\021CompleteCondition\030\007 \003(\0132\034.protos." +
-      "ComponentsExpression\0226\n\020DisgardCondition" +
+      "ComponentsExpression\0226\n\020DiscardCondition" +
       "\030\010 \003(\0132\034.protos.ComponentsExpression\022\021\n\t" +
       "NextTasks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.prot",
       "os.ComponentData\022C\n\035DataValueSetterExpre" +
@@ -17067,7 +17067,7 @@ public final class ProtoContract {
     internal_static_protos_ContractComponent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponent_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DisgardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DiscardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
     internal_static_protos_ContractBody_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_protos_ContractBody_fieldAccessorTable = new

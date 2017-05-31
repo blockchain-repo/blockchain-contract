@@ -1690,7 +1690,7 @@ proto.protos.ContractComponent.toObject = function(includeInstance, msg) {
     proto.protos.ComponentsExpression.toObject, includeInstance),
     completeconditionList: jspb.Message.toObjectList(msg.getCompleteconditionList(),
     proto.protos.ComponentsExpression.toObject, includeInstance),
-    disgardconditionList: jspb.Message.toObjectList(msg.getDisgardconditionList(),
+    discardconditionList: jspb.Message.toObjectList(msg.getDiscardconditionList(),
     proto.protos.ComponentsExpression.toObject, includeInstance),
     nexttasksList: jspb.Message.getField(msg, 9),
     datalistList: jspb.Message.toObjectList(msg.getDatalistList(),
@@ -1777,7 +1777,7 @@ proto.protos.ContractComponent.deserializeBinaryFromReader = function(msg, reade
     case 8:
       var value = new proto.protos.ComponentsExpression;
       reader.readMessage(value,proto.protos.ComponentsExpression.deserializeBinaryFromReader);
-      msg.addDisgardcondition(value);
+      msg.addDiscardcondition(value);
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
@@ -1915,7 +1915,7 @@ proto.protos.ContractComponent.serializeBinaryToWriter = function(message, write
       proto.protos.ComponentsExpression.serializeBinaryToWriter
     );
   }
-  f = message.getDisgardconditionList();
+  f = message.getDiscardconditionList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       8,
@@ -2164,19 +2164,19 @@ proto.protos.ContractComponent.prototype.clearCompleteconditionList = function()
 
 
 /**
- * repeated ComponentsExpression DisgardCondition = 8;
+ * repeated ComponentsExpression DiscardCondition = 8;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<!proto.protos.ComponentsExpression>}
  */
-proto.protos.ContractComponent.prototype.getDisgardconditionList = function() {
+proto.protos.ContractComponent.prototype.getDiscardconditionList = function() {
   return /** @type{!Array.<!proto.protos.ComponentsExpression>} */ (
     jspb.Message.getRepeatedWrapperField(this, proto.protos.ComponentsExpression, 8));
 };
 
 
 /** @param {!Array.<!proto.protos.ComponentsExpression>} value */
-proto.protos.ContractComponent.prototype.setDisgardconditionList = function(value) {
+proto.protos.ContractComponent.prototype.setDiscardconditionList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 8, value);
 };
 
@@ -2186,13 +2186,13 @@ proto.protos.ContractComponent.prototype.setDisgardconditionList = function(valu
  * @param {number=} opt_index
  * @return {!proto.protos.ComponentsExpression}
  */
-proto.protos.ContractComponent.prototype.addDisgardcondition = function(opt_value, opt_index) {
+proto.protos.ContractComponent.prototype.addDiscardcondition = function(opt_value, opt_index) {
   return jspb.Message.addToRepeatedWrapperField(this, 8, opt_value, proto.protos.ComponentsExpression, opt_index);
 };
 
 
-proto.protos.ContractComponent.prototype.clearDisgardconditionList = function() {
-  this.setDisgardconditionList([]);
+proto.protos.ContractComponent.prototype.clearDiscardconditionList = function() {
+  this.setDiscardconditionList([]);
 };
 
 

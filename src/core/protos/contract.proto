@@ -69,7 +69,7 @@ message ContractComponent{
     string State = 5;
     repeated ComponentsExpression PreCondition= 6;
     repeated ComponentsExpression CompleteCondition = 7;
-    repeated ComponentsExpression DisgardCondition = 8;
+    repeated ComponentsExpression DiscardCondition = 8;
     repeated string NextTasks = 9;
     repeated ComponentData DataList = 10;
     repeated ComponentsExpression DataValueSetterExpressionList = 11;
