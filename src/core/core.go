@@ -15,7 +15,7 @@ func WriteContract(contract model.ContractModel) bool {
 	pubs := config.GetAllPublicKey()
 
 	contract.ContractHead.MainPubkey = pubs[rand.Intn(len(pubs))]
-	contract.ContractHead.OperateTime = common.GenTimestamp()
+	contract.ContractHead.AssignTime = common.GenTimestamp()
 	ok := r.InsertContract(contract.ToString())
 	return ok
 }
