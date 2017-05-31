@@ -143,7 +143,7 @@ func getTxChangefeed() *ChangeFeed {
 	change := &ChangeFeed{
 		db:        "Unicontract",
 		table:     "ContractOutputs",
-		operation: []string{"insert"},
+		operation: INSERT | UPDATE,
 	}
 	go change.runForever()
 	return change

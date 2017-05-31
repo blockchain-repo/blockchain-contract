@@ -123,6 +123,7 @@ func UpdateTaskStauts(contractModel *model.ContractOutput, taskId string, taskSt
 			task[index].State = taskStatus
 		}
 	}
+	contractModel.Id = common.HashData(common.StructSerialize(contractModel))
 }
 
 func ExecuteGetContract(contractId string) (string, error) {

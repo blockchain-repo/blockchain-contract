@@ -6223,6 +6223,646 @@ public final class ProtoContract {
 
   }
 
+  public interface SelectBranchExpressionOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.SelectBranchExpression)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string BranchExpressionStr = 1;</code>
+     */
+    java.lang.String getBranchExpressionStr();
+    /**
+     * <code>string BranchExpressionStr = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getBranchExpressionStrBytes();
+
+    /**
+     * <code>string BranchExpressionValue = 2;</code>
+     */
+    java.lang.String getBranchExpressionValue();
+    /**
+     * <code>string BranchExpressionValue = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getBranchExpressionValueBytes();
+  }
+  /**
+   * Protobuf type {@code protos.SelectBranchExpression}
+   */
+  public  static final class SelectBranchExpression extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.SelectBranchExpression)
+      SelectBranchExpressionOrBuilder {
+    // Use SelectBranchExpression.newBuilder() to construct.
+    private SelectBranchExpression(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SelectBranchExpression() {
+      branchExpressionStr_ = "";
+      branchExpressionValue_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private SelectBranchExpression(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              branchExpressionStr_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              branchExpressionValue_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_SelectBranchExpression_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_SelectBranchExpression_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.uniledger.protos.ProtoContract.SelectBranchExpression.class, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder.class);
+    }
+
+    public static final int BRANCHEXPRESSIONSTR_FIELD_NUMBER = 1;
+    private volatile java.lang.Object branchExpressionStr_;
+    /**
+     * <code>string BranchExpressionStr = 1;</code>
+     */
+    public java.lang.String getBranchExpressionStr() {
+      java.lang.Object ref = branchExpressionStr_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        branchExpressionStr_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string BranchExpressionStr = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getBranchExpressionStrBytes() {
+      java.lang.Object ref = branchExpressionStr_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        branchExpressionStr_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int BRANCHEXPRESSIONVALUE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object branchExpressionValue_;
+    /**
+     * <code>string BranchExpressionValue = 2;</code>
+     */
+    public java.lang.String getBranchExpressionValue() {
+      java.lang.Object ref = branchExpressionValue_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        branchExpressionValue_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string BranchExpressionValue = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getBranchExpressionValueBytes() {
+      java.lang.Object ref = branchExpressionValue_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        branchExpressionValue_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getBranchExpressionStrBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, branchExpressionStr_);
+      }
+      if (!getBranchExpressionValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, branchExpressionValue_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getBranchExpressionStrBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, branchExpressionStr_);
+      }
+      if (!getBranchExpressionValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, branchExpressionValue_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.uniledger.protos.ProtoContract.SelectBranchExpression)) {
+        return super.equals(obj);
+      }
+      com.uniledger.protos.ProtoContract.SelectBranchExpression other = (com.uniledger.protos.ProtoContract.SelectBranchExpression) obj;
+
+      boolean result = true;
+      result = result && getBranchExpressionStr()
+          .equals(other.getBranchExpressionStr());
+      result = result && getBranchExpressionValue()
+          .equals(other.getBranchExpressionValue());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + BRANCHEXPRESSIONSTR_FIELD_NUMBER;
+      hash = (53 * hash) + getBranchExpressionStr().hashCode();
+      hash = (37 * hash) + BRANCHEXPRESSIONVALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getBranchExpressionValue().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.uniledger.protos.ProtoContract.SelectBranchExpression prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.SelectBranchExpression}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.SelectBranchExpression)
+        com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_SelectBranchExpression_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_SelectBranchExpression_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.uniledger.protos.ProtoContract.SelectBranchExpression.class, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder.class);
+      }
+
+      // Construct using com.uniledger.protos.ProtoContract.SelectBranchExpression.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        branchExpressionStr_ = "";
+
+        branchExpressionValue_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_SelectBranchExpression_descriptor;
+      }
+
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression getDefaultInstanceForType() {
+        return com.uniledger.protos.ProtoContract.SelectBranchExpression.getDefaultInstance();
+      }
+
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression build() {
+        com.uniledger.protos.ProtoContract.SelectBranchExpression result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression buildPartial() {
+        com.uniledger.protos.ProtoContract.SelectBranchExpression result = new com.uniledger.protos.ProtoContract.SelectBranchExpression(this);
+        result.branchExpressionStr_ = branchExpressionStr_;
+        result.branchExpressionValue_ = branchExpressionValue_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.uniledger.protos.ProtoContract.SelectBranchExpression) {
+          return mergeFrom((com.uniledger.protos.ProtoContract.SelectBranchExpression)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.uniledger.protos.ProtoContract.SelectBranchExpression other) {
+        if (other == com.uniledger.protos.ProtoContract.SelectBranchExpression.getDefaultInstance()) return this;
+        if (!other.getBranchExpressionStr().isEmpty()) {
+          branchExpressionStr_ = other.branchExpressionStr_;
+          onChanged();
+        }
+        if (!other.getBranchExpressionValue().isEmpty()) {
+          branchExpressionValue_ = other.branchExpressionValue_;
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.uniledger.protos.ProtoContract.SelectBranchExpression parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.uniledger.protos.ProtoContract.SelectBranchExpression) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object branchExpressionStr_ = "";
+      /**
+       * <code>string BranchExpressionStr = 1;</code>
+       */
+      public java.lang.String getBranchExpressionStr() {
+        java.lang.Object ref = branchExpressionStr_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          branchExpressionStr_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string BranchExpressionStr = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getBranchExpressionStrBytes() {
+        java.lang.Object ref = branchExpressionStr_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          branchExpressionStr_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string BranchExpressionStr = 1;</code>
+       */
+      public Builder setBranchExpressionStr(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        branchExpressionStr_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string BranchExpressionStr = 1;</code>
+       */
+      public Builder clearBranchExpressionStr() {
+        
+        branchExpressionStr_ = getDefaultInstance().getBranchExpressionStr();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string BranchExpressionStr = 1;</code>
+       */
+      public Builder setBranchExpressionStrBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        branchExpressionStr_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object branchExpressionValue_ = "";
+      /**
+       * <code>string BranchExpressionValue = 2;</code>
+       */
+      public java.lang.String getBranchExpressionValue() {
+        java.lang.Object ref = branchExpressionValue_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          branchExpressionValue_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string BranchExpressionValue = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getBranchExpressionValueBytes() {
+        java.lang.Object ref = branchExpressionValue_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          branchExpressionValue_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string BranchExpressionValue = 2;</code>
+       */
+      public Builder setBranchExpressionValue(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        branchExpressionValue_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string BranchExpressionValue = 2;</code>
+       */
+      public Builder clearBranchExpressionValue() {
+        
+        branchExpressionValue_ = getDefaultInstance().getBranchExpressionValue();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string BranchExpressionValue = 2;</code>
+       */
+      public Builder setBranchExpressionValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        branchExpressionValue_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.SelectBranchExpression)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.SelectBranchExpression)
+    private static final com.uniledger.protos.ProtoContract.SelectBranchExpression DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.uniledger.protos.ProtoContract.SelectBranchExpression();
+    }
+
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SelectBranchExpression>
+        PARSER = new com.google.protobuf.AbstractParser<SelectBranchExpression>() {
+      public SelectBranchExpression parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new SelectBranchExpression(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SelectBranchExpression> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SelectBranchExpression> getParserForType() {
+      return PARSER;
+    }
+
+    public com.uniledger.protos.ProtoContract.SelectBranchExpression getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ContractComponentOrBuilder extends
       // @@protoc_insertion_point(interface_extends:protos.ContractComponent)
       com.google.protobuf.MessageOrBuilder {
@@ -6326,27 +6966,27 @@ public final class ProtoContract {
         int index);
 
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
     java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> 
-        getDisgardConditionList();
+        getDiscardConditionList();
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    com.uniledger.protos.ProtoContract.ComponentsExpression getDisgardCondition(int index);
+    com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index);
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    int getDisgardConditionCount();
+    int getDiscardConditionCount();
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
     java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-        getDisgardConditionOrBuilderList();
+        getDiscardConditionOrBuilderList();
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDisgardConditionOrBuilder(
+    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
         int index);
 
     /**
@@ -6541,6 +7181,50 @@ public final class ProtoContract {
      */
     com.google.protobuf.ByteString
         getTaskIdBytes();
+
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> 
+        getSelectBranchesList();
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    com.uniledger.protos.ProtoContract.SelectBranchExpression getSelectBranches(int index);
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    int getSelectBranchesCount();
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+        getSelectBranchesOrBuilderList();
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder getSelectBranchesOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code protos.ContractComponent}
@@ -6561,7 +7245,7 @@ public final class ProtoContract {
       state_ = "";
       preCondition_ = java.util.Collections.emptyList();
       completeCondition_ = java.util.Collections.emptyList();
-      disgardCondition_ = java.util.Collections.emptyList();
+      discardCondition_ = java.util.Collections.emptyList();
       nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       dataList_ = java.util.Collections.emptyList();
       dataValueSetterExpressionList_ = java.util.Collections.emptyList();
@@ -6572,6 +7256,7 @@ public final class ProtoContract {
       text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       taskExecuteIdx_ = 0;
       taskId_ = "";
+      selectBranches_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -6649,10 +7334,10 @@ public final class ProtoContract {
             }
             case 66: {
               if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-                disgardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
+                discardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
                 mutable_bitField0_ |= 0x00000080;
               }
-              disgardCondition_.add(
+              discardCondition_.add(
                   input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpression.parser(), extensionRegistry));
               break;
             }
@@ -6761,6 +7446,15 @@ public final class ProtoContract {
               taskId_ = s;
               break;
             }
+            case 170: {
+              if (!((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
+                selectBranches_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.SelectBranchExpression>();
+                mutable_bitField0_ |= 0x00100000;
+              }
+              selectBranches_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.SelectBranchExpression.parser(), extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -6776,7 +7470,7 @@ public final class ProtoContract {
           completeCondition_ = java.util.Collections.unmodifiableList(completeCondition_);
         }
         if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-          disgardCondition_ = java.util.Collections.unmodifiableList(disgardCondition_);
+          discardCondition_ = java.util.Collections.unmodifiableList(discardCondition_);
         }
         if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
           nextTasks_ = nextTasks_.getUnmodifiableView();
@@ -6798,6 +7492,9 @@ public final class ProtoContract {
         }
         if (((mutable_bitField0_ & 0x00020000) == 0x00020000)) {
           text_ = text_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
+          selectBranches_ = java.util.Collections.unmodifiableList(selectBranches_);
         }
         makeExtensionsImmutable();
       }
@@ -7055,39 +7752,39 @@ public final class ProtoContract {
       return completeCondition_.get(index);
     }
 
-    public static final int DISGARDCONDITION_FIELD_NUMBER = 8;
-    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> disgardCondition_;
+    public static final int DISCARDCONDITION_FIELD_NUMBER = 8;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> discardCondition_;
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDisgardConditionList() {
-      return disgardCondition_;
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDiscardConditionList() {
+      return discardCondition_;
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
     public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-        getDisgardConditionOrBuilderList() {
-      return disgardCondition_;
+        getDiscardConditionOrBuilderList() {
+      return discardCondition_;
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public int getDisgardConditionCount() {
-      return disgardCondition_.size();
+    public int getDiscardConditionCount() {
+      return discardCondition_.size();
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentsExpression getDisgardCondition(int index) {
-      return disgardCondition_.get(index);
+    public com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index) {
+      return discardCondition_.get(index);
     }
     /**
-     * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDisgardConditionOrBuilder(
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
         int index) {
-      return disgardCondition_.get(index);
+      return discardCondition_.get(index);
     }
 
     public static final int NEXTTASKS_FIELD_NUMBER = 9;
@@ -7403,6 +8100,61 @@ public final class ProtoContract {
       }
     }
 
+    public static final int SELECTBRANCHES_FIELD_NUMBER = 21;
+    private java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> selectBranches_;
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> getSelectBranchesList() {
+      return selectBranches_;
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+        getSelectBranchesOrBuilderList() {
+      return selectBranches_;
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public int getSelectBranchesCount() {
+      return selectBranches_.size();
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public com.uniledger.protos.ProtoContract.SelectBranchExpression getSelectBranches(int index) {
+      return selectBranches_.get(index);
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder getSelectBranchesOrBuilder(
+        int index) {
+      return selectBranches_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -7436,8 +8188,8 @@ public final class ProtoContract {
       for (int i = 0; i < completeCondition_.size(); i++) {
         output.writeMessage(7, completeCondition_.get(i));
       }
-      for (int i = 0; i < disgardCondition_.size(); i++) {
-        output.writeMessage(8, disgardCondition_.get(i));
+      for (int i = 0; i < discardCondition_.size(); i++) {
+        output.writeMessage(8, discardCondition_.get(i));
       }
       for (int i = 0; i < nextTasks_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, nextTasks_.getRaw(i));
@@ -7475,6 +8227,9 @@ public final class ProtoContract {
       if (!getTaskIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 20, taskId_);
       }
+      for (int i = 0; i < selectBranches_.size(); i++) {
+        output.writeMessage(21, selectBranches_.get(i));
+      }
     }
 
     public int getSerializedSize() {
@@ -7505,9 +8260,9 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, completeCondition_.get(i));
       }
-      for (int i = 0; i < disgardCondition_.size(); i++) {
+      for (int i = 0; i < discardCondition_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, disgardCondition_.get(i));
+          .computeMessageSize(8, discardCondition_.get(i));
       }
       {
         int dataSize = 0;
@@ -7576,6 +8331,10 @@ public final class ProtoContract {
       if (!getTaskIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, taskId_);
       }
+      for (int i = 0; i < selectBranches_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(21, selectBranches_.get(i));
+      }
       memoizedSize = size;
       return size;
     }
@@ -7606,8 +8365,8 @@ public final class ProtoContract {
           .equals(other.getPreConditionList());
       result = result && getCompleteConditionList()
           .equals(other.getCompleteConditionList());
-      result = result && getDisgardConditionList()
-          .equals(other.getDisgardConditionList());
+      result = result && getDiscardConditionList()
+          .equals(other.getDiscardConditionList());
       result = result && getNextTasksList()
           .equals(other.getNextTasksList());
       result = result && getDataListList()
@@ -7638,6 +8397,8 @@ public final class ProtoContract {
           == other.getTaskExecuteIdx());
       result = result && getTaskId()
           .equals(other.getTaskId());
+      result = result && getSelectBranchesList()
+          .equals(other.getSelectBranchesList());
       return result;
     }
 
@@ -7666,9 +8427,9 @@ public final class ProtoContract {
         hash = (37 * hash) + COMPLETECONDITION_FIELD_NUMBER;
         hash = (53 * hash) + getCompleteConditionList().hashCode();
       }
-      if (getDisgardConditionCount() > 0) {
-        hash = (37 * hash) + DISGARDCONDITION_FIELD_NUMBER;
-        hash = (53 * hash) + getDisgardConditionList().hashCode();
+      if (getDiscardConditionCount() > 0) {
+        hash = (37 * hash) + DISCARDCONDITION_FIELD_NUMBER;
+        hash = (53 * hash) + getDiscardConditionList().hashCode();
       }
       if (getNextTasksCount() > 0) {
         hash = (37 * hash) + NEXTTASKS_FIELD_NUMBER;
@@ -7712,6 +8473,10 @@ public final class ProtoContract {
       hash = (53 * hash) + getTaskExecuteIdx();
       hash = (37 * hash) + TASKID_FIELD_NUMBER;
       hash = (53 * hash) + getTaskId().hashCode();
+      if (getSelectBranchesCount() > 0) {
+        hash = (37 * hash) + SELECTBRANCHES_FIELD_NUMBER;
+        hash = (53 * hash) + getSelectBranchesList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7828,9 +8593,10 @@ public final class ProtoContract {
                 .alwaysUseFieldBuilders) {
           getPreConditionFieldBuilder();
           getCompleteConditionFieldBuilder();
-          getDisgardConditionFieldBuilder();
+          getDiscardConditionFieldBuilder();
           getDataListFieldBuilder();
           getDataValueSetterExpressionListFieldBuilder();
+          getSelectBranchesFieldBuilder();
         }
       }
       public Builder clear() {
@@ -7857,11 +8623,11 @@ public final class ProtoContract {
         } else {
           completeConditionBuilder_.clear();
         }
-        if (disgardConditionBuilder_ == null) {
-          disgardCondition_ = java.util.Collections.emptyList();
+        if (discardConditionBuilder_ == null) {
+          discardCondition_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000080);
         } else {
-          disgardConditionBuilder_.clear();
+          discardConditionBuilder_.clear();
         }
         nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
@@ -7903,6 +8669,12 @@ public final class ProtoContract {
 
         taskId_ = "";
 
+        if (selectBranchesBuilder_ == null) {
+          selectBranches_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00100000);
+        } else {
+          selectBranchesBuilder_.clear();
+        }
         return this;
       }
 
@@ -7950,14 +8722,14 @@ public final class ProtoContract {
         } else {
           result.completeCondition_ = completeConditionBuilder_.build();
         }
-        if (disgardConditionBuilder_ == null) {
+        if (discardConditionBuilder_ == null) {
           if (((bitField0_ & 0x00000080) == 0x00000080)) {
-            disgardCondition_ = java.util.Collections.unmodifiableList(disgardCondition_);
+            discardCondition_ = java.util.Collections.unmodifiableList(discardCondition_);
             bitField0_ = (bitField0_ & ~0x00000080);
           }
-          result.disgardCondition_ = disgardCondition_;
+          result.discardCondition_ = discardCondition_;
         } else {
-          result.disgardCondition_ = disgardConditionBuilder_.build();
+          result.discardCondition_ = discardConditionBuilder_.build();
         }
         if (((bitField0_ & 0x00000100) == 0x00000100)) {
           nextTasks_ = nextTasks_.getUnmodifiableView();
@@ -8015,6 +8787,15 @@ public final class ProtoContract {
         result.text_ = text_;
         result.taskExecuteIdx_ = taskExecuteIdx_;
         result.taskId_ = taskId_;
+        if (selectBranchesBuilder_ == null) {
+          if (((bitField0_ & 0x00100000) == 0x00100000)) {
+            selectBranches_ = java.util.Collections.unmodifiableList(selectBranches_);
+            bitField0_ = (bitField0_ & ~0x00100000);
+          }
+          result.selectBranches_ = selectBranches_;
+        } else {
+          result.selectBranches_ = selectBranchesBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8129,29 +8910,29 @@ public final class ProtoContract {
             }
           }
         }
-        if (disgardConditionBuilder_ == null) {
-          if (!other.disgardCondition_.isEmpty()) {
-            if (disgardCondition_.isEmpty()) {
-              disgardCondition_ = other.disgardCondition_;
+        if (discardConditionBuilder_ == null) {
+          if (!other.discardCondition_.isEmpty()) {
+            if (discardCondition_.isEmpty()) {
+              discardCondition_ = other.discardCondition_;
               bitField0_ = (bitField0_ & ~0x00000080);
             } else {
-              ensureDisgardConditionIsMutable();
-              disgardCondition_.addAll(other.disgardCondition_);
+              ensureDiscardConditionIsMutable();
+              discardCondition_.addAll(other.discardCondition_);
             }
             onChanged();
           }
         } else {
-          if (!other.disgardCondition_.isEmpty()) {
-            if (disgardConditionBuilder_.isEmpty()) {
-              disgardConditionBuilder_.dispose();
-              disgardConditionBuilder_ = null;
-              disgardCondition_ = other.disgardCondition_;
+          if (!other.discardCondition_.isEmpty()) {
+            if (discardConditionBuilder_.isEmpty()) {
+              discardConditionBuilder_.dispose();
+              discardConditionBuilder_ = null;
+              discardCondition_ = other.discardCondition_;
               bitField0_ = (bitField0_ & ~0x00000080);
-              disgardConditionBuilder_ = 
+              discardConditionBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getDisgardConditionFieldBuilder() : null;
+                   getDiscardConditionFieldBuilder() : null;
             } else {
-              disgardConditionBuilder_.addAllMessages(other.disgardCondition_);
+              discardConditionBuilder_.addAllMessages(other.discardCondition_);
             }
           }
         }
@@ -8272,6 +9053,32 @@ public final class ProtoContract {
         if (!other.getTaskId().isEmpty()) {
           taskId_ = other.taskId_;
           onChanged();
+        }
+        if (selectBranchesBuilder_ == null) {
+          if (!other.selectBranches_.isEmpty()) {
+            if (selectBranches_.isEmpty()) {
+              selectBranches_ = other.selectBranches_;
+              bitField0_ = (bitField0_ & ~0x00100000);
+            } else {
+              ensureSelectBranchesIsMutable();
+              selectBranches_.addAll(other.selectBranches_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.selectBranches_.isEmpty()) {
+            if (selectBranchesBuilder_.isEmpty()) {
+              selectBranchesBuilder_.dispose();
+              selectBranchesBuilder_ = null;
+              selectBranches_ = other.selectBranches_;
+              bitField0_ = (bitField0_ & ~0x00100000);
+              selectBranchesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getSelectBranchesFieldBuilder() : null;
+            } else {
+              selectBranchesBuilder_.addAllMessages(other.selectBranches_);
+            }
+          }
         }
         onChanged();
         return this;
@@ -9125,244 +9932,244 @@ public final class ProtoContract {
         return completeConditionBuilder_;
       }
 
-      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> disgardCondition_ =
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> discardCondition_ =
         java.util.Collections.emptyList();
-      private void ensureDisgardConditionIsMutable() {
+      private void ensureDiscardConditionIsMutable() {
         if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-          disgardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(disgardCondition_);
+          discardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(discardCondition_);
           bitField0_ |= 0x00000080;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> disgardConditionBuilder_;
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> discardConditionBuilder_;
 
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDisgardConditionList() {
-        if (disgardConditionBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(disgardCondition_);
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDiscardConditionList() {
+        if (discardConditionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(discardCondition_);
         } else {
-          return disgardConditionBuilder_.getMessageList();
+          return discardConditionBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public int getDisgardConditionCount() {
-        if (disgardConditionBuilder_ == null) {
-          return disgardCondition_.size();
+      public int getDiscardConditionCount() {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.size();
         } else {
-          return disgardConditionBuilder_.getCount();
+          return discardConditionBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression getDisgardCondition(int index) {
-        if (disgardConditionBuilder_ == null) {
-          return disgardCondition_.get(index);
+      public com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index) {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.get(index);
         } else {
-          return disgardConditionBuilder_.getMessage(index);
+          return discardConditionBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder setDisgardCondition(
+      public Builder setDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
-        if (disgardConditionBuilder_ == null) {
+        if (discardConditionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.set(index, value);
+          ensureDiscardConditionIsMutable();
+          discardCondition_.set(index, value);
           onChanged();
         } else {
-          disgardConditionBuilder_.setMessage(index, value);
+          discardConditionBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder setDisgardCondition(
+      public Builder setDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.set(index, builderForValue.build());
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.set(index, builderForValue.build());
           onChanged();
         } else {
-          disgardConditionBuilder_.setMessage(index, builderForValue.build());
+          discardConditionBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
-        if (disgardConditionBuilder_ == null) {
+      public Builder addDiscardCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (discardConditionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(value);
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(value);
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(value);
+          discardConditionBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(
+      public Builder addDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
-        if (disgardConditionBuilder_ == null) {
+        if (discardConditionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(index, value);
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(index, value);
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(index, value);
+          discardConditionBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(
+      public Builder addDiscardCondition(
           com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(builderForValue.build());
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(builderForValue.build());
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(builderForValue.build());
+          discardConditionBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addDisgardCondition(
+      public Builder addDiscardCondition(
           int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.add(index, builderForValue.build());
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(index, builderForValue.build());
           onChanged();
         } else {
-          disgardConditionBuilder_.addMessage(index, builderForValue.build());
+          discardConditionBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder addAllDisgardCondition(
+      public Builder addAllDiscardCondition(
           java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentsExpression> values) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, disgardCondition_);
+              values, discardCondition_);
           onChanged();
         } else {
-          disgardConditionBuilder_.addAllMessages(values);
+          discardConditionBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder clearDisgardCondition() {
-        if (disgardConditionBuilder_ == null) {
-          disgardCondition_ = java.util.Collections.emptyList();
+      public Builder clearDiscardCondition() {
+        if (discardConditionBuilder_ == null) {
+          discardCondition_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000080);
           onChanged();
         } else {
-          disgardConditionBuilder_.clear();
+          discardConditionBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public Builder removeDisgardCondition(int index) {
-        if (disgardConditionBuilder_ == null) {
-          ensureDisgardConditionIsMutable();
-          disgardCondition_.remove(index);
+      public Builder removeDiscardCondition(int index) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.remove(index);
           onChanged();
         } else {
-          disgardConditionBuilder_.remove(index);
+          discardConditionBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getDisgardConditionBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getDiscardConditionBuilder(
           int index) {
-        return getDisgardConditionFieldBuilder().getBuilder(index);
+        return getDiscardConditionFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDisgardConditionOrBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
           int index) {
-        if (disgardConditionBuilder_ == null) {
-          return disgardCondition_.get(index);  } else {
-          return disgardConditionBuilder_.getMessageOrBuilder(index);
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.get(index);  } else {
+          return discardConditionBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
       public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-           getDisgardConditionOrBuilderList() {
-        if (disgardConditionBuilder_ != null) {
-          return disgardConditionBuilder_.getMessageOrBuilderList();
+           getDiscardConditionOrBuilderList() {
+        if (discardConditionBuilder_ != null) {
+          return discardConditionBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(disgardCondition_);
+          return java.util.Collections.unmodifiableList(discardCondition_);
         }
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDisgardConditionBuilder() {
-        return getDisgardConditionFieldBuilder().addBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDiscardConditionBuilder() {
+        return getDiscardConditionFieldBuilder().addBuilder(
             com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDisgardConditionBuilder(
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDiscardConditionBuilder(
           int index) {
-        return getDisgardConditionFieldBuilder().addBuilder(
+        return getDiscardConditionFieldBuilder().addBuilder(
             index, com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
       }
       /**
-       * <code>repeated .protos.ComponentsExpression DisgardCondition = 8;</code>
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
        */
       public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression.Builder> 
-           getDisgardConditionBuilderList() {
-        return getDisgardConditionFieldBuilder().getBuilderList();
+           getDiscardConditionBuilderList() {
+        return getDiscardConditionFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
           com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
-          getDisgardConditionFieldBuilder() {
-        if (disgardConditionBuilder_ == null) {
-          disgardConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getDiscardConditionFieldBuilder() {
+        if (discardConditionBuilder_ == null) {
+          discardConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder>(
-                  disgardCondition_,
+                  discardCondition_,
                   ((bitField0_ & 0x00000080) == 0x00000080),
                   getParentForChildren(),
                   isClean());
-          disgardCondition_ = null;
+          discardCondition_ = null;
         }
-        return disgardConditionBuilder_;
+        return discardConditionBuilder_;
       }
 
       private com.google.protobuf.LazyStringList nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -10681,6 +11488,318 @@ public final class ProtoContract {
         onChanged();
         return this;
       }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> selectBranches_ =
+        java.util.Collections.emptyList();
+      private void ensureSelectBranchesIsMutable() {
+        if (!((bitField0_ & 0x00100000) == 0x00100000)) {
+          selectBranches_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.SelectBranchExpression>(selectBranches_);
+          bitField0_ |= 0x00100000;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.SelectBranchExpression, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder, com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> selectBranchesBuilder_;
+
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> getSelectBranchesList() {
+        if (selectBranchesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(selectBranches_);
+        } else {
+          return selectBranchesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public int getSelectBranchesCount() {
+        if (selectBranchesBuilder_ == null) {
+          return selectBranches_.size();
+        } else {
+          return selectBranchesBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression getSelectBranches(int index) {
+        if (selectBranchesBuilder_ == null) {
+          return selectBranches_.get(index);
+        } else {
+          return selectBranchesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder setSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression value) {
+        if (selectBranchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSelectBranchesIsMutable();
+          selectBranches_.set(index, value);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder setSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder builderForValue) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          selectBranchesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(com.uniledger.protos.ProtoContract.SelectBranchExpression value) {
+        if (selectBranchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(value);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression value) {
+        if (selectBranchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(index, value);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(
+          com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder builderForValue) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(builderForValue.build());
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder builderForValue) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addAllSelectBranches(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.SelectBranchExpression> values) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, selectBranches_);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder clearSelectBranches() {
+        if (selectBranchesBuilder_ == null) {
+          selectBranches_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00100000);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder removeSelectBranches(int index) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.remove(index);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder getSelectBranchesBuilder(
+          int index) {
+        return getSelectBranchesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder getSelectBranchesOrBuilder(
+          int index) {
+        if (selectBranchesBuilder_ == null) {
+          return selectBranches_.get(index);  } else {
+          return selectBranchesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+           getSelectBranchesOrBuilderList() {
+        if (selectBranchesBuilder_ != null) {
+          return selectBranchesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(selectBranches_);
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder addSelectBranchesBuilder() {
+        return getSelectBranchesFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.SelectBranchExpression.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder addSelectBranchesBuilder(
+          int index) {
+        return getSelectBranchesFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.SelectBranchExpression.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder> 
+           getSelectBranchesBuilderList() {
+        return getSelectBranchesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.SelectBranchExpression, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder, com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+          getSelectBranchesFieldBuilder() {
+        if (selectBranchesBuilder_ == null) {
+          selectBranchesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.SelectBranchExpression, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder, com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder>(
+                  selectBranches_,
+                  ((bitField0_ & 0x00100000) == 0x00100000),
+                  getParentForChildren(),
+                  isClean());
+          selectBranches_ = null;
+        }
+        return selectBranchesBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -11395,7 +12514,7 @@ public final class ProtoContract {
       }
     }
 
-    public static final int CREATORTIME_FIELD_NUMBER = 8;
+    public static final int CREATETIME_FIELD_NUMBER = 8;
     private volatile java.lang.Object createTime_;
     /**
      * <code>string CreateTime = 8;</code>
@@ -11832,7 +12951,7 @@ public final class ProtoContract {
       hash = (53 * hash) + getContractState().hashCode();
       hash = (37 * hash) + CREATOR_FIELD_NUMBER;
       hash = (53 * hash) + getCreator().hashCode();
-      hash = (37 * hash) + CREATORTIME_FIELD_NUMBER;
+      hash = (37 * hash) + CREATETIME_FIELD_NUMBER;
       hash = (53 * hash) + getCreateTime().hashCode();
       hash = (37 * hash) + STARTTIME_FIELD_NUMBER;
       hash = (53 * hash) + getStartTime().hashCode();
@@ -12050,7 +13169,7 @@ public final class ProtoContract {
         result.description_ = description_;
         result.contractState_ = contractState_;
         result.creator_ = creator_;
-        result.createTime = createTime_;
+        result.createTime_ = createTime_;
         result.startTime_ = startTime_;
         result.endTime_ = endTime_;
         if (((bitField0_ & 0x00000400) == 0x00000400)) {
@@ -13940,21 +15059,41 @@ public final class ProtoContract {
 
     /**
      * <pre>
-     * add date: 2017-05-11 合约执行时间戳
+     *指派处理时间 add 2017-05-27 17:10:0
      * </pre>
      *
-     * <code>string Timestamp = 3;</code>
+     * <code>string AssignTime = 3;</code>
      */
-    java.lang.String getTimestamp();
+    java.lang.String getAssignTime();
+    /**
+     * <pre>
+     *指派处理时间 add 2017-05-27 17:10:0
+     * </pre>
+     *
+     * <code>string AssignTime = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getAssignTimeBytes();
+
     /**
      * <pre>
      * add date: 2017-05-11 合约执行时间戳
+     *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
      * </pre>
      *
-     * <code>string Timestamp = 3;</code>
+     * <code>string OperateTime = 4;</code>
+     */
+    java.lang.String getOperateTime();
+    /**
+     * <pre>
+     * add date: 2017-05-11 合约执行时间戳
+     *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
+     * </pre>
+     *
+     * <code>string OperateTime = 4;</code>
      */
     com.google.protobuf.ByteString
-        getTimestampBytes();
+        getOperateTimeBytes();
   }
   /**
    * Protobuf type {@code protos.ContractHead}
@@ -13970,7 +15109,8 @@ public final class ProtoContract {
     private ContractHead() {
       mainPubkey_ = "";
       version_ = 0;
-      timestamp_ = "";
+      assignTime_ = "";
+      operateTime_ = "";
     }
 
     @java.lang.Override
@@ -14012,7 +15152,13 @@ public final class ProtoContract {
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              timestamp_ = s;
+              assignTime_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              operateTime_ = s;
               break;
             }
           }
@@ -14081,42 +15227,86 @@ public final class ProtoContract {
       return version_;
     }
 
-    public static final int TIMESTAMP_FIELD_NUMBER = 3;
-    private volatile java.lang.Object timestamp_;
+    public static final int ASSIGNTIME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object assignTime_;
     /**
      * <pre>
-     * add date: 2017-05-11 合约执行时间戳
+     *指派处理时间 add 2017-05-27 17:10:0
      * </pre>
      *
-     * <code>string Timestamp = 3;</code>
+     * <code>string AssignTime = 3;</code>
      */
-    public java.lang.String getTimestamp() {
-      java.lang.Object ref = timestamp_;
+    public java.lang.String getAssignTime() {
+      java.lang.Object ref = assignTime_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        timestamp_ = s;
+        assignTime_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *指派处理时间 add 2017-05-27 17:10:0
+     * </pre>
+     *
+     * <code>string AssignTime = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAssignTimeBytes() {
+      java.lang.Object ref = assignTime_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        assignTime_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OPERATETIME_FIELD_NUMBER = 4;
+    private volatile java.lang.Object operateTime_;
+    /**
+     * <pre>
+     * add date: 2017-05-11 合约执行时间戳
+     *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
+     * </pre>
+     *
+     * <code>string OperateTime = 4;</code>
+     */
+    public java.lang.String getOperateTime() {
+      java.lang.Object ref = operateTime_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        operateTime_ = s;
         return s;
       }
     }
     /**
      * <pre>
      * add date: 2017-05-11 合约执行时间戳
+     *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
      * </pre>
      *
-     * <code>string Timestamp = 3;</code>
+     * <code>string OperateTime = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getTimestampBytes() {
-      java.lang.Object ref = timestamp_;
+        getOperateTimeBytes() {
+      java.lang.Object ref = operateTime_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        timestamp_ = b;
+        operateTime_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -14141,8 +15331,11 @@ public final class ProtoContract {
       if (version_ != 0) {
         output.writeInt32(2, version_);
       }
-      if (!getTimestampBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, timestamp_);
+      if (!getAssignTimeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, assignTime_);
+      }
+      if (!getOperateTimeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, operateTime_);
       }
     }
 
@@ -14158,8 +15351,11 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, version_);
       }
-      if (!getTimestampBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, timestamp_);
+      if (!getAssignTimeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, assignTime_);
+      }
+      if (!getOperateTimeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, operateTime_);
       }
       memoizedSize = size;
       return size;
@@ -14181,8 +15377,10 @@ public final class ProtoContract {
           .equals(other.getMainPubkey());
       result = result && (getVersion()
           == other.getVersion());
-      result = result && getTimestamp()
-          .equals(other.getTimestamp());
+      result = result && getAssignTime()
+          .equals(other.getAssignTime());
+      result = result && getOperateTime()
+          .equals(other.getOperateTime());
       return result;
     }
 
@@ -14197,8 +15395,10 @@ public final class ProtoContract {
       hash = (53 * hash) + getMainPubkey().hashCode();
       hash = (37 * hash) + VERSION_FIELD_NUMBER;
       hash = (53 * hash) + getVersion();
-      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-      hash = (53 * hash) + getTimestamp().hashCode();
+      hash = (37 * hash) + ASSIGNTIME_FIELD_NUMBER;
+      hash = (53 * hash) + getAssignTime().hashCode();
+      hash = (37 * hash) + OPERATETIME_FIELD_NUMBER;
+      hash = (53 * hash) + getOperateTime().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -14321,7 +15521,9 @@ public final class ProtoContract {
 
         version_ = 0;
 
-        timestamp_ = "";
+        assignTime_ = "";
+
+        operateTime_ = "";
 
         return this;
       }
@@ -14347,7 +15549,8 @@ public final class ProtoContract {
         com.uniledger.protos.ProtoContract.ContractHead result = new com.uniledger.protos.ProtoContract.ContractHead(this);
         result.mainPubkey_ = mainPubkey_;
         result.version_ = version_;
-        result.timestamp_ = timestamp_;
+        result.assignTime_ = assignTime_;
+        result.operateTime_ = operateTime_;
         onBuilt();
         return result;
       }
@@ -14396,8 +15599,12 @@ public final class ProtoContract {
         if (other.getVersion() != 0) {
           setVersion(other.getVersion());
         }
-        if (!other.getTimestamp().isEmpty()) {
-          timestamp_ = other.timestamp_;
+        if (!other.getAssignTime().isEmpty()) {
+          assignTime_ = other.assignTime_;
+          onChanged();
+        }
+        if (!other.getOperateTime().isEmpty()) {
+          operateTime_ = other.operateTime_;
           onChanged();
         }
         onChanged();
@@ -14521,21 +15728,111 @@ public final class ProtoContract {
         return this;
       }
 
-      private java.lang.Object timestamp_ = "";
+      private java.lang.Object assignTime_ = "";
       /**
        * <pre>
-       * add date: 2017-05-11 合约执行时间戳
+       *指派处理时间 add 2017-05-27 17:10:0
        * </pre>
        *
-       * <code>string Timestamp = 3;</code>
+       * <code>string AssignTime = 3;</code>
        */
-      public java.lang.String getTimestamp() {
-        java.lang.Object ref = timestamp_;
+      public java.lang.String getAssignTime() {
+        java.lang.Object ref = assignTime_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          timestamp_ = s;
+          assignTime_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *指派处理时间 add 2017-05-27 17:10:0
+       * </pre>
+       *
+       * <code>string AssignTime = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAssignTimeBytes() {
+        java.lang.Object ref = assignTime_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          assignTime_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *指派处理时间 add 2017-05-27 17:10:0
+       * </pre>
+       *
+       * <code>string AssignTime = 3;</code>
+       */
+      public Builder setAssignTime(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        assignTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *指派处理时间 add 2017-05-27 17:10:0
+       * </pre>
+       *
+       * <code>string AssignTime = 3;</code>
+       */
+      public Builder clearAssignTime() {
+        
+        assignTime_ = getDefaultInstance().getAssignTime();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *指派处理时间 add 2017-05-27 17:10:0
+       * </pre>
+       *
+       * <code>string AssignTime = 3;</code>
+       */
+      public Builder setAssignTimeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        assignTime_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object operateTime_ = "";
+      /**
+       * <pre>
+       * add date: 2017-05-11 合约执行时间戳
+       *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
+       * </pre>
+       *
+       * <code>string OperateTime = 4;</code>
+       */
+      public java.lang.String getOperateTime() {
+        java.lang.Object ref = operateTime_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          operateTime_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
@@ -14544,18 +15841,19 @@ public final class ProtoContract {
       /**
        * <pre>
        * add date: 2017-05-11 合约执行时间戳
+       *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
        * </pre>
        *
-       * <code>string Timestamp = 3;</code>
+       * <code>string OperateTime = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getTimestampBytes() {
-        java.lang.Object ref = timestamp_;
+          getOperateTimeBytes() {
+        java.lang.Object ref = operateTime_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          timestamp_ = b;
+          operateTime_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
@@ -14564,48 +15862,51 @@ public final class ProtoContract {
       /**
        * <pre>
        * add date: 2017-05-11 合约执行时间戳
+       *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
        * </pre>
        *
-       * <code>string Timestamp = 3;</code>
+       * <code>string OperateTime = 4;</code>
        */
-      public Builder setTimestamp(
+      public Builder setOperateTime(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        timestamp_ = value;
+        operateTime_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
        * add date: 2017-05-11 合约执行时间戳
+       *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
        * </pre>
        *
-       * <code>string Timestamp = 3;</code>
+       * <code>string OperateTime = 4;</code>
        */
-      public Builder clearTimestamp() {
+      public Builder clearOperateTime() {
         
-        timestamp_ = getDefaultInstance().getTimestamp();
+        operateTime_ = getDefaultInstance().getOperateTime();
         onChanged();
         return this;
       }
       /**
        * <pre>
        * add date: 2017-05-11 合约执行时间戳
+       *操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
        * </pre>
        *
-       * <code>string Timestamp = 3;</code>
+       * <code>string OperateTime = 4;</code>
        */
-      public Builder setTimestampBytes(
+      public Builder setOperateTimeBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        timestamp_ = value;
+        operateTime_ = value;
         onChanged();
         return this;
       }
@@ -15616,6 +16917,11 @@ public final class ProtoContract {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ComponentData_OptionsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_SelectBranchExpression_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_SelectBranchExpression_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ContractComponent_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -15664,38 +16970,43 @@ public final class ProtoContract {
       "\001(\t\0223\n\007Options\030\r \003(\0132\".protos.ComponentD" +
       "ata.OptionsEntry\022\016\n\006Format\030\017 \001(\t\032.\n\014Opti" +
       "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001",
-      "\"\376\004\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
-      "\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descrip" +
-      "tion\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreConditio" +
-      "n\030\006 \003(\0132\034.protos.ComponentsExpression\0227\n" +
-      "\021CompleteCondition\030\007 \003(\0132\034.protos.Compon" +
-      "entsExpression\0226\n\020DisgardCondition\030\010 \003(\013" +
-      "2\034.protos.ComponentsExpression\022\021\n\tNextTa" +
-      "sks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Com" +
-      "ponentData\022C\n\035DataValueSetterExpressionL" +
-      "ist\030\013 \003(\0132\034.protos.ComponentsExpression\022",
-      "0\n\rCandidateList\030\014 \001(\0132\031.protos.Contract" +
-      "Component\0221\n\016DecisionResult\030\r \001(\0132\031.prot" +
-      "os.ContractComponent\022\020\n\010TaskList\030\016 \003(\t\022\030" +
-      "\n\020SupportArguments\030\017 \003(\t\022\030\n\020AgainstArgum" +
-      "ents\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(" +
-      "\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(" +
-      "\t\"\223\003\n\014ContractBody\022\022\n\nContractId\030\001 \001(\t\022\r" +
-      "\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(\t\022\017\n\007Caption\030" +
-      "\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022\025\n\rContractSt" +
-      "ate\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022\023\n\013CreatorTim",
-      "e\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017\n\007EndTime\030\n " +
-      "\001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022-\n\016ContractA" +
-      "ssets\030\014 \003(\0132\025.protos.ContractAsset\0225\n\022Co" +
-      "ntractSignatures\030\r \003(\0132\031.protos.Contract" +
-      "Signature\0225\n\022ContractComponents\030\016 \003(\0132\031." +
-      "protos.ContractComponent\022\025\n\rMetaAttribut" +
-      "e\030\017 \001(\014\"F\n\014ContractHead\022\022\n\nMainPubkey\030\001 " +
-      "\001(\t\022\017\n\007Version\030\002 \001(\005\022\021\n\tTimestamp\030\003 \001(\t\"" +
-      "n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014ContractHead\030" +
-      "\002 \001(\0132\024.protos.ContractHead\022*\n\014ContractB",
-      "ody\030\003 \001(\0132\024.protos.ContractBodyB%\n\024com.u" +
-      "niledger.protosB\rProtoContractb\006proto3"
+      "\"T\n\026SelectBranchExpression\022\033\n\023BranchExpr" +
+      "essionStr\030\001 \001(\t\022\035\n\025BranchExpressionValue" +
+      "\030\002 \001(\t\"\266\005\n\021ContractComponent\022\r\n\005Cname\030\001 " +
+      "\001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013D" +
+      "escription\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCo" +
+      "ndition\030\006 \003(\0132\034.protos.ComponentsExpress" +
+      "ion\0227\n\021CompleteCondition\030\007 \003(\0132\034.protos." +
+      "ComponentsExpression\0226\n\020DiscardCondition" +
+      "\030\010 \003(\0132\034.protos.ComponentsExpression\022\021\n\t" +
+      "NextTasks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.prot",
+      "os.ComponentData\022C\n\035DataValueSetterExpre" +
+      "ssionList\030\013 \003(\0132\034.protos.ComponentsExpre" +
+      "ssion\0220\n\rCandidateList\030\014 \001(\0132\031.protos.Co" +
+      "ntractComponent\0221\n\016DecisionResult\030\r \001(\0132" +
+      "\031.protos.ContractComponent\022\020\n\010TaskList\030\016" +
+      " \003(\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020Agains" +
+      "tArguments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Tex" +
+      "t\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskI" +
+      "d\030\024 \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.protos" +
+      ".SelectBranchExpression\"\222\003\n\014ContractBody",
+      "\022\022\n\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005C" +
+      "type\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Descripti" +
+      "on\030\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creat" +
+      "or\030\007 \001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTim" +
+      "e\030\t \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwne" +
+      "rs\030\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.proto" +
+      "s.ContractAsset\0225\n\022ContractSignatures\030\r " +
+      "\003(\0132\031.protos.ContractSignature\0225\n\022Contra" +
+      "ctComponents\030\016 \003(\0132\031.protos.ContractComp" +
+      "onent\022\025\n\rMetaAttribute\030\017 \001(\014\"\\\n\014Contract",
+      "Head\022\022\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(" +
+      "\005\022\022\n\nAssignTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001" +
+      "(\t\"n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014ContractHe" +
+      "ad\030\002 \001(\0132\024.protos.ContractHead\022*\n\014Contra" +
+      "ctBody\030\003 \001(\0132\024.protos.ContractBodyB%\n\024co" +
+      "m.uniledger.protosB\rProtoContractb\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -15745,26 +17056,32 @@ public final class ProtoContract {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentData_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_protos_ContractComponent_descriptor =
+    internal_static_protos_SelectBranchExpression_descriptor =
       getDescriptor().getMessageTypes().get(5);
+    internal_static_protos_SelectBranchExpression_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_SelectBranchExpression_descriptor,
+        new java.lang.String[] { "BranchExpressionStr", "BranchExpressionValue", });
+    internal_static_protos_ContractComponent_descriptor =
+      getDescriptor().getMessageTypes().get(6);
     internal_static_protos_ContractComponent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponent_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DisgardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", });
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DiscardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
     internal_static_protos_ContractBody_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_protos_ContractBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractBody_descriptor,
         new java.lang.String[] { "ContractId", "Cname", "Ctype", "Caption", "Description", "ContractState", "Creator", "CreateTime", "StartTime", "EndTime", "ContractOwners", "ContractAssets", "ContractSignatures", "ContractComponents", "MetaAttribute", });
     internal_static_protos_ContractHead_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_protos_ContractHead_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractHead_descriptor,
-        new java.lang.String[] { "MainPubkey", "Version", "Timestamp", });
+        new java.lang.String[] { "MainPubkey", "Version", "AssignTime", "OperateTime", });
     internal_static_protos_Contract_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_protos_Contract_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_Contract_descriptor,

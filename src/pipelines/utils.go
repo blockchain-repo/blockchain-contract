@@ -1,4 +1,3 @@
-//TODO multipipe such as https://github.com/bigchaindb/multipipes
 package pipelines
 
 import (

@@ -7,13 +7,11 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
-	"unicontract/src/core/model"
 	r "unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/model"
 
 	"github.com/astaxie/beego/logs"
 )
-
-
 
 func cvValidateContract(arg interface{}) interface{} {
 	bs, err := json.Marshal(arg)
@@ -42,37 +40,33 @@ func cvValidateContract(arg interface{}) interface{} {
 	return v
 }
 
-
-
 func cvVote(arg interface{}) interface{} {
 	v := arg.(model.Vote)
-	time := monitor.Monitor.NewTiming()
 
 	v.NodePubkey = config.Config.Keypair.PublicKey
 	v.VoteBody.Timestamp = common.GenTimestamp()
 	v.VoteBody.VoteType = "Contract"
 	v.Id = v.GenerateId()
 	v.Signature = v.SignVote()
-	logs.Debug("-------cvVote:",common.Serialize(v))
-	time.Send("cv_validate_contract")
+	logs.Debug("-------cvVote:", common.Serialize(v))
 	return v
 
 }
 
 func cvWriteVote(arg interface{}) interface{} {
 	v := arg.(model.Vote)
-	time := monitor.Monitor.NewTiming()
-	res :=r.Insert("Unicontract", "Votes", v.ToString())
-	logs.Debug("-------cvWriteVote:",common.Serialize(res))
-	time.Send("cv_vote_contract")
+	vote_write_time := monitor.Monitor.NewTiming()
+	res := r.Insert("Unicontract", "Votes", v.ToString())
+	logs.Debug("-------cvWriteVote:", common.Serialize(res))
+	vote_write_time.Send("vote_write")
 	return v
 }
 
 func getcvChangefeed() *ChangeFeed {
 	change := &ChangeFeed{
-		db:        r.DBNAME ,
+		db:        r.DBNAME,
 		table:     r.TABLE_CONTRACTS,
-		operation: []string{"insert"},
+		operation: INSERT | UPDATE,
 	}
 	go change.runForever()
 	return change

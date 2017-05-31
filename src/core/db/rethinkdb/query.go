@@ -6,10 +6,9 @@ import (
 
 	"unicontract/src/common"
 
-	"strings"
-
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
+	"strings"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -112,28 +111,26 @@ func GetOneContractByMapCondition(conditions map[string]interface{}) (string, er
 	if owner == "" {
 		return "", errors.New("owner blank")
 	}
-	//signatureStatus, _ := conditions["signatureStatus"].(string)
-	name, _ := conditions["name"].(string)
-	name = strings.Trim(name, " ")
-	_ = name
+	status, ok := conditions["status"].(string)
+	logs.Warn(ok)
 	session := ConnectDB(DBNAME)
 
 	var res *r.Cursor
 	var err error
-	if contractId != "" && name != "" {
+	if contractId != "" && status != "" {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).
+			//Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).
 			Limit(1).Run(session)
 		//Filter(r.Row.Field("ContractBody").Field("Cname").Contains(name)).Run(session) //must sequence, not use this
-	} else if contractId == "" && name != "" {
+	} else if contractId == "" && status != "" {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).
+			Filter(r.Row.Field("ContractBody").Field("ContractState").Match(status)).
 			Limit(1).Run(session)
 
-	} else if contractId != "" && name == "" {
+	} else if contractId != "" && status == "" {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
@@ -160,38 +157,54 @@ func GetOneContractByMapCondition(conditions map[string]interface{}) (string, er
 
 // 根据传入条件查询合约
 func GetContractsByMapCondition(conditions map[string]interface{}) (string, error) {
+	status, _ := conditions["status"].(string)
 	contractId, _ := conditions["contractId"].(string)
 	owner, _ := conditions["owner"].(string)
 	if owner == "" {
 		return "", errors.New("owner blank")
 	}
-	//signatureStatus, _ := conditions["signatureStatus"].(string)
-	name, _ := conditions["name"].(string)
-	name = strings.Trim(name, " ")
-	_ = name
+	contractName, _ := conditions["contractName"].(string)
+	contractName = strings.Trim(contractName, " ")
 	session := ConnectDB(DBNAME)
-
 	var res *r.Cursor
 	var err error
-	if contractId != "" && name != "" {
+	if contractId != "" && contractName != "" && status != "" {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).Run(session)
-		//Filter(r.Row.Field("ContractBody").Field("Cname").Contains(name)).Run(session) //must sequence, not use this
-	} else if contractId == "" && name != "" {
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).
+			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).Run(session)
+	} else if contractId != "" && contractName != "" && status == "" {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(name)).Run(session)
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).Run(session)
 
-	} else if contractId != "" && name == "" {
+	} else if contractId != "" && contractName == "" && status != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).Run(session)
+	} else if contractId == "" && contractName != "" && status != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).
+			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).Run(session)
+	} else if contractId != "" && contractName == "" && status == "" {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).Run(session)
+	} else if contractId == "" && contractName != "" && status == "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).Run(session)
+	} else if contractId == "" && contractName == "" && status != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).Run(session)
 	} else {
 		res, err = r.Table(TABLE_CONTRACTS).
 			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).Run(session)
-
 	}
 	if err != nil {
 		return "", err
