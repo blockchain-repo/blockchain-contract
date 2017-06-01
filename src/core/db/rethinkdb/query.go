@@ -6,9 +6,10 @@ import (
 
 	"unicontract/src/common"
 
+	"strings"
+
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
-	"strings"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -716,9 +717,10 @@ func SetTaskScheduleOverFlag(strID string) error {
 }
 
 //---------------------------------------------------------------------------
-// 设置TaskState字段的值
-func SetTaskState(strID, strState string) error {
-	strJSON := fmt.Sprintf("{\"TaskState\":\"%s\"}", strState)
+// 设置TaskId,TaskState和TaskExecuteIndex字段的值
+func SetTaskState(strID, strTaskId, strState string, nTaskExecuteIndex int) error {
+	strJSON := fmt.Sprintf("{\"TaskId\":\"%s\",\"TaskState\":\"%s\",\"TaskExecuteIndex\":%d}",
+		strTaskId, strState, nTaskExecuteIndex)
 
 	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if res.Replaced|res.Unchanged >= 1 {

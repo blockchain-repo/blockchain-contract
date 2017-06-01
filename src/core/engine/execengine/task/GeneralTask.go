@@ -7,7 +7,6 @@ package task
 import (
 	"bytes"
 	"errors"
-	"github.com/astaxie/beego/logs"
 	"time"
 	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common"
@@ -17,6 +16,8 @@ import (
 	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
+
+	"github.com/astaxie/beego/logs"
 )
 
 type GeneralTask struct {
@@ -834,7 +835,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case -1:
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
 		//    调用扫描引擎接口： UpdateMonitorFail(contractID_old)
-		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId(), gt.GetState())
+		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -846,7 +847,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case 0:
 		//执行条件不满足：1.更新contractID1 的flag=0，timestamp
 		//    调用扫描引擎接口： UpdateMonitorWait(contractID_old)
-		r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId(), gt.GetState())
+		r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
