@@ -9,7 +9,7 @@ import (
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"time"
-	//"unicontract/src/core/engine"
+	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -102,6 +102,7 @@ func (gt *GeneralTask) GetNextTasks() []string {
 }
 
 //当前任务生命周期的执行：（根据任务状态选择相应的执行态方法进入）
+//入口时机：加载中的任务执行完成Discard,执行下一可执行任务Dormant
 //执行过程：PreProcess => Start or Complete or Discard => PostProcess
 //执行结果：
 //    1. ret = -1：执行失败, 需要回滚
@@ -147,6 +148,36 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 	r_err = errors.New(r_str_error)
 	return r_ret, r_err
 }
+func (gt *GeneralTask) GetTaskId() string {
+	if gt.PropertyTable[_TaskId] == nil {
+		return ""
+	}
+	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
+	return taskid_property.GetValue().(string)
+}
+
+func (gt *GeneralTask) GetTaskExecuteIdx() int {
+	taskexecuteidx_property := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
+	return taskexecuteidx_property.GetValue().(int)
+}
+
+func (gt *GeneralTask) SetTaskId(str_taskId string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	gt.TaskId = str_taskId
+	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
+	taskid_property.SetValue(str_taskId)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	gt.PropertyTable[_TaskId] = taskid_property
+}
+
+func (gt *GeneralTask) SetTaskExecuteIdx(int_idx int) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	gt.TaskExecuteIdx = int_idx
+	taskexecuteidx_property := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
+	taskexecuteidx_property.SetValue(int_idx)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	gt.PropertyTable[_TaskExecuteIdx] = taskexecuteidx_property
+}
 
 //===============描述态=====================
 //反序列化实现运行态 map结构 到 数组结构的转化
@@ -160,8 +191,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 		logs.Error("InitGeneralTask fail[" + err.Error() + "]")
 		return err
 	}
-	gt.Ctype = common.TernaryOperator(gt.Ctype == "", constdef.ComponentType[constdef.Component_Task], gt.Ctype).(string)
-	gt.SetCtype(gt.Ctype)
+	gt.SetCtype(constdef.ComponentType[constdef.Component_Task])
 	common.AddProperty(gt, gt.PropertyTable, _TaskId, gt.TaskId)
 	// State default
 	gt.State = common.TernaryOperator(gt.State == "", constdef.ComponentType[constdef.TaskState_Dormant], gt.State).(string)
@@ -262,14 +292,6 @@ func (gt *GeneralTask) InitGeneralTask() error {
 }
 
 //====属性Get方法
-func (gt *GeneralTask) GetTaskId() string {
-	if gt.PropertyTable[_TaskId] == nil {
-		return ""
-	}
-	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
-	return taskid_property.GetValue().(string)
-}
-
 func (gt *GeneralTask) GetPreCondition() map[string]inf.IExpression {
 	if gt.PropertyTable[_PreCondition] == nil {
 		return nil
@@ -292,11 +314,6 @@ func (gt *GeneralTask) GetDiscardCondition() map[string]inf.IExpression {
 	}
 	Discardcondition_property := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
 	return Discardcondition_property.GetValue().(map[string]inf.IExpression)
-}
-
-func (gt *GeneralTask) GetTaskExecuteIdx() int {
-	taskexecuteidx_property := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
-	return taskexecuteidx_property.GetValue().(int)
 }
 
 func (gt *GeneralTask) GetDataList() map[string]inf.IData {
@@ -369,24 +386,6 @@ func (gt *GeneralTask) AddDiscardCondition(p_condition string) {
 }
 
 //====属性Set方法
-func (gt *GeneralTask) SetTaskId(str_taskId string) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	gt.TaskId = str_taskId
-	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
-	taskid_property.SetValue(str_taskId)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	gt.PropertyTable[_TaskId] = taskid_property
-}
-
-func (gt *GeneralTask) SetTaskExecuteIdx(int_idx int) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	gt.TaskExecuteIdx = int_idx
-	taskexecuteidx_property := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
-	taskexecuteidx_property.SetValue(int_idx)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	gt.PropertyTable[_TaskExecuteIdx] = taskexecuteidx_property
-}
-
 func (gt *GeneralTask) SetSelectBranchs(p_selectbranchs []common.SelectBranchExpression) {
 	gt.SelectBranchs = p_selectbranchs
 	selectbranch_property := gt.PropertyTable[_SelectBranchs].(property.PropertyT)
@@ -520,7 +519,7 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 	v_contract := gt.GetContract()
 	v_default_function := "FuncIsConPutInUnichian(" + v_contract.GetOutputId() + ")"
 	v_result, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_default_function)
-	if v_err != nil{
+	if v_err != nil {
 		logs.Warning("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
 		r_flag = false
 	}
@@ -573,8 +572,18 @@ func (gt *GeneralTask) IsDiscarded() bool {
 //任务运行前进行的预处理
 func (gt *GeneralTask) PreProcess() error {
 	var r_err error = nil
-	//当前合约执行任务的Org信息赋值：OrgId, OrgTaskId, OrgTaskExecuteIdx,
-
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	r_buf.WriteString("Task PreProcess Runing:")
+	//当前合约执行任务为新任务,即OutputStruct
+	if gt.GetContract() == nil {
+		r_err = errors.New("PreProcess fail, GetContract is nil!")
+		r_buf.WriteString("PreProcess fail, GetContract is nil!")
+		logs.Warning(r_buf.String())
+		return r_err
+	}
+	//outputTaskId, outputTaskExecuteIdx赋值
+	gt.GetContract().SetOutputTaskId(gt.GetTaskId())
+	gt.GetContract().SetOutputTaskExecuteIdx(gt.GetTaskExecuteIdx())
 	return r_err
 }
 
@@ -608,18 +617,24 @@ func (gt *GeneralTask) Start() (int8, error) {
 		var exec_flag bool = true
 		//var data_array []interface{} = gt.DataList
 		//循环遍历函数表达式列表，执行函数
+		//注意：限制只可有一个Output交易产出
+		// TODO 待处理，避免一般操作任务，重复执行
 		var v_idx int8 = 0
 		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
-			//函数识别 & 执行
+			//1 函数识别 & 执行
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], v_expr_object.GetExpressionStr())
 			v_result_object := v_result.(common.OperateResult)
-			//执行结果赋值
-			//结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
+			//2 执行结果赋值
+			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
 			gt.ConsistentValue(gt.DataList, v_idx, v_result_object)
-			//结果赋值到 dataSetterValue函数结果
+			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
-			//执行结果判断
+			//  2.3 Output交易产出结构体赋值
+			if v_result_object.GetOutput() != "" {
+				gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
+			}
+			//3 执行结果判断
 			if r_err != nil || v_result_object.GetCode() != 200 {
 				exec_flag = false
 				break
@@ -663,68 +678,113 @@ func (gt *GeneralTask) Complete() (int8, error) {
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	logs.Info(r_buf.String(), " begin....")
+	logs.Info(r_buf.String(), "Complete begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	// CompleteCondition 需要包含单节点任务执行结果条件
 	//   任务执行成功，继续往下执行
 	//   任务执行失败，该任务需要重新执行
 	if gt.IsInProgress() && gt.testCompleteCondition() {
-		//Dormant中： 1. 执行函数，产出Output对象； 2.将函数执行结果赋值到对应结构中
-		//判断OutputStruct 是否为空，为空则需要在此构造产出结构体
+		//Dormant方法中生成交易产出Output（针对资产方法，合约执行状态+交易产出）；如果没有交易产出Output，则在Complete中生成Output（纯合约执行状态）
+		//1 判断OutputStruct 是否为空，为空则需要在此构造产出结构体
+		var output_null_flag bool = false
 		if gt.GetContract().GetOutputStruct() == "" {
-
+			output_null_flag = true
+			var tmp_output common.OperateResult = common.OperateResult{}
+			str_json_contract, r_err := gt.GetContract().Serialize()
+			if r_err != nil {
+				r_ret = -1
+				r_buf.WriteString("[Result]: Generate OutputStruct fail;")
+				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+				r_buf.WriteString("Complete fail....")
+				logs.Error(r_buf.String())
+				return r_ret, r_err
+			}
+			tmp_output, r_err = function.FuncInterim(str_json_contract, gt.GetTaskId(), gt.GetTaskExecuteIdx())
+			if r_err != nil {
+				r_ret = -1
+				r_buf.WriteString("[Result]: Generate OutputStruct fail;")
+				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+				r_buf.WriteString("Complete fail....")
+				logs.Error(r_buf.String())
+				return r_ret, r_err
+			}
+			if tmp_output.GetOutput() == nil || tmp_output.GetOutput().(string) == "" {
+				r_ret = -1
+				r_buf.WriteString("[Result]: Generate OutputStruct fail;")
+				r_buf.WriteString("[Error]: outputStruct is nil;")
+				r_buf.WriteString("Complete fail....")
+				logs.Error(r_buf.String())
+				return r_ret, r_err
+			}
+			gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
 		}
-		tmp_contract, r_err := gt.GetContract().Deserialize(gt.GetContract().GetOutputStruct())
-		if tmp_contract == nil {
-			r_ret = -1
-			r_buf.WriteString("[Result]: Deserialize OutputStruct fail;")
-			r_buf.WriteString("[Error]: outputStruct is nil;")
-			r_buf.WriteString("fail....")
-			logs.Error(r_buf.String())
-			return r_ret, r_err
+		//4 OutputStruct插入到Output表中
+		var v_result common.OperateResult = common.OperateResult{}
+		if output_null_flag {
+			v_result, r_err = function.FuncInterimComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
+		} else {
+			v_result, r_err = function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
 		}
-		if r_err != nil {
-			r_ret = -1
-			r_buf.WriteString("[Result]: Deserialize OutputStruct fail;")
-			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			r_buf.WriteString("fail....")
-			logs.Error(r_buf.String())
-			return r_ret, r_err
-		}
-		//构造产出信息的赋值: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
-		output_struct := tmp_contract.(inf.ICognitiveContract)
-
-		gt.GetContract().SetOutputId(output_struct.GetId())
-		gt.GetContract().SetOutputTaskId(output_struct.GetOutputTaskId())
-		gt.GetContract().SetOutputTaskExecuteIdx(output_struct.GetOutputTaskExecuteIdx())
-
-		v_reslt, r_err := function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
 		//执行结果判断
-		if r_err != nil || v_reslt.GetCode() != 200 {
+		if r_err != nil || v_result.GetCode() != 200 {
 			r_ret = -1
 			r_buf.WriteString("[Result]: Task execute fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			r_buf.WriteString("fail....")
+			r_buf.WriteString("Complete fail....")
 			logs.Error(r_buf.String())
 			return r_ret, r_err
 		}
+		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
+		var map_output_first interface{} = common.Deserialize(gt.GetContract().GetOutputStruct())
+		if map_output_first == nil {
+			r_ret = -1
+			r_err = errors.New("Contract Output Deserialize fail!")
+			r_buf.WriteString("[Result]: CompleteCondition not true;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			logs.Warning(r_buf.String(), "Complete exit....")
+			return r_ret, r_err
+		}
+		var map_output_second map[string]interface{} = map_output_first.(map[string]interface{})
+		if map_output_second == nil || len(map_output_second) == 0 || map_output_second["transaction"] == nil {
+			r_ret = -1
+			r_err = errors.New("Contract Output Struct Get fail!")
+			r_buf.WriteString("[Result]: CompleteCondition not true;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			logs.Warning(r_buf.String(), "Complete exit....")
+			return r_ret, r_err
+		}
+		var map_transaction map[string]interface{} = map_output_second["transaction"].(map[string]interface{})
+		if map_transaction["Contract"] == nil {
+			r_ret = -1
+			r_err = errors.New("Contract HashId Get fail!")
+			r_buf.WriteString("[Result]: CompleteCondition not true;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			logs.Warning(r_buf.String(), "Complete exit....")
+			return r_ret, r_err
+		}
+		var map_contract map[string]interface{} = map_transaction["Contract"].(map[string]interface{})
+
+		gt.GetContract().SetOutputId(map_contract["Id"].(string))
+		gt.GetContract().SetOutputTaskId(gt.GetTaskId())
+		gt.GetContract().SetOutputTaskExecuteIdx(gt.GetTaskExecuteIdx())
+
 		logs.Info(r_buf.String(), " Inprocess to Complete....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Completed])
 	} else if gt.IsInProgress() && !gt.testCompleteCondition() {
 		r_ret = 0
 		r_buf.WriteString("[Result]: CompleteCondition not true;")
-		logs.Warning(r_buf.String(), " exit....")
+		logs.Warning(r_buf.String(), "Complete exit....")
 		return r_ret, r_err
 	}
 	//保证顺利执行，给执行方法留下执行时间，需要多次sleep等待执行
-	//TODO
-	//var executeEngineConf map[interface{}]interface{} = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
 	var executeEngineConf map[interface{}]interface{}
-	if executeEngineConf == nil {
+	if engine.UCVMConf == nil {
 		executeEngineConf = make(map[interface{}]interface{}, 0)
 		executeEngineConf["task_complete_sleep_count"] = 3
 		executeEngineConf["task_complete_sleep_time"] = 5
+	} else {
+		executeEngineConf = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
 	}
 	var v_sleep_num int = executeEngineConf["task_complete_sleep_count"].(int)
 	for v_sleep_num > 0 {
@@ -798,17 +858,18 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case 1:
 		//执行成功：1 更新contractID1 的flag=1, succNum+1, timestamp, 2.将contractID2插入到扫描监控表中
 		//    调用扫描引擎接口： UpdateMonitorSucc(contractID_old, contractID_new)
-		//TODO 过程中数据赋值
 		r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
-		output_taskIdx := v_contract.GetOutputTaskExecuteIdx()
 		r_err = common.UpdateMonitorSucc(
 			v_contract.GetContractId(),
 			v_contract.GetId(),
-			v_contract.GetOutputId(),
+			v_contract.GetOrgTaskId(),
 			gt.GetState(),
-			constdef.TaskState[constdef.TaskState_Dormant],
+			v_contract.GetOrgTaskExecuteIdx(),
+			v_contract.GetOutputId(),
 			v_contract.GetOutputTaskId(),
-			output_taskIdx)
+			gt.GetState(),
+			v_contract.GetOutputTaskExecuteIdx(),
+		)
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorSucc] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")

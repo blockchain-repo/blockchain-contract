@@ -11,6 +11,8 @@ import (
 
 	"github.com/astaxie/beego/logs"
 
+	"bytes"
+	"strconv"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/expressionutils"
@@ -42,9 +44,10 @@ type CognitiveContract struct {
 }
 
 type CognitiveContractHead struct {
-	MainPubkey string `json:"MainPubkey"`
-	Timestamp  string `json:"Timestamp"`
-	Version    int    `json:"Version"`
+	AssignTime  string `json:"AssignTime"`
+	MainPubkey  string `json:"MainPubkey"`
+	OperateTime string `json:"OperateTime"`
+	Version     int    `json:"Version"`
 }
 
 type CognitiveContractBody struct {
@@ -73,9 +76,10 @@ const (
 	_ContractHead = "_ContractHead"
 	_ContractBody = "_ContractBody"
 
-	_MainPubkey = "_MainPubkey"
-	_Timestamp  = "_Timestamp"
-	_Version    = "_Version"
+	_MainPubkey  = "_MainPubkey"
+	_AssignTime  = "_AssignTime"
+	_OperateTime = "_OperateTime"
+	_Version     = "_Version"
 
 	_Cname              = "_Cname"
 	_Ctype              = "_Ctype"
@@ -117,11 +121,11 @@ func (cc CognitiveContract) GetContractId() string {
 	return contractid_property.GetValue().(string)
 }
 
-func (cc CognitiveContract) GetVersion() string {
+func (cc CognitiveContract) GetUCVMVersion() string {
 	return constdef.UCVM_Version
 }
 
-func (cc CognitiveContract) GetCopyRight() string {
+func (cc CognitiveContract) GetUCVMCopyRight() string {
 	return constdef.UCVM_CopyRight
 }
 
@@ -168,6 +172,14 @@ func (cc CognitiveContract) ProcessString(p_str string) string {
 	return p_str
 }
 
+func (cc CognitiveContract) SetContract(p_contract inf.ICognitiveContract) {
+	//为实现接口而设置的空方法
+}
+
+func (cc CognitiveContract) GetContract() inf.ICognitiveContract {
+	return &cc
+}
+
 func (cc CognitiveContract) GetName() string {
 	return cc.GetCname()
 }
@@ -178,18 +190,89 @@ func (gc *CognitiveContract) GetCtype() string {
 	ctype_property := gc.PropertyTable[_Ctype].(property.PropertyT)
 	return ctype_property.GetValue().(string)
 }
-func (cc CognitiveContract) GetContract() inf.ICognitiveContract {
-	return &cc
-}
-func (cc CognitiveContract) SetContract(p_contract inf.ICognitiveContract) {
 
-}
 func (gc *CognitiveContract) GetId() string {
 	if gc.PropertyTable[_Id] == nil {
 		return ""
 	}
 	id_property := gc.PropertyTable[_Id].(property.PropertyT)
 	return id_property.GetValue().(string)
+}
+func (gc *CognitiveContract) GetOrgTaskId() string {
+	if gc.PropertyTable[_OrgTaskId] == nil {
+		return ""
+	}
+	orgtaskid_property := gc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	return orgtaskid_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOrgTaskExecuteIdx() int {
+	if gc.PropertyTable[_OrgTaskExecuteIdx] == nil {
+		return 0
+	}
+	orgtaskexecuteidx_property := gc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	return orgtaskexecuteidx_property.GetValue().(int)
+}
+
+func (gc *CognitiveContract) GetOutputId() string {
+	if gc.PropertyTable[_OutputId] == nil {
+		return ""
+	}
+	outputid_property := gc.PropertyTable[_OutputId].(property.PropertyT)
+	return outputid_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOutputTaskId() string {
+	if gc.PropertyTable[_OutputTaskId] == nil {
+		return ""
+	}
+	OutputTaskId_property := gc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	return OutputTaskId_property.GetValue().(string)
+}
+
+func (gc *CognitiveContract) GetOutputTaskExecuteIdx() int {
+	if gc.PropertyTable[_OutputTaskExecuteIdx] == nil {
+		return 0
+	}
+	OutputTaskExecuteIdx_property := gc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	return OutputTaskExecuteIdx_property.GetValue().(int)
+}
+
+func (gc *CognitiveContract) GetOutputStruct() string {
+	if gc.PropertyTable[_OutputStruct] == nil {
+		return ""
+	}
+	outputstruct_property := gc.PropertyTable[_OutputStruct].(property.PropertyT)
+	if outputstruct_property.GetValue() == nil {
+		return ""
+	}
+	return outputstruct_property.GetValue().(string)
+}
+
+func (cc CognitiveContract) SetOrgId(p_OrgId string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OrgId = p_OrgId
+	OrgId_property := cc.PropertyTable[_OrgId].(property.PropertyT)
+	OrgId_property.SetValue(p_OrgId)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OrgId] = OrgId_property
+}
+func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OrgTaskId = p_OrgTaskId
+	OrgTaskId_property := cc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	OrgTaskId_property.SetValue(p_OrgTaskId)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OrgTaskId] = OrgTaskId_property
+}
+
+func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OrgTaskExecuteIdx = p_OrgTaskExecuteIdx
+	OrgTaskExecuteIdx_property := cc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	OrgTaskExecuteIdx_property.SetValue(p_OrgTaskExecuteIdx)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OrgTaskExecuteIdx] = OrgTaskExecuteIdx_property
 }
 func (cc CognitiveContract) SetOutputId(p_outputId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
@@ -199,12 +282,31 @@ func (cc CognitiveContract) SetOutputId(p_outputId string) {
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OutputId] = outputid_property
 }
-func (gc *CognitiveContract) GetOutputId() string {
-	if gc.PropertyTable[_OutputId] == nil {
-		return ""
-	}
-	outputid_property := gc.PropertyTable[_OutputId].(property.PropertyT)
-	return outputid_property.GetValue().(string)
+func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OutputTaskId = p_OutputTaskId
+	OutputTaskId_property := cc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	OutputTaskId_property.SetValue(p_OutputTaskId)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OutputTaskId] = OutputTaskId_property
+}
+
+func (cc CognitiveContract) SetOutputTaskExecuteIdx(p_OutputTaskExecuteIdx int) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OutputTaskExecuteIdx = p_OutputTaskExecuteIdx
+	OutputTaskExecuteIdx_property := cc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	OutputTaskExecuteIdx_property.SetValue(p_OutputTaskExecuteIdx)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OutputTaskExecuteIdx] = OutputTaskExecuteIdx_property
+}
+
+func (cc CognitiveContract) SetOutputStruct(p_OutputStruct string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.OutputStruct = p_OutputStruct
+	OutputStruct_property := cc.PropertyTable[_OutputStruct].(property.PropertyT)
+	OutputStruct_property.SetValue(p_OutputStruct)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_OutputStruct] = OutputStruct_property
 }
 
 //===============描述态=====================
@@ -271,7 +373,8 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	common.AddProperty(cc, cc.PropertyTable, _Id, cc.Id)
 	//ContractHead初始化
 	common.AddProperty(cc, cc.PropertyTable, _MainPubkey, cc.ContractHead.MainPubkey)
-	common.AddProperty(cc, cc.PropertyTable, _Timestamp, cc.ContractHead.Timestamp)
+	common.AddProperty(cc, cc.PropertyTable, _AssignTime, cc.ContractHead.AssignTime)
+	common.AddProperty(cc, cc.PropertyTable, _OperateTime, cc.ContractHead.OperateTime)
 	common.AddProperty(cc, cc.PropertyTable, _Version, cc.ContractHead.Version)
 	//ContractBody初始化
 	if cc.ContractBody.Cname == "" {
@@ -473,49 +576,6 @@ func (cc *CognitiveContract) GetProperty(p_name string) interface{} {
 }
 
 //====属性Get方法	common.AddProperty(cc, cc.PropertyTable, _OrgId, cc.OrgId)
-func (gc *CognitiveContract) GetOrgTaskId() string {
-	if gc.PropertyTable[_OrgTaskId] == nil {
-		return ""
-	}
-	orgtaskid_property := gc.PropertyTable[_OrgTaskId].(property.PropertyT)
-	return orgtaskid_property.GetValue().(string)
-}
-
-func (gc *CognitiveContract) GetOrgTaskExecuteIdx() int {
-	if gc.PropertyTable[_OrgTaskExecuteIdx] == nil {
-		return 0
-	}
-	orgtaskexecuteidx_property := gc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
-	return orgtaskexecuteidx_property.GetValue().(int)
-}
-
-func (gc *CognitiveContract) GetOutputTaskId() string {
-	if gc.PropertyTable[_OutputTaskId] == nil {
-		return ""
-	}
-	OutputTaskId_property := gc.PropertyTable[_OutputTaskId].(property.PropertyT)
-	return OutputTaskId_property.GetValue().(string)
-}
-
-func (gc *CognitiveContract) GetOutputTaskExecuteIdx() int {
-	if gc.PropertyTable[_OutputTaskExecuteIdx] == nil {
-		return 0
-	}
-	OutputTaskExecuteIdx_property := gc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
-	return OutputTaskExecuteIdx_property.GetValue().(int)
-}
-
-func (gc *CognitiveContract) GetOutputStruct() string {
-	if gc.PropertyTable[_OutputStruct] == nil {
-		return ""
-	}
-	outputstruct_property := gc.PropertyTable[_OutputStruct].(property.PropertyT)
-	if outputstruct_property.GetValue() == nil {
-		return ""
-	}
-	return outputstruct_property.GetValue().(string)
-}
-
 func (gc *CognitiveContract) GetCname() string {
 	if gc.PropertyTable[_Cname] == nil {
 		return ""
@@ -553,51 +613,6 @@ func (gc *CognitiveContract) GetMetaAttribute() map[string]string {
 }
 
 //属性Set方法
-func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	cc.OrgTaskId = p_OrgTaskId
-	OrgTaskId_property := cc.PropertyTable[_OrgTaskId].(property.PropertyT)
-	OrgTaskId_property.SetValue(p_OrgTaskId)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	cc.PropertyTable[_OrgTaskId] = OrgTaskId_property
-}
-
-func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	cc.OrgTaskExecuteIdx = p_OrgTaskExecuteIdx
-	OrgTaskExecuteIdx_property := cc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
-	OrgTaskExecuteIdx_property.SetValue(p_OrgTaskExecuteIdx)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	cc.PropertyTable[_OrgTaskExecuteIdx] = OrgTaskExecuteIdx_property
-}
-
-func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	cc.OutputTaskId = p_OutputTaskId
-	OutputTaskId_property := cc.PropertyTable[_OutputTaskId].(property.PropertyT)
-	OutputTaskId_property.SetValue(p_OutputTaskId)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	cc.PropertyTable[_OutputTaskId] = OutputTaskId_property
-}
-
-func (cc CognitiveContract) SetOutputTaskExecuteIdx(p_OutputTaskExecuteIdx int) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	cc.OutputTaskExecuteIdx = p_OutputTaskExecuteIdx
-	OutputTaskExecuteIdx_property := cc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
-	OutputTaskExecuteIdx_property.SetValue(p_OutputTaskExecuteIdx)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	cc.PropertyTable[_OutputTaskExecuteIdx] = OutputTaskExecuteIdx_property
-}
-
-func (cc CognitiveContract) SetOutputStruct(p_OutputStruct interface{}) {
-	//Take case: Setter method need set value for gc.xxxxxx
-	cc.OutputStruct = p_OutputStruct
-	OutputStruct_property := cc.PropertyTable[_OutputStruct].(property.PropertyT)
-	OutputStruct_property.SetValue(p_OutputStruct)
-	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
-	cc.PropertyTable[_OutputStruct] = OutputStruct_property
-}
-
 func (cc CognitiveContract) SetId(p_Id string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.Id = p_Id
@@ -750,9 +765,9 @@ func (cc *CognitiveContract) SetNextTasks(p_NextTasks []string) {
 // 2.轮询判断队列中的任务(寻找应当执行的任务)
 // 3.    后继任务中都是dromant state的任务，将后继任务重新入队，进入6 轮询判断；
 // 4.    后继任务中有digcard的任务，则将同级任务跳过；将该任务的后继任务加入队列；调回2 重新判定
-// 5.    后继任务中有inprocess 或 completed 的任务，将该同级任务跳过；将该任务加入队列；进入6 轮询判断
+// 5.    后继任务中有inprocess/complete的任务，将该同级任务跳过；将该任务加入队列；进入6 轮询判断
 // 6.轮询判断队列中的任务（执行任务）
-// 7.    任务是inprocess 或 completed state, 执行执行
+// 7.    任务是inprocess state, 执行执行
 // 8.    任务是dromant state,需要轮询队列中的任务，是否可以执行；
 // 9.          不满足运行条件，继续判断同级任务
 // 10.         满足运行条件，则执行该任务，跳过队列中的其他同级任务
@@ -760,18 +775,24 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	var r_ret int8 = -1
 	var r_err error = nil
 	var next_tasks []string = cc.GetNextTasks()
-	fmt.Println(next_tasks)
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	r_buf.WriteString("Contract Executeing....:")
+	r_buf.WriteString("[ContractID]: " + cc.GetContractId() + ";")
+	r_buf.WriteString("[ContractHashID]: " + cc.GetId() + ";")
 	if next_tasks == nil || len(next_tasks) == 0 {
 		r_err = errors.New("contract has no start tasks!")
+		r_buf.WriteString("[Result]: UpdateTasksState fail;")
+		r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+		logs.Warning(r_buf.String())
 		return r_ret, r_err
 	}
 	var r_task_queue *common.Queue = common.NewQueue()
 	for _, v_task := range next_tasks {
 		r_task_queue.Push(v_task)
 	}
-	//判断后继任务是否有执行过(state_digcard)的：
-	//     有(state_digcard)，则清空队列，将该任务后继任务入队，继续判断；
-	//     有(state_inprocess or state_completed),则清空队列，将该任务入队，跳出判断，进入下一判断
+	//判断后继任务是否有执行过(state_discard)的：
+	//     有(state_discard)，则清空队列，将该任务后继任务入队，继续判断；
+	//     有(state_inprocess,state_complete),则清空队列，将该任务入队，跳出判断，进入下一判断
 	//     无(且队列不空时)，继续判断
 	//     无(且队列为空时)，则将当前轮询的后继任务入队，跳出循环，进入下一判断
 	for !r_task_queue.Empty() {
@@ -779,7 +800,10 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		f_f_task := cc.GetTask(tmp_str_task.(string))
 		if f_f_task == nil {
 			r_ret = -1
-			r_err = errors.New("GetTask is null!")
+			r_err = errors.New("Judge Task, GetTask is null!")
+			r_buf.WriteString("[Result]: UpdateTasksState fail;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			logs.Warning(r_buf.String())
 			return r_ret, r_err
 		}
 		if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Discard] {
@@ -807,7 +831,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		}
 	}
 	//执行任务流，任务执行返回的状态：
-	//       -1: 任务状态流转过程中，在某一状态时，执行失败，返回 -1; State=Inprocess, Completed
+	//       -1: 任务状态流转过程中，在某一状态时，执行失败，返回 -1; State=Dormaant, Inprocess
 	//       0 : 任务状态流转过程中，在某一状态时，达不到执行条件 返回0; State=Dromant, Inprocess, Completed
 	//       1 : 任务状态流转完成，才会返回 1; State=Digcard
 	//注：此处只代表单个任务的执行结果，每次执行只能执行一个任务
@@ -817,28 +841,32 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		f_s_task := cc.GetTask(tmp_str_task.(string))
 		if f_s_task == nil {
 			r_ret = -1
-			r_err = errors.New("GetTask is null!")
+			r_err = errors.New("Execute Task, GetTask is null!")
+			r_buf.WriteString("[Result]: UpdateTasksState fail;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			logs.Warning(r_buf.String())
 			return r_ret, r_err
 		}
+
 		r_ret, f_err = f_s_task.(inf.ITask).UpdateState()
 		switch r_ret {
-		case 1: //执行成功后，合约退出， 注意：后续任务不入队列了，等待共识成功后初始化到扫描监控表中，下次加载再执行
-			break
-			/*
-				for r_task_queue.Len() != 0 {
-					r_task_queue.Pop()
+		case 1: //执行成功后，跳转到下一合约任务；
+			// 注意：如后描述暂不生效（后续任务不入队列了，等待共识成功后初始化到扫描监控表中，下次加载再执行）
+			for r_task_queue.Len() != 0 {
+				r_task_queue.Pop()
+			}
+			next_tasks = f_s_task.(inf.ITask).GetNextTasks()
+			for _, t_task := range next_tasks {
+				//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
+				//      通过循环执行次数条件,退出循环执行
+				tmp_next_task := cc.GetTask(t_task)
+				if tmp_next_task != nil {
+					v_nexttask_object := tmp_next_task.(inf.ITask)
+					v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
+					v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
+					r_task_queue.Push(t_task)
 				}
-				next_tasks = f_s_task.(inf.ITask).GetNextTasks()
-				for _, t_task := range next_tasks {
-					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
-					//      通过循环执行次数条件,退出循环执行
-					tmp_next_task := cc.GetTask(t_task)
-					if tmp_next_task != nil {
-						tmp_next_task.(inf.ITask).SetState(constdef.TaskState[constdef.TaskState_Dormant])
-						r_task_queue.Push(t_task)
-					}
-				}
-			*/
+			}
 		case 0: //执行条件不成立
 			if f_s_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
 				continue
@@ -855,4 +883,119 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		}
 	}
 	return r_ret, r_err
+}
+
+//check合约是否可执行（1. 合约签名齐全， 2. 合约起始日期达到）
+//return :  true 可执行；  false 不可执行；
+func (cc *CognitiveContract) CanExecute() bool {
+	var v_bool bool = true
+	var v_owner_count int = len(cc.GetContractOwners().([]string))
+	var v_signature_count int = len(cc.GetContractSignatures().([]ContractSignature))
+	var v_contract_state string = cc.GetContractState()
+	if v_contract_state == constdef.ContractState[constdef.Contract_Completed] || v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
+		logs.Warning("ContractState is Completed or Discarded, contract can't execute!")
+		v_bool = false
+		return v_bool
+	}
+	//constract_state: Create or Signature need check signatures
+	if v_contract_state == constdef.ContractState[constdef.Contract_Signature] || v_contract_state == constdef.ContractState[constdef.Contract_Create] {
+		//check owners signature count
+		if v_signature_count < v_owner_count {
+			v_bool = false
+			logs.Error("contract signatures count not equals contract owners!")
+			return v_bool
+		}
+		//check owners signaature content
+		var v_idx int = 0
+		for _, v_owner := range cc.GetContractOwners().([]string) {
+			for v_idx, v_contract_signature := range cc.GetContractSignatures().([]ContractSignature) {
+				if v_owner == v_contract_signature.GetOwnerPubkey() {
+					break
+				}
+				v_idx = v_idx + 1
+			}
+			if v_idx >= v_signature_count {
+				v_bool = false
+				logs.Error("contract signatures content not all contract owners!")
+				return v_bool
+			}
+		}
+	}
+	//check contract begin_time & end_time
+	var now_date string = common.GenTimestamp()
+	var contract_starttime string = cc.GetStartTime()
+	var contract_endtime string = cc.GetEndTime()
+	var v_err error = nil
+	var now_date_int int64
+	var starttime_int int64
+	var endtime_int int64
+	now_date_int, v_err = strconv.ParseInt(now_date, 10, 64)
+	if v_err != nil {
+		logs.Error("Now_date ParseInt Error(" + v_err.Error() + ")!")
+		v_bool = false
+		return v_bool
+	}
+	starttime_int, v_err = strconv.ParseInt(contract_starttime, 10, 64)
+	if v_err != nil {
+		logs.Error("Start_time ParseInt Error(" + v_err.Error() + ")!")
+		v_bool = false
+		return v_bool
+	}
+	endtime_int, v_err = strconv.ParseInt(contract_endtime, 10, 64)
+	if v_err != nil {
+		logs.Error("End_time ParseInt Error(" + v_err.Error() + ")!")
+		v_bool = false
+		return v_bool
+	}
+	fmt.Println(now_date_int)
+	fmt.Println(starttime_int)
+	fmt.Println(endtime_int)
+	if now_date_int < starttime_int {
+		logs.Warning("Now_date not gt StartTime, can't execute contract!")
+		v_bool = false
+		return v_bool
+	}
+	if now_date_int > endtime_int {
+		//合约超过截止时间，合约状态更新为：丢弃
+		cc.SetContractState(constdef.ContractState[constdef.Contract_Discarded])
+		logs.Error("Now_date gt EndTime, contract can't execute!")
+		v_bool = false
+		return v_bool
+	}
+	return v_bool
+}
+
+//更新合约状态ContractState
+//return: true 更新成功； false 更新失败；
+func (cc *CognitiveContract) UpdateContractState() bool {
+	var v_bool bool = true
+	var v_contract_state string = cc.GetContractState()
+	switch v_contract_state {
+	case constdef.ContractState[constdef.Contract_Signature]:
+		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
+	}
+	return v_bool
+}
+
+//根据合约交易完整结构体中的Relation部分提取当前运行的任务信息，给OrgTaskinfo赋值
+//Args: p_relation_map => ContractOutput结构中relation map结构
+func (cc *CognitiveContract) SetOrgTaskInfo(p_relation_map map[string]interface{}) error {
+	var v_err error = nil
+	if p_relation_map == nil {
+		v_err = errors.New("Param[p_relation_json] is nil!")
+		logs.Warn("SetOrgTaskInfo fail, Error[" + v_err.Error() + "]")
+		return v_err
+	}
+
+	//提取ContractHashID
+	var v_contractHashID string = p_relation_map["ContractHashId"].(string)
+	cc.SetOrgId(v_contractHashID)
+	//提取TaskID
+	var v_taskID string = p_relation_map["TaskId"].(string)
+	cc.SetOrgTaskId(v_taskID)
+	//提取TaskIndexID
+	var v_taskIndexID int = int(p_relation_map["TaskExecuteIdx"].(float64))
+	cc.SetOrgTaskExecuteIdx(v_taskIndexID)
+
+	return v_err
 }

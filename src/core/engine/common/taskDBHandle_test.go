@@ -94,16 +94,17 @@ func Test_UpdateMonitorWait(t *testing.T) {
 }
 
 func Test_UpdateMonitorSucc(t *testing.T) {
-	strContractID := "5355fb6b-d56c-417d-b75e-7f85b26832d6"
-	strContractHashOldID := "224f6ca3-430a-4ffb-90bf-d523614a7501"
-	strContractHashNewID := common.GenerateUUID()
+	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
+	strContractHashOldID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	strTaskId := "999999"
 	strTaskStateOld := "old"
+	intTaskExecuteIdx := 22
+	strContractHashIDNew := common.GenerateUUID()
+	strTaskIdNew := "1000000"
 	strTaskStateNew := "new"
-	strTaskId := "1000000"
-	nTaskExecuteIndex := 23
-	err := UpdateMonitorSucc(strContractID, strContractHashOldID,
-		strContractHashNewID, strTaskStateOld,
-		strTaskStateNew, strTaskId, nTaskExecuteIndex)
+	intTaskExecuteIdxNew := 23
+	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strTaskId, strTaskStateOld, intTaskExecuteIdx,
+		strContractHashIDNew, strTaskIdNew, strTaskStateNew, intTaskExecuteIdxNew)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {

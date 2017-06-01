@@ -9,33 +9,38 @@ type ICognitiveContract interface {
 		SetEvent(IEvent)
 	*/
 	GetContractId() string
-	GetVersion() string
-	GetCopyRight() string
+	GetUCVMVersion() string
+	GetUCVMCopyRight() string
 	GetTask(string) interface{}
-	GetComponentTtem(p_name string) interface{}
-	GetPropertyItem(p_name string) interface{}
-	AddComponent(p_component IComponent)
-	EvaluateExpression(p_exprtype string, p_expression string) (interface{}, error)
+	GetComponentTtem(string) interface{}
+	GetPropertyItem(string) interface{}
+	AddComponent(IComponent)
+	EvaluateExpression(string, string) (interface{}, error)
 	ProcessString(string) string
 
-	SetContract(constract ICognitiveContract)
+	SetContract(ICognitiveContract)
 	GetContract() ICognitiveContract
 	GetName() string
 	GetCtype() string
-	GetId() string
-	SetOutputId(p_outputId string)
-	GetOutputId() string
 
+	GetId() string
 	GetOrgTaskId() string
 	GetOrgTaskExecuteIdx() int
+	GetOutputId() string
 	GetOutputTaskId() string
 	GetOutputTaskExecuteIdx() int
 	GetOutputStruct() string
 
+	SetOrgId(string)
+	SetOrgTaskId(string)
+	SetOrgTaskExecuteIdx(int)
+	SetOutputId(p_outputId string)
+	SetOutputTaskId(string)
+	SetOutputTaskExecuteIdx(int)
+	SetOutputStruct(string)
+
 	Serialize() (string, error)
 	Deserialize(p_str string) (interface{}, error)
-    SetOutputTaskId(string)
-    SetOutputTaskExecuteIdx(int)
 }
 
 //component
@@ -67,6 +72,10 @@ type ITask interface {
 	SetState(string)
 	GetNextTasks() []string
 	UpdateState() (int8, error)
+	GetTaskId() string
+	GetTaskExecuteIdx() int
+	SetTaskId(string)
+	SetTaskExecuteIdx(int)
 }
 
 //expression interface

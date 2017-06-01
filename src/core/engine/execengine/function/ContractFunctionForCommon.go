@@ -207,18 +207,19 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	5: taskId(string): taskId
 	6: TaskExecuteIdx(int): TaskExecuteIdx
 */
+//传3个参数， contractStr, taskId, taskIndex
 func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-	if len(args) != 5 {
+	if len(args) != 3 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
 	var contractStr string = args[0].(string)
 	var contractHashId string = args[1].(string)
 	var contractId string = args[2].(string)
-	var taskId string = args[3].(string)
-	var taskIndex int = args[4].(int)
+	var taskId string = args[1].(string)
+	var taskIndex int = args[2].(int)
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 	outputStr, v_err := transaction.ExecuteInterim(metadataStr, relationStr, contractStr)

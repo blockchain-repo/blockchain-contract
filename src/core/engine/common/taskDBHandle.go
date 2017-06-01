@@ -70,7 +70,8 @@ func UpdateMonitorFail(strContractID, strContractHashID, strTaskState string) er
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
-		len(strContractHashID) == 0 {
+		len(strContractHashID) == 0 ||
+		len(strTaskState) == 0 {
 		return fmt.Errorf("param is null")
 	}
 
@@ -103,7 +104,8 @@ func UpdateMonitorWait(strContractID, strContractHashID, strTaskState string) er
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
-		len(strContractHashID) == 0 {
+		len(strContractHashID) == 0 ||
+		len(strTaskState) == 0 {
 		return fmt.Errorf("param is null")
 	}
 
@@ -134,23 +136,28 @@ func UpdateMonitorWait(strContractID, strContractHashID, strTaskState string) er
 // 执行成功：1.更新strContractID & strContractHashOldID的的SendFlag=1, SuccessCount + 1, LastExecuteTime, TaskState
 //        2.将strContractID & strContractHashNewID插入到扫描监控表中
 func UpdateMonitorSucc(strContractID string,
-	strContractHashOldID string,
-	strContractHashNewID string,
+	strContractHashIdOld string,
 	strTaskStateOld string,
+	strTaskIdOld string,
+	intTaskExecuteIndexOld int,
+	strContractHashIDNew string,
+	strTaskIdNew string,
 	strTaskStateNew string,
-	strTaskId string,
-	nTaskExecuteIndex int) error {
+	intTaskExecuteIndexNew int) error {
 
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
-		len(strContractHashOldID) == 0 ||
-		len(strContractHashNewID) == 0 ||
-		len(strTaskId) == 0 {
+		len(strContractHashIdOld) == 0 ||
+		len(strTaskIdOld) == 0 ||
+		len(strTaskStateOld) == 0 ||
+		len(strContractHashIDNew) == 0 ||
+		len(strTaskIdNew) == 0 ||
+		len(strTaskStateNew) == 0 {
 		return fmt.Errorf("param is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashOldID)
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashIdOld)
 	if err != nil {
 		return err
 	}
@@ -191,9 +198,9 @@ func UpdateMonitorSucc(strContractID string,
 	var taskSchedule model.TaskSchedule
 	taskSchedule.Id = common.GenerateUUID()
 	taskSchedule.ContractId = strContractID
-	taskSchedule.ContractHashId = strContractHashNewID
-	taskSchedule.TaskId = strTaskId
-	taskSchedule.TaskExecuteIndex = nTaskExecuteIndex
+	taskSchedule.ContractHashId = strContractHashIDNew
+	taskSchedule.TaskId = strTaskIdNew
+	taskSchedule.TaskExecuteIndex = intTaskExecuteIndexNew
 	taskSchedule.TaskState = strTaskStateNew
 	taskSchedule.NodePubkey = strNodePubkey
 	taskSchedule.StartTime = startTime

@@ -54,6 +54,21 @@ func (e Enquiry) GetNextTasks() []string {
 func (e Enquiry) UpdateState() (int8, error) {
 	return e.GeneralTask.UpdateState()
 }
+func (e Enquiry) GetTaskId() string {
+	return e.GeneralTask.GetTaskId()
+}
+
+func (e Enquiry) GetTaskExecuteIdx() int {
+	return e.GeneralTask.GetTaskExecuteIdx()
+}
+
+func (e Enquiry) SetTaskId(str_taskId string) {
+	e.GeneralTask.SetTaskId(str_taskId)
+}
+
+func (e Enquiry) SetTaskExecuteIdx(int_idx int) {
+	e.GeneralTask.SetTaskExecuteIdx(int_idx)
+}
 
 //===============描述态=====================
 

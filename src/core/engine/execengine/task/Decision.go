@@ -91,6 +91,21 @@ func (d Decision) UpdateState() (int8, error) {
 	}
 	return r_ret, r_err
 }
+func (d Decision) GetTaskId() string {
+	return d.Enquiry.GetTaskId()
+}
+
+func (d Decision) GetTaskExecuteIdx() int {
+	return d.Enquiry.GetTaskExecuteIdx()
+}
+
+func (d Decision) SetTaskId(str_taskId string) {
+	d.Enquiry.SetTaskId(str_taskId)
+}
+
+func (d Decision) SetTaskExecuteIdx(int_idx int) {
+	d.Enquiry.SetTaskExecuteIdx(int_idx)
+}
 
 //====================描述态==========================
 

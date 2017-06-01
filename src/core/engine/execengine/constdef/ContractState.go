@@ -6,14 +6,14 @@ const (
 	Contract_Signature
 	Contract_In_Process
 	Contract_Completed
-	Contract_Disgarded
+	Contract_Discarded
 )
 
 var ContractState = map[int]string{
-	Contract_Unknown: "Contract_Unknown",
-	Contract_Create:  "Contract_Create",
-	Contract_Signature: "Contract_Signature",
+	Contract_Unknown:    "Contract_Unknown",
+	Contract_Create:     "Contract_Create",
+	Contract_Signature:  "Contract_Signature",
 	Contract_In_Process: "Contract_In_Process",
-	Contract_Completed: "Contract_Completed",
-	Contract_Disgarded: "Contract_Disgarded",
+	Contract_Completed:  "Contract_Completed",
+	Contract_Discarded:  "Contract_Discarded",
 }

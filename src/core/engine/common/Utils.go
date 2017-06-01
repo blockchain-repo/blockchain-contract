@@ -170,9 +170,9 @@ func AddProperty(object interface{}, p_propertyTable map[string]interface{}, str
 		pro_object.SetValue(value.(OperateResult))
 		p_propertyTable[str_name] = pro_object
 		ReflectSetValue(object, str_name, value)
-	case SelectBranchExpression:
+	case []SelectBranchExpression:
 		pro_object = property.PropertyT{Name: str_name}
-		pro_object.SetValue(value.(SelectBranchExpression))
+		pro_object.SetValue(value.([]SelectBranchExpression))
 		p_propertyTable[str_name] = pro_object
 		ReflectSetValue(object, str_name, value)
 	case []string:

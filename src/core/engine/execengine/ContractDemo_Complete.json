@@ -1,4 +1,7 @@
 {
+  "id": "854f718a715d3dd01f52982388631e82712b9dea216ff9c02eaf7383a1d9a183",
+  "transaction": {
+    "Contract": {
   "id": "bfdb4bf1bbf13183d6637f8bab295038b39326b82cce8acff947042deb3ccc13",
   "ContractHead": {
     "MainPubkey": "HdaBUgpzpW7MicbspTe3kd2nLYk6f2WtpKTPzDULC9mK",
@@ -510,4 +513,83 @@
       }
     ]
   }
+    },
+    "Relation": {
+      "ContractHashId": "63841426ea1c501745d56ce47a4e7b93bf85841d54f2c77102ce488ac0ce8b51",
+      "ContractId": "feca0672-4ad7-4d9a-ad57-83d48db2269b",
+      "TaskExecuteIdx": 0,
+      "TaskId": "taskId",
+      "Voters": [
+        "7mQXR8NY9M1Uj86VM4CHnacY8fpLPudfmn5DaJGgXDi9"
+      ],
+      "Votes": [
+        {
+          "NodePubkey": "7mQXR8NY9M1Uj86VM4CHnacY8fpLPudfmn5DaJGgXDi9",
+          "Signature": "2dpZi2t79EGaNeUA3teUdTkE1dKwUh5n5LmwsY5inrBqghMQR3siSmsSmQmFFsf3QHyCYiuuA7oSYEKc41SWwTgg",
+          "Vote": {
+            "InvalidReason": "invalid reason",
+            "IsValid": true,
+            "Timestamp": "1495881255170",
+            "VoteFor": "854f718a715d3dd01f52982388631e82712b9dea216ff9c02eaf7383a1d9a183",
+            "VoteType": "TRANSACTION"
+          },
+          "id": "f1da2a97-4be7-4b34-9bae-92e5181cec7d"
+        }
+      ]
+    },
+    "asset": {
+      "data": {
+        "money": "RMB"
+      },
+      "divisible": true,
+      "id": "f3c71d28-861e-4cf3-8907-48c713d3677e",
+      "refillable": false,
+      "updatable": false
+    },
+    "conditions": [
+      {
+        "amount": 500,
+        "cid": 0,
+        "condition": {
+          "details": {
+            "bitmask": 32,
+            "public_key": "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL",
+            "signature": null,
+            "type": "fulfillment",
+            "type_id": 4
+          },
+          "uri": ""
+        },
+        "isfreeze": false,
+        "owners_after": [
+          "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
+        ]
+      }
+    ],
+    "fulfillments": [
+      {
+        "fid": 0,
+        "fulfillment": "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD",
+        "input": null,
+        "owners_before": [
+          "5XAJvuRGb8B3hUesjREL7zdZ82ahZqHuBV6ttf3UEhyL"
+        ]
+      }
+    ],
+    "metadata": {
+      "data": {
+        "6": {
+          "QQQQ": "9999"
+        },
+        "A": "4",
+        "a": "1",
+        "b": "2",
+        "c": "3"
+      },
+      "id": "meta-data-id"
+    },
+    "operation": "CREATE",
+    "timestamp": "1495881255168"
+  },
+  "version": 1
 }

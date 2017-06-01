@@ -38,6 +38,7 @@ func _TaskExecute() {
 
 		beegoLog.Debug("query contract base on contractId")
 		jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", strContractTask.ContractHashId)
+		//responseResult:  requestHandler.ResponseResult, data中存的是完整的Output结构体
 		responseResult, err := chain.GetTxByConHashId(jsonBody)
 		if err != nil || responseResult.Data == nil {
 			beegoLog.Error(err)
@@ -74,6 +75,7 @@ func _TaskExecute() {
 func _Execute(strData, strContractID, strContractHashID string) {
 	task_execute_time := monitor.Monitor.NewTiming()
 	contractExecuter := execengine.NewContractExecuter()
+	//strData为完整的Output结构体
 	err := contractExecuter.Load(strData)
 	if err != nil {
 		beegoLog.Error(err)

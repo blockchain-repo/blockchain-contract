@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"strings"
 	"unicontract/src/core/engine"
+	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/contract"
 	"unicontract/src/core/engine/execengine/inf"
@@ -50,12 +51,70 @@ func NewContractExecuter() *ContractExecuter {
 //====运行态周期方法
 //====运行生命周期：Load(描述态到运行态) =》 Prepare =》 Run  =》 Stop
 //将描述态加载到内存中，形成运行态（即初始化Contract、ComponentTable、PropertyTable）
+//Args: p_str_json      => 完整的contract Output结构体JSON
 func (ce *ContractExecuter) Load(p_str_json string) error {
 	var err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	r_buf.WriteString("Contract Executeor:Load.")
+	if p_str_json == "" {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Param contract_json is nil;")
+		err = errors.New("Param contract_json is nil;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	//p_str_json为完整的合约交易(Output结构体)
+	//0 识别Contract结构体和Relation结构体:
+	var map_output_first interface{} = common.Deserialize(p_str_json)
+	if map_output_first == nil {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:json str deserialize fail;")
+		err = errors.New("ContractOutput json str deserialize fail;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	var map_output_second map[string]interface{} = map_output_first.(map[string]interface{})
+	if map_output_second == nil || len(map_output_second) == 0 {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:json str deserialize fail;")
+		err = errors.New("ContractOutput map process fail;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	if map_output_second["transaction"] == nil {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:json str deserialize fail;")
+		err = errors.New("Transaction map process fail;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	var map_transaction map[string]interface{} = map_output_second["transaction"].(map[string]interface{})
+	if map_transaction["Contract"] == nil {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:json str deserialize fail;")
+		err = errors.New("Contract map process fail;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	var map_contract map[string]interface{} = map_transaction["Contract"].(map[string]interface{})
+	if map_transaction["Relation"] == nil {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:json str deserialize fail;")
+		err = errors.New("Relation map process fail;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	var map_relation map[string]interface{} = map_transaction["Relation"].(map[string]interface{})
+	var str_json_contract string = common.Serialize(map_contract)
+	if str_json_contract == "" {
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:json str deserialize fail;")
+		err = errors.New("Contract json str process fail;")
+		logs.Error(r_buf.String())
+		return err
+	}
 	//l 反序列化
-	ret_contract, err := ce.contract_executer.Deserialize(p_str_json)
+	ret_contract, err := ce.contract_executer.Deserialize(str_json_contract)
 	ce.contract_executer = ret_contract.(*contract.CognitiveContract)
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
@@ -84,6 +143,28 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 			logs.Error(r_buf.String())
 			return err
 		}
+	}
+	//4 Check合约是否可以执行，并更新合约状态
+	if !ce.contract_executer.CanExecute() {
+		err = errors.New("Contract can not execute;")
+		r_buf.WriteString("[Result]: Load Fail;")
+		r_buf.WriteString("[Error]: Contract can not execute;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	if !ce.contract_executer.UpdateContractState() {
+		err = errors.New("Update ContractState Error;")
+		r_buf.WriteString("[Result]: Load Fail;")
+		r_buf.WriteString("[Error]: Update ContractState Error;")
+		logs.Error(r_buf.String())
+		return err
+	}
+	err = ce.contract_executer.SetOrgTaskInfo(map_relation)
+	if err != nil {
+		r_buf.WriteString("[Result]: Load Fail;")
+		r_buf.WriteString("[Error]: Update ContractState Error: " + err.Error() + ";")
+		logs.Error(r_buf.String())
+		return err
 	}
 	r_buf.WriteString("[Result]:Load Success!")
 	logs.Info(r_buf.String())
@@ -261,3 +342,5 @@ func (ce *ContractExecuter) Destory() {
 		ce.contract_executer = nil
 	}
 }
+
+//------------------------------------------------------------------------------
