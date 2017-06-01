@@ -947,9 +947,6 @@ func (cc *CognitiveContract) CanExecute() bool {
 		v_bool = false
 		return v_bool
 	}
-	fmt.Println(now_date_int)
-	fmt.Println(starttime_int)
-	fmt.Println(endtime_int)
 	if now_date_int < starttime_int {
 		logs.Warning("Now_date not gt StartTime, can't execute contract!")
 		v_bool = false

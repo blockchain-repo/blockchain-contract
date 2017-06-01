@@ -5,7 +5,8 @@
       "Id": "1111111111111111111111111111111111111111111111111111111111111111111111111",
       "ContractHead": {
         "MainPubkey": "mainpubkey12345678901234567890123456789012",
-        "Timestamp": "1492619683",
+        "OperateTime": "1492619683000",
+        "AssignTime": "1492619683000",
         "Version": 1
       },
       "ContractBody": {
@@ -526,7 +527,7 @@
       "ContractHashId": "63841426ea1c501745d56ce47a4e7b93bf85841d54f2c77102ce488ac0ce8b51",
       "ContractId": "feca0672-4ad7-4d9a-ad57-83d48db2269b",
       "TaskExecuteIdx": 0,
-      "TaskId": "taskId",
+      "TaskId": "UUID100-1222-12222222",
       "Voters": [
         "7mQXR8NY9M1Uj86VM4CHnacY8fpLPudfmn5DaJGgXDi9"
       ],

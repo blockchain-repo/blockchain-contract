@@ -694,16 +694,16 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			str_json_contract, r_err := gt.GetContract().Serialize()
 			if r_err != nil {
 				r_ret = -1
-				r_buf.WriteString("[Result]: Generate OutputStruct fail;")
+				r_buf.WriteString("[Result]: Generate OutputStruct fail, str_json_contract Serialize fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 				r_buf.WriteString("Complete fail....")
 				logs.Error(r_buf.String())
 				return r_ret, r_err
 			}
-			tmp_output, r_err = function.FuncInterim(str_json_contract, gt.GetTaskId(), gt.GetTaskExecuteIdx())
+			tmp_output, r_err = function.FuncInterim(str_json_contract, gt.GetContract().GetContractId(), gt.GetTaskId(), gt.GetTaskExecuteIdx())
 			if r_err != nil {
 				r_ret = -1
-				r_buf.WriteString("[Result]: Generate OutputStruct fail;")
+				r_buf.WriteString("[Result]: Generate OutputStruct fail, FuncInterim generage output error;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 				r_buf.WriteString("Complete fail....")
 				logs.Error(r_buf.String())
@@ -711,7 +711,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			}
 			if tmp_output.GetOutput() == nil || tmp_output.GetOutput().(string) == "" {
 				r_ret = -1
-				r_buf.WriteString("[Result]: Generate OutputStruct fail;")
+				r_buf.WriteString("[Result]: Generate OutputStruct fail,FuncInterim generage output is nil;")
 				r_buf.WriteString("[Error]: outputStruct is nil;")
 				r_buf.WriteString("Complete fail....")
 				logs.Error(r_buf.String())
