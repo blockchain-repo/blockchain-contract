@@ -5,7 +5,8 @@
       "id": "bfdb4bf1bbf13183d6637f8bab295038b39326b82cce8acff947042deb3ccc13",
       "ContractHead": {
         "MainPubkey": "HdaBUgpzpW7MicbspTe3kd2nLYk6f2WtpKTPzDULC9mK",
-        "Timestamp": "1494578190560",
+        "OperateTime": "1492619683000",
+        "AssignTime": "1492619683000",
         "Version": 1
       },
       "ContractBody": {

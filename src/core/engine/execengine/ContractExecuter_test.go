@@ -81,6 +81,11 @@ func PrintContract(v_contract *contract.CognitiveContract) {
 		fmt.Println("  Signatures.Signature[", p_idx, "]: ", p_signature.Signature)
 		fmt.Println("  Signatures.SignTimestamp[", p_idx, "]: ", p_signature.SignTimestamp)
 	}
+	fmt.Println("NextTasks: ", v_contract.ContractBody.NextTasks)
+	fmt.Println("  PropertyTable[_NextTasks]: ", v_contract.GetPropertyTable()["_NextTasks"])
+	for p_idx, p_nexttask := range v_contract.ContractBody.NextTasks {
+		fmt.Println("  nexttask[", p_idx, "]: ", p_nexttask)
+	}
 	fmt.Println("MetaAttribute: ", v_contract.ContractBody.MetaAttribute)
 	fmt.Println("  PropertyTable[_MetaAttribute]: ", v_contract.GetPropertyTable()["_MetaAttribute"])
 	fmt.Println("  All MetaAttribute: ")
@@ -111,6 +116,14 @@ func PrintContract(v_contract *contract.CognitiveContract) {
 			fmt.Println("Task[", m_key, "] : ", m_value.(inf.ITask).GetState())
 		}
 	}
+	fmt.Println("ContractId: ", v_contract.GetContractId())
+	fmt.Println("OrgId: ", v_contract.GetId())
+	fmt.Println("OrgTaskId: ", v_contract.GetOrgTaskId())
+	fmt.Println("OrgTaskExecuteIdx: ", v_contract.GetOrgTaskExecuteIdx())
+	fmt.Println("OutputId: ", v_contract.GetOutputId())
+	fmt.Println("OutputTaskId: ", v_contract.GetOutputTaskId())
+	fmt.Println("OutputTaskExecuteIdx: ", v_contract.GetOutputTaskExecuteIdx())
+	fmt.Println("OutputStruct: ", v_contract.GetOutputStruct())
 }
 
 func TestContractAllLife_New(t *testing.T) {

@@ -211,17 +211,16 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-	if len(args) != 3 {
+	if len(args) != 4 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
 	var contractStr string = args[0].(string)
-	var contractHashId string = args[1].(string)
-	var contractId string = args[2].(string)
-	var taskId string = args[1].(string)
-	var taskIndex int = args[2].(int)
+	var contractId string = args[1].(string)
+	var taskId string = args[2].(string)
+	var taskIndex int = args[3].(int)
 	var metadataStr string = ""
-	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	var relationStr string = transaction.GenerateRelation("", contractId, taskId, taskIndex)
 	outputStr, v_err := transaction.ExecuteInterim(metadataStr, relationStr, contractStr)
 	if v_err != nil {
 		return v_result, v_err
