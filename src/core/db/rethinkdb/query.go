@@ -63,6 +63,18 @@ func InsertContract(contract string) bool {
 	return false
 }
 
+func DeleteContract(id string) bool {
+	if len(id) == 0 {
+		return false
+	}
+
+	res := Delete(DBNAME, TABLE_CONTRACTS, id)
+	if res.Deleted >= 1 {
+		return true
+	}
+	return false
+}
+
 func GetContractById(id string) (string, error) {
 	if id == "" {
 		return "", errors.New("id blank")
@@ -282,6 +294,40 @@ func GetContractMainPubkeyByContract(id string) (string, error) {
 		return "", err
 	}
 	return blo2, nil
+}
+
+func GetNoConsensusContracts(time string, state int) (string, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).
+		Filter(r.Row.Field("ContractHead").Field("ConsensusResult").Eq(state)).
+		Filter(r.Row.Field("ContractHead").Field("AssignTime").Le(time)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(blo), nil
+}
+
+func SetContractConsensusResultById(id string, time string, ConsensusResult int) error {
+	strJSON := fmt.Sprintf("{\"ContractHead\":{\"AssignTime\":\"%s\",\"ConsensusResult\":%d}}",
+		time, ConsensusResult)
+
+	res := Update(DBNAME, TABLE_CONTRACTS, id, strJSON)
+	if res.Replaced|res.Unchanged >= 1 {
+		return nil
+	} else {
+		return fmt.Errorf("update failed")
+	}
 }
 
 /*----------------------------- contracts end---------------------------------------*/

@@ -134,6 +134,57 @@ func Test_GetContractMainPubkeyByContract(t *testing.T) {
 	fmt.Println("222", main_pubkey)
 }
 
+func Test_SetContractConsensusResultById(t *testing.T) {
+	id := "4591d2c4c88c1ca6ea763956cf64070fc8ef3ad14c4f98277205819efe66b4c4"
+	err := SetContractConsensusResultById(id, common.GenTimestamp(), 1)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func Test_DeleteContract(t *testing.T) {
+	id := "1663c124ba5f28c5e0a030da52646144e69156f3ad2b311d4929d66291d2b4fe"
+	strContract, err := GetContractById(id)
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Log(strContract)
+	}
+
+	var contract_ model.ContractModel
+	err = json.Unmarshal([]byte(strContract), &contract_)
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Logf("%+v\n", contract_)
+	}
+
+	t.Logf("delete contract return is [ %t ]\n", DeleteContract(contract_.Id))
+
+	contract_.ContractHead.MainPubkey = "ASDFASDFASDFASDFASDF"
+
+	sldata, err := json.Marshal(contract_)
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Log(InsertContract(string(sldata)))
+	}
+}
+
+func Test_GetNoConsensusContracts(t *testing.T) {
+	timestamp := common.GenTimestamp()
+	strContracts, err := GetNoConsensusContracts(timestamp, 2)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(strContracts) == 0 {
+		t.Log("is null")
+	}
+
+	t.Log(strContracts)
+}
+
 /*----------------------------- contracts end---------------------------------------*/
 
 /*----------------------------- votes start---------------------------------------*/

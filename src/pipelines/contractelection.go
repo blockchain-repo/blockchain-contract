@@ -139,6 +139,9 @@ func ceHeadFilter() error {
 		if err == nil {
 			beegoLog.Debug("2.2.2 verify head node")
 			if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
+				// 将contract更新为正在共识阶段
+				rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
+					common.GenTimestamp(), 1)
 				beegoLog.Debug("2.2.3 verify vote")
 				vote_validate_time := monitor.Monitor.NewTiming()
 				pContractOutput, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
@@ -152,6 +155,10 @@ func ceHeadFilter() error {
 					}
 					continue
 				}
+
+				// 将contract更新为共识结束
+				rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
+					common.GenTimestamp(), 2)
 
 				if pass { // 合约合法
 					beegoLog.Debug("2.3 ceHeadFilter --->")
@@ -182,6 +189,8 @@ func ceHeadFilter() error {
 					//monitor.Monitor.Gauge("consensus_failure", consensus_failure_count)
 					monitor.Monitor.Count("consensus_failure", 1)
 				}
+			} else {
+				beegoLog.Info("I am not head node.")
 			}
 		} else {
 			beegoLog.Error(err.Error())
