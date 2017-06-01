@@ -70,10 +70,12 @@ func Test_UpdateMonitorSend(t *testing.T) {
 }
 
 func Test_UpdateMonitorFail(t *testing.T) {
-	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
-	strContractHashID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	strContractID := "9d3be6de-4fb1-4bd0-867b-b83e18f80203"
+	strContractHashID := "54f21b37-601d-42c8-93f5-f3acf41c19c4"
+	strTaskId := "asdfasdfasdfasfasdf"
 	strTaskState := "asdfasdfasdf"
-	err := UpdateMonitorFail(strContractID, strContractHashID, strTaskState)
+	nTaskExecuteIndex := 56785
+	err := UpdateMonitorFail(strContractID, strContractHashID, strTaskId, strTaskState, nTaskExecuteIndex)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -82,10 +84,12 @@ func Test_UpdateMonitorFail(t *testing.T) {
 }
 
 func Test_UpdateMonitorWait(t *testing.T) {
-	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
-	strContractHashID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	strContractID := "9d3be6de-4fb1-4bd0-867b-b83e18f80203"
+	strContractHashID := "54f21b37-601d-42c8-93f5-f3acf41c19c4"
+	strTaskId := "1234123412341234"
 	strTaskState := "asdfasdfasdf"
-	err := UpdateMonitorWait(strContractID, strContractHashID, strTaskState)
+	nTaskExecuteIndex := 2222
+	err := UpdateMonitorWait(strContractID, strContractHashID, strTaskId, strTaskState, nTaskExecuteIndex)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -103,7 +107,7 @@ func Test_UpdateMonitorSucc(t *testing.T) {
 	strTaskIdNew := "1000000"
 	strTaskStateNew := "new"
 	intTaskExecuteIdxNew := 23
-	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strTaskId, strTaskStateOld, intTaskExecuteIdx,
+	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strTaskStateOld, strTaskId, intTaskExecuteIdx,
 		strContractHashIDNew, strTaskIdNew, strTaskStateNew, intTaskExecuteIdxNew)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())

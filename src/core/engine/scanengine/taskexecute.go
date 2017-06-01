@@ -42,14 +42,14 @@ func _TaskExecute() {
 		responseResult, err := chain.GetTxByConHashId(jsonBody)
 		if err != nil || responseResult.Data == nil {
 			beegoLog.Error(err)
-			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId, "")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
 		if responseResult.Code != _HTTP_OK {
 			beegoLog.Error("responseResult.Code is [ %d ]", responseResult.Code)
 			beegoLog.Error("responseResult.Message is [ %s ]", responseResult.Message)
-			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId, "")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
@@ -58,7 +58,7 @@ func _TaskExecute() {
 		if !ok || len(contractData) == 0 {
 			beegoLog.Error("responseResult.Data is not ok for type []interface {}. type is %T, or value is [], value is %+v",
 				responseResult.Data, responseResult.Data)
-			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId, "")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
@@ -79,7 +79,7 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	err := contractExecuter.Load(strData)
 	if err != nil {
 		beegoLog.Error(err)
-		_UpdateToFailed(strContractID, strContractHashID, "")
+		_UpdateToFailed(strContractID, strContractHashID)
 		return
 	}
 	//执行引擎初始化环境
@@ -88,7 +88,7 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	ret, err := contractExecuter.Start()
 	if err != nil {
 		beegoLog.Error(err)
-		_UpdateToFailed(strContractID, strContractHashID, "")
+		_UpdateToFailed(strContractID, strContractHashID)
 		return
 	}
 	if ret == 0 {
@@ -106,16 +106,16 @@ func _Execute(strData, strContractID, strContractHashID string) {
 }
 
 //---------------------------------------------------------------------------
-func _UpdateToWait(strContractID, strContractHashID, strTaskState string) {
-	err := engineCommon.UpdateMonitorWait(strContractID, strContractHashID, strTaskState)
+func _UpdateToWait(strContractID, strContractHashID string) {
+	err := engineCommon.UpdateMonitorWait(strContractID, strContractHashID, "0", "", 1)
 	if err != nil {
 		beegoLog.Error(err)
 	}
 }
 
 //---------------------------------------------------------------------------
-func _UpdateToFailed(strContractID, strContractHashID, strTaskState string) {
-	err := engineCommon.UpdateMonitorFail(strContractID, strContractHashID, strTaskState)
+func _UpdateToFailed(strContractID, strContractHashID string) {
+	err := engineCommon.UpdateMonitorFail(strContractID, strContractHashID, "0", "", 1)
 	if err != nil {
 		beegoLog.Error(err)
 	}

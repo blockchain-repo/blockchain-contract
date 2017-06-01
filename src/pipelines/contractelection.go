@@ -303,11 +303,10 @@ func _verifyValid(mVotes map[string]model.Vote) int {
 	}
 
 	nValid := 0
-	nTotalVoteNum := len(mVotes)
-	if nValidNum*2 > nTotalVoteNum {
+	if nValidNum*2 > gnPublicKeysNum {
 		nValid = 1
 	}
-	if nInValidNum*2 > nTotalVoteNum {
+	if nInValidNum*2 >= gnPublicKeysNum {
 		nValid = 2
 	}
 

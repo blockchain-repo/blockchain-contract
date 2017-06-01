@@ -555,9 +555,11 @@ func Test_SetTaskScheduleCount(t *testing.T) {
 }
 
 func Test_SetTaskState(t *testing.T) {
-	strID := "355c42b2-ff2f-442c-b833-7dc02a277de9"
+	strID := "c89a79d1-5895-438a-97d7-484794d6437b"
+	strTaskId := "1"
 	strStat := "asdfasdfasdfasdfasdf"
-	err := SetTaskState(strID, strStat)
+	nTaskExecuteIndex := 12121
+	err := SetTaskState(strID, strTaskId, strStat, nTaskExecuteIndex)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
