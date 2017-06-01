@@ -18,7 +18,7 @@ message ContractAsset{
     string Description = 4;
     string Unit = 5;
     float Amount= 6;
-    bytes MetaData = 7;
+    map<string, string> MetaData = 7;
 }
 
 message ExpressionResult {

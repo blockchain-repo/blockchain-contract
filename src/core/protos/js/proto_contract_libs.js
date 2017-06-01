@@ -270,7 +270,7 @@ proto.protos.ContractAsset.toObject = function(includeInstance, msg) {
     description: jspb.Message.getFieldWithDefault(msg, 4, ""),
     unit: jspb.Message.getFieldWithDefault(msg, 5, ""),
     amount: +jspb.Message.getFieldWithDefault(msg, 6, 0.0),
-    metadata: msg.getMetadata_asB64()
+    metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -332,8 +332,10 @@ proto.protos.ContractAsset.deserializeBinaryFromReader = function(msg, reader) {
       msg.setAmount(value);
       break;
     case 7:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setMetadata(value);
+      var value = msg.getMetadataMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString);
+         });
       break;
     default:
       reader.skipField();
@@ -405,12 +407,9 @@ proto.protos.ContractAsset.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getMetadata_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
-      7,
-      f
-    );
+  f = message.getMetadataMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(7, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -506,41 +505,20 @@ proto.protos.ContractAsset.prototype.setAmount = function(value) {
 
 
 /**
- * optional bytes MetaData = 7;
- * @return {!(string|Uint8Array)}
+ * map<string, string> MetaData = 7;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
  */
-proto.protos.ContractAsset.prototype.getMetadata = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+proto.protos.ContractAsset.prototype.getMetadataMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 7, opt_noLazyCreate,
+      null));
 };
 
 
-/**
- * optional bytes MetaData = 7;
- * This is a type-conversion wrapper around `getMetadata()`
- * @return {string}
- */
-proto.protos.ContractAsset.prototype.getMetadata_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getMetadata()));
-};
-
-
-/**
- * optional bytes MetaData = 7;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getMetadata()`
- * @return {!Uint8Array}
- */
-proto.protos.ContractAsset.prototype.getMetadata_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getMetadata()));
-};
-
-
-/** @param {!(string|Uint8Array)} value */
-proto.protos.ContractAsset.prototype.setMetadata = function(value) {
-  jspb.Message.setField(this, 7, value);
+proto.protos.ContractAsset.prototype.clearMetadataMap = function() {
+  this.getMetadataMap().clear();
 };
 
 

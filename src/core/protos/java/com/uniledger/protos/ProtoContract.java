@@ -851,9 +851,38 @@ public final class ProtoContract {
     float getAmount();
 
     /**
-     * <code>bytes MetaData = 7;</code>
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
      */
-    com.google.protobuf.ByteString getMetaData();
+    int getMetaDataCount();
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+    boolean containsMetaData(
+        java.lang.String key);
+    /**
+     * Use {@link #getMetaDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getMetaData();
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getMetaDataMap();
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+
+    java.lang.String getMetaDataOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue);
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+
+    java.lang.String getMetaDataOrThrow(
+        java.lang.String key);
   }
   /**
    * Protobuf type {@code protos.ContractAsset}
@@ -873,7 +902,6 @@ public final class ProtoContract {
       description_ = "";
       unit_ = "";
       amount_ = 0F;
-      metaData_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -937,8 +965,16 @@ public final class ProtoContract {
               break;
             }
             case 58: {
-
-              metaData_ = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                metaData_ = com.google.protobuf.MapField.newMapField(
+                    MetaDataDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000040;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              metaData__ = input.readMessage(
+                  MetaDataDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              metaData_.getMutableMap().put(
+                  metaData__.getKey(), metaData__.getValue());
               break;
             }
           }
@@ -957,6 +993,17 @@ public final class ProtoContract {
       return com.uniledger.protos.ProtoContract.internal_static_protos_ContractAsset_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 7:
+          return internalGetMetaData();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.uniledger.protos.ProtoContract.internal_static_protos_ContractAsset_fieldAccessorTable
@@ -964,6 +1011,7 @@ public final class ProtoContract {
               com.uniledger.protos.ProtoContract.ContractAsset.class, com.uniledger.protos.ProtoContract.ContractAsset.Builder.class);
     }
 
+    private int bitField0_;
     public static final int ASSETID_FIELD_NUMBER = 1;
     private volatile java.lang.Object assetId_;
     /**
@@ -1144,12 +1192,79 @@ public final class ProtoContract {
     }
 
     public static final int METADATA_FIELD_NUMBER = 7;
-    private com.google.protobuf.ByteString metaData_;
-    /**
-     * <code>bytes MetaData = 7;</code>
-     */
-    public com.google.protobuf.ByteString getMetaData() {
+    private static final class MetaDataDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  com.uniledger.protos.ProtoContract.internal_static_protos_ContractAsset_MetaDataEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> metaData_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetMetaData() {
+      if (metaData_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            MetaDataDefaultEntryHolder.defaultEntry);
+      }
       return metaData_;
+    }
+
+    public int getMetaDataCount() {
+      return internalGetMetaData().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+
+    public boolean containsMetaData(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetMetaData().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getMetaDataMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getMetaData() {
+      return getMetaDataMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+
+    public java.util.Map<java.lang.String, java.lang.String> getMetaDataMap() {
+      return internalGetMetaData().getMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+
+    public java.lang.String getMetaDataOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetMetaData().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, string&gt; MetaData = 7;</code>
+     */
+
+    public java.lang.String getMetaDataOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetMetaData().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1182,9 +1297,12 @@ public final class ProtoContract {
       if (amount_ != 0F) {
         output.writeFloat(6, amount_);
       }
-      if (!metaData_.isEmpty()) {
-        output.writeBytes(7, metaData_);
-      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetMetaData(),
+          MetaDataDefaultEntryHolder.defaultEntry,
+          7);
     }
 
     public int getSerializedSize() {
@@ -1211,9 +1329,15 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(6, amount_);
       }
-      if (!metaData_.isEmpty()) {
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetMetaData().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        metaData__ = MetaDataDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(7, metaData_);
+            .computeMessageSize(7, metaData__);
       }
       memoizedSize = size;
       return size;
@@ -1245,8 +1369,8 @@ public final class ProtoContract {
           java.lang.Float.floatToIntBits(getAmount())
           == java.lang.Float.floatToIntBits(
               other.getAmount()));
-      result = result && getMetaData()
-          .equals(other.getMetaData());
+      result = result && internalGetMetaData().equals(
+          other.internalGetMetaData());
       return result;
     }
 
@@ -1270,8 +1394,10 @@ public final class ProtoContract {
       hash = (37 * hash) + AMOUNT_FIELD_NUMBER;
       hash = (53 * hash) + java.lang.Float.floatToIntBits(
           getAmount());
-      hash = (37 * hash) + METADATA_FIELD_NUMBER;
-      hash = (53 * hash) + getMetaData().hashCode();
+      if (!internalGetMetaData().getMap().isEmpty()) {
+        hash = (37 * hash) + METADATA_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetMetaData().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1366,6 +1492,28 @@ public final class ProtoContract {
         return com.uniledger.protos.ProtoContract.internal_static_protos_ContractAsset_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 7:
+            return internalGetMetaData();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 7:
+            return internalGetMutableMetaData();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.uniledger.protos.ProtoContract.internal_static_protos_ContractAsset_fieldAccessorTable
@@ -1402,8 +1550,7 @@ public final class ProtoContract {
 
         amount_ = 0F;
 
-        metaData_ = com.google.protobuf.ByteString.EMPTY;
-
+        internalGetMutableMetaData().clear();
         return this;
       }
 
@@ -1426,13 +1573,17 @@ public final class ProtoContract {
 
       public com.uniledger.protos.ProtoContract.ContractAsset buildPartial() {
         com.uniledger.protos.ProtoContract.ContractAsset result = new com.uniledger.protos.ProtoContract.ContractAsset(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.assetId_ = assetId_;
         result.name_ = name_;
         result.caption_ = caption_;
         result.description_ = description_;
         result.unit_ = unit_;
         result.amount_ = amount_;
-        result.metaData_ = metaData_;
+        result.metaData_ = internalGetMetaData();
+        result.metaData_.makeImmutable();
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -1497,9 +1648,8 @@ public final class ProtoContract {
         if (other.getAmount() != 0F) {
           setAmount(other.getAmount());
         }
-        if (other.getMetaData() != com.google.protobuf.ByteString.EMPTY) {
-          setMetaData(other.getMetaData());
-        }
+        internalGetMutableMetaData().mergeFrom(
+            other.internalGetMetaData());
         onChanged();
         return this;
       }
@@ -1525,6 +1675,7 @@ public final class ProtoContract {
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object assetId_ = "";
       /**
@@ -1897,32 +2048,126 @@ public final class ProtoContract {
         return this;
       }
 
-      private com.google.protobuf.ByteString metaData_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes MetaData = 7;</code>
-       */
-      public com.google.protobuf.ByteString getMetaData() {
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> metaData_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMetaData() {
+        if (metaData_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              MetaDataDefaultEntryHolder.defaultEntry);
+        }
         return metaData_;
       }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutableMetaData() {
+        onChanged();;
+        if (metaData_ == null) {
+          metaData_ = com.google.protobuf.MapField.newMapField(
+              MetaDataDefaultEntryHolder.defaultEntry);
+        }
+        if (!metaData_.isMutable()) {
+          metaData_ = metaData_.copy();
+        }
+        return metaData_;
+      }
+
+      public int getMetaDataCount() {
+        return internalGetMetaData().getMap().size();
+      }
       /**
-       * <code>bytes MetaData = 7;</code>
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
        */
-      public Builder setMetaData(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        metaData_ = value;
-        onChanged();
+
+      public boolean containsMetaData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetMetaData().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getMetaDataMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getMetaData() {
+        return getMetaDataMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
+       */
+
+      public java.util.Map<java.lang.String, java.lang.String> getMetaDataMap() {
+        return internalGetMetaData().getMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
+       */
+
+      public java.lang.String getMetaDataOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetMetaData().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
+       */
+
+      public java.lang.String getMetaDataOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetMetaData().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearMetaData() {
+        internalGetMutableMetaData().getMutableMap()
+            .clear();
         return this;
       }
       /**
-       * <code>bytes MetaData = 7;</code>
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
        */
-      public Builder clearMetaData() {
-        
-        metaData_ = getDefaultInstance().getMetaData();
-        onChanged();
+
+      public Builder removeMetaData(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableMetaData().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutableMetaData() {
+        return internalGetMutableMetaData().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
+       */
+      public Builder putMetaData(
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableMetaData().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, string&gt; MetaData = 7;</code>
+       */
+
+      public Builder putAllMetaData(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        internalGetMutableMetaData().getMutableMap()
+            .putAll(values);
         return this;
       }
       public final Builder setUnknownFields(
@@ -18903,6 +19148,11 @@ public final class ProtoContract {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ContractAsset_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ContractAsset_MetaDataEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ContractAsset_MetaDataEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ExpressionResult_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -18963,71 +19213,73 @@ public final class ProtoContract {
     java.lang.String[] descriptorData = {
       "\n\016contract.proto\022\006protos\"R\n\021ContractSign" +
       "ature\022\023\n\013OwnerPubkey\030\001 \001(\t\022\021\n\tSignature\030" +
-      "\002 \001(\t\022\025\n\rSignTimestamp\030\003 \001(\t\"\204\001\n\rContrac" +
+      "\002 \001(\t\022\025\n\rSignTimestamp\030\003 \001(\t\"\332\001\n\rContrac" +
       "tAsset\022\017\n\007AssetId\030\001 \001(\t\022\014\n\004Name\030\002 \001(\t\022\017\n" +
       "\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\014\n\004U" +
-      "nit\030\005 \001(\t\022\016\n\006Amount\030\006 \001(\002\022\020\n\010MetaData\030\007 " +
-      "\001(\014\"2\n\020ExpressionResult\022\020\n\010Messsage\030\001 \001(" +
-      "\t\022\014\n\004Code\030\002 \001(\005\"\271\001\n\024ComponentsExpression" +
-      "\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Captio" +
-      "n\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n\rExpressi",
-      "onStr\030\005 \001(\t\0222\n\020ExpressionResult\030\006 \001(\0132\030." +
-      "protos.ExpressionResult\022\022\n\nLogicValue\030\007 " +
-      "\001(\005\"\311\004\n\rComponentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005" +
-      "Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descript" +
-      "ion\030\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014HardCon" +
-      "vType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022%\n\006Parent\030" +
-      "\010 \001(\0132\025.protos.ComponentData\022\021\n\tMandator" +
-      "y\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0223\n\007Options\030\013 \003(\0132\"" +
-      ".protos.ComponentData.OptionsEntry\022\016\n\006Fo" +
-      "rmat\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tValueUin",
-      "t\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013ValueStri" +
-      "ng\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\003\022\030\n\020Def" +
-      "aultValueUint\030\022 \001(\004\022\031\n\021DefaultValueFloat" +
-      "\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024\n\014Da" +
-      "taRangeInt\030\025 \003(\003\022\025\n\rDataRangeUint\030\026 \003(\004\022" +
-      "\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEntry\022" +
-      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026Selec" +
-      "tBranchExpression\022\033\n\023BranchExpressionStr" +
-      "\030\001 \001(\t\022\035\n\025BranchExpressionValue\030\002 \001(\t\"\266\005" +
-      "\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ct",
-      "ype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descriptio" +
-      "n\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006" +
-      " \003(\0132\034.protos.ComponentsExpression\0227\n\021Co" +
-      "mpleteCondition\030\007 \003(\0132\034.protos.Component" +
-      "sExpression\0226\n\020DiscardCondition\030\010 \003(\0132\034." +
-      "protos.ComponentsExpression\022\021\n\tNextTasks" +
-      "\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Compon" +
-      "entData\022C\n\035DataValueSetterExpressionList" +
-      "\030\013 \003(\0132\034.protos.ComponentsExpression\0220\n\r" +
-      "CandidateList\030\014 \001(\0132\031.protos.ContractCom",
-      "ponent\0221\n\016DecisionResult\030\r \001(\0132\031.protos." +
-      "ContractComponent\022\020\n\010TaskList\030\016 \003(\t\022\030\n\020S" +
-      "upportArguments\030\017 \003(\t\022\030\n\020AgainstArgument" +
-      "s\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022\026" +
-      "\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(\t\0226" +
-      "\n\016SelectBranches\030\025 \003(\0132\036.protos.SelectBr" +
-      "anchExpression\"\204\004\n\014ContractBody\022\022\n\nContr" +
-      "actId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(" +
-      "\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022" +
-      "\025\n\rContractState\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022",
-      "\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017" +
-      "\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022" +
-      "-\n\016ContractAssets\030\014 \003(\0132\025.protos.Contrac" +
-      "tAsset\0225\n\022ContractSignatures\030\r \003(\0132\031.pro" +
-      "tos.ContractSignature\0225\n\022ContractCompone" +
-      "nts\030\016 \003(\0132\031.protos.ContractComponent\022>\n\r" +
-      "MetaAttribute\030\017 \003(\0132\'.protos.ContractBod" +
-      "y.MetaAttributeEntry\022\021\n\tNextTasks\030\020 \003(\t\032" +
-      "4\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
-      "lue\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nMainPub",
-      "key\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssignTime" +
-      "\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017Consensus" +
-      "Result\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014" +
-      "ContractHead\030\002 \001(\0132\024.protos.ContractHead" +
-      "\022*\n\014ContractBody\030\003 \001(\0132\024.protos.Contract" +
-      "BodyB%\n\024com.uniledger.protosB\rProtoContr" +
-      "actb\006proto3"
+      "nit\030\005 \001(\t\022\016\n\006Amount\030\006 \001(\002\0225\n\010MetaData\030\007 " +
+      "\003(\0132#.protos.ContractAsset.MetaDataEntry" +
+      "\032/\n\rMetaDataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t:\0028\001\"2\n\020ExpressionResult\022\020\n\010Messsag" +
+      "e\030\001 \001(\t\022\014\n\004Code\030\002 \001(\005\"\271\001\n\024ComponentsExpr",
+      "ession\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007" +
+      "Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n\rEx" +
+      "pressionStr\030\005 \001(\t\0222\n\020ExpressionResult\030\006 " +
+      "\001(\0132\030.protos.ExpressionResult\022\022\n\nLogicVa" +
+      "lue\030\007 \001(\005\"\311\004\n\rComponentData\022\r\n\005Cname\030\001 \001" +
+      "(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013De" +
+      "scription\030\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014H" +
+      "ardConvType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022%\n\006P" +
+      "arent\030\010 \001(\0132\025.protos.ComponentData\022\021\n\tMa" +
+      "ndatory\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0223\n\007Options\030\013",
+      " \003(\0132\".protos.ComponentData.OptionsEntry" +
+      "\022\016\n\006Format\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tVa" +
+      "lueUint\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013Val" +
+      "ueString\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\003\022" +
+      "\030\n\020DefaultValueUint\030\022 \001(\004\022\031\n\021DefaultValu" +
+      "eFloat\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t" +
+      "\022\024\n\014DataRangeInt\030\025 \003(\003\022\025\n\rDataRangeUint\030" +
+      "\026 \003(\004\022\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014Options" +
+      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n" +
+      "\026SelectBranchExpression\022\033\n\023BranchExpress",
+      "ionStr\030\001 \001(\t\022\035\n\025BranchExpressionValue\030\002 " +
+      "\001(\t\"\266\005\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t" +
+      "\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Desc" +
+      "ription\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondi" +
+      "tion\030\006 \003(\0132\034.protos.ComponentsExpression" +
+      "\0227\n\021CompleteCondition\030\007 \003(\0132\034.protos.Com" +
+      "ponentsExpression\0226\n\020DiscardCondition\030\010 " +
+      "\003(\0132\034.protos.ComponentsExpression\022\021\n\tNex" +
+      "tTasks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos." +
+      "ComponentData\022C\n\035DataValueSetterExpressi",
+      "onList\030\013 \003(\0132\034.protos.ComponentsExpressi" +
+      "on\0220\n\rCandidateList\030\014 \001(\0132\031.protos.Contr" +
+      "actComponent\0221\n\016DecisionResult\030\r \001(\0132\031.p" +
+      "rotos.ContractComponent\022\020\n\010TaskList\030\016 \003(" +
+      "\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020AgainstAr" +
+      "guments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022" +
+      " \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024" +
+      " \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.protos.Se" +
+      "lectBranchExpression\"\204\004\n\014ContractBody\022\022\n" +
+      "\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctyp",
+      "e\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Description\030" +
+      "\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creator\030" +
+      "\007 \001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTime\030\t" +
+      " \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwners\030" +
+      "\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.protos.C" +
+      "ontractAsset\0225\n\022ContractSignatures\030\r \003(\013" +
+      "2\031.protos.ContractSignature\0225\n\022ContractC" +
+      "omponents\030\016 \003(\0132\031.protos.ContractCompone" +
+      "nt\022>\n\rMetaAttribute\030\017 \003(\0132\'.protos.Contr" +
+      "actBody.MetaAttributeEntry\022\021\n\tNextTasks\030",
+      "\020 \003(\t\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(\t" +
+      "\022\r\n\005value\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nM" +
+      "ainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssi" +
+      "gnTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017Con" +
+      "sensusResult\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001" +
+      "(\t\022*\n\014ContractHead\030\002 \001(\0132\024.protos.Contra" +
+      "ctHead\022*\n\014ContractBody\030\003 \001(\0132\024.protos.Co" +
+      "ntractBodyB%\n\024com.uniledger.protosB\rProt" +
+      "oContractb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -19053,6 +19305,12 @@ public final class ProtoContract {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractAsset_descriptor,
         new java.lang.String[] { "AssetId", "Name", "Caption", "Description", "Unit", "Amount", "MetaData", });
+    internal_static_protos_ContractAsset_MetaDataEntry_descriptor =
+      internal_static_protos_ContractAsset_descriptor.getNestedTypes().get(0);
+    internal_static_protos_ContractAsset_MetaDataEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ContractAsset_MetaDataEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ExpressionResult_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_protos_ExpressionResult_fieldAccessorTable = new
