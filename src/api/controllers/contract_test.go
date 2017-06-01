@@ -209,11 +209,11 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	return requestBody, nil
 }
 
-var default_url = "http://36.110.71.170:66/v1/contract/"
+//var default_url = "http://36.110.71.170:66/v1/contract/"
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
 //var default_url = "http://36.110.71.170:66/v1/contract/"
-//var default_url = "http://localhost:8088/v1/contract/"
+var default_url = "http://localhost:8088/v1/contract/"
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
 

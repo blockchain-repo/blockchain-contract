@@ -1,0 +1,4 @@
+#头节点监控配置
+MonitorHeadNode:
+  scan_time: 1              #扫描间隔时间，单位是小时
+  interval_time: 1          #处理共识的时间阈值，单位是小时;比如处理1小时前还未共识的合约

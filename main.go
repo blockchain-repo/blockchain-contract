@@ -1,18 +1,21 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
 	"os"
 	"strconv"
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common"
 	"unicontract/src/common/basic"
 	"unicontract/src/config"
+	"unicontract/src/core/control"
+	"unicontract/src/core/control/headNodeMonitor"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/scanengine"
 	"unicontract/src/pipelines"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 )
 
 func main() {
@@ -59,7 +62,13 @@ func runStart() {
 	scanengine.Init()
 	logs.Info("scanengine Init")
 	go scanengine.Start()
-	logs.Info("UCVM ScanEngine Init")
+	logs.Info("UCVM ScanEngine Start")
+	control.Init()
+	logs.Info("control Init")
+	headNodeMonitor.Init()
+	logs.Info("headNodeMonitor Init")
+	go headNodeMonitor.Start()
+	logs.Info("headNodeMonitor Start")
 	beego.Run()
 	logs.Info("beego Run")
 }
