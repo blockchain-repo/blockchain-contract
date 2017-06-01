@@ -34,11 +34,10 @@ const (
 
 func (c *ContractController) parseProtoRequestBody() (token string, contract *protos.Contract, err error, status int) {
 	contentType := c.Ctx.Input.Header("Content-Type")
-	//requestDataType := c.Ctx.Input.Header("RequestDataType")
 	token = c.Ctx.Input.Header("token")
 	if token == "" {
-		err = fmt.Errorf("服务器拒绝请求")
-		status = HTTP_STATUS_CODE_Forbidden
+		err = fmt.Errorf("token is blank!")
+		status = HTTP_STATUS_CODE_BadRequest
 		return
 	}
 
@@ -49,13 +48,14 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 		err = proto.Unmarshal(requestBody, contract)
 		if err != nil {
 			logs.Error("contract parseRequestBody unmarshal err ", err)
-			err = fmt.Errorf("服务器拒绝请求")
+			err = fmt.Errorf("contract parseRequestBody unmarshal err ")
 			status = HTTP_STATUS_CODE_BadRequest
 			return
 		}
-
+		//todo temp
+		logs.Warn(contract)
 		if contract == nil || contract.Id == "" {
-			err = fmt.Errorf("contract error")
+			err = fmt.Errorf("contract nil or contract.Id is blank!")
 			status = HTTP_STATUS_CODE_BadRequest
 			return
 		}
@@ -201,9 +201,21 @@ func (c *ContractController) Create() {
 	}
 
 	contractModel := fromContractToContractModel(contract)
+
+	//TODO 额外验证 合约基本字段、owners、component为空
+	contractHead := contractModel.ContractHead
+	contractBody := contractModel.ContractBody
+	components := contractModel.ContractBody.ContractComponents
+	if contractHead == nil || contractBody == nil || contractBody.ContractOwners == nil || components == nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过!")
+		logs.Debug("API[Create] token is", token)
+		monitor.Monitor.Count("request_fail", 1)
+		return
+	}
+
 	contractValid := contractModel.Validate()
 	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过!")
 		logs.Debug("API[Create] token is", token)
 		monitor.Monitor.Count("request_fail", 1)
 		return
@@ -368,6 +380,62 @@ func (c *ContractController) QueryAll() {
 	}
 
 	contractModelStr, err := rethinkdb.GetContractsByMapCondition(requestParamMap)
+	if err != nil {
+		logs.Error("API[Query]合约(Id="+contractId+")查询错误: ", err)
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		return
+	}
+
+	if contractModelStr == "" {
+		logs.Warn("API[Query]合约(Id=" + contractId + ")不存在: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
+		return
+	}
+
+	contractListProto, err := fromContractModelArrayStrToContracts(contractModelStr)
+	if err != nil {
+		logs.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		return
+	}
+	contractListProtoBytes, err := proto.Marshal(&contractListProto)
+	if err != nil {
+		logs.Error("API[QueryALl]合约, 转换失败(proto.Marshal) ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		return
+	}
+	contractProtoStr := string(contractListProtoBytes)
+	c.responseJsonBody(contractProtoStr, true, "API[Query]查询合约成功!")
+	//c.responseJsonBody(contractProtoStr, true, "API[Query] success!")
+}
+
+func (c *ContractController) QueryLog() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	/*------------------- requestParams start ------------------*/
+	contractState, _ := requestParamMap["status"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+
+	contractId, _ := requestParamMap["contractId"].(string)
+	//if !ok {
+	//	logs.Error("contractId type error")
+	//}
+	contractName, _ := requestParamMap["contractName"].(string)
+	/*------------------- requestParams end ------------------*/
+	logs.Warn("Body: ", c.Ctx.Request.Body)
+	//logs.Warn("Header: ", c.Ctx.Request.Header)
+
+	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s, contractName=%s]",
+		c.Ctx.Request.RequestURI, token, owner, contractState, contractId, contractName))
+	if token == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+
+	contractModelStr, err := rethinkdb.GetContractsLogByMapCondition(requestParamMap)
 	if err != nil {
 		logs.Error("API[Query]合约(Id="+contractId+")查询错误: ", err)
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")

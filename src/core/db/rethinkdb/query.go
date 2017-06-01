@@ -220,6 +220,38 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 	return common.Serialize(blo), nil
 }
 
+// 根据传入条件查询合约
+func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, error) {
+	contractId, _ := conditions["contractId"].(string)
+	owner, _ := conditions["owner"].(string)
+	if owner == "" {
+		return "", errors.New("owner blank")
+	}
+	if contractId == "" {
+		return "", errors.New("contractId blank")
+	}
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	var err error
+	if contractId != "" {
+		res, err = r.Table(TABLE_CONTRACTS).
+			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).Run(session)
+	}
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(blo), nil
+}
+
 //根据 contract.id 获取合约处理主节点
 func GetContractMainPubkeyByContract(id string) (string, error) {
 	session := ConnectDB(DBNAME)
