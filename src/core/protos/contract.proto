@@ -114,6 +114,8 @@ message ContractHead {
     // add date: 2017-05-11 合约执行时间戳
     //操作时间,记录状态改变时间, Timestamp修改而来 2017-05-27 17:10:0
     string OperateTime = 4;
+    //add date: 2017-06-01 共识结果,是否共识等
+    int32 ConsensusResult = 5;
 }
 
 message Contract {

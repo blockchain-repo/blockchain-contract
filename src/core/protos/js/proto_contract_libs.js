@@ -3232,7 +3232,8 @@ proto.protos.ContractHead.toObject = function(includeInstance, msg) {
     mainpubkey: jspb.Message.getFieldWithDefault(msg, 1, ""),
     version: jspb.Message.getFieldWithDefault(msg, 2, 0),
     assigntime: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    operatetime: jspb.Message.getFieldWithDefault(msg, 4, "")
+    operatetime: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    consensusresult: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -3284,6 +3285,10 @@ proto.protos.ContractHead.deserializeBinaryFromReader = function(msg, reader) {
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setOperatetime(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setConsensusresult(value);
       break;
     default:
       reader.skipField();
@@ -3338,6 +3343,13 @@ proto.protos.ContractHead.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeString(
       4,
+      f
+    );
+  }
+  f = message.getConsensusresult();
+  if (f !== 0) {
+    writer.writeInt32(
+      5,
       f
     );
   }
@@ -3401,6 +3413,21 @@ proto.protos.ContractHead.prototype.getOperatetime = function() {
 /** @param {string} value */
 proto.protos.ContractHead.prototype.setOperatetime = function(value) {
   jspb.Message.setField(this, 4, value);
+};
+
+
+/**
+ * optional int32 ConsensusResult = 5;
+ * @return {number}
+ */
+proto.protos.ContractHead.prototype.getConsensusresult = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/** @param {number} value */
+proto.protos.ContractHead.prototype.setConsensusresult = function(value) {
+  jspb.Message.setField(this, 5, value);
 };
 
 
