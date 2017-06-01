@@ -15094,6 +15094,15 @@ public final class ProtoContract {
      */
     com.google.protobuf.ByteString
         getOperateTimeBytes();
+
+    /**
+     * <pre>
+     *add date: 2017-06-01 共识结果,是否共识等
+     * </pre>
+     *
+     * <code>int32 ConsensusResult = 5;</code>
+     */
+    int getConsensusResult();
   }
   /**
    * Protobuf type {@code protos.ContractHead}
@@ -15111,6 +15120,7 @@ public final class ProtoContract {
       version_ = 0;
       assignTime_ = "";
       operateTime_ = "";
+      consensusResult_ = 0;
     }
 
     @java.lang.Override
@@ -15159,6 +15169,11 @@ public final class ProtoContract {
               java.lang.String s = input.readStringRequireUtf8();
 
               operateTime_ = s;
+              break;
+            }
+            case 40: {
+
+              consensusResult_ = input.readInt32();
               break;
             }
           }
@@ -15313,6 +15328,19 @@ public final class ProtoContract {
       }
     }
 
+    public static final int CONSENSUSRESULT_FIELD_NUMBER = 5;
+    private int consensusResult_;
+    /**
+     * <pre>
+     *add date: 2017-06-01 共识结果,是否共识等
+     * </pre>
+     *
+     * <code>int32 ConsensusResult = 5;</code>
+     */
+    public int getConsensusResult() {
+      return consensusResult_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -15337,6 +15365,9 @@ public final class ProtoContract {
       if (!getOperateTimeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, operateTime_);
       }
+      if (consensusResult_ != 0) {
+        output.writeInt32(5, consensusResult_);
+      }
     }
 
     public int getSerializedSize() {
@@ -15356,6 +15387,10 @@ public final class ProtoContract {
       }
       if (!getOperateTimeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, operateTime_);
+      }
+      if (consensusResult_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, consensusResult_);
       }
       memoizedSize = size;
       return size;
@@ -15381,6 +15416,8 @@ public final class ProtoContract {
           .equals(other.getAssignTime());
       result = result && getOperateTime()
           .equals(other.getOperateTime());
+      result = result && (getConsensusResult()
+          == other.getConsensusResult());
       return result;
     }
 
@@ -15399,6 +15436,8 @@ public final class ProtoContract {
       hash = (53 * hash) + getAssignTime().hashCode();
       hash = (37 * hash) + OPERATETIME_FIELD_NUMBER;
       hash = (53 * hash) + getOperateTime().hashCode();
+      hash = (37 * hash) + CONSENSUSRESULT_FIELD_NUMBER;
+      hash = (53 * hash) + getConsensusResult();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -15525,6 +15564,8 @@ public final class ProtoContract {
 
         operateTime_ = "";
 
+        consensusResult_ = 0;
+
         return this;
       }
 
@@ -15551,6 +15592,7 @@ public final class ProtoContract {
         result.version_ = version_;
         result.assignTime_ = assignTime_;
         result.operateTime_ = operateTime_;
+        result.consensusResult_ = consensusResult_;
         onBuilt();
         return result;
       }
@@ -15606,6 +15648,9 @@ public final class ProtoContract {
         if (!other.getOperateTime().isEmpty()) {
           operateTime_ = other.operateTime_;
           onChanged();
+        }
+        if (other.getConsensusResult() != 0) {
+          setConsensusResult(other.getConsensusResult());
         }
         onChanged();
         return this;
@@ -15907,6 +15952,44 @@ public final class ProtoContract {
   checkByteStringIsUtf8(value);
         
         operateTime_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int consensusResult_ ;
+      /**
+       * <pre>
+       *add date: 2017-06-01 共识结果,是否共识等
+       * </pre>
+       *
+       * <code>int32 ConsensusResult = 5;</code>
+       */
+      public int getConsensusResult() {
+        return consensusResult_;
+      }
+      /**
+       * <pre>
+       *add date: 2017-06-01 共识结果,是否共识等
+       * </pre>
+       *
+       * <code>int32 ConsensusResult = 5;</code>
+       */
+      public Builder setConsensusResult(int value) {
+        
+        consensusResult_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *add date: 2017-06-01 共识结果,是否共识等
+       * </pre>
+       *
+       * <code>int32 ConsensusResult = 5;</code>
+       */
+      public Builder clearConsensusResult() {
+        
+        consensusResult_ = 0;
         onChanged();
         return this;
       }
@@ -16999,14 +17082,14 @@ public final class ProtoContract {
       "s.ContractAsset\0225\n\022ContractSignatures\030\r " +
       "\003(\0132\031.protos.ContractSignature\0225\n\022Contra" +
       "ctComponents\030\016 \003(\0132\031.protos.ContractComp" +
-      "onent\022\025\n\rMetaAttribute\030\017 \001(\014\"\\\n\014Contract",
+      "onent\022\025\n\rMetaAttribute\030\017 \001(\014\"u\n\014Contract",
       "Head\022\022\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(" +
       "\005\022\022\n\nAssignTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001" +
-      "(\t\"n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014ContractHe" +
-      "ad\030\002 \001(\0132\024.protos.ContractHead\022*\n\014Contra" +
-      "ctBody\030\003 \001(\0132\024.protos.ContractBodyB%\n\024co" +
-      "m.uniledger.protosB\rProtoContractb\006proto" +
-      "3"
+      "(\t\022\027\n\017ConsensusResult\030\005 \001(\005\"n\n\010Contract\022" +
+      "\n\n\002id\030\001 \001(\t\022*\n\014ContractHead\030\002 \001(\0132\024.prot" +
+      "os.ContractHead\022*\n\014ContractBody\030\003 \001(\0132\024." +
+      "protos.ContractBodyB%\n\024com.uniledger.pro" +
+      "tosB\rProtoContractb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -17079,7 +17162,7 @@ public final class ProtoContract {
     internal_static_protos_ContractHead_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractHead_descriptor,
-        new java.lang.String[] { "MainPubkey", "Version", "AssignTime", "OperateTime", });
+        new java.lang.String[] { "MainPubkey", "Version", "AssignTime", "OperateTime", "ConsensusResult", });
     internal_static_protos_Contract_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_protos_Contract_fieldAccessorTable = new
