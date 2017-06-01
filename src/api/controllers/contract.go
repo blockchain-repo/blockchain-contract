@@ -164,6 +164,46 @@ func fromContractModelArrayStrToContracts(contractModelStr string) (protos.Contr
 	return contractList, nil
 }
 
+// special for contractArray to proto[] only for queryLog
+func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos.ContractList, error) {
+	// 1. to contractModel
+	var contractModel []model.ContractModel
+	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
+	// 2. to contract
+	var contractList protos.ContractList
+	var contracts []*protos.Contract
+	if err != nil {
+		logs.Error("error fromContractModelArrayStrToContracts", err)
+		return contractList, err
+	}
+	contracts = make([]*protos.Contract, len(contractModel))
+	for i := 0; i < len(contractModel); i++ {
+		tempContract := &contractModel[i].Contract
+		contracts[i] = &protos.Contract{
+			Id: tempContract.Id,
+			ContractHead: &protos.ContractHead{
+				OperateTime: tempContract.ContractHead.OperateTime,
+			},
+			ContractBody: &protos.ContractBody{
+				Caption:            tempContract.ContractBody.Caption,
+				Cname:              tempContract.ContractBody.Cname,
+				ContractId:         tempContract.ContractBody.ContractId,
+				ContractOwners:     tempContract.ContractBody.ContractOwners,
+				ContractSignatures: tempContract.ContractBody.ContractSignatures,
+				ContractState:      tempContract.ContractBody.ContractState,
+				Description:        tempContract.ContractBody.Description,
+				StartTime:          tempContract.ContractBody.StartTime,
+				EndTime:            tempContract.ContractBody.EndTime,
+				Creator:            tempContract.ContractBody.Creator,
+			},
+		}
+		//contracts[i] = &contractModel[i].Contract
+	}
+	contractList.Contracts = contracts
+	logs.Info("query contract len is ", len(contractModel))
+	return contractList, nil
+}
+
 // @Title AuthSignature
 // @Description AuthSignature for contract
 // @Param	body		body 	models.Contract	true		"body for contract content"
@@ -447,8 +487,8 @@ func (c *ContractController) QueryLog() {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
 		return
 	}
-
-	contractListProto, err := fromContractModelArrayStrToContracts(contractModelStr)
+	//todo 需要过滤字段,只提取需要的字段!
+	contractListProto, err := fromContractModelArrayStrToContractsForLog(contractModelStr)
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())

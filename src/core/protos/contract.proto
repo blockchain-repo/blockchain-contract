@@ -23,7 +23,7 @@ message ContractAsset{
 
 message ExpressionResult {
     string Messsage = 1;
-    string Code = 2;
+    int32 Code = 2;
 }
 
 message ComponentsExpression {
@@ -33,10 +33,9 @@ message ComponentsExpression {
     string Description = 4;
     string ExpressionStr = 5;
     ExpressionResult ExpressionResult = 6;
-    string LogicValue = 7;
+    int32 LogicValue = 7;
 }
 
-//import "google/protobuf/any.proto";
 
 message ComponentData{
     string Cname = 1;
@@ -45,15 +44,37 @@ message ComponentData{
     string Description = 4;
     string ModifyDate = 5;
     string HardConvType = 6;
-//    map<string,?> Category = 7; // map[string]interface{} Category
+    repeated string Category = 7; // []string Category
     ComponentData Parent = 8;
     bool Mandatory = 9;
-//    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-    string Unit = 11;
-//    google.protobuf.Any Value = 12; // interface{} Value
-    map<string,int32> Options = 13;
-//    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-    string Format = 15;
+    string Unit = 10;
+    map<string, int32> Options = 11;
+    string Format = 12;
+    //Value interface{} int64
+    int64 ValueInt = 13;
+    //Value interface{} unit64
+    uint64 ValueUint = 14;
+    //Value interface{} float64
+    double ValueFloat = 15;
+    //Value interface{} string
+    string ValueString = 16;
+
+    //DefaultValue interface{} int64
+    int64 DefaultValueInt = 17;
+    //DefaultValue interface{} unit64
+    uint64 DefaultValueUint = 18;
+    //DefaultValue interface{} float64
+    double DefaultValueFloat = 19;
+    //DefaultValueinterface{} string
+    string DefaultValueString = 20;
+
+    //DataRange interface{} int64
+    repeated int64 DataRangeInt = 21;
+    //DataRange interface{} unit64
+    repeated uint64 DataRangeUint = 22;
+    //DataRange interface{} float64
+    repeated double DataRangeFloat = 23;
+
 }
 
 message SelectBranchExpression{
@@ -103,7 +124,9 @@ message ContractBody {
     repeated ContractSignature ContractSignatures = 13;
     repeated ContractComponent ContractComponents = 14;
     // add date: 2017-05-11 map[string]interface{} 合约属性MetaData
-    bytes MetaAttribute = 15;
+//    bytes MetaAttribute = 15;
+    map<string, string> MetaAttribute = 15;
+    repeated string NextTasks = 16;
 }
 
 message ContractHead {

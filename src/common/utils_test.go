@@ -1,8 +1,11 @@
 package common
 
 import (
+	"bytes"
+	"encoding/binary"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -16,7 +19,7 @@ func Test_GenTimestamp(t *testing.T) {
 	fmt.Println("----------------------tim:", tim)
 }
 
-func Test_GenSpecialTimestamp(t *testing.T){
+func Test_GenSpecialTimestamp(t *testing.T) {
 	//the_time, err := time.Parse("2006-01-02 15:04:05", "2014-01-08 09:04:41")
 	fullTimeStr := "2017-04-08 00:12:00"
 	str, err := GenSpecialTimestamp(fullTimeStr)
@@ -24,7 +27,7 @@ func Test_GenSpecialTimestamp(t *testing.T){
 		fmt.Println("Test_GenSpecialTimestamp error")
 		return
 	}
-	fmt.Println(fullTimeStr,"对应的时间戳为", str)
+	fmt.Println(fullTimeStr, "对应的时间戳为", str)
 }
 
 func Test_Deserialize(t *testing.T) {

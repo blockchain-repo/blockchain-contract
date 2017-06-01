@@ -1989,14 +1989,9 @@ public final class ProtoContract {
         getMesssageBytes();
 
     /**
-     * <code>string Code = 2;</code>
+     * <code>int32 Code = 2;</code>
      */
-    java.lang.String getCode();
-    /**
-     * <code>string Code = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getCodeBytes();
+    int getCode();
   }
   /**
    * Protobuf type {@code protos.ExpressionResult}
@@ -2011,7 +2006,7 @@ public final class ProtoContract {
     }
     private ExpressionResult() {
       messsage_ = "";
-      code_ = "";
+      code_ = 0;
     }
 
     @java.lang.Override
@@ -2045,10 +2040,9 @@ public final class ProtoContract {
               messsage_ = s;
               break;
             }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 16: {
 
-              code_ = s;
+              code_ = input.readInt32();
               break;
             }
           }
@@ -2109,37 +2103,12 @@ public final class ProtoContract {
     }
 
     public static final int CODE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object code_;
+    private int code_;
     /**
-     * <code>string Code = 2;</code>
+     * <code>int32 Code = 2;</code>
      */
-    public java.lang.String getCode() {
-      java.lang.Object ref = code_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        code_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string Code = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCodeBytes() {
-      java.lang.Object ref = code_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        code_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getCode() {
+      return code_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2157,8 +2126,8 @@ public final class ProtoContract {
       if (!getMesssageBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, messsage_);
       }
-      if (!getCodeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, code_);
+      if (code_ != 0) {
+        output.writeInt32(2, code_);
       }
     }
 
@@ -2170,8 +2139,9 @@ public final class ProtoContract {
       if (!getMesssageBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, messsage_);
       }
-      if (!getCodeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, code_);
+      if (code_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, code_);
       }
       memoizedSize = size;
       return size;
@@ -2191,8 +2161,8 @@ public final class ProtoContract {
       boolean result = true;
       result = result && getMesssage()
           .equals(other.getMesssage());
-      result = result && getCode()
-          .equals(other.getCode());
+      result = result && (getCode()
+          == other.getCode());
       return result;
     }
 
@@ -2206,7 +2176,7 @@ public final class ProtoContract {
       hash = (37 * hash) + MESSSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getMesssage().hashCode();
       hash = (37 * hash) + CODE_FIELD_NUMBER;
-      hash = (53 * hash) + getCode().hashCode();
+      hash = (53 * hash) + getCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2327,7 +2297,7 @@ public final class ProtoContract {
         super.clear();
         messsage_ = "";
 
-        code_ = "";
+        code_ = 0;
 
         return this;
       }
@@ -2398,9 +2368,8 @@ public final class ProtoContract {
           messsage_ = other.messsage_;
           onChanged();
         }
-        if (!other.getCode().isEmpty()) {
-          code_ = other.code_;
-          onChanged();
+        if (other.getCode() != 0) {
+          setCode(other.getCode());
         }
         onChanged();
         return this;
@@ -2497,71 +2466,28 @@ public final class ProtoContract {
         return this;
       }
 
-      private java.lang.Object code_ = "";
+      private int code_ ;
       /**
-       * <code>string Code = 2;</code>
+       * <code>int32 Code = 2;</code>
        */
-      public java.lang.String getCode() {
-        java.lang.Object ref = code_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          code_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public int getCode() {
+        return code_;
       }
       /**
-       * <code>string Code = 2;</code>
+       * <code>int32 Code = 2;</code>
        */
-      public com.google.protobuf.ByteString
-          getCodeBytes() {
-        java.lang.Object ref = code_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          code_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string Code = 2;</code>
-       */
-      public Builder setCode(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+      public Builder setCode(int value) {
+        
         code_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string Code = 2;</code>
+       * <code>int32 Code = 2;</code>
        */
       public Builder clearCode() {
         
-        code_ = getDefaultInstance().getCode();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Code = 2;</code>
-       */
-      public Builder setCodeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        code_ = value;
+        code_ = 0;
         onChanged();
         return this;
       }
@@ -2682,14 +2608,9 @@ public final class ProtoContract {
     com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder();
 
     /**
-     * <code>string LogicValue = 7;</code>
+     * <code>int32 LogicValue = 7;</code>
      */
-    java.lang.String getLogicValue();
-    /**
-     * <code>string LogicValue = 7;</code>
-     */
-    com.google.protobuf.ByteString
-        getLogicValueBytes();
+    int getLogicValue();
   }
   /**
    * Protobuf type {@code protos.ComponentsExpression}
@@ -2708,7 +2629,7 @@ public final class ProtoContract {
       caption_ = "";
       description_ = "";
       expressionStr_ = "";
-      logicValue_ = "";
+      logicValue_ = 0;
     }
 
     @java.lang.Override
@@ -2779,10 +2700,9 @@ public final class ProtoContract {
 
               break;
             }
-            case 58: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 56: {
 
-              logicValue_ = s;
+              logicValue_ = input.readInt32();
               break;
             }
           }
@@ -3000,37 +2920,12 @@ public final class ProtoContract {
     }
 
     public static final int LOGICVALUE_FIELD_NUMBER = 7;
-    private volatile java.lang.Object logicValue_;
+    private int logicValue_;
     /**
-     * <code>string LogicValue = 7;</code>
+     * <code>int32 LogicValue = 7;</code>
      */
-    public java.lang.String getLogicValue() {
-      java.lang.Object ref = logicValue_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        logicValue_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string LogicValue = 7;</code>
-     */
-    public com.google.protobuf.ByteString
-        getLogicValueBytes() {
-      java.lang.Object ref = logicValue_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        logicValue_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getLogicValue() {
+      return logicValue_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3063,8 +2958,8 @@ public final class ProtoContract {
       if (expressionResult_ != null) {
         output.writeMessage(6, getExpressionResult());
       }
-      if (!getLogicValueBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, logicValue_);
+      if (logicValue_ != 0) {
+        output.writeInt32(7, logicValue_);
       }
     }
 
@@ -3092,8 +2987,9 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, getExpressionResult());
       }
-      if (!getLogicValueBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, logicValue_);
+      if (logicValue_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, logicValue_);
       }
       memoizedSize = size;
       return size;
@@ -3126,8 +3022,8 @@ public final class ProtoContract {
         result = result && getExpressionResult()
             .equals(other.getExpressionResult());
       }
-      result = result && getLogicValue()
-          .equals(other.getLogicValue());
+      result = result && (getLogicValue()
+          == other.getLogicValue());
       return result;
     }
 
@@ -3153,7 +3049,7 @@ public final class ProtoContract {
         hash = (53 * hash) + getExpressionResult().hashCode();
       }
       hash = (37 * hash) + LOGICVALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getLogicValue().hashCode();
+      hash = (53 * hash) + getLogicValue();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3288,7 +3184,7 @@ public final class ProtoContract {
           expressionResult_ = null;
           expressionResultBuilder_ = null;
         }
-        logicValue_ = "";
+        logicValue_ = 0;
 
         return this;
       }
@@ -3387,9 +3283,8 @@ public final class ProtoContract {
         if (other.hasExpressionResult()) {
           mergeExpressionResult(other.getExpressionResult());
         }
-        if (!other.getLogicValue().isEmpty()) {
-          logicValue_ = other.logicValue_;
-          onChanged();
+        if (other.getLogicValue() != 0) {
+          setLogicValue(other.getLogicValue());
         }
         onChanged();
         return this;
@@ -3879,71 +3774,28 @@ public final class ProtoContract {
         return expressionResultBuilder_;
       }
 
-      private java.lang.Object logicValue_ = "";
+      private int logicValue_ ;
       /**
-       * <code>string LogicValue = 7;</code>
+       * <code>int32 LogicValue = 7;</code>
        */
-      public java.lang.String getLogicValue() {
-        java.lang.Object ref = logicValue_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          logicValue_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public int getLogicValue() {
+        return logicValue_;
       }
       /**
-       * <code>string LogicValue = 7;</code>
+       * <code>int32 LogicValue = 7;</code>
        */
-      public com.google.protobuf.ByteString
-          getLogicValueBytes() {
-        java.lang.Object ref = logicValue_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          logicValue_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string LogicValue = 7;</code>
-       */
-      public Builder setLogicValue(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+      public Builder setLogicValue(int value) {
+        
         logicValue_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string LogicValue = 7;</code>
+       * <code>int32 LogicValue = 7;</code>
        */
       public Builder clearLogicValue() {
         
-        logicValue_ = getDefaultInstance().getLogicValue();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string LogicValue = 7;</code>
-       */
-      public Builder setLogicValueBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        logicValue_ = value;
+        logicValue_ = 0;
         onChanged();
         return this;
       }
@@ -4062,25 +3914,48 @@ public final class ProtoContract {
 
     /**
      * <pre>
-     *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
+     * []string Category
      * </pre>
      *
+     * <code>repeated string Category = 7;</code>
+     */
+    java.util.List<java.lang.String>
+        getCategoryList();
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    int getCategoryCount();
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    java.lang.String getCategory(int index);
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getCategoryBytes(int index);
+
+    /**
      * <code>.protos.ComponentData Parent = 8;</code>
      */
     boolean hasParent();
     /**
-     * <pre>
-     *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-     * </pre>
-     *
      * <code>.protos.ComponentData Parent = 8;</code>
      */
     com.uniledger.protos.ProtoContract.ComponentData getParent();
     /**
-     * <pre>
-     *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-     * </pre>
-     *
      * <code>.protos.ComponentData Parent = 8;</code>
      */
     com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getParentOrBuilder();
@@ -4091,37 +3966,21 @@ public final class ProtoContract {
     boolean getMandatory();
 
     /**
-     * <pre>
-     *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-     * </pre>
-     *
-     * <code>string Unit = 11;</code>
+     * <code>string Unit = 10;</code>
      */
     java.lang.String getUnit();
     /**
-     * <pre>
-     *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-     * </pre>
-     *
-     * <code>string Unit = 11;</code>
+     * <code>string Unit = 10;</code>
      */
     com.google.protobuf.ByteString
         getUnitBytes();
 
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
     int getOptionsCount();
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
     boolean containsOptions(
         java.lang.String key);
@@ -4132,53 +3991,198 @@ public final class ProtoContract {
     java.util.Map<java.lang.String, java.lang.Integer>
     getOptions();
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
     java.util.Map<java.lang.String, java.lang.Integer>
     getOptionsMap();
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
 
     int getOptionsOrDefault(
         java.lang.String key,
         int defaultValue);
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
 
     int getOptionsOrThrow(
         java.lang.String key);
 
     /**
-     * <pre>
-     *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-     * </pre>
-     *
-     * <code>string Format = 15;</code>
+     * <code>string Format = 12;</code>
      */
     java.lang.String getFormat();
     /**
-     * <pre>
-     *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-     * </pre>
-     *
-     * <code>string Format = 15;</code>
+     * <code>string Format = 12;</code>
      */
     com.google.protobuf.ByteString
         getFormatBytes();
+
+    /**
+     * <pre>
+     *Value interface{} int64
+     * </pre>
+     *
+     * <code>int64 ValueInt = 13;</code>
+     */
+    long getValueInt();
+
+    /**
+     * <pre>
+     *Value interface{} unit64
+     * </pre>
+     *
+     * <code>uint64 ValueUint = 14;</code>
+     */
+    long getValueUint();
+
+    /**
+     * <pre>
+     *Value interface{} float64
+     * </pre>
+     *
+     * <code>double ValueFloat = 15;</code>
+     */
+    double getValueFloat();
+
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    java.lang.String getValueString();
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueStringBytes();
+
+    /**
+     * <pre>
+     *DefaultValue interface{} int64
+     * </pre>
+     *
+     * <code>int64 DefaultValueInt = 17;</code>
+     */
+    long getDefaultValueInt();
+
+    /**
+     * <pre>
+     *DefaultValue interface{} unit64
+     * </pre>
+     *
+     * <code>uint64 DefaultValueUint = 18;</code>
+     */
+    long getDefaultValueUint();
+
+    /**
+     * <pre>
+     *DefaultValue interface{} float64
+     * </pre>
+     *
+     * <code>double DefaultValueFloat = 19;</code>
+     */
+    double getDefaultValueFloat();
+
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    java.lang.String getDefaultValueString();
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    com.google.protobuf.ByteString
+        getDefaultValueStringBytes();
+
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int64 DataRangeInt = 21;</code>
+     */
+    java.util.List<java.lang.Long> getDataRangeIntList();
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int64 DataRangeInt = 21;</code>
+     */
+    int getDataRangeIntCount();
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int64 DataRangeInt = 21;</code>
+     */
+    long getDataRangeInt(int index);
+
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint64 DataRangeUint = 22;</code>
+     */
+    java.util.List<java.lang.Long> getDataRangeUintList();
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint64 DataRangeUint = 22;</code>
+     */
+    int getDataRangeUintCount();
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint64 DataRangeUint = 22;</code>
+     */
+    long getDataRangeUint(int index);
+
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    java.util.List<java.lang.Double> getDataRangeFloatList();
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    int getDataRangeFloatCount();
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    double getDataRangeFloat(int index);
   }
   /**
    * Protobuf type {@code protos.ComponentData}
@@ -4198,9 +4202,21 @@ public final class ProtoContract {
       description_ = "";
       modifyDate_ = "";
       hardConvType_ = "";
+      category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       mandatory_ = false;
       unit_ = "";
       format_ = "";
+      valueInt_ = 0L;
+      valueUint_ = 0L;
+      valueFloat_ = 0D;
+      valueString_ = "";
+      defaultValueInt_ = 0L;
+      defaultValueUint_ = 0L;
+      defaultValueFloat_ = 0D;
+      defaultValueString_ = "";
+      dataRangeInt_ = java.util.Collections.emptyList();
+      dataRangeUint_ = java.util.Collections.emptyList();
+      dataRangeFloat_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -4264,6 +4280,15 @@ public final class ProtoContract {
               hardConvType_ = s;
               break;
             }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                category_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              category_.add(s);
+              break;
+            }
             case 66: {
               com.uniledger.protos.ProtoContract.ComponentData.Builder subBuilder = null;
               if (parent_ != null) {
@@ -4282,17 +4307,17 @@ public final class ProtoContract {
               mandatory_ = input.readBool();
               break;
             }
-            case 90: {
+            case 82: {
               java.lang.String s = input.readStringRequireUtf8();
 
               unit_ = s;
               break;
             }
-            case 106: {
-              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+            case 90: {
+              if (!((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
                 options_ = com.google.protobuf.MapField.newMapField(
                     OptionsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000200;
+                mutable_bitField0_ |= 0x00000400;
               }
               com.google.protobuf.MapEntry<java.lang.String, java.lang.Integer>
               options__ = input.readMessage(
@@ -4301,10 +4326,115 @@ public final class ProtoContract {
                   options__.getKey(), options__.getValue());
               break;
             }
-            case 122: {
+            case 98: {
               java.lang.String s = input.readStringRequireUtf8();
 
               format_ = s;
+              break;
+            }
+            case 104: {
+
+              valueInt_ = input.readInt64();
+              break;
+            }
+            case 112: {
+
+              valueUint_ = input.readUInt64();
+              break;
+            }
+            case 121: {
+
+              valueFloat_ = input.readDouble();
+              break;
+            }
+            case 130: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              valueString_ = s;
+              break;
+            }
+            case 136: {
+
+              defaultValueInt_ = input.readInt64();
+              break;
+            }
+            case 144: {
+
+              defaultValueUint_ = input.readUInt64();
+              break;
+            }
+            case 153: {
+
+              defaultValueFloat_ = input.readDouble();
+              break;
+            }
+            case 162: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              defaultValueString_ = s;
+              break;
+            }
+            case 168: {
+              if (!((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Long>();
+                mutable_bitField0_ |= 0x00100000;
+              }
+              dataRangeInt_.add(input.readInt64());
+              break;
+            }
+            case 170: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00100000) == 0x00100000) && input.getBytesUntilLimit() > 0) {
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Long>();
+                mutable_bitField0_ |= 0x00100000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                dataRangeInt_.add(input.readInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 176: {
+              if (!((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Long>();
+                mutable_bitField0_ |= 0x00200000;
+              }
+              dataRangeUint_.add(input.readUInt64());
+              break;
+            }
+            case 178: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00200000) == 0x00200000) && input.getBytesUntilLimit() > 0) {
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Long>();
+                mutable_bitField0_ |= 0x00200000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                dataRangeUint_.add(input.readUInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 185: {
+              if (!((mutable_bitField0_ & 0x00400000) == 0x00400000)) {
+                dataRangeFloat_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00400000;
+              }
+              dataRangeFloat_.add(input.readDouble());
+              break;
+            }
+            case 186: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00400000) == 0x00400000) && input.getBytesUntilLimit() > 0) {
+                dataRangeFloat_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00400000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                dataRangeFloat_.add(input.readDouble());
+              }
+              input.popLimit(limit);
               break;
             }
           }
@@ -4315,6 +4445,18 @@ public final class ProtoContract {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+          category_ = category_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
+          dataRangeInt_ = java.util.Collections.unmodifiableList(dataRangeInt_);
+        }
+        if (((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
+          dataRangeUint_ = java.util.Collections.unmodifiableList(dataRangeUint_);
+        }
+        if (((mutable_bitField0_ & 0x00400000) == 0x00400000)) {
+          dataRangeFloat_ = java.util.Collections.unmodifiableList(dataRangeFloat_);
+        }
         makeExtensionsImmutable();
       }
     }
@@ -4327,7 +4469,7 @@ public final class ProtoContract {
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 13:
+        case 11:
           return internalGetOptions();
         default:
           throw new RuntimeException(
@@ -4546,33 +4688,66 @@ public final class ProtoContract {
       }
     }
 
+    public static final int CATEGORY_FIELD_NUMBER = 7;
+    private com.google.protobuf.LazyStringList category_;
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getCategoryList() {
+      return category_;
+    }
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public int getCategoryCount() {
+      return category_.size();
+    }
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public java.lang.String getCategory(int index) {
+      return category_.get(index);
+    }
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCategoryBytes(int index) {
+      return category_.getByteString(index);
+    }
+
     public static final int PARENT_FIELD_NUMBER = 8;
     private com.uniledger.protos.ProtoContract.ComponentData parent_;
     /**
-     * <pre>
-     *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-     * </pre>
-     *
      * <code>.protos.ComponentData Parent = 8;</code>
      */
     public boolean hasParent() {
       return parent_ != null;
     }
     /**
-     * <pre>
-     *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-     * </pre>
-     *
      * <code>.protos.ComponentData Parent = 8;</code>
      */
     public com.uniledger.protos.ProtoContract.ComponentData getParent() {
       return parent_ == null ? com.uniledger.protos.ProtoContract.ComponentData.getDefaultInstance() : parent_;
     }
     /**
-     * <pre>
-     *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-     * </pre>
-     *
      * <code>.protos.ComponentData Parent = 8;</code>
      */
     public com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getParentOrBuilder() {
@@ -4588,14 +4763,10 @@ public final class ProtoContract {
       return mandatory_;
     }
 
-    public static final int UNIT_FIELD_NUMBER = 11;
+    public static final int UNIT_FIELD_NUMBER = 10;
     private volatile java.lang.Object unit_;
     /**
-     * <pre>
-     *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-     * </pre>
-     *
-     * <code>string Unit = 11;</code>
+     * <code>string Unit = 10;</code>
      */
     public java.lang.String getUnit() {
       java.lang.Object ref = unit_;
@@ -4610,11 +4781,7 @@ public final class ProtoContract {
       }
     }
     /**
-     * <pre>
-     *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-     * </pre>
-     *
-     * <code>string Unit = 11;</code>
+     * <code>string Unit = 10;</code>
      */
     public com.google.protobuf.ByteString
         getUnitBytes() {
@@ -4630,7 +4797,7 @@ public final class ProtoContract {
       }
     }
 
-    public static final int OPTIONS_FIELD_NUMBER = 13;
+    public static final int OPTIONS_FIELD_NUMBER = 11;
     private static final class OptionsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, java.lang.Integer> defaultEntry =
@@ -4657,11 +4824,7 @@ public final class ProtoContract {
       return internalGetOptions().getMap().size();
     }
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
 
     public boolean containsOptions(
@@ -4677,22 +4840,14 @@ public final class ProtoContract {
       return getOptionsMap();
     }
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
 
     public java.util.Map<java.lang.String, java.lang.Integer> getOptionsMap() {
       return internalGetOptions().getMap();
     }
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
 
     public int getOptionsOrDefault(
@@ -4704,11 +4859,7 @@ public final class ProtoContract {
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <pre>
-     *    google.protobuf.Any Value = 12; // interface{} Value
-     * </pre>
-     *
-     * <code>map&lt;string, int32&gt; Options = 13;</code>
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
      */
 
     public int getOptionsOrThrow(
@@ -4722,14 +4873,10 @@ public final class ProtoContract {
       return map.get(key);
     }
 
-    public static final int FORMAT_FIELD_NUMBER = 15;
+    public static final int FORMAT_FIELD_NUMBER = 12;
     private volatile java.lang.Object format_;
     /**
-     * <pre>
-     *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-     * </pre>
-     *
-     * <code>string Format = 15;</code>
+     * <code>string Format = 12;</code>
      */
     public java.lang.String getFormat() {
       java.lang.Object ref = format_;
@@ -4744,11 +4891,7 @@ public final class ProtoContract {
       }
     }
     /**
-     * <pre>
-     *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-     * </pre>
-     *
-     * <code>string Format = 15;</code>
+     * <code>string Format = 12;</code>
      */
     public com.google.protobuf.ByteString
         getFormatBytes() {
@@ -4764,6 +4907,273 @@ public final class ProtoContract {
       }
     }
 
+    public static final int VALUEINT_FIELD_NUMBER = 13;
+    private long valueInt_;
+    /**
+     * <pre>
+     *Value interface{} int64
+     * </pre>
+     *
+     * <code>int64 ValueInt = 13;</code>
+     */
+    public long getValueInt() {
+      return valueInt_;
+    }
+
+    public static final int VALUEUINT_FIELD_NUMBER = 14;
+    private long valueUint_;
+    /**
+     * <pre>
+     *Value interface{} unit64
+     * </pre>
+     *
+     * <code>uint64 ValueUint = 14;</code>
+     */
+    public long getValueUint() {
+      return valueUint_;
+    }
+
+    public static final int VALUEFLOAT_FIELD_NUMBER = 15;
+    private double valueFloat_;
+    /**
+     * <pre>
+     *Value interface{} float64
+     * </pre>
+     *
+     * <code>double ValueFloat = 15;</code>
+     */
+    public double getValueFloat() {
+      return valueFloat_;
+    }
+
+    public static final int VALUESTRING_FIELD_NUMBER = 16;
+    private volatile java.lang.Object valueString_;
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    public java.lang.String getValueString() {
+      java.lang.Object ref = valueString_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        valueString_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueStringBytes() {
+      java.lang.Object ref = valueString_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        valueString_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DEFAULTVALUEINT_FIELD_NUMBER = 17;
+    private long defaultValueInt_;
+    /**
+     * <pre>
+     *DefaultValue interface{} int64
+     * </pre>
+     *
+     * <code>int64 DefaultValueInt = 17;</code>
+     */
+    public long getDefaultValueInt() {
+      return defaultValueInt_;
+    }
+
+    public static final int DEFAULTVALUEUINT_FIELD_NUMBER = 18;
+    private long defaultValueUint_;
+    /**
+     * <pre>
+     *DefaultValue interface{} unit64
+     * </pre>
+     *
+     * <code>uint64 DefaultValueUint = 18;</code>
+     */
+    public long getDefaultValueUint() {
+      return defaultValueUint_;
+    }
+
+    public static final int DEFAULTVALUEFLOAT_FIELD_NUMBER = 19;
+    private double defaultValueFloat_;
+    /**
+     * <pre>
+     *DefaultValue interface{} float64
+     * </pre>
+     *
+     * <code>double DefaultValueFloat = 19;</code>
+     */
+    public double getDefaultValueFloat() {
+      return defaultValueFloat_;
+    }
+
+    public static final int DEFAULTVALUESTRING_FIELD_NUMBER = 20;
+    private volatile java.lang.Object defaultValueString_;
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    public java.lang.String getDefaultValueString() {
+      java.lang.Object ref = defaultValueString_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        defaultValueString_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDefaultValueStringBytes() {
+      java.lang.Object ref = defaultValueString_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        defaultValueString_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DATARANGEINT_FIELD_NUMBER = 21;
+    private java.util.List<java.lang.Long> dataRangeInt_;
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int64 DataRangeInt = 21;</code>
+     */
+    public java.util.List<java.lang.Long>
+        getDataRangeIntList() {
+      return dataRangeInt_;
+    }
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int64 DataRangeInt = 21;</code>
+     */
+    public int getDataRangeIntCount() {
+      return dataRangeInt_.size();
+    }
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int64 DataRangeInt = 21;</code>
+     */
+    public long getDataRangeInt(int index) {
+      return dataRangeInt_.get(index);
+    }
+    private int dataRangeIntMemoizedSerializedSize = -1;
+
+    public static final int DATARANGEUINT_FIELD_NUMBER = 22;
+    private java.util.List<java.lang.Long> dataRangeUint_;
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint64 DataRangeUint = 22;</code>
+     */
+    public java.util.List<java.lang.Long>
+        getDataRangeUintList() {
+      return dataRangeUint_;
+    }
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint64 DataRangeUint = 22;</code>
+     */
+    public int getDataRangeUintCount() {
+      return dataRangeUint_.size();
+    }
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint64 DataRangeUint = 22;</code>
+     */
+    public long getDataRangeUint(int index) {
+      return dataRangeUint_.get(index);
+    }
+    private int dataRangeUintMemoizedSerializedSize = -1;
+
+    public static final int DATARANGEFLOAT_FIELD_NUMBER = 23;
+    private java.util.List<java.lang.Double> dataRangeFloat_;
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    public java.util.List<java.lang.Double>
+        getDataRangeFloatList() {
+      return dataRangeFloat_;
+    }
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    public int getDataRangeFloatCount() {
+      return dataRangeFloat_.size();
+    }
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    public double getDataRangeFloat(int index) {
+      return dataRangeFloat_.get(index);
+    }
+    private int dataRangeFloatMemoizedSerializedSize = -1;
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -4776,6 +5186,7 @@ public final class ProtoContract {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (!getCnameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, cname_);
       }
@@ -4794,6 +5205,9 @@ public final class ProtoContract {
       if (!getHardConvTypeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, hardConvType_);
       }
+      for (int i = 0; i < category_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, category_.getRaw(i));
+      }
       if (parent_ != null) {
         output.writeMessage(8, getParent());
       }
@@ -4801,16 +5215,61 @@ public final class ProtoContract {
         output.writeBool(9, mandatory_);
       }
       if (!getUnitBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, unit_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, unit_);
       }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetOptions(),
           OptionsDefaultEntryHolder.defaultEntry,
-          13);
+          11);
       if (!getFormatBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 15, format_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, format_);
+      }
+      if (valueInt_ != 0L) {
+        output.writeInt64(13, valueInt_);
+      }
+      if (valueUint_ != 0L) {
+        output.writeUInt64(14, valueUint_);
+      }
+      if (valueFloat_ != 0D) {
+        output.writeDouble(15, valueFloat_);
+      }
+      if (!getValueStringBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 16, valueString_);
+      }
+      if (defaultValueInt_ != 0L) {
+        output.writeInt64(17, defaultValueInt_);
+      }
+      if (defaultValueUint_ != 0L) {
+        output.writeUInt64(18, defaultValueUint_);
+      }
+      if (defaultValueFloat_ != 0D) {
+        output.writeDouble(19, defaultValueFloat_);
+      }
+      if (!getDefaultValueStringBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 20, defaultValueString_);
+      }
+      if (getDataRangeIntList().size() > 0) {
+        output.writeUInt32NoTag(170);
+        output.writeUInt32NoTag(dataRangeIntMemoizedSerializedSize);
+      }
+      for (int i = 0; i < dataRangeInt_.size(); i++) {
+        output.writeInt64NoTag(dataRangeInt_.get(i));
+      }
+      if (getDataRangeUintList().size() > 0) {
+        output.writeUInt32NoTag(178);
+        output.writeUInt32NoTag(dataRangeUintMemoizedSerializedSize);
+      }
+      for (int i = 0; i < dataRangeUint_.size(); i++) {
+        output.writeUInt64NoTag(dataRangeUint_.get(i));
+      }
+      if (getDataRangeFloatList().size() > 0) {
+        output.writeUInt32NoTag(186);
+        output.writeUInt32NoTag(dataRangeFloatMemoizedSerializedSize);
+      }
+      for (int i = 0; i < dataRangeFloat_.size(); i++) {
+        output.writeDoubleNoTag(dataRangeFloat_.get(i));
       }
     }
 
@@ -4837,6 +5296,14 @@ public final class ProtoContract {
       if (!getHardConvTypeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, hardConvType_);
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < category_.size(); i++) {
+          dataSize += computeStringSizeNoTag(category_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getCategoryList().size();
+      }
       if (parent_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(8, getParent());
@@ -4846,7 +5313,7 @@ public final class ProtoContract {
           .computeBoolSize(9, mandatory_);
       }
       if (!getUnitBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, unit_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, unit_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.Integer> entry
            : internalGetOptions().getMap().entrySet()) {
@@ -4856,10 +5323,79 @@ public final class ProtoContract {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(13, options__);
+            .computeMessageSize(11, options__);
       }
       if (!getFormatBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(15, format_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, format_);
+      }
+      if (valueInt_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(13, valueInt_);
+      }
+      if (valueUint_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(14, valueUint_);
+      }
+      if (valueFloat_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(15, valueFloat_);
+      }
+      if (!getValueStringBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, valueString_);
+      }
+      if (defaultValueInt_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(17, defaultValueInt_);
+      }
+      if (defaultValueUint_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(18, defaultValueUint_);
+      }
+      if (defaultValueFloat_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(19, defaultValueFloat_);
+      }
+      if (!getDefaultValueStringBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, defaultValueString_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < dataRangeInt_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt64SizeNoTag(dataRangeInt_.get(i));
+        }
+        size += dataSize;
+        if (!getDataRangeIntList().isEmpty()) {
+          size += 2;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        dataRangeIntMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < dataRangeUint_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt64SizeNoTag(dataRangeUint_.get(i));
+        }
+        size += dataSize;
+        if (!getDataRangeUintList().isEmpty()) {
+          size += 2;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        dataRangeUintMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        dataSize = 8 * getDataRangeFloatList().size();
+        size += dataSize;
+        if (!getDataRangeFloatList().isEmpty()) {
+          size += 2;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        dataRangeFloatMemoizedSerializedSize = dataSize;
       }
       memoizedSize = size;
       return size;
@@ -4889,6 +5425,8 @@ public final class ProtoContract {
           .equals(other.getModifyDate());
       result = result && getHardConvType()
           .equals(other.getHardConvType());
+      result = result && getCategoryList()
+          .equals(other.getCategoryList());
       result = result && (hasParent() == other.hasParent());
       if (hasParent()) {
         result = result && getParent()
@@ -4902,6 +5440,32 @@ public final class ProtoContract {
           other.internalGetOptions());
       result = result && getFormat()
           .equals(other.getFormat());
+      result = result && (getValueInt()
+          == other.getValueInt());
+      result = result && (getValueUint()
+          == other.getValueUint());
+      result = result && (
+          java.lang.Double.doubleToLongBits(getValueFloat())
+          == java.lang.Double.doubleToLongBits(
+              other.getValueFloat()));
+      result = result && getValueString()
+          .equals(other.getValueString());
+      result = result && (getDefaultValueInt()
+          == other.getDefaultValueInt());
+      result = result && (getDefaultValueUint()
+          == other.getDefaultValueUint());
+      result = result && (
+          java.lang.Double.doubleToLongBits(getDefaultValueFloat())
+          == java.lang.Double.doubleToLongBits(
+              other.getDefaultValueFloat()));
+      result = result && getDefaultValueString()
+          .equals(other.getDefaultValueString());
+      result = result && getDataRangeIntList()
+          .equals(other.getDataRangeIntList());
+      result = result && getDataRangeUintList()
+          .equals(other.getDataRangeUintList());
+      result = result && getDataRangeFloatList()
+          .equals(other.getDataRangeFloatList());
       return result;
     }
 
@@ -4924,6 +5488,10 @@ public final class ProtoContract {
       hash = (53 * hash) + getModifyDate().hashCode();
       hash = (37 * hash) + HARDCONVTYPE_FIELD_NUMBER;
       hash = (53 * hash) + getHardConvType().hashCode();
+      if (getCategoryCount() > 0) {
+        hash = (37 * hash) + CATEGORY_FIELD_NUMBER;
+        hash = (53 * hash) + getCategoryList().hashCode();
+      }
       if (hasParent()) {
         hash = (37 * hash) + PARENT_FIELD_NUMBER;
         hash = (53 * hash) + getParent().hashCode();
@@ -4939,6 +5507,40 @@ public final class ProtoContract {
       }
       hash = (37 * hash) + FORMAT_FIELD_NUMBER;
       hash = (53 * hash) + getFormat().hashCode();
+      hash = (37 * hash) + VALUEINT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getValueInt());
+      hash = (37 * hash) + VALUEUINT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getValueUint());
+      hash = (37 * hash) + VALUEFLOAT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getValueFloat()));
+      hash = (37 * hash) + VALUESTRING_FIELD_NUMBER;
+      hash = (53 * hash) + getValueString().hashCode();
+      hash = (37 * hash) + DEFAULTVALUEINT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getDefaultValueInt());
+      hash = (37 * hash) + DEFAULTVALUEUINT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getDefaultValueUint());
+      hash = (37 * hash) + DEFAULTVALUEFLOAT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getDefaultValueFloat()));
+      hash = (37 * hash) + DEFAULTVALUESTRING_FIELD_NUMBER;
+      hash = (53 * hash) + getDefaultValueString().hashCode();
+      if (getDataRangeIntCount() > 0) {
+        hash = (37 * hash) + DATARANGEINT_FIELD_NUMBER;
+        hash = (53 * hash) + getDataRangeIntList().hashCode();
+      }
+      if (getDataRangeUintCount() > 0) {
+        hash = (37 * hash) + DATARANGEUINT_FIELD_NUMBER;
+        hash = (53 * hash) + getDataRangeUintList().hashCode();
+      }
+      if (getDataRangeFloatCount() > 0) {
+        hash = (37 * hash) + DATARANGEFLOAT_FIELD_NUMBER;
+        hash = (53 * hash) + getDataRangeFloatList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -5037,7 +5639,7 @@ public final class ProtoContract {
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 13:
+          case 11:
             return internalGetOptions();
           default:
             throw new RuntimeException(
@@ -5048,7 +5650,7 @@ public final class ProtoContract {
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 13:
+          case 11:
             return internalGetMutableOptions();
           default:
             throw new RuntimeException(
@@ -5091,6 +5693,8 @@ public final class ProtoContract {
 
         hardConvType_ = "";
 
+        category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000040);
         if (parentBuilder_ == null) {
           parent_ = null;
         } else {
@@ -5104,6 +5708,28 @@ public final class ProtoContract {
         internalGetMutableOptions().clear();
         format_ = "";
 
+        valueInt_ = 0L;
+
+        valueUint_ = 0L;
+
+        valueFloat_ = 0D;
+
+        valueString_ = "";
+
+        defaultValueInt_ = 0L;
+
+        defaultValueUint_ = 0L;
+
+        defaultValueFloat_ = 0D;
+
+        defaultValueString_ = "";
+
+        dataRangeInt_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00100000);
+        dataRangeUint_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00200000);
+        dataRangeFloat_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00400000);
         return this;
       }
 
@@ -5134,6 +5760,11 @@ public final class ProtoContract {
         result.description_ = description_;
         result.modifyDate_ = modifyDate_;
         result.hardConvType_ = hardConvType_;
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          category_ = category_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000040);
+        }
+        result.category_ = category_;
         if (parentBuilder_ == null) {
           result.parent_ = parent_;
         } else {
@@ -5144,6 +5775,29 @@ public final class ProtoContract {
         result.options_ = internalGetOptions();
         result.options_.makeImmutable();
         result.format_ = format_;
+        result.valueInt_ = valueInt_;
+        result.valueUint_ = valueUint_;
+        result.valueFloat_ = valueFloat_;
+        result.valueString_ = valueString_;
+        result.defaultValueInt_ = defaultValueInt_;
+        result.defaultValueUint_ = defaultValueUint_;
+        result.defaultValueFloat_ = defaultValueFloat_;
+        result.defaultValueString_ = defaultValueString_;
+        if (((bitField0_ & 0x00100000) == 0x00100000)) {
+          dataRangeInt_ = java.util.Collections.unmodifiableList(dataRangeInt_);
+          bitField0_ = (bitField0_ & ~0x00100000);
+        }
+        result.dataRangeInt_ = dataRangeInt_;
+        if (((bitField0_ & 0x00200000) == 0x00200000)) {
+          dataRangeUint_ = java.util.Collections.unmodifiableList(dataRangeUint_);
+          bitField0_ = (bitField0_ & ~0x00200000);
+        }
+        result.dataRangeUint_ = dataRangeUint_;
+        if (((bitField0_ & 0x00400000) == 0x00400000)) {
+          dataRangeFloat_ = java.util.Collections.unmodifiableList(dataRangeFloat_);
+          bitField0_ = (bitField0_ & ~0x00400000);
+        }
+        result.dataRangeFloat_ = dataRangeFloat_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5210,6 +5864,16 @@ public final class ProtoContract {
           hardConvType_ = other.hardConvType_;
           onChanged();
         }
+        if (!other.category_.isEmpty()) {
+          if (category_.isEmpty()) {
+            category_ = other.category_;
+            bitField0_ = (bitField0_ & ~0x00000040);
+          } else {
+            ensureCategoryIsMutable();
+            category_.addAll(other.category_);
+          }
+          onChanged();
+        }
         if (other.hasParent()) {
           mergeParent(other.getParent());
         }
@@ -5224,6 +5888,62 @@ public final class ProtoContract {
             other.internalGetOptions());
         if (!other.getFormat().isEmpty()) {
           format_ = other.format_;
+          onChanged();
+        }
+        if (other.getValueInt() != 0L) {
+          setValueInt(other.getValueInt());
+        }
+        if (other.getValueUint() != 0L) {
+          setValueUint(other.getValueUint());
+        }
+        if (other.getValueFloat() != 0D) {
+          setValueFloat(other.getValueFloat());
+        }
+        if (!other.getValueString().isEmpty()) {
+          valueString_ = other.valueString_;
+          onChanged();
+        }
+        if (other.getDefaultValueInt() != 0L) {
+          setDefaultValueInt(other.getDefaultValueInt());
+        }
+        if (other.getDefaultValueUint() != 0L) {
+          setDefaultValueUint(other.getDefaultValueUint());
+        }
+        if (other.getDefaultValueFloat() != 0D) {
+          setDefaultValueFloat(other.getDefaultValueFloat());
+        }
+        if (!other.getDefaultValueString().isEmpty()) {
+          defaultValueString_ = other.defaultValueString_;
+          onChanged();
+        }
+        if (!other.dataRangeInt_.isEmpty()) {
+          if (dataRangeInt_.isEmpty()) {
+            dataRangeInt_ = other.dataRangeInt_;
+            bitField0_ = (bitField0_ & ~0x00100000);
+          } else {
+            ensureDataRangeIntIsMutable();
+            dataRangeInt_.addAll(other.dataRangeInt_);
+          }
+          onChanged();
+        }
+        if (!other.dataRangeUint_.isEmpty()) {
+          if (dataRangeUint_.isEmpty()) {
+            dataRangeUint_ = other.dataRangeUint_;
+            bitField0_ = (bitField0_ & ~0x00200000);
+          } else {
+            ensureDataRangeUintIsMutable();
+            dataRangeUint_.addAll(other.dataRangeUint_);
+          }
+          onChanged();
+        }
+        if (!other.dataRangeFloat_.isEmpty()) {
+          if (dataRangeFloat_.isEmpty()) {
+            dataRangeFloat_ = other.dataRangeFloat_;
+            bitField0_ = (bitField0_ & ~0x00400000);
+          } else {
+            ensureDataRangeFloatIsMutable();
+            dataRangeFloat_.addAll(other.dataRangeFloat_);
+          }
           onChanged();
         }
         onChanged();
@@ -5667,24 +6387,146 @@ public final class ProtoContract {
         return this;
       }
 
+      private com.google.protobuf.LazyStringList category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureCategoryIsMutable() {
+        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
+          category_ = new com.google.protobuf.LazyStringArrayList(category_);
+          bitField0_ |= 0x00000040;
+         }
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getCategoryList() {
+        return category_.getUnmodifiableView();
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public int getCategoryCount() {
+        return category_.size();
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public java.lang.String getCategory(int index) {
+        return category_.get(index);
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCategoryBytes(int index) {
+        return category_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder setCategory(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCategoryIsMutable();
+        category_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder addCategory(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCategoryIsMutable();
+        category_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder addAllCategory(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureCategoryIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, category_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder clearCategory() {
+        category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder addCategoryBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureCategoryIsMutable();
+        category_.add(value);
+        onChanged();
+        return this;
+      }
+
       private com.uniledger.protos.ProtoContract.ComponentData parent_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> parentBuilder_;
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public boolean hasParent() {
         return parentBuilder_ != null || parent_ != null;
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public com.uniledger.protos.ProtoContract.ComponentData getParent() {
@@ -5695,10 +6537,6 @@ public final class ProtoContract {
         }
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public Builder setParent(com.uniledger.protos.ProtoContract.ComponentData value) {
@@ -5715,10 +6553,6 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public Builder setParent(
@@ -5733,10 +6567,6 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public Builder mergeParent(com.uniledger.protos.ProtoContract.ComponentData value) {
@@ -5755,10 +6585,6 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public Builder clearParent() {
@@ -5773,10 +6599,6 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public com.uniledger.protos.ProtoContract.ComponentData.Builder getParentBuilder() {
@@ -5785,10 +6607,6 @@ public final class ProtoContract {
         return getParentFieldBuilder().getBuilder();
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       public com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getParentOrBuilder() {
@@ -5800,10 +6618,6 @@ public final class ProtoContract {
         }
       }
       /**
-       * <pre>
-       *    map&lt;string,?&gt; Category = 7; // map[string]interface{} Category
-       * </pre>
-       *
        * <code>.protos.ComponentData Parent = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
@@ -5848,11 +6662,7 @@ public final class ProtoContract {
 
       private java.lang.Object unit_ = "";
       /**
-       * <pre>
-       *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-       * </pre>
-       *
-       * <code>string Unit = 11;</code>
+       * <code>string Unit = 10;</code>
        */
       public java.lang.String getUnit() {
         java.lang.Object ref = unit_;
@@ -5867,11 +6677,7 @@ public final class ProtoContract {
         }
       }
       /**
-       * <pre>
-       *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-       * </pre>
-       *
-       * <code>string Unit = 11;</code>
+       * <code>string Unit = 10;</code>
        */
       public com.google.protobuf.ByteString
           getUnitBytes() {
@@ -5887,11 +6693,7 @@ public final class ProtoContract {
         }
       }
       /**
-       * <pre>
-       *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-       * </pre>
-       *
-       * <code>string Unit = 11;</code>
+       * <code>string Unit = 10;</code>
        */
       public Builder setUnit(
           java.lang.String value) {
@@ -5904,11 +6706,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-       * </pre>
-       *
-       * <code>string Unit = 11;</code>
+       * <code>string Unit = 10;</code>
        */
       public Builder clearUnit() {
         
@@ -5917,11 +6715,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    google.protobuf.Any DefaultValue = 10; // interface{} DefaultValue
-       * </pre>
-       *
-       * <code>string Unit = 11;</code>
+       * <code>string Unit = 10;</code>
        */
       public Builder setUnitBytes(
           com.google.protobuf.ByteString value) {
@@ -5962,11 +6756,7 @@ public final class ProtoContract {
         return internalGetOptions().getMap().size();
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
 
       public boolean containsOptions(
@@ -5982,22 +6772,14 @@ public final class ProtoContract {
         return getOptionsMap();
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
 
       public java.util.Map<java.lang.String, java.lang.Integer> getOptionsMap() {
         return internalGetOptions().getMap();
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
 
       public int getOptionsOrDefault(
@@ -6009,11 +6791,7 @@ public final class ProtoContract {
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
 
       public int getOptionsOrThrow(
@@ -6033,11 +6811,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
 
       public Builder removeOptions(
@@ -6056,11 +6830,7 @@ public final class ProtoContract {
         return internalGetMutableOptions().getMutableMap();
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
       public Builder putOptions(
           java.lang.String key,
@@ -6072,11 +6842,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    google.protobuf.Any Value = 12; // interface{} Value
-       * </pre>
-       *
-       * <code>map&lt;string, int32&gt; Options = 13;</code>
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
        */
 
       public Builder putAllOptions(
@@ -6088,11 +6854,7 @@ public final class ProtoContract {
 
       private java.lang.Object format_ = "";
       /**
-       * <pre>
-       *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-       * </pre>
-       *
-       * <code>string Format = 15;</code>
+       * <code>string Format = 12;</code>
        */
       public java.lang.String getFormat() {
         java.lang.Object ref = format_;
@@ -6107,11 +6869,7 @@ public final class ProtoContract {
         }
       }
       /**
-       * <pre>
-       *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-       * </pre>
-       *
-       * <code>string Format = 15;</code>
+       * <code>string Format = 12;</code>
        */
       public com.google.protobuf.ByteString
           getFormatBytes() {
@@ -6127,11 +6885,7 @@ public final class ProtoContract {
         }
       }
       /**
-       * <pre>
-       *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-       * </pre>
-       *
-       * <code>string Format = 15;</code>
+       * <code>string Format = 12;</code>
        */
       public Builder setFormat(
           java.lang.String value) {
@@ -6144,11 +6898,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-       * </pre>
-       *
-       * <code>string Format = 15;</code>
+       * <code>string Format = 12;</code>
        */
       public Builder clearFormat() {
         
@@ -6157,11 +6907,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <pre>
-       *    repeated google.protobuf.Any DataRange = 14; // []interface{} DataRange
-       * </pre>
-       *
-       * <code>string Format = 15;</code>
+       * <code>string Format = 12;</code>
        */
       public Builder setFormatBytes(
           com.google.protobuf.ByteString value) {
@@ -6171,6 +6917,694 @@ public final class ProtoContract {
   checkByteStringIsUtf8(value);
         
         format_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long valueInt_ ;
+      /**
+       * <pre>
+       *Value interface{} int64
+       * </pre>
+       *
+       * <code>int64 ValueInt = 13;</code>
+       */
+      public long getValueInt() {
+        return valueInt_;
+      }
+      /**
+       * <pre>
+       *Value interface{} int64
+       * </pre>
+       *
+       * <code>int64 ValueInt = 13;</code>
+       */
+      public Builder setValueInt(long value) {
+        
+        valueInt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} int64
+       * </pre>
+       *
+       * <code>int64 ValueInt = 13;</code>
+       */
+      public Builder clearValueInt() {
+        
+        valueInt_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long valueUint_ ;
+      /**
+       * <pre>
+       *Value interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 ValueUint = 14;</code>
+       */
+      public long getValueUint() {
+        return valueUint_;
+      }
+      /**
+       * <pre>
+       *Value interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 ValueUint = 14;</code>
+       */
+      public Builder setValueUint(long value) {
+        
+        valueUint_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 ValueUint = 14;</code>
+       */
+      public Builder clearValueUint() {
+        
+        valueUint_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private double valueFloat_ ;
+      /**
+       * <pre>
+       *Value interface{} float64
+       * </pre>
+       *
+       * <code>double ValueFloat = 15;</code>
+       */
+      public double getValueFloat() {
+        return valueFloat_;
+      }
+      /**
+       * <pre>
+       *Value interface{} float64
+       * </pre>
+       *
+       * <code>double ValueFloat = 15;</code>
+       */
+      public Builder setValueFloat(double value) {
+        
+        valueFloat_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} float64
+       * </pre>
+       *
+       * <code>double ValueFloat = 15;</code>
+       */
+      public Builder clearValueFloat() {
+        
+        valueFloat_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object valueString_ = "";
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public java.lang.String getValueString() {
+        java.lang.Object ref = valueString_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          valueString_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueStringBytes() {
+        java.lang.Object ref = valueString_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          valueString_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public Builder setValueString(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        valueString_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public Builder clearValueString() {
+        
+        valueString_ = getDefaultInstance().getValueString();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public Builder setValueStringBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        valueString_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long defaultValueInt_ ;
+      /**
+       * <pre>
+       *DefaultValue interface{} int64
+       * </pre>
+       *
+       * <code>int64 DefaultValueInt = 17;</code>
+       */
+      public long getDefaultValueInt() {
+        return defaultValueInt_;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} int64
+       * </pre>
+       *
+       * <code>int64 DefaultValueInt = 17;</code>
+       */
+      public Builder setDefaultValueInt(long value) {
+        
+        defaultValueInt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} int64
+       * </pre>
+       *
+       * <code>int64 DefaultValueInt = 17;</code>
+       */
+      public Builder clearDefaultValueInt() {
+        
+        defaultValueInt_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long defaultValueUint_ ;
+      /**
+       * <pre>
+       *DefaultValue interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 DefaultValueUint = 18;</code>
+       */
+      public long getDefaultValueUint() {
+        return defaultValueUint_;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 DefaultValueUint = 18;</code>
+       */
+      public Builder setDefaultValueUint(long value) {
+        
+        defaultValueUint_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 DefaultValueUint = 18;</code>
+       */
+      public Builder clearDefaultValueUint() {
+        
+        defaultValueUint_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private double defaultValueFloat_ ;
+      /**
+       * <pre>
+       *DefaultValue interface{} float64
+       * </pre>
+       *
+       * <code>double DefaultValueFloat = 19;</code>
+       */
+      public double getDefaultValueFloat() {
+        return defaultValueFloat_;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} float64
+       * </pre>
+       *
+       * <code>double DefaultValueFloat = 19;</code>
+       */
+      public Builder setDefaultValueFloat(double value) {
+        
+        defaultValueFloat_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} float64
+       * </pre>
+       *
+       * <code>double DefaultValueFloat = 19;</code>
+       */
+      public Builder clearDefaultValueFloat() {
+        
+        defaultValueFloat_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object defaultValueString_ = "";
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public java.lang.String getDefaultValueString() {
+        java.lang.Object ref = defaultValueString_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          defaultValueString_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDefaultValueStringBytes() {
+        java.lang.Object ref = defaultValueString_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          defaultValueString_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public Builder setDefaultValueString(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        defaultValueString_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public Builder clearDefaultValueString() {
+        
+        defaultValueString_ = getDefaultInstance().getDefaultValueString();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public Builder setDefaultValueStringBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        defaultValueString_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Long> dataRangeInt_ = java.util.Collections.emptyList();
+      private void ensureDataRangeIntIsMutable() {
+        if (!((bitField0_ & 0x00100000) == 0x00100000)) {
+          dataRangeInt_ = new java.util.ArrayList<java.lang.Long>(dataRangeInt_);
+          bitField0_ |= 0x00100000;
+         }
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public java.util.List<java.lang.Long>
+          getDataRangeIntList() {
+        return java.util.Collections.unmodifiableList(dataRangeInt_);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public int getDataRangeIntCount() {
+        return dataRangeInt_.size();
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public long getDataRangeInt(int index) {
+        return dataRangeInt_.get(index);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public Builder setDataRangeInt(
+          int index, long value) {
+        ensureDataRangeIntIsMutable();
+        dataRangeInt_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public Builder addDataRangeInt(long value) {
+        ensureDataRangeIntIsMutable();
+        dataRangeInt_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public Builder addAllDataRangeInt(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureDataRangeIntIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dataRangeInt_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int64 DataRangeInt = 21;</code>
+       */
+      public Builder clearDataRangeInt() {
+        dataRangeInt_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00100000);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Long> dataRangeUint_ = java.util.Collections.emptyList();
+      private void ensureDataRangeUintIsMutable() {
+        if (!((bitField0_ & 0x00200000) == 0x00200000)) {
+          dataRangeUint_ = new java.util.ArrayList<java.lang.Long>(dataRangeUint_);
+          bitField0_ |= 0x00200000;
+         }
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public java.util.List<java.lang.Long>
+          getDataRangeUintList() {
+        return java.util.Collections.unmodifiableList(dataRangeUint_);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public int getDataRangeUintCount() {
+        return dataRangeUint_.size();
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public long getDataRangeUint(int index) {
+        return dataRangeUint_.get(index);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public Builder setDataRangeUint(
+          int index, long value) {
+        ensureDataRangeUintIsMutable();
+        dataRangeUint_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public Builder addDataRangeUint(long value) {
+        ensureDataRangeUintIsMutable();
+        dataRangeUint_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public Builder addAllDataRangeUint(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureDataRangeUintIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dataRangeUint_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint64 DataRangeUint = 22;</code>
+       */
+      public Builder clearDataRangeUint() {
+        dataRangeUint_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00200000);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Double> dataRangeFloat_ = java.util.Collections.emptyList();
+      private void ensureDataRangeFloatIsMutable() {
+        if (!((bitField0_ & 0x00400000) == 0x00400000)) {
+          dataRangeFloat_ = new java.util.ArrayList<java.lang.Double>(dataRangeFloat_);
+          bitField0_ |= 0x00400000;
+         }
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public java.util.List<java.lang.Double>
+          getDataRangeFloatList() {
+        return java.util.Collections.unmodifiableList(dataRangeFloat_);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public int getDataRangeFloatCount() {
+        return dataRangeFloat_.size();
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public double getDataRangeFloat(int index) {
+        return dataRangeFloat_.get(index);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder setDataRangeFloat(
+          int index, double value) {
+        ensureDataRangeFloatIsMutable();
+        dataRangeFloat_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder addDataRangeFloat(double value) {
+        ensureDataRangeFloatIsMutable();
+        dataRangeFloat_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder addAllDataRangeFloat(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensureDataRangeFloatIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dataRangeFloat_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder clearDataRangeFloat() {
+        dataRangeFloat_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00400000);
         onChanged();
         return this;
       }
@@ -12063,11 +13497,80 @@ public final class ProtoContract {
     /**
      * <pre>
      * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
      * </pre>
      *
-     * <code>bytes MetaAttribute = 15;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
      */
-    com.google.protobuf.ByteString getMetaAttribute();
+    int getMetaAttributeCount();
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+    boolean containsMetaAttribute(
+        java.lang.String key);
+    /**
+     * Use {@link #getMetaAttributeMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getMetaAttribute();
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getMetaAttributeMap();
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+
+    java.lang.String getMetaAttributeOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue);
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+
+    java.lang.String getMetaAttributeOrThrow(
+        java.lang.String key);
+
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    java.util.List<java.lang.String>
+        getNextTasksList();
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    int getNextTasksCount();
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    java.lang.String getNextTasks(int index);
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    com.google.protobuf.ByteString
+        getNextTasksBytes(int index);
   }
   /**
    * Protobuf type {@code protos.ContractBody}
@@ -12095,7 +13598,7 @@ public final class ProtoContract {
       contractAssets_ = java.util.Collections.emptyList();
       contractSignatures_ = java.util.Collections.emptyList();
       contractComponents_ = java.util.Collections.emptyList();
-      metaAttribute_ = com.google.protobuf.ByteString.EMPTY;
+      nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -12220,8 +13723,25 @@ public final class ProtoContract {
               break;
             }
             case 122: {
-
-              metaAttribute_ = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00004000) == 0x00004000)) {
+                metaAttribute_ = com.google.protobuf.MapField.newMapField(
+                    MetaAttributeDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00004000;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              metaAttribute__ = input.readMessage(
+                  MetaAttributeDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              metaAttribute_.getMutableMap().put(
+                  metaAttribute__.getKey(), metaAttribute__.getValue());
+              break;
+            }
+            case 130: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00008000) == 0x00008000)) {
+                nextTasks_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00008000;
+              }
+              nextTasks_.add(s);
               break;
             }
           }
@@ -12244,6 +13764,9 @@ public final class ProtoContract {
         if (((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
           contractComponents_ = java.util.Collections.unmodifiableList(contractComponents_);
         }
+        if (((mutable_bitField0_ & 0x00008000) == 0x00008000)) {
+          nextTasks_ = nextTasks_.getUnmodifiableView();
+        }
         makeExtensionsImmutable();
       }
     }
@@ -12252,6 +13775,17 @@ public final class ProtoContract {
       return com.uniledger.protos.ProtoContract.internal_static_protos_ContractBody_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 15:
+          return internalGetMetaAttribute();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.uniledger.protos.ProtoContract.internal_static_protos_ContractBody_fieldAccessorTable
@@ -12751,16 +14285,128 @@ public final class ProtoContract {
     }
 
     public static final int METAATTRIBUTE_FIELD_NUMBER = 15;
-    private com.google.protobuf.ByteString metaAttribute_;
+    private static final class MetaAttributeDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  com.uniledger.protos.ProtoContract.internal_static_protos_ContractBody_MetaAttributeEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> metaAttribute_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetMetaAttribute() {
+      if (metaAttribute_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            MetaAttributeDefaultEntryHolder.defaultEntry);
+      }
+      return metaAttribute_;
+    }
+
+    public int getMetaAttributeCount() {
+      return internalGetMetaAttribute().getMap().size();
+    }
     /**
      * <pre>
      * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
      * </pre>
      *
-     * <code>bytes MetaAttribute = 15;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
      */
-    public com.google.protobuf.ByteString getMetaAttribute() {
-      return metaAttribute_;
+
+    public boolean containsMetaAttribute(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetMetaAttribute().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getMetaAttributeMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getMetaAttribute() {
+      return getMetaAttributeMap();
+    }
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+
+    public java.util.Map<java.lang.String, java.lang.String> getMetaAttributeMap() {
+      return internalGetMetaAttribute().getMap();
+    }
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+
+    public java.lang.String getMetaAttributeOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetMetaAttribute().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+     *    bytes MetaAttribute = 15;
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+     */
+
+    public java.lang.String getMetaAttributeOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetMetaAttribute().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int NEXTTASKS_FIELD_NUMBER = 16;
+    private com.google.protobuf.LazyStringList nextTasks_;
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getNextTasksList() {
+      return nextTasks_;
+    }
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    public int getNextTasksCount() {
+      return nextTasks_.size();
+    }
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    public java.lang.String getNextTasks(int index) {
+      return nextTasks_.get(index);
+    }
+    /**
+     * <code>repeated string NextTasks = 16;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNextTasksBytes(int index) {
+      return nextTasks_.getByteString(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -12817,8 +14463,14 @@ public final class ProtoContract {
       for (int i = 0; i < contractComponents_.size(); i++) {
         output.writeMessage(14, contractComponents_.get(i));
       }
-      if (!metaAttribute_.isEmpty()) {
-        output.writeBytes(15, metaAttribute_);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetMetaAttribute(),
+          MetaAttributeDefaultEntryHolder.defaultEntry,
+          15);
+      for (int i = 0; i < nextTasks_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 16, nextTasks_.getRaw(i));
       }
     }
 
@@ -12877,9 +14529,23 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, contractComponents_.get(i));
       }
-      if (!metaAttribute_.isEmpty()) {
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetMetaAttribute().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        metaAttribute__ = MetaAttributeDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(15, metaAttribute_);
+            .computeMessageSize(15, metaAttribute__);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < nextTasks_.size(); i++) {
+          dataSize += computeStringSizeNoTag(nextTasks_.getRaw(i));
+        }
+        size += dataSize;
+        size += 2 * getNextTasksList().size();
       }
       memoizedSize = size;
       return size;
@@ -12925,8 +14591,10 @@ public final class ProtoContract {
           .equals(other.getContractSignaturesList());
       result = result && getContractComponentsList()
           .equals(other.getContractComponentsList());
-      result = result && getMetaAttribute()
-          .equals(other.getMetaAttribute());
+      result = result && internalGetMetaAttribute().equals(
+          other.internalGetMetaAttribute());
+      result = result && getNextTasksList()
+          .equals(other.getNextTasksList());
       return result;
     }
 
@@ -12973,8 +14641,14 @@ public final class ProtoContract {
         hash = (37 * hash) + CONTRACTCOMPONENTS_FIELD_NUMBER;
         hash = (53 * hash) + getContractComponentsList().hashCode();
       }
-      hash = (37 * hash) + METAATTRIBUTE_FIELD_NUMBER;
-      hash = (53 * hash) + getMetaAttribute().hashCode();
+      if (!internalGetMetaAttribute().getMap().isEmpty()) {
+        hash = (37 * hash) + METAATTRIBUTE_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetMetaAttribute().hashCode();
+      }
+      if (getNextTasksCount() > 0) {
+        hash = (37 * hash) + NEXTTASKS_FIELD_NUMBER;
+        hash = (53 * hash) + getNextTasksList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -13069,6 +14743,28 @@ public final class ProtoContract {
         return com.uniledger.protos.ProtoContract.internal_static_protos_ContractBody_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 15:
+            return internalGetMetaAttribute();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 15:
+            return internalGetMutableMetaAttribute();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.uniledger.protos.ProtoContract.internal_static_protos_ContractBody_fieldAccessorTable
@@ -13136,8 +14832,9 @@ public final class ProtoContract {
         } else {
           contractComponentsBuilder_.clear();
         }
-        metaAttribute_ = com.google.protobuf.ByteString.EMPTY;
-
+        internalGetMutableMetaAttribute().clear();
+        nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00008000);
         return this;
       }
 
@@ -13204,7 +14901,13 @@ public final class ProtoContract {
         } else {
           result.contractComponents_ = contractComponentsBuilder_.build();
         }
-        result.metaAttribute_ = metaAttribute_;
+        result.metaAttribute_ = internalGetMetaAttribute();
+        result.metaAttribute_.makeImmutable();
+        if (((bitField0_ & 0x00008000) == 0x00008000)) {
+          nextTasks_ = nextTasks_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00008000);
+        }
+        result.nextTasks_ = nextTasks_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -13375,8 +15078,17 @@ public final class ProtoContract {
             }
           }
         }
-        if (other.getMetaAttribute() != com.google.protobuf.ByteString.EMPTY) {
-          setMetaAttribute(other.getMetaAttribute());
+        internalGetMutableMetaAttribute().mergeFrom(
+            other.internalGetMetaAttribute());
+        if (!other.nextTasks_.isEmpty()) {
+          if (nextTasks_.isEmpty()) {
+            nextTasks_ = other.nextTasks_;
+            bitField0_ = (bitField0_ & ~0x00008000);
+          } else {
+            ensureNextTasksIsMutable();
+            nextTasks_.addAll(other.nextTasks_);
+          }
+          onChanged();
         }
         onChanged();
         return this;
@@ -14949,43 +16661,254 @@ public final class ProtoContract {
         return contractComponentsBuilder_;
       }
 
-      private com.google.protobuf.ByteString metaAttribute_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <pre>
-       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
-       * </pre>
-       *
-       * <code>bytes MetaAttribute = 15;</code>
-       */
-      public com.google.protobuf.ByteString getMetaAttribute() {
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> metaAttribute_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMetaAttribute() {
+        if (metaAttribute_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              MetaAttributeDefaultEntryHolder.defaultEntry);
+        }
         return metaAttribute_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutableMetaAttribute() {
+        onChanged();;
+        if (metaAttribute_ == null) {
+          metaAttribute_ = com.google.protobuf.MapField.newMapField(
+              MetaAttributeDefaultEntryHolder.defaultEntry);
+        }
+        if (!metaAttribute_.isMutable()) {
+          metaAttribute_ = metaAttribute_.copy();
+        }
+        return metaAttribute_;
+      }
+
+      public int getMetaAttributeCount() {
+        return internalGetMetaAttribute().getMap().size();
       }
       /**
        * <pre>
        * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
        * </pre>
        *
-       * <code>bytes MetaAttribute = 15;</code>
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
        */
-      public Builder setMetaAttribute(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        metaAttribute_ = value;
-        onChanged();
+
+      public boolean containsMetaAttribute(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetMetaAttribute().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getMetaAttributeMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getMetaAttribute() {
+        return getMetaAttributeMap();
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+       */
+
+      public java.util.Map<java.lang.String, java.lang.String> getMetaAttributeMap() {
+        return internalGetMetaAttribute().getMap();
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+       */
+
+      public java.lang.String getMetaAttributeOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetMetaAttribute().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+       */
+
+      public java.lang.String getMetaAttributeOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetMetaAttribute().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearMetaAttribute() {
+        internalGetMutableMetaAttribute().getMutableMap()
+            .clear();
         return this;
       }
       /**
        * <pre>
        * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
        * </pre>
        *
-       * <code>bytes MetaAttribute = 15;</code>
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
        */
-      public Builder clearMetaAttribute() {
-        
-        metaAttribute_ = getDefaultInstance().getMetaAttribute();
+
+      public Builder removeMetaAttribute(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableMetaAttribute().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutableMetaAttribute() {
+        return internalGetMutableMetaAttribute().getMutableMap();
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+       */
+      public Builder putMetaAttribute(
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableMetaAttribute().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 map[string]interface{} 合约属性MetaData
+       *    bytes MetaAttribute = 15;
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 15;</code>
+       */
+
+      public Builder putAllMetaAttribute(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        internalGetMutableMetaAttribute().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureNextTasksIsMutable() {
+        if (!((bitField0_ & 0x00008000) == 0x00008000)) {
+          nextTasks_ = new com.google.protobuf.LazyStringArrayList(nextTasks_);
+          bitField0_ |= 0x00008000;
+         }
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getNextTasksList() {
+        return nextTasks_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public int getNextTasksCount() {
+        return nextTasks_.size();
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public java.lang.String getNextTasks(int index) {
+        return nextTasks_.get(index);
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNextTasksBytes(int index) {
+        return nextTasks_.getByteString(index);
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public Builder setNextTasks(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNextTasksIsMutable();
+        nextTasks_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public Builder addNextTasks(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNextTasksIsMutable();
+        nextTasks_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public Builder addAllNextTasks(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureNextTasksIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nextTasks_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public Builder clearNextTasks() {
+        nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00008000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 16;</code>
+       */
+      public Builder addNextTasksBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureNextTasksIsMutable();
+        nextTasks_.add(value);
         onChanged();
         return this;
       }
@@ -17015,6 +18938,11 @@ public final class ProtoContract {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ContractBody_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ContractBody_MetaAttributeEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ContractBody_MetaAttributeEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ContractHead_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -17040,56 +18968,66 @@ public final class ProtoContract {
       "\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\014\n\004U" +
       "nit\030\005 \001(\t\022\016\n\006Amount\030\006 \001(\002\022\020\n\010MetaData\030\007 " +
       "\001(\014\"2\n\020ExpressionResult\022\020\n\010Messsage\030\001 \001(" +
-      "\t\022\014\n\004Code\030\002 \001(\t\"\271\001\n\024ComponentsExpression" +
+      "\t\022\014\n\004Code\030\002 \001(\005\"\271\001\n\024ComponentsExpression" +
       "\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Captio" +
       "n\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n\rExpressi",
       "onStr\030\005 \001(\t\0222\n\020ExpressionResult\030\006 \001(\0132\030." +
       "protos.ExpressionResult\022\022\n\nLogicValue\030\007 " +
-      "\001(\t\"\272\002\n\rComponentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005" +
+      "\001(\005\"\311\004\n\rComponentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005" +
       "Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descript" +
       "ion\030\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014HardCon" +
-      "vType\030\006 \001(\t\022%\n\006Parent\030\010 \001(\0132\025.protos.Com" +
-      "ponentData\022\021\n\tMandatory\030\t \001(\010\022\014\n\004Unit\030\013 " +
-      "\001(\t\0223\n\007Options\030\r \003(\0132\".protos.ComponentD" +
-      "ata.OptionsEntry\022\016\n\006Format\030\017 \001(\t\032.\n\014Opti" +
-      "onsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001",
-      "\"T\n\026SelectBranchExpression\022\033\n\023BranchExpr" +
-      "essionStr\030\001 \001(\t\022\035\n\025BranchExpressionValue" +
-      "\030\002 \001(\t\"\266\005\n\021ContractComponent\022\r\n\005Cname\030\001 " +
-      "\001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013D" +
-      "escription\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCo" +
-      "ndition\030\006 \003(\0132\034.protos.ComponentsExpress" +
-      "ion\0227\n\021CompleteCondition\030\007 \003(\0132\034.protos." +
-      "ComponentsExpression\0226\n\020DiscardCondition" +
-      "\030\010 \003(\0132\034.protos.ComponentsExpression\022\021\n\t" +
-      "NextTasks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.prot",
-      "os.ComponentData\022C\n\035DataValueSetterExpre" +
-      "ssionList\030\013 \003(\0132\034.protos.ComponentsExpre" +
-      "ssion\0220\n\rCandidateList\030\014 \001(\0132\031.protos.Co" +
-      "ntractComponent\0221\n\016DecisionResult\030\r \001(\0132" +
-      "\031.protos.ContractComponent\022\020\n\010TaskList\030\016" +
-      " \003(\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020Agains" +
-      "tArguments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Tex" +
-      "t\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskI" +
-      "d\030\024 \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.protos" +
-      ".SelectBranchExpression\"\222\003\n\014ContractBody",
-      "\022\022\n\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005C" +
-      "type\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Descripti" +
-      "on\030\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creat" +
-      "or\030\007 \001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTim" +
-      "e\030\t \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwne" +
-      "rs\030\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.proto" +
-      "s.ContractAsset\0225\n\022ContractSignatures\030\r " +
-      "\003(\0132\031.protos.ContractSignature\0225\n\022Contra" +
-      "ctComponents\030\016 \003(\0132\031.protos.ContractComp" +
-      "onent\022\025\n\rMetaAttribute\030\017 \001(\014\"u\n\014Contract",
-      "Head\022\022\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(" +
-      "\005\022\022\n\nAssignTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001" +
-      "(\t\022\027\n\017ConsensusResult\030\005 \001(\005\"n\n\010Contract\022" +
-      "\n\n\002id\030\001 \001(\t\022*\n\014ContractHead\030\002 \001(\0132\024.prot" +
-      "os.ContractHead\022*\n\014ContractBody\030\003 \001(\0132\024." +
-      "protos.ContractBodyB%\n\024com.uniledger.pro" +
-      "tosB\rProtoContractb\006proto3"
+      "vType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022%\n\006Parent\030" +
+      "\010 \001(\0132\025.protos.ComponentData\022\021\n\tMandator" +
+      "y\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0223\n\007Options\030\013 \003(\0132\"" +
+      ".protos.ComponentData.OptionsEntry\022\016\n\006Fo" +
+      "rmat\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tValueUin",
+      "t\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013ValueStri" +
+      "ng\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\003\022\030\n\020Def" +
+      "aultValueUint\030\022 \001(\004\022\031\n\021DefaultValueFloat" +
+      "\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024\n\014Da" +
+      "taRangeInt\030\025 \003(\003\022\025\n\rDataRangeUint\030\026 \003(\004\022" +
+      "\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEntry\022" +
+      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026Selec" +
+      "tBranchExpression\022\033\n\023BranchExpressionStr" +
+      "\030\001 \001(\t\022\035\n\025BranchExpressionValue\030\002 \001(\t\"\266\005" +
+      "\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ct",
+      "ype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descriptio" +
+      "n\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006" +
+      " \003(\0132\034.protos.ComponentsExpression\0227\n\021Co" +
+      "mpleteCondition\030\007 \003(\0132\034.protos.Component" +
+      "sExpression\0226\n\020DiscardCondition\030\010 \003(\0132\034." +
+      "protos.ComponentsExpression\022\021\n\tNextTasks" +
+      "\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Compon" +
+      "entData\022C\n\035DataValueSetterExpressionList" +
+      "\030\013 \003(\0132\034.protos.ComponentsExpression\0220\n\r" +
+      "CandidateList\030\014 \001(\0132\031.protos.ContractCom",
+      "ponent\0221\n\016DecisionResult\030\r \001(\0132\031.protos." +
+      "ContractComponent\022\020\n\010TaskList\030\016 \003(\t\022\030\n\020S" +
+      "upportArguments\030\017 \003(\t\022\030\n\020AgainstArgument" +
+      "s\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022\026" +
+      "\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(\t\0226" +
+      "\n\016SelectBranches\030\025 \003(\0132\036.protos.SelectBr" +
+      "anchExpression\"\204\004\n\014ContractBody\022\022\n\nContr" +
+      "actId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(" +
+      "\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022" +
+      "\025\n\rContractState\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022",
+      "\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017" +
+      "\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022" +
+      "-\n\016ContractAssets\030\014 \003(\0132\025.protos.Contrac" +
+      "tAsset\0225\n\022ContractSignatures\030\r \003(\0132\031.pro" +
+      "tos.ContractSignature\0225\n\022ContractCompone" +
+      "nts\030\016 \003(\0132\031.protos.ContractComponent\022>\n\r" +
+      "MetaAttribute\030\017 \003(\0132\'.protos.ContractBod" +
+      "y.MetaAttributeEntry\022\021\n\tNextTasks\030\020 \003(\t\032" +
+      "4\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
+      "lue\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nMainPub",
+      "key\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssignTime" +
+      "\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017Consensus" +
+      "Result\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014" +
+      "ContractHead\030\002 \001(\0132\024.protos.ContractHead" +
+      "\022*\n\014ContractBody\030\003 \001(\0132\024.protos.Contract" +
+      "BodyB%\n\024com.uniledger.protosB\rProtoContr" +
+      "actb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -17132,7 +19070,7 @@ public final class ProtoContract {
     internal_static_protos_ComponentData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentData_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ModifyDate", "HardConvType", "Parent", "Mandatory", "Unit", "Options", "Format", });
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ModifyDate", "HardConvType", "Category", "Parent", "Mandatory", "Unit", "Options", "Format", "ValueInt", "ValueUint", "ValueFloat", "ValueString", "DefaultValueInt", "DefaultValueUint", "DefaultValueFloat", "DefaultValueString", "DataRangeInt", "DataRangeUint", "DataRangeFloat", });
     internal_static_protos_ComponentData_OptionsEntry_descriptor =
       internal_static_protos_ComponentData_descriptor.getNestedTypes().get(0);
     internal_static_protos_ComponentData_OptionsEntry_fieldAccessorTable = new
@@ -17156,7 +19094,13 @@ public final class ProtoContract {
     internal_static_protos_ContractBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractBody_descriptor,
-        new java.lang.String[] { "ContractId", "Cname", "Ctype", "Caption", "Description", "ContractState", "Creator", "CreateTime", "StartTime", "EndTime", "ContractOwners", "ContractAssets", "ContractSignatures", "ContractComponents", "MetaAttribute", });
+        new java.lang.String[] { "ContractId", "Cname", "Ctype", "Caption", "Description", "ContractState", "Creator", "CreateTime", "StartTime", "EndTime", "ContractOwners", "ContractAssets", "ContractSignatures", "ContractComponents", "MetaAttribute", "NextTasks", });
+    internal_static_protos_ContractBody_MetaAttributeEntry_descriptor =
+      internal_static_protos_ContractBody_descriptor.getNestedTypes().get(0);
+    internal_static_protos_ContractBody_MetaAttributeEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ContractBody_MetaAttributeEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ContractHead_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_protos_ContractHead_fieldAccessorTable = new

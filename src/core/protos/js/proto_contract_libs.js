@@ -591,7 +591,7 @@ proto.protos.ExpressionResult.prototype.toObject = function(opt_includeInstance)
 proto.protos.ExpressionResult.toObject = function(includeInstance, msg) {
   var f, obj = {
     messsage: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    code: jspb.Message.getFieldWithDefault(msg, 2, "")
+    code: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -633,7 +633,7 @@ proto.protos.ExpressionResult.deserializeBinaryFromReader = function(msg, reader
       msg.setMesssage(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setCode(value);
       break;
     default:
@@ -672,8 +672,8 @@ proto.protos.ExpressionResult.serializeBinaryToWriter = function(message, writer
     );
   }
   f = message.getCode();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt32(
       2,
       f
     );
@@ -697,15 +697,15 @@ proto.protos.ExpressionResult.prototype.setMesssage = function(value) {
 
 
 /**
- * optional string Code = 2;
- * @return {string}
+ * optional int32 Code = 2;
+ * @return {number}
  */
 proto.protos.ExpressionResult.prototype.getCode = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
-/** @param {string} value */
+/** @param {number} value */
 proto.protos.ExpressionResult.prototype.setCode = function(value) {
   jspb.Message.setField(this, 2, value);
 };
@@ -763,7 +763,7 @@ proto.protos.ComponentsExpression.toObject = function(includeInstance, msg) {
     description: jspb.Message.getFieldWithDefault(msg, 4, ""),
     expressionstr: jspb.Message.getFieldWithDefault(msg, 5, ""),
     expressionresult: (f = msg.getExpressionresult()) && proto.protos.ExpressionResult.toObject(includeInstance, f),
-    logicvalue: jspb.Message.getFieldWithDefault(msg, 7, "")
+    logicvalue: jspb.Message.getFieldWithDefault(msg, 7, 0)
   };
 
   if (includeInstance) {
@@ -826,7 +826,7 @@ proto.protos.ComponentsExpression.deserializeBinaryFromReader = function(msg, re
       msg.setExpressionresult(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setLogicvalue(value);
       break;
     default:
@@ -901,8 +901,8 @@ proto.protos.ComponentsExpression.serializeBinaryToWriter = function(message, wr
     );
   }
   f = message.getLogicvalue();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt32(
       7,
       f
     );
@@ -1016,15 +1016,15 @@ proto.protos.ComponentsExpression.prototype.hasExpressionresult = function() {
 
 
 /**
- * optional string LogicValue = 7;
- * @return {string}
+ * optional int32 LogicValue = 7;
+ * @return {number}
  */
 proto.protos.ComponentsExpression.prototype.getLogicvalue = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
-/** @param {string} value */
+/** @param {number} value */
 proto.protos.ComponentsExpression.prototype.setLogicvalue = function(value) {
   jspb.Message.setField(this, 7, value);
 };
@@ -1042,12 +1042,19 @@ proto.protos.ComponentsExpression.prototype.setLogicvalue = function(value) {
  * @constructor
  */
 proto.protos.ComponentData = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.protos.ComponentData.repeatedFields_, null);
 };
 goog.inherits(proto.protos.ComponentData, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.protos.ComponentData.displayName = 'proto.protos.ComponentData';
 }
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.protos.ComponentData.repeatedFields_ = [7,21,22,23];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1082,11 +1089,23 @@ proto.protos.ComponentData.toObject = function(includeInstance, msg) {
     description: jspb.Message.getFieldWithDefault(msg, 4, ""),
     modifydate: jspb.Message.getFieldWithDefault(msg, 5, ""),
     hardconvtype: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    categoryList: jspb.Message.getField(msg, 7),
     parent: (f = msg.getParent()) && proto.protos.ComponentData.toObject(includeInstance, f),
     mandatory: jspb.Message.getFieldWithDefault(msg, 9, false),
-    unit: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    unit: jspb.Message.getFieldWithDefault(msg, 10, ""),
     optionsMap: (f = msg.getOptionsMap()) ? f.toObject(includeInstance, undefined) : [],
-    format: jspb.Message.getFieldWithDefault(msg, 15, "")
+    format: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    valueint: jspb.Message.getFieldWithDefault(msg, 13, 0),
+    valueuint: jspb.Message.getFieldWithDefault(msg, 14, 0),
+    valuefloat: +jspb.Message.getFieldWithDefault(msg, 15, 0.0),
+    valuestring: jspb.Message.getFieldWithDefault(msg, 16, ""),
+    defaultvalueint: jspb.Message.getFieldWithDefault(msg, 17, 0),
+    defaultvalueuint: jspb.Message.getFieldWithDefault(msg, 18, 0),
+    defaultvaluefloat: +jspb.Message.getFieldWithDefault(msg, 19, 0.0),
+    defaultvaluestring: jspb.Message.getFieldWithDefault(msg, 20, ""),
+    datarangeintList: jspb.Message.getField(msg, 21),
+    datarangeuintList: jspb.Message.getField(msg, 22),
+    datarangefloatList: jspb.Message.getRepeatedFloatingPointField(msg, 23)
   };
 
   if (includeInstance) {
@@ -1147,6 +1166,10 @@ proto.protos.ComponentData.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setHardconvtype(value);
       break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addCategory(value);
+      break;
     case 8:
       var value = new proto.protos.ComponentData;
       reader.readMessage(value,proto.protos.ComponentData.deserializeBinaryFromReader);
@@ -1156,19 +1179,63 @@ proto.protos.ComponentData.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setMandatory(value);
       break;
-    case 11:
+    case 10:
       var value = /** @type {string} */ (reader.readString());
       msg.setUnit(value);
       break;
-    case 13:
+    case 11:
       var value = msg.getOptionsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readInt32);
          });
       break;
-    case 15:
+    case 12:
       var value = /** @type {string} */ (reader.readString());
       msg.setFormat(value);
+      break;
+    case 13:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setValueint(value);
+      break;
+    case 14:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setValueuint(value);
+      break;
+    case 15:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setValuefloat(value);
+      break;
+    case 16:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setValuestring(value);
+      break;
+    case 17:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setDefaultvalueint(value);
+      break;
+    case 18:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setDefaultvalueuint(value);
+      break;
+    case 19:
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setDefaultvaluefloat(value);
+      break;
+    case 20:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDefaultvaluestring(value);
+      break;
+    case 21:
+      var value = /** @type {!Array.<number>} */ (reader.readPackedInt64());
+      msg.setDatarangeintList(value);
+      break;
+    case 22:
+      var value = /** @type {!Array.<number>} */ (reader.readPackedUint64());
+      msg.setDatarangeuintList(value);
+      break;
+    case 23:
+      var value = /** @type {!Array.<number>} */ (reader.readPackedDouble());
+      msg.setDatarangefloatList(value);
       break;
     default:
       reader.skipField();
@@ -1240,6 +1307,13 @@ proto.protos.ComponentData.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getCategoryList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      7,
+      f
+    );
+  }
   f = message.getParent();
   if (f != null) {
     writer.writeMessage(
@@ -1258,18 +1332,95 @@ proto.protos.ComponentData.serializeBinaryToWriter = function(message, writer) {
   f = message.getUnit();
   if (f.length > 0) {
     writer.writeString(
-      11,
+      10,
       f
     );
   }
   f = message.getOptionsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(13, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeInt32);
+    f.serializeBinary(11, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeInt32);
   }
   f = message.getFormat();
   if (f.length > 0) {
     writer.writeString(
+      12,
+      f
+    );
+  }
+  f = message.getValueint();
+  if (f !== 0) {
+    writer.writeInt64(
+      13,
+      f
+    );
+  }
+  f = message.getValueuint();
+  if (f !== 0) {
+    writer.writeUint64(
+      14,
+      f
+    );
+  }
+  f = message.getValuefloat();
+  if (f !== 0.0) {
+    writer.writeDouble(
       15,
+      f
+    );
+  }
+  f = message.getValuestring();
+  if (f.length > 0) {
+    writer.writeString(
+      16,
+      f
+    );
+  }
+  f = message.getDefaultvalueint();
+  if (f !== 0) {
+    writer.writeInt64(
+      17,
+      f
+    );
+  }
+  f = message.getDefaultvalueuint();
+  if (f !== 0) {
+    writer.writeUint64(
+      18,
+      f
+    );
+  }
+  f = message.getDefaultvaluefloat();
+  if (f !== 0.0) {
+    writer.writeDouble(
+      19,
+      f
+    );
+  }
+  f = message.getDefaultvaluestring();
+  if (f.length > 0) {
+    writer.writeString(
+      20,
+      f
+    );
+  }
+  f = message.getDatarangeintList();
+  if (f.length > 0) {
+    writer.writePackedInt64(
+      21,
+      f
+    );
+  }
+  f = message.getDatarangeuintList();
+  if (f.length > 0) {
+    writer.writePackedUint64(
+      22,
+      f
+    );
+  }
+  f = message.getDatarangefloatList();
+  if (f.length > 0) {
+    writer.writePackedDouble(
+      23,
       f
     );
   }
@@ -1367,6 +1518,37 @@ proto.protos.ComponentData.prototype.setHardconvtype = function(value) {
 
 
 /**
+ * repeated string Category = 7;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<string>}
+ */
+proto.protos.ComponentData.prototype.getCategoryList = function() {
+  return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 7));
+};
+
+
+/** @param {!Array.<string>} value */
+proto.protos.ComponentData.prototype.setCategoryList = function(value) {
+  jspb.Message.setField(this, 7, value || []);
+};
+
+
+/**
+ * @param {!string} value
+ * @param {number=} opt_index
+ */
+proto.protos.ComponentData.prototype.addCategory = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 7, value, opt_index);
+};
+
+
+proto.protos.ComponentData.prototype.clearCategoryList = function() {
+  this.setCategoryList([]);
+};
+
+
+/**
  * optional ComponentData Parent = 8;
  * @return {?proto.protos.ComponentData}
  */
@@ -1414,29 +1596,29 @@ proto.protos.ComponentData.prototype.setMandatory = function(value) {
 
 
 /**
- * optional string Unit = 11;
+ * optional string Unit = 10;
  * @return {string}
  */
 proto.protos.ComponentData.prototype.getUnit = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
 
 /** @param {string} value */
 proto.protos.ComponentData.prototype.setUnit = function(value) {
-  jspb.Message.setField(this, 11, value);
+  jspb.Message.setField(this, 10, value);
 };
 
 
 /**
- * map<string, int32> Options = 13;
+ * map<string, int32> Options = 11;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,number>}
  */
 proto.protos.ComponentData.prototype.getOptionsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,number>} */ (
-      jspb.Message.getMapField(this, 13, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 11, opt_noLazyCreate,
       null));
 };
 
@@ -1447,17 +1629,230 @@ proto.protos.ComponentData.prototype.clearOptionsMap = function() {
 
 
 /**
- * optional string Format = 15;
+ * optional string Format = 12;
  * @return {string}
  */
 proto.protos.ComponentData.prototype.getFormat = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 15, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
 
 /** @param {string} value */
 proto.protos.ComponentData.prototype.setFormat = function(value) {
+  jspb.Message.setField(this, 12, value);
+};
+
+
+/**
+ * optional int64 ValueInt = 13;
+ * @return {number}
+ */
+proto.protos.ComponentData.prototype.getValueint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 13, 0));
+};
+
+
+/** @param {number} value */
+proto.protos.ComponentData.prototype.setValueint = function(value) {
+  jspb.Message.setField(this, 13, value);
+};
+
+
+/**
+ * optional uint64 ValueUint = 14;
+ * @return {number}
+ */
+proto.protos.ComponentData.prototype.getValueuint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 14, 0));
+};
+
+
+/** @param {number} value */
+proto.protos.ComponentData.prototype.setValueuint = function(value) {
+  jspb.Message.setField(this, 14, value);
+};
+
+
+/**
+ * optional double ValueFloat = 15;
+ * @return {number}
+ */
+proto.protos.ComponentData.prototype.getValuefloat = function() {
+  return /** @type {number} */ (+jspb.Message.getFieldWithDefault(this, 15, 0.0));
+};
+
+
+/** @param {number} value */
+proto.protos.ComponentData.prototype.setValuefloat = function(value) {
   jspb.Message.setField(this, 15, value);
+};
+
+
+/**
+ * optional string ValueString = 16;
+ * @return {string}
+ */
+proto.protos.ComponentData.prototype.getValuestring = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 16, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ComponentData.prototype.setValuestring = function(value) {
+  jspb.Message.setField(this, 16, value);
+};
+
+
+/**
+ * optional int64 DefaultValueInt = 17;
+ * @return {number}
+ */
+proto.protos.ComponentData.prototype.getDefaultvalueint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 17, 0));
+};
+
+
+/** @param {number} value */
+proto.protos.ComponentData.prototype.setDefaultvalueint = function(value) {
+  jspb.Message.setField(this, 17, value);
+};
+
+
+/**
+ * optional uint64 DefaultValueUint = 18;
+ * @return {number}
+ */
+proto.protos.ComponentData.prototype.getDefaultvalueuint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 18, 0));
+};
+
+
+/** @param {number} value */
+proto.protos.ComponentData.prototype.setDefaultvalueuint = function(value) {
+  jspb.Message.setField(this, 18, value);
+};
+
+
+/**
+ * optional double DefaultValueFloat = 19;
+ * @return {number}
+ */
+proto.protos.ComponentData.prototype.getDefaultvaluefloat = function() {
+  return /** @type {number} */ (+jspb.Message.getFieldWithDefault(this, 19, 0.0));
+};
+
+
+/** @param {number} value */
+proto.protos.ComponentData.prototype.setDefaultvaluefloat = function(value) {
+  jspb.Message.setField(this, 19, value);
+};
+
+
+/**
+ * optional string DefaultValueString = 20;
+ * @return {string}
+ */
+proto.protos.ComponentData.prototype.getDefaultvaluestring = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 20, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ComponentData.prototype.setDefaultvaluestring = function(value) {
+  jspb.Message.setField(this, 20, value);
+};
+
+
+/**
+ * repeated int64 DataRangeInt = 21;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<number>}
+ */
+proto.protos.ComponentData.prototype.getDatarangeintList = function() {
+  return /** @type {!Array.<number>} */ (jspb.Message.getField(this, 21));
+};
+
+
+/** @param {!Array.<number>} value */
+proto.protos.ComponentData.prototype.setDatarangeintList = function(value) {
+  jspb.Message.setField(this, 21, value || []);
+};
+
+
+/**
+ * @param {!number} value
+ * @param {number=} opt_index
+ */
+proto.protos.ComponentData.prototype.addDatarangeint = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 21, value, opt_index);
+};
+
+
+proto.protos.ComponentData.prototype.clearDatarangeintList = function() {
+  this.setDatarangeintList([]);
+};
+
+
+/**
+ * repeated uint64 DataRangeUint = 22;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<number>}
+ */
+proto.protos.ComponentData.prototype.getDatarangeuintList = function() {
+  return /** @type {!Array.<number>} */ (jspb.Message.getField(this, 22));
+};
+
+
+/** @param {!Array.<number>} value */
+proto.protos.ComponentData.prototype.setDatarangeuintList = function(value) {
+  jspb.Message.setField(this, 22, value || []);
+};
+
+
+/**
+ * @param {!number} value
+ * @param {number=} opt_index
+ */
+proto.protos.ComponentData.prototype.addDatarangeuint = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 22, value, opt_index);
+};
+
+
+proto.protos.ComponentData.prototype.clearDatarangeuintList = function() {
+  this.setDatarangeuintList([]);
+};
+
+
+/**
+ * repeated double DataRangeFloat = 23;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<number>}
+ */
+proto.protos.ComponentData.prototype.getDatarangefloatList = function() {
+  return /** @type {!Array.<number>} */ (jspb.Message.getRepeatedFloatingPointField(this, 23));
+};
+
+
+/** @param {!Array.<number>} value */
+proto.protos.ComponentData.prototype.setDatarangefloatList = function(value) {
+  jspb.Message.setField(this, 23, value || []);
+};
+
+
+/**
+ * @param {!number} value
+ * @param {number=} opt_index
+ */
+proto.protos.ComponentData.prototype.addDatarangefloat = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 23, value, opt_index);
+};
+
+
+proto.protos.ComponentData.prototype.clearDatarangefloatList = function() {
+  this.setDatarangefloatList([]);
 };
 
 
@@ -2578,7 +2973,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.protos.ContractBody.repeatedFields_ = [11,12,13,14];
+proto.protos.ContractBody.repeatedFields_ = [11,12,13,14,16];
 
 
 
@@ -2625,7 +3020,8 @@ proto.protos.ContractBody.toObject = function(includeInstance, msg) {
     proto.protos.ContractSignature.toObject, includeInstance),
     contractcomponentsList: jspb.Message.toObjectList(msg.getContractcomponentsList(),
     proto.protos.ContractComponent.toObject, includeInstance),
-    metaattribute: msg.getMetaattribute_asB64()
+    metaattributeMap: (f = msg.getMetaattributeMap()) ? f.toObject(includeInstance, undefined) : [],
+    nexttasksList: jspb.Message.getField(msg, 16)
   };
 
   if (includeInstance) {
@@ -2722,8 +3118,14 @@ proto.protos.ContractBody.deserializeBinaryFromReader = function(msg, reader) {
       msg.addContractcomponents(value);
       break;
     case 15:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setMetaattribute(value);
+      var value = msg.getMetaattributeMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString);
+         });
+      break;
+    case 16:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addNexttasks(value);
       break;
     default:
       reader.skipField();
@@ -2854,10 +3256,14 @@ proto.protos.ContractBody.serializeBinaryToWriter = function(message, writer) {
       proto.protos.ContractComponent.serializeBinaryToWriter
     );
   }
-  f = message.getMetaattribute_asU8();
+  f = message.getMetaattributeMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(15, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
+  f = message.getNexttasksList();
   if (f.length > 0) {
-    writer.writeBytes(
-      15,
+    writer.writeRepeatedString(
+      16,
       f
     );
   }
@@ -3145,41 +3551,51 @@ proto.protos.ContractBody.prototype.clearContractcomponentsList = function() {
 
 
 /**
- * optional bytes MetaAttribute = 15;
- * @return {!(string|Uint8Array)}
+ * map<string, string> MetaAttribute = 15;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
  */
-proto.protos.ContractBody.prototype.getMetaattribute = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 15, ""));
+proto.protos.ContractBody.prototype.getMetaattributeMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 15, opt_noLazyCreate,
+      null));
+};
+
+
+proto.protos.ContractBody.prototype.clearMetaattributeMap = function() {
+  this.getMetaattributeMap().clear();
 };
 
 
 /**
- * optional bytes MetaAttribute = 15;
- * This is a type-conversion wrapper around `getMetaattribute()`
- * @return {string}
+ * repeated string NextTasks = 16;
+ * If you change this array by adding, removing or replacing elements, or if you
+ * replace the array itself, then you must call the setter to update it.
+ * @return {!Array.<string>}
  */
-proto.protos.ContractBody.prototype.getMetaattribute_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getMetaattribute()));
+proto.protos.ContractBody.prototype.getNexttasksList = function() {
+  return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 16));
+};
+
+
+/** @param {!Array.<string>} value */
+proto.protos.ContractBody.prototype.setNexttasksList = function(value) {
+  jspb.Message.setField(this, 16, value || []);
 };
 
 
 /**
- * optional bytes MetaAttribute = 15;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getMetaattribute()`
- * @return {!Uint8Array}
+ * @param {!string} value
+ * @param {number=} opt_index
  */
-proto.protos.ContractBody.prototype.getMetaattribute_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getMetaattribute()));
+proto.protos.ContractBody.prototype.addNexttasks = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 16, value, opt_index);
 };
 
 
-/** @param {!(string|Uint8Array)} value */
-proto.protos.ContractBody.prototype.setMetaattribute = function(value) {
-  jspb.Message.setField(this, 15, value);
+proto.protos.ContractBody.prototype.clearNexttasksList = function() {
+  this.setNexttasksList([]);
 };
 
 

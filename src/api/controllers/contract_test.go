@@ -12,6 +12,7 @@ import (
 	"unicontract/src/core/protos"
 
 	"github.com/golang/protobuf/proto"
+	"unicontract/src/core/engine/execengine/constdef"
 )
 
 // application content-type
@@ -108,42 +109,64 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractModel := model.ContractModel{}
 
 	//模拟用户发送的数据, mainpubkey 传入API 后,根据配置生成,此处请勿设置
+	assignTime, err := common.GenSpecialTimestamp("2017-06-01 00:00:00")
+	operateTime, err := common.GenSpecialTimestamp("2017-06-01 00:00:00")
 	mainPubkey := config.Config.Keypair.PublicKey
-	contractHead := &protos.ContractHead{mainPubkey, 1, common.GenTimestamp(),
-		common.GenTimestamp(), 0}
+	contractHead := &protos.ContractHead{mainPubkey, 1,
+		assignTime, operateTime, 0}
 	// random choose the creator
 	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen)]
 	//contractAsset := []*protos.ContractAsset{}
 	//contractComponent:=[]*protos.ContractComponent{}
 
-	startTime, err := common.GenSpecialTimestamp("2017-04-29 00:00:00")
+	startTime, err := common.GenSpecialTimestamp("2017-05-29 00:00:00")
 	if err != nil {
 		fmt.Println(err)
 		return "", err
 	}
-	endTime, err := common.GenSpecialTimestamp("2018-05-06 07:00:00")
+	endTime, err := common.GenSpecialTimestamp("2017-10-06 07:00:00")
 	if err != nil {
 		fmt.Println(err)
 		return "", err
 	}
 	// random contractOwners 随机生成的合约拥有者数组
 	contractOwners := ownersPubkeys
-
+	createTime := common.GenTimestamp()
 	contractBody := &protos.ContractBody{
-		ContractId:         "UUID-1234-5678-90",
-		Cname:              "test create contract ",
-		Ctype:              "CREATE",
-		Caption:            "futurever",
-		Description:        "www.futurever.com",
-		ContractState:      "",
+		ContractId:  "UUID-1234-5678-90 wx1",
+		Cname:       "test create contract",
+		Ctype:       "CREATE",
+		Caption:     "futurever",
+		Description: "www.futurever.com",
+		//ContractState: constdef.ContractState[constdef.Component_Unknown],
+		//ContractState: constdef.ContractState[constdef.Contract_Create],
+		ContractState: constdef.ContractState[constdef.Contract_Signature],
+		//ContractState: constdef.ContractState[constdef.Contract_In_Process],
+		//ContractState: constdef.ContractState[constdef.Contract_Completed],
+		//ContractState:      constdef.ContractState[constdef.Contract_Disgarded],
 		Creator:            randomCreator,
-		CreateTime:         common.GenTimestamp(),
+		CreateTime:         createTime,
 		StartTime:          startTime,
 		EndTime:            endTime,
 		ContractOwners:     contractOwners,
 		ContractSignatures: nil,
 		ContractAssets:     nil,
-		ContractComponents: nil,
+		ContractComponents: []*protos.ContractComponent{
+			{
+				DataList: []*protos.ComponentData{
+					{
+						Cname:             "232",
+						DefaultValueFloat: float64(33),
+						DataRangeFloat:    []float64{32, 32},
+
+						//DefaultValue:(*google_protobuf.Any{TypeUrl:"22", Value:2}),
+						//Value:3,
+					},
+				},
+			},
+		},
+
+		NextTasks: nil,
 	}
 
 	contractModel.ContractHead = contractHead
@@ -179,7 +202,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 }
 
 func generateProtoContract(produceValid bool, optArgs ...map[string]interface{}) ([]byte, error) {
-	contractOwnersLen := 1
+	contractOwnersLen := 2
 	if tempLen, ok := optArgs[0]["contractOwnersLen"]; ok {
 		contractOwnersLen, ok = tempLen.(int)
 		if !ok {
