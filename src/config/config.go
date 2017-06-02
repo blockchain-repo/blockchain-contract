@@ -7,7 +7,6 @@ import (
 	"github.com/astaxie/beego/logs"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"unicontract/src/common"
 )
 
