@@ -154,7 +154,7 @@ func createTxPip() (txPip Pipeline) {
 	txNodeSlice = append(txNodeSlice, &Node{target: txHeadFilter, routineNum: 1, name: "txHeadFilter"})
 	txNodeSlice = append(txNodeSlice, &Node{target: txValidate, routineNum: 1, name: "txValidate"})
 	txNodeSlice = append(txNodeSlice, &Node{target: txQueryEists, routineNum: 1, name: "txQueryEists"})
-	txNodeSlice = append(txNodeSlice, &Node{target: txSend, routineNum: 1, name: "txSends"})
+	txNodeSlice = append(txNodeSlice, &Node{target: txSend, routineNum: 1, name: "txSends",timeout:10})
 	txPip = Pipeline{
 		nodes: txNodeSlice,
 	}

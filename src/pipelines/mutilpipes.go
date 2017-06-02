@@ -2,6 +2,7 @@ package pipelines
 
 import (
 	"errors"
+	"time"
 
 	"github.com/astaxie/beego/logs"
 )
@@ -12,6 +13,7 @@ type Node struct {
 	output     chan interface{}
 	routineNum int
 	name       string
+	timeout    int64
 }
 
 func (n *Node) start() {
@@ -32,17 +34,31 @@ func (n *Node) runForever() {
 }
 
 func (n *Node) run() error {
-	x, ok := <-n.input
-	if !ok {
-		logs.Error(errors.New("read data from inputchannel error"))
+	timeout := make(chan bool, 1)
+	go func() {
+		time.Sleep(time.Second * time.Duration(n.timeout)) //等待10秒钟
+		if n.timeout != 0 {
+			timeout <- true
+		}
+	}()
+	select {
+	case x, ok := <-n.input:
+		//从ch中读到数据
+		if !ok {
+			logs.Error(errors.New("read data from inputchannel error"))
+			return nil
+		}
+		//TODO  not good enough, how to support multi params and returns
+		out := n.target(x)
+		if n.output == nil || out == nil {
+			return nil
+		}
+		n.output <- out
+	case <-timeout:
+		//一直没有从ch中读取到数据，但从timeout中读取到数据
+		logs.Info("read data timeout")
 		return nil
 	}
-	//TODO  not good enough, how to support multi params and returns
-	out := n.target(x)
-	if n.output == nil || out == nil {
-		return nil
-	}
-	n.output <- out
 	return nil
 }
 
