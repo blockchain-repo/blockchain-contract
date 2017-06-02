@@ -1,9 +1,9 @@
 package chain
 
 import (
-	"testing"
 	"fmt"
 	"reflect"
+	"testing"
 )
 
 /**
@@ -15,16 +15,20 @@ func TestCreateByPayload(t *testing.T) {
 
 	jsonBody := `{"beginTime":"1487066476", "endTime":"1487066776"}`
 
-	result,err:= CreateByPayload(jsonBody)
-	if err != nil{
-		fmt.Println(err)
+	for i := 1; i <= 1000; i++ {
+		result, err := CreateByPayload(jsonBody)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(result)
+		fmt.Println(result.Data)
+		fmt.Println(result.Message)
+		fmt.Println(result.Code)
+		fmt.Println(result.Status)
+		fmt.Println(reflect.TypeOf(result.Data))
+
 	}
-	fmt.Println(result)
-	fmt.Println(result.Data)
-	fmt.Println(result.Message)
-	fmt.Println(result.Code)
-	fmt.Println(result.Status)
-	fmt.Println(reflect.TypeOf(result.Data))
+
 }
 
 /**
@@ -32,10 +36,10 @@ func TestCreateByPayload(t *testing.T) {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryByID(t *testing.T){
+func TestQueryByID(t *testing.T) {
 	jsonBody := `{"tx_id":"440b13ed5442cd1375c3bcd17b91fa9b17a8eb5efbd117cbbde3ee979ce50269"}`
-	result,err := QueryByID(jsonBody)
-	if err != nil{
+	result, err := QueryByID(jsonBody)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -47,9 +51,9 @@ func TestQueryByID(t *testing.T){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryTxsTotal(t *testing.T)  {
-	result,err := QueryTxsTotal()
-	if err != nil{
+func TestQueryTxsTotal(t *testing.T) {
+	result, err := QueryTxsTotal()
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -61,10 +65,10 @@ func TestQueryTxsTotal(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryTxsByRange(t *testing.T)  {
+func TestQueryTxsByRange(t *testing.T) {
 	jsonBody := `{"beginTime":"1493127874364", "endTime":"1493131075550"}`
-	result,err := QueryTxsByRange(jsonBody)
-	if err != nil{
+	result, err := QueryTxsByRange(jsonBody)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -76,9 +80,9 @@ func TestQueryTxsByRange(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryGroupByBlock(t *testing.T)  {
-	result,err := QueryGroupByBlock()
-	if err != nil{
+func TestQueryGroupByBlock(t *testing.T) {
+	result, err := QueryGroupByBlock()
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -90,9 +94,9 @@ func TestQueryGroupByBlock(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryBlockByID(t *testing.T)  {
-	result,err := QueryBlockByID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
-	if err != nil{
+func TestQueryBlockByID(t *testing.T) {
+	result, err := QueryBlockByID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -104,9 +108,9 @@ func TestQueryBlockByID(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryTxsByID(t *testing.T)  {
-	result,err := QueryTxsByID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
-	if err != nil{
+func TestQueryTxsByID(t *testing.T) {
+	result, err := QueryTxsByID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -118,9 +122,9 @@ func TestQueryTxsByID(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryTxsCountByID(t *testing.T)  {
-	result,err := QueryTxsCountByID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
-	if err != nil{
+func TestQueryTxsCountByID(t *testing.T) {
+	result, err := QueryTxsCountByID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -132,9 +136,9 @@ func TestQueryTxsCountByID(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryBlockCount(t *testing.T)  {
-	result,err := QueryBlockCount()
-	if err != nil{
+func TestQueryBlockCount(t *testing.T) {
+	result, err := QueryBlockCount()
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -146,10 +150,10 @@ func TestQueryBlockCount(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryBlocksByRange(t *testing.T)  {
+func TestQueryBlocksByRange(t *testing.T) {
 	jsonBody := `{"beginTime":"1493127874364", "endTime":"1493131075550"}`
-	result,err := QueryBlocksByRange(jsonBody)
-	if err != nil{
+	result, err := QueryBlocksByRange(jsonBody)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -161,9 +165,9 @@ func TestQueryBlocksByRange(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryInvalidBlockTotal(t *testing.T)  {
-	result,err := QueryInvalidBlockTotal()
-	if err != nil{
+func TestQueryInvalidBlockTotal(t *testing.T) {
+	result, err := QueryInvalidBlockTotal()
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -175,10 +179,10 @@ func TestQueryInvalidBlockTotal(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestQueryInvalidBlockByRange(t *testing.T)  {
+func TestQueryInvalidBlockByRange(t *testing.T) {
 	jsonBody := `{"beginTime":"1493127874364", "endTime":"1493131075550"}`
-	result,err := QueryInvalidBlockByRange(jsonBody)
-	if err != nil{
+	result, err := QueryInvalidBlockByRange(jsonBody)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -190,9 +194,9 @@ func TestQueryInvalidBlockByRange(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestPublickeySet(t *testing.T)  {
-	result,err := PublickeySet()
-	if err != nil{
+func TestPublickeySet(t *testing.T) {
+	result, err := PublickeySet()
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -204,10 +208,10 @@ func TestPublickeySet(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestTxCreateAvgTimeByRange(t *testing.T)  {
+func TestTxCreateAvgTimeByRange(t *testing.T) {
 	jsonBody := `{"beginTime":"1493127874364", "endTime":"1493131075550"}`
-	result,err := TxCreateAvgTimeByRange(jsonBody)
-	if err != nil{
+	result, err := TxCreateAvgTimeByRange(jsonBody)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -219,10 +223,10 @@ func TestTxCreateAvgTimeByRange(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestBlockCreateAvgTimeByRange(t *testing.T)  {
+func TestBlockCreateAvgTimeByRange(t *testing.T) {
 	jsonBody := `{"beginTime":"1493127874364", "endTime":"1493131075550"}`
-	result,err := BlockCreateAvgTimeByRange(jsonBody)
-	if err != nil{
+	result, err := BlockCreateAvgTimeByRange(jsonBody)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -234,9 +238,9 @@ func TestBlockCreateAvgTimeByRange(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestVoteTimeByBlockID(t *testing.T)  {
-	result,err := VoteTimeByBlockID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
-	if err != nil{
+func TestVoteTimeByBlockID(t *testing.T) {
+	result, err := VoteTimeByBlockID(`{"block_id":"e01e291dead26382274a7f3423fdf48ab7c9a930d5d6a1f7c59dee303987c346"}`)
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
@@ -248,9 +252,9 @@ func TestVoteTimeByBlockID(t *testing.T)  {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TestVoteAvgTimeByRange(t *testing.T)  {
-	result,err := VoteAvgTimeByRange("")
-	if err != nil{
+func TestVoteAvgTimeByRange(t *testing.T) {
+	result, err := VoteAvgTimeByRange("")
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)

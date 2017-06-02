@@ -42,7 +42,7 @@ func Init() {
 	if err != nil {
 		logs.Error(err.Error())
 	}
-	fileName := user.HomeDir + "/.unicontract"
+	fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
 
 	//判断文件是否存在
 	//fileInfo,err := os.Stat(fileName)
@@ -81,7 +81,7 @@ func ReadUnicontractConfig() string {
 	if err != nil {
 		logs.Error(err.Error())
 	}
-	fileName := user.HomeDir + "/.unicontract"
+	fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
 
 	//读取配置文件
 	unicontractFile, err := os.Open(fileName)
@@ -108,7 +108,7 @@ func WriteConToFile() {
 	if err != nil {
 		logs.Error(err.Error())
 	}
-	fileName := user.HomeDir + "/.unicontract"
+	fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
 
 	//判断文件是否存在
 	fileInfo, err := os.Stat(fileName)
