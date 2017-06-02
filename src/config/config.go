@@ -38,12 +38,14 @@ type Keypair struct {
  */
 func Init() {
 	//获取当前用户目录
-	user, err := user.Current()
-	if err != nil {
-		logs.Error(err.Error())
-	}
-	fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
+	//user, err := user.Current()
+	//if err != nil {
+	//	logs.Error(err.Error())
+	//}
 
+	//fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
+	fileName := os.Getenv("CONFIGPATH")
+	fileName = fileName + "/unicontract"
 	//判断文件是否存在
 	//fileInfo,err := os.Stat(fileName)
 	//if err != nil{	//文件不存在
@@ -77,12 +79,14 @@ func Init() {
  */
 func ReadUnicontractConfig() string {
 	//获取当前用户目录
-	user, err := user.Current()
-	if err != nil {
-		logs.Error(err.Error())
-	}
-	fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
+	//user, err := user.Current()
+	//if err != nil {
+	//	logs.Error(err.Error())
+	//}
+	//fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
 
+	fileName := os.Getenv("CONFIGPATH")
+	fileName = fileName + "/unicontract"
 	//读取配置文件
 	unicontractFile, err := os.Open(fileName)
 	defer unicontractFile.Close()
@@ -104,11 +108,14 @@ func ReadUnicontractConfig() string {
 func WriteConToFile() {
 
 	//获取当前用户目录
-	user, err := user.Current()
-	if err != nil {
-		logs.Error(err.Error())
-	}
-	fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
+	//user, err := user.Current()
+	//if err != nil {
+	//	logs.Error(err.Error())
+	//}
+	//fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
+
+	fileName := os.Getenv("CONFIGPATH")
+	fileName = fileName + "/unicontract"
 
 	//判断文件是否存在
 	fileInfo, err := os.Stat(fileName)
