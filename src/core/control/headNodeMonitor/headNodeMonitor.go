@@ -70,7 +70,7 @@ func _HeadNodeMonitor() {
 				}
 
 				// 插入新的contract
-				slData, err = json.Marshal(slContracts[index])
+				slData, err := json.Marshal(slContracts[index])
 				if err != nil {
 					beegoLog.Error(err)
 					continue
