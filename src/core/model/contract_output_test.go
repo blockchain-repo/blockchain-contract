@@ -57,7 +57,7 @@ func GenerateOutputTest() string {
 	contractAsset := []*protos.ContractAsset{}
 	contractComponent := []*protos.ContractComponent{}
 	contractHead := &protos.ContractHead{config.Config.Keypair.PublicKey, 1,
-		common.GenTimestamp()}
+		common.GenTimestamp(), common.GenTimestamp(), 0}
 
 	contractOwners := []string{
 		"BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",

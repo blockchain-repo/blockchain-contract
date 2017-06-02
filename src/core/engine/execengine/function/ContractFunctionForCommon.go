@@ -58,7 +58,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_err error = nil
 
 	//var v_map_args map[string]interface{} = nil
-	if len(args) != 8 {
+	if len(args) != 7 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
@@ -68,11 +68,11 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var recipients [][2]interface{} = args[1].([][2]interface{})
 	//executer provide
 	var contractStr string = args[2].(string)
-	var contractHashId string = args[3].(string)
-	var contractId string = args[4].(string)
-	var taskId string = args[5].(string)
-	var taskIndex int = args[6].(int)
-	var mainPubkey string = args[7].(string)
+	var contractId string = args[3].(string)
+	var taskId string = args[4].(string)
+	var taskIndex int = args[5].(int)
+	var mainPubkey string = args[6].(string)
+	var contractHashId string = ""
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 
@@ -166,7 +166,7 @@ func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error
 func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-	if len(args) != 7 {
+	if len(args) != 6 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
@@ -175,10 +175,10 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	var recipients [][2]interface{} = args[1].([][2]interface{})
 	//executer provide
 	var contractStr string = args[2].(string)
-	var contractHashId string = args[3].(string)
-	var contractId string = args[4].(string)
-	var taskId string = args[5].(string)
-	var taskIndex int = args[6].(int)
+	var contractId string = args[3].(string)
+	var taskId string = args[4].(string)
+	var taskIndex int = args[5].(int)
+	var contractHashId string = ""
 	//var mainPubkey string = args[7].(string)
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
@@ -218,8 +218,9 @@ func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	var contractId string = args[1].(string)
 	var taskId string = args[2].(string)
 	var taskIndex int = args[3].(int)
+	var contractHashId string = ""
 	var metadataStr string = ""
-	var relationStr string = transaction.GenerateRelation("", contractId, taskId, taskIndex)
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 	outputStr, v_err := transaction.ExecuteInterim(metadataStr, relationStr, contractStr)
 	if v_err != nil {
 		return v_result, v_err
@@ -273,20 +274,20 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	//userPubKey string, contractId string, taskId string, taskNum int
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-	if len(args) != 7 {
+	if len(args) != 5 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
 	//user provide
 	var ownerBefore string = args[0].(string)
-	var recipients [][2]interface{} = [][2]interface{}{}
 	//executer provide
-	var contractStr string = args[2].(string)
-	var contractHashId string = args[3].(string)
-	var contractId string = args[4].(string)
-	var taskId string = args[5].(string)
-	var taskIndex int = args[6].(int)
+	var contractStr string = args[1].(string)
+	var contractId string = args[2].(string)
+	var taskId string = args[3].(string)
+	var taskIndex int = args[4].(int)
 	//var mainPubkey string = args[7].(string)
+	var recipients [][2]interface{} = [][2]interface{}{}
+	var contractHashId string = ""
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 

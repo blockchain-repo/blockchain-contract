@@ -198,6 +198,8 @@ func (c *ContractOutput) GenerateConOutput(operation string, asset Asset, inputs
 	}
 	c.Transaction = tx
 	c.Version = version
+	c.Transaction.ContractModel.Id = common.HashData(common.StructSerialize(c.Transaction.ContractModel.ContractBody))
+	c.Transaction.Relation.ContractHashId = c.Transaction.ContractModel.Id
 	conOutId := c.GenerateId()
 	c.Id = conOutId
 }
