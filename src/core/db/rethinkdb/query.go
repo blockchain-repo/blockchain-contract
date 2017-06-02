@@ -436,6 +436,14 @@ func GetVotesByContractId(contractId string) (string, error) {
 	return common.Serialize(blo), nil
 }
 
+// 删除一系列id的vote
+func DeleteVotes(slID []interface{}) (int, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_VOTES).
+		GetAll(slID...).Delete().RunWrite(session)
+	return res.Deleted, err
+}
+
 /*----------------------------- votes end---------------------------------------*/
 
 /*----------------------------- contractOutputs start---------------------------------------*/

@@ -1,7 +1,6 @@
 package pipelines
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -24,7 +23,6 @@ import (
 
 //---------------------------------------------------------------------------
 const (
-	_NEW_VAL          = "new_val"
 	_HTTP_OK          = 200
 	_VERSION          = 2
 	_OPERATION        = "CONTRACT"
@@ -93,13 +91,15 @@ func ceChangefeed() {
 		beegoLog.Debug("1.1 ceChangefeed get new_val")
 		mValue := value.(map[string]interface{})
 		// 提取new_val的值
-		slVote, err := json.Marshal(mValue[_NEW_VAL])
-		if err != nil {
-			beegoLog.Error(err.Error())
+		new_val := mValue["new_val"]
+		if new_val == nil {
+			beegoLog.Error("is null")
 			continue
 		}
-		if bytes.Equal(slVote, []byte("null")) {
-			beegoLog.Error("is null")
+
+		slVote, err := json.Marshal(new_val)
+		if err != nil {
+			beegoLog.Error(err.Error())
 			continue
 		}
 

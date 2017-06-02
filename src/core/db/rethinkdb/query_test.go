@@ -248,6 +248,17 @@ func Test_GetVotesByContractId(t *testing.T) {
 	}
 }
 
+func Test_DeleteVotes(t *testing.T) {
+	slID := make([]interface{}, 0)
+	slID = append(slID, "5e3f5fc2-1e1f-487f-a673-a0cebe30aca3")
+	slID = append(slID, "10b75956-0087-43db-80f4-ca7bdb478002")
+	slID = append(slID, "8903222a-0824-4fad-8a75-2c4f1902ac47")
+
+	deleteNum, err := DeleteVotes(slID)
+	t.Logf("deleteNum is %d\n", deleteNum)
+	t.Logf("err is %+v\n", err)
+}
+
 /*----------------------------- votes end---------------------------------------*/
 
 /*----------------------------- contractOutputs start---------------------------------------*/

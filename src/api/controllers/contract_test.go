@@ -150,7 +150,20 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 		EndTime:            endTime,
 		ContractOwners:     contractOwners,
 		ContractSignatures: nil,
-		ContractAssets:     nil,
+		ContractAssets: []*protos.ContractAsset{
+			{
+				AssetId:     "xxxxxxxxxxx",
+				Name:        "asset_money",
+				Caption:     "智能手机",
+				Description: "智能手机，返还话费产品",
+				Unit:        "台",
+				Amount:      1,
+				MetaData: map[string]string{
+					"TestAsset1": "1111111111",
+					"TestAsset2": "2222222222",
+				},
+			},
+		},
 		ContractComponents: []*protos.ContractComponent{
 			{
 				DataList: []*protos.ComponentData{
@@ -236,11 +249,11 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
 //var default_url = "http://36.110.71.170:66/v1/contract/"
-var default_url = "http://localhost:8088/v1/contract/"
+//var default_url = "http://localhost:8088/v1/contract/"
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
 
-//var default_url = "http://localhost:8088/v1/contract/"
+var default_url = "http://localhost:8088/v1/contract/"
 
 //var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"
 

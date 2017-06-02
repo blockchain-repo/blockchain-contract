@@ -57,6 +57,12 @@ func _HeadNodeMonitor() {
 				index_new := _GenerateAnotherHeadNodeKey(value.ContractHead.GetMainPubkey())
 				slContracts[index].ContractHead.MainPubkey = gslPublicKeys[index_new]
 
+				// 删除老的contract对应的vote，如果删除出现问题，无关紧要，无需continue
+				err := _DeleteOldVotes(value.Id)
+				if err != nil {
+					beegoLog.Error(err)
+				}
+
 				// 删除老的contract
 				if !rethinkdb.DeleteContract(value.Id) {
 					beegoLog.Error(err)
@@ -64,7 +70,7 @@ func _HeadNodeMonitor() {
 				}
 
 				// 插入新的contract
-				slData, err := json.Marshal(slContracts[index])
+				slData, err = json.Marshal(slContracts[index])
 				if err != nil {
 					beegoLog.Error(err)
 					continue
@@ -88,6 +94,34 @@ func _GenerateAnotherHeadNodeKey(key string) int {
 		}
 	}
 	return i
+}
+
+//---------------------------------------------------------------------------
+func _DeleteOldVotes(strContractId string) error {
+	strVotes, err := rethinkdb.GetVotesByContractId(strContractId)
+	if err != nil {
+		return err
+	}
+
+	var slVote []model.Vote
+	err = json.Unmarshal([]byte(strVotes), &slVote)
+	if err != nil {
+		return err
+	}
+
+	slID := make([]interface{}, 0)
+	for index, _ := range slVote {
+		slID = append(slID, slVote[index].Id)
+	}
+
+	deleteNum, err := rethinkdb.DeleteVotes(slID)
+	if err != nil {
+		return err
+	}
+
+	beegoLog.Info("delete [ %d ] votes for old contract", deleteNum)
+
+	return nil
 }
 
 //---------------------------------------------------------------------------
