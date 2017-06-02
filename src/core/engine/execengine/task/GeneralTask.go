@@ -693,7 +693,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			output_null_flag = true
 			var tmp_output common.OperateResult = common.OperateResult{}
 			str_json_contract, r_err := gt.GetContract().Serialize()
-			if r_err != nil {
+			if r_err != nil || str_json_contract == "" {
 				r_ret = -1
 				r_buf.WriteString("[Result]: Generate OutputStruct fail, str_json_contract Serialize fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")

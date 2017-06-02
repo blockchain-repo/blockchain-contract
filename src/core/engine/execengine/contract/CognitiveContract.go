@@ -44,10 +44,11 @@ type CognitiveContract struct {
 }
 
 type CognitiveContractHead struct {
-	AssignTime  string `json:"AssignTime"`
-	MainPubkey  string `json:"MainPubkey"`
-	OperateTime string `json:"OperateTime"`
-	Version     int    `json:"Version"`
+	AssignTime      string `json:"AssignTime"`
+	MainPubkey      string `json:"MainPubkey"`
+	OperateTime     string `json:"OperateTime"`
+	Version         int    `json:"Version"`
+	ConsensusResult int    `json:"ConsensusResult"`
 }
 
 type CognitiveContractBody struct {
@@ -76,10 +77,11 @@ const (
 	_ContractHead = "_ContractHead"
 	_ContractBody = "_ContractBody"
 
-	_MainPubkey  = "_MainPubkey"
-	_AssignTime  = "_AssignTime"
-	_OperateTime = "_OperateTime"
-	_Version     = "_Version"
+	_MainPubkey      = "_MainPubkey"
+	_AssignTime      = "_AssignTime"
+	_OperateTime     = "_OperateTime"
+	_Version         = "_Version"
+	_ConsensusResult = "_ConsensusResult"
 
 	_Cname              = "_Cname"
 	_Ctype              = "_Ctype"
@@ -376,6 +378,7 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	common.AddProperty(cc, cc.PropertyTable, _AssignTime, cc.ContractHead.AssignTime)
 	common.AddProperty(cc, cc.PropertyTable, _OperateTime, cc.ContractHead.OperateTime)
 	common.AddProperty(cc, cc.PropertyTable, _Version, cc.ContractHead.Version)
+	common.AddProperty(cc, cc.PropertyTable, _ConsensusResult, cc.ContractHead.ConsensusResult)
 	//ContractBody初始化
 	if cc.ContractBody.Cname == "" {
 		logs.Warning("Contract Need Cname!")

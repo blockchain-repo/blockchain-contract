@@ -207,7 +207,6 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	5: taskId(string): taskId
 	6: TaskExecuteIdx(int): TaskExecuteIdx
 */
-//传3个参数， contractStr, taskId, taskIndex
 func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil

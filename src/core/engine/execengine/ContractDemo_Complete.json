@@ -55,6 +55,7 @@
     ],
     "ContractComponents": [
       {
+        "TaskId": "UUID110-1234-11111",
         "Cname": "enquiry_A",
         "Caption": "查询用户账户",
         "Description": "查询移动用户A账户是否有500元",
@@ -139,6 +140,7 @@
         ]
       },
       {
+        "TaskId": "UUID110-1234-11112",
         "Cname": "action_B",
         "Caption": "A购置手机",
         "Description": "移动用户A账户存在500元：用户A将500元转账给移动运营商B，运营商B将手机快递给用户A",
@@ -207,6 +209,7 @@
         "DataList": []
       },
       {
+        "TaskId": "UUID110-1234-11113",
         "Cname": "action_C",
         "Caption": "A账户存款500元",
         "Description": "移动用户A账户不存在500元：用户Ａ往账户存入500元，然后将500元转账给移动运营商B",
@@ -275,6 +278,7 @@
         "DataList": []
       },
       {
+        "TaskId": "UUID110-1234-11114",
         "Cname": "enquiry_D",
         "Caption": "查询用户月消费额",
         "Description": "查询用户A当月消费额度，是否大于58元",
@@ -355,6 +359,7 @@
         ]
       },
       {
+        "TaskId": "UUID110-1234-11115",
         "Cname": "action_E",
         "Caption": "移动运营商下月1号返移动用户A20元",
         "Description": "移动用户A当月消费58元以上：移动运营商B下月1号返还话费20元；连续返还12个月",
@@ -434,6 +439,7 @@
         ]
       },
       {
+        "TaskId": "UUID110-1234-11116",
         "Cname": "action_F",
         "Caption": "移动运行商不返话费",
         "Description": "移动用户A当月消费不足58元：移动运营商B下月1号不返还话费",
