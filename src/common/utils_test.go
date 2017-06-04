@@ -1,11 +1,8 @@
 package common
 
 import (
-	"bytes"
-	"encoding/binary"
 	"errors"
 	"fmt"
-	"strings"
 	"testing"
 )
 

@@ -1,12 +1,24 @@
 package common
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"testing"
 )
 
 func Test_HashData(t *testing.T) {
 	hash := HashData("hello unichain 2017")
+	//jsonByte, _ := ioutil.ReadFile("./test2.json")
+	jsonByte, _ := ioutil.ReadFile("./test_with_signature.json")
+	// convert json to interface, order the json and serialize
+	var data1 interface{}
+	json.Unmarshal(jsonByte, &data1)
+	data1Str, _ := json.Marshal(data1)
+	fmt.Println(string(data1Str))
+	fmt.Println("sort json " + HashData(string(data1Str)))
+	fmt.Println(HashData(string(jsonByte)))
+
 	data := "2c27fa14ff62005acda2b1845bb335f5c139ff252670d6d86cf9801617120037"
 	if hash != data {
 		t.Error("Test_HashData error")
