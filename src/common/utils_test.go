@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"strings"
 	"testing"
 )
@@ -46,8 +47,9 @@ func Test_Deserialize(t *testing.T) {
 }
 
 func Test_Serialize(t *testing.T) {
-	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
+	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
 	data := Deserialize(jsonStr)
+	//data2 := Serialize(data, false)
 	data2 := Serialize(data)
 	fmt.Println("----------------------ser:", data2)
 
@@ -58,7 +60,7 @@ func Test_Serialize(t *testing.T) {
 
 //only for selfTest
 func Test_SerializePretty(t *testing.T) {
-	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
+	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
 	data := Deserialize(jsonStr)
 	data3 := SerializePretty(data)
 	fmt.Println("----------------------ser:\n", data3)
@@ -130,27 +132,46 @@ func Test_Try(t *testing.T) {
 
 //only for selfTest
 func Test_SerializeDisableHtmlEscape(t *testing.T) {
-	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
-	default_data := Deserialize(jsonStr)
-	default_data_jsonStr := SerializePretty(default_data)
-	t.Log("----------default serialize result------------:\n", default_data_jsonStr)
+	jsonByte, _ := ioutil.ReadFile("./test_full.json")
+	//jsonByte, _ := ioutil.ReadFile("./test_with_signature.json")
+	var jsonFileData interface{}
+	json.Unmarshal(jsonByte, &jsonFileData)
+
+	//jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
+	//jsonStr := "[12,12,{}]"
+	jsonStr := "2"
+	bb, _ := json.Marshal(jsonStr)
+	t.Log(string(bb))
+	ddd := Serialize(jsonStr)
+	t.Log(ddd)
+	t.Log(Deserialize(ddd))
+	//jsonStr := "{\"host\": \"http://localhost:9090\",\"port\": 9090,\"analytics_file\": \"1>=0 && 3+2 <=5 || 4&2 || 2^1\",\"static_file_version\": 1,\"static_dir\": \"E:/Project/goTest/src/\",\"templates_dir\": \"E:/Project/goTest/src/templates/\",\"serTcpSocketHost\": \":12340\",\"serTcpSocketPort\": 12340,\"fruits\": [\"apple\", \"peach\"]}"
+	//jsonStrByte, _ := json.Marshal(jsonStr)
+	//var jsonStrData interface{}
+	//json.Unmarshal([]byte(jsonStr), &jsonFileData)
+
+	//default_data := Deserialize(jsonStr)
+	//default_data_jsonStr := SerializePretty(default_data)
+	//t.Log("----------default serialize result------------:\n", default_data_jsonStr)
 
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
+	// disabled the HTMLEscape for &, <, and > to \u0026, \u003c, and \u003e in json string
 	enc.SetEscapeHTML(false)
-	enc.Encode(jsonStr)
+	enc.Encode(jsonFileData)
+	//enc.Encode(jsonStr)
 
 	strJson := buf.String()
 	t.Log("disableEscapeHTML and output len is", len(strJson), ",content is:\n", strJson)
-	strJson = strings.Replace(strJson, "\\", "", -1)
-	t.Log("remove the backslash and output len is", len(strJson), ",content is:\n", strJson)
-	strJsonWithOutBacklashLen := len(strJson)
-	strJson = strings.Trim(strJson, "\"")
-	t.Log("after strings trim, the len is", len(strJson), ",expect is", strJsonWithOutBacklashLen-2, ",content is:\n", strJson)
+	//strJson = strings.Replace(strJson, "\\", "", -1)
+	//t.Log("remove the backslash and output len is", len(strJson), ",content is:\n", strJson)
+	//strJsonWithOutBacklashLen := len(strJson)
+	//strJson = strings.Trim(strJson, "\"")
+	//t.Log("after strings trim, the len is", len(strJson), ",expect is", strJsonWithOutBacklashLen-2, ",content is:\n", strJson)
 
 	defaultJsonStr := "\"{\"host\": \"http://localhost:9090\",\"port\": 9090,\"analytics_file\": \"1>=0 && 3+2 <=5 || 4&2 || 2^1\",\"static_file_version\": 1,\"static_dir\": \"E:/Project/goTest/src/\",\"templates_dir\": \"E:/Project/goTest/src/templates/\",\"serTcpSocketHost\": \":12340\",\"serTcpSocketPort\": 12340,\"fruits\": [\"apple\", \"peach\"]}\""
 	t.Log("defaultJsonStr len is ", len(defaultJsonStr))
-	defaultJsonStr = strings.Replace(defaultJsonStr, "\\", "", -1)
+	//defaultJsonStr = strings.Replace(defaultJsonStr, "\\", "", -1)
 	strdefaultJsonStrWithOutBacklashLen := len(strJson)
 	t.Log("defaultJsonStr remove the backslash and output len is", len(defaultJsonStr), ",content is:\n", defaultJsonStr)
 	defaultJsonStr = strings.Trim(defaultJsonStr, "\"")

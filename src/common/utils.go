@@ -75,63 +75,66 @@ Structs keys are marshalled in the order defined in the struct
 */
 /*------------------------------ struct serialize must use this -----------------------------*/
 /*------------------------------ Hash and Sign use this -----------------------------*/
-func StructSerialize(obj interface{}) string {
+func StructSerialize(obj interface{}, escapeHTML ...bool) string {
 	objMap, err := StructToMap(obj)
 	if err != nil {
 		logs.Error(err.Error())
 		return ""
 	}
-	str, err := json.Marshal(objMap)
-	if err != nil {
-		logs.Error(err.Error())
-		return ""
+	if len(escapeHTML) >= 1 {
+		return Serialize(objMap, escapeHTML[0])
 	}
-	return string(str)
+	return Serialize(objMap)
 }
 
 //only for selfTest, format json output
-func StructSerializePretty(obj interface{}) string {
+func StructSerializePretty(obj interface{}, escapeHTML ...bool) string {
 	objMap, err := StructToMap(obj)
 	if err != nil {
 		logs.Error(err.Error())
 		return ""
 	}
-	input, err := json.Marshal(objMap)
-	if err != nil {
-		logs.Error(err.Error())
-		return ""
+	if len(escapeHTML) >= 1 {
+		return SerializePretty(objMap, escapeHTML[0])
 	}
-	var out bytes.Buffer
-	err = json.Indent(&out, input, "", "\t")
-
-	if err != nil {
-		logs.Error(err.Error())
-	}
-	return string(out.String())
+	return SerializePretty(objMap)
 }
 
 /*------------- Structs keys are marshalled in the order defined in the struct ------------------*/
-func Serialize(obj interface{}) string {
-	str, err := json.Marshal(obj)
+func Serialize(obj interface{}, escapeHTML ...bool) string {
+	setEscapeHTML := false
+	if len(escapeHTML) >= 1 {
+		setEscapeHTML = escapeHTML[0]
+	}
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	// disabled the HTMLEscape for &, <, and > to \u0026, \u003c, and \u003e in json string
+	enc.SetEscapeHTML(setEscapeHTML)
+	err := enc.Encode(obj)
 	if err != nil {
 		logs.Error(err.Error())
+		return ""
 	}
-	return string(str)
+	return buf.String()
 }
 
 //only for selfTest, format json output
-func SerializePretty(obj interface{}) string {
-	input, err := json.Marshal(obj)
+func SerializePretty(obj interface{}, escapeHTML ...bool) string {
+	setEscapeHTML := false
+	if len(escapeHTML) >= 1 {
+		setEscapeHTML = escapeHTML[0]
+	}
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	// disabled the HTMLEscape for &, <, and > to \u0026, \u003c, and \u003e in json string
+	enc.SetEscapeHTML(setEscapeHTML)
+	enc.SetIndent("", "\t")
+	err := enc.Encode(obj)
 	if err != nil {
 		logs.Error(err.Error())
+		return ""
 	}
-	var out bytes.Buffer
-	err = json.Indent(&out, input, "", "\t")
-
-	if err != nil {
-		logs.Error(err.Error())
-	}
-	return string(out.String())
+	return buf.String()
 }
 
 func Deserialize(jsonStr string) interface{} {
