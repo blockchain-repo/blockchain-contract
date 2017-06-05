@@ -1,8 +1,11 @@
 package common
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -123,4 +126,34 @@ func Test_Try(t *testing.T) {
 		err = errors.New(e.(string))
 	})
 	fmt.Printf("%+v\n", err)
+}
+
+//only for selfTest
+func Test_SerializeDisableHtmlEscape(t *testing.T) {
+	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
+	default_data := Deserialize(jsonStr)
+	default_data_jsonStr := SerializePretty(default_data)
+	t.Log("----------default serialize result------------:\n", default_data_jsonStr)
+
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.Encode(jsonStr)
+
+	strJson := buf.String()
+	t.Log("disableEscapeHTML and output len is", len(strJson), ",content is:\n", strJson)
+	strJson = strings.Replace(strJson, "\\", "", -1)
+	t.Log("remove the backslash and output len is", len(strJson), ",content is:\n", strJson)
+	strJsonWithOutBacklashLen := len(strJson)
+	strJson = strings.Trim(strJson, "\"")
+	t.Log("after strings trim, the len is", len(strJson), ",expect is", strJsonWithOutBacklashLen-2, ",content is:\n", strJson)
+
+	defaultJsonStr := "\"{\"host\": \"http://localhost:9090\",\"port\": 9090,\"analytics_file\": \"1>=0 && 3+2 <=5 || 4&2 || 2^1\",\"static_file_version\": 1,\"static_dir\": \"E:/Project/goTest/src/\",\"templates_dir\": \"E:/Project/goTest/src/templates/\",\"serTcpSocketHost\": \":12340\",\"serTcpSocketPort\": 12340,\"fruits\": [\"apple\", \"peach\"]}\""
+	t.Log("defaultJsonStr len is ", len(defaultJsonStr))
+	defaultJsonStr = strings.Replace(defaultJsonStr, "\\", "", -1)
+	strdefaultJsonStrWithOutBacklashLen := len(strJson)
+	t.Log("defaultJsonStr remove the backslash and output len is", len(defaultJsonStr), ",content is:\n", defaultJsonStr)
+	defaultJsonStr = strings.Trim(defaultJsonStr, "\"")
+	t.Log("defaultJsonStr after strings trim, the len is", len(defaultJsonStr), ",expect is", strdefaultJsonStrWithOutBacklashLen-2, ",content is:\n", defaultJsonStr)
+
 }
