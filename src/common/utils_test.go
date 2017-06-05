@@ -137,9 +137,9 @@ func Test_SerializeDisableHtmlEscape(t *testing.T) {
 	var jsonFileData interface{}
 	json.Unmarshal(jsonByte, &jsonFileData)
 
-	//jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
+	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
 	//jsonStr := "[12,12,{}]"
-	jsonStr := "2"
+	//jsonStr := "2"
 	bb, _ := json.Marshal(jsonStr)
 	t.Log(string(bb))
 	ddd := Serialize(jsonStr)
@@ -176,5 +176,31 @@ func Test_SerializeDisableHtmlEscape(t *testing.T) {
 	t.Log("defaultJsonStr remove the backslash and output len is", len(defaultJsonStr), ",content is:\n", defaultJsonStr)
 	defaultJsonStr = strings.Trim(defaultJsonStr, "\"")
 	t.Log("defaultJsonStr after strings trim, the len is", len(defaultJsonStr), ",expect is", strdefaultJsonStrWithOutBacklashLen-2, ",content is:\n", defaultJsonStr)
+
+}
+
+func Test_JsonStrTrim(t *testing.T) {
+	jsonStr := `{"host": "http://localhost:9090","port": 9090,"analytics_file": "1>=0 && 3+2 <=5 || 4&2 || 2^1","static_file_version": 1,"static_dir": "E:/Project/goTest/src/","templates_dir": "E:/Project/goTest/src/templates/","serTcpSocketHost": ":12340","serTcpSocketPort": 12340,"fruits": ["apple", "peach"]}`
+
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	// disabled the HTMLEscape for &, <, and > to \u0026, \u003c, and \u003e in json string
+	enc.SetEscapeHTML(false)
+	/*--------------- 1. trim the result maybe have the extra double quotation in last--------------------*/
+	enc.Encode(jsonStr)
+
+	/*---------------- 2. it`s ok change to interface and encode--------------------------*/
+	//var jsonStrData interface{}
+	//json.Unmarshal([]byte(jsonStr), &jsonStrData)
+	//enc.Encode(jsonStrData)
+
+	strJson := buf.String()
+	//t.Log("disableEscapeHTML and output len is", len(strJson), ",content is:\n", strJson)
+	strJson = strings.Replace(strJson, "\\", "", -1)
+	//t.Log("remove the backslash and output len is", len(strJson), ",content is:\n", strJson)
+	strJsonWithOutBacklashLen := len(strJson)
+	strJson = strings.Trim(strJson, "\"")
+	t.Log("after strings trim, the len is", len(strJson), ",expect is", strJsonWithOutBacklashLen-2, ",content is:\n", strJson)
+	// the last double quotation except removed
 
 }
