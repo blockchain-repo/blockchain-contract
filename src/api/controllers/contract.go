@@ -269,6 +269,33 @@ func (c *ContractController) Create() {
 		return
 	}
 	contract_write_time.Send("contract_write")
+
+	Contracts_number, err := rethinkdb.GetContractsCount()
+	if err != nil {
+		logs.Error(err)
+	}
+	Contract_Create, err := rethinkdb.GetContractStatsCount("Contract_Create")
+	if err != nil {
+		logs.Error(err)
+	}
+	Contract_Signature, err := rethinkdb.GetContractStatsCount("Contract_Signature")
+	if err != nil {
+		logs.Error(err)
+	}
+	Contract_In_Process, err := rethinkdb.GetContractStatsCount("Contract_In_Process")
+	if err != nil {
+		logs.Error(err)
+	}
+	Contract_Discarded, err := rethinkdb.GetContractStatsCount("Contract_Discarded")
+	if err != nil {
+		logs.Error(err)
+	}
+	monitor.Monitor.Gauge("Contracts_number", common.StringToInt(Contracts_number))
+	monitor.Monitor.Gauge("Contract_Create", common.StringToInt(Contract_Create))
+	monitor.Monitor.Gauge("Contract_Signature", common.StringToInt(Contract_Signature))
+	monitor.Monitor.Gauge("Contract_In_Process", common.StringToInt(Contract_In_Process))
+	monitor.Monitor.Gauge("Contract_Discarded", common.StringToInt(Contract_Discarded))
+
 	c.responseJsonBody(contract.Id, true, "API[Create] insert contract Id "+contractModel.Id+"]")
 
 }

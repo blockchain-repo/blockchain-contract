@@ -87,7 +87,7 @@ func Test_InsertContractStruct(t *testing.T) {
 }
 
 func Test_GetContractById(t *testing.T) {
-	id := "9a596c277e80c59b4e70e6a1b53520ba3ccdd954d4e4d1e52c31de61dfbc3c75"
+	id := "813410e5e448924010c3b5574beb2f6449bf2dd49ae0d4faea62030c37b23a2"
 	/*-------------------examples:------------------*/
 	contractStr, err := GetContractById(id)
 	if err != nil {
@@ -183,6 +183,36 @@ func Test_GetNoConsensusContracts(t *testing.T) {
 	}
 
 	t.Log(strContracts)
+}
+
+func Test_GetContractsCount(t *testing.T) {
+
+	count, err := GetContractsCount()
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(count)
+
+	number, err := strconv.Atoi(count)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(number)
+}
+
+func Test_GetContractStatsCount(t *testing.T) {
+
+	count, err := GetContractStatsCount("Contract_In_Process")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(count)
+
+	number, err := strconv.Atoi(count)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(number)
 }
 
 /*----------------------------- contracts end---------------------------------------*/

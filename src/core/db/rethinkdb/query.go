@@ -379,6 +379,48 @@ func SetContractConsensusResultById(id string, time string, ConsensusResult int)
 	}
 }
 
+// 获取合约个数
+func GetContractsCount() (string, error) {
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).Count().Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return blo, nil
+}
+
+// 获取合约不同状态个数
+func GetContractStatsCount(stat string) (string, error) {
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).
+		Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(stat)).
+		Count().Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return blo, nil
+}
+
 /*----------------------------- contracts end---------------------------------------*/
 
 /*----------------------------- votes start---------------------------------------*/

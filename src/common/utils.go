@@ -221,6 +221,21 @@ func TypeToMap(name interface{}) map[interface{}]interface{} {
 	return value
 }
 
+/**
+ * function : 断言-类型转换map[interface{}]interface{}
+ * param   :
+ * return : 返回int
+ */
+
+func StringToInt(str string) int {
+
+	number, err := strconv.Atoi(str)
+	if err != nil {
+		logs.Error(err)
+	}
+	return number
+}
+
 // UUID
 func GenerateUUID() string {
 	return uuid.New().String()
