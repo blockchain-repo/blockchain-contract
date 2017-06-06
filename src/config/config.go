@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"io/ioutil"
 	"os"
-	"unicontract/src/common"
-)
 
-var Config UnicontractConfig
+	"github.com/astaxie/beego/logs"
+
+	"unicontract/src/common"
+	"unicontract/src/common/crypto"
+)
 
 /**
  * function : 智能合约配置
@@ -30,41 +31,30 @@ type Keypair struct {
 	PrivateKey string `json:"PrivateKey"`
 }
 
+var Config UnicontractConfig
+var unicontractStr []byte
+
+func init() {
+	var err error
+	fileName := os.Getenv("CONFIGPATH")
+	fileName = fileName + "/unicontract"
+
+	//读取配置文件
+	unicontractStr, err = crypto.AesDecryptFromFile(fileName)
+	if err != nil {
+		logs.Error(err.Error())
+	}
+}
+
 /**
  * function : 初始化UnicontractConfig struct
  * param   :
  * return :
  */
 func Init() {
-	//获取当前用户目录
-	//user, err := user.Current()
-	//if err != nil {
-	//	logs.Error(err.Error())
-	//}
-
-	//fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
-	fileName := os.Getenv("CONFIGPATH")
-	fileName = fileName + "/unicontract"
-	//判断文件是否存在
-	//fileInfo,err := os.Stat(fileName)
-	//if err != nil{	//文件不存在
-	//	//创建unictractConf
-	//	_CreatUnictractConf(fileName)
-	//}
-
-	//读取配置文件
-	unicontractFile, err := os.Open(fileName)
-	defer unicontractFile.Close()
-	if err != nil {
-		logs.Error(err.Error())
-	}
-	unicontractStr, err := ioutil.ReadAll(unicontractFile)
-	if err != nil {
-		logs.Error(err.Error())
-	}
 	//获取unicontractConfig 结构体
 	var unicontractConfig UnicontractConfig
-	err = json.Unmarshal(unicontractStr, &unicontractConfig)
+	err := json.Unmarshal(unicontractStr, &unicontractConfig)
 	if err != nil {
 		logs.Error(err.Error())
 	}
