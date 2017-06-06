@@ -17,6 +17,7 @@ type ContractModel struct {
 func (c *ContractModel) Validate() bool {
 	// 1. validate contract.id
 	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
+	logs.Warn("valid id is: " + c.GenerateId())
 	if !idValid {
 		logs.Error("Validate idValid false")
 		return false
@@ -98,8 +99,13 @@ func (c *ContractModel) IsSignatureValid() bool {
 			return false
 		}
 		// contract signature verify
+		signature1 := common.Sign("5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC", contractBody_serialized)
+		logs.Error(signature1)
+		signature2 := common.Sign("6hXsHQ4fdWQ9UY1XkBYCYRouAagRW8rXxYSLgpveQNYY", contractBody_serialized)
+		logs.Error(signature2)
+
 		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
-		//logs.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]")
+		logs.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
 		if !verifyFlag {
 			logs.Error("IsSignatureValid contract signature verify fail")
 			return false
@@ -116,6 +122,7 @@ func (c *ContractModel) ToString() string {
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
 	contractBodySerialized := common.StructSerialize(c.Contract.ContractBody)
+	logs.Warn("contractBodySerialized:\n", contractBodySerialized)
 	return common.HashData(contractBodySerialized)
 }
 
@@ -160,7 +167,7 @@ func FromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 }
 
 // transfer contractModel to contract(proto)
-func FromContractModelToContract(contractModel ContractModel) (protos.Contract) {
+func FromContractModelToContract(contractModel ContractModel) protos.Contract {
 	/*-------------module deep copy start --------------*/
 	var contractModelClone = contractModel
 

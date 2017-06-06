@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"github.com/golang/protobuf/proto"
+	"io/ioutil"
 	"testing"
 	"unicontract/src/common"
 	"unicontract/src/config"
@@ -284,4 +285,24 @@ func Test_Validate(t *testing.T) {
 	contractModel.Id = contractModel.GenerateId()
 	ok := contractModel.Validate()
 	fmt.Println(ok)
+}
+
+func Test_HashDataForDisabledHTMLEscape(t *testing.T) {
+	jsonByte, _ := ioutil.ReadFile("./test1.json")
+	// convert json to interface, order the json and serialize
+	//var contractData map[string]interface{}
+	//json.Unmarshal(jsonByte, &contractData)
+	//fmt.Println(string(jsonByte))
+
+	var contractModel ContractModel
+	json.Unmarshal(jsonByte, &contractModel)
+	fmt.Println(contractModel)
+	fmt.Println(contractModel.ContractBody)
+
+	// disabled the HTMLEscape for &, <, and > to \u0026, \u003c, and \u003e in json string
+	contractModelSerializeStr := common.StructSerialize(contractModel.ContractBody)
+	fmt.Println(contractModelSerializeStr)
+	hashId := common.HashData(contractModelSerializeStr)
+
+	fmt.Println("----------------------hashId:", hashId)
 }

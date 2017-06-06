@@ -11,6 +11,7 @@ import (
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
 
+	"encoding/json"
 	"github.com/golang/protobuf/proto"
 	"unicontract/src/core/engine/execengine/constdef"
 )
@@ -68,7 +69,7 @@ func httpRequest(method string, urlStr string, body []byte, requestHead map[stri
 }
 
 func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) (string, error) {
-	contractOwnersLen := 3
+	contractOwnersLen := 2
 	if tempLen, ok := optArgs[0]["contractOwnersLen"]; ok {
 		contractOwnersLen, ok = tempLen.(int)
 		if !ok {
@@ -133,17 +134,17 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractOwners := ownersPubkeys
 	createTime := common.GenTimestamp()
 	contractBody := &protos.ContractBody{
-		ContractId:  "UUID-1234-5678-90 wx1",
+		ContractId:  "UUID-1234-5678-90 demo",
 		Cname:       "test create contract",
 		Ctype:       "CREATE",
 		Caption:     "futurever",
 		Description: "www.futurever.com",
 		//ContractState: constdef.ContractState[constdef.Component_Unknown],
 		//ContractState: constdef.ContractState[constdef.Contract_Create],
-		ContractState: constdef.ContractState[constdef.Contract_Signature],
+		//ContractState: constdef.ContractState[constdef.Contract_Signature],
 		//ContractState: constdef.ContractState[constdef.Contract_In_Process],
 		//ContractState: constdef.ContractState[constdef.Contract_Completed],
-		//ContractState:      constdef.ContractState[constdef.Contract_Disgarded],
+		ContractState:      constdef.ContractState[constdef.Contract_Discarded],
 		Creator:            randomCreator,
 		CreateTime:         createTime,
 		StartTime:          startTime,
@@ -186,8 +187,10 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractModel.ContractBody = contractBody
 
 	// 生成 签名
-	contractSignatures := make([]*protos.ContractSignature, contractSignaturesLen)
-	for i := 0; i < contractSignaturesLen; i++ {
+	realContractSignaturesLen := 2
+	//realContractSignaturesLen := contractSignaturesLen
+	contractSignatures := make([]*protos.ContractSignature, realContractSignaturesLen)
+	for i := 0; i < realContractSignaturesLen; i++ {
 		ownerPubkey := ownersPubkeys[i]
 		privateKey := owners[ownerPubkey]
 		contractSignatures[i] = &protos.ContractSignature{
@@ -254,10 +257,11 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 //var default_url = "http://192.168.1.11:8088/v1/contract/"
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
+//var default_url = "http://192.168.1.11:8088/v1/contract/"
 
-var default_url = "http://localhost:8088/v1/contract/"
+//var default_url = "http://localhost:8088/v1/contract/"
 
-//var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"
+var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"
 
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
@@ -298,6 +302,50 @@ func Test_CreatContract(t *testing.T) {
 		fmt.Println("generateProtoContract error ", err.Error())
 		return
 	}
+	requestHead := make(map[string]string)
+	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+	response, err := httpRequest("POST", url, requestBody, requestHead)
+	//接受返回数据
+	var responseData protos.ResponseData
+	proto.Unmarshal(response, &responseData)
+	fmt.Println(common.StructSerializePretty(responseData))
+}
+
+func Test_CreatContractWithLocalJson(t *testing.T) {
+	url := default_url + "create"
+	jsonContract, err := ioutil.ReadFile("./produce_contract.json")
+
+	//fmt.Print(string(jsonContract))
+	fmt.Println(common.HashData(string(jsonContract)))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	var contractModel model.ContractModel
+	err = json.Unmarshal(jsonContract, &contractModel)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	//todo generate temp id
+	fmt.Println(contractModel.GenerateId())
+	fmt.Println(common.HashData(common.StructSerialize(contractModel.ContractBody)))
+	serializeContractModel := common.StructSerialize(contractModel)
+	//fmt.Println("produce the contractModel", serializeContractModel)
+	//fmt.Println("produce the contractModel", common.SerializePretty(contractModel))
+	//requestBody, err := generateProtoContract(false, extraAttr)
+	if err != nil {
+		fmt.Println("generateProtoContract error ", err.Error())
+		return
+	}
+
+	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
+	requestBody, err := proto.Marshal(&protoContract)
+	if err != nil {
+		fmt.Println(requestBody, err)
+		return
+	}
+
 	requestHead := make(map[string]string)
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 	response, err := httpRequest("POST", url, requestBody, requestHead)

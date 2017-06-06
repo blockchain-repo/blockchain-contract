@@ -54,11 +54,11 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 		}
 		//todo temp
 		logs.Warn(contract)
-		if contract == nil || contract.Id == "" {
-			err = fmt.Errorf("contract nil or contract.Id is blank!")
-			status = HTTP_STATUS_CODE_BadRequest
-			return
-		}
+		//if contract == nil || contract.Id == "" {
+		//	err = fmt.Errorf("contract nil or contract.Id is blank!")
+		//	status = HTTP_STATUS_CODE_BadRequest
+		//	return
+		//}
 		fmt.Sprintf("[API] match |%s [token =%s, Content-Type =%s]", token, c.Ctx.Request.RequestURI,
 			contentType)
 		logs.Info(fmt.Sprintf("[API] match|%-32s \t[token = %s, Content-Type = %s]", c.Ctx.Request.RequestURI,
@@ -241,7 +241,9 @@ func (c *ContractController) Create() {
 	}
 
 	contractModel := fromContractToContractModel(contract)
-
+	contractModel.ContractHead = &protos.ContractHead{
+		Version: 1,
+	}
 	//TODO 额外验证 合约基本字段、owners、component为空
 	//contractHead := contractModel.ContractHead
 	//contractBody := contractModel.ContractBody

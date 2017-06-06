@@ -115,7 +115,8 @@ func Serialize(obj interface{}, escapeHTML ...bool) string {
 		logs.Error(err.Error())
 		return ""
 	}
-	return buf.String()
+	return strings.TrimSpace(buf.String())
+	//return strings.Replace(strings.TrimSpace(buf.String()), "\n", "", -1)
 }
 
 //only for selfTest, format json output
@@ -134,7 +135,8 @@ func SerializePretty(obj interface{}, escapeHTML ...bool) string {
 		logs.Error(err.Error())
 		return ""
 	}
-	return buf.String()
+	return strings.TrimSpace(buf.String())
+	//return strings.Replace(strings.TrimSpace(buf.String()), "\n", "", -1)
 }
 
 func Deserialize(jsonStr string) interface{} {
