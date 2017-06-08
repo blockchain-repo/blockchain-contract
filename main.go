@@ -6,6 +6,7 @@ import (
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common"
 	"unicontract/src/common/basic"
+	_ "unicontract/src/common/quartz"
 	"unicontract/src/config"
 	"unicontract/src/core/control"
 	"unicontract/src/core/control/headNodeMonitor"

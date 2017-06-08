@@ -21,7 +21,6 @@ import (
 
 import (
 	"unicontract/src/common"
-	"unicontract/src/common/monitor"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
@@ -99,7 +98,6 @@ func UpdateMonitorFail(strContractID string,
 	if err != nil {
 		return err
 	}
-	monitor.Monitor.Count("execute_contract_fail", 1)
 	return rethinkdb.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
 }
 
@@ -137,7 +135,6 @@ func UpdateMonitorWait(strContractID string,
 	if err != nil {
 		return err
 	}
-	monitor.Monitor.Count("execute_contract_wait", 1)
 	return rethinkdb.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
 }
 

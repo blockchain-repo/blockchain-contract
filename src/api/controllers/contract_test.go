@@ -290,25 +290,28 @@ func Test_AuthSignature(t *testing.T) {
 }
 
 func Test_CreatContract(t *testing.T) {
-	url := default_url + "create"
-	produceValid := true
-	extraAttr := make(map[string]interface{})
-	extraAttr["contractOwnersLen"] = 2
-	extraAttr["contractSignaturesLen"] = 2
+	for i := 1; i <= 2; i++ {
 
-	requestBody, err := generateProtoContract(produceValid, extraAttr)
-	//requestBody, err := generateProtoContract(false, extraAttr)
-	if err != nil {
-		fmt.Println("generateProtoContract error ", err.Error())
-		return
+		url := default_url + "create"
+		produceValid := true
+		extraAttr := make(map[string]interface{})
+		extraAttr["contractOwnersLen"] = 2
+		extraAttr["contractSignaturesLen"] = 2
+
+		requestBody, err := generateProtoContract(produceValid, extraAttr)
+		//requestBody, err := generateProtoContract(false, extraAttr)
+		if err != nil {
+			fmt.Println("generateProtoContract error ", err.Error())
+			return
+		}
+		requestHead := make(map[string]string)
+		requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
+		response, err := httpRequest("POST", url, requestBody, requestHead)
+		//接受返回数据
+		var responseData protos.ResponseData
+		proto.Unmarshal(response, &responseData)
+		fmt.Println(common.StructSerializePretty(responseData))
 	}
-	requestHead := make(map[string]string)
-	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
-	response, err := httpRequest("POST", url, requestBody, requestHead)
-	//接受返回数据
-	var responseData protos.ResponseData
-	proto.Unmarshal(response, &responseData)
-	fmt.Println(common.StructSerializePretty(responseData))
 }
 
 func Test_CreatContractWithLocalJson(t *testing.T) {

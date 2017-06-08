@@ -87,7 +87,6 @@ func ceChangefeed() {
 	var value interface{}
 	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
 	for res.Next(&value) {
-		votes_changefeed_time := monitor.Monitor.NewTiming()
 		beegoLog.Debug("1.1 ceChangefeed get new_val")
 		mValue := value.(map[string]interface{})
 		// 提取new_val的值
@@ -105,7 +104,6 @@ func ceChangefeed() {
 
 		beegoLog.Debug("1.2 ceChangefeed --->")
 		gchInput <- string(slVote)
-		votes_changefeed_time.Send("votes_changefeed")
 	}
 	beegoLog.Error("--------------------------------------------------------")
 	beegoLog.Error("changfeed exit")
@@ -186,8 +184,6 @@ func ceHeadFilter() error {
 					//	beegoLog.Error(err.Error())
 					//	continue
 					//}
-					//monitor.Monitor.Gauge("consensus_failure", consensus_failure_count)
-					monitor.Monitor.Count("consensus_failure", 1)
 				}
 			} else {
 				beegoLog.Info("I am not head node.")
@@ -214,7 +210,9 @@ func ceQueryEists(contractOutput model.ContractOutput) {
 
 	if len(output) == 0 {
 		beegoLog.Debug("3.3 insert contractoutput table")
+		contractOutput_write_time := monitor.Monitor.NewTiming()
 		rethinkdb.InsertContractOutput(string(slContractOutput))
+		contractOutput_write_time.Send("contractOutput_write")
 	} else {
 		beegoLog.Debug("3.3 contractoutput exist")
 	}

@@ -1010,4 +1010,27 @@ func DeleteTaskSchedules(slID []interface{}) (int, error) {
 	return res.Deleted, err
 }
 
+//---------------------------------------------------------------------------
+// 删除一系列id的任务
+func GetTaskScheduleCount(stat string) (string, error) {
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).
+		Filter(r.Row.Field("ContractBody").Field(stat).Eq(50)).
+		Count().Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return blo, nil
+}
+
 /*TaskSchedule end---------------------------------------------------------*/

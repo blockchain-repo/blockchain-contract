@@ -12,6 +12,7 @@ import (
 	"unicontract/src/core/protos"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 )
 
 func init() {
@@ -734,6 +735,15 @@ func Test_DeleteTaskSchedules(t *testing.T) {
 
 	deleteNum, err := DeleteTaskSchedules(slID)
 	t.Logf("deleteNum is %d\n", deleteNum)
+	t.Logf("err is %+v\n", err)
+}
+
+func Test_GetTaskScheduleCount(t *testing.T) {
+	count, err := GetTaskScheduleCount("WaitCount")
+	if err != nil {
+		logs.Error(err)
+	}
+	t.Logf("deleteNum is %d\n", count)
 	t.Logf("err is %+v\n", err)
 }
 

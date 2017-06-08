@@ -122,8 +122,6 @@ func txSend(arg interface{}) interface{} {
 		//if err != nil {
 		//	logs.Error(err.Error())
 		//}
-		//monitor.Monitor.Gauge("sendFailingRecords_count", count)
-		monitor.Monitor.Count("sendFailingRecords_count", 1)
 		return nil
 	}
 	if result.Code != 200 {
@@ -133,8 +131,6 @@ func txSend(arg interface{}) interface{} {
 		//if err != nil {
 		//	logs.Error(err.Error())
 		//}
-		//monitor.Monitor.Gauge("sendFailingRecords_count", count)
-		monitor.Monitor.Count("sendFailingRecords_count", 1)
 	}
 	return coModel
 }
