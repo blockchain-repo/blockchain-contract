@@ -55,7 +55,7 @@ func sendContractStatsToMonitor() {
 		monitor.Monitor.Gauge("Contract_In_Process", common.StringToInt(Contract_In_Process))
 		monitor.Monitor.Gauge("Contract_Discarded", common.StringToInt(Contract_Discarded))
 		monitor.Monitor.Gauge("Contract_Completed", common.StringToInt(Contract_Completed))
-		monitor.Monitor.Gauge("task_failed_Count", common.StringToInt(task_failed_Count))
-		monitor.Monitor.Gauge("task_wait_Count", common.StringToInt(task_wait_Count))
+		monitor.Monitor.Gauge("task_failed_count", common.StringToInt(task_failed_Count))
+		monitor.Monitor.Gauge("task_wait_count", common.StringToInt(task_wait_Count))
 	}
 }
