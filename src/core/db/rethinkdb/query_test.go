@@ -77,6 +77,7 @@ func Test_InsertContractStruct(t *testing.T) {
 	signatureContract := contractModel.Sign(private_key)
 	contractModel.ContractHead = contractHead
 	contractModel.ContractBody = contractBody
+	contractModel.ContractBody.ContractState = "Contract_Signature"
 
 	fmt.Println("private_key is : ", private_key)
 	fmt.Println("contract is : ", common.Serialize(contract))
@@ -559,6 +560,8 @@ func Test_InsertTaskSchedules(t *testing.T) {
 	taskSchedule.NodePubkey = config.Config.Keypair.PublicKey
 	taskSchedule.StartTime = common.GenTimestamp()
 	taskSchedule.EndTime = strconv.FormatInt(time.Now().Add(time.Hour*24*5).UnixNano()/1000000, 10)
+	taskSchedule.FailedCount = 50
+	taskSchedule.WaitCount = 50
 
 	mapObj1, _ := common.StructToMap(taskSchedule)
 	taskSchedule.Id = common.GenerateUUID()
@@ -743,6 +746,7 @@ func Test_GetTaskScheduleCount(t *testing.T) {
 	if err != nil {
 		logs.Error(err)
 	}
+	logs.Error(count)
 	t.Logf("deleteNum is %d\n", count)
 	t.Logf("err is %+v\n", err)
 }

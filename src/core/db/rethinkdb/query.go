@@ -1015,8 +1015,8 @@ func DeleteTaskSchedules(slID []interface{}) (int, error) {
 func GetTaskScheduleCount(stat string) (string, error) {
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_CONTRACT_TASKS).
-		Filter(r.Row.Field(stat).Eq(50)).
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field(stat).Ge(50)).
 		Count().Run(session)
 	if err != nil {
 		return "", err
