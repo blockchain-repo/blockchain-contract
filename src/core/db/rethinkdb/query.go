@@ -1016,7 +1016,7 @@ func GetTaskScheduleCount(stat string) (string, error) {
 
 	session := ConnectDB(DBNAME)
 	res, err := r.Table(TABLE_CONTRACT_TASKS).
-		Filter(r.Row.Field("ContractBody").Field(stat).Eq(50)).
+		Filter(r.Row.Field(stat).Eq(50)).
 		Count().Run(session)
 	if err != nil {
 		return "", err
