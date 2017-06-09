@@ -21,7 +21,6 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_pb=_b('\n\x13response_data.proto\x12\x06protos\"5\n\x0cResponseData\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\tB)\n\x14\x63om.uniledger.protosB\x11ProtoResponseDatab\x06proto3')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -71,6 +70,7 @@ _RESPONSEDATA = _descriptor.Descriptor(
 )
 
 DESCRIPTOR.message_types_by_name['ResponseData'] = _RESPONSEDATA
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ResponseData = _reflection.GeneratedProtocolMessageType('ResponseData', (_message.Message,), dict(
   DESCRIPTOR = _RESPONSEDATA,

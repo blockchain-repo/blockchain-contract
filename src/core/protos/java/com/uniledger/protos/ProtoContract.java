@@ -314,6 +314,17 @@ public final class ProtoContract {
     }
 
     public static com.uniledger.protos.ProtoContract.ContractSignature parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractSignature parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractSignature parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
@@ -1404,6 +1415,17 @@ public final class ProtoContract {
     }
 
     public static com.uniledger.protos.ProtoContract.ContractAsset parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractAsset parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractAsset parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
@@ -2428,6 +2450,17 @@ public final class ProtoContract {
     }
 
     public static com.uniledger.protos.ProtoContract.ExpressionResult parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ExpressionResult parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ExpressionResult parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
@@ -2785,6 +2818,1131 @@ public final class ProtoContract {
 
   }
 
+  public interface ComponentsExpressionSubOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.ComponentsExpressionSub)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    java.lang.String getCname();
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getCnameBytes();
+
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    java.lang.String getCtype();
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getCtypeBytes();
+
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    java.lang.String getCaption();
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getCaptionBytes();
+
+    /**
+     * <code>string Description = 4;</code>
+     */
+    java.lang.String getDescription();
+    /**
+     * <code>string Description = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDescriptionBytes();
+
+    /**
+     * <code>string ExpressionStr = 5;</code>
+     */
+    java.lang.String getExpressionStr();
+    /**
+     * <code>string ExpressionStr = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getExpressionStrBytes();
+
+    /**
+     * <code>int32 LogicValue = 7;</code>
+     */
+    int getLogicValue();
+  }
+  /**
+   * Protobuf type {@code protos.ComponentsExpressionSub}
+   */
+  public  static final class ComponentsExpressionSub extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.ComponentsExpressionSub)
+      ComponentsExpressionSubOrBuilder {
+    // Use ComponentsExpressionSub.newBuilder() to construct.
+    private ComponentsExpressionSub(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ComponentsExpressionSub() {
+      cname_ = "";
+      ctype_ = "";
+      caption_ = "";
+      description_ = "";
+      expressionStr_ = "";
+      logicValue_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ComponentsExpressionSub(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              cname_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              ctype_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              caption_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              description_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              expressionStr_ = s;
+              break;
+            }
+            case 56: {
+
+              logicValue_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.class, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder.class);
+    }
+
+    public static final int CNAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object cname_;
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    public java.lang.String getCname() {
+      java.lang.Object ref = cname_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        cname_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCnameBytes() {
+      java.lang.Object ref = cname_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        cname_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CTYPE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object ctype_;
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    public java.lang.String getCtype() {
+      java.lang.Object ref = ctype_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        ctype_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCtypeBytes() {
+      java.lang.Object ref = ctype_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ctype_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CAPTION_FIELD_NUMBER = 3;
+    private volatile java.lang.Object caption_;
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    public java.lang.String getCaption() {
+      java.lang.Object ref = caption_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        caption_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCaptionBytes() {
+      java.lang.Object ref = caption_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        caption_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DESCRIPTION_FIELD_NUMBER = 4;
+    private volatile java.lang.Object description_;
+    /**
+     * <code>string Description = 4;</code>
+     */
+    public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        description_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Description = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EXPRESSIONSTR_FIELD_NUMBER = 5;
+    private volatile java.lang.Object expressionStr_;
+    /**
+     * <code>string ExpressionStr = 5;</code>
+     */
+    public java.lang.String getExpressionStr() {
+      java.lang.Object ref = expressionStr_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        expressionStr_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string ExpressionStr = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getExpressionStrBytes() {
+      java.lang.Object ref = expressionStr_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        expressionStr_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int LOGICVALUE_FIELD_NUMBER = 7;
+    private int logicValue_;
+    /**
+     * <code>int32 LogicValue = 7;</code>
+     */
+    public int getLogicValue() {
+      return logicValue_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getCnameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, cname_);
+      }
+      if (!getCtypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ctype_);
+      }
+      if (!getCaptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, caption_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
+      }
+      if (!getExpressionStrBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, expressionStr_);
+      }
+      if (logicValue_ != 0) {
+        output.writeInt32(7, logicValue_);
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getCnameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, cname_);
+      }
+      if (!getCtypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ctype_);
+      }
+      if (!getCaptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, caption_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
+      }
+      if (!getExpressionStrBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, expressionStr_);
+      }
+      if (logicValue_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, logicValue_);
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.uniledger.protos.ProtoContract.ComponentsExpressionSub)) {
+        return super.equals(obj);
+      }
+      com.uniledger.protos.ProtoContract.ComponentsExpressionSub other = (com.uniledger.protos.ProtoContract.ComponentsExpressionSub) obj;
+
+      boolean result = true;
+      result = result && getCname()
+          .equals(other.getCname());
+      result = result && getCtype()
+          .equals(other.getCtype());
+      result = result && getCaption()
+          .equals(other.getCaption());
+      result = result && getDescription()
+          .equals(other.getDescription());
+      result = result && getExpressionStr()
+          .equals(other.getExpressionStr());
+      result = result && (getLogicValue()
+          == other.getLogicValue());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + CNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getCname().hashCode();
+      hash = (37 * hash) + CTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getCtype().hashCode();
+      hash = (37 * hash) + CAPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getCaption().hashCode();
+      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getDescription().hashCode();
+      hash = (37 * hash) + EXPRESSIONSTR_FIELD_NUMBER;
+      hash = (53 * hash) + getExpressionStr().hashCode();
+      hash = (37 * hash) + LOGICVALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getLogicValue();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.uniledger.protos.ProtoContract.ComponentsExpressionSub prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.ComponentsExpressionSub}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.ComponentsExpressionSub)
+        com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.uniledger.protos.ProtoContract.ComponentsExpressionSub.class, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder.class);
+      }
+
+      // Construct using com.uniledger.protos.ProtoContract.ComponentsExpressionSub.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        cname_ = "";
+
+        ctype_ = "";
+
+        caption_ = "";
+
+        description_ = "";
+
+        expressionStr_ = "";
+
+        logicValue_ = 0;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_descriptor;
+      }
+
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getDefaultInstanceForType() {
+        return com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance();
+      }
+
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub build() {
+        com.uniledger.protos.ProtoContract.ComponentsExpressionSub result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub buildPartial() {
+        com.uniledger.protos.ProtoContract.ComponentsExpressionSub result = new com.uniledger.protos.ProtoContract.ComponentsExpressionSub(this);
+        result.cname_ = cname_;
+        result.ctype_ = ctype_;
+        result.caption_ = caption_;
+        result.description_ = description_;
+        result.expressionStr_ = expressionStr_;
+        result.logicValue_ = logicValue_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.uniledger.protos.ProtoContract.ComponentsExpressionSub) {
+          return mergeFrom((com.uniledger.protos.ProtoContract.ComponentsExpressionSub)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.uniledger.protos.ProtoContract.ComponentsExpressionSub other) {
+        if (other == com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance()) return this;
+        if (!other.getCname().isEmpty()) {
+          cname_ = other.cname_;
+          onChanged();
+        }
+        if (!other.getCtype().isEmpty()) {
+          ctype_ = other.ctype_;
+          onChanged();
+        }
+        if (!other.getCaption().isEmpty()) {
+          caption_ = other.caption_;
+          onChanged();
+        }
+        if (!other.getDescription().isEmpty()) {
+          description_ = other.description_;
+          onChanged();
+        }
+        if (!other.getExpressionStr().isEmpty()) {
+          expressionStr_ = other.expressionStr_;
+          onChanged();
+        }
+        if (other.getLogicValue() != 0) {
+          setLogicValue(other.getLogicValue());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.uniledger.protos.ProtoContract.ComponentsExpressionSub parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.uniledger.protos.ProtoContract.ComponentsExpressionSub) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object cname_ = "";
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public java.lang.String getCname() {
+        java.lang.Object ref = cname_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          cname_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCnameBytes() {
+        java.lang.Object ref = cname_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          cname_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder setCname(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        cname_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder clearCname() {
+        
+        cname_ = getDefaultInstance().getCname();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder setCnameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        cname_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object ctype_ = "";
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public java.lang.String getCtype() {
+        java.lang.Object ref = ctype_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          ctype_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCtypeBytes() {
+        java.lang.Object ref = ctype_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ctype_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder setCtype(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ctype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder clearCtype() {
+        
+        ctype_ = getDefaultInstance().getCtype();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder setCtypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        ctype_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object caption_ = "";
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public java.lang.String getCaption() {
+        java.lang.Object ref = caption_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          caption_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCaptionBytes() {
+        java.lang.Object ref = caption_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          caption_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder setCaption(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        caption_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder clearCaption() {
+        
+        caption_ = getDefaultInstance().getCaption();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder setCaptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        caption_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object description_ = "";
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public java.lang.String getDescription() {
+        java.lang.Object ref = description_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          description_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          description_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder setDescription(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        description_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder clearDescription() {
+        
+        description_ = getDefaultInstance().getDescription();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder setDescriptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        description_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object expressionStr_ = "";
+      /**
+       * <code>string ExpressionStr = 5;</code>
+       */
+      public java.lang.String getExpressionStr() {
+        java.lang.Object ref = expressionStr_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          expressionStr_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string ExpressionStr = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getExpressionStrBytes() {
+        java.lang.Object ref = expressionStr_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          expressionStr_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string ExpressionStr = 5;</code>
+       */
+      public Builder setExpressionStr(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        expressionStr_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ExpressionStr = 5;</code>
+       */
+      public Builder clearExpressionStr() {
+        
+        expressionStr_ = getDefaultInstance().getExpressionStr();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ExpressionStr = 5;</code>
+       */
+      public Builder setExpressionStrBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        expressionStr_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int logicValue_ ;
+      /**
+       * <code>int32 LogicValue = 7;</code>
+       */
+      public int getLogicValue() {
+        return logicValue_;
+      }
+      /**
+       * <code>int32 LogicValue = 7;</code>
+       */
+      public Builder setLogicValue(int value) {
+        
+        logicValue_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 LogicValue = 7;</code>
+       */
+      public Builder clearLogicValue() {
+        
+        logicValue_ = 0;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.ComponentsExpressionSub)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.ComponentsExpressionSub)
+    private static final com.uniledger.protos.ProtoContract.ComponentsExpressionSub DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.uniledger.protos.ProtoContract.ComponentsExpressionSub();
+    }
+
+    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ComponentsExpressionSub>
+        PARSER = new com.google.protobuf.AbstractParser<ComponentsExpressionSub>() {
+      public ComponentsExpressionSub parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ComponentsExpressionSub(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ComponentsExpressionSub> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ComponentsExpressionSub> getParserForType() {
+      return PARSER;
+    }
+
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ComponentsExpressionOrBuilder extends
       // @@protoc_insertion_point(interface_extends:protos.ComponentsExpression)
       com.google.protobuf.MessageOrBuilder {
@@ -2840,17 +3998,17 @@ public final class ProtoContract {
         getExpressionStrBytes();
 
     /**
-     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
      */
     boolean hasExpressionResult();
     /**
-     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
      */
-    com.uniledger.protos.ProtoContract.ExpressionResult getExpressionResult();
+    com.uniledger.protos.ProtoContract.ComponentsExpressionSub getExpressionResult();
     /**
-     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
      */
-    com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder();
+    com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder getExpressionResultOrBuilder();
 
     /**
      * <code>int32 LogicValue = 7;</code>
@@ -2933,11 +4091,11 @@ public final class ProtoContract {
               break;
             }
             case 50: {
-              com.uniledger.protos.ProtoContract.ExpressionResult.Builder subBuilder = null;
+              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder subBuilder = null;
               if (expressionResult_ != null) {
                 subBuilder = expressionResult_.toBuilder();
               }
-              expressionResult_ = input.readMessage(com.uniledger.protos.ProtoContract.ExpressionResult.parser(), extensionRegistry);
+              expressionResult_ = input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpressionSub.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(expressionResult_);
                 expressionResult_ = subBuilder.buildPartial();
@@ -3144,23 +4302,23 @@ public final class ProtoContract {
     }
 
     public static final int EXPRESSIONRESULT_FIELD_NUMBER = 6;
-    private com.uniledger.protos.ProtoContract.ExpressionResult expressionResult_;
+    private com.uniledger.protos.ProtoContract.ComponentsExpressionSub expressionResult_;
     /**
-     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
      */
     public boolean hasExpressionResult() {
       return expressionResult_ != null;
     }
     /**
-     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
      */
-    public com.uniledger.protos.ProtoContract.ExpressionResult getExpressionResult() {
-      return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ExpressionResult.getDefaultInstance() : expressionResult_;
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getExpressionResult() {
+      return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance() : expressionResult_;
     }
     /**
-     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
      */
-    public com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder() {
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder getExpressionResultOrBuilder() {
       return getExpressionResult();
     }
 
@@ -3300,6 +4458,17 @@ public final class ProtoContract {
       return hash;
     }
 
+    public static com.uniledger.protos.ProtoContract.ComponentsExpression parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentsExpression parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static com.uniledger.protos.ProtoContract.ComponentsExpression parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3902,29 +5071,29 @@ public final class ProtoContract {
         return this;
       }
 
-      private com.uniledger.protos.ProtoContract.ExpressionResult expressionResult_ = null;
+      private com.uniledger.protos.ProtoContract.ComponentsExpressionSub expressionResult_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ExpressionResult, com.uniledger.protos.ProtoContract.ExpressionResult.Builder, com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder> expressionResultBuilder_;
+          com.uniledger.protos.ProtoContract.ComponentsExpressionSub, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder> expressionResultBuilder_;
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
       public boolean hasExpressionResult() {
         return expressionResultBuilder_ != null || expressionResult_ != null;
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
-      public com.uniledger.protos.ProtoContract.ExpressionResult getExpressionResult() {
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getExpressionResult() {
         if (expressionResultBuilder_ == null) {
-          return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ExpressionResult.getDefaultInstance() : expressionResult_;
+          return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance() : expressionResult_;
         } else {
           return expressionResultBuilder_.getMessage();
         }
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
-      public Builder setExpressionResult(com.uniledger.protos.ProtoContract.ExpressionResult value) {
+      public Builder setExpressionResult(com.uniledger.protos.ProtoContract.ComponentsExpressionSub value) {
         if (expressionResultBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -3938,10 +5107,10 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
       public Builder setExpressionResult(
-          com.uniledger.protos.ProtoContract.ExpressionResult.Builder builderForValue) {
+          com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder builderForValue) {
         if (expressionResultBuilder_ == null) {
           expressionResult_ = builderForValue.build();
           onChanged();
@@ -3952,13 +5121,13 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
-      public Builder mergeExpressionResult(com.uniledger.protos.ProtoContract.ExpressionResult value) {
+      public Builder mergeExpressionResult(com.uniledger.protos.ProtoContract.ComponentsExpressionSub value) {
         if (expressionResultBuilder_ == null) {
           if (expressionResult_ != null) {
             expressionResult_ =
-              com.uniledger.protos.ProtoContract.ExpressionResult.newBuilder(expressionResult_).mergeFrom(value).buildPartial();
+              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.newBuilder(expressionResult_).mergeFrom(value).buildPartial();
           } else {
             expressionResult_ = value;
           }
@@ -3970,7 +5139,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
       public Builder clearExpressionResult() {
         if (expressionResultBuilder_ == null) {
@@ -3984,33 +5153,33 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
-      public com.uniledger.protos.ProtoContract.ExpressionResult.Builder getExpressionResultBuilder() {
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder getExpressionResultBuilder() {
         
         onChanged();
         return getExpressionResultFieldBuilder().getBuilder();
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
-      public com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder() {
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder getExpressionResultOrBuilder() {
         if (expressionResultBuilder_ != null) {
           return expressionResultBuilder_.getMessageOrBuilder();
         } else {
           return expressionResult_ == null ?
-              com.uniledger.protos.ProtoContract.ExpressionResult.getDefaultInstance() : expressionResult_;
+              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance() : expressionResult_;
         }
       }
       /**
-       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
+       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ExpressionResult, com.uniledger.protos.ProtoContract.ExpressionResult.Builder, com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder> 
+          com.uniledger.protos.ProtoContract.ComponentsExpressionSub, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder> 
           getExpressionResultFieldBuilder() {
         if (expressionResultBuilder_ == null) {
           expressionResultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.uniledger.protos.ProtoContract.ExpressionResult, com.uniledger.protos.ProtoContract.ExpressionResult.Builder, com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder>(
+              com.uniledger.protos.ProtoContract.ComponentsExpressionSub, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder>(
                   getExpressionResult(),
                   getParentForChildren(),
                   isClean());
@@ -4093,8 +5262,8 @@ public final class ProtoContract {
 
   }
 
-  public interface ComponentDataOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.ComponentData)
+  public interface ComponentDataSubOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.ComponentDataSub)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -4191,19 +5360,6 @@ public final class ProtoContract {
      */
     com.google.protobuf.ByteString
         getCategoryBytes(int index);
-
-    /**
-     * <code>.protos.ComponentData Parent = 8;</code>
-     */
-    boolean hasParent();
-    /**
-     * <code>.protos.ComponentData Parent = 8;</code>
-     */
-    com.uniledger.protos.ProtoContract.ComponentData getParent();
-    /**
-     * <code>.protos.ComponentData Parent = 8;</code>
-     */
-    com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getParentOrBuilder();
 
     /**
      * <code>bool Mandatory = 9;</code>
@@ -4314,18 +5470,18 @@ public final class ProtoContract {
      *DefaultValue interface{} int64
      * </pre>
      *
-     * <code>int64 DefaultValueInt = 17;</code>
+     * <code>int32 DefaultValueInt = 17;</code>
      */
-    long getDefaultValueInt();
+    int getDefaultValueInt();
 
     /**
      * <pre>
      *DefaultValue interface{} unit64
      * </pre>
      *
-     * <code>uint64 DefaultValueUint = 18;</code>
+     * <code>uint32 DefaultValueUint = 18;</code>
      */
-    long getDefaultValueUint();
+    int getDefaultValueUint();
 
     /**
      * <pre>
@@ -4359,15 +5515,15 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    java.util.List<java.lang.Long> getDataRangeIntList();
+    java.util.List<java.lang.Integer> getDataRangeIntList();
     /**
      * <pre>
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
     int getDataRangeIntCount();
     /**
@@ -4375,24 +5531,24 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    long getDataRangeInt(int index);
+    int getDataRangeInt(int index);
 
     /**
      * <pre>
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    java.util.List<java.lang.Long> getDataRangeUintList();
+    java.util.List<java.lang.Integer> getDataRangeUintList();
     /**
      * <pre>
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
     int getDataRangeUintCount();
     /**
@@ -4400,9 +5556,3646 @@ public final class ProtoContract {
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    long getDataRangeUint(int index);
+    int getDataRangeUint(int index);
+
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    java.util.List<java.lang.Double> getDataRangeFloatList();
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    int getDataRangeFloatCount();
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    double getDataRangeFloat(int index);
+  }
+  /**
+   * Protobuf type {@code protos.ComponentDataSub}
+   */
+  public  static final class ComponentDataSub extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.ComponentDataSub)
+      ComponentDataSubOrBuilder {
+    // Use ComponentDataSub.newBuilder() to construct.
+    private ComponentDataSub(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ComponentDataSub() {
+      cname_ = "";
+      ctype_ = "";
+      caption_ = "";
+      description_ = "";
+      modifyDate_ = "";
+      hardConvType_ = "";
+      category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      mandatory_ = false;
+      unit_ = "";
+      format_ = "";
+      valueInt_ = 0L;
+      valueUint_ = 0L;
+      valueFloat_ = 0D;
+      valueString_ = "";
+      defaultValueInt_ = 0;
+      defaultValueUint_ = 0;
+      defaultValueFloat_ = 0D;
+      defaultValueString_ = "";
+      dataRangeInt_ = java.util.Collections.emptyList();
+      dataRangeUint_ = java.util.Collections.emptyList();
+      dataRangeFloat_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ComponentDataSub(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              cname_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              ctype_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              caption_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              description_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              modifyDate_ = s;
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              hardConvType_ = s;
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                category_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              category_.add(s);
+              break;
+            }
+            case 72: {
+
+              mandatory_ = input.readBool();
+              break;
+            }
+            case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              unit_ = s;
+              break;
+            }
+            case 90: {
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                options_ = com.google.protobuf.MapField.newMapField(
+                    OptionsDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000200;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.Integer>
+              options__ = input.readMessage(
+                  OptionsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              options_.getMutableMap().put(
+                  options__.getKey(), options__.getValue());
+              break;
+            }
+            case 98: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              format_ = s;
+              break;
+            }
+            case 104: {
+
+              valueInt_ = input.readInt64();
+              break;
+            }
+            case 112: {
+
+              valueUint_ = input.readUInt64();
+              break;
+            }
+            case 121: {
+
+              valueFloat_ = input.readDouble();
+              break;
+            }
+            case 130: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              valueString_ = s;
+              break;
+            }
+            case 136: {
+
+              defaultValueInt_ = input.readInt32();
+              break;
+            }
+            case 144: {
+
+              defaultValueUint_ = input.readUInt32();
+              break;
+            }
+            case 153: {
+
+              defaultValueFloat_ = input.readDouble();
+              break;
+            }
+            case 162: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              defaultValueString_ = s;
+              break;
+            }
+            case 168: {
+              if (!((mutable_bitField0_ & 0x00080000) == 0x00080000)) {
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00080000;
+              }
+              dataRangeInt_.add(input.readInt32());
+              break;
+            }
+            case 170: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00080000) == 0x00080000) && input.getBytesUntilLimit() > 0) {
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00080000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                dataRangeInt_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 176: {
+              if (!((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00100000;
+              }
+              dataRangeUint_.add(input.readUInt32());
+              break;
+            }
+            case 178: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00100000) == 0x00100000) && input.getBytesUntilLimit() > 0) {
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00100000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                dataRangeUint_.add(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 185: {
+              if (!((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
+                dataRangeFloat_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00200000;
+              }
+              dataRangeFloat_.add(input.readDouble());
+              break;
+            }
+            case 186: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00200000) == 0x00200000) && input.getBytesUntilLimit() > 0) {
+                dataRangeFloat_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00200000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                dataRangeFloat_.add(input.readDouble());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+          category_ = category_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00080000) == 0x00080000)) {
+          dataRangeInt_ = java.util.Collections.unmodifiableList(dataRangeInt_);
+        }
+        if (((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
+          dataRangeUint_ = java.util.Collections.unmodifiableList(dataRangeUint_);
+        }
+        if (((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
+          dataRangeFloat_ = java.util.Collections.unmodifiableList(dataRangeFloat_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentDataSub_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 11:
+          return internalGetOptions();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentDataSub_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.uniledger.protos.ProtoContract.ComponentDataSub.class, com.uniledger.protos.ProtoContract.ComponentDataSub.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int CNAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object cname_;
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    public java.lang.String getCname() {
+      java.lang.Object ref = cname_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        cname_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCnameBytes() {
+      java.lang.Object ref = cname_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        cname_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CTYPE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object ctype_;
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    public java.lang.String getCtype() {
+      java.lang.Object ref = ctype_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        ctype_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCtypeBytes() {
+      java.lang.Object ref = ctype_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ctype_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CAPTION_FIELD_NUMBER = 3;
+    private volatile java.lang.Object caption_;
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    public java.lang.String getCaption() {
+      java.lang.Object ref = caption_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        caption_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCaptionBytes() {
+      java.lang.Object ref = caption_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        caption_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DESCRIPTION_FIELD_NUMBER = 4;
+    private volatile java.lang.Object description_;
+    /**
+     * <code>string Description = 4;</code>
+     */
+    public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        description_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Description = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MODIFYDATE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object modifyDate_;
+    /**
+     * <code>string ModifyDate = 5;</code>
+     */
+    public java.lang.String getModifyDate() {
+      java.lang.Object ref = modifyDate_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        modifyDate_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string ModifyDate = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getModifyDateBytes() {
+      java.lang.Object ref = modifyDate_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        modifyDate_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int HARDCONVTYPE_FIELD_NUMBER = 6;
+    private volatile java.lang.Object hardConvType_;
+    /**
+     * <code>string HardConvType = 6;</code>
+     */
+    public java.lang.String getHardConvType() {
+      java.lang.Object ref = hardConvType_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        hardConvType_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string HardConvType = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getHardConvTypeBytes() {
+      java.lang.Object ref = hardConvType_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        hardConvType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CATEGORY_FIELD_NUMBER = 7;
+    private com.google.protobuf.LazyStringList category_;
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getCategoryList() {
+      return category_;
+    }
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public int getCategoryCount() {
+      return category_.size();
+    }
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public java.lang.String getCategory(int index) {
+      return category_.get(index);
+    }
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCategoryBytes(int index) {
+      return category_.getByteString(index);
+    }
+
+    public static final int MANDATORY_FIELD_NUMBER = 9;
+    private boolean mandatory_;
+    /**
+     * <code>bool Mandatory = 9;</code>
+     */
+    public boolean getMandatory() {
+      return mandatory_;
+    }
+
+    public static final int UNIT_FIELD_NUMBER = 10;
+    private volatile java.lang.Object unit_;
+    /**
+     * <code>string Unit = 10;</code>
+     */
+    public java.lang.String getUnit() {
+      java.lang.Object ref = unit_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        unit_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Unit = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUnitBytes() {
+      java.lang.Object ref = unit_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        unit_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OPTIONS_FIELD_NUMBER = 11;
+    private static final class OptionsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.Integer> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.Integer>newDefaultInstance(
+                  com.uniledger.protos.ProtoContract.internal_static_protos_ComponentDataSub_OptionsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.INT32,
+                  0);
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.Integer> options_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.Integer>
+    internalGetOptions() {
+      if (options_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            OptionsDefaultEntryHolder.defaultEntry);
+      }
+      return options_;
+    }
+
+    public int getOptionsCount() {
+      return internalGetOptions().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+
+    public boolean containsOptions(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetOptions().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getOptionsMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.Integer> getOptions() {
+      return getOptionsMap();
+    }
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+
+    public java.util.Map<java.lang.String, java.lang.Integer> getOptionsMap() {
+      return internalGetOptions().getMap();
+    }
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+
+    public int getOptionsOrDefault(
+        java.lang.String key,
+        int defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.Integer> map =
+          internalGetOptions().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+
+    public int getOptionsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.Integer> map =
+          internalGetOptions().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int FORMAT_FIELD_NUMBER = 12;
+    private volatile java.lang.Object format_;
+    /**
+     * <code>string Format = 12;</code>
+     */
+    public java.lang.String getFormat() {
+      java.lang.Object ref = format_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        format_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Format = 12;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFormatBytes() {
+      java.lang.Object ref = format_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        format_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int VALUEINT_FIELD_NUMBER = 13;
+    private long valueInt_;
+    /**
+     * <pre>
+     *Value interface{} int64
+     * </pre>
+     *
+     * <code>int64 ValueInt = 13;</code>
+     */
+    public long getValueInt() {
+      return valueInt_;
+    }
+
+    public static final int VALUEUINT_FIELD_NUMBER = 14;
+    private long valueUint_;
+    /**
+     * <pre>
+     *Value interface{} unit64
+     * </pre>
+     *
+     * <code>uint64 ValueUint = 14;</code>
+     */
+    public long getValueUint() {
+      return valueUint_;
+    }
+
+    public static final int VALUEFLOAT_FIELD_NUMBER = 15;
+    private double valueFloat_;
+    /**
+     * <pre>
+     *Value interface{} float64
+     * </pre>
+     *
+     * <code>double ValueFloat = 15;</code>
+     */
+    public double getValueFloat() {
+      return valueFloat_;
+    }
+
+    public static final int VALUESTRING_FIELD_NUMBER = 16;
+    private volatile java.lang.Object valueString_;
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    public java.lang.String getValueString() {
+      java.lang.Object ref = valueString_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        valueString_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueStringBytes() {
+      java.lang.Object ref = valueString_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        valueString_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DEFAULTVALUEINT_FIELD_NUMBER = 17;
+    private int defaultValueInt_;
+    /**
+     * <pre>
+     *DefaultValue interface{} int64
+     * </pre>
+     *
+     * <code>int32 DefaultValueInt = 17;</code>
+     */
+    public int getDefaultValueInt() {
+      return defaultValueInt_;
+    }
+
+    public static final int DEFAULTVALUEUINT_FIELD_NUMBER = 18;
+    private int defaultValueUint_;
+    /**
+     * <pre>
+     *DefaultValue interface{} unit64
+     * </pre>
+     *
+     * <code>uint32 DefaultValueUint = 18;</code>
+     */
+    public int getDefaultValueUint() {
+      return defaultValueUint_;
+    }
+
+    public static final int DEFAULTVALUEFLOAT_FIELD_NUMBER = 19;
+    private double defaultValueFloat_;
+    /**
+     * <pre>
+     *DefaultValue interface{} float64
+     * </pre>
+     *
+     * <code>double DefaultValueFloat = 19;</code>
+     */
+    public double getDefaultValueFloat() {
+      return defaultValueFloat_;
+    }
+
+    public static final int DEFAULTVALUESTRING_FIELD_NUMBER = 20;
+    private volatile java.lang.Object defaultValueString_;
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    public java.lang.String getDefaultValueString() {
+      java.lang.Object ref = defaultValueString_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        defaultValueString_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDefaultValueStringBytes() {
+      java.lang.Object ref = defaultValueString_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        defaultValueString_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DATARANGEINT_FIELD_NUMBER = 21;
+    private java.util.List<java.lang.Integer> dataRangeInt_;
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int32 DataRangeInt = 21;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getDataRangeIntList() {
+      return dataRangeInt_;
+    }
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int32 DataRangeInt = 21;</code>
+     */
+    public int getDataRangeIntCount() {
+      return dataRangeInt_.size();
+    }
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int32 DataRangeInt = 21;</code>
+     */
+    public int getDataRangeInt(int index) {
+      return dataRangeInt_.get(index);
+    }
+    private int dataRangeIntMemoizedSerializedSize = -1;
+
+    public static final int DATARANGEUINT_FIELD_NUMBER = 22;
+    private java.util.List<java.lang.Integer> dataRangeUint_;
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint32 DataRangeUint = 22;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getDataRangeUintList() {
+      return dataRangeUint_;
+    }
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint32 DataRangeUint = 22;</code>
+     */
+    public int getDataRangeUintCount() {
+      return dataRangeUint_.size();
+    }
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint32 DataRangeUint = 22;</code>
+     */
+    public int getDataRangeUint(int index) {
+      return dataRangeUint_.get(index);
+    }
+    private int dataRangeUintMemoizedSerializedSize = -1;
+
+    public static final int DATARANGEFLOAT_FIELD_NUMBER = 23;
+    private java.util.List<java.lang.Double> dataRangeFloat_;
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    public java.util.List<java.lang.Double>
+        getDataRangeFloatList() {
+      return dataRangeFloat_;
+    }
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    public int getDataRangeFloatCount() {
+      return dataRangeFloat_.size();
+    }
+    /**
+     * <pre>
+     *DataRange interface{} float64
+     * </pre>
+     *
+     * <code>repeated double DataRangeFloat = 23;</code>
+     */
+    public double getDataRangeFloat(int index) {
+      return dataRangeFloat_.get(index);
+    }
+    private int dataRangeFloatMemoizedSerializedSize = -1;
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (!getCnameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, cname_);
+      }
+      if (!getCtypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ctype_);
+      }
+      if (!getCaptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, caption_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
+      }
+      if (!getModifyDateBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, modifyDate_);
+      }
+      if (!getHardConvTypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, hardConvType_);
+      }
+      for (int i = 0; i < category_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, category_.getRaw(i));
+      }
+      if (mandatory_ != false) {
+        output.writeBool(9, mandatory_);
+      }
+      if (!getUnitBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, unit_);
+      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetOptions(),
+          OptionsDefaultEntryHolder.defaultEntry,
+          11);
+      if (!getFormatBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, format_);
+      }
+      if (valueInt_ != 0L) {
+        output.writeInt64(13, valueInt_);
+      }
+      if (valueUint_ != 0L) {
+        output.writeUInt64(14, valueUint_);
+      }
+      if (valueFloat_ != 0D) {
+        output.writeDouble(15, valueFloat_);
+      }
+      if (!getValueStringBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 16, valueString_);
+      }
+      if (defaultValueInt_ != 0) {
+        output.writeInt32(17, defaultValueInt_);
+      }
+      if (defaultValueUint_ != 0) {
+        output.writeUInt32(18, defaultValueUint_);
+      }
+      if (defaultValueFloat_ != 0D) {
+        output.writeDouble(19, defaultValueFloat_);
+      }
+      if (!getDefaultValueStringBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 20, defaultValueString_);
+      }
+      if (getDataRangeIntList().size() > 0) {
+        output.writeUInt32NoTag(170);
+        output.writeUInt32NoTag(dataRangeIntMemoizedSerializedSize);
+      }
+      for (int i = 0; i < dataRangeInt_.size(); i++) {
+        output.writeInt32NoTag(dataRangeInt_.get(i));
+      }
+      if (getDataRangeUintList().size() > 0) {
+        output.writeUInt32NoTag(178);
+        output.writeUInt32NoTag(dataRangeUintMemoizedSerializedSize);
+      }
+      for (int i = 0; i < dataRangeUint_.size(); i++) {
+        output.writeUInt32NoTag(dataRangeUint_.get(i));
+      }
+      if (getDataRangeFloatList().size() > 0) {
+        output.writeUInt32NoTag(186);
+        output.writeUInt32NoTag(dataRangeFloatMemoizedSerializedSize);
+      }
+      for (int i = 0; i < dataRangeFloat_.size(); i++) {
+        output.writeDoubleNoTag(dataRangeFloat_.get(i));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getCnameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, cname_);
+      }
+      if (!getCtypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ctype_);
+      }
+      if (!getCaptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, caption_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
+      }
+      if (!getModifyDateBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, modifyDate_);
+      }
+      if (!getHardConvTypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, hardConvType_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < category_.size(); i++) {
+          dataSize += computeStringSizeNoTag(category_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getCategoryList().size();
+      }
+      if (mandatory_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(9, mandatory_);
+      }
+      if (!getUnitBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, unit_);
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.Integer> entry
+           : internalGetOptions().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.Integer>
+        options__ = OptionsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(11, options__);
+      }
+      if (!getFormatBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, format_);
+      }
+      if (valueInt_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(13, valueInt_);
+      }
+      if (valueUint_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(14, valueUint_);
+      }
+      if (valueFloat_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(15, valueFloat_);
+      }
+      if (!getValueStringBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, valueString_);
+      }
+      if (defaultValueInt_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(17, defaultValueInt_);
+      }
+      if (defaultValueUint_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(18, defaultValueUint_);
+      }
+      if (defaultValueFloat_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(19, defaultValueFloat_);
+      }
+      if (!getDefaultValueStringBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, defaultValueString_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < dataRangeInt_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataRangeInt_.get(i));
+        }
+        size += dataSize;
+        if (!getDataRangeIntList().isEmpty()) {
+          size += 2;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        dataRangeIntMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < dataRangeUint_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(dataRangeUint_.get(i));
+        }
+        size += dataSize;
+        if (!getDataRangeUintList().isEmpty()) {
+          size += 2;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        dataRangeUintMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        dataSize = 8 * getDataRangeFloatList().size();
+        size += dataSize;
+        if (!getDataRangeFloatList().isEmpty()) {
+          size += 2;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        dataRangeFloatMemoizedSerializedSize = dataSize;
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.uniledger.protos.ProtoContract.ComponentDataSub)) {
+        return super.equals(obj);
+      }
+      com.uniledger.protos.ProtoContract.ComponentDataSub other = (com.uniledger.protos.ProtoContract.ComponentDataSub) obj;
+
+      boolean result = true;
+      result = result && getCname()
+          .equals(other.getCname());
+      result = result && getCtype()
+          .equals(other.getCtype());
+      result = result && getCaption()
+          .equals(other.getCaption());
+      result = result && getDescription()
+          .equals(other.getDescription());
+      result = result && getModifyDate()
+          .equals(other.getModifyDate());
+      result = result && getHardConvType()
+          .equals(other.getHardConvType());
+      result = result && getCategoryList()
+          .equals(other.getCategoryList());
+      result = result && (getMandatory()
+          == other.getMandatory());
+      result = result && getUnit()
+          .equals(other.getUnit());
+      result = result && internalGetOptions().equals(
+          other.internalGetOptions());
+      result = result && getFormat()
+          .equals(other.getFormat());
+      result = result && (getValueInt()
+          == other.getValueInt());
+      result = result && (getValueUint()
+          == other.getValueUint());
+      result = result && (
+          java.lang.Double.doubleToLongBits(getValueFloat())
+          == java.lang.Double.doubleToLongBits(
+              other.getValueFloat()));
+      result = result && getValueString()
+          .equals(other.getValueString());
+      result = result && (getDefaultValueInt()
+          == other.getDefaultValueInt());
+      result = result && (getDefaultValueUint()
+          == other.getDefaultValueUint());
+      result = result && (
+          java.lang.Double.doubleToLongBits(getDefaultValueFloat())
+          == java.lang.Double.doubleToLongBits(
+              other.getDefaultValueFloat()));
+      result = result && getDefaultValueString()
+          .equals(other.getDefaultValueString());
+      result = result && getDataRangeIntList()
+          .equals(other.getDataRangeIntList());
+      result = result && getDataRangeUintList()
+          .equals(other.getDataRangeUintList());
+      result = result && getDataRangeFloatList()
+          .equals(other.getDataRangeFloatList());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + CNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getCname().hashCode();
+      hash = (37 * hash) + CTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getCtype().hashCode();
+      hash = (37 * hash) + CAPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getCaption().hashCode();
+      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getDescription().hashCode();
+      hash = (37 * hash) + MODIFYDATE_FIELD_NUMBER;
+      hash = (53 * hash) + getModifyDate().hashCode();
+      hash = (37 * hash) + HARDCONVTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getHardConvType().hashCode();
+      if (getCategoryCount() > 0) {
+        hash = (37 * hash) + CATEGORY_FIELD_NUMBER;
+        hash = (53 * hash) + getCategoryList().hashCode();
+      }
+      hash = (37 * hash) + MANDATORY_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getMandatory());
+      hash = (37 * hash) + UNIT_FIELD_NUMBER;
+      hash = (53 * hash) + getUnit().hashCode();
+      if (!internalGetOptions().getMap().isEmpty()) {
+        hash = (37 * hash) + OPTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetOptions().hashCode();
+      }
+      hash = (37 * hash) + FORMAT_FIELD_NUMBER;
+      hash = (53 * hash) + getFormat().hashCode();
+      hash = (37 * hash) + VALUEINT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getValueInt());
+      hash = (37 * hash) + VALUEUINT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getValueUint());
+      hash = (37 * hash) + VALUEFLOAT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getValueFloat()));
+      hash = (37 * hash) + VALUESTRING_FIELD_NUMBER;
+      hash = (53 * hash) + getValueString().hashCode();
+      hash = (37 * hash) + DEFAULTVALUEINT_FIELD_NUMBER;
+      hash = (53 * hash) + getDefaultValueInt();
+      hash = (37 * hash) + DEFAULTVALUEUINT_FIELD_NUMBER;
+      hash = (53 * hash) + getDefaultValueUint();
+      hash = (37 * hash) + DEFAULTVALUEFLOAT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getDefaultValueFloat()));
+      hash = (37 * hash) + DEFAULTVALUESTRING_FIELD_NUMBER;
+      hash = (53 * hash) + getDefaultValueString().hashCode();
+      if (getDataRangeIntCount() > 0) {
+        hash = (37 * hash) + DATARANGEINT_FIELD_NUMBER;
+        hash = (53 * hash) + getDataRangeIntList().hashCode();
+      }
+      if (getDataRangeUintCount() > 0) {
+        hash = (37 * hash) + DATARANGEUINT_FIELD_NUMBER;
+        hash = (53 * hash) + getDataRangeUintList().hashCode();
+      }
+      if (getDataRangeFloatCount() > 0) {
+        hash = (37 * hash) + DATARANGEFLOAT_FIELD_NUMBER;
+        hash = (53 * hash) + getDataRangeFloatList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.uniledger.protos.ProtoContract.ComponentDataSub prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.ComponentDataSub}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.ComponentDataSub)
+        com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentDataSub_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 11:
+            return internalGetOptions();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 11:
+            return internalGetMutableOptions();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentDataSub_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.uniledger.protos.ProtoContract.ComponentDataSub.class, com.uniledger.protos.ProtoContract.ComponentDataSub.Builder.class);
+      }
+
+      // Construct using com.uniledger.protos.ProtoContract.ComponentDataSub.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        cname_ = "";
+
+        ctype_ = "";
+
+        caption_ = "";
+
+        description_ = "";
+
+        modifyDate_ = "";
+
+        hardConvType_ = "";
+
+        category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        mandatory_ = false;
+
+        unit_ = "";
+
+        internalGetMutableOptions().clear();
+        format_ = "";
+
+        valueInt_ = 0L;
+
+        valueUint_ = 0L;
+
+        valueFloat_ = 0D;
+
+        valueString_ = "";
+
+        defaultValueInt_ = 0;
+
+        defaultValueUint_ = 0;
+
+        defaultValueFloat_ = 0D;
+
+        defaultValueString_ = "";
+
+        dataRangeInt_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00080000);
+        dataRangeUint_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00100000);
+        dataRangeFloat_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00200000);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentDataSub_descriptor;
+      }
+
+      public com.uniledger.protos.ProtoContract.ComponentDataSub getDefaultInstanceForType() {
+        return com.uniledger.protos.ProtoContract.ComponentDataSub.getDefaultInstance();
+      }
+
+      public com.uniledger.protos.ProtoContract.ComponentDataSub build() {
+        com.uniledger.protos.ProtoContract.ComponentDataSub result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.uniledger.protos.ProtoContract.ComponentDataSub buildPartial() {
+        com.uniledger.protos.ProtoContract.ComponentDataSub result = new com.uniledger.protos.ProtoContract.ComponentDataSub(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.cname_ = cname_;
+        result.ctype_ = ctype_;
+        result.caption_ = caption_;
+        result.description_ = description_;
+        result.modifyDate_ = modifyDate_;
+        result.hardConvType_ = hardConvType_;
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          category_ = category_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000040);
+        }
+        result.category_ = category_;
+        result.mandatory_ = mandatory_;
+        result.unit_ = unit_;
+        result.options_ = internalGetOptions();
+        result.options_.makeImmutable();
+        result.format_ = format_;
+        result.valueInt_ = valueInt_;
+        result.valueUint_ = valueUint_;
+        result.valueFloat_ = valueFloat_;
+        result.valueString_ = valueString_;
+        result.defaultValueInt_ = defaultValueInt_;
+        result.defaultValueUint_ = defaultValueUint_;
+        result.defaultValueFloat_ = defaultValueFloat_;
+        result.defaultValueString_ = defaultValueString_;
+        if (((bitField0_ & 0x00080000) == 0x00080000)) {
+          dataRangeInt_ = java.util.Collections.unmodifiableList(dataRangeInt_);
+          bitField0_ = (bitField0_ & ~0x00080000);
+        }
+        result.dataRangeInt_ = dataRangeInt_;
+        if (((bitField0_ & 0x00100000) == 0x00100000)) {
+          dataRangeUint_ = java.util.Collections.unmodifiableList(dataRangeUint_);
+          bitField0_ = (bitField0_ & ~0x00100000);
+        }
+        result.dataRangeUint_ = dataRangeUint_;
+        if (((bitField0_ & 0x00200000) == 0x00200000)) {
+          dataRangeFloat_ = java.util.Collections.unmodifiableList(dataRangeFloat_);
+          bitField0_ = (bitField0_ & ~0x00200000);
+        }
+        result.dataRangeFloat_ = dataRangeFloat_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.uniledger.protos.ProtoContract.ComponentDataSub) {
+          return mergeFrom((com.uniledger.protos.ProtoContract.ComponentDataSub)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.uniledger.protos.ProtoContract.ComponentDataSub other) {
+        if (other == com.uniledger.protos.ProtoContract.ComponentDataSub.getDefaultInstance()) return this;
+        if (!other.getCname().isEmpty()) {
+          cname_ = other.cname_;
+          onChanged();
+        }
+        if (!other.getCtype().isEmpty()) {
+          ctype_ = other.ctype_;
+          onChanged();
+        }
+        if (!other.getCaption().isEmpty()) {
+          caption_ = other.caption_;
+          onChanged();
+        }
+        if (!other.getDescription().isEmpty()) {
+          description_ = other.description_;
+          onChanged();
+        }
+        if (!other.getModifyDate().isEmpty()) {
+          modifyDate_ = other.modifyDate_;
+          onChanged();
+        }
+        if (!other.getHardConvType().isEmpty()) {
+          hardConvType_ = other.hardConvType_;
+          onChanged();
+        }
+        if (!other.category_.isEmpty()) {
+          if (category_.isEmpty()) {
+            category_ = other.category_;
+            bitField0_ = (bitField0_ & ~0x00000040);
+          } else {
+            ensureCategoryIsMutable();
+            category_.addAll(other.category_);
+          }
+          onChanged();
+        }
+        if (other.getMandatory() != false) {
+          setMandatory(other.getMandatory());
+        }
+        if (!other.getUnit().isEmpty()) {
+          unit_ = other.unit_;
+          onChanged();
+        }
+        internalGetMutableOptions().mergeFrom(
+            other.internalGetOptions());
+        if (!other.getFormat().isEmpty()) {
+          format_ = other.format_;
+          onChanged();
+        }
+        if (other.getValueInt() != 0L) {
+          setValueInt(other.getValueInt());
+        }
+        if (other.getValueUint() != 0L) {
+          setValueUint(other.getValueUint());
+        }
+        if (other.getValueFloat() != 0D) {
+          setValueFloat(other.getValueFloat());
+        }
+        if (!other.getValueString().isEmpty()) {
+          valueString_ = other.valueString_;
+          onChanged();
+        }
+        if (other.getDefaultValueInt() != 0) {
+          setDefaultValueInt(other.getDefaultValueInt());
+        }
+        if (other.getDefaultValueUint() != 0) {
+          setDefaultValueUint(other.getDefaultValueUint());
+        }
+        if (other.getDefaultValueFloat() != 0D) {
+          setDefaultValueFloat(other.getDefaultValueFloat());
+        }
+        if (!other.getDefaultValueString().isEmpty()) {
+          defaultValueString_ = other.defaultValueString_;
+          onChanged();
+        }
+        if (!other.dataRangeInt_.isEmpty()) {
+          if (dataRangeInt_.isEmpty()) {
+            dataRangeInt_ = other.dataRangeInt_;
+            bitField0_ = (bitField0_ & ~0x00080000);
+          } else {
+            ensureDataRangeIntIsMutable();
+            dataRangeInt_.addAll(other.dataRangeInt_);
+          }
+          onChanged();
+        }
+        if (!other.dataRangeUint_.isEmpty()) {
+          if (dataRangeUint_.isEmpty()) {
+            dataRangeUint_ = other.dataRangeUint_;
+            bitField0_ = (bitField0_ & ~0x00100000);
+          } else {
+            ensureDataRangeUintIsMutable();
+            dataRangeUint_.addAll(other.dataRangeUint_);
+          }
+          onChanged();
+        }
+        if (!other.dataRangeFloat_.isEmpty()) {
+          if (dataRangeFloat_.isEmpty()) {
+            dataRangeFloat_ = other.dataRangeFloat_;
+            bitField0_ = (bitField0_ & ~0x00200000);
+          } else {
+            ensureDataRangeFloatIsMutable();
+            dataRangeFloat_.addAll(other.dataRangeFloat_);
+          }
+          onChanged();
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.uniledger.protos.ProtoContract.ComponentDataSub parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.uniledger.protos.ProtoContract.ComponentDataSub) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object cname_ = "";
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public java.lang.String getCname() {
+        java.lang.Object ref = cname_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          cname_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCnameBytes() {
+        java.lang.Object ref = cname_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          cname_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder setCname(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        cname_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder clearCname() {
+        
+        cname_ = getDefaultInstance().getCname();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder setCnameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        cname_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object ctype_ = "";
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public java.lang.String getCtype() {
+        java.lang.Object ref = ctype_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          ctype_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCtypeBytes() {
+        java.lang.Object ref = ctype_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ctype_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder setCtype(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ctype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder clearCtype() {
+        
+        ctype_ = getDefaultInstance().getCtype();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder setCtypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        ctype_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object caption_ = "";
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public java.lang.String getCaption() {
+        java.lang.Object ref = caption_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          caption_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCaptionBytes() {
+        java.lang.Object ref = caption_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          caption_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder setCaption(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        caption_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder clearCaption() {
+        
+        caption_ = getDefaultInstance().getCaption();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder setCaptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        caption_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object description_ = "";
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public java.lang.String getDescription() {
+        java.lang.Object ref = description_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          description_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          description_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder setDescription(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        description_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder clearDescription() {
+        
+        description_ = getDefaultInstance().getDescription();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder setDescriptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        description_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object modifyDate_ = "";
+      /**
+       * <code>string ModifyDate = 5;</code>
+       */
+      public java.lang.String getModifyDate() {
+        java.lang.Object ref = modifyDate_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          modifyDate_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string ModifyDate = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getModifyDateBytes() {
+        java.lang.Object ref = modifyDate_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          modifyDate_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string ModifyDate = 5;</code>
+       */
+      public Builder setModifyDate(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        modifyDate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ModifyDate = 5;</code>
+       */
+      public Builder clearModifyDate() {
+        
+        modifyDate_ = getDefaultInstance().getModifyDate();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ModifyDate = 5;</code>
+       */
+      public Builder setModifyDateBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        modifyDate_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object hardConvType_ = "";
+      /**
+       * <code>string HardConvType = 6;</code>
+       */
+      public java.lang.String getHardConvType() {
+        java.lang.Object ref = hardConvType_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          hardConvType_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string HardConvType = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getHardConvTypeBytes() {
+        java.lang.Object ref = hardConvType_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          hardConvType_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string HardConvType = 6;</code>
+       */
+      public Builder setHardConvType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        hardConvType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string HardConvType = 6;</code>
+       */
+      public Builder clearHardConvType() {
+        
+        hardConvType_ = getDefaultInstance().getHardConvType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string HardConvType = 6;</code>
+       */
+      public Builder setHardConvTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        hardConvType_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureCategoryIsMutable() {
+        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
+          category_ = new com.google.protobuf.LazyStringArrayList(category_);
+          bitField0_ |= 0x00000040;
+         }
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getCategoryList() {
+        return category_.getUnmodifiableView();
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public int getCategoryCount() {
+        return category_.size();
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public java.lang.String getCategory(int index) {
+        return category_.get(index);
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCategoryBytes(int index) {
+        return category_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder setCategory(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCategoryIsMutable();
+        category_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder addCategory(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCategoryIsMutable();
+        category_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder addAllCategory(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureCategoryIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, category_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder clearCategory() {
+        category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * []string Category
+       * </pre>
+       *
+       * <code>repeated string Category = 7;</code>
+       */
+      public Builder addCategoryBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureCategoryIsMutable();
+        category_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private boolean mandatory_ ;
+      /**
+       * <code>bool Mandatory = 9;</code>
+       */
+      public boolean getMandatory() {
+        return mandatory_;
+      }
+      /**
+       * <code>bool Mandatory = 9;</code>
+       */
+      public Builder setMandatory(boolean value) {
+        
+        mandatory_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool Mandatory = 9;</code>
+       */
+      public Builder clearMandatory() {
+        
+        mandatory_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object unit_ = "";
+      /**
+       * <code>string Unit = 10;</code>
+       */
+      public java.lang.String getUnit() {
+        java.lang.Object ref = unit_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          unit_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Unit = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUnitBytes() {
+        java.lang.Object ref = unit_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          unit_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Unit = 10;</code>
+       */
+      public Builder setUnit(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        unit_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Unit = 10;</code>
+       */
+      public Builder clearUnit() {
+        
+        unit_ = getDefaultInstance().getUnit();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Unit = 10;</code>
+       */
+      public Builder setUnitBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        unit_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.Integer> options_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.Integer>
+      internalGetOptions() {
+        if (options_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              OptionsDefaultEntryHolder.defaultEntry);
+        }
+        return options_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.Integer>
+      internalGetMutableOptions() {
+        onChanged();;
+        if (options_ == null) {
+          options_ = com.google.protobuf.MapField.newMapField(
+              OptionsDefaultEntryHolder.defaultEntry);
+        }
+        if (!options_.isMutable()) {
+          options_ = options_.copy();
+        }
+        return options_;
+      }
+
+      public int getOptionsCount() {
+        return internalGetOptions().getMap().size();
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+
+      public boolean containsOptions(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetOptions().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getOptionsMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.Integer> getOptions() {
+        return getOptionsMap();
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+
+      public java.util.Map<java.lang.String, java.lang.Integer> getOptionsMap() {
+        return internalGetOptions().getMap();
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+
+      public int getOptionsOrDefault(
+          java.lang.String key,
+          int defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.Integer> map =
+            internalGetOptions().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+
+      public int getOptionsOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.Integer> map =
+            internalGetOptions().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearOptions() {
+        internalGetMutableOptions().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+
+      public Builder removeOptions(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableOptions().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.Integer>
+      getMutableOptions() {
+        return internalGetMutableOptions().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+      public Builder putOptions(
+          java.lang.String key,
+          int value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        
+        internalGetMutableOptions().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <code>map&lt;string, int32&gt; Options = 11;</code>
+       */
+
+      public Builder putAllOptions(
+          java.util.Map<java.lang.String, java.lang.Integer> values) {
+        internalGetMutableOptions().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private java.lang.Object format_ = "";
+      /**
+       * <code>string Format = 12;</code>
+       */
+      public java.lang.String getFormat() {
+        java.lang.Object ref = format_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          format_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Format = 12;</code>
+       */
+      public com.google.protobuf.ByteString
+          getFormatBytes() {
+        java.lang.Object ref = format_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          format_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Format = 12;</code>
+       */
+      public Builder setFormat(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        format_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Format = 12;</code>
+       */
+      public Builder clearFormat() {
+        
+        format_ = getDefaultInstance().getFormat();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Format = 12;</code>
+       */
+      public Builder setFormatBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        format_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long valueInt_ ;
+      /**
+       * <pre>
+       *Value interface{} int64
+       * </pre>
+       *
+       * <code>int64 ValueInt = 13;</code>
+       */
+      public long getValueInt() {
+        return valueInt_;
+      }
+      /**
+       * <pre>
+       *Value interface{} int64
+       * </pre>
+       *
+       * <code>int64 ValueInt = 13;</code>
+       */
+      public Builder setValueInt(long value) {
+        
+        valueInt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} int64
+       * </pre>
+       *
+       * <code>int64 ValueInt = 13;</code>
+       */
+      public Builder clearValueInt() {
+        
+        valueInt_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long valueUint_ ;
+      /**
+       * <pre>
+       *Value interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 ValueUint = 14;</code>
+       */
+      public long getValueUint() {
+        return valueUint_;
+      }
+      /**
+       * <pre>
+       *Value interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 ValueUint = 14;</code>
+       */
+      public Builder setValueUint(long value) {
+        
+        valueUint_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} unit64
+       * </pre>
+       *
+       * <code>uint64 ValueUint = 14;</code>
+       */
+      public Builder clearValueUint() {
+        
+        valueUint_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private double valueFloat_ ;
+      /**
+       * <pre>
+       *Value interface{} float64
+       * </pre>
+       *
+       * <code>double ValueFloat = 15;</code>
+       */
+      public double getValueFloat() {
+        return valueFloat_;
+      }
+      /**
+       * <pre>
+       *Value interface{} float64
+       * </pre>
+       *
+       * <code>double ValueFloat = 15;</code>
+       */
+      public Builder setValueFloat(double value) {
+        
+        valueFloat_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} float64
+       * </pre>
+       *
+       * <code>double ValueFloat = 15;</code>
+       */
+      public Builder clearValueFloat() {
+        
+        valueFloat_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object valueString_ = "";
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public java.lang.String getValueString() {
+        java.lang.Object ref = valueString_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          valueString_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueStringBytes() {
+        java.lang.Object ref = valueString_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          valueString_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public Builder setValueString(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        valueString_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public Builder clearValueString() {
+        
+        valueString_ = getDefaultInstance().getValueString();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Value interface{} string
+       * </pre>
+       *
+       * <code>string ValueString = 16;</code>
+       */
+      public Builder setValueStringBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        valueString_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int defaultValueInt_ ;
+      /**
+       * <pre>
+       *DefaultValue interface{} int64
+       * </pre>
+       *
+       * <code>int32 DefaultValueInt = 17;</code>
+       */
+      public int getDefaultValueInt() {
+        return defaultValueInt_;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} int64
+       * </pre>
+       *
+       * <code>int32 DefaultValueInt = 17;</code>
+       */
+      public Builder setDefaultValueInt(int value) {
+        
+        defaultValueInt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} int64
+       * </pre>
+       *
+       * <code>int32 DefaultValueInt = 17;</code>
+       */
+      public Builder clearDefaultValueInt() {
+        
+        defaultValueInt_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int defaultValueUint_ ;
+      /**
+       * <pre>
+       *DefaultValue interface{} unit64
+       * </pre>
+       *
+       * <code>uint32 DefaultValueUint = 18;</code>
+       */
+      public int getDefaultValueUint() {
+        return defaultValueUint_;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} unit64
+       * </pre>
+       *
+       * <code>uint32 DefaultValueUint = 18;</code>
+       */
+      public Builder setDefaultValueUint(int value) {
+        
+        defaultValueUint_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} unit64
+       * </pre>
+       *
+       * <code>uint32 DefaultValueUint = 18;</code>
+       */
+      public Builder clearDefaultValueUint() {
+        
+        defaultValueUint_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private double defaultValueFloat_ ;
+      /**
+       * <pre>
+       *DefaultValue interface{} float64
+       * </pre>
+       *
+       * <code>double DefaultValueFloat = 19;</code>
+       */
+      public double getDefaultValueFloat() {
+        return defaultValueFloat_;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} float64
+       * </pre>
+       *
+       * <code>double DefaultValueFloat = 19;</code>
+       */
+      public Builder setDefaultValueFloat(double value) {
+        
+        defaultValueFloat_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValue interface{} float64
+       * </pre>
+       *
+       * <code>double DefaultValueFloat = 19;</code>
+       */
+      public Builder clearDefaultValueFloat() {
+        
+        defaultValueFloat_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object defaultValueString_ = "";
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public java.lang.String getDefaultValueString() {
+        java.lang.Object ref = defaultValueString_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          defaultValueString_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDefaultValueStringBytes() {
+        java.lang.Object ref = defaultValueString_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          defaultValueString_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public Builder setDefaultValueString(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        defaultValueString_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public Builder clearDefaultValueString() {
+        
+        defaultValueString_ = getDefaultInstance().getDefaultValueString();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DefaultValueinterface{} string
+       * </pre>
+       *
+       * <code>string DefaultValueString = 20;</code>
+       */
+      public Builder setDefaultValueStringBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        defaultValueString_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Integer> dataRangeInt_ = java.util.Collections.emptyList();
+      private void ensureDataRangeIntIsMutable() {
+        if (!((bitField0_ & 0x00080000) == 0x00080000)) {
+          dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>(dataRangeInt_);
+          bitField0_ |= 0x00080000;
+         }
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getDataRangeIntList() {
+        return java.util.Collections.unmodifiableList(dataRangeInt_);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public int getDataRangeIntCount() {
+        return dataRangeInt_.size();
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public int getDataRangeInt(int index) {
+        return dataRangeInt_.get(index);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public Builder setDataRangeInt(
+          int index, int value) {
+        ensureDataRangeIntIsMutable();
+        dataRangeInt_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public Builder addDataRangeInt(int value) {
+        ensureDataRangeIntIsMutable();
+        dataRangeInt_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public Builder addAllDataRangeInt(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureDataRangeIntIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dataRangeInt_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} int64
+       * </pre>
+       *
+       * <code>repeated int32 DataRangeInt = 21;</code>
+       */
+      public Builder clearDataRangeInt() {
+        dataRangeInt_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00080000);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Integer> dataRangeUint_ = java.util.Collections.emptyList();
+      private void ensureDataRangeUintIsMutable() {
+        if (!((bitField0_ & 0x00100000) == 0x00100000)) {
+          dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>(dataRangeUint_);
+          bitField0_ |= 0x00100000;
+         }
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getDataRangeUintList() {
+        return java.util.Collections.unmodifiableList(dataRangeUint_);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public int getDataRangeUintCount() {
+        return dataRangeUint_.size();
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public int getDataRangeUint(int index) {
+        return dataRangeUint_.get(index);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public Builder setDataRangeUint(
+          int index, int value) {
+        ensureDataRangeUintIsMutable();
+        dataRangeUint_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public Builder addDataRangeUint(int value) {
+        ensureDataRangeUintIsMutable();
+        dataRangeUint_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public Builder addAllDataRangeUint(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureDataRangeUintIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dataRangeUint_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} unit64
+       * </pre>
+       *
+       * <code>repeated uint32 DataRangeUint = 22;</code>
+       */
+      public Builder clearDataRangeUint() {
+        dataRangeUint_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00100000);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Double> dataRangeFloat_ = java.util.Collections.emptyList();
+      private void ensureDataRangeFloatIsMutable() {
+        if (!((bitField0_ & 0x00200000) == 0x00200000)) {
+          dataRangeFloat_ = new java.util.ArrayList<java.lang.Double>(dataRangeFloat_);
+          bitField0_ |= 0x00200000;
+         }
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public java.util.List<java.lang.Double>
+          getDataRangeFloatList() {
+        return java.util.Collections.unmodifiableList(dataRangeFloat_);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public int getDataRangeFloatCount() {
+        return dataRangeFloat_.size();
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public double getDataRangeFloat(int index) {
+        return dataRangeFloat_.get(index);
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder setDataRangeFloat(
+          int index, double value) {
+        ensureDataRangeFloatIsMutable();
+        dataRangeFloat_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder addDataRangeFloat(double value) {
+        ensureDataRangeFloatIsMutable();
+        dataRangeFloat_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder addAllDataRangeFloat(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensureDataRangeFloatIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dataRangeFloat_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *DataRange interface{} float64
+       * </pre>
+       *
+       * <code>repeated double DataRangeFloat = 23;</code>
+       */
+      public Builder clearDataRangeFloat() {
+        dataRangeFloat_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00200000);
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.ComponentDataSub)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.ComponentDataSub)
+    private static final com.uniledger.protos.ProtoContract.ComponentDataSub DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.uniledger.protos.ProtoContract.ComponentDataSub();
+    }
+
+    public static com.uniledger.protos.ProtoContract.ComponentDataSub getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ComponentDataSub>
+        PARSER = new com.google.protobuf.AbstractParser<ComponentDataSub>() {
+      public ComponentDataSub parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ComponentDataSub(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ComponentDataSub> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ComponentDataSub> getParserForType() {
+      return PARSER;
+    }
+
+    public com.uniledger.protos.ProtoContract.ComponentDataSub getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ComponentDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.ComponentData)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    java.lang.String getCname();
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getCnameBytes();
+
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    java.lang.String getCtype();
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getCtypeBytes();
+
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    java.lang.String getCaption();
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getCaptionBytes();
+
+    /**
+     * <code>string Description = 4;</code>
+     */
+    java.lang.String getDescription();
+    /**
+     * <code>string Description = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDescriptionBytes();
+
+    /**
+     * <code>string ModifyDate = 5;</code>
+     */
+    java.lang.String getModifyDate();
+    /**
+     * <code>string ModifyDate = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getModifyDateBytes();
+
+    /**
+     * <code>string HardConvType = 6;</code>
+     */
+    java.lang.String getHardConvType();
+    /**
+     * <code>string HardConvType = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getHardConvTypeBytes();
+
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    java.util.List<java.lang.String>
+        getCategoryList();
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    int getCategoryCount();
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    java.lang.String getCategory(int index);
+    /**
+     * <pre>
+     * []string Category
+     * </pre>
+     *
+     * <code>repeated string Category = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getCategoryBytes(int index);
+
+    /**
+     * <code>.protos.ComponentDataSub Parent = 8;</code>
+     */
+    boolean hasParent();
+    /**
+     * <code>.protos.ComponentDataSub Parent = 8;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentDataSub getParent();
+    /**
+     * <code>.protos.ComponentDataSub Parent = 8;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder getParentOrBuilder();
+
+    /**
+     * <code>bool Mandatory = 9;</code>
+     */
+    boolean getMandatory();
+
+    /**
+     * <code>string Unit = 10;</code>
+     */
+    java.lang.String getUnit();
+    /**
+     * <code>string Unit = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getUnitBytes();
+
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+    int getOptionsCount();
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+    boolean containsOptions(
+        java.lang.String key);
+    /**
+     * Use {@link #getOptionsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.Integer>
+    getOptions();
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.Integer>
+    getOptionsMap();
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+
+    int getOptionsOrDefault(
+        java.lang.String key,
+        int defaultValue);
+    /**
+     * <code>map&lt;string, int32&gt; Options = 11;</code>
+     */
+
+    int getOptionsOrThrow(
+        java.lang.String key);
+
+    /**
+     * <code>string Format = 12;</code>
+     */
+    java.lang.String getFormat();
+    /**
+     * <code>string Format = 12;</code>
+     */
+    com.google.protobuf.ByteString
+        getFormatBytes();
+
+    /**
+     * <pre>
+     *Value interface{} int64
+     * </pre>
+     *
+     * <code>int32 ValueInt = 13;</code>
+     */
+    int getValueInt();
+
+    /**
+     * <pre>
+     *Value interface{} unit64
+     * </pre>
+     *
+     * <code>uint32 ValueUint = 14;</code>
+     */
+    int getValueUint();
+
+    /**
+     * <pre>
+     *Value interface{} float64
+     * </pre>
+     *
+     * <code>double ValueFloat = 15;</code>
+     */
+    double getValueFloat();
+
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    java.lang.String getValueString();
+    /**
+     * <pre>
+     *Value interface{} string
+     * </pre>
+     *
+     * <code>string ValueString = 16;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueStringBytes();
+
+    /**
+     * <pre>
+     *DefaultValue interface{} int64
+     * </pre>
+     *
+     * <code>int32 DefaultValueInt = 17;</code>
+     */
+    int getDefaultValueInt();
+
+    /**
+     * <pre>
+     *DefaultValue interface{} unit64
+     * </pre>
+     *
+     * <code>uint32 DefaultValueUint = 18;</code>
+     */
+    int getDefaultValueUint();
+
+    /**
+     * <pre>
+     *DefaultValue interface{} float64
+     * </pre>
+     *
+     * <code>double DefaultValueFloat = 19;</code>
+     */
+    double getDefaultValueFloat();
+
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    java.lang.String getDefaultValueString();
+    /**
+     * <pre>
+     *DefaultValueinterface{} string
+     * </pre>
+     *
+     * <code>string DefaultValueString = 20;</code>
+     */
+    com.google.protobuf.ByteString
+        getDefaultValueStringBytes();
+
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int32 DataRangeInt = 21;</code>
+     */
+    java.util.List<java.lang.Integer> getDataRangeIntList();
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int32 DataRangeInt = 21;</code>
+     */
+    int getDataRangeIntCount();
+    /**
+     * <pre>
+     *DataRange interface{} int64
+     * </pre>
+     *
+     * <code>repeated int32 DataRangeInt = 21;</code>
+     */
+    int getDataRangeInt(int index);
+
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint32 DataRangeUint = 22;</code>
+     */
+    java.util.List<java.lang.Integer> getDataRangeUintList();
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint32 DataRangeUint = 22;</code>
+     */
+    int getDataRangeUintCount();
+    /**
+     * <pre>
+     *DataRange interface{} unit64
+     * </pre>
+     *
+     * <code>repeated uint32 DataRangeUint = 22;</code>
+     */
+    int getDataRangeUint(int index);
 
     /**
      * <pre>
@@ -4451,12 +9244,12 @@ public final class ProtoContract {
       mandatory_ = false;
       unit_ = "";
       format_ = "";
-      valueInt_ = 0L;
-      valueUint_ = 0L;
+      valueInt_ = 0;
+      valueUint_ = 0;
       valueFloat_ = 0D;
       valueString_ = "";
-      defaultValueInt_ = 0L;
-      defaultValueUint_ = 0L;
+      defaultValueInt_ = 0;
+      defaultValueUint_ = 0;
       defaultValueFloat_ = 0D;
       defaultValueString_ = "";
       dataRangeInt_ = java.util.Collections.emptyList();
@@ -4535,11 +9328,11 @@ public final class ProtoContract {
               break;
             }
             case 66: {
-              com.uniledger.protos.ProtoContract.ComponentData.Builder subBuilder = null;
+              com.uniledger.protos.ProtoContract.ComponentDataSub.Builder subBuilder = null;
               if (parent_ != null) {
                 subBuilder = parent_.toBuilder();
               }
-              parent_ = input.readMessage(com.uniledger.protos.ProtoContract.ComponentData.parser(), extensionRegistry);
+              parent_ = input.readMessage(com.uniledger.protos.ProtoContract.ComponentDataSub.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(parent_);
                 parent_ = subBuilder.buildPartial();
@@ -4579,12 +9372,12 @@ public final class ProtoContract {
             }
             case 104: {
 
-              valueInt_ = input.readInt64();
+              valueInt_ = input.readInt32();
               break;
             }
             case 112: {
 
-              valueUint_ = input.readUInt64();
+              valueUint_ = input.readUInt32();
               break;
             }
             case 121: {
@@ -4600,12 +9393,12 @@ public final class ProtoContract {
             }
             case 136: {
 
-              defaultValueInt_ = input.readInt64();
+              defaultValueInt_ = input.readInt32();
               break;
             }
             case 144: {
 
-              defaultValueUint_ = input.readUInt64();
+              defaultValueUint_ = input.readUInt32();
               break;
             }
             case 153: {
@@ -4621,42 +9414,42 @@ public final class ProtoContract {
             }
             case 168: {
               if (!((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
-                dataRangeInt_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00100000;
               }
-              dataRangeInt_.add(input.readInt64());
+              dataRangeInt_.add(input.readInt32());
               break;
             }
             case 170: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00100000) == 0x00100000) && input.getBytesUntilLimit() > 0) {
-                dataRangeInt_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00100000;
               }
               while (input.getBytesUntilLimit() > 0) {
-                dataRangeInt_.add(input.readInt64());
+                dataRangeInt_.add(input.readInt32());
               }
               input.popLimit(limit);
               break;
             }
             case 176: {
               if (!((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
-                dataRangeUint_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00200000;
               }
-              dataRangeUint_.add(input.readUInt64());
+              dataRangeUint_.add(input.readUInt32());
               break;
             }
             case 178: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00200000) == 0x00200000) && input.getBytesUntilLimit() > 0) {
-                dataRangeUint_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00200000;
               }
               while (input.getBytesUntilLimit() > 0) {
-                dataRangeUint_.add(input.readUInt64());
+                dataRangeUint_.add(input.readUInt32());
               }
               input.popLimit(limit);
               break;
@@ -4979,23 +9772,23 @@ public final class ProtoContract {
     }
 
     public static final int PARENT_FIELD_NUMBER = 8;
-    private com.uniledger.protos.ProtoContract.ComponentData parent_;
+    private com.uniledger.protos.ProtoContract.ComponentDataSub parent_;
     /**
-     * <code>.protos.ComponentData Parent = 8;</code>
+     * <code>.protos.ComponentDataSub Parent = 8;</code>
      */
     public boolean hasParent() {
       return parent_ != null;
     }
     /**
-     * <code>.protos.ComponentData Parent = 8;</code>
+     * <code>.protos.ComponentDataSub Parent = 8;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentData getParent() {
-      return parent_ == null ? com.uniledger.protos.ProtoContract.ComponentData.getDefaultInstance() : parent_;
+    public com.uniledger.protos.ProtoContract.ComponentDataSub getParent() {
+      return parent_ == null ? com.uniledger.protos.ProtoContract.ComponentDataSub.getDefaultInstance() : parent_;
     }
     /**
-     * <code>.protos.ComponentData Parent = 8;</code>
+     * <code>.protos.ComponentDataSub Parent = 8;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getParentOrBuilder() {
+    public com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder getParentOrBuilder() {
       return getParent();
     }
 
@@ -5153,28 +9946,28 @@ public final class ProtoContract {
     }
 
     public static final int VALUEINT_FIELD_NUMBER = 13;
-    private long valueInt_;
+    private int valueInt_;
     /**
      * <pre>
      *Value interface{} int64
      * </pre>
      *
-     * <code>int64 ValueInt = 13;</code>
+     * <code>int32 ValueInt = 13;</code>
      */
-    public long getValueInt() {
+    public int getValueInt() {
       return valueInt_;
     }
 
     public static final int VALUEUINT_FIELD_NUMBER = 14;
-    private long valueUint_;
+    private int valueUint_;
     /**
      * <pre>
      *Value interface{} unit64
      * </pre>
      *
-     * <code>uint64 ValueUint = 14;</code>
+     * <code>uint32 ValueUint = 14;</code>
      */
-    public long getValueUint() {
+    public int getValueUint() {
       return valueUint_;
     }
 
@@ -5234,28 +10027,28 @@ public final class ProtoContract {
     }
 
     public static final int DEFAULTVALUEINT_FIELD_NUMBER = 17;
-    private long defaultValueInt_;
+    private int defaultValueInt_;
     /**
      * <pre>
      *DefaultValue interface{} int64
      * </pre>
      *
-     * <code>int64 DefaultValueInt = 17;</code>
+     * <code>int32 DefaultValueInt = 17;</code>
      */
-    public long getDefaultValueInt() {
+    public int getDefaultValueInt() {
       return defaultValueInt_;
     }
 
     public static final int DEFAULTVALUEUINT_FIELD_NUMBER = 18;
-    private long defaultValueUint_;
+    private int defaultValueUint_;
     /**
      * <pre>
      *DefaultValue interface{} unit64
      * </pre>
      *
-     * <code>uint64 DefaultValueUint = 18;</code>
+     * <code>uint32 DefaultValueUint = 18;</code>
      */
-    public long getDefaultValueUint() {
+    public int getDefaultValueUint() {
       return defaultValueUint_;
     }
 
@@ -5315,15 +10108,15 @@ public final class ProtoContract {
     }
 
     public static final int DATARANGEINT_FIELD_NUMBER = 21;
-    private java.util.List<java.lang.Long> dataRangeInt_;
+    private java.util.List<java.lang.Integer> dataRangeInt_;
     /**
      * <pre>
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    public java.util.List<java.lang.Long>
+    public java.util.List<java.lang.Integer>
         getDataRangeIntList() {
       return dataRangeInt_;
     }
@@ -5332,7 +10125,7 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
     public int getDataRangeIntCount() {
       return dataRangeInt_.size();
@@ -5342,23 +10135,23 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    public long getDataRangeInt(int index) {
+    public int getDataRangeInt(int index) {
       return dataRangeInt_.get(index);
     }
     private int dataRangeIntMemoizedSerializedSize = -1;
 
     public static final int DATARANGEUINT_FIELD_NUMBER = 22;
-    private java.util.List<java.lang.Long> dataRangeUint_;
+    private java.util.List<java.lang.Integer> dataRangeUint_;
     /**
      * <pre>
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    public java.util.List<java.lang.Long>
+    public java.util.List<java.lang.Integer>
         getDataRangeUintList() {
       return dataRangeUint_;
     }
@@ -5367,7 +10160,7 @@ public final class ProtoContract {
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
     public int getDataRangeUintCount() {
       return dataRangeUint_.size();
@@ -5377,9 +10170,9 @@ public final class ProtoContract {
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    public long getDataRangeUint(int index) {
+    public int getDataRangeUint(int index) {
       return dataRangeUint_.get(index);
     }
     private int dataRangeUintMemoizedSerializedSize = -1;
@@ -5471,11 +10264,11 @@ public final class ProtoContract {
       if (!getFormatBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 12, format_);
       }
-      if (valueInt_ != 0L) {
-        output.writeInt64(13, valueInt_);
+      if (valueInt_ != 0) {
+        output.writeInt32(13, valueInt_);
       }
-      if (valueUint_ != 0L) {
-        output.writeUInt64(14, valueUint_);
+      if (valueUint_ != 0) {
+        output.writeUInt32(14, valueUint_);
       }
       if (valueFloat_ != 0D) {
         output.writeDouble(15, valueFloat_);
@@ -5483,11 +10276,11 @@ public final class ProtoContract {
       if (!getValueStringBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 16, valueString_);
       }
-      if (defaultValueInt_ != 0L) {
-        output.writeInt64(17, defaultValueInt_);
+      if (defaultValueInt_ != 0) {
+        output.writeInt32(17, defaultValueInt_);
       }
-      if (defaultValueUint_ != 0L) {
-        output.writeUInt64(18, defaultValueUint_);
+      if (defaultValueUint_ != 0) {
+        output.writeUInt32(18, defaultValueUint_);
       }
       if (defaultValueFloat_ != 0D) {
         output.writeDouble(19, defaultValueFloat_);
@@ -5500,14 +10293,14 @@ public final class ProtoContract {
         output.writeUInt32NoTag(dataRangeIntMemoizedSerializedSize);
       }
       for (int i = 0; i < dataRangeInt_.size(); i++) {
-        output.writeInt64NoTag(dataRangeInt_.get(i));
+        output.writeInt32NoTag(dataRangeInt_.get(i));
       }
       if (getDataRangeUintList().size() > 0) {
         output.writeUInt32NoTag(178);
         output.writeUInt32NoTag(dataRangeUintMemoizedSerializedSize);
       }
       for (int i = 0; i < dataRangeUint_.size(); i++) {
-        output.writeUInt64NoTag(dataRangeUint_.get(i));
+        output.writeUInt32NoTag(dataRangeUint_.get(i));
       }
       if (getDataRangeFloatList().size() > 0) {
         output.writeUInt32NoTag(186);
@@ -5573,13 +10366,13 @@ public final class ProtoContract {
       if (!getFormatBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, format_);
       }
-      if (valueInt_ != 0L) {
+      if (valueInt_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(13, valueInt_);
+          .computeInt32Size(13, valueInt_);
       }
-      if (valueUint_ != 0L) {
+      if (valueUint_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(14, valueUint_);
+          .computeUInt32Size(14, valueUint_);
       }
       if (valueFloat_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
@@ -5588,13 +10381,13 @@ public final class ProtoContract {
       if (!getValueStringBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, valueString_);
       }
-      if (defaultValueInt_ != 0L) {
+      if (defaultValueInt_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(17, defaultValueInt_);
+          .computeInt32Size(17, defaultValueInt_);
       }
-      if (defaultValueUint_ != 0L) {
+      if (defaultValueUint_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(18, defaultValueUint_);
+          .computeUInt32Size(18, defaultValueUint_);
       }
       if (defaultValueFloat_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
@@ -5607,7 +10400,7 @@ public final class ProtoContract {
         int dataSize = 0;
         for (int i = 0; i < dataRangeInt_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt64SizeNoTag(dataRangeInt_.get(i));
+            .computeInt32SizeNoTag(dataRangeInt_.get(i));
         }
         size += dataSize;
         if (!getDataRangeIntList().isEmpty()) {
@@ -5621,7 +10414,7 @@ public final class ProtoContract {
         int dataSize = 0;
         for (int i = 0; i < dataRangeUint_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeUInt64SizeNoTag(dataRangeUint_.get(i));
+            .computeUInt32SizeNoTag(dataRangeUint_.get(i));
         }
         size += dataSize;
         if (!getDataRangeUintList().isEmpty()) {
@@ -5753,22 +10546,18 @@ public final class ProtoContract {
       hash = (37 * hash) + FORMAT_FIELD_NUMBER;
       hash = (53 * hash) + getFormat().hashCode();
       hash = (37 * hash) + VALUEINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getValueInt());
+      hash = (53 * hash) + getValueInt();
       hash = (37 * hash) + VALUEUINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getValueUint());
+      hash = (53 * hash) + getValueUint();
       hash = (37 * hash) + VALUEFLOAT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getValueFloat()));
       hash = (37 * hash) + VALUESTRING_FIELD_NUMBER;
       hash = (53 * hash) + getValueString().hashCode();
       hash = (37 * hash) + DEFAULTVALUEINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getDefaultValueInt());
+      hash = (53 * hash) + getDefaultValueInt();
       hash = (37 * hash) + DEFAULTVALUEUINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getDefaultValueUint());
+      hash = (53 * hash) + getDefaultValueUint();
       hash = (37 * hash) + DEFAULTVALUEFLOAT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getDefaultValueFloat()));
@@ -5791,6 +10580,17 @@ public final class ProtoContract {
       return hash;
     }
 
+    public static com.uniledger.protos.ProtoContract.ComponentData parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ComponentData parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static com.uniledger.protos.ProtoContract.ComponentData parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -5953,17 +10753,17 @@ public final class ProtoContract {
         internalGetMutableOptions().clear();
         format_ = "";
 
-        valueInt_ = 0L;
+        valueInt_ = 0;
 
-        valueUint_ = 0L;
+        valueUint_ = 0;
 
         valueFloat_ = 0D;
 
         valueString_ = "";
 
-        defaultValueInt_ = 0L;
+        defaultValueInt_ = 0;
 
-        defaultValueUint_ = 0L;
+        defaultValueUint_ = 0;
 
         defaultValueFloat_ = 0D;
 
@@ -6135,10 +10935,10 @@ public final class ProtoContract {
           format_ = other.format_;
           onChanged();
         }
-        if (other.getValueInt() != 0L) {
+        if (other.getValueInt() != 0) {
           setValueInt(other.getValueInt());
         }
-        if (other.getValueUint() != 0L) {
+        if (other.getValueUint() != 0) {
           setValueUint(other.getValueUint());
         }
         if (other.getValueFloat() != 0D) {
@@ -6148,10 +10948,10 @@ public final class ProtoContract {
           valueString_ = other.valueString_;
           onChanged();
         }
-        if (other.getDefaultValueInt() != 0L) {
+        if (other.getDefaultValueInt() != 0) {
           setDefaultValueInt(other.getDefaultValueInt());
         }
-        if (other.getDefaultValueUint() != 0L) {
+        if (other.getDefaultValueUint() != 0) {
           setDefaultValueUint(other.getDefaultValueUint());
         }
         if (other.getDefaultValueFloat() != 0D) {
@@ -6762,29 +11562,29 @@ public final class ProtoContract {
         return this;
       }
 
-      private com.uniledger.protos.ProtoContract.ComponentData parent_ = null;
+      private com.uniledger.protos.ProtoContract.ComponentDataSub parent_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> parentBuilder_;
+          com.uniledger.protos.ProtoContract.ComponentDataSub, com.uniledger.protos.ProtoContract.ComponentDataSub.Builder, com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder> parentBuilder_;
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
       public boolean hasParent() {
         return parentBuilder_ != null || parent_ != null;
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentData getParent() {
+      public com.uniledger.protos.ProtoContract.ComponentDataSub getParent() {
         if (parentBuilder_ == null) {
-          return parent_ == null ? com.uniledger.protos.ProtoContract.ComponentData.getDefaultInstance() : parent_;
+          return parent_ == null ? com.uniledger.protos.ProtoContract.ComponentDataSub.getDefaultInstance() : parent_;
         } else {
           return parentBuilder_.getMessage();
         }
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
-      public Builder setParent(com.uniledger.protos.ProtoContract.ComponentData value) {
+      public Builder setParent(com.uniledger.protos.ProtoContract.ComponentDataSub value) {
         if (parentBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -6798,10 +11598,10 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
       public Builder setParent(
-          com.uniledger.protos.ProtoContract.ComponentData.Builder builderForValue) {
+          com.uniledger.protos.ProtoContract.ComponentDataSub.Builder builderForValue) {
         if (parentBuilder_ == null) {
           parent_ = builderForValue.build();
           onChanged();
@@ -6812,13 +11612,13 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
-      public Builder mergeParent(com.uniledger.protos.ProtoContract.ComponentData value) {
+      public Builder mergeParent(com.uniledger.protos.ProtoContract.ComponentDataSub value) {
         if (parentBuilder_ == null) {
           if (parent_ != null) {
             parent_ =
-              com.uniledger.protos.ProtoContract.ComponentData.newBuilder(parent_).mergeFrom(value).buildPartial();
+              com.uniledger.protos.ProtoContract.ComponentDataSub.newBuilder(parent_).mergeFrom(value).buildPartial();
           } else {
             parent_ = value;
           }
@@ -6830,7 +11630,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
       public Builder clearParent() {
         if (parentBuilder_ == null) {
@@ -6844,33 +11644,33 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentData.Builder getParentBuilder() {
+      public com.uniledger.protos.ProtoContract.ComponentDataSub.Builder getParentBuilder() {
         
         onChanged();
         return getParentFieldBuilder().getBuilder();
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getParentOrBuilder() {
+      public com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder getParentOrBuilder() {
         if (parentBuilder_ != null) {
           return parentBuilder_.getMessageOrBuilder();
         } else {
           return parent_ == null ?
-              com.uniledger.protos.ProtoContract.ComponentData.getDefaultInstance() : parent_;
+              com.uniledger.protos.ProtoContract.ComponentDataSub.getDefaultInstance() : parent_;
         }
       }
       /**
-       * <code>.protos.ComponentData Parent = 8;</code>
+       * <code>.protos.ComponentDataSub Parent = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> 
+          com.uniledger.protos.ProtoContract.ComponentDataSub, com.uniledger.protos.ProtoContract.ComponentDataSub.Builder, com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder> 
           getParentFieldBuilder() {
         if (parentBuilder_ == null) {
           parentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder>(
+              com.uniledger.protos.ProtoContract.ComponentDataSub, com.uniledger.protos.ProtoContract.ComponentDataSub.Builder, com.uniledger.protos.ProtoContract.ComponentDataSubOrBuilder>(
                   getParent(),
                   getParentForChildren(),
                   isClean());
@@ -7166,15 +11966,15 @@ public final class ProtoContract {
         return this;
       }
 
-      private long valueInt_ ;
+      private int valueInt_ ;
       /**
        * <pre>
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
-      public long getValueInt() {
+      public int getValueInt() {
         return valueInt_;
       }
       /**
@@ -7182,9 +11982,9 @@ public final class ProtoContract {
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
-      public Builder setValueInt(long value) {
+      public Builder setValueInt(int value) {
         
         valueInt_ = value;
         onChanged();
@@ -7195,24 +11995,24 @@ public final class ProtoContract {
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
       public Builder clearValueInt() {
         
-        valueInt_ = 0L;
+        valueInt_ = 0;
         onChanged();
         return this;
       }
 
-      private long valueUint_ ;
+      private int valueUint_ ;
       /**
        * <pre>
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
-      public long getValueUint() {
+      public int getValueUint() {
         return valueUint_;
       }
       /**
@@ -7220,9 +12020,9 @@ public final class ProtoContract {
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
-      public Builder setValueUint(long value) {
+      public Builder setValueUint(int value) {
         
         valueUint_ = value;
         onChanged();
@@ -7233,11 +12033,11 @@ public final class ProtoContract {
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
       public Builder clearValueUint() {
         
-        valueUint_ = 0L;
+        valueUint_ = 0;
         onChanged();
         return this;
       }
@@ -7369,15 +12169,15 @@ public final class ProtoContract {
         return this;
       }
 
-      private long defaultValueInt_ ;
+      private int defaultValueInt_ ;
       /**
        * <pre>
        *DefaultValue interface{} int64
        * </pre>
        *
-       * <code>int64 DefaultValueInt = 17;</code>
+       * <code>int32 DefaultValueInt = 17;</code>
        */
-      public long getDefaultValueInt() {
+      public int getDefaultValueInt() {
         return defaultValueInt_;
       }
       /**
@@ -7385,9 +12185,9 @@ public final class ProtoContract {
        *DefaultValue interface{} int64
        * </pre>
        *
-       * <code>int64 DefaultValueInt = 17;</code>
+       * <code>int32 DefaultValueInt = 17;</code>
        */
-      public Builder setDefaultValueInt(long value) {
+      public Builder setDefaultValueInt(int value) {
         
         defaultValueInt_ = value;
         onChanged();
@@ -7398,24 +12198,24 @@ public final class ProtoContract {
        *DefaultValue interface{} int64
        * </pre>
        *
-       * <code>int64 DefaultValueInt = 17;</code>
+       * <code>int32 DefaultValueInt = 17;</code>
        */
       public Builder clearDefaultValueInt() {
         
-        defaultValueInt_ = 0L;
+        defaultValueInt_ = 0;
         onChanged();
         return this;
       }
 
-      private long defaultValueUint_ ;
+      private int defaultValueUint_ ;
       /**
        * <pre>
        *DefaultValue interface{} unit64
        * </pre>
        *
-       * <code>uint64 DefaultValueUint = 18;</code>
+       * <code>uint32 DefaultValueUint = 18;</code>
        */
-      public long getDefaultValueUint() {
+      public int getDefaultValueUint() {
         return defaultValueUint_;
       }
       /**
@@ -7423,9 +12223,9 @@ public final class ProtoContract {
        *DefaultValue interface{} unit64
        * </pre>
        *
-       * <code>uint64 DefaultValueUint = 18;</code>
+       * <code>uint32 DefaultValueUint = 18;</code>
        */
-      public Builder setDefaultValueUint(long value) {
+      public Builder setDefaultValueUint(int value) {
         
         defaultValueUint_ = value;
         onChanged();
@@ -7436,11 +12236,11 @@ public final class ProtoContract {
        *DefaultValue interface{} unit64
        * </pre>
        *
-       * <code>uint64 DefaultValueUint = 18;</code>
+       * <code>uint32 DefaultValueUint = 18;</code>
        */
       public Builder clearDefaultValueUint() {
         
-        defaultValueUint_ = 0L;
+        defaultValueUint_ = 0;
         onChanged();
         return this;
       }
@@ -7572,10 +12372,10 @@ public final class ProtoContract {
         return this;
       }
 
-      private java.util.List<java.lang.Long> dataRangeInt_ = java.util.Collections.emptyList();
+      private java.util.List<java.lang.Integer> dataRangeInt_ = java.util.Collections.emptyList();
       private void ensureDataRangeIntIsMutable() {
         if (!((bitField0_ & 0x00100000) == 0x00100000)) {
-          dataRangeInt_ = new java.util.ArrayList<java.lang.Long>(dataRangeInt_);
+          dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>(dataRangeInt_);
           bitField0_ |= 0x00100000;
          }
       }
@@ -7584,9 +12384,9 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
-      public java.util.List<java.lang.Long>
+      public java.util.List<java.lang.Integer>
           getDataRangeIntList() {
         return java.util.Collections.unmodifiableList(dataRangeInt_);
       }
@@ -7595,7 +12395,7 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public int getDataRangeIntCount() {
         return dataRangeInt_.size();
@@ -7605,9 +12405,9 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
-      public long getDataRangeInt(int index) {
+      public int getDataRangeInt(int index) {
         return dataRangeInt_.get(index);
       }
       /**
@@ -7615,10 +12415,10 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public Builder setDataRangeInt(
-          int index, long value) {
+          int index, int value) {
         ensureDataRangeIntIsMutable();
         dataRangeInt_.set(index, value);
         onChanged();
@@ -7629,9 +12429,9 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
-      public Builder addDataRangeInt(long value) {
+      public Builder addDataRangeInt(int value) {
         ensureDataRangeIntIsMutable();
         dataRangeInt_.add(value);
         onChanged();
@@ -7642,10 +12442,10 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public Builder addAllDataRangeInt(
-          java.lang.Iterable<? extends java.lang.Long> values) {
+          java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureDataRangeIntIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, dataRangeInt_);
@@ -7657,7 +12457,7 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public Builder clearDataRangeInt() {
         dataRangeInt_ = java.util.Collections.emptyList();
@@ -7666,10 +12466,10 @@ public final class ProtoContract {
         return this;
       }
 
-      private java.util.List<java.lang.Long> dataRangeUint_ = java.util.Collections.emptyList();
+      private java.util.List<java.lang.Integer> dataRangeUint_ = java.util.Collections.emptyList();
       private void ensureDataRangeUintIsMutable() {
         if (!((bitField0_ & 0x00200000) == 0x00200000)) {
-          dataRangeUint_ = new java.util.ArrayList<java.lang.Long>(dataRangeUint_);
+          dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>(dataRangeUint_);
           bitField0_ |= 0x00200000;
          }
       }
@@ -7678,9 +12478,9 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
-      public java.util.List<java.lang.Long>
+      public java.util.List<java.lang.Integer>
           getDataRangeUintList() {
         return java.util.Collections.unmodifiableList(dataRangeUint_);
       }
@@ -7689,7 +12489,7 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public int getDataRangeUintCount() {
         return dataRangeUint_.size();
@@ -7699,9 +12499,9 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
-      public long getDataRangeUint(int index) {
+      public int getDataRangeUint(int index) {
         return dataRangeUint_.get(index);
       }
       /**
@@ -7709,10 +12509,10 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public Builder setDataRangeUint(
-          int index, long value) {
+          int index, int value) {
         ensureDataRangeUintIsMutable();
         dataRangeUint_.set(index, value);
         onChanged();
@@ -7723,9 +12523,9 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
-      public Builder addDataRangeUint(long value) {
+      public Builder addDataRangeUint(int value) {
         ensureDataRangeUintIsMutable();
         dataRangeUint_.add(value);
         onChanged();
@@ -7736,10 +12536,10 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public Builder addAllDataRangeUint(
-          java.lang.Iterable<? extends java.lang.Long> values) {
+          java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureDataRangeUintIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, dataRangeUint_);
@@ -7751,7 +12551,7 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public Builder clearDataRangeUint() {
         dataRangeUint_ = java.util.Collections.emptyList();
@@ -8140,6 +12940,17 @@ public final class ProtoContract {
       return hash;
     }
 
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static com.uniledger.protos.ProtoContract.SelectBranchExpression parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -8542,6 +13353,4615 @@ public final class ProtoContract {
 
   }
 
+  public interface ContractComponentSubOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.ContractComponentSub)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    java.lang.String getCname();
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getCnameBytes();
+
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    java.lang.String getCtype();
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getCtypeBytes();
+
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    java.lang.String getCaption();
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getCaptionBytes();
+
+    /**
+     * <code>string Description = 4;</code>
+     */
+    java.lang.String getDescription();
+    /**
+     * <code>string Description = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getDescriptionBytes();
+
+    /**
+     * <code>string State = 5;</code>
+     */
+    java.lang.String getState();
+    /**
+     * <code>string State = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getStateBytes();
+
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> 
+        getPreConditionList();
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpression getPreCondition(int index);
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    int getPreConditionCount();
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getPreConditionOrBuilderList();
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getPreConditionOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> 
+        getCompleteConditionList();
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpression getCompleteCondition(int index);
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    int getCompleteConditionCount();
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getCompleteConditionOrBuilderList();
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getCompleteConditionOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> 
+        getDiscardConditionList();
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index);
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    int getDiscardConditionCount();
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getDiscardConditionOrBuilderList();
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    java.util.List<java.lang.String>
+        getNextTasksList();
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    int getNextTasksCount();
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    java.lang.String getNextTasks(int index);
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getNextTasksBytes(int index);
+
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.ComponentData> 
+        getDataListList();
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentData getDataList(int index);
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    int getDataListCount();
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> 
+        getDataListOrBuilderList();
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getDataListOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> 
+        getDataValueSetterExpressionListList();
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpression getDataValueSetterExpressionList(int index);
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    int getDataValueSetterExpressionListCount();
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getDataValueSetterExpressionListOrBuilderList();
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDataValueSetterExpressionListOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    java.util.List<java.lang.String>
+        getTaskListList();
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    int getTaskListCount();
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    java.lang.String getTaskList(int index);
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    com.google.protobuf.ByteString
+        getTaskListBytes(int index);
+
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    java.util.List<java.lang.String>
+        getSupportArgumentsList();
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    int getSupportArgumentsCount();
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    java.lang.String getSupportArguments(int index);
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    com.google.protobuf.ByteString
+        getSupportArgumentsBytes(int index);
+
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    java.util.List<java.lang.String>
+        getAgainstArgumentsList();
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    int getAgainstArgumentsCount();
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    java.lang.String getAgainstArguments(int index);
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    com.google.protobuf.ByteString
+        getAgainstArgumentsBytes(int index);
+
+    /**
+     * <code>int32 Support = 17;</code>
+     */
+    int getSupport();
+
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    java.util.List<java.lang.String>
+        getTextList();
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    int getTextCount();
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    java.lang.String getText(int index);
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    com.google.protobuf.ByteString
+        getTextBytes(int index);
+
+    /**
+     * <pre>
+     * add date: 2017-05-11 任务执行索引次数 int
+     * </pre>
+     *
+     * <code>int32 TaskExecuteIdx = 19;</code>
+     */
+    int getTaskExecuteIdx();
+
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    java.lang.String getTaskId();
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    com.google.protobuf.ByteString
+        getTaskIdBytes();
+
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> 
+        getSelectBranchesList();
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    com.uniledger.protos.ProtoContract.SelectBranchExpression getSelectBranches(int index);
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    int getSelectBranchesCount();
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    java.util.List<? extends com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+        getSelectBranchesOrBuilderList();
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder getSelectBranchesOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code protos.ContractComponentSub}
+   */
+  public  static final class ContractComponentSub extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.ContractComponentSub)
+      ContractComponentSubOrBuilder {
+    // Use ContractComponentSub.newBuilder() to construct.
+    private ContractComponentSub(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ContractComponentSub() {
+      cname_ = "";
+      ctype_ = "";
+      caption_ = "";
+      description_ = "";
+      state_ = "";
+      preCondition_ = java.util.Collections.emptyList();
+      completeCondition_ = java.util.Collections.emptyList();
+      discardCondition_ = java.util.Collections.emptyList();
+      nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      dataList_ = java.util.Collections.emptyList();
+      dataValueSetterExpressionList_ = java.util.Collections.emptyList();
+      taskList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      supportArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      againstArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      support_ = 0;
+      text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      taskExecuteIdx_ = 0;
+      taskId_ = "";
+      selectBranches_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private ContractComponentSub(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              cname_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              ctype_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              caption_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              description_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              state_ = s;
+              break;
+            }
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                preCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              preCondition_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpression.parser(), extensionRegistry));
+              break;
+            }
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                completeCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              completeCondition_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpression.parser(), extensionRegistry));
+              break;
+            }
+            case 66: {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+                discardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
+                mutable_bitField0_ |= 0x00000080;
+              }
+              discardCondition_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpression.parser(), extensionRegistry));
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+                nextTasks_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000100;
+              }
+              nextTasks_.add(s);
+              break;
+            }
+            case 82: {
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                dataList_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentData>();
+                mutable_bitField0_ |= 0x00000200;
+              }
+              dataList_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.ComponentData.parser(), extensionRegistry));
+              break;
+            }
+            case 90: {
+              if (!((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
+                dataValueSetterExpressionList_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>();
+                mutable_bitField0_ |= 0x00000400;
+              }
+              dataValueSetterExpressionList_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpression.parser(), extensionRegistry));
+              break;
+            }
+            case 114: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
+                taskList_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000800;
+              }
+              taskList_.add(s);
+              break;
+            }
+            case 122: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
+                supportArguments_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00001000;
+              }
+              supportArguments_.add(s);
+              break;
+            }
+            case 130: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
+                againstArguments_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00002000;
+              }
+              againstArguments_.add(s);
+              break;
+            }
+            case 136: {
+
+              support_ = input.readInt32();
+              break;
+            }
+            case 146: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00008000) == 0x00008000)) {
+                text_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00008000;
+              }
+              text_.add(s);
+              break;
+            }
+            case 152: {
+
+              taskExecuteIdx_ = input.readInt32();
+              break;
+            }
+            case 162: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              taskId_ = s;
+              break;
+            }
+            case 170: {
+              if (!((mutable_bitField0_ & 0x00040000) == 0x00040000)) {
+                selectBranches_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.SelectBranchExpression>();
+                mutable_bitField0_ |= 0x00040000;
+              }
+              selectBranches_.add(
+                  input.readMessage(com.uniledger.protos.ProtoContract.SelectBranchExpression.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          preCondition_ = java.util.Collections.unmodifiableList(preCondition_);
+        }
+        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+          completeCondition_ = java.util.Collections.unmodifiableList(completeCondition_);
+        }
+        if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+          discardCondition_ = java.util.Collections.unmodifiableList(discardCondition_);
+        }
+        if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+          nextTasks_ = nextTasks_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+          dataList_ = java.util.Collections.unmodifiableList(dataList_);
+        }
+        if (((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
+          dataValueSetterExpressionList_ = java.util.Collections.unmodifiableList(dataValueSetterExpressionList_);
+        }
+        if (((mutable_bitField0_ & 0x00000800) == 0x00000800)) {
+          taskList_ = taskList_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
+          supportArguments_ = supportArguments_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
+          againstArguments_ = againstArguments_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00008000) == 0x00008000)) {
+          text_ = text_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00040000) == 0x00040000)) {
+          selectBranches_ = java.util.Collections.unmodifiableList(selectBranches_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_ContractComponentSub_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.uniledger.protos.ProtoContract.internal_static_protos_ContractComponentSub_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.uniledger.protos.ProtoContract.ContractComponentSub.class, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int CNAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object cname_;
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    public java.lang.String getCname() {
+      java.lang.Object ref = cname_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        cname_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Cname = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCnameBytes() {
+      java.lang.Object ref = cname_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        cname_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CTYPE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object ctype_;
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    public java.lang.String getCtype() {
+      java.lang.Object ref = ctype_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        ctype_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Ctype = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCtypeBytes() {
+      java.lang.Object ref = ctype_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ctype_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CAPTION_FIELD_NUMBER = 3;
+    private volatile java.lang.Object caption_;
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    public java.lang.String getCaption() {
+      java.lang.Object ref = caption_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        caption_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Caption = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCaptionBytes() {
+      java.lang.Object ref = caption_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        caption_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DESCRIPTION_FIELD_NUMBER = 4;
+    private volatile java.lang.Object description_;
+    /**
+     * <code>string Description = 4;</code>
+     */
+    public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        description_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string Description = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int STATE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object state_;
+    /**
+     * <code>string State = 5;</code>
+     */
+    public java.lang.String getState() {
+      java.lang.Object ref = state_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        state_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string State = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getStateBytes() {
+      java.lang.Object ref = state_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        state_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PRECONDITION_FIELD_NUMBER = 6;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> preCondition_;
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getPreConditionList() {
+      return preCondition_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getPreConditionOrBuilderList() {
+      return preCondition_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    public int getPreConditionCount() {
+      return preCondition_.size();
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpression getPreCondition(int index) {
+      return preCondition_.get(index);
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getPreConditionOrBuilder(
+        int index) {
+      return preCondition_.get(index);
+    }
+
+    public static final int COMPLETECONDITION_FIELD_NUMBER = 7;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> completeCondition_;
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getCompleteConditionList() {
+      return completeCondition_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getCompleteConditionOrBuilderList() {
+      return completeCondition_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    public int getCompleteConditionCount() {
+      return completeCondition_.size();
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpression getCompleteCondition(int index) {
+      return completeCondition_.get(index);
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getCompleteConditionOrBuilder(
+        int index) {
+      return completeCondition_.get(index);
+    }
+
+    public static final int DISCARDCONDITION_FIELD_NUMBER = 8;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> discardCondition_;
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDiscardConditionList() {
+      return discardCondition_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getDiscardConditionOrBuilderList() {
+      return discardCondition_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    public int getDiscardConditionCount() {
+      return discardCondition_.size();
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index) {
+      return discardCondition_.get(index);
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
+        int index) {
+      return discardCondition_.get(index);
+    }
+
+    public static final int NEXTTASKS_FIELD_NUMBER = 9;
+    private com.google.protobuf.LazyStringList nextTasks_;
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getNextTasksList() {
+      return nextTasks_;
+    }
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    public int getNextTasksCount() {
+      return nextTasks_.size();
+    }
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    public java.lang.String getNextTasks(int index) {
+      return nextTasks_.get(index);
+    }
+    /**
+     * <code>repeated string NextTasks = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNextTasksBytes(int index) {
+      return nextTasks_.getByteString(index);
+    }
+
+    public static final int DATALIST_FIELD_NUMBER = 10;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentData> dataList_;
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentData> getDataListList() {
+      return dataList_;
+    }
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> 
+        getDataListOrBuilderList() {
+      return dataList_;
+    }
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    public int getDataListCount() {
+      return dataList_.size();
+    }
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentData getDataList(int index) {
+      return dataList_.get(index);
+    }
+    /**
+     * <code>repeated .protos.ComponentData DataList = 10;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getDataListOrBuilder(
+        int index) {
+      return dataList_.get(index);
+    }
+
+    public static final int DATAVALUESETTEREXPRESSIONLIST_FIELD_NUMBER = 11;
+    private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> dataValueSetterExpressionList_;
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDataValueSetterExpressionListList() {
+      return dataValueSetterExpressionList_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+        getDataValueSetterExpressionListOrBuilderList() {
+      return dataValueSetterExpressionList_;
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    public int getDataValueSetterExpressionListCount() {
+      return dataValueSetterExpressionList_.size();
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpression getDataValueSetterExpressionList(int index) {
+      return dataValueSetterExpressionList_.get(index);
+    }
+    /**
+     * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+     */
+    public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDataValueSetterExpressionListOrBuilder(
+        int index) {
+      return dataValueSetterExpressionList_.get(index);
+    }
+
+    public static final int TASKLIST_FIELD_NUMBER = 14;
+    private com.google.protobuf.LazyStringList taskList_;
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getTaskListList() {
+      return taskList_;
+    }
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    public int getTaskListCount() {
+      return taskList_.size();
+    }
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    public java.lang.String getTaskList(int index) {
+      return taskList_.get(index);
+    }
+    /**
+     * <code>repeated string TaskList = 14;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTaskListBytes(int index) {
+      return taskList_.getByteString(index);
+    }
+
+    public static final int SUPPORTARGUMENTS_FIELD_NUMBER = 15;
+    private com.google.protobuf.LazyStringList supportArguments_;
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getSupportArgumentsList() {
+      return supportArguments_;
+    }
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    public int getSupportArgumentsCount() {
+      return supportArguments_.size();
+    }
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    public java.lang.String getSupportArguments(int index) {
+      return supportArguments_.get(index);
+    }
+    /**
+     * <code>repeated string SupportArguments = 15;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSupportArgumentsBytes(int index) {
+      return supportArguments_.getByteString(index);
+    }
+
+    public static final int AGAINSTARGUMENTS_FIELD_NUMBER = 16;
+    private com.google.protobuf.LazyStringList againstArguments_;
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getAgainstArgumentsList() {
+      return againstArguments_;
+    }
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    public int getAgainstArgumentsCount() {
+      return againstArguments_.size();
+    }
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    public java.lang.String getAgainstArguments(int index) {
+      return againstArguments_.get(index);
+    }
+    /**
+     * <code>repeated string AgainstArguments = 16;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAgainstArgumentsBytes(int index) {
+      return againstArguments_.getByteString(index);
+    }
+
+    public static final int SUPPORT_FIELD_NUMBER = 17;
+    private int support_;
+    /**
+     * <code>int32 Support = 17;</code>
+     */
+    public int getSupport() {
+      return support_;
+    }
+
+    public static final int TEXT_FIELD_NUMBER = 18;
+    private com.google.protobuf.LazyStringList text_;
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getTextList() {
+      return text_;
+    }
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    public int getTextCount() {
+      return text_.size();
+    }
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    public java.lang.String getText(int index) {
+      return text_.get(index);
+    }
+    /**
+     * <code>repeated string Text = 18;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTextBytes(int index) {
+      return text_.getByteString(index);
+    }
+
+    public static final int TASKEXECUTEIDX_FIELD_NUMBER = 19;
+    private int taskExecuteIdx_;
+    /**
+     * <pre>
+     * add date: 2017-05-11 任务执行索引次数 int
+     * </pre>
+     *
+     * <code>int32 TaskExecuteIdx = 19;</code>
+     */
+    public int getTaskExecuteIdx() {
+      return taskExecuteIdx_;
+    }
+
+    public static final int TASKID_FIELD_NUMBER = 20;
+    private volatile java.lang.Object taskId_;
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    public java.lang.String getTaskId() {
+      java.lang.Object ref = taskId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        taskId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string TaskId = 20;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTaskIdBytes() {
+      java.lang.Object ref = taskId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        taskId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SELECTBRANCHES_FIELD_NUMBER = 21;
+    private java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> selectBranches_;
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> getSelectBranchesList() {
+      return selectBranches_;
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public java.util.List<? extends com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+        getSelectBranchesOrBuilderList() {
+      return selectBranches_;
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public int getSelectBranchesCount() {
+      return selectBranches_.size();
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public com.uniledger.protos.ProtoContract.SelectBranchExpression getSelectBranches(int index) {
+      return selectBranches_.get(index);
+    }
+    /**
+     * <pre>
+     *2017-05-27 17:10:00 add
+     * </pre>
+     *
+     * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+     */
+    public com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder getSelectBranchesOrBuilder(
+        int index) {
+      return selectBranches_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getCnameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, cname_);
+      }
+      if (!getCtypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ctype_);
+      }
+      if (!getCaptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, caption_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
+      }
+      if (!getStateBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, state_);
+      }
+      for (int i = 0; i < preCondition_.size(); i++) {
+        output.writeMessage(6, preCondition_.get(i));
+      }
+      for (int i = 0; i < completeCondition_.size(); i++) {
+        output.writeMessage(7, completeCondition_.get(i));
+      }
+      for (int i = 0; i < discardCondition_.size(); i++) {
+        output.writeMessage(8, discardCondition_.get(i));
+      }
+      for (int i = 0; i < nextTasks_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, nextTasks_.getRaw(i));
+      }
+      for (int i = 0; i < dataList_.size(); i++) {
+        output.writeMessage(10, dataList_.get(i));
+      }
+      for (int i = 0; i < dataValueSetterExpressionList_.size(); i++) {
+        output.writeMessage(11, dataValueSetterExpressionList_.get(i));
+      }
+      for (int i = 0; i < taskList_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 14, taskList_.getRaw(i));
+      }
+      for (int i = 0; i < supportArguments_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 15, supportArguments_.getRaw(i));
+      }
+      for (int i = 0; i < againstArguments_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 16, againstArguments_.getRaw(i));
+      }
+      if (support_ != 0) {
+        output.writeInt32(17, support_);
+      }
+      for (int i = 0; i < text_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 18, text_.getRaw(i));
+      }
+      if (taskExecuteIdx_ != 0) {
+        output.writeInt32(19, taskExecuteIdx_);
+      }
+      if (!getTaskIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 20, taskId_);
+      }
+      for (int i = 0; i < selectBranches_.size(); i++) {
+        output.writeMessage(21, selectBranches_.get(i));
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getCnameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, cname_);
+      }
+      if (!getCtypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ctype_);
+      }
+      if (!getCaptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, caption_);
+      }
+      if (!getDescriptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
+      }
+      if (!getStateBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, state_);
+      }
+      for (int i = 0; i < preCondition_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, preCondition_.get(i));
+      }
+      for (int i = 0; i < completeCondition_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, completeCondition_.get(i));
+      }
+      for (int i = 0; i < discardCondition_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(8, discardCondition_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < nextTasks_.size(); i++) {
+          dataSize += computeStringSizeNoTag(nextTasks_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getNextTasksList().size();
+      }
+      for (int i = 0; i < dataList_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, dataList_.get(i));
+      }
+      for (int i = 0; i < dataValueSetterExpressionList_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(11, dataValueSetterExpressionList_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < taskList_.size(); i++) {
+          dataSize += computeStringSizeNoTag(taskList_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getTaskListList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < supportArguments_.size(); i++) {
+          dataSize += computeStringSizeNoTag(supportArguments_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getSupportArgumentsList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < againstArguments_.size(); i++) {
+          dataSize += computeStringSizeNoTag(againstArguments_.getRaw(i));
+        }
+        size += dataSize;
+        size += 2 * getAgainstArgumentsList().size();
+      }
+      if (support_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(17, support_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < text_.size(); i++) {
+          dataSize += computeStringSizeNoTag(text_.getRaw(i));
+        }
+        size += dataSize;
+        size += 2 * getTextList().size();
+      }
+      if (taskExecuteIdx_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(19, taskExecuteIdx_);
+      }
+      if (!getTaskIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, taskId_);
+      }
+      for (int i = 0; i < selectBranches_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(21, selectBranches_.get(i));
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.uniledger.protos.ProtoContract.ContractComponentSub)) {
+        return super.equals(obj);
+      }
+      com.uniledger.protos.ProtoContract.ContractComponentSub other = (com.uniledger.protos.ProtoContract.ContractComponentSub) obj;
+
+      boolean result = true;
+      result = result && getCname()
+          .equals(other.getCname());
+      result = result && getCtype()
+          .equals(other.getCtype());
+      result = result && getCaption()
+          .equals(other.getCaption());
+      result = result && getDescription()
+          .equals(other.getDescription());
+      result = result && getState()
+          .equals(other.getState());
+      result = result && getPreConditionList()
+          .equals(other.getPreConditionList());
+      result = result && getCompleteConditionList()
+          .equals(other.getCompleteConditionList());
+      result = result && getDiscardConditionList()
+          .equals(other.getDiscardConditionList());
+      result = result && getNextTasksList()
+          .equals(other.getNextTasksList());
+      result = result && getDataListList()
+          .equals(other.getDataListList());
+      result = result && getDataValueSetterExpressionListList()
+          .equals(other.getDataValueSetterExpressionListList());
+      result = result && getTaskListList()
+          .equals(other.getTaskListList());
+      result = result && getSupportArgumentsList()
+          .equals(other.getSupportArgumentsList());
+      result = result && getAgainstArgumentsList()
+          .equals(other.getAgainstArgumentsList());
+      result = result && (getSupport()
+          == other.getSupport());
+      result = result && getTextList()
+          .equals(other.getTextList());
+      result = result && (getTaskExecuteIdx()
+          == other.getTaskExecuteIdx());
+      result = result && getTaskId()
+          .equals(other.getTaskId());
+      result = result && getSelectBranchesList()
+          .equals(other.getSelectBranchesList());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + CNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getCname().hashCode();
+      hash = (37 * hash) + CTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getCtype().hashCode();
+      hash = (37 * hash) + CAPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getCaption().hashCode();
+      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+      hash = (53 * hash) + getDescription().hashCode();
+      hash = (37 * hash) + STATE_FIELD_NUMBER;
+      hash = (53 * hash) + getState().hashCode();
+      if (getPreConditionCount() > 0) {
+        hash = (37 * hash) + PRECONDITION_FIELD_NUMBER;
+        hash = (53 * hash) + getPreConditionList().hashCode();
+      }
+      if (getCompleteConditionCount() > 0) {
+        hash = (37 * hash) + COMPLETECONDITION_FIELD_NUMBER;
+        hash = (53 * hash) + getCompleteConditionList().hashCode();
+      }
+      if (getDiscardConditionCount() > 0) {
+        hash = (37 * hash) + DISCARDCONDITION_FIELD_NUMBER;
+        hash = (53 * hash) + getDiscardConditionList().hashCode();
+      }
+      if (getNextTasksCount() > 0) {
+        hash = (37 * hash) + NEXTTASKS_FIELD_NUMBER;
+        hash = (53 * hash) + getNextTasksList().hashCode();
+      }
+      if (getDataListCount() > 0) {
+        hash = (37 * hash) + DATALIST_FIELD_NUMBER;
+        hash = (53 * hash) + getDataListList().hashCode();
+      }
+      if (getDataValueSetterExpressionListCount() > 0) {
+        hash = (37 * hash) + DATAVALUESETTEREXPRESSIONLIST_FIELD_NUMBER;
+        hash = (53 * hash) + getDataValueSetterExpressionListList().hashCode();
+      }
+      if (getTaskListCount() > 0) {
+        hash = (37 * hash) + TASKLIST_FIELD_NUMBER;
+        hash = (53 * hash) + getTaskListList().hashCode();
+      }
+      if (getSupportArgumentsCount() > 0) {
+        hash = (37 * hash) + SUPPORTARGUMENTS_FIELD_NUMBER;
+        hash = (53 * hash) + getSupportArgumentsList().hashCode();
+      }
+      if (getAgainstArgumentsCount() > 0) {
+        hash = (37 * hash) + AGAINSTARGUMENTS_FIELD_NUMBER;
+        hash = (53 * hash) + getAgainstArgumentsList().hashCode();
+      }
+      hash = (37 * hash) + SUPPORT_FIELD_NUMBER;
+      hash = (53 * hash) + getSupport();
+      if (getTextCount() > 0) {
+        hash = (37 * hash) + TEXT_FIELD_NUMBER;
+        hash = (53 * hash) + getTextList().hashCode();
+      }
+      hash = (37 * hash) + TASKEXECUTEIDX_FIELD_NUMBER;
+      hash = (53 * hash) + getTaskExecuteIdx();
+      hash = (37 * hash) + TASKID_FIELD_NUMBER;
+      hash = (53 * hash) + getTaskId().hashCode();
+      if (getSelectBranchesCount() > 0) {
+        hash = (37 * hash) + SELECTBRANCHES_FIELD_NUMBER;
+        hash = (53 * hash) + getSelectBranchesList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.uniledger.protos.ProtoContract.ContractComponentSub prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.ContractComponentSub}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.ContractComponentSub)
+        com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ContractComponentSub_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ContractComponentSub_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.uniledger.protos.ProtoContract.ContractComponentSub.class, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder.class);
+      }
+
+      // Construct using com.uniledger.protos.ProtoContract.ContractComponentSub.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getPreConditionFieldBuilder();
+          getCompleteConditionFieldBuilder();
+          getDiscardConditionFieldBuilder();
+          getDataListFieldBuilder();
+          getDataValueSetterExpressionListFieldBuilder();
+          getSelectBranchesFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        cname_ = "";
+
+        ctype_ = "";
+
+        caption_ = "";
+
+        description_ = "";
+
+        state_ = "";
+
+        if (preConditionBuilder_ == null) {
+          preCondition_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        } else {
+          preConditionBuilder_.clear();
+        }
+        if (completeConditionBuilder_ == null) {
+          completeCondition_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000040);
+        } else {
+          completeConditionBuilder_.clear();
+        }
+        if (discardConditionBuilder_ == null) {
+          discardCondition_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000080);
+        } else {
+          discardConditionBuilder_.clear();
+        }
+        nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000100);
+        if (dataListBuilder_ == null) {
+          dataList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000200);
+        } else {
+          dataListBuilder_.clear();
+        }
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          dataValueSetterExpressionList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000400);
+        } else {
+          dataValueSetterExpressionListBuilder_.clear();
+        }
+        taskList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000800);
+        supportArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00001000);
+        againstArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00002000);
+        support_ = 0;
+
+        text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00008000);
+        taskExecuteIdx_ = 0;
+
+        taskId_ = "";
+
+        if (selectBranchesBuilder_ == null) {
+          selectBranches_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00040000);
+        } else {
+          selectBranchesBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.uniledger.protos.ProtoContract.internal_static_protos_ContractComponentSub_descriptor;
+      }
+
+      public com.uniledger.protos.ProtoContract.ContractComponentSub getDefaultInstanceForType() {
+        return com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance();
+      }
+
+      public com.uniledger.protos.ProtoContract.ContractComponentSub build() {
+        com.uniledger.protos.ProtoContract.ContractComponentSub result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.uniledger.protos.ProtoContract.ContractComponentSub buildPartial() {
+        com.uniledger.protos.ProtoContract.ContractComponentSub result = new com.uniledger.protos.ProtoContract.ContractComponentSub(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.cname_ = cname_;
+        result.ctype_ = ctype_;
+        result.caption_ = caption_;
+        result.description_ = description_;
+        result.state_ = state_;
+        if (preConditionBuilder_ == null) {
+          if (((bitField0_ & 0x00000020) == 0x00000020)) {
+            preCondition_ = java.util.Collections.unmodifiableList(preCondition_);
+            bitField0_ = (bitField0_ & ~0x00000020);
+          }
+          result.preCondition_ = preCondition_;
+        } else {
+          result.preCondition_ = preConditionBuilder_.build();
+        }
+        if (completeConditionBuilder_ == null) {
+          if (((bitField0_ & 0x00000040) == 0x00000040)) {
+            completeCondition_ = java.util.Collections.unmodifiableList(completeCondition_);
+            bitField0_ = (bitField0_ & ~0x00000040);
+          }
+          result.completeCondition_ = completeCondition_;
+        } else {
+          result.completeCondition_ = completeConditionBuilder_.build();
+        }
+        if (discardConditionBuilder_ == null) {
+          if (((bitField0_ & 0x00000080) == 0x00000080)) {
+            discardCondition_ = java.util.Collections.unmodifiableList(discardCondition_);
+            bitField0_ = (bitField0_ & ~0x00000080);
+          }
+          result.discardCondition_ = discardCondition_;
+        } else {
+          result.discardCondition_ = discardConditionBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          nextTasks_ = nextTasks_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000100);
+        }
+        result.nextTasks_ = nextTasks_;
+        if (dataListBuilder_ == null) {
+          if (((bitField0_ & 0x00000200) == 0x00000200)) {
+            dataList_ = java.util.Collections.unmodifiableList(dataList_);
+            bitField0_ = (bitField0_ & ~0x00000200);
+          }
+          result.dataList_ = dataList_;
+        } else {
+          result.dataList_ = dataListBuilder_.build();
+        }
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          if (((bitField0_ & 0x00000400) == 0x00000400)) {
+            dataValueSetterExpressionList_ = java.util.Collections.unmodifiableList(dataValueSetterExpressionList_);
+            bitField0_ = (bitField0_ & ~0x00000400);
+          }
+          result.dataValueSetterExpressionList_ = dataValueSetterExpressionList_;
+        } else {
+          result.dataValueSetterExpressionList_ = dataValueSetterExpressionListBuilder_.build();
+        }
+        if (((bitField0_ & 0x00000800) == 0x00000800)) {
+          taskList_ = taskList_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000800);
+        }
+        result.taskList_ = taskList_;
+        if (((bitField0_ & 0x00001000) == 0x00001000)) {
+          supportArguments_ = supportArguments_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00001000);
+        }
+        result.supportArguments_ = supportArguments_;
+        if (((bitField0_ & 0x00002000) == 0x00002000)) {
+          againstArguments_ = againstArguments_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00002000);
+        }
+        result.againstArguments_ = againstArguments_;
+        result.support_ = support_;
+        if (((bitField0_ & 0x00008000) == 0x00008000)) {
+          text_ = text_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00008000);
+        }
+        result.text_ = text_;
+        result.taskExecuteIdx_ = taskExecuteIdx_;
+        result.taskId_ = taskId_;
+        if (selectBranchesBuilder_ == null) {
+          if (((bitField0_ & 0x00040000) == 0x00040000)) {
+            selectBranches_ = java.util.Collections.unmodifiableList(selectBranches_);
+            bitField0_ = (bitField0_ & ~0x00040000);
+          }
+          result.selectBranches_ = selectBranches_;
+        } else {
+          result.selectBranches_ = selectBranchesBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.uniledger.protos.ProtoContract.ContractComponentSub) {
+          return mergeFrom((com.uniledger.protos.ProtoContract.ContractComponentSub)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.uniledger.protos.ProtoContract.ContractComponentSub other) {
+        if (other == com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance()) return this;
+        if (!other.getCname().isEmpty()) {
+          cname_ = other.cname_;
+          onChanged();
+        }
+        if (!other.getCtype().isEmpty()) {
+          ctype_ = other.ctype_;
+          onChanged();
+        }
+        if (!other.getCaption().isEmpty()) {
+          caption_ = other.caption_;
+          onChanged();
+        }
+        if (!other.getDescription().isEmpty()) {
+          description_ = other.description_;
+          onChanged();
+        }
+        if (!other.getState().isEmpty()) {
+          state_ = other.state_;
+          onChanged();
+        }
+        if (preConditionBuilder_ == null) {
+          if (!other.preCondition_.isEmpty()) {
+            if (preCondition_.isEmpty()) {
+              preCondition_ = other.preCondition_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+            } else {
+              ensurePreConditionIsMutable();
+              preCondition_.addAll(other.preCondition_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.preCondition_.isEmpty()) {
+            if (preConditionBuilder_.isEmpty()) {
+              preConditionBuilder_.dispose();
+              preConditionBuilder_ = null;
+              preCondition_ = other.preCondition_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+              preConditionBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getPreConditionFieldBuilder() : null;
+            } else {
+              preConditionBuilder_.addAllMessages(other.preCondition_);
+            }
+          }
+        }
+        if (completeConditionBuilder_ == null) {
+          if (!other.completeCondition_.isEmpty()) {
+            if (completeCondition_.isEmpty()) {
+              completeCondition_ = other.completeCondition_;
+              bitField0_ = (bitField0_ & ~0x00000040);
+            } else {
+              ensureCompleteConditionIsMutable();
+              completeCondition_.addAll(other.completeCondition_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.completeCondition_.isEmpty()) {
+            if (completeConditionBuilder_.isEmpty()) {
+              completeConditionBuilder_.dispose();
+              completeConditionBuilder_ = null;
+              completeCondition_ = other.completeCondition_;
+              bitField0_ = (bitField0_ & ~0x00000040);
+              completeConditionBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getCompleteConditionFieldBuilder() : null;
+            } else {
+              completeConditionBuilder_.addAllMessages(other.completeCondition_);
+            }
+          }
+        }
+        if (discardConditionBuilder_ == null) {
+          if (!other.discardCondition_.isEmpty()) {
+            if (discardCondition_.isEmpty()) {
+              discardCondition_ = other.discardCondition_;
+              bitField0_ = (bitField0_ & ~0x00000080);
+            } else {
+              ensureDiscardConditionIsMutable();
+              discardCondition_.addAll(other.discardCondition_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.discardCondition_.isEmpty()) {
+            if (discardConditionBuilder_.isEmpty()) {
+              discardConditionBuilder_.dispose();
+              discardConditionBuilder_ = null;
+              discardCondition_ = other.discardCondition_;
+              bitField0_ = (bitField0_ & ~0x00000080);
+              discardConditionBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDiscardConditionFieldBuilder() : null;
+            } else {
+              discardConditionBuilder_.addAllMessages(other.discardCondition_);
+            }
+          }
+        }
+        if (!other.nextTasks_.isEmpty()) {
+          if (nextTasks_.isEmpty()) {
+            nextTasks_ = other.nextTasks_;
+            bitField0_ = (bitField0_ & ~0x00000100);
+          } else {
+            ensureNextTasksIsMutable();
+            nextTasks_.addAll(other.nextTasks_);
+          }
+          onChanged();
+        }
+        if (dataListBuilder_ == null) {
+          if (!other.dataList_.isEmpty()) {
+            if (dataList_.isEmpty()) {
+              dataList_ = other.dataList_;
+              bitField0_ = (bitField0_ & ~0x00000200);
+            } else {
+              ensureDataListIsMutable();
+              dataList_.addAll(other.dataList_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.dataList_.isEmpty()) {
+            if (dataListBuilder_.isEmpty()) {
+              dataListBuilder_.dispose();
+              dataListBuilder_ = null;
+              dataList_ = other.dataList_;
+              bitField0_ = (bitField0_ & ~0x00000200);
+              dataListBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDataListFieldBuilder() : null;
+            } else {
+              dataListBuilder_.addAllMessages(other.dataList_);
+            }
+          }
+        }
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          if (!other.dataValueSetterExpressionList_.isEmpty()) {
+            if (dataValueSetterExpressionList_.isEmpty()) {
+              dataValueSetterExpressionList_ = other.dataValueSetterExpressionList_;
+              bitField0_ = (bitField0_ & ~0x00000400);
+            } else {
+              ensureDataValueSetterExpressionListIsMutable();
+              dataValueSetterExpressionList_.addAll(other.dataValueSetterExpressionList_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.dataValueSetterExpressionList_.isEmpty()) {
+            if (dataValueSetterExpressionListBuilder_.isEmpty()) {
+              dataValueSetterExpressionListBuilder_.dispose();
+              dataValueSetterExpressionListBuilder_ = null;
+              dataValueSetterExpressionList_ = other.dataValueSetterExpressionList_;
+              bitField0_ = (bitField0_ & ~0x00000400);
+              dataValueSetterExpressionListBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getDataValueSetterExpressionListFieldBuilder() : null;
+            } else {
+              dataValueSetterExpressionListBuilder_.addAllMessages(other.dataValueSetterExpressionList_);
+            }
+          }
+        }
+        if (!other.taskList_.isEmpty()) {
+          if (taskList_.isEmpty()) {
+            taskList_ = other.taskList_;
+            bitField0_ = (bitField0_ & ~0x00000800);
+          } else {
+            ensureTaskListIsMutable();
+            taskList_.addAll(other.taskList_);
+          }
+          onChanged();
+        }
+        if (!other.supportArguments_.isEmpty()) {
+          if (supportArguments_.isEmpty()) {
+            supportArguments_ = other.supportArguments_;
+            bitField0_ = (bitField0_ & ~0x00001000);
+          } else {
+            ensureSupportArgumentsIsMutable();
+            supportArguments_.addAll(other.supportArguments_);
+          }
+          onChanged();
+        }
+        if (!other.againstArguments_.isEmpty()) {
+          if (againstArguments_.isEmpty()) {
+            againstArguments_ = other.againstArguments_;
+            bitField0_ = (bitField0_ & ~0x00002000);
+          } else {
+            ensureAgainstArgumentsIsMutable();
+            againstArguments_.addAll(other.againstArguments_);
+          }
+          onChanged();
+        }
+        if (other.getSupport() != 0) {
+          setSupport(other.getSupport());
+        }
+        if (!other.text_.isEmpty()) {
+          if (text_.isEmpty()) {
+            text_ = other.text_;
+            bitField0_ = (bitField0_ & ~0x00008000);
+          } else {
+            ensureTextIsMutable();
+            text_.addAll(other.text_);
+          }
+          onChanged();
+        }
+        if (other.getTaskExecuteIdx() != 0) {
+          setTaskExecuteIdx(other.getTaskExecuteIdx());
+        }
+        if (!other.getTaskId().isEmpty()) {
+          taskId_ = other.taskId_;
+          onChanged();
+        }
+        if (selectBranchesBuilder_ == null) {
+          if (!other.selectBranches_.isEmpty()) {
+            if (selectBranches_.isEmpty()) {
+              selectBranches_ = other.selectBranches_;
+              bitField0_ = (bitField0_ & ~0x00040000);
+            } else {
+              ensureSelectBranchesIsMutable();
+              selectBranches_.addAll(other.selectBranches_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.selectBranches_.isEmpty()) {
+            if (selectBranchesBuilder_.isEmpty()) {
+              selectBranchesBuilder_.dispose();
+              selectBranchesBuilder_ = null;
+              selectBranches_ = other.selectBranches_;
+              bitField0_ = (bitField0_ & ~0x00040000);
+              selectBranchesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getSelectBranchesFieldBuilder() : null;
+            } else {
+              selectBranchesBuilder_.addAllMessages(other.selectBranches_);
+            }
+          }
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.uniledger.protos.ProtoContract.ContractComponentSub parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.uniledger.protos.ProtoContract.ContractComponentSub) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object cname_ = "";
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public java.lang.String getCname() {
+        java.lang.Object ref = cname_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          cname_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCnameBytes() {
+        java.lang.Object ref = cname_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          cname_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder setCname(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        cname_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder clearCname() {
+        
+        cname_ = getDefaultInstance().getCname();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Cname = 1;</code>
+       */
+      public Builder setCnameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        cname_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object ctype_ = "";
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public java.lang.String getCtype() {
+        java.lang.Object ref = ctype_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          ctype_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCtypeBytes() {
+        java.lang.Object ref = ctype_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ctype_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder setCtype(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ctype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder clearCtype() {
+        
+        ctype_ = getDefaultInstance().getCtype();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Ctype = 2;</code>
+       */
+      public Builder setCtypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        ctype_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object caption_ = "";
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public java.lang.String getCaption() {
+        java.lang.Object ref = caption_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          caption_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCaptionBytes() {
+        java.lang.Object ref = caption_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          caption_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder setCaption(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        caption_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder clearCaption() {
+        
+        caption_ = getDefaultInstance().getCaption();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Caption = 3;</code>
+       */
+      public Builder setCaptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        caption_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object description_ = "";
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public java.lang.String getDescription() {
+        java.lang.Object ref = description_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          description_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          description_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder setDescription(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        description_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder clearDescription() {
+        
+        description_ = getDefaultInstance().getDescription();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string Description = 4;</code>
+       */
+      public Builder setDescriptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        description_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object state_ = "";
+      /**
+       * <code>string State = 5;</code>
+       */
+      public java.lang.String getState() {
+        java.lang.Object ref = state_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          state_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string State = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getStateBytes() {
+        java.lang.Object ref = state_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          state_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string State = 5;</code>
+       */
+      public Builder setState(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        state_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string State = 5;</code>
+       */
+      public Builder clearState() {
+        
+        state_ = getDefaultInstance().getState();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string State = 5;</code>
+       */
+      public Builder setStateBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        state_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> preCondition_ =
+        java.util.Collections.emptyList();
+      private void ensurePreConditionIsMutable() {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+          preCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(preCondition_);
+          bitField0_ |= 0x00000020;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> preConditionBuilder_;
+
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getPreConditionList() {
+        if (preConditionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(preCondition_);
+        } else {
+          return preConditionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public int getPreConditionCount() {
+        if (preConditionBuilder_ == null) {
+          return preCondition_.size();
+        } else {
+          return preConditionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression getPreCondition(int index) {
+        if (preConditionBuilder_ == null) {
+          return preCondition_.get(index);
+        } else {
+          return preConditionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder setPreCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (preConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePreConditionIsMutable();
+          preCondition_.set(index, value);
+          onChanged();
+        } else {
+          preConditionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder setPreCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (preConditionBuilder_ == null) {
+          ensurePreConditionIsMutable();
+          preCondition_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          preConditionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder addPreCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (preConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePreConditionIsMutable();
+          preCondition_.add(value);
+          onChanged();
+        } else {
+          preConditionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder addPreCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (preConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePreConditionIsMutable();
+          preCondition_.add(index, value);
+          onChanged();
+        } else {
+          preConditionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder addPreCondition(
+          com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (preConditionBuilder_ == null) {
+          ensurePreConditionIsMutable();
+          preCondition_.add(builderForValue.build());
+          onChanged();
+        } else {
+          preConditionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder addPreCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (preConditionBuilder_ == null) {
+          ensurePreConditionIsMutable();
+          preCondition_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          preConditionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder addAllPreCondition(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentsExpression> values) {
+        if (preConditionBuilder_ == null) {
+          ensurePreConditionIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, preCondition_);
+          onChanged();
+        } else {
+          preConditionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder clearPreCondition() {
+        if (preConditionBuilder_ == null) {
+          preCondition_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+          onChanged();
+        } else {
+          preConditionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public Builder removePreCondition(int index) {
+        if (preConditionBuilder_ == null) {
+          ensurePreConditionIsMutable();
+          preCondition_.remove(index);
+          onChanged();
+        } else {
+          preConditionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getPreConditionBuilder(
+          int index) {
+        return getPreConditionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getPreConditionOrBuilder(
+          int index) {
+        if (preConditionBuilder_ == null) {
+          return preCondition_.get(index);  } else {
+          return preConditionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+           getPreConditionOrBuilderList() {
+        if (preConditionBuilder_ != null) {
+          return preConditionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(preCondition_);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addPreConditionBuilder() {
+        return getPreConditionFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addPreConditionBuilder(
+          int index) {
+        return getPreConditionFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression PreCondition = 6;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression.Builder> 
+           getPreConditionBuilderList() {
+        return getPreConditionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+          getPreConditionFieldBuilder() {
+        if (preConditionBuilder_ == null) {
+          preConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder>(
+                  preCondition_,
+                  ((bitField0_ & 0x00000020) == 0x00000020),
+                  getParentForChildren(),
+                  isClean());
+          preCondition_ = null;
+        }
+        return preConditionBuilder_;
+      }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> completeCondition_ =
+        java.util.Collections.emptyList();
+      private void ensureCompleteConditionIsMutable() {
+        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
+          completeCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(completeCondition_);
+          bitField0_ |= 0x00000040;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> completeConditionBuilder_;
+
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getCompleteConditionList() {
+        if (completeConditionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(completeCondition_);
+        } else {
+          return completeConditionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public int getCompleteConditionCount() {
+        if (completeConditionBuilder_ == null) {
+          return completeCondition_.size();
+        } else {
+          return completeConditionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression getCompleteCondition(int index) {
+        if (completeConditionBuilder_ == null) {
+          return completeCondition_.get(index);
+        } else {
+          return completeConditionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder setCompleteCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (completeConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureCompleteConditionIsMutable();
+          completeCondition_.set(index, value);
+          onChanged();
+        } else {
+          completeConditionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder setCompleteCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (completeConditionBuilder_ == null) {
+          ensureCompleteConditionIsMutable();
+          completeCondition_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          completeConditionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder addCompleteCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (completeConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureCompleteConditionIsMutable();
+          completeCondition_.add(value);
+          onChanged();
+        } else {
+          completeConditionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder addCompleteCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (completeConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureCompleteConditionIsMutable();
+          completeCondition_.add(index, value);
+          onChanged();
+        } else {
+          completeConditionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder addCompleteCondition(
+          com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (completeConditionBuilder_ == null) {
+          ensureCompleteConditionIsMutable();
+          completeCondition_.add(builderForValue.build());
+          onChanged();
+        } else {
+          completeConditionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder addCompleteCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (completeConditionBuilder_ == null) {
+          ensureCompleteConditionIsMutable();
+          completeCondition_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          completeConditionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder addAllCompleteCondition(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentsExpression> values) {
+        if (completeConditionBuilder_ == null) {
+          ensureCompleteConditionIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, completeCondition_);
+          onChanged();
+        } else {
+          completeConditionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder clearCompleteCondition() {
+        if (completeConditionBuilder_ == null) {
+          completeCondition_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000040);
+          onChanged();
+        } else {
+          completeConditionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public Builder removeCompleteCondition(int index) {
+        if (completeConditionBuilder_ == null) {
+          ensureCompleteConditionIsMutable();
+          completeCondition_.remove(index);
+          onChanged();
+        } else {
+          completeConditionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getCompleteConditionBuilder(
+          int index) {
+        return getCompleteConditionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getCompleteConditionOrBuilder(
+          int index) {
+        if (completeConditionBuilder_ == null) {
+          return completeCondition_.get(index);  } else {
+          return completeConditionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+           getCompleteConditionOrBuilderList() {
+        if (completeConditionBuilder_ != null) {
+          return completeConditionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(completeCondition_);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addCompleteConditionBuilder() {
+        return getCompleteConditionFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addCompleteConditionBuilder(
+          int index) {
+        return getCompleteConditionFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression CompleteCondition = 7;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression.Builder> 
+           getCompleteConditionBuilderList() {
+        return getCompleteConditionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+          getCompleteConditionFieldBuilder() {
+        if (completeConditionBuilder_ == null) {
+          completeConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder>(
+                  completeCondition_,
+                  ((bitField0_ & 0x00000040) == 0x00000040),
+                  getParentForChildren(),
+                  isClean());
+          completeCondition_ = null;
+        }
+        return completeConditionBuilder_;
+      }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> discardCondition_ =
+        java.util.Collections.emptyList();
+      private void ensureDiscardConditionIsMutable() {
+        if (!((bitField0_ & 0x00000080) == 0x00000080)) {
+          discardCondition_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(discardCondition_);
+          bitField0_ |= 0x00000080;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> discardConditionBuilder_;
+
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDiscardConditionList() {
+        if (discardConditionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(discardCondition_);
+        } else {
+          return discardConditionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public int getDiscardConditionCount() {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.size();
+        } else {
+          return discardConditionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression getDiscardCondition(int index) {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.get(index);
+        } else {
+          return discardConditionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder setDiscardCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (discardConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDiscardConditionIsMutable();
+          discardCondition_.set(index, value);
+          onChanged();
+        } else {
+          discardConditionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder setDiscardCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          discardConditionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder addDiscardCondition(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (discardConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(value);
+          onChanged();
+        } else {
+          discardConditionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder addDiscardCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (discardConditionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(index, value);
+          onChanged();
+        } else {
+          discardConditionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder addDiscardCondition(
+          com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(builderForValue.build());
+          onChanged();
+        } else {
+          discardConditionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder addDiscardCondition(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          discardConditionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder addAllDiscardCondition(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentsExpression> values) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, discardCondition_);
+          onChanged();
+        } else {
+          discardConditionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder clearDiscardCondition() {
+        if (discardConditionBuilder_ == null) {
+          discardCondition_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000080);
+          onChanged();
+        } else {
+          discardConditionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public Builder removeDiscardCondition(int index) {
+        if (discardConditionBuilder_ == null) {
+          ensureDiscardConditionIsMutable();
+          discardCondition_.remove(index);
+          onChanged();
+        } else {
+          discardConditionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getDiscardConditionBuilder(
+          int index) {
+        return getDiscardConditionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDiscardConditionOrBuilder(
+          int index) {
+        if (discardConditionBuilder_ == null) {
+          return discardCondition_.get(index);  } else {
+          return discardConditionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+           getDiscardConditionOrBuilderList() {
+        if (discardConditionBuilder_ != null) {
+          return discardConditionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(discardCondition_);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDiscardConditionBuilder() {
+        return getDiscardConditionFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDiscardConditionBuilder(
+          int index) {
+        return getDiscardConditionFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DiscardCondition = 8;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression.Builder> 
+           getDiscardConditionBuilderList() {
+        return getDiscardConditionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+          getDiscardConditionFieldBuilder() {
+        if (discardConditionBuilder_ == null) {
+          discardConditionBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder>(
+                  discardCondition_,
+                  ((bitField0_ & 0x00000080) == 0x00000080),
+                  getParentForChildren(),
+                  isClean());
+          discardCondition_ = null;
+        }
+        return discardConditionBuilder_;
+      }
+
+      private com.google.protobuf.LazyStringList nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureNextTasksIsMutable() {
+        if (!((bitField0_ & 0x00000100) == 0x00000100)) {
+          nextTasks_ = new com.google.protobuf.LazyStringArrayList(nextTasks_);
+          bitField0_ |= 0x00000100;
+         }
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getNextTasksList() {
+        return nextTasks_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public int getNextTasksCount() {
+        return nextTasks_.size();
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public java.lang.String getNextTasks(int index) {
+        return nextTasks_.get(index);
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNextTasksBytes(int index) {
+        return nextTasks_.getByteString(index);
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public Builder setNextTasks(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNextTasksIsMutable();
+        nextTasks_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public Builder addNextTasks(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNextTasksIsMutable();
+        nextTasks_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public Builder addAllNextTasks(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureNextTasksIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nextTasks_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public Builder clearNextTasks() {
+        nextTasks_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000100);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string NextTasks = 9;</code>
+       */
+      public Builder addNextTasksBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureNextTasksIsMutable();
+        nextTasks_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentData> dataList_ =
+        java.util.Collections.emptyList();
+      private void ensureDataListIsMutable() {
+        if (!((bitField0_ & 0x00000200) == 0x00000200)) {
+          dataList_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentData>(dataList_);
+          bitField0_ |= 0x00000200;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> dataListBuilder_;
+
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentData> getDataListList() {
+        if (dataListBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(dataList_);
+        } else {
+          return dataListBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public int getDataListCount() {
+        if (dataListBuilder_ == null) {
+          return dataList_.size();
+        } else {
+          return dataListBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentData getDataList(int index) {
+        if (dataListBuilder_ == null) {
+          return dataList_.get(index);
+        } else {
+          return dataListBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder setDataList(
+          int index, com.uniledger.protos.ProtoContract.ComponentData value) {
+        if (dataListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataListIsMutable();
+          dataList_.set(index, value);
+          onChanged();
+        } else {
+          dataListBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder setDataList(
+          int index, com.uniledger.protos.ProtoContract.ComponentData.Builder builderForValue) {
+        if (dataListBuilder_ == null) {
+          ensureDataListIsMutable();
+          dataList_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataListBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder addDataList(com.uniledger.protos.ProtoContract.ComponentData value) {
+        if (dataListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataListIsMutable();
+          dataList_.add(value);
+          onChanged();
+        } else {
+          dataListBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder addDataList(
+          int index, com.uniledger.protos.ProtoContract.ComponentData value) {
+        if (dataListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataListIsMutable();
+          dataList_.add(index, value);
+          onChanged();
+        } else {
+          dataListBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder addDataList(
+          com.uniledger.protos.ProtoContract.ComponentData.Builder builderForValue) {
+        if (dataListBuilder_ == null) {
+          ensureDataListIsMutable();
+          dataList_.add(builderForValue.build());
+          onChanged();
+        } else {
+          dataListBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder addDataList(
+          int index, com.uniledger.protos.ProtoContract.ComponentData.Builder builderForValue) {
+        if (dataListBuilder_ == null) {
+          ensureDataListIsMutable();
+          dataList_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataListBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder addAllDataList(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentData> values) {
+        if (dataListBuilder_ == null) {
+          ensureDataListIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dataList_);
+          onChanged();
+        } else {
+          dataListBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder clearDataList() {
+        if (dataListBuilder_ == null) {
+          dataList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000200);
+          onChanged();
+        } else {
+          dataListBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public Builder removeDataList(int index) {
+        if (dataListBuilder_ == null) {
+          ensureDataListIsMutable();
+          dataList_.remove(index);
+          onChanged();
+        } else {
+          dataListBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentData.Builder getDataListBuilder(
+          int index) {
+        return getDataListFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentDataOrBuilder getDataListOrBuilder(
+          int index) {
+        if (dataListBuilder_ == null) {
+          return dataList_.get(index);  } else {
+          return dataListBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> 
+           getDataListOrBuilderList() {
+        if (dataListBuilder_ != null) {
+          return dataListBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(dataList_);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentData.Builder addDataListBuilder() {
+        return getDataListFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.ComponentData.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentData.Builder addDataListBuilder(
+          int index) {
+        return getDataListFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.ComponentData.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentData DataList = 10;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentData.Builder> 
+           getDataListBuilderList() {
+        return getDataListFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder> 
+          getDataListFieldBuilder() {
+        if (dataListBuilder_ == null) {
+          dataListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.ComponentData, com.uniledger.protos.ProtoContract.ComponentData.Builder, com.uniledger.protos.ProtoContract.ComponentDataOrBuilder>(
+                  dataList_,
+                  ((bitField0_ & 0x00000200) == 0x00000200),
+                  getParentForChildren(),
+                  isClean());
+          dataList_ = null;
+        }
+        return dataListBuilder_;
+      }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> dataValueSetterExpressionList_ =
+        java.util.Collections.emptyList();
+      private void ensureDataValueSetterExpressionListIsMutable() {
+        if (!((bitField0_ & 0x00000400) == 0x00000400)) {
+          dataValueSetterExpressionList_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ComponentsExpression>(dataValueSetterExpressionList_);
+          bitField0_ |= 0x00000400;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> dataValueSetterExpressionListBuilder_;
+
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression> getDataValueSetterExpressionListList() {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(dataValueSetterExpressionList_);
+        } else {
+          return dataValueSetterExpressionListBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public int getDataValueSetterExpressionListCount() {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          return dataValueSetterExpressionList_.size();
+        } else {
+          return dataValueSetterExpressionListBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression getDataValueSetterExpressionList(int index) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          return dataValueSetterExpressionList_.get(index);
+        } else {
+          return dataValueSetterExpressionListBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder setDataValueSetterExpressionList(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.set(index, value);
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder setDataValueSetterExpressionList(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder addDataValueSetterExpressionList(com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.add(value);
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder addDataValueSetterExpressionList(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression value) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.add(index, value);
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder addDataValueSetterExpressionList(
+          com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.add(builderForValue.build());
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder addDataValueSetterExpressionList(
+          int index, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder builderForValue) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder addAllDataValueSetterExpressionList(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ComponentsExpression> values) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          ensureDataValueSetterExpressionListIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dataValueSetterExpressionList_);
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder clearDataValueSetterExpressionList() {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          dataValueSetterExpressionList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000400);
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public Builder removeDataValueSetterExpressionList(int index) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          ensureDataValueSetterExpressionListIsMutable();
+          dataValueSetterExpressionList_.remove(index);
+          onChanged();
+        } else {
+          dataValueSetterExpressionListBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder getDataValueSetterExpressionListBuilder(
+          int index) {
+        return getDataValueSetterExpressionListFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder getDataValueSetterExpressionListOrBuilder(
+          int index) {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          return dataValueSetterExpressionList_.get(index);  } else {
+          return dataValueSetterExpressionListBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+           getDataValueSetterExpressionListOrBuilderList() {
+        if (dataValueSetterExpressionListBuilder_ != null) {
+          return dataValueSetterExpressionListBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(dataValueSetterExpressionList_);
+        }
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDataValueSetterExpressionListBuilder() {
+        return getDataValueSetterExpressionListFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public com.uniledger.protos.ProtoContract.ComponentsExpression.Builder addDataValueSetterExpressionListBuilder(
+          int index) {
+        return getDataValueSetterExpressionListFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.ComponentsExpression.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .protos.ComponentsExpression DataValueSetterExpressionList = 11;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.ComponentsExpression.Builder> 
+           getDataValueSetterExpressionListBuilderList() {
+        return getDataValueSetterExpressionListFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder> 
+          getDataValueSetterExpressionListFieldBuilder() {
+        if (dataValueSetterExpressionListBuilder_ == null) {
+          dataValueSetterExpressionListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.ComponentsExpression, com.uniledger.protos.ProtoContract.ComponentsExpression.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionOrBuilder>(
+                  dataValueSetterExpressionList_,
+                  ((bitField0_ & 0x00000400) == 0x00000400),
+                  getParentForChildren(),
+                  isClean());
+          dataValueSetterExpressionList_ = null;
+        }
+        return dataValueSetterExpressionListBuilder_;
+      }
+
+      private com.google.protobuf.LazyStringList taskList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureTaskListIsMutable() {
+        if (!((bitField0_ & 0x00000800) == 0x00000800)) {
+          taskList_ = new com.google.protobuf.LazyStringArrayList(taskList_);
+          bitField0_ |= 0x00000800;
+         }
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getTaskListList() {
+        return taskList_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public int getTaskListCount() {
+        return taskList_.size();
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public java.lang.String getTaskList(int index) {
+        return taskList_.get(index);
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTaskListBytes(int index) {
+        return taskList_.getByteString(index);
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public Builder setTaskList(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTaskListIsMutable();
+        taskList_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public Builder addTaskList(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTaskListIsMutable();
+        taskList_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public Builder addAllTaskList(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureTaskListIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, taskList_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public Builder clearTaskList() {
+        taskList_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000800);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string TaskList = 14;</code>
+       */
+      public Builder addTaskListBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureTaskListIsMutable();
+        taskList_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList supportArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureSupportArgumentsIsMutable() {
+        if (!((bitField0_ & 0x00001000) == 0x00001000)) {
+          supportArguments_ = new com.google.protobuf.LazyStringArrayList(supportArguments_);
+          bitField0_ |= 0x00001000;
+         }
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getSupportArgumentsList() {
+        return supportArguments_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public int getSupportArgumentsCount() {
+        return supportArguments_.size();
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public java.lang.String getSupportArguments(int index) {
+        return supportArguments_.get(index);
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSupportArgumentsBytes(int index) {
+        return supportArguments_.getByteString(index);
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public Builder setSupportArguments(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureSupportArgumentsIsMutable();
+        supportArguments_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public Builder addSupportArguments(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureSupportArgumentsIsMutable();
+        supportArguments_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public Builder addAllSupportArguments(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureSupportArgumentsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, supportArguments_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public Builder clearSupportArguments() {
+        supportArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00001000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string SupportArguments = 15;</code>
+       */
+      public Builder addSupportArgumentsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureSupportArgumentsIsMutable();
+        supportArguments_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList againstArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureAgainstArgumentsIsMutable() {
+        if (!((bitField0_ & 0x00002000) == 0x00002000)) {
+          againstArguments_ = new com.google.protobuf.LazyStringArrayList(againstArguments_);
+          bitField0_ |= 0x00002000;
+         }
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getAgainstArgumentsList() {
+        return againstArguments_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public int getAgainstArgumentsCount() {
+        return againstArguments_.size();
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public java.lang.String getAgainstArguments(int index) {
+        return againstArguments_.get(index);
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAgainstArgumentsBytes(int index) {
+        return againstArguments_.getByteString(index);
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public Builder setAgainstArguments(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAgainstArgumentsIsMutable();
+        againstArguments_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public Builder addAgainstArguments(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAgainstArgumentsIsMutable();
+        againstArguments_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public Builder addAllAgainstArguments(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureAgainstArgumentsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, againstArguments_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public Builder clearAgainstArguments() {
+        againstArguments_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00002000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string AgainstArguments = 16;</code>
+       */
+      public Builder addAgainstArgumentsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureAgainstArgumentsIsMutable();
+        againstArguments_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private int support_ ;
+      /**
+       * <code>int32 Support = 17;</code>
+       */
+      public int getSupport() {
+        return support_;
+      }
+      /**
+       * <code>int32 Support = 17;</code>
+       */
+      public Builder setSupport(int value) {
+        
+        support_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 Support = 17;</code>
+       */
+      public Builder clearSupport() {
+        
+        support_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureTextIsMutable() {
+        if (!((bitField0_ & 0x00008000) == 0x00008000)) {
+          text_ = new com.google.protobuf.LazyStringArrayList(text_);
+          bitField0_ |= 0x00008000;
+         }
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getTextList() {
+        return text_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public int getTextCount() {
+        return text_.size();
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public java.lang.String getText(int index) {
+        return text_.get(index);
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTextBytes(int index) {
+        return text_.getByteString(index);
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public Builder setText(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTextIsMutable();
+        text_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public Builder addText(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTextIsMutable();
+        text_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public Builder addAllText(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureTextIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, text_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public Builder clearText() {
+        text_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00008000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string Text = 18;</code>
+       */
+      public Builder addTextBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureTextIsMutable();
+        text_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private int taskExecuteIdx_ ;
+      /**
+       * <pre>
+       * add date: 2017-05-11 任务执行索引次数 int
+       * </pre>
+       *
+       * <code>int32 TaskExecuteIdx = 19;</code>
+       */
+      public int getTaskExecuteIdx() {
+        return taskExecuteIdx_;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 任务执行索引次数 int
+       * </pre>
+       *
+       * <code>int32 TaskExecuteIdx = 19;</code>
+       */
+      public Builder setTaskExecuteIdx(int value) {
+        
+        taskExecuteIdx_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * add date: 2017-05-11 任务执行索引次数 int
+       * </pre>
+       *
+       * <code>int32 TaskExecuteIdx = 19;</code>
+       */
+      public Builder clearTaskExecuteIdx() {
+        
+        taskExecuteIdx_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object taskId_ = "";
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public java.lang.String getTaskId() {
+        java.lang.Object ref = taskId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          taskId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTaskIdBytes() {
+        java.lang.Object ref = taskId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          taskId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public Builder setTaskId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        taskId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public Builder clearTaskId() {
+        
+        taskId_ = getDefaultInstance().getTaskId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string TaskId = 20;</code>
+       */
+      public Builder setTaskIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        taskId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> selectBranches_ =
+        java.util.Collections.emptyList();
+      private void ensureSelectBranchesIsMutable() {
+        if (!((bitField0_ & 0x00040000) == 0x00040000)) {
+          selectBranches_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.SelectBranchExpression>(selectBranches_);
+          bitField0_ |= 0x00040000;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.SelectBranchExpression, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder, com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> selectBranchesBuilder_;
+
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression> getSelectBranchesList() {
+        if (selectBranchesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(selectBranches_);
+        } else {
+          return selectBranchesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public int getSelectBranchesCount() {
+        if (selectBranchesBuilder_ == null) {
+          return selectBranches_.size();
+        } else {
+          return selectBranchesBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression getSelectBranches(int index) {
+        if (selectBranchesBuilder_ == null) {
+          return selectBranches_.get(index);
+        } else {
+          return selectBranchesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder setSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression value) {
+        if (selectBranchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSelectBranchesIsMutable();
+          selectBranches_.set(index, value);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder setSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder builderForValue) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          selectBranchesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(com.uniledger.protos.ProtoContract.SelectBranchExpression value) {
+        if (selectBranchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(value);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression value) {
+        if (selectBranchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(index, value);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(
+          com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder builderForValue) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(builderForValue.build());
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addSelectBranches(
+          int index, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder builderForValue) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder addAllSelectBranches(
+          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.SelectBranchExpression> values) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, selectBranches_);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder clearSelectBranches() {
+        if (selectBranchesBuilder_ == null) {
+          selectBranches_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00040000);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public Builder removeSelectBranches(int index) {
+        if (selectBranchesBuilder_ == null) {
+          ensureSelectBranchesIsMutable();
+          selectBranches_.remove(index);
+          onChanged();
+        } else {
+          selectBranchesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder getSelectBranchesBuilder(
+          int index) {
+        return getSelectBranchesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder getSelectBranchesOrBuilder(
+          int index) {
+        if (selectBranchesBuilder_ == null) {
+          return selectBranches_.get(index);  } else {
+          return selectBranchesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public java.util.List<? extends com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+           getSelectBranchesOrBuilderList() {
+        if (selectBranchesBuilder_ != null) {
+          return selectBranchesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(selectBranches_);
+        }
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder addSelectBranchesBuilder() {
+        return getSelectBranchesFieldBuilder().addBuilder(
+            com.uniledger.protos.ProtoContract.SelectBranchExpression.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder addSelectBranchesBuilder(
+          int index) {
+        return getSelectBranchesFieldBuilder().addBuilder(
+            index, com.uniledger.protos.ProtoContract.SelectBranchExpression.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       *2017-05-27 17:10:00 add
+       * </pre>
+       *
+       * <code>repeated .protos.SelectBranchExpression SelectBranches = 21;</code>
+       */
+      public java.util.List<com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder> 
+           getSelectBranchesBuilderList() {
+        return getSelectBranchesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.uniledger.protos.ProtoContract.SelectBranchExpression, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder, com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder> 
+          getSelectBranchesFieldBuilder() {
+        if (selectBranchesBuilder_ == null) {
+          selectBranchesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.uniledger.protos.ProtoContract.SelectBranchExpression, com.uniledger.protos.ProtoContract.SelectBranchExpression.Builder, com.uniledger.protos.ProtoContract.SelectBranchExpressionOrBuilder>(
+                  selectBranches_,
+                  ((bitField0_ & 0x00040000) == 0x00040000),
+                  getParentForChildren(),
+                  isClean());
+          selectBranches_ = null;
+        }
+        return selectBranchesBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.ContractComponentSub)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.ContractComponentSub)
+    private static final com.uniledger.protos.ProtoContract.ContractComponentSub DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.uniledger.protos.ProtoContract.ContractComponentSub();
+    }
+
+    public static com.uniledger.protos.ProtoContract.ContractComponentSub getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ContractComponentSub>
+        PARSER = new com.google.protobuf.AbstractParser<ContractComponentSub>() {
+      public ContractComponentSub parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ContractComponentSub(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ContractComponentSub> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ContractComponentSub> getParserForType() {
+      return PARSER;
+    }
+
+    public com.uniledger.protos.ProtoContract.ContractComponentSub getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ContractComponentOrBuilder extends
       // @@protoc_insertion_point(interface_extends:protos.ContractComponent)
       com.google.protobuf.MessageOrBuilder {
@@ -8736,30 +18156,30 @@ public final class ProtoContract {
         int index);
 
     /**
-     * <code>.protos.ContractComponent CandidateList = 12;</code>
+     * <code>.protos.ContractComponentSub CandidateList = 12;</code>
      */
     boolean hasCandidateList();
     /**
-     * <code>.protos.ContractComponent CandidateList = 12;</code>
+     * <code>.protos.ContractComponentSub CandidateList = 12;</code>
      */
-    com.uniledger.protos.ProtoContract.ContractComponent getCandidateList();
+    com.uniledger.protos.ProtoContract.ContractComponentSub getCandidateList();
     /**
-     * <code>.protos.ContractComponent CandidateList = 12;</code>
+     * <code>.protos.ContractComponentSub CandidateList = 12;</code>
      */
-    com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getCandidateListOrBuilder();
+    com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder getCandidateListOrBuilder();
 
     /**
-     * <code>.protos.ContractComponent DecisionResult = 13;</code>
+     * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
      */
     boolean hasDecisionResult();
     /**
-     * <code>.protos.ContractComponent DecisionResult = 13;</code>
+     * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
      */
-    com.uniledger.protos.ProtoContract.ContractComponent getDecisionResult();
+    com.uniledger.protos.ProtoContract.ContractComponentSub getDecisionResult();
     /**
-     * <code>.protos.ContractComponent DecisionResult = 13;</code>
+     * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
      */
-    com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getDecisionResultOrBuilder();
+    com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder getDecisionResultOrBuilder();
 
     /**
      * <code>repeated string TaskList = 14;</code>
@@ -9048,11 +18468,11 @@ public final class ProtoContract {
               break;
             }
             case 98: {
-              com.uniledger.protos.ProtoContract.ContractComponent.Builder subBuilder = null;
+              com.uniledger.protos.ProtoContract.ContractComponentSub.Builder subBuilder = null;
               if (candidateList_ != null) {
                 subBuilder = candidateList_.toBuilder();
               }
-              candidateList_ = input.readMessage(com.uniledger.protos.ProtoContract.ContractComponent.parser(), extensionRegistry);
+              candidateList_ = input.readMessage(com.uniledger.protos.ProtoContract.ContractComponentSub.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(candidateList_);
                 candidateList_ = subBuilder.buildPartial();
@@ -9061,11 +18481,11 @@ public final class ProtoContract {
               break;
             }
             case 106: {
-              com.uniledger.protos.ProtoContract.ContractComponent.Builder subBuilder = null;
+              com.uniledger.protos.ProtoContract.ContractComponentSub.Builder subBuilder = null;
               if (decisionResult_ != null) {
                 subBuilder = decisionResult_.toBuilder();
               }
-              decisionResult_ = input.readMessage(com.uniledger.protos.ProtoContract.ContractComponent.parser(), extensionRegistry);
+              decisionResult_ = input.readMessage(com.uniledger.protos.ProtoContract.ContractComponentSub.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(decisionResult_);
                 decisionResult_ = subBuilder.buildPartial();
@@ -9566,44 +18986,44 @@ public final class ProtoContract {
     }
 
     public static final int CANDIDATELIST_FIELD_NUMBER = 12;
-    private com.uniledger.protos.ProtoContract.ContractComponent candidateList_;
+    private com.uniledger.protos.ProtoContract.ContractComponentSub candidateList_;
     /**
-     * <code>.protos.ContractComponent CandidateList = 12;</code>
+     * <code>.protos.ContractComponentSub CandidateList = 12;</code>
      */
     public boolean hasCandidateList() {
       return candidateList_ != null;
     }
     /**
-     * <code>.protos.ContractComponent CandidateList = 12;</code>
+     * <code>.protos.ContractComponentSub CandidateList = 12;</code>
      */
-    public com.uniledger.protos.ProtoContract.ContractComponent getCandidateList() {
-      return candidateList_ == null ? com.uniledger.protos.ProtoContract.ContractComponent.getDefaultInstance() : candidateList_;
+    public com.uniledger.protos.ProtoContract.ContractComponentSub getCandidateList() {
+      return candidateList_ == null ? com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance() : candidateList_;
     }
     /**
-     * <code>.protos.ContractComponent CandidateList = 12;</code>
+     * <code>.protos.ContractComponentSub CandidateList = 12;</code>
      */
-    public com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getCandidateListOrBuilder() {
+    public com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder getCandidateListOrBuilder() {
       return getCandidateList();
     }
 
     public static final int DECISIONRESULT_FIELD_NUMBER = 13;
-    private com.uniledger.protos.ProtoContract.ContractComponent decisionResult_;
+    private com.uniledger.protos.ProtoContract.ContractComponentSub decisionResult_;
     /**
-     * <code>.protos.ContractComponent DecisionResult = 13;</code>
+     * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
      */
     public boolean hasDecisionResult() {
       return decisionResult_ != null;
     }
     /**
-     * <code>.protos.ContractComponent DecisionResult = 13;</code>
+     * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
      */
-    public com.uniledger.protos.ProtoContract.ContractComponent getDecisionResult() {
-      return decisionResult_ == null ? com.uniledger.protos.ProtoContract.ContractComponent.getDefaultInstance() : decisionResult_;
+    public com.uniledger.protos.ProtoContract.ContractComponentSub getDecisionResult() {
+      return decisionResult_ == null ? com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance() : decisionResult_;
     }
     /**
-     * <code>.protos.ContractComponent DecisionResult = 13;</code>
+     * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
      */
-    public com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getDecisionResultOrBuilder() {
+    public com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder getDecisionResultOrBuilder() {
       return getDecisionResult();
     }
 
@@ -10161,6 +19581,17 @@ public final class ProtoContract {
       return hash;
     }
 
+    public static com.uniledger.protos.ProtoContract.ContractComponent parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractComponent parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static com.uniledger.protos.ProtoContract.ContractComponent parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -12425,29 +21856,29 @@ public final class ProtoContract {
         return dataValueSetterExpressionListBuilder_;
       }
 
-      private com.uniledger.protos.ProtoContract.ContractComponent candidateList_ = null;
+      private com.uniledger.protos.ProtoContract.ContractComponentSub candidateList_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ContractComponent, com.uniledger.protos.ProtoContract.ContractComponent.Builder, com.uniledger.protos.ProtoContract.ContractComponentOrBuilder> candidateListBuilder_;
+          com.uniledger.protos.ProtoContract.ContractComponentSub, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder, com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder> candidateListBuilder_;
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
       public boolean hasCandidateList() {
         return candidateListBuilder_ != null || candidateList_ != null;
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
-      public com.uniledger.protos.ProtoContract.ContractComponent getCandidateList() {
+      public com.uniledger.protos.ProtoContract.ContractComponentSub getCandidateList() {
         if (candidateListBuilder_ == null) {
-          return candidateList_ == null ? com.uniledger.protos.ProtoContract.ContractComponent.getDefaultInstance() : candidateList_;
+          return candidateList_ == null ? com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance() : candidateList_;
         } else {
           return candidateListBuilder_.getMessage();
         }
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
-      public Builder setCandidateList(com.uniledger.protos.ProtoContract.ContractComponent value) {
+      public Builder setCandidateList(com.uniledger.protos.ProtoContract.ContractComponentSub value) {
         if (candidateListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12461,10 +21892,10 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
       public Builder setCandidateList(
-          com.uniledger.protos.ProtoContract.ContractComponent.Builder builderForValue) {
+          com.uniledger.protos.ProtoContract.ContractComponentSub.Builder builderForValue) {
         if (candidateListBuilder_ == null) {
           candidateList_ = builderForValue.build();
           onChanged();
@@ -12475,13 +21906,13 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
-      public Builder mergeCandidateList(com.uniledger.protos.ProtoContract.ContractComponent value) {
+      public Builder mergeCandidateList(com.uniledger.protos.ProtoContract.ContractComponentSub value) {
         if (candidateListBuilder_ == null) {
           if (candidateList_ != null) {
             candidateList_ =
-              com.uniledger.protos.ProtoContract.ContractComponent.newBuilder(candidateList_).mergeFrom(value).buildPartial();
+              com.uniledger.protos.ProtoContract.ContractComponentSub.newBuilder(candidateList_).mergeFrom(value).buildPartial();
           } else {
             candidateList_ = value;
           }
@@ -12493,7 +21924,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
       public Builder clearCandidateList() {
         if (candidateListBuilder_ == null) {
@@ -12507,33 +21938,33 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
-      public com.uniledger.protos.ProtoContract.ContractComponent.Builder getCandidateListBuilder() {
+      public com.uniledger.protos.ProtoContract.ContractComponentSub.Builder getCandidateListBuilder() {
         
         onChanged();
         return getCandidateListFieldBuilder().getBuilder();
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
-      public com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getCandidateListOrBuilder() {
+      public com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder getCandidateListOrBuilder() {
         if (candidateListBuilder_ != null) {
           return candidateListBuilder_.getMessageOrBuilder();
         } else {
           return candidateList_ == null ?
-              com.uniledger.protos.ProtoContract.ContractComponent.getDefaultInstance() : candidateList_;
+              com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance() : candidateList_;
         }
       }
       /**
-       * <code>.protos.ContractComponent CandidateList = 12;</code>
+       * <code>.protos.ContractComponentSub CandidateList = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ContractComponent, com.uniledger.protos.ProtoContract.ContractComponent.Builder, com.uniledger.protos.ProtoContract.ContractComponentOrBuilder> 
+          com.uniledger.protos.ProtoContract.ContractComponentSub, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder, com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder> 
           getCandidateListFieldBuilder() {
         if (candidateListBuilder_ == null) {
           candidateListBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.uniledger.protos.ProtoContract.ContractComponent, com.uniledger.protos.ProtoContract.ContractComponent.Builder, com.uniledger.protos.ProtoContract.ContractComponentOrBuilder>(
+              com.uniledger.protos.ProtoContract.ContractComponentSub, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder, com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder>(
                   getCandidateList(),
                   getParentForChildren(),
                   isClean());
@@ -12542,29 +21973,29 @@ public final class ProtoContract {
         return candidateListBuilder_;
       }
 
-      private com.uniledger.protos.ProtoContract.ContractComponent decisionResult_ = null;
+      private com.uniledger.protos.ProtoContract.ContractComponentSub decisionResult_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ContractComponent, com.uniledger.protos.ProtoContract.ContractComponent.Builder, com.uniledger.protos.ProtoContract.ContractComponentOrBuilder> decisionResultBuilder_;
+          com.uniledger.protos.ProtoContract.ContractComponentSub, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder, com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder> decisionResultBuilder_;
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
       public boolean hasDecisionResult() {
         return decisionResultBuilder_ != null || decisionResult_ != null;
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
-      public com.uniledger.protos.ProtoContract.ContractComponent getDecisionResult() {
+      public com.uniledger.protos.ProtoContract.ContractComponentSub getDecisionResult() {
         if (decisionResultBuilder_ == null) {
-          return decisionResult_ == null ? com.uniledger.protos.ProtoContract.ContractComponent.getDefaultInstance() : decisionResult_;
+          return decisionResult_ == null ? com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance() : decisionResult_;
         } else {
           return decisionResultBuilder_.getMessage();
         }
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
-      public Builder setDecisionResult(com.uniledger.protos.ProtoContract.ContractComponent value) {
+      public Builder setDecisionResult(com.uniledger.protos.ProtoContract.ContractComponentSub value) {
         if (decisionResultBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12578,10 +22009,10 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
       public Builder setDecisionResult(
-          com.uniledger.protos.ProtoContract.ContractComponent.Builder builderForValue) {
+          com.uniledger.protos.ProtoContract.ContractComponentSub.Builder builderForValue) {
         if (decisionResultBuilder_ == null) {
           decisionResult_ = builderForValue.build();
           onChanged();
@@ -12592,13 +22023,13 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
-      public Builder mergeDecisionResult(com.uniledger.protos.ProtoContract.ContractComponent value) {
+      public Builder mergeDecisionResult(com.uniledger.protos.ProtoContract.ContractComponentSub value) {
         if (decisionResultBuilder_ == null) {
           if (decisionResult_ != null) {
             decisionResult_ =
-              com.uniledger.protos.ProtoContract.ContractComponent.newBuilder(decisionResult_).mergeFrom(value).buildPartial();
+              com.uniledger.protos.ProtoContract.ContractComponentSub.newBuilder(decisionResult_).mergeFrom(value).buildPartial();
           } else {
             decisionResult_ = value;
           }
@@ -12610,7 +22041,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
       public Builder clearDecisionResult() {
         if (decisionResultBuilder_ == null) {
@@ -12624,33 +22055,33 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
-      public com.uniledger.protos.ProtoContract.ContractComponent.Builder getDecisionResultBuilder() {
+      public com.uniledger.protos.ProtoContract.ContractComponentSub.Builder getDecisionResultBuilder() {
         
         onChanged();
         return getDecisionResultFieldBuilder().getBuilder();
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
-      public com.uniledger.protos.ProtoContract.ContractComponentOrBuilder getDecisionResultOrBuilder() {
+      public com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder getDecisionResultOrBuilder() {
         if (decisionResultBuilder_ != null) {
           return decisionResultBuilder_.getMessageOrBuilder();
         } else {
           return decisionResult_ == null ?
-              com.uniledger.protos.ProtoContract.ContractComponent.getDefaultInstance() : decisionResult_;
+              com.uniledger.protos.ProtoContract.ContractComponentSub.getDefaultInstance() : decisionResult_;
         }
       }
       /**
-       * <code>.protos.ContractComponent DecisionResult = 13;</code>
+       * <code>.protos.ContractComponentSub DecisionResult = 13;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ContractComponent, com.uniledger.protos.ProtoContract.ContractComponent.Builder, com.uniledger.protos.ProtoContract.ContractComponentOrBuilder> 
+          com.uniledger.protos.ProtoContract.ContractComponentSub, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder, com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder> 
           getDecisionResultFieldBuilder() {
         if (decisionResultBuilder_ == null) {
           decisionResultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.uniledger.protos.ProtoContract.ContractComponent, com.uniledger.protos.ProtoContract.ContractComponent.Builder, com.uniledger.protos.ProtoContract.ContractComponentOrBuilder>(
+              com.uniledger.protos.ProtoContract.ContractComponentSub, com.uniledger.protos.ProtoContract.ContractComponentSub.Builder, com.uniledger.protos.ProtoContract.ContractComponentSubOrBuilder>(
                   getDecisionResult(),
                   getParentForChildren(),
                   isClean());
@@ -14899,6 +24330,17 @@ public final class ProtoContract {
       return hash;
     }
 
+    public static com.uniledger.protos.ProtoContract.ContractBody parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractBody parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static com.uniledger.protos.ProtoContract.ContractBody parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -17612,6 +27054,17 @@ public final class ProtoContract {
     }
 
     public static com.uniledger.protos.ProtoContract.ContractHead parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractHead parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.ContractHead parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
@@ -18530,6 +27983,17 @@ public final class ProtoContract {
     }
 
     public static com.uniledger.protos.ProtoContract.Contract parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.uniledger.protos.ProtoContract.Contract parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.uniledger.protos.ProtoContract.Contract parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
@@ -19158,10 +28622,25 @@ public final class ProtoContract {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ExpressionResult_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ComponentsExpressionSub_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ComponentsExpressionSub_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ComponentsExpression_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ComponentsExpression_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ComponentDataSub_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ComponentDataSub_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ComponentDataSub_OptionsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ComponentDataSub_OptionsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ComponentData_descriptor;
   private static final 
@@ -19177,6 +28656,11 @@ public final class ProtoContract {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_SelectBranchExpression_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ContractComponentSub_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ContractComponentSub_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ContractComponent_descriptor;
   private static final 
@@ -19220,66 +28704,99 @@ public final class ProtoContract {
       "\003(\0132#.protos.ContractAsset.MetaDataEntry" +
       "\032/\n\rMetaDataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
       "\002 \001(\t:\0028\001\"2\n\020ExpressionResult\022\020\n\010Messsag" +
-      "e\030\001 \001(\t\022\014\n\004Code\030\002 \001(\005\"\271\001\n\024ComponentsExpr",
-      "ession\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007" +
-      "Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n\rEx" +
-      "pressionStr\030\005 \001(\t\0222\n\020ExpressionResult\030\006 " +
-      "\001(\0132\030.protos.ExpressionResult\022\022\n\nLogicVa" +
-      "lue\030\007 \001(\005\"\311\004\n\rComponentData\022\r\n\005Cname\030\001 \001" +
-      "(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013De" +
-      "scription\030\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014H" +
-      "ardConvType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022%\n\006P" +
-      "arent\030\010 \001(\0132\025.protos.ComponentData\022\021\n\tMa" +
-      "ndatory\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0223\n\007Options\030\013",
-      " \003(\0132\".protos.ComponentData.OptionsEntry" +
-      "\022\016\n\006Format\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tVa" +
-      "lueUint\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013Val" +
-      "ueString\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\003\022" +
-      "\030\n\020DefaultValueUint\030\022 \001(\004\022\031\n\021DefaultValu" +
-      "eFloat\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t" +
-      "\022\024\n\014DataRangeInt\030\025 \003(\003\022\025\n\rDataRangeUint\030" +
-      "\026 \003(\004\022\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014Options" +
-      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n" +
-      "\026SelectBranchExpression\022\033\n\023BranchExpress",
-      "ionStr\030\001 \001(\t\022\035\n\025BranchExpressionValue\030\002 " +
-      "\001(\t\"\266\005\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t" +
+      "e\030\001 \001(\t\022\014\n\004Code\030\002 \001(\005\"\210\001\n\027ComponentsExpr",
+      "essionSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022" +
+      "\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n" +
+      "\rExpressionStr\030\005 \001(\t\022\022\n\nLogicValue\030\007 \001(\005" +
+      "\"\300\001\n\024ComponentsExpression\022\r\n\005Cname\030\001 \001(\t" +
       "\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Desc" +
-      "ription\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondi" +
-      "tion\030\006 \003(\0132\034.protos.ComponentsExpression" +
-      "\0227\n\021CompleteCondition\030\007 \003(\0132\034.protos.Com" +
-      "ponentsExpression\0226\n\020DiscardCondition\030\010 " +
-      "\003(\0132\034.protos.ComponentsExpression\022\021\n\tNex" +
-      "tTasks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos." +
-      "ComponentData\022C\n\035DataValueSetterExpressi",
-      "onList\030\013 \003(\0132\034.protos.ComponentsExpressi" +
-      "on\0220\n\rCandidateList\030\014 \001(\0132\031.protos.Contr" +
-      "actComponent\0221\n\016DecisionResult\030\r \001(\0132\031.p" +
-      "rotos.ContractComponent\022\020\n\010TaskList\030\016 \003(" +
-      "\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020AgainstAr" +
-      "guments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022" +
-      " \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024" +
-      " \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.protos.Se" +
-      "lectBranchExpression\"\204\004\n\014ContractBody\022\022\n" +
-      "\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctyp",
-      "e\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Description\030" +
-      "\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creator\030" +
-      "\007 \001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTime\030\t" +
-      " \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwners\030" +
-      "\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.protos.C" +
-      "ontractAsset\0225\n\022ContractSignatures\030\r \003(\013" +
-      "2\031.protos.ContractSignature\0225\n\022ContractC" +
-      "omponents\030\016 \003(\0132\031.protos.ContractCompone" +
-      "nt\022>\n\rMetaAttribute\030\017 \003(\0132\'.protos.Contr" +
-      "actBody.MetaAttributeEntry\022\021\n\tNextTasks\030",
-      "\020 \003(\t\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022\r\n\005value\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nM" +
-      "ainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssi" +
-      "gnTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017Con" +
-      "sensusResult\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001" +
-      "(\t\022*\n\014ContractHead\030\002 \001(\0132\024.protos.Contra" +
-      "ctHead\022*\n\014ContractBody\030\003 \001(\0132\024.protos.Co" +
-      "ntractBodyB%\n\024com.uniledger.protosB\rProt" +
-      "oContractb\006proto3"
+      "ription\030\004 \001(\t\022\025\n\rExpressionStr\030\005 \001(\t\0229\n\020" +
+      "ExpressionResult\030\006 \001(\0132\037.protos.Componen" +
+      "tsExpressionSub\022\022\n\nLogicValue\030\007 \001(\005\"\250\004\n\020" +
+      "ComponentDataSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype" +
+      "\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004",
+      " \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014HardConvType" +
+      "\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022\021\n\tMandatory\030\t " +
+      "\001(\010\022\014\n\004Unit\030\n \001(\t\0226\n\007Options\030\013 \003(\0132%.pro" +
+      "tos.ComponentDataSub.OptionsEntry\022\016\n\006For" +
+      "mat\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tValueUint" +
+      "\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013ValueStrin" +
+      "g\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\005\022\030\n\020Defa" +
+      "ultValueUint\030\022 \001(\r\022\031\n\021DefaultValueFloat\030" +
+      "\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024\n\014Dat" +
+      "aRangeInt\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 \003(\r\022\026",
+      "\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEntry\022\013" +
+      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"\314\004\n\rCompo" +
+      "nentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017" +
+      "\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\022\n\n" +
+      "ModifyDate\030\005 \001(\t\022\024\n\014HardConvType\030\006 \001(\t\022\020" +
+      "\n\010Category\030\007 \003(\t\022(\n\006Parent\030\010 \001(\0132\030.proto" +
+      "s.ComponentDataSub\022\021\n\tMandatory\030\t \001(\010\022\014\n" +
+      "\004Unit\030\n \001(\t\0223\n\007Options\030\013 \003(\0132\".protos.Co" +
+      "mponentData.OptionsEntry\022\016\n\006Format\030\014 \001(\t" +
+      "\022\020\n\010ValueInt\030\r \001(\005\022\021\n\tValueUint\030\016 \001(\r\022\022\n",
+      "\nValueFloat\030\017 \001(\001\022\023\n\013ValueString\030\020 \001(\t\022\027" +
+      "\n\017DefaultValueInt\030\021 \001(\005\022\030\n\020DefaultValueU" +
+      "int\030\022 \001(\r\022\031\n\021DefaultValueFloat\030\023 \001(\001\022\032\n\022" +
+      "DefaultValueString\030\024 \001(\t\022\024\n\014DataRangeInt" +
+      "\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 \003(\r\022\026\n\016DataRan" +
+      "geFloat\030\027 \003(\001\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026SelectBranchExp" +
+      "ression\022\033\n\023BranchExpressionStr\030\001 \001(\t\022\035\n\025" +
+      "BranchExpressionValue\030\002 \001(\t\"\324\004\n\024Contract" +
+      "ComponentSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001",
+      "(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t" +
+      "\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006 \003(\0132\034." +
+      "protos.ComponentsExpression\0227\n\021CompleteC" +
+      "ondition\030\007 \003(\0132\034.protos.ComponentsExpres" +
+      "sion\0226\n\020DiscardCondition\030\010 \003(\0132\034.protos." +
+      "ComponentsExpression\022\021\n\tNextTasks\030\t \003(\t\022" +
+      "\'\n\010DataList\030\n \003(\0132\025.protos.ComponentData" +
+      "\022C\n\035DataValueSetterExpressionList\030\013 \003(\0132" +
+      "\034.protos.ComponentsExpression\022\020\n\010TaskLis" +
+      "t\030\016 \003(\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020Aga",
+      "instArguments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004" +
+      "Text\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006Ta" +
+      "skId\030\024 \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.pro" +
+      "tos.SelectBranchExpression\"\274\005\n\021ContractC" +
+      "omponent\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017" +
+      "\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\r\n\005" +
+      "State\030\005 \001(\t\0222\n\014PreCondition\030\006 \003(\0132\034.prot" +
+      "os.ComponentsExpression\0227\n\021CompleteCondi" +
+      "tion\030\007 \003(\0132\034.protos.ComponentsExpression" +
+      "\0226\n\020DiscardCondition\030\010 \003(\0132\034.protos.Comp",
+      "onentsExpression\022\021\n\tNextTasks\030\t \003(\t\022\'\n\010D" +
+      "ataList\030\n \003(\0132\025.protos.ComponentData\022C\n\035" +
+      "DataValueSetterExpressionList\030\013 \003(\0132\034.pr" +
+      "otos.ComponentsExpression\0223\n\rCandidateLi" +
+      "st\030\014 \001(\0132\034.protos.ContractComponentSub\0224" +
+      "\n\016DecisionResult\030\r \001(\0132\034.protos.Contract" +
+      "ComponentSub\022\020\n\010TaskList\030\016 \003(\t\022\030\n\020Suppor" +
+      "tArguments\030\017 \003(\t\022\030\n\020AgainstArguments\030\020 \003" +
+      "(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022\026\n\016Tas" +
+      "kExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(\t\0226\n\016Sel",
+      "ectBranches\030\025 \003(\0132\036.protos.SelectBranchE" +
+      "xpression\"\204\004\n\014ContractBody\022\022\n\nContractId" +
+      "\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(\t\022\017\n\007" +
+      "Caption\030\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022\025\n\rCo" +
+      "ntractState\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022\022\n\nCr" +
+      "eateTime\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017\n\007End" +
+      "Time\030\n \001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022-\n\016Co" +
+      "ntractAssets\030\014 \003(\0132\025.protos.ContractAsse" +
+      "t\0225\n\022ContractSignatures\030\r \003(\0132\031.protos.C" +
+      "ontractSignature\0225\n\022ContractComponents\030\016",
+      " \003(\0132\031.protos.ContractComponent\022>\n\rMetaA" +
+      "ttribute\030\017 \003(\0132\'.protos.ContractBody.Met" +
+      "aAttributeEntry\022\021\n\tNextTasks\030\020 \003(\t\0324\n\022Me" +
+      "taAttributeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
+      " \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nMainPubkey\030\001" +
+      " \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssignTime\030\003 \001(" +
+      "\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017ConsensusResul" +
+      "t\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014Contr" +
+      "actHead\030\002 \001(\0132\024.protos.ContractHead\022*\n\014C" +
+      "ontractBody\030\003 \001(\0132\024.protos.ContractBodyB",
+      "%\n\024com.uniledger.protosB\rProtoContractb\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -19317,14 +28834,32 @@ public final class ProtoContract {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ExpressionResult_descriptor,
         new java.lang.String[] { "Messsage", "Code", });
-    internal_static_protos_ComponentsExpression_descriptor =
+    internal_static_protos_ComponentsExpressionSub_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_protos_ComponentsExpressionSub_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ComponentsExpressionSub_descriptor,
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ExpressionStr", "LogicValue", });
+    internal_static_protos_ComponentsExpression_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_protos_ComponentsExpression_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentsExpression_descriptor,
         new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ExpressionStr", "ExpressionResult", "LogicValue", });
+    internal_static_protos_ComponentDataSub_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_protos_ComponentDataSub_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ComponentDataSub_descriptor,
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ModifyDate", "HardConvType", "Category", "Mandatory", "Unit", "Options", "Format", "ValueInt", "ValueUint", "ValueFloat", "ValueString", "DefaultValueInt", "DefaultValueUint", "DefaultValueFloat", "DefaultValueString", "DataRangeInt", "DataRangeUint", "DataRangeFloat", });
+    internal_static_protos_ComponentDataSub_OptionsEntry_descriptor =
+      internal_static_protos_ComponentDataSub_descriptor.getNestedTypes().get(0);
+    internal_static_protos_ComponentDataSub_OptionsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ComponentDataSub_OptionsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ComponentData_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_protos_ComponentData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentData_descriptor,
@@ -19336,19 +28871,25 @@ public final class ProtoContract {
         internal_static_protos_ComponentData_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_protos_SelectBranchExpression_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_protos_SelectBranchExpression_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_SelectBranchExpression_descriptor,
         new java.lang.String[] { "BranchExpressionStr", "BranchExpressionValue", });
+    internal_static_protos_ContractComponentSub_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_protos_ContractComponentSub_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ContractComponentSub_descriptor,
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DiscardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
     internal_static_protos_ContractComponent_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_protos_ContractComponent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponent_descriptor,
         new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DiscardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
     internal_static_protos_ContractBody_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_protos_ContractBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractBody_descriptor,
@@ -19360,13 +28901,13 @@ public final class ProtoContract {
         internal_static_protos_ContractBody_MetaAttributeEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ContractHead_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_protos_ContractHead_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractHead_descriptor,
         new java.lang.String[] { "MainPubkey", "Version", "AssignTime", "OperateTime", "ConsensusResult", });
     internal_static_protos_Contract_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_protos_Contract_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_Contract_descriptor,

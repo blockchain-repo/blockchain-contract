@@ -3,6 +3,7 @@ package protos;
 
 option java_package = "com.uniledger.protos";
 option java_outer_classname = "ProtoContract";
+//option java_multiple_files = true;
 
 message ContractSignature{
     string OwnerPubkey = 1;
@@ -26,18 +27,26 @@ message ExpressionResult {
     int32 Code = 2;
 }
 
+message ComponentsExpressionSub{
+    string Cname = 1;
+    string Ctype = 2;
+    string Caption = 3;
+    string Description = 4;
+    string ExpressionStr = 5;
+    int32 LogicValue = 7;
+}
+
 message ComponentsExpression {
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
     string Description = 4;
     string ExpressionStr = 5;
-    ExpressionResult ExpressionResult = 6;
+    ComponentsExpressionSub ExpressionResult = 6;
     int32 LogicValue = 7;
 }
 
-
-message ComponentData{
+message ComponentDataSub{
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
@@ -45,7 +54,6 @@ message ComponentData{
     string ModifyDate = 5;
     string HardConvType = 6;
     repeated string Category = 7; // []string Category
-    ComponentData Parent = 8;
     bool Mandatory = 9;
     string Unit = 10;
     map<string, int32> Options = 11;
@@ -60,18 +68,58 @@ message ComponentData{
     string ValueString = 16;
 
     //DefaultValue interface{} int64
-    int64 DefaultValueInt = 17;
+    int32 DefaultValueInt = 17;
     //DefaultValue interface{} unit64
-    uint64 DefaultValueUint = 18;
+    uint32 DefaultValueUint = 18;
     //DefaultValue interface{} float64
     double DefaultValueFloat = 19;
     //DefaultValueinterface{} string
     string DefaultValueString = 20;
 
     //DataRange interface{} int64
-    repeated int64 DataRangeInt = 21;
+    repeated int32 DataRangeInt = 21;
     //DataRange interface{} unit64
-    repeated uint64 DataRangeUint = 22;
+    repeated uint32 DataRangeUint = 22;
+    //DataRange interface{} float64
+    repeated double DataRangeFloat = 23;
+
+}
+
+message ComponentData{
+    string Cname = 1;
+    string Ctype = 2;
+    string Caption = 3;
+    string Description = 4;
+    string ModifyDate = 5;
+    string HardConvType = 6;
+    repeated string Category = 7; // []string Category
+    ComponentDataSub Parent = 8;
+    bool Mandatory = 9;
+    string Unit = 10;
+    map<string, int32> Options = 11;
+    string Format = 12;
+    //Value interface{} int64
+    int32 ValueInt = 13;
+    //Value interface{} unit64
+    uint32 ValueUint = 14;
+    //Value interface{} float64
+    double ValueFloat = 15;
+    //Value interface{} string
+    string ValueString = 16;
+
+    //DefaultValue interface{} int64
+    int32 DefaultValueInt = 17;
+    //DefaultValue interface{} unit64
+    uint32 DefaultValueUint = 18;
+    //DefaultValue interface{} float64
+    double DefaultValueFloat = 19;
+    //DefaultValueinterface{} string
+    string DefaultValueString = 20;
+
+    //DataRange interface{} int64
+    repeated int32 DataRangeInt = 21;
+    //DataRange interface{} unit64
+    repeated uint32 DataRangeUint = 22;
     //DataRange interface{} float64
     repeated double DataRangeFloat = 23;
 
@@ -80,6 +128,30 @@ message ComponentData{
 message SelectBranchExpression{
     string BranchExpressionStr = 1;
     string  BranchExpressionValue = 2;
+}
+
+message ContractComponentSub{
+    string Cname = 1;
+    string Ctype = 2;
+    string Caption = 3;
+    string Description = 4;
+    string State = 5;
+    repeated ComponentsExpression PreCondition= 6;
+    repeated ComponentsExpression CompleteCondition = 7;
+    repeated ComponentsExpression DiscardCondition = 8;
+    repeated string NextTasks = 9;
+    repeated ComponentData DataList = 10;
+    repeated ComponentsExpression DataValueSetterExpressionList = 11;
+    repeated string TaskList = 14;
+    repeated string SupportArguments = 15;
+    repeated string AgainstArguments = 16;
+    int32 Support = 17;
+    repeated string Text = 18;
+    // add date: 2017-05-11 任务执行索引次数 int
+    int32 TaskExecuteIdx = 19;
+    string TaskId = 20;
+    //2017-05-27 17:10:00 add
+    repeated SelectBranchExpression SelectBranches = 21;
 }
 
 message ContractComponent{
@@ -94,8 +166,8 @@ message ContractComponent{
     repeated string NextTasks = 9;
     repeated ComponentData DataList = 10;
     repeated ComponentsExpression DataValueSetterExpressionList = 11;
-    ContractComponent CandidateList = 12;
-    ContractComponent DecisionResult = 13;
+    ContractComponentSub CandidateList = 12;
+    ContractComponentSub DecisionResult = 13;
     repeated string TaskList = 14;
     repeated string SupportArguments = 15;
     repeated string AgainstArguments = 16;

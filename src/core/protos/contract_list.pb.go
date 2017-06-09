@@ -15,9 +15,12 @@ It has these top-level messages:
 	ContractSignature
 	ContractAsset
 	ExpressionResult
+	ComponentsExpressionSub
 	ComponentsExpression
+	ComponentDataSub
 	ComponentData
 	SelectBranchExpression
+	ContractComponentSub
 	ContractComponent
 	ContractBody
 	ContractHead
