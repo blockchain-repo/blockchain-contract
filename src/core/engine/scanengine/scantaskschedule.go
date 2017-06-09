@@ -29,25 +29,24 @@ import (
 
 //---------------------------------------------------------------------------
 func _ScanTaskSchedule() {
-	for {
-		start := time.Now()
-		var slTasks []model.TaskSchedule
-
+	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
+	for _ = range ticker.C {
 		beegoLog.Debug("query no send data")
 		strNodePubkey := config.Config.Keypair.PublicKey
 		retStr, err := engineCommon.GetMonitorNoSendData(strNodePubkey,
 			scanEngineConf["failed_count_threshold"].(int))
 		if err != nil {
 			beegoLog.Error(err.Error())
-			goto CONSUME
+			continue
 		}
 
 		if len(retStr) == 0 {
 			beegoLog.Debug("all send")
-			goto CONSUME
+			continue
 		}
 
 		beegoLog.Debug("get no send tasks")
+		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
 		beegoLog.Debug("handle task")
@@ -57,19 +56,11 @@ func _ScanTaskSchedule() {
 			err = engineCommon.UpdateMonitorSend(value.Id)
 			if err != nil {
 				beegoLog.Error(err.Error())
-				goto CONSUME
 			}
 		}
 
 		//task fail count send to monitor,modify value
 		monitor.Monitor.Gauge("task_fail_count", 1)
-
-	CONSUME:
-		consume := time.Since(start)
-		if consume.Seconds() < float64(scanEngineConf["sleep_time"].(int)) {
-			time.Sleep((time.Duration(float64(scanEngineConf["sleep_time"].(int)) -
-				consume.Seconds())) * time.Second)
-		}
 	}
 
 	gwgTaskExe.Done()

@@ -38,30 +38,28 @@ func _ScanFailedTask(flag int) {
 		strLogFlag = "wait"
 	}
 
-	for {
-		start := time.Now()
-		var slTasks []model.TaskSchedule
-		var slID []interface{}
-
+	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
+	for _ = range ticker.C {
 		beegoLog.Debug("query " + strLogFlag + " data")
 		strNodePubkey := config.Config.Keypair.PublicKey
 		retStr, err := engineCommon.GetMonitorNoSuccessData(strNodePubkey,
 			scanEngineConf[strThresholdName].(int), flag)
 		if err != nil {
 			beegoLog.Error(err.Error())
-			goto CONSUME
+			continue
 		}
 
 		if len(retStr) == 0 {
 			beegoLog.Debug("no " + strLogFlag + " data")
-			goto CONSUME
+			continue
 		}
 
 		beegoLog.Debug("get " + strLogFlag + " tasks")
+		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
 		beegoLog.Debug("get task id slice")
-		slID = _GetTaskID(slTasks)
+		slID := _GetTaskID(slTasks)
 
 		beegoLog.Debug("handle task")
 		engineCommon.UpdateMonitorSendBatch(slID)
@@ -71,13 +69,6 @@ func _ScanFailedTask(flag int) {
 
 		//task fail count send to monitor,modify value
 		monitor.Monitor.Gauge(fmt.Sprintf("task_%s_count", strLogFlag), 1)
-
-	CONSUME:
-		consume := time.Since(start)
-		if consume.Seconds() < float64(scanEngineConf["sleep_time"].(int)) {
-			time.Sleep((time.Duration(float64(scanEngineConf["sleep_time"].(int)) -
-				consume.Seconds())) * time.Second)
-		}
 	}
 
 	gwgTaskExe.Done()
