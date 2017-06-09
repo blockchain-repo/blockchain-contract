@@ -28,40 +28,36 @@ import (
 
 //---------------------------------------------------------------------------
 func _CleanTaskSchedule() {
-	for {
-		ticker := time.NewTicker(time.Minute * (time.Duration)(scanEngineConf["clean_time"].(int)))
-		beegoLog.Debug("wait for clean data...")
-		select {
-		case <-ticker.C:
-			beegoLog.Debug("query all success task")
-			strSuccessTask, err :=
-				rethinkdb.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
-			if err != nil {
-				beegoLog.Error(err)
-				continue
-			}
+	ticker := time.NewTicker(time.Minute * (time.Duration)(scanEngineConf["clean_time"].(int)))
+	for _ = range ticker.C {
+		beegoLog.Debug("query all success task")
+		strSuccessTask, err :=
+			rethinkdb.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
+		if err != nil {
+			beegoLog.Error(err)
+			continue
+		}
 
-			if len(strSuccessTask) == 0 {
-				beegoLog.Debug("success task is null")
-				continue
-			}
+		if len(strSuccessTask) == 0 {
+			beegoLog.Debug("success task is null")
+			continue
+		}
 
-			var slTasks []model.TaskSchedule
-			json.Unmarshal([]byte(strSuccessTask), &slTasks)
+		var slTasks []model.TaskSchedule
+		json.Unmarshal([]byte(strSuccessTask), &slTasks)
 
-			beegoLog.Debug("success task filter")
-			slID := _TaskFilter(slTasks)
+		beegoLog.Debug("success task filter")
+		slID := _TaskFilter(slTasks)
 
-			if len(slID) == 0 {
-				beegoLog.Debug("_TaskFilter return is null")
-				continue
-			}
+		if len(slID) == 0 {
+			beegoLog.Debug("_TaskFilter return is null")
+			continue
+		}
 
-			beegoLog.Debug("success task delete")
-			deleteNum, err := rethinkdb.DeleteTaskSchedules(slID)
-			if deleteNum != len(slID) {
-				beegoLog.Error(err)
-			}
+		beegoLog.Debug("success task delete")
+		deleteNum, err := rethinkdb.DeleteTaskSchedules(slID)
+		if deleteNum != len(slID) {
+			beegoLog.Error(err)
 		}
 	}
 	gwgTaskExe.Done()
