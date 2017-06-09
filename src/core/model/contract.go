@@ -99,11 +99,6 @@ func (c *ContractModel) IsSignatureValid() bool {
 			return false
 		}
 		// contract signature verify
-		signature1 := common.Sign("5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC", contractBody_serialized)
-		logs.Error(signature1)
-		signature2 := common.Sign("6hXsHQ4fdWQ9UY1XkBYCYRouAagRW8rXxYSLgpveQNYY", contractBody_serialized)
-		logs.Error(signature2)
-
 		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
 		logs.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
 		if !verifyFlag {

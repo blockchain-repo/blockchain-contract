@@ -23,7 +23,6 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   serialized_pb=_b('\n\x13\x63ontract_list.proto\x12\x06protos\x1a\x0e\x63ontract.proto\"3\n\x0c\x43ontractList\x12#\n\tcontracts\x18\x01 \x03(\x0b\x32\x10.protos.ContractB)\n\x14\x63om.uniledger.protosB\x11ProtoContractListb\x06proto3')
   ,
   dependencies=[contract__pb2.DESCRIPTOR,])
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -60,6 +59,7 @@ _CONTRACTLIST = _descriptor.Descriptor(
 
 _CONTRACTLIST.fields_by_name['contracts'].message_type = contract__pb2._CONTRACT
 DESCRIPTOR.message_types_by_name['ContractList'] = _CONTRACTLIST
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ContractList = _reflection.GeneratedProtocolMessageType('ContractList', (_message.Message,), dict(
   DESCRIPTOR = _CONTRACTLIST,
