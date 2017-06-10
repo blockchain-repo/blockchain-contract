@@ -9,7 +9,6 @@
 goog.provide('proto.protos.ComponentData');
 goog.provide('proto.protos.ComponentDataSub');
 goog.provide('proto.protos.ComponentsExpression');
-goog.provide('proto.protos.ComponentsExpressionSub');
 goog.provide('proto.protos.Contract');
 goog.provide('proto.protos.ContractAsset');
 goog.provide('proto.protos.ContractBody');
@@ -703,281 +702,6 @@ proto.protos.ExpressionResult.prototype.setCode = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.protos.ComponentsExpressionSub = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.protos.ComponentsExpressionSub, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  proto.protos.ComponentsExpressionSub.displayName = 'proto.protos.ComponentsExpressionSub';
-}
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto suitable for use in Soy templates.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.protos.ComponentsExpressionSub.prototype.toObject = function(opt_includeInstance) {
-  return proto.protos.ComponentsExpressionSub.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.protos.ComponentsExpressionSub} msg The msg instance to transform.
- * @return {!Object}
- */
-proto.protos.ComponentsExpressionSub.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    cname: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    ctype: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    caption: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    description: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    expressionstr: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    logicvalue: jspb.Message.getFieldWithDefault(msg, 7, 0)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.protos.ComponentsExpressionSub}
- */
-proto.protos.ComponentsExpressionSub.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.protos.ComponentsExpressionSub;
-  return proto.protos.ComponentsExpressionSub.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.protos.ComponentsExpressionSub} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.protos.ComponentsExpressionSub}
- */
-proto.protos.ComponentsExpressionSub.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setCname(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setCtype(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setCaption(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setDescription(value);
-      break;
-    case 5:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setExpressionstr(value);
-      break;
-    case 7:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setLogicvalue(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.protos.ComponentsExpressionSub.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.protos.ComponentsExpressionSub.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.protos.ComponentsExpressionSub} message
- * @param {!jspb.BinaryWriter} writer
- */
-proto.protos.ComponentsExpressionSub.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getCname();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getCtype();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getCaption();
-  if (f.length > 0) {
-    writer.writeString(
-      3,
-      f
-    );
-  }
-  f = message.getDescription();
-  if (f.length > 0) {
-    writer.writeString(
-      4,
-      f
-    );
-  }
-  f = message.getExpressionstr();
-  if (f.length > 0) {
-    writer.writeString(
-      5,
-      f
-    );
-  }
-  f = message.getLogicvalue();
-  if (f !== 0) {
-    writer.writeInt32(
-      7,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string Cname = 1;
- * @return {string}
- */
-proto.protos.ComponentsExpressionSub.prototype.getCname = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ComponentsExpressionSub.prototype.setCname = function(value) {
-  jspb.Message.setField(this, 1, value);
-};
-
-
-/**
- * optional string Ctype = 2;
- * @return {string}
- */
-proto.protos.ComponentsExpressionSub.prototype.getCtype = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ComponentsExpressionSub.prototype.setCtype = function(value) {
-  jspb.Message.setField(this, 2, value);
-};
-
-
-/**
- * optional string Caption = 3;
- * @return {string}
- */
-proto.protos.ComponentsExpressionSub.prototype.getCaption = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ComponentsExpressionSub.prototype.setCaption = function(value) {
-  jspb.Message.setField(this, 3, value);
-};
-
-
-/**
- * optional string Description = 4;
- * @return {string}
- */
-proto.protos.ComponentsExpressionSub.prototype.getDescription = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ComponentsExpressionSub.prototype.setDescription = function(value) {
-  jspb.Message.setField(this, 4, value);
-};
-
-
-/**
- * optional string ExpressionStr = 5;
- * @return {string}
- */
-proto.protos.ComponentsExpressionSub.prototype.getExpressionstr = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ComponentsExpressionSub.prototype.setExpressionstr = function(value) {
-  jspb.Message.setField(this, 5, value);
-};
-
-
-/**
- * optional int32 LogicValue = 7;
- * @return {number}
- */
-proto.protos.ComponentsExpressionSub.prototype.getLogicvalue = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
-};
-
-
-/** @param {number} value */
-proto.protos.ComponentsExpressionSub.prototype.setLogicvalue = function(value) {
-  jspb.Message.setField(this, 7, value);
-};
-
-
-
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
 proto.protos.ComponentsExpression = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
@@ -1018,7 +742,7 @@ proto.protos.ComponentsExpression.toObject = function(includeInstance, msg) {
     caption: jspb.Message.getFieldWithDefault(msg, 3, ""),
     description: jspb.Message.getFieldWithDefault(msg, 4, ""),
     expressionstr: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    expressionresult: (f = msg.getExpressionresult()) && proto.protos.ComponentsExpressionSub.toObject(includeInstance, f),
+    expressionresult: (f = msg.getExpressionresult()) && proto.protos.ExpressionResult.toObject(includeInstance, f),
     logicvalue: jspb.Message.getFieldWithDefault(msg, 7, 0)
   };
 
@@ -1077,8 +801,8 @@ proto.protos.ComponentsExpression.deserializeBinaryFromReader = function(msg, re
       msg.setExpressionstr(value);
       break;
     case 6:
-      var value = new proto.protos.ComponentsExpressionSub;
-      reader.readMessage(value,proto.protos.ComponentsExpressionSub.deserializeBinaryFromReader);
+      var value = new proto.protos.ExpressionResult;
+      reader.readMessage(value,proto.protos.ExpressionResult.deserializeBinaryFromReader);
       msg.setExpressionresult(value);
       break;
     case 7:
@@ -1153,7 +877,7 @@ proto.protos.ComponentsExpression.serializeBinaryToWriter = function(message, wr
     writer.writeMessage(
       6,
       f,
-      proto.protos.ComponentsExpressionSub.serializeBinaryToWriter
+      proto.protos.ExpressionResult.serializeBinaryToWriter
     );
   }
   f = message.getLogicvalue();
@@ -1242,16 +966,16 @@ proto.protos.ComponentsExpression.prototype.setExpressionstr = function(value) {
 
 
 /**
- * optional ComponentsExpressionSub ExpressionResult = 6;
- * @return {?proto.protos.ComponentsExpressionSub}
+ * optional ExpressionResult ExpressionResult = 6;
+ * @return {?proto.protos.ExpressionResult}
  */
 proto.protos.ComponentsExpression.prototype.getExpressionresult = function() {
-  return /** @type{?proto.protos.ComponentsExpressionSub} */ (
-    jspb.Message.getWrapperField(this, proto.protos.ComponentsExpressionSub, 6));
+  return /** @type{?proto.protos.ExpressionResult} */ (
+    jspb.Message.getWrapperField(this, proto.protos.ExpressionResult, 6));
 };
 
 
-/** @param {?proto.protos.ComponentsExpressionSub|undefined} value */
+/** @param {?proto.protos.ExpressionResult|undefined} value */
 proto.protos.ComponentsExpression.prototype.setExpressionresult = function(value) {
   jspb.Message.setWrapperField(this, 6, value);
 };

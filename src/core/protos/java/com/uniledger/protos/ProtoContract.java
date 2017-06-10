@@ -2818,1131 +2818,6 @@ public final class ProtoContract {
 
   }
 
-  public interface ComponentsExpressionSubOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.ComponentsExpressionSub)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string Cname = 1;</code>
-     */
-    java.lang.String getCname();
-    /**
-     * <code>string Cname = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getCnameBytes();
-
-    /**
-     * <code>string Ctype = 2;</code>
-     */
-    java.lang.String getCtype();
-    /**
-     * <code>string Ctype = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getCtypeBytes();
-
-    /**
-     * <code>string Caption = 3;</code>
-     */
-    java.lang.String getCaption();
-    /**
-     * <code>string Caption = 3;</code>
-     */
-    com.google.protobuf.ByteString
-        getCaptionBytes();
-
-    /**
-     * <code>string Description = 4;</code>
-     */
-    java.lang.String getDescription();
-    /**
-     * <code>string Description = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getDescriptionBytes();
-
-    /**
-     * <code>string ExpressionStr = 5;</code>
-     */
-    java.lang.String getExpressionStr();
-    /**
-     * <code>string ExpressionStr = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getExpressionStrBytes();
-
-    /**
-     * <code>int32 LogicValue = 7;</code>
-     */
-    int getLogicValue();
-  }
-  /**
-   * Protobuf type {@code protos.ComponentsExpressionSub}
-   */
-  public  static final class ComponentsExpressionSub extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.ComponentsExpressionSub)
-      ComponentsExpressionSubOrBuilder {
-    // Use ComponentsExpressionSub.newBuilder() to construct.
-    private ComponentsExpressionSub(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private ComponentsExpressionSub() {
-      cname_ = "";
-      ctype_ = "";
-      caption_ = "";
-      description_ = "";
-      expressionStr_ = "";
-      logicValue_ = 0;
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
-    }
-    private ComponentsExpressionSub(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      int mutable_bitField0_ = 0;
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!input.skipField(tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              cname_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              ctype_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              caption_ = s;
-              break;
-            }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              description_ = s;
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              expressionStr_ = s;
-              break;
-            }
-            case 56: {
-
-              logicValue_ = input.readInt32();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.class, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder.class);
-    }
-
-    public static final int CNAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object cname_;
-    /**
-     * <code>string Cname = 1;</code>
-     */
-    public java.lang.String getCname() {
-      java.lang.Object ref = cname_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        cname_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string Cname = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCnameBytes() {
-      java.lang.Object ref = cname_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        cname_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int CTYPE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object ctype_;
-    /**
-     * <code>string Ctype = 2;</code>
-     */
-    public java.lang.String getCtype() {
-      java.lang.Object ref = ctype_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ctype_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string Ctype = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCtypeBytes() {
-      java.lang.Object ref = ctype_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ctype_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int CAPTION_FIELD_NUMBER = 3;
-    private volatile java.lang.Object caption_;
-    /**
-     * <code>string Caption = 3;</code>
-     */
-    public java.lang.String getCaption() {
-      java.lang.Object ref = caption_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        caption_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string Caption = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCaptionBytes() {
-      java.lang.Object ref = caption_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        caption_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int DESCRIPTION_FIELD_NUMBER = 4;
-    private volatile java.lang.Object description_;
-    /**
-     * <code>string Description = 4;</code>
-     */
-    public java.lang.String getDescription() {
-      java.lang.Object ref = description_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        description_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string Description = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getDescriptionBytes() {
-      java.lang.Object ref = description_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        description_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int EXPRESSIONSTR_FIELD_NUMBER = 5;
-    private volatile java.lang.Object expressionStr_;
-    /**
-     * <code>string ExpressionStr = 5;</code>
-     */
-    public java.lang.String getExpressionStr() {
-      java.lang.Object ref = expressionStr_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        expressionStr_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string ExpressionStr = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getExpressionStrBytes() {
-      java.lang.Object ref = expressionStr_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        expressionStr_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int LOGICVALUE_FIELD_NUMBER = 7;
-    private int logicValue_;
-    /**
-     * <code>int32 LogicValue = 7;</code>
-     */
-    public int getLogicValue() {
-      return logicValue_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!getCnameBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, cname_);
-      }
-      if (!getCtypeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ctype_);
-      }
-      if (!getCaptionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, caption_);
-      }
-      if (!getDescriptionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, description_);
-      }
-      if (!getExpressionStrBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, expressionStr_);
-      }
-      if (logicValue_ != 0) {
-        output.writeInt32(7, logicValue_);
-      }
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!getCnameBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, cname_);
-      }
-      if (!getCtypeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ctype_);
-      }
-      if (!getCaptionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, caption_);
-      }
-      if (!getDescriptionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, description_);
-      }
-      if (!getExpressionStrBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, expressionStr_);
-      }
-      if (logicValue_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(7, logicValue_);
-      }
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.uniledger.protos.ProtoContract.ComponentsExpressionSub)) {
-        return super.equals(obj);
-      }
-      com.uniledger.protos.ProtoContract.ComponentsExpressionSub other = (com.uniledger.protos.ProtoContract.ComponentsExpressionSub) obj;
-
-      boolean result = true;
-      result = result && getCname()
-          .equals(other.getCname());
-      result = result && getCtype()
-          .equals(other.getCtype());
-      result = result && getCaption()
-          .equals(other.getCaption());
-      result = result && getDescription()
-          .equals(other.getDescription());
-      result = result && getExpressionStr()
-          .equals(other.getExpressionStr());
-      result = result && (getLogicValue()
-          == other.getLogicValue());
-      return result;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + CNAME_FIELD_NUMBER;
-      hash = (53 * hash) + getCname().hashCode();
-      hash = (37 * hash) + CTYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getCtype().hashCode();
-      hash = (37 * hash) + CAPTION_FIELD_NUMBER;
-      hash = (53 * hash) + getCaption().hashCode();
-      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
-      hash = (53 * hash) + getDescription().hashCode();
-      hash = (37 * hash) + EXPRESSIONSTR_FIELD_NUMBER;
-      hash = (53 * hash) + getExpressionStr().hashCode();
-      hash = (37 * hash) + LOGICVALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getLogicValue();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(com.uniledger.protos.ProtoContract.ComponentsExpressionSub prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code protos.ComponentsExpressionSub}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.ComponentsExpressionSub)
-        com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.uniledger.protos.ProtoContract.ComponentsExpressionSub.class, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder.class);
-      }
-
-      // Construct using com.uniledger.protos.ProtoContract.ComponentsExpressionSub.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        cname_ = "";
-
-        ctype_ = "";
-
-        caption_ = "";
-
-        description_ = "";
-
-        expressionStr_ = "";
-
-        logicValue_ = 0;
-
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.uniledger.protos.ProtoContract.internal_static_protos_ComponentsExpressionSub_descriptor;
-      }
-
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getDefaultInstanceForType() {
-        return com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance();
-      }
-
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub build() {
-        com.uniledger.protos.ProtoContract.ComponentsExpressionSub result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub buildPartial() {
-        com.uniledger.protos.ProtoContract.ComponentsExpressionSub result = new com.uniledger.protos.ProtoContract.ComponentsExpressionSub(this);
-        result.cname_ = cname_;
-        result.ctype_ = ctype_;
-        result.caption_ = caption_;
-        result.description_ = description_;
-        result.expressionStr_ = expressionStr_;
-        result.logicValue_ = logicValue_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder clone() {
-        return (Builder) super.clone();
-      }
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.setField(field, value);
-      }
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
-      }
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
-      }
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
-      }
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          Object value) {
-        return (Builder) super.addRepeatedField(field, value);
-      }
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.uniledger.protos.ProtoContract.ComponentsExpressionSub) {
-          return mergeFrom((com.uniledger.protos.ProtoContract.ComponentsExpressionSub)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.uniledger.protos.ProtoContract.ComponentsExpressionSub other) {
-        if (other == com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance()) return this;
-        if (!other.getCname().isEmpty()) {
-          cname_ = other.cname_;
-          onChanged();
-        }
-        if (!other.getCtype().isEmpty()) {
-          ctype_ = other.ctype_;
-          onChanged();
-        }
-        if (!other.getCaption().isEmpty()) {
-          caption_ = other.caption_;
-          onChanged();
-        }
-        if (!other.getDescription().isEmpty()) {
-          description_ = other.description_;
-          onChanged();
-        }
-        if (!other.getExpressionStr().isEmpty()) {
-          expressionStr_ = other.expressionStr_;
-          onChanged();
-        }
-        if (other.getLogicValue() != 0) {
-          setLogicValue(other.getLogicValue());
-        }
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.uniledger.protos.ProtoContract.ComponentsExpressionSub parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.uniledger.protos.ProtoContract.ComponentsExpressionSub) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object cname_ = "";
-      /**
-       * <code>string Cname = 1;</code>
-       */
-      public java.lang.String getCname() {
-        java.lang.Object ref = cname_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          cname_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string Cname = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCnameBytes() {
-        java.lang.Object ref = cname_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          cname_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string Cname = 1;</code>
-       */
-      public Builder setCname(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        cname_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Cname = 1;</code>
-       */
-      public Builder clearCname() {
-        
-        cname_ = getDefaultInstance().getCname();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Cname = 1;</code>
-       */
-      public Builder setCnameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        cname_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object ctype_ = "";
-      /**
-       * <code>string Ctype = 2;</code>
-       */
-      public java.lang.String getCtype() {
-        java.lang.Object ref = ctype_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          ctype_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string Ctype = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCtypeBytes() {
-        java.lang.Object ref = ctype_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          ctype_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string Ctype = 2;</code>
-       */
-      public Builder setCtype(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        ctype_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Ctype = 2;</code>
-       */
-      public Builder clearCtype() {
-        
-        ctype_ = getDefaultInstance().getCtype();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Ctype = 2;</code>
-       */
-      public Builder setCtypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        ctype_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object caption_ = "";
-      /**
-       * <code>string Caption = 3;</code>
-       */
-      public java.lang.String getCaption() {
-        java.lang.Object ref = caption_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          caption_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string Caption = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCaptionBytes() {
-        java.lang.Object ref = caption_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          caption_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string Caption = 3;</code>
-       */
-      public Builder setCaption(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        caption_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Caption = 3;</code>
-       */
-      public Builder clearCaption() {
-        
-        caption_ = getDefaultInstance().getCaption();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Caption = 3;</code>
-       */
-      public Builder setCaptionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        caption_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object description_ = "";
-      /**
-       * <code>string Description = 4;</code>
-       */
-      public java.lang.String getDescription() {
-        java.lang.Object ref = description_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          description_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string Description = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getDescriptionBytes() {
-        java.lang.Object ref = description_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          description_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string Description = 4;</code>
-       */
-      public Builder setDescription(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        description_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Description = 4;</code>
-       */
-      public Builder clearDescription() {
-        
-        description_ = getDefaultInstance().getDescription();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string Description = 4;</code>
-       */
-      public Builder setDescriptionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        description_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object expressionStr_ = "";
-      /**
-       * <code>string ExpressionStr = 5;</code>
-       */
-      public java.lang.String getExpressionStr() {
-        java.lang.Object ref = expressionStr_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          expressionStr_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string ExpressionStr = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getExpressionStrBytes() {
-        java.lang.Object ref = expressionStr_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          expressionStr_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string ExpressionStr = 5;</code>
-       */
-      public Builder setExpressionStr(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        expressionStr_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ExpressionStr = 5;</code>
-       */
-      public Builder clearExpressionStr() {
-        
-        expressionStr_ = getDefaultInstance().getExpressionStr();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string ExpressionStr = 5;</code>
-       */
-      public Builder setExpressionStrBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        expressionStr_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int logicValue_ ;
-      /**
-       * <code>int32 LogicValue = 7;</code>
-       */
-      public int getLogicValue() {
-        return logicValue_;
-      }
-      /**
-       * <code>int32 LogicValue = 7;</code>
-       */
-      public Builder setLogicValue(int value) {
-        
-        logicValue_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 LogicValue = 7;</code>
-       */
-      public Builder clearLogicValue() {
-        
-        logicValue_ = 0;
-        onChanged();
-        return this;
-      }
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:protos.ComponentsExpressionSub)
-    }
-
-    // @@protoc_insertion_point(class_scope:protos.ComponentsExpressionSub)
-    private static final com.uniledger.protos.ProtoContract.ComponentsExpressionSub DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new com.uniledger.protos.ProtoContract.ComponentsExpressionSub();
-    }
-
-    public static com.uniledger.protos.ProtoContract.ComponentsExpressionSub getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<ComponentsExpressionSub>
-        PARSER = new com.google.protobuf.AbstractParser<ComponentsExpressionSub>() {
-      public ComponentsExpressionSub parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ComponentsExpressionSub(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ComponentsExpressionSub> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ComponentsExpressionSub> getParserForType() {
-      return PARSER;
-    }
-
-    public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   public interface ComponentsExpressionOrBuilder extends
       // @@protoc_insertion_point(interface_extends:protos.ComponentsExpression)
       com.google.protobuf.MessageOrBuilder {
@@ -3998,17 +2873,17 @@ public final class ProtoContract {
         getExpressionStrBytes();
 
     /**
-     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
      */
     boolean hasExpressionResult();
     /**
-     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
      */
-    com.uniledger.protos.ProtoContract.ComponentsExpressionSub getExpressionResult();
+    com.uniledger.protos.ProtoContract.ExpressionResult getExpressionResult();
     /**
-     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
      */
-    com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder getExpressionResultOrBuilder();
+    com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder();
 
     /**
      * <code>int32 LogicValue = 7;</code>
@@ -4091,11 +2966,11 @@ public final class ProtoContract {
               break;
             }
             case 50: {
-              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder subBuilder = null;
+              com.uniledger.protos.ProtoContract.ExpressionResult.Builder subBuilder = null;
               if (expressionResult_ != null) {
                 subBuilder = expressionResult_.toBuilder();
               }
-              expressionResult_ = input.readMessage(com.uniledger.protos.ProtoContract.ComponentsExpressionSub.parser(), extensionRegistry);
+              expressionResult_ = input.readMessage(com.uniledger.protos.ProtoContract.ExpressionResult.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(expressionResult_);
                 expressionResult_ = subBuilder.buildPartial();
@@ -4302,23 +3177,23 @@ public final class ProtoContract {
     }
 
     public static final int EXPRESSIONRESULT_FIELD_NUMBER = 6;
-    private com.uniledger.protos.ProtoContract.ComponentsExpressionSub expressionResult_;
+    private com.uniledger.protos.ProtoContract.ExpressionResult expressionResult_;
     /**
-     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
      */
     public boolean hasExpressionResult() {
       return expressionResult_ != null;
     }
     /**
-     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getExpressionResult() {
-      return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance() : expressionResult_;
+    public com.uniledger.protos.ProtoContract.ExpressionResult getExpressionResult() {
+      return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ExpressionResult.getDefaultInstance() : expressionResult_;
     }
     /**
-     * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+     * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
      */
-    public com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder getExpressionResultOrBuilder() {
+    public com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder() {
       return getExpressionResult();
     }
 
@@ -5071,29 +3946,29 @@ public final class ProtoContract {
         return this;
       }
 
-      private com.uniledger.protos.ProtoContract.ComponentsExpressionSub expressionResult_ = null;
+      private com.uniledger.protos.ProtoContract.ExpressionResult expressionResult_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ComponentsExpressionSub, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder> expressionResultBuilder_;
+          com.uniledger.protos.ProtoContract.ExpressionResult, com.uniledger.protos.ProtoContract.ExpressionResult.Builder, com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder> expressionResultBuilder_;
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
       public boolean hasExpressionResult() {
         return expressionResultBuilder_ != null || expressionResult_ != null;
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub getExpressionResult() {
+      public com.uniledger.protos.ProtoContract.ExpressionResult getExpressionResult() {
         if (expressionResultBuilder_ == null) {
-          return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance() : expressionResult_;
+          return expressionResult_ == null ? com.uniledger.protos.ProtoContract.ExpressionResult.getDefaultInstance() : expressionResult_;
         } else {
           return expressionResultBuilder_.getMessage();
         }
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
-      public Builder setExpressionResult(com.uniledger.protos.ProtoContract.ComponentsExpressionSub value) {
+      public Builder setExpressionResult(com.uniledger.protos.ProtoContract.ExpressionResult value) {
         if (expressionResultBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5107,10 +3982,10 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
       public Builder setExpressionResult(
-          com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder builderForValue) {
+          com.uniledger.protos.ProtoContract.ExpressionResult.Builder builderForValue) {
         if (expressionResultBuilder_ == null) {
           expressionResult_ = builderForValue.build();
           onChanged();
@@ -5121,13 +3996,13 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
-      public Builder mergeExpressionResult(com.uniledger.protos.ProtoContract.ComponentsExpressionSub value) {
+      public Builder mergeExpressionResult(com.uniledger.protos.ProtoContract.ExpressionResult value) {
         if (expressionResultBuilder_ == null) {
           if (expressionResult_ != null) {
             expressionResult_ =
-              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.newBuilder(expressionResult_).mergeFrom(value).buildPartial();
+              com.uniledger.protos.ProtoContract.ExpressionResult.newBuilder(expressionResult_).mergeFrom(value).buildPartial();
           } else {
             expressionResult_ = value;
           }
@@ -5139,7 +4014,7 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
       public Builder clearExpressionResult() {
         if (expressionResultBuilder_ == null) {
@@ -5153,33 +4028,33 @@ public final class ProtoContract {
         return this;
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder getExpressionResultBuilder() {
+      public com.uniledger.protos.ProtoContract.ExpressionResult.Builder getExpressionResultBuilder() {
         
         onChanged();
         return getExpressionResultFieldBuilder().getBuilder();
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
-      public com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder getExpressionResultOrBuilder() {
+      public com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder getExpressionResultOrBuilder() {
         if (expressionResultBuilder_ != null) {
           return expressionResultBuilder_.getMessageOrBuilder();
         } else {
           return expressionResult_ == null ?
-              com.uniledger.protos.ProtoContract.ComponentsExpressionSub.getDefaultInstance() : expressionResult_;
+              com.uniledger.protos.ProtoContract.ExpressionResult.getDefaultInstance() : expressionResult_;
         }
       }
       /**
-       * <code>.protos.ComponentsExpressionSub ExpressionResult = 6;</code>
+       * <code>.protos.ExpressionResult ExpressionResult = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ComponentsExpressionSub, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder> 
+          com.uniledger.protos.ProtoContract.ExpressionResult, com.uniledger.protos.ProtoContract.ExpressionResult.Builder, com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder> 
           getExpressionResultFieldBuilder() {
         if (expressionResultBuilder_ == null) {
           expressionResultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.uniledger.protos.ProtoContract.ComponentsExpressionSub, com.uniledger.protos.ProtoContract.ComponentsExpressionSub.Builder, com.uniledger.protos.ProtoContract.ComponentsExpressionSubOrBuilder>(
+              com.uniledger.protos.ProtoContract.ExpressionResult, com.uniledger.protos.ProtoContract.ExpressionResult.Builder, com.uniledger.protos.ProtoContract.ExpressionResultOrBuilder>(
                   getExpressionResult(),
                   getParentForChildren(),
                   isClean());
@@ -28622,11 +27497,6 @@ public final class ProtoContract {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ExpressionResult_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_ComponentsExpressionSub_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_ComponentsExpressionSub_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ComponentsExpression_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -28704,99 +27574,95 @@ public final class ProtoContract {
       "\003(\0132#.protos.ContractAsset.MetaDataEntry" +
       "\032/\n\rMetaDataEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
       "\002 \001(\t:\0028\001\"2\n\020ExpressionResult\022\020\n\010Messsag" +
-      "e\030\001 \001(\t\022\014\n\004Code\030\002 \001(\005\"\210\001\n\027ComponentsExpr",
-      "essionSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022" +
-      "\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n" +
-      "\rExpressionStr\030\005 \001(\t\022\022\n\nLogicValue\030\007 \001(\005" +
-      "\"\300\001\n\024ComponentsExpression\022\r\n\005Cname\030\001 \001(\t" +
-      "\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Desc" +
-      "ription\030\004 \001(\t\022\025\n\rExpressionStr\030\005 \001(\t\0229\n\020" +
-      "ExpressionResult\030\006 \001(\0132\037.protos.Componen" +
-      "tsExpressionSub\022\022\n\nLogicValue\030\007 \001(\005\"\250\004\n\020" +
-      "ComponentDataSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype" +
-      "\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004",
-      " \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014HardConvType" +
-      "\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022\021\n\tMandatory\030\t " +
-      "\001(\010\022\014\n\004Unit\030\n \001(\t\0226\n\007Options\030\013 \003(\0132%.pro" +
-      "tos.ComponentDataSub.OptionsEntry\022\016\n\006For" +
-      "mat\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tValueUint" +
-      "\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013ValueStrin" +
-      "g\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\005\022\030\n\020Defa" +
-      "ultValueUint\030\022 \001(\r\022\031\n\021DefaultValueFloat\030" +
-      "\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024\n\014Dat" +
-      "aRangeInt\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 \003(\r\022\026",
-      "\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"\314\004\n\rCompo" +
-      "nentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017" +
-      "\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\022\n\n" +
-      "ModifyDate\030\005 \001(\t\022\024\n\014HardConvType\030\006 \001(\t\022\020" +
-      "\n\010Category\030\007 \003(\t\022(\n\006Parent\030\010 \001(\0132\030.proto" +
-      "s.ComponentDataSub\022\021\n\tMandatory\030\t \001(\010\022\014\n" +
-      "\004Unit\030\n \001(\t\0223\n\007Options\030\013 \003(\0132\".protos.Co" +
-      "mponentData.OptionsEntry\022\016\n\006Format\030\014 \001(\t" +
-      "\022\020\n\010ValueInt\030\r \001(\005\022\021\n\tValueUint\030\016 \001(\r\022\022\n",
-      "\nValueFloat\030\017 \001(\001\022\023\n\013ValueString\030\020 \001(\t\022\027" +
-      "\n\017DefaultValueInt\030\021 \001(\005\022\030\n\020DefaultValueU" +
-      "int\030\022 \001(\r\022\031\n\021DefaultValueFloat\030\023 \001(\001\022\032\n\022" +
-      "DefaultValueString\030\024 \001(\t\022\024\n\014DataRangeInt" +
-      "\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 \003(\r\022\026\n\016DataRan" +
-      "geFloat\030\027 \003(\001\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026SelectBranchExp" +
-      "ression\022\033\n\023BranchExpressionStr\030\001 \001(\t\022\035\n\025" +
-      "BranchExpressionValue\030\002 \001(\t\"\324\004\n\024Contract" +
-      "ComponentSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001",
-      "(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t" +
-      "\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006 \003(\0132\034." +
-      "protos.ComponentsExpression\0227\n\021CompleteC" +
-      "ondition\030\007 \003(\0132\034.protos.ComponentsExpres" +
-      "sion\0226\n\020DiscardCondition\030\010 \003(\0132\034.protos." +
-      "ComponentsExpression\022\021\n\tNextTasks\030\t \003(\t\022" +
-      "\'\n\010DataList\030\n \003(\0132\025.protos.ComponentData" +
-      "\022C\n\035DataValueSetterExpressionList\030\013 \003(\0132" +
-      "\034.protos.ComponentsExpression\022\020\n\010TaskLis" +
-      "t\030\016 \003(\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020Aga",
-      "instArguments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004" +
-      "Text\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006Ta" +
-      "skId\030\024 \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.pro" +
-      "tos.SelectBranchExpression\"\274\005\n\021ContractC" +
-      "omponent\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017" +
-      "\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\r\n\005" +
-      "State\030\005 \001(\t\0222\n\014PreCondition\030\006 \003(\0132\034.prot" +
-      "os.ComponentsExpression\0227\n\021CompleteCondi" +
-      "tion\030\007 \003(\0132\034.protos.ComponentsExpression" +
-      "\0226\n\020DiscardCondition\030\010 \003(\0132\034.protos.Comp",
-      "onentsExpression\022\021\n\tNextTasks\030\t \003(\t\022\'\n\010D" +
-      "ataList\030\n \003(\0132\025.protos.ComponentData\022C\n\035" +
-      "DataValueSetterExpressionList\030\013 \003(\0132\034.pr" +
-      "otos.ComponentsExpression\0223\n\rCandidateLi" +
-      "st\030\014 \001(\0132\034.protos.ContractComponentSub\0224" +
-      "\n\016DecisionResult\030\r \001(\0132\034.protos.Contract" +
-      "ComponentSub\022\020\n\010TaskList\030\016 \003(\t\022\030\n\020Suppor" +
-      "tArguments\030\017 \003(\t\022\030\n\020AgainstArguments\030\020 \003" +
-      "(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022\026\n\016Tas" +
-      "kExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(\t\0226\n\016Sel",
-      "ectBranches\030\025 \003(\0132\036.protos.SelectBranchE" +
-      "xpression\"\204\004\n\014ContractBody\022\022\n\nContractId" +
-      "\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030\003 \001(\t\022\017\n\007" +
-      "Caption\030\004 \001(\t\022\023\n\013Description\030\005 \001(\t\022\025\n\rCo" +
-      "ntractState\030\006 \001(\t\022\017\n\007Creator\030\007 \001(\t\022\022\n\nCr" +
-      "eateTime\030\010 \001(\t\022\021\n\tStartTime\030\t \001(\t\022\017\n\007End" +
-      "Time\030\n \001(\t\022\026\n\016ContractOwners\030\013 \003(\t\022-\n\016Co" +
-      "ntractAssets\030\014 \003(\0132\025.protos.ContractAsse" +
-      "t\0225\n\022ContractSignatures\030\r \003(\0132\031.protos.C" +
-      "ontractSignature\0225\n\022ContractComponents\030\016",
-      " \003(\0132\031.protos.ContractComponent\022>\n\rMetaA" +
-      "ttribute\030\017 \003(\0132\'.protos.ContractBody.Met" +
-      "aAttributeEntry\022\021\n\tNextTasks\030\020 \003(\t\0324\n\022Me" +
-      "taAttributeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nMainPubkey\030\001" +
-      " \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssignTime\030\003 \001(" +
-      "\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017ConsensusResul" +
-      "t\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001(\t\022*\n\014Contr" +
-      "actHead\030\002 \001(\0132\024.protos.ContractHead\022*\n\014C" +
-      "ontractBody\030\003 \001(\0132\024.protos.ContractBodyB",
-      "%\n\024com.uniledger.protosB\rProtoContractb\006" +
-      "proto3"
+      "e\030\001 \001(\t\022\014\n\004Code\030\002 \001(\005\"\271\001\n\024ComponentsExpr",
+      "ession\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007" +
+      "Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n\rEx" +
+      "pressionStr\030\005 \001(\t\0222\n\020ExpressionResult\030\006 " +
+      "\001(\0132\030.protos.ExpressionResult\022\022\n\nLogicVa" +
+      "lue\030\007 \001(\005\"\250\004\n\020ComponentDataSub\022\r\n\005Cname\030" +
+      "\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n" +
+      "\013Description\030\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024" +
+      "\n\014HardConvType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022\021" +
+      "\n\tMandatory\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0226\n\007Optio" +
+      "ns\030\013 \003(\0132%.protos.ComponentDataSub.Optio",
+      "nsEntry\022\016\n\006Format\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(" +
+      "\003\022\021\n\tValueUint\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001" +
+      "\022\023\n\013ValueString\030\020 \001(\t\022\027\n\017DefaultValueInt" +
+      "\030\021 \001(\005\022\030\n\020DefaultValueUint\030\022 \001(\r\022\031\n\021Defa" +
+      "ultValueFloat\030\023 \001(\001\022\032\n\022DefaultValueStrin" +
+      "g\030\024 \001(\t\022\024\n\014DataRangeInt\030\025 \003(\005\022\025\n\rDataRan" +
+      "geUint\030\026 \003(\r\022\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014" +
+      "OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005" +
+      ":\0028\001\"\314\004\n\rComponentData\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
+      "\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descrip",
+      "tion\030\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014HardCo" +
+      "nvType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022(\n\006Parent" +
+      "\030\010 \001(\0132\030.protos.ComponentDataSub\022\021\n\tMand" +
+      "atory\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0223\n\007Options\030\013 \003" +
+      "(\0132\".protos.ComponentData.OptionsEntry\022\016" +
+      "\n\006Format\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\005\022\021\n\tValu" +
+      "eUint\030\016 \001(\r\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013Value" +
+      "String\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\005\022\030\n" +
+      "\020DefaultValueUint\030\022 \001(\r\022\031\n\021DefaultValueF" +
+      "loat\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024",
+      "\n\014DataRangeInt\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 " +
+      "\003(\r\022\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEn" +
+      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026S" +
+      "electBranchExpression\022\033\n\023BranchExpressio" +
+      "nStr\030\001 \001(\t\022\035\n\025BranchExpressionValue\030\002 \001(" +
+      "\t\"\324\004\n\024ContractComponentSub\022\r\n\005Cname\030\001 \001(" +
+      "\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Des" +
+      "cription\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCond" +
+      "ition\030\006 \003(\0132\034.protos.ComponentsExpressio" +
+      "n\0227\n\021CompleteCondition\030\007 \003(\0132\034.protos.Co",
+      "mponentsExpression\0226\n\020DiscardCondition\030\010" +
+      " \003(\0132\034.protos.ComponentsExpression\022\021\n\tNe" +
+      "xtTasks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos" +
+      ".ComponentData\022C\n\035DataValueSetterExpress" +
+      "ionList\030\013 \003(\0132\034.protos.ComponentsExpress" +
+      "ion\022\020\n\010TaskList\030\016 \003(\t\022\030\n\020SupportArgument" +
+      "s\030\017 \003(\t\022\030\n\020AgainstArguments\030\020 \003(\t\022\017\n\007Sup" +
+      "port\030\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022\026\n\016TaskExecuteI" +
+      "dx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(\t\0226\n\016SelectBranch" +
+      "es\030\025 \003(\0132\036.protos.SelectBranchExpression",
+      "\"\274\005\n\021ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n" +
+      "\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descrip" +
+      "tion\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreConditio" +
+      "n\030\006 \003(\0132\034.protos.ComponentsExpression\0227\n" +
+      "\021CompleteCondition\030\007 \003(\0132\034.protos.Compon" +
+      "entsExpression\0226\n\020DiscardCondition\030\010 \003(\013" +
+      "2\034.protos.ComponentsExpression\022\021\n\tNextTa" +
+      "sks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Com" +
+      "ponentData\022C\n\035DataValueSetterExpressionL" +
+      "ist\030\013 \003(\0132\034.protos.ComponentsExpression\022",
+      "3\n\rCandidateList\030\014 \001(\0132\034.protos.Contract" +
+      "ComponentSub\0224\n\016DecisionResult\030\r \001(\0132\034.p" +
+      "rotos.ContractComponentSub\022\020\n\010TaskList\030\016" +
+      " \003(\t\022\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020Agains" +
+      "tArguments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Tex" +
+      "t\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskI" +
+      "d\030\024 \001(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.protos" +
+      ".SelectBranchExpression\"\204\004\n\014ContractBody" +
+      "\022\022\n\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005C" +
+      "type\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Descripti",
+      "on\030\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creat" +
+      "or\030\007 \001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTim" +
+      "e\030\t \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwne" +
+      "rs\030\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.proto" +
+      "s.ContractAsset\0225\n\022ContractSignatures\030\r " +
+      "\003(\0132\031.protos.ContractSignature\0225\n\022Contra" +
+      "ctComponents\030\016 \003(\0132\031.protos.ContractComp" +
+      "onent\022>\n\rMetaAttribute\030\017 \003(\0132\'.protos.Co" +
+      "ntractBody.MetaAttributeEntry\022\021\n\tNextTas" +
+      "ks\030\020 \003(\t\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 ",
+      "\001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022" +
+      "\n\nMainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nA" +
+      "ssignTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017" +
+      "ConsensusResult\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030" +
+      "\001 \001(\t\022*\n\014ContractHead\030\002 \001(\0132\024.protos.Con" +
+      "tractHead\022*\n\014ContractBody\030\003 \001(\0132\024.protos" +
+      ".ContractBodyB%\n\024com.uniledger.protosB\rP" +
+      "rotoContractb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -28834,20 +27700,14 @@ public final class ProtoContract {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ExpressionResult_descriptor,
         new java.lang.String[] { "Messsage", "Code", });
-    internal_static_protos_ComponentsExpressionSub_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_protos_ComponentsExpressionSub_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_ComponentsExpressionSub_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ExpressionStr", "LogicValue", });
     internal_static_protos_ComponentsExpression_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_protos_ComponentsExpression_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentsExpression_descriptor,
         new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ExpressionStr", "ExpressionResult", "LogicValue", });
     internal_static_protos_ComponentDataSub_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_protos_ComponentDataSub_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentDataSub_descriptor,
@@ -28859,7 +27719,7 @@ public final class ProtoContract {
         internal_static_protos_ComponentDataSub_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ComponentData_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_protos_ComponentData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentData_descriptor,
@@ -28871,25 +27731,25 @@ public final class ProtoContract {
         internal_static_protos_ComponentData_OptionsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_protos_SelectBranchExpression_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_protos_SelectBranchExpression_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_SelectBranchExpression_descriptor,
         new java.lang.String[] { "BranchExpressionStr", "BranchExpressionValue", });
     internal_static_protos_ContractComponentSub_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_protos_ContractComponentSub_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponentSub_descriptor,
         new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DiscardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
     internal_static_protos_ContractComponent_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_protos_ContractComponent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractComponent_descriptor,
         new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "State", "PreCondition", "CompleteCondition", "DiscardCondition", "NextTasks", "DataList", "DataValueSetterExpressionList", "CandidateList", "DecisionResult", "TaskList", "SupportArguments", "AgainstArguments", "Support", "Text", "TaskExecuteIdx", "TaskId", "SelectBranches", });
     internal_static_protos_ContractBody_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_protos_ContractBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractBody_descriptor,
@@ -28901,13 +27761,13 @@ public final class ProtoContract {
         internal_static_protos_ContractBody_MetaAttributeEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ContractHead_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_protos_ContractHead_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractHead_descriptor,
         new java.lang.String[] { "MainPubkey", "Version", "AssignTime", "OperateTime", "ConsensusResult", });
     internal_static_protos_Contract_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_protos_Contract_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_Contract_descriptor,

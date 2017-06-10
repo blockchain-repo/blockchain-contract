@@ -241,6 +241,7 @@ func (c *ContractController) Create() {
 	}
 
 	contractModel := fromContractToContractModel(contract)
+	logs.Warn("contractModel:\n", contractModel)
 	contractModel.ContractHead = &protos.ContractHead{
 		Version: 1,
 	}

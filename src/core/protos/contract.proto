@@ -27,22 +27,13 @@ message ExpressionResult {
     int32 Code = 2;
 }
 
-message ComponentsExpressionSub{
-    string Cname = 1;
-    string Ctype = 2;
-    string Caption = 3;
-    string Description = 4;
-    string ExpressionStr = 5;
-    int32 LogicValue = 7;
-}
-
 message ComponentsExpression {
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
     string Description = 4;
     string ExpressionStr = 5;
-    ComponentsExpressionSub ExpressionResult = 6;
+    ExpressionResult ExpressionResult = 6;
     int32 LogicValue = 7;
 }
 
