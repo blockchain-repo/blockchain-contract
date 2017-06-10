@@ -2,66 +2,107 @@ package data
 
 import (
 	"errors"
+	"github.com/astaxie/beego/logs"
 	"strings"
+	"unicontract/src/core/engine/common"
+	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
-	"unicontract/src/core/engine/execengine/constdef"
-	"github.com/astaxie/beego/logs"
 )
 
 type TextData struct {
 	GeneralData
+	ValueString        int `json:"ValueString"`
+	DefaultValueString int `json:"DefaultValueString"`
 }
 
-func NewTextData()*TextData{
+const (
+	_ValueString        = "_ValueString"
+	_DefaultValueString = "_DefaultValueString"
+)
+
+func NewTextData() *TextData {
 	n := &TextData{}
 	return n
 }
+
 //====================接口方法========================
-func (td TextData)GetName()string{
+func (td TextData) GetName() string {
 	return td.GeneralData.GetName()
 }
 
-func (td TextData) GetValue() interface{}{
-	value_property := td.PropertyTable[_Value].(property.PropertyT)
-	if value_property.GetValue() != nil {
-		return value_property.GetValue()
-	} else {
-		v_contract := td.GeneralComponent.GetContract()
-		v_default := v_contract.ProcessString(td.GetDefaultValue().(string))
-		return v_default
-	}
+func (td TextData) GetValue() interface{} {
+	return td.GetValueString()
 }
-func (td TextData)SetContract(p_contract inf.ICognitiveContract) {
+func (td TextData) SetContract(p_contract inf.ICognitiveContract) {
 	td.GeneralComponent.SetContract(p_contract)
 }
-func (td TextData)GetContract() inf.ICognitiveContract {
+func (td TextData) GetContract() inf.ICognitiveContract {
 	return td.GeneralComponent.GetContract()
 }
-func (td TextData)GetCtype()string{
+func (td TextData) GetCtype() string {
 	return td.GeneralData.GetCtype()
 }
-func (td TextData) SetValue(p_Value interface{}){
-	td.GeneralData.SetValue(p_Value)
+func (td TextData) SetValue(p_Value interface{}) {
+	td.SetValueString(p_Value)
 }
+
 //====================描述态==========================
 
-
 //====================运行态==========================
-func (td *TextData) InitTextData()error{
+func (td *TextData) InitTextData() error {
 	var err error = nil
 	err = td.InitGeneralData()
-    if err != nil {
-		logs.Error("InitTextData fail["+err.Error()+"]")
+	if err != nil {
+		logs.Error("InitTextData fail[" + err.Error() + "]")
 		return err
 	}
 	td.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Text])
-
+	common.AddProperty(td, td.PropertyTable, _ValueString, td.ValueString)
+	common.AddProperty(td, td.PropertyTable, _DefaultValueString, td.DefaultValueString)
 	td.SetHardConvType("string")
 	return err
 }
+
+//=====Getter方法
+func (td *TextData) GetValueString() interface{} {
+	value_property := td.PropertyTable[_ValueString].(property.PropertyT)
+	if value_property.GetValue() != nil {
+		return value_property.GetValue()
+	} else {
+		v_default := td.GetDefaultValueString()
+		return v_default
+	}
+}
+func (td *TextData) GetDefaultValueString() interface{} {
+	value_property := td.PropertyTable[_DefaultValueString].(property.PropertyT)
+	if value_property.GetValue() != nil {
+		return value_property.GetValue()
+	}
+	return nil
+}
+
+//=====Setter方法
+func (td *TextData) SetValueString(p_ValueString interface{}) {
+	if p_ValueString != nil {
+		td.ValueString = p_ValueString.(int)
+		value_property := td.PropertyTable[_ValueString].(property.PropertyT)
+		value_property.SetValue(p_ValueString)
+		td.PropertyTable[_ValueString] = value_property
+	}
+}
+
+func (td *TextData) SetDefaultValueString(p_DefaultValueString interface{}) {
+	if p_DefaultValueString != nil {
+		td.DefaultValueString = p_DefaultValueString.(int)
+		defaultvalue_property := td.PropertyTable[_DefaultValueString].(property.PropertyT)
+		defaultvalue_property.SetValue(p_DefaultValueString)
+		td.PropertyTable[_DefaultValueString] = defaultvalue_property
+	}
+}
+
 //=====运算
-func (td *TextData) Eq(p_data interface{})(bool, error) {
+func (td *TextData) Eq(p_data interface{}) (bool, error) {
 	var f_leftdata string = td.GetValue().(string)
 	var f_rightdata string
 	var f_error error
@@ -77,7 +118,7 @@ func (td *TextData) Eq(p_data interface{})(bool, error) {
 	return strings.EqualFold(f_leftdata, f_rightdata), f_error
 }
 
-func (td *TextData) Add(p_data interface{})(string, error) {
+func (td *TextData) Add(p_data interface{}) (string, error) {
 	var f_leftdata string = td.GetValue().(string)
 	var f_rightdata string
 	var f_error error
@@ -93,7 +134,7 @@ func (td *TextData) Add(p_data interface{})(string, error) {
 	return f_leftdata + f_rightdata, f_error
 }
 
-func (td *TextData) RAdd(p_data interface{})(string, error) {
+func (td *TextData) RAdd(p_data interface{}) (string, error) {
 	var f_leftdata string = td.GetValue().(string)
 	var f_rightdata string
 	var f_error error
@@ -109,7 +150,7 @@ func (td *TextData) RAdd(p_data interface{})(string, error) {
 	return f_rightdata + f_leftdata, f_error
 }
 
-func (td *TextData) Len()int{
+func (td *TextData) Len() int {
 	var f_leftdata string = td.GetValue().(string)
 	return len(f_leftdata)
 }

@@ -1,111 +1,152 @@
 package data
 
 import (
-	"unicontract/src/core/engine/execengine/property"
-	"strconv"
 	"errors"
-	"unicontract/src/core/engine/execengine/inf"
-	"unicontract/src/core/engine/execengine/constdef"
 	"github.com/astaxie/beego/logs"
+	"strconv"
 	"unicontract/src/core/engine/common"
+	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/inf"
+	"unicontract/src/core/engine/execengine/property"
 )
 
 //支持int中的各种类型int8, int16, int32, int64; 不可直接用int
 //TODO :先以int为主
 type IntData struct {
 	GeneralData
-	DataRange [2]int `json:"DataRange"`
+	ValueInt        int    `json:"ValueInt"`
+	DefaultValueInt int    `json:"DefaultValueInt"`
+	DataRangeInt    [2]int `json:"DataRangeInt"`
 }
 
 const (
-	_Contract = "_Contract"
+	_DataRangeInt    = "_DataRangeInt"
+	_ValueInt        = "_ValueInt"
+	_DefaultValueInt = "_DefaultValueInt"
 )
 
-func NewIntData()*IntData{
+func NewIntData() *IntData {
 	n := &IntData{}
 	return n
 }
+
 //====================接口方法========================
-func (nd IntData)GetName()string{
+func (nd IntData) GetName() string {
 	return nd.GeneralData.GetName()
 }
 
-func (nd IntData) GetValue() interface{}{
-	return nd.GeneralData.GetValue()
+func (nd IntData) GetValue() interface{} {
+	return nd.GetValueInt()
 }
 
-func (nd IntData)GetContract() inf.ICognitiveContract {
+func (nd IntData) GetContract() inf.ICognitiveContract {
 	return nd.GeneralData.GetContract()
 }
-func (nd IntData)SetContract(p_contract inf.ICognitiveContract) {
+func (nd IntData) SetContract(p_contract inf.ICognitiveContract) {
 	nd.GeneralData.SetContract(p_contract)
 }
-func (nd IntData)GetCtype()string{
+func (nd IntData) GetCtype() string {
 	return nd.GeneralData.GetCtype()
 }
-func (nd IntData) SetValue(p_Value interface{}){
-	nd.GeneralData.SetValue(p_Value)
+func (nd IntData) SetValue(p_Value interface{}) {
+	nd.SetValueInt(p_Value)
 }
+
 //====================描述态==========================
 
-
 //====================运行态==========================
-func (nd *IntData) InitIntData()error{
+func (nd *IntData) InitIntData() error {
 	var err error = nil
 	err = nd.InitGeneralData()
-    if err != nil {
-		logs.Error("InitIntData fail["+err.Error()+"]")
+	if err != nil {
+		logs.Error("InitIntData fail[" + err.Error() + "]")
 		return err
 	}
 	nd.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Int])
 	var data_range [2]int = [2]int{-2147483647, 2147483647}
-	if nd.DataRange[0] ==  0 && nd.DataRange[1] == 0 {
-		common.AddProperty(nd, nd.PropertyTable, _DataRange, data_range)
+	if nd.DataRangeInt[0] == 0 && nd.DataRangeInt[1] == 0 {
+		common.AddProperty(nd, nd.PropertyTable, _DataRangeInt, data_range)
 	} else {
-		common.AddProperty(nd, nd.PropertyTable, _DataRange, nd.DataRange)
+		common.AddProperty(nd, nd.PropertyTable, _DataRangeInt, nd.DataRangeInt)
 	}
+	common.AddProperty(nd, nd.PropertyTable, _ValueInt, nd.ValueInt)
+	common.AddProperty(nd, nd.PropertyTable, _DefaultValueInt, nd.DefaultValueInt)
 	nd.SetHardConvType("int")
 	return err
 }
 
 //====属性Get方法
-func (nd *IntData) GetDataRange()[2]int{
-	datarange_property := nd.PropertyTable[_DataRange].(property.PropertyT)
-	return datarange_property.GetValue().([2]int)
+func (nd *IntData) GetDataRangeInt() [2]int {
+	dataRangeInt_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+	return dataRangeInt_property.GetValue().([2]int)
+}
+func (nd *IntData) GetValueInt() interface{} {
+	value_property := nd.PropertyTable[_ValueInt].(property.PropertyT)
+	if value_property.GetValue() != nil {
+		return value_property.GetValue()
+	} else {
+		v_default := nd.GetDefaultValueInt()
+		return v_default
+	}
+}
+func (nd *IntData) GetDefaultValueInt() interface{} {
+	value_property := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
+	if value_property.GetValue() != nil {
+		return value_property.GetValue()
+	}
+	return nil
 }
 
 //====属性Set方法
-func (nd *IntData) SetDataRange(data_range [2]int)error{
+func (nd *IntData) SetValueInt(p_ValueInt interface{}) {
+	if p_ValueInt != nil {
+		nd.ValueInt = p_ValueInt.(int)
+		value_property := nd.PropertyTable[_ValueInt].(property.PropertyT)
+		value_property.SetValue(p_ValueInt)
+		nd.PropertyTable[_ValueInt] = value_property
+	}
+}
+
+func (nd *IntData) SetDefaultValueInt(p_DefaultValueInt interface{}) {
+	if p_DefaultValueInt != nil {
+		nd.DefaultValueInt = p_DefaultValueInt.(int)
+		defaultvalue_property := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
+		defaultvalue_property.SetValue(p_DefaultValueInt)
+		nd.PropertyTable[_DefaultValueInt] = defaultvalue_property
+	}
+}
+func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 	var err error = nil
 	if data_range[0] == 0 && data_range[1] == 0 {
 		var data_range [2]int = [2]int{-2147483647, 2147483647}
-		nd.DataRange = data_range
-		datarange_property := nd.PropertyTable[_DataRange].(property.PropertyT)
-		datarange_property.SetValue(data_range)
-		nd.PropertyTable[_DataRange] = datarange_property
+		nd.DataRangeInt = data_range
+		datarangeint_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+		datarangeint_property.SetValue(data_range)
+		nd.PropertyTable[_DataRangeInt] = datarangeint_property
 	} else {
 		var f_range [2]int = data_range
 		if f_range[0] <= f_range[1] {
-			nd.DataRange = f_range
-			datarange_property := nd.PropertyTable[_DataRange].(property.PropertyT)
-			datarange_property.SetValue(data_range)
-			nd.PropertyTable[_DataRange] = datarange_property
-		}else{
+			nd.DataRangeInt = f_range
+			datarangeint_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+			datarangeint_property.SetValue(data_range)
+			nd.PropertyTable[_DataRangeInt] = datarangeint_property
+		} else {
 			var str_error string = "Data range Error(low:" + strconv.Itoa(f_range[0]) +
 				", high:" + strconv.Itoa(f_range[1]) + ")!"
 			err = errors.New(str_error)
 		}
 	}
-	nd.DataRange = data_range
+	nd.DataRangeInt = data_range
 	return err
 }
+
 //=====运算
-func (nd *IntData) CheckRange(check_data int)bool{
+func (nd *IntData) CheckRange(check_data int) bool {
 	var r_ret = false
-	if len(nd.GetDataRange()) == 0 {
+	if len(nd.GetDataRangeInt()) == 0 {
 		r_ret = true
 	} else {
-		var f_range = nd.GetDataRange()
+		var f_range = nd.GetDataRangeInt()
 		if check_data >= f_range[0] && check_data <= f_range[1] {
 			r_ret = true
 		} else {
@@ -115,7 +156,7 @@ func (nd *IntData) CheckRange(check_data int)bool{
 	return r_ret
 }
 
-func (nd *IntData) Add(p_data interface{})(int, error){
+func (nd *IntData) Add(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -131,7 +172,7 @@ func (nd *IntData) Add(p_data interface{})(int, error){
 	return f_leftdata + f_rightdata, f_error
 }
 
-func (nd *IntData) RAdd(p_data interface{})(int, error){
+func (nd *IntData) RAdd(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -147,7 +188,7 @@ func (nd *IntData) RAdd(p_data interface{})(int, error){
 	return f_leftdata + f_rightdata, f_error
 }
 
-func (nd *IntData) Sub(p_data interface{})(int, error) {
+func (nd *IntData) Sub(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -163,7 +204,7 @@ func (nd *IntData) Sub(p_data interface{})(int, error) {
 	return f_leftdata - f_rightdata, f_error
 }
 
-func (nd *IntData) RSub(p_data interface{})(int, error) {
+func (nd *IntData) RSub(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -179,7 +220,7 @@ func (nd *IntData) RSub(p_data interface{})(int, error) {
 	return f_rightdata - f_leftdata, f_error
 }
 
-func (nd *IntData) Mul(p_data interface{})(int, error) {
+func (nd *IntData) Mul(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -195,7 +236,7 @@ func (nd *IntData) Mul(p_data interface{})(int, error) {
 	return f_leftdata * f_rightdata, f_error
 }
 
-func (nd *IntData) RMul(p_data interface{})(int, error) {
+func (nd *IntData) RMul(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -211,7 +252,7 @@ func (nd *IntData) RMul(p_data interface{})(int, error) {
 	return f_leftdata * f_rightdata, f_error
 }
 
-func (nd *IntData) Div(p_data interface{})(int, error) {
+func (nd *IntData) Div(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -230,7 +271,7 @@ func (nd *IntData) Div(p_data interface{})(int, error) {
 	return f_leftdata / f_rightdata, f_error
 }
 
-func (nd *IntData) RDiv(p_data interface{})(int, error) {
+func (nd *IntData) RDiv(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -249,7 +290,7 @@ func (nd *IntData) RDiv(p_data interface{})(int, error) {
 	return f_rightdata / f_leftdata, f_error
 }
 
-func (nd *IntData) Mod(p_data interface{})(int, error) {
+func (nd *IntData) Mod(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -265,7 +306,7 @@ func (nd *IntData) Mod(p_data interface{})(int, error) {
 	return f_leftdata % f_rightdata, f_error
 }
 
-func (nd *IntData) RMod(p_data interface{})(int, error) {
+func (nd *IntData) RMod(p_data interface{}) (int, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -281,12 +322,12 @@ func (nd *IntData) RMod(p_data interface{})(int, error) {
 	return f_rightdata % f_leftdata, f_error
 }
 
-func (nd *IntData) Neg()(int) {
+func (nd *IntData) Neg() int {
 	var f_leftdata int = nd.GetValue().(int)
 	return -f_leftdata
 }
 
-func (nd *IntData) Lt(p_data interface{})(bool, error) {
+func (nd *IntData) Lt(p_data interface{}) (bool, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -302,7 +343,7 @@ func (nd *IntData) Lt(p_data interface{})(bool, error) {
 	return f_leftdata < f_rightdata, f_error
 }
 
-func (nd *IntData) Le(p_data interface{})(bool, error) {
+func (nd *IntData) Le(p_data interface{}) (bool, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -318,7 +359,7 @@ func (nd *IntData) Le(p_data interface{})(bool, error) {
 	return f_leftdata <= f_rightdata, f_error
 }
 
-func (nd *IntData) Eq(p_data interface{})(bool, error) {
+func (nd *IntData) Eq(p_data interface{}) (bool, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -334,7 +375,7 @@ func (nd *IntData) Eq(p_data interface{})(bool, error) {
 	return f_leftdata == f_rightdata, f_error
 }
 
-func (nd *IntData) Ne(p_data interface{})(bool, error) {
+func (nd *IntData) Ne(p_data interface{}) (bool, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -350,7 +391,7 @@ func (nd *IntData) Ne(p_data interface{})(bool, error) {
 	return f_leftdata != f_rightdata, f_error
 }
 
-func (nd *IntData) Ge(p_data interface{})(bool, error) {
+func (nd *IntData) Ge(p_data interface{}) (bool, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error
@@ -366,7 +407,7 @@ func (nd *IntData) Ge(p_data interface{})(bool, error) {
 	return f_leftdata >= f_rightdata, f_error
 }
 
-func (nd *IntData) Gt(p_data interface{})(bool, error) {
+func (nd *IntData) Gt(p_data interface{}) (bool, error) {
 	var f_leftdata int = nd.GetValue().(int)
 	var f_rightdata int
 	var f_error error

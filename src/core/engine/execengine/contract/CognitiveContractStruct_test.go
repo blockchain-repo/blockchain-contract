@@ -236,7 +236,7 @@ func TestContractStruct_all(t *testing.T) {
 },
 "LogicValue":"1"
 }],
-"DisgardCondition":[{
+"DiscardCondition":[{
 "Cname":"expression_discond_A",
 "Caption":"",
 "Description":"",
@@ -309,7 +309,7 @@ func TestContractStruct_all(t *testing.T) {
 },
 "LogicValue":"1"
 }],
-"DisgardCondition":[{
+"DiscardCondition":[{
 "Cname":"expression_discond_B",
 "Caption":"",
 "Description":"",
@@ -370,7 +370,7 @@ func TestContractStruct_all(t *testing.T) {
 },
 "LogicValue":"1"
 }],
-"DisgardCondition":[{
+"DiscardCondition":[{
 "Cname":"expression_discond_C",
 "Caption":"",
 "Description":"",
@@ -431,7 +431,7 @@ func TestContractStruct_all(t *testing.T) {
 },
 "LogicValue":"1"
 }],
-"DisgardCondition":[{
+"DiscardCondition":[{
 "Cname":"expression_discond_D",
 "Caption":"",
 "Description":"",
@@ -504,7 +504,7 @@ func TestContractStruct_all(t *testing.T) {
 },
 "LogicValue":"1"
 }],
-"DisgardCondition":[{
+"DiscardCondition":[{
 "Cname":"expression_discond_E",
 "Caption":"",
 "Description":"",
@@ -576,7 +576,7 @@ func TestContractStruct_all(t *testing.T) {
 },
 "LogicValue":"1"
 }],
-"DisgardCondition":[{
+"DiscardCondition":[{
 "Cname":"expression_discond_F",
 "Caption":"",
 "Description":"",

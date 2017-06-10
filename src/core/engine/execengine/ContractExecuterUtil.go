@@ -129,10 +129,10 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 				return err
 			}
 		}
-		digard_conditions := map_task["DisgardCondition"]
+		digard_conditions := map_task["DiscardCondition"]
 		for _, p_value := range digard_conditions.([]interface{}) {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Enquiry.DisgardCondition] fail;")
+				r_buf.WriteString("[Result]: loadExpression[Enquiry.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
 				logs.Warning(r_buf.String())
 				return err
@@ -175,10 +175,10 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 				return err
 			}
 		}
-		digard_conditions := map_task["DisgardCondition"]
+		digard_conditions := map_task["DiscardCondition"]
 		for _, p_value := range digard_conditions.([]interface{}) {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Action.DisgardCondition] fail;")
+				r_buf.WriteString("[Result]: loadExpression[Action.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
 				logs.Warning(r_buf.String())
 				return err
@@ -221,10 +221,10 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 				return err
 			}
 		}
-		digard_conditions := map_task["DisgardCondition"]
+		digard_conditions := map_task["DiscardCondition"]
 		for _, p_value := range digard_conditions.([]interface{}) {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Decision.DisgardCondition] fail;")
+				r_buf.WriteString("[Result]: loadExpression[Decision.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
 				logs.Warning(r_buf.String())
 				return err
@@ -267,10 +267,10 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 				return err
 			}
 		}
-		digard_conditions := map_task["DisgardCondition"]
+		digard_conditions := map_task["DiscardCondition"]
 		for _, p_value := range digard_conditions.([]interface{}) {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Plan.DisgardCondition] fail;")
+				r_buf.WriteString("[Result]: loadExpression[Plan.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
 				logs.Warning(r_buf.String())
 				return err
@@ -295,10 +295,10 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 				return err
 			}
 		}
-		digard_conditions := map_task["DisgardCondition"]
+		digard_conditions := map_task["DiscardCondition"]
 		for _, p_value := range digard_conditions.([]interface{}) {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Unknow.DisgardCondition] fail;")
+				r_buf.WriteString("[Result]: loadExpression[Unknow.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
 				logs.Warning(r_buf.String())
 				return err

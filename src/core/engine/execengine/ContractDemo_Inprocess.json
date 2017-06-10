@@ -80,7 +80,7 @@
                 "LogicValue": 1
               }
             ],
-            "DisgardCondition": [
+            "DiscardCondition": [
               {
                 "Cname": "expression_discond_A",
                 "Caption": "",
@@ -165,7 +165,7 @@
                 "LogicValue": 1
               }
             ],
-            "DisgardCondition": [
+            "DiscardCondition": [
               {
                 "Cname": "expression_discond_B",
                 "Caption": "",
@@ -234,7 +234,7 @@
                 "LogicValue": 1
               }
             ],
-            "DisgardCondition": [
+            "DiscardCondition": [
               {
                 "Cname": "expression_discond_C",
                 "Caption": "",
@@ -303,7 +303,7 @@
                 "LogicValue": 1
               }
             ],
-            "DisgardCondition": [
+            "DiscardCondition": [
               {
                 "Cname": "expression_discond_D",
                 "Caption": "",
@@ -384,7 +384,7 @@
                 "LogicValue": 1
               }
             ],
-            "DisgardCondition": [
+            "DiscardCondition": [
               {
                 "Cname": "expression_discond_E",
                 "Caption": "",
@@ -464,7 +464,7 @@
                 "LogicValue": 1
               }
             ],
-            "DisgardCondition": [
+            "DiscardCondition": [
               {
                 "Cname": "expression_discond_F",
                 "Caption": "",
