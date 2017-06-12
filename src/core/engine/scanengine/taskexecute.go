@@ -35,7 +35,8 @@ func _TaskExecute() {
 			break
 		}
 		beegoLog.Debug("get ContractTask")
-
+		//wsp@monitor
+		monitor.Monitor.Count("task_running", -1)
 		beegoLog.Debug("query contract base on contractId")
 		jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", strContractTask.ContractHashId)
 		//responseResult:  requestHandler.ResponseResult, data中存的是完整的Output结构体
