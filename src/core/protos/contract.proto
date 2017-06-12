@@ -25,6 +25,9 @@ message ContractAsset{
 message ExpressionResult {
     string Messsage = 1;
     int32 Code = 2;
+    string Data = 3;
+    string OutPut = 4;
+
 }
 
 message ComponentsExpression {

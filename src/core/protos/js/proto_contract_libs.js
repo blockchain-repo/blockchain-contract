@@ -571,7 +571,9 @@ proto.protos.ExpressionResult.prototype.toObject = function(opt_includeInstance)
 proto.protos.ExpressionResult.toObject = function(includeInstance, msg) {
   var f, obj = {
     messsage: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    code: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    code: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    data: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    output: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -616,6 +618,14 @@ proto.protos.ExpressionResult.deserializeBinaryFromReader = function(msg, reader
       var value = /** @type {number} */ (reader.readInt32());
       msg.setCode(value);
       break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setData(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setOutput(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -658,6 +668,20 @@ proto.protos.ExpressionResult.serializeBinaryToWriter = function(message, writer
       f
     );
   }
+  f = message.getData();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getOutput();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
 };
 
 
@@ -688,6 +712,36 @@ proto.protos.ExpressionResult.prototype.getCode = function() {
 /** @param {number} value */
 proto.protos.ExpressionResult.prototype.setCode = function(value) {
   jspb.Message.setField(this, 2, value);
+};
+
+
+/**
+ * optional string Data = 3;
+ * @return {string}
+ */
+proto.protos.ExpressionResult.prototype.getData = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ExpressionResult.prototype.setData = function(value) {
+  jspb.Message.setField(this, 3, value);
+};
+
+
+/**
+ * optional string OutPut = 4;
+ * @return {string}
+ */
+proto.protos.ExpressionResult.prototype.getOutput = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ExpressionResult.prototype.setOutput = function(value) {
+  jspb.Message.setField(this, 4, value);
 };
 
 
