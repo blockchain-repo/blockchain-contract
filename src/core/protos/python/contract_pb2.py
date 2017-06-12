@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='contract.proto',
   package='protos',
   syntax='proto3',
-  serialized_pb=_b('\n\x0e\x63ontract.proto\x12\x06protos\"R\n\x11\x43ontractSignature\x12\x13\n\x0bOwnerPubkey\x18\x01 \x01(\t\x12\x11\n\tSignature\x18\x02 \x01(\t\x12\x15\n\rSignTimestamp\x18\x03 \x01(\t\"\xda\x01\n\rContractAsset\x12\x0f\n\x07\x41ssetId\x18\x01 \x01(\t\x12\x0c\n\x04Name\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x0c\n\x04Unit\x18\x05 \x01(\t\x12\x0e\n\x06\x41mount\x18\x06 \x01(\x02\x12\x35\n\x08MetaData\x18\x07 \x03(\x0b\x32#.protos.ContractAsset.MetaDataEntry\x1a/\n\rMetaDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"P\n\x10\x45xpressionResult\x12\x10\n\x08Messsage\x18\x01 \x01(\t\x12\x0c\n\x04\x43ode\x18\x02 \x01(\x05\x12\x0c\n\x04\x44\x61ta\x18\x03 \x01(\t\x12\x0e\n\x06OutPut\x18\x04 \x01(\t\"\xb9\x01\n\x14\x43omponentsExpression\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x15\n\rExpressionStr\x18\x05 \x01(\t\x12\x32\n\x10\x45xpressionResult\x18\x06 \x01(\x0b\x32\x18.protos.ExpressionResult\x12\x12\n\nLogicValue\x18\x07 \x01(\x05\"\xa8\x04\n\x10\x43omponentDataSub\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x12\n\nModifyDate\x18\x05 \x01(\t\x12\x14\n\x0cHardConvType\x18\x06 \x01(\t\x12\x10\n\x08\x43\x61tegory\x18\x07 \x03(\t\x12\x11\n\tMandatory\x18\t \x01(\x08\x12\x0c\n\x04Unit\x18\n \x01(\t\x12\x36\n\x07Options\x18\x0b \x03(\x0b\x32%.protos.ComponentDataSub.OptionsEntry\x12\x0e\n\x06\x46ormat\x18\x0c \x01(\t\x12\x10\n\x08ValueInt\x18\r \x01(\x03\x12\x11\n\tValueUint\x18\x0e \x01(\x04\x12\x12\n\nValueFloat\x18\x0f \x01(\x01\x12\x13\n\x0bValueString\x18\x10 \x01(\t\x12\x17\n\x0f\x44\x65\x66\x61ultValueInt\x18\x11 \x01(\x05\x12\x18\n\x10\x44\x65\x66\x61ultValueUint\x18\x12 \x01(\r\x12\x19\n\x11\x44\x65\x66\x61ultValueFloat\x18\x13 \x01(\x01\x12\x1a\n\x12\x44\x65\x66\x61ultValueString\x18\x14 \x01(\t\x12\x14\n\x0c\x44\x61taRangeInt\x18\x15 \x03(\x05\x12\x15\n\rDataRangeUint\x18\x16 \x03(\r\x12\x16\n\x0e\x44\x61taRangeFloat\x18\x17 \x03(\x01\x1a.\n\x0cOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"\xcc\x04\n\rComponentData\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x12\n\nModifyDate\x18\x05 \x01(\t\x12\x14\n\x0cHardConvType\x18\x06 \x01(\t\x12\x10\n\x08\x43\x61tegory\x18\x07 \x03(\t\x12(\n\x06Parent\x18\x08 \x01(\x0b\x32\x18.protos.ComponentDataSub\x12\x11\n\tMandatory\x18\t \x01(\x08\x12\x0c\n\x04Unit\x18\n \x01(\t\x12\x33\n\x07Options\x18\x0b \x03(\x0b\x32\".protos.ComponentData.OptionsEntry\x12\x0e\n\x06\x46ormat\x18\x0c \x01(\t\x12\x10\n\x08ValueInt\x18\r \x01(\x05\x12\x11\n\tValueUint\x18\x0e \x01(\r\x12\x12\n\nValueFloat\x18\x0f \x01(\x01\x12\x13\n\x0bValueString\x18\x10 \x01(\t\x12\x17\n\x0f\x44\x65\x66\x61ultValueInt\x18\x11 \x01(\x05\x12\x18\n\x10\x44\x65\x66\x61ultValueUint\x18\x12 \x01(\r\x12\x19\n\x11\x44\x65\x66\x61ultValueFloat\x18\x13 \x01(\x01\x12\x1a\n\x12\x44\x65\x66\x61ultValueString\x18\x14 \x01(\t\x12\x14\n\x0c\x44\x61taRangeInt\x18\x15 \x03(\x05\x12\x15\n\rDataRangeUint\x18\x16 \x03(\r\x12\x16\n\x0e\x44\x61taRangeFloat\x18\x17 \x03(\x01\x1a.\n\x0cOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"T\n\x16SelectBranchExpression\x12\x1b\n\x13\x42ranchExpressionStr\x18\x01 \x01(\t\x12\x1d\n\x15\x42ranchExpressionValue\x18\x02 \x01(\t\"\xd4\x04\n\x14\x43ontractComponentSub\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\r\n\x05State\x18\x05 \x01(\t\x12\x32\n\x0cPreCondition\x18\x06 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x37\n\x11\x43ompleteCondition\x18\x07 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x36\n\x10\x44iscardCondition\x18\x08 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x11\n\tNextTasks\x18\t \x03(\t\x12\'\n\x08\x44\x61taList\x18\n \x03(\x0b\x32\x15.protos.ComponentData\x12\x43\n\x1d\x44\x61taValueSetterExpressionList\x18\x0b \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x10\n\x08TaskList\x18\x0e \x03(\t\x12\x18\n\x10SupportArguments\x18\x0f \x03(\t\x12\x18\n\x10\x41gainstArguments\x18\x10 \x03(\t\x12\x0f\n\x07Support\x18\x11 \x01(\x05\x12\x0c\n\x04Text\x18\x12 \x03(\t\x12\x16\n\x0eTaskExecuteIdx\x18\x13 \x01(\x05\x12\x0e\n\x06TaskId\x18\x14 \x01(\t\x12\x36\n\x0eSelectBranches\x18\x15 \x03(\x0b\x32\x1e.protos.SelectBranchExpression\"\xbc\x05\n\x11\x43ontractComponent\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\r\n\x05State\x18\x05 \x01(\t\x12\x32\n\x0cPreCondition\x18\x06 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x37\n\x11\x43ompleteCondition\x18\x07 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x36\n\x10\x44iscardCondition\x18\x08 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x11\n\tNextTasks\x18\t \x03(\t\x12\'\n\x08\x44\x61taList\x18\n \x03(\x0b\x32\x15.protos.ComponentData\x12\x43\n\x1d\x44\x61taValueSetterExpressionList\x18\x0b \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x33\n\rCandidateList\x18\x0c \x01(\x0b\x32\x1c.protos.ContractComponentSub\x12\x34\n\x0e\x44\x65\x63isionResult\x18\r \x01(\x0b\x32\x1c.protos.ContractComponentSub\x12\x10\n\x08TaskList\x18\x0e \x03(\t\x12\x18\n\x10SupportArguments\x18\x0f \x03(\t\x12\x18\n\x10\x41gainstArguments\x18\x10 \x03(\t\x12\x0f\n\x07Support\x18\x11 \x01(\x05\x12\x0c\n\x04Text\x18\x12 \x03(\t\x12\x16\n\x0eTaskExecuteIdx\x18\x13 \x01(\x05\x12\x0e\n\x06TaskId\x18\x14 \x01(\t\x12\x36\n\x0eSelectBranches\x18\x15 \x03(\x0b\x32\x1e.protos.SelectBranchExpression\"\x84\x04\n\x0c\x43ontractBody\x12\x12\n\nContractId\x18\x01 \x01(\t\x12\r\n\x05\x43name\x18\x02 \x01(\t\x12\r\n\x05\x43type\x18\x03 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x04 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x05 \x01(\t\x12\x15\n\rContractState\x18\x06 \x01(\t\x12\x0f\n\x07\x43reator\x18\x07 \x01(\t\x12\x12\n\nCreateTime\x18\x08 \x01(\t\x12\x11\n\tStartTime\x18\t \x01(\t\x12\x0f\n\x07\x45ndTime\x18\n \x01(\t\x12\x16\n\x0e\x43ontractOwners\x18\x0b \x03(\t\x12-\n\x0e\x43ontractAssets\x18\x0c \x03(\x0b\x32\x15.protos.ContractAsset\x12\x35\n\x12\x43ontractSignatures\x18\r \x03(\x0b\x32\x19.protos.ContractSignature\x12\x35\n\x12\x43ontractComponents\x18\x0e \x03(\x0b\x32\x19.protos.ContractComponent\x12>\n\rMetaAttribute\x18\x0f \x03(\x0b\x32\'.protos.ContractBody.MetaAttributeEntry\x12\x11\n\tNextTasks\x18\x10 \x03(\t\x1a\x34\n\x12MetaAttributeEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"u\n\x0c\x43ontractHead\x12\x12\n\nMainPubkey\x18\x01 \x01(\t\x12\x0f\n\x07Version\x18\x02 \x01(\x05\x12\x12\n\nAssignTime\x18\x03 \x01(\t\x12\x13\n\x0bOperateTime\x18\x04 \x01(\t\x12\x17\n\x0f\x43onsensusResult\x18\x05 \x01(\x05\"n\n\x08\x43ontract\x12\n\n\x02id\x18\x01 \x01(\t\x12*\n\x0c\x43ontractHead\x18\x02 \x01(\x0b\x32\x14.protos.ContractHead\x12*\n\x0c\x43ontractBody\x18\x03 \x01(\x0b\x32\x14.protos.ContractBodyB%\n\x14\x63om.uniledger.protosB\rProtoContractb\x06proto3')
+  serialized_pb=_b('\n\x0e\x63ontract.proto\x12\x06protos\"R\n\x11\x43ontractSignature\x12\x13\n\x0bOwnerPubkey\x18\x01 \x01(\t\x12\x11\n\tSignature\x18\x02 \x01(\t\x12\x15\n\rSignTimestamp\x18\x03 \x01(\t\"\xda\x01\n\rContractAsset\x12\x0f\n\x07\x41ssetId\x18\x01 \x01(\t\x12\x0c\n\x04Name\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x0c\n\x04Unit\x18\x05 \x01(\t\x12\x0e\n\x06\x41mount\x18\x06 \x01(\x02\x12\x35\n\x08MetaData\x18\x07 \x03(\x0b\x32#.protos.ContractAsset.MetaDataEntry\x1a/\n\rMetaDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"P\n\x10\x45xpressionResult\x12\x10\n\x08Messsage\x18\x01 \x01(\t\x12\x0c\n\x04\x43ode\x18\x02 \x01(\x05\x12\x0c\n\x04\x44\x61ta\x18\x03 \x01(\t\x12\x0e\n\x06OutPut\x18\x04 \x01(\t\"\xb7\x02\n\x14\x43omponentsExpression\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x15\n\rExpressionStr\x18\x05 \x01(\t\x12\x32\n\x10\x45xpressionResult\x18\x06 \x03(\x0b\x32\x18.protos.ExpressionResult\x12\x12\n\nLogicValue\x18\x07 \x01(\x03\x12\x46\n\rMetaAttribute\x18\x08 \x03(\x0b\x32/.protos.ComponentsExpression.MetaAttributeEntry\x1a\x34\n\x12MetaAttributeEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xa8\x04\n\x10\x43omponentDataSub\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x12\n\nModifyDate\x18\x05 \x01(\t\x12\x14\n\x0cHardConvType\x18\x06 \x01(\t\x12\x10\n\x08\x43\x61tegory\x18\x07 \x03(\t\x12\x11\n\tMandatory\x18\t \x01(\x08\x12\x0c\n\x04Unit\x18\n \x01(\t\x12\x36\n\x07Options\x18\x0b \x03(\x0b\x32%.protos.ComponentDataSub.OptionsEntry\x12\x0e\n\x06\x46ormat\x18\x0c \x01(\t\x12\x10\n\x08ValueInt\x18\r \x01(\x03\x12\x11\n\tValueUint\x18\x0e \x01(\x04\x12\x12\n\nValueFloat\x18\x0f \x01(\x01\x12\x13\n\x0bValueString\x18\x10 \x01(\t\x12\x17\n\x0f\x44\x65\x66\x61ultValueInt\x18\x11 \x01(\x05\x12\x18\n\x10\x44\x65\x66\x61ultValueUint\x18\x12 \x01(\r\x12\x19\n\x11\x44\x65\x66\x61ultValueFloat\x18\x13 \x01(\x01\x12\x1a\n\x12\x44\x65\x66\x61ultValueString\x18\x14 \x01(\t\x12\x14\n\x0c\x44\x61taRangeInt\x18\x15 \x03(\x05\x12\x15\n\rDataRangeUint\x18\x16 \x03(\r\x12\x16\n\x0e\x44\x61taRangeFloat\x18\x17 \x03(\x01\x1a.\n\x0cOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"\xcc\x04\n\rComponentData\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\x12\n\nModifyDate\x18\x05 \x01(\t\x12\x14\n\x0cHardConvType\x18\x06 \x01(\t\x12\x10\n\x08\x43\x61tegory\x18\x07 \x03(\t\x12(\n\x06Parent\x18\x08 \x01(\x0b\x32\x18.protos.ComponentDataSub\x12\x11\n\tMandatory\x18\t \x01(\x08\x12\x0c\n\x04Unit\x18\n \x01(\t\x12\x33\n\x07Options\x18\x0b \x03(\x0b\x32\".protos.ComponentData.OptionsEntry\x12\x0e\n\x06\x46ormat\x18\x0c \x01(\t\x12\x10\n\x08ValueInt\x18\r \x01(\x03\x12\x11\n\tValueUint\x18\x0e \x01(\x04\x12\x12\n\nValueFloat\x18\x0f \x01(\x01\x12\x13\n\x0bValueString\x18\x10 \x01(\t\x12\x17\n\x0f\x44\x65\x66\x61ultValueInt\x18\x11 \x01(\x05\x12\x18\n\x10\x44\x65\x66\x61ultValueUint\x18\x12 \x01(\r\x12\x19\n\x11\x44\x65\x66\x61ultValueFloat\x18\x13 \x01(\x01\x12\x1a\n\x12\x44\x65\x66\x61ultValueString\x18\x14 \x01(\t\x12\x14\n\x0c\x44\x61taRangeInt\x18\x15 \x03(\x03\x12\x15\n\rDataRangeUint\x18\x16 \x03(\x04\x12\x16\n\x0e\x44\x61taRangeFloat\x18\x17 \x03(\x01\x1a.\n\x0cOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"T\n\x16SelectBranchExpression\x12\x1b\n\x13\x42ranchExpressionStr\x18\x01 \x01(\t\x12\x1d\n\x15\x42ranchExpressionValue\x18\x02 \x01(\t\"\xd4\x04\n\x14\x43ontractComponentSub\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\r\n\x05State\x18\x05 \x01(\t\x12\x32\n\x0cPreCondition\x18\x06 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x37\n\x11\x43ompleteCondition\x18\x07 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x36\n\x10\x44iscardCondition\x18\x08 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x11\n\tNextTasks\x18\t \x03(\t\x12\'\n\x08\x44\x61taList\x18\n \x03(\x0b\x32\x15.protos.ComponentData\x12\x43\n\x1d\x44\x61taValueSetterExpressionList\x18\x0b \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x10\n\x08TaskList\x18\x0e \x03(\t\x12\x18\n\x10SupportArguments\x18\x0f \x03(\t\x12\x18\n\x10\x41gainstArguments\x18\x10 \x03(\t\x12\x0f\n\x07Support\x18\x11 \x01(\x05\x12\x0c\n\x04Text\x18\x12 \x03(\t\x12\x16\n\x0eTaskExecuteIdx\x18\x13 \x01(\x05\x12\x0e\n\x06TaskId\x18\x14 \x01(\t\x12\x36\n\x0eSelectBranches\x18\x15 \x03(\x0b\x32\x1e.protos.SelectBranchExpression\"\xb7\x06\n\x11\x43ontractComponent\x12\r\n\x05\x43name\x18\x01 \x01(\t\x12\r\n\x05\x43type\x18\x02 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x03 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x04 \x01(\t\x12\r\n\x05State\x18\x05 \x01(\t\x12\x32\n\x0cPreCondition\x18\x06 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x37\n\x11\x43ompleteCondition\x18\x07 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x36\n\x10\x44iscardCondition\x18\x08 \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x11\n\tNextTasks\x18\t \x03(\t\x12\'\n\x08\x44\x61taList\x18\n \x03(\x0b\x32\x15.protos.ComponentData\x12\x43\n\x1d\x44\x61taValueSetterExpressionList\x18\x0b \x03(\x0b\x32\x1c.protos.ComponentsExpression\x12\x33\n\rCandidateList\x18\x0c \x03(\x0b\x32\x1c.protos.ContractComponentSub\x12\x34\n\x0e\x44\x65\x63isionResult\x18\r \x03(\x0b\x32\x1c.protos.ContractComponentSub\x12\x10\n\x08TaskList\x18\x0e \x03(\t\x12\x18\n\x10SupportArguments\x18\x0f \x03(\t\x12\x18\n\x10\x41gainstArguments\x18\x10 \x03(\t\x12\x0f\n\x07Support\x18\x11 \x01(\x05\x12\x0c\n\x04Text\x18\x12 \x03(\t\x12\x16\n\x0eTaskExecuteIdx\x18\x13 \x01(\x05\x12\x0e\n\x06TaskId\x18\x14 \x01(\t\x12\x36\n\x0eSelectBranches\x18\x15 \x03(\x0b\x32\x1e.protos.SelectBranchExpression\x12\x43\n\rMetaAttribute\x18\x16 \x03(\x0b\x32,.protos.ContractComponent.MetaAttributeEntry\x1a\x34\n\x12MetaAttributeEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x84\x04\n\x0c\x43ontractBody\x12\x12\n\nContractId\x18\x01 \x01(\t\x12\r\n\x05\x43name\x18\x02 \x01(\t\x12\r\n\x05\x43type\x18\x03 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x04 \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x05 \x01(\t\x12\x15\n\rContractState\x18\x06 \x01(\t\x12\x0f\n\x07\x43reator\x18\x07 \x01(\t\x12\x12\n\nCreateTime\x18\x08 \x01(\t\x12\x11\n\tStartTime\x18\t \x01(\t\x12\x0f\n\x07\x45ndTime\x18\n \x01(\t\x12\x16\n\x0e\x43ontractOwners\x18\x0b \x03(\t\x12-\n\x0e\x43ontractAssets\x18\x0c \x03(\x0b\x32\x15.protos.ContractAsset\x12\x35\n\x12\x43ontractSignatures\x18\r \x03(\x0b\x32\x19.protos.ContractSignature\x12\x35\n\x12\x43ontractComponents\x18\x0e \x03(\x0b\x32\x19.protos.ContractComponent\x12>\n\rMetaAttribute\x18\x0f \x03(\x0b\x32\'.protos.ContractBody.MetaAttributeEntry\x12\x11\n\tNextTasks\x18\x10 \x03(\t\x1a\x34\n\x12MetaAttributeEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"u\n\x0c\x43ontractHead\x12\x12\n\nMainPubkey\x18\x01 \x01(\t\x12\x0f\n\x07Version\x18\x02 \x01(\x05\x12\x12\n\nAssignTime\x18\x03 \x01(\t\x12\x13\n\x0bOperateTime\x18\x04 \x01(\t\x12\x17\n\x0f\x43onsensusResult\x18\x05 \x01(\x05\"n\n\x08\x43ontract\x12\n\n\x02id\x18\x01 \x01(\t\x12*\n\x0c\x43ontractHead\x18\x02 \x01(\x0b\x32\x14.protos.ContractHead\x12*\n\x0c\x43ontractBody\x18\x03 \x01(\x0b\x32\x14.protos.ContractBodyB%\n\x14\x63om.uniledger.protosB\rProtoContractb\x06proto3')
 )
 
 
@@ -232,6 +232,43 @@ _EXPRESSIONRESULT = _descriptor.Descriptor(
 )
 
 
+_COMPONENTSEXPRESSION_METAATTRIBUTEENTRY = _descriptor.Descriptor(
+  name='MetaAttributeEntry',
+  full_name='protos.ComponentsExpression.MetaAttributeEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='protos.ComponentsExpression.MetaAttributeEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='protos.ComponentsExpression.MetaAttributeEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=673,
+  serialized_end=725,
+)
+
 _COMPONENTSEXPRESSION = _descriptor.Descriptor(
   name='ComponentsExpression',
   full_name='protos.ComponentsExpression',
@@ -276,22 +313,29 @@ _COMPONENTSEXPRESSION = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='ExpressionResult', full_name='protos.ComponentsExpression.ExpressionResult', index=5,
-      number=6, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=6, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='LogicValue', full_name='protos.ComponentsExpression.LogicValue', index=6,
-      number=7, type=5, cpp_type=1, label=1,
+      number=7, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='MetaAttribute', full_name='protos.ComponentsExpression.MetaAttribute', index=7,
+      number=8, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_COMPONENTSEXPRESSION_METAATTRIBUTEENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -301,7 +345,7 @@ _COMPONENTSEXPRESSION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=414,
-  serialized_end=599,
+  serialized_end=725,
 )
 
 
@@ -338,8 +382,8 @@ _COMPONENTDATASUB_OPTIONSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1108,
-  serialized_end=1154,
+  serialized_start=1234,
+  serialized_end=1280,
 )
 
 _COMPONENTDATASUB = _descriptor.Descriptor(
@@ -515,8 +559,8 @@ _COMPONENTDATASUB = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=602,
-  serialized_end=1154,
+  serialized_start=728,
+  serialized_end=1280,
 )
 
 
@@ -553,8 +597,8 @@ _COMPONENTDATA_OPTIONSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1108,
-  serialized_end=1154,
+  serialized_start=1234,
+  serialized_end=1280,
 )
 
 _COMPONENTDATA = _descriptor.Descriptor(
@@ -650,14 +694,14 @@ _COMPONENTDATA = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='ValueInt', full_name='protos.ComponentData.ValueInt', index=12,
-      number=13, type=5, cpp_type=1, label=1,
+      number=13, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='ValueUint', full_name='protos.ComponentData.ValueUint', index=13,
-      number=14, type=13, cpp_type=3, label=1,
+      number=14, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -706,14 +750,14 @@ _COMPONENTDATA = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='DataRangeInt', full_name='protos.ComponentData.DataRangeInt', index=20,
-      number=21, type=5, cpp_type=1, label=3,
+      number=21, type=3, cpp_type=2, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='DataRangeUint', full_name='protos.ComponentData.DataRangeUint', index=21,
-      number=22, type=13, cpp_type=3, label=3,
+      number=22, type=4, cpp_type=4, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -737,8 +781,8 @@ _COMPONENTDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1157,
-  serialized_end=1745,
+  serialized_start=1283,
+  serialized_end=1871,
 )
 
 
@@ -775,8 +819,8 @@ _SELECTBRANCHEXPRESSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1747,
-  serialized_end=1831,
+  serialized_start=1873,
+  serialized_end=1957,
 )
 
 
@@ -932,10 +976,47 @@ _CONTRACTCOMPONENTSUB = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1834,
-  serialized_end=2430,
+  serialized_start=1960,
+  serialized_end=2556,
 )
 
+
+_CONTRACTCOMPONENT_METAATTRIBUTEENTRY = _descriptor.Descriptor(
+  name='MetaAttributeEntry',
+  full_name='protos.ContractComponent.MetaAttributeEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='protos.ContractComponent.MetaAttributeEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='protos.ContractComponent.MetaAttributeEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=673,
+  serialized_end=725,
+)
 
 _CONTRACTCOMPONENT = _descriptor.Descriptor(
   name='ContractComponent',
@@ -1023,15 +1104,15 @@ _CONTRACTCOMPONENT = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='CandidateList', full_name='protos.ContractComponent.CandidateList', index=11,
-      number=12, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=12, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='DecisionResult', full_name='protos.ContractComponent.DecisionResult', index=12,
-      number=13, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=13, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -1091,10 +1172,17 @@ _CONTRACTCOMPONENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='MetaAttribute', full_name='protos.ContractComponent.MetaAttribute', index=21,
+      number=22, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_CONTRACTCOMPONENT_METAATTRIBUTEENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -1103,8 +1191,8 @@ _CONTRACTCOMPONENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2433,
-  serialized_end=3133,
+  serialized_start=2559,
+  serialized_end=3382,
 )
 
 
@@ -1141,8 +1229,8 @@ _CONTRACTBODY_METAATTRIBUTEENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3600,
-  serialized_end=3652,
+  serialized_start=673,
+  serialized_end=725,
 )
 
 _CONTRACTBODY = _descriptor.Descriptor(
@@ -1276,8 +1364,8 @@ _CONTRACTBODY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3136,
-  serialized_end=3652,
+  serialized_start=3385,
+  serialized_end=3901,
 )
 
 
@@ -1335,8 +1423,8 @@ _CONTRACTHEAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3654,
-  serialized_end=3771,
+  serialized_start=3903,
+  serialized_end=4020,
 )
 
 
@@ -1380,13 +1468,15 @@ _CONTRACT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3773,
-  serialized_end=3883,
+  serialized_start=4022,
+  serialized_end=4132,
 )
 
 _CONTRACTASSET_METADATAENTRY.containing_type = _CONTRACTASSET
 _CONTRACTASSET.fields_by_name['MetaData'].message_type = _CONTRACTASSET_METADATAENTRY
+_COMPONENTSEXPRESSION_METAATTRIBUTEENTRY.containing_type = _COMPONENTSEXPRESSION
 _COMPONENTSEXPRESSION.fields_by_name['ExpressionResult'].message_type = _EXPRESSIONRESULT
+_COMPONENTSEXPRESSION.fields_by_name['MetaAttribute'].message_type = _COMPONENTSEXPRESSION_METAATTRIBUTEENTRY
 _COMPONENTDATASUB_OPTIONSENTRY.containing_type = _COMPONENTDATASUB
 _COMPONENTDATASUB.fields_by_name['Options'].message_type = _COMPONENTDATASUB_OPTIONSENTRY
 _COMPONENTDATA_OPTIONSENTRY.containing_type = _COMPONENTDATA
@@ -1398,6 +1488,7 @@ _CONTRACTCOMPONENTSUB.fields_by_name['DiscardCondition'].message_type = _COMPONE
 _CONTRACTCOMPONENTSUB.fields_by_name['DataList'].message_type = _COMPONENTDATA
 _CONTRACTCOMPONENTSUB.fields_by_name['DataValueSetterExpressionList'].message_type = _COMPONENTSEXPRESSION
 _CONTRACTCOMPONENTSUB.fields_by_name['SelectBranches'].message_type = _SELECTBRANCHEXPRESSION
+_CONTRACTCOMPONENT_METAATTRIBUTEENTRY.containing_type = _CONTRACTCOMPONENT
 _CONTRACTCOMPONENT.fields_by_name['PreCondition'].message_type = _COMPONENTSEXPRESSION
 _CONTRACTCOMPONENT.fields_by_name['CompleteCondition'].message_type = _COMPONENTSEXPRESSION
 _CONTRACTCOMPONENT.fields_by_name['DiscardCondition'].message_type = _COMPONENTSEXPRESSION
@@ -1406,6 +1497,7 @@ _CONTRACTCOMPONENT.fields_by_name['DataValueSetterExpressionList'].message_type 
 _CONTRACTCOMPONENT.fields_by_name['CandidateList'].message_type = _CONTRACTCOMPONENTSUB
 _CONTRACTCOMPONENT.fields_by_name['DecisionResult'].message_type = _CONTRACTCOMPONENTSUB
 _CONTRACTCOMPONENT.fields_by_name['SelectBranches'].message_type = _SELECTBRANCHEXPRESSION
+_CONTRACTCOMPONENT.fields_by_name['MetaAttribute'].message_type = _CONTRACTCOMPONENT_METAATTRIBUTEENTRY
 _CONTRACTBODY_METAATTRIBUTEENTRY.containing_type = _CONTRACTBODY
 _CONTRACTBODY.fields_by_name['ContractAssets'].message_type = _CONTRACTASSET
 _CONTRACTBODY.fields_by_name['ContractSignatures'].message_type = _CONTRACTSIGNATURE
@@ -1457,11 +1549,19 @@ ExpressionResult = _reflection.GeneratedProtocolMessageType('ExpressionResult', 
 _sym_db.RegisterMessage(ExpressionResult)
 
 ComponentsExpression = _reflection.GeneratedProtocolMessageType('ComponentsExpression', (_message.Message,), dict(
+
+  MetaAttributeEntry = _reflection.GeneratedProtocolMessageType('MetaAttributeEntry', (_message.Message,), dict(
+    DESCRIPTOR = _COMPONENTSEXPRESSION_METAATTRIBUTEENTRY,
+    __module__ = 'contract_pb2'
+    # @@protoc_insertion_point(class_scope:protos.ComponentsExpression.MetaAttributeEntry)
+    ))
+  ,
   DESCRIPTOR = _COMPONENTSEXPRESSION,
   __module__ = 'contract_pb2'
   # @@protoc_insertion_point(class_scope:protos.ComponentsExpression)
   ))
 _sym_db.RegisterMessage(ComponentsExpression)
+_sym_db.RegisterMessage(ComponentsExpression.MetaAttributeEntry)
 
 ComponentDataSub = _reflection.GeneratedProtocolMessageType('ComponentDataSub', (_message.Message,), dict(
 
@@ -1508,11 +1608,19 @@ ContractComponentSub = _reflection.GeneratedProtocolMessageType('ContractCompone
 _sym_db.RegisterMessage(ContractComponentSub)
 
 ContractComponent = _reflection.GeneratedProtocolMessageType('ContractComponent', (_message.Message,), dict(
+
+  MetaAttributeEntry = _reflection.GeneratedProtocolMessageType('MetaAttributeEntry', (_message.Message,), dict(
+    DESCRIPTOR = _CONTRACTCOMPONENT_METAATTRIBUTEENTRY,
+    __module__ = 'contract_pb2'
+    # @@protoc_insertion_point(class_scope:protos.ContractComponent.MetaAttributeEntry)
+    ))
+  ,
   DESCRIPTOR = _CONTRACTCOMPONENT,
   __module__ = 'contract_pb2'
   # @@protoc_insertion_point(class_scope:protos.ContractComponent)
   ))
 _sym_db.RegisterMessage(ContractComponent)
+_sym_db.RegisterMessage(ContractComponent.MetaAttributeEntry)
 
 ContractBody = _reflection.GeneratedProtocolMessageType('ContractBody', (_message.Message,), dict(
 
@@ -1548,10 +1656,14 @@ DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\024com.uniledger.protosB\rProtoContract'))
 _CONTRACTASSET_METADATAENTRY.has_options = True
 _CONTRACTASSET_METADATAENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+_COMPONENTSEXPRESSION_METAATTRIBUTEENTRY.has_options = True
+_COMPONENTSEXPRESSION_METAATTRIBUTEENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _COMPONENTDATASUB_OPTIONSENTRY.has_options = True
 _COMPONENTDATASUB_OPTIONSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _COMPONENTDATA_OPTIONSENTRY.has_options = True
 _COMPONENTDATA_OPTIONSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+_CONTRACTCOMPONENT_METAATTRIBUTEENTRY.has_options = True
+_CONTRACTCOMPONENT_METAATTRIBUTEENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _CONTRACTBODY_METAATTRIBUTEENTRY.has_options = True
 _CONTRACTBODY_METAATTRIBUTEENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 # @@protoc_insertion_point(module_scope)
