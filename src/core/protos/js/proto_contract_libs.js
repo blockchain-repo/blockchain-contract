@@ -570,7 +570,7 @@ proto.protos.ExpressionResult.prototype.toObject = function(opt_includeInstance)
  */
 proto.protos.ExpressionResult.toObject = function(includeInstance, msg) {
   var f, obj = {
-    messsage: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    message: jspb.Message.getFieldWithDefault(msg, 1, ""),
     code: jspb.Message.getFieldWithDefault(msg, 2, 0),
     data: jspb.Message.getFieldWithDefault(msg, 3, ""),
     output: jspb.Message.getFieldWithDefault(msg, 4, "")
@@ -612,7 +612,7 @@ proto.protos.ExpressionResult.deserializeBinaryFromReader = function(msg, reader
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setMesssage(value);
+      msg.setMessage(value);
       break;
     case 2:
       var value = /** @type {number} */ (reader.readInt32());
@@ -654,7 +654,7 @@ proto.protos.ExpressionResult.prototype.serializeBinary = function() {
  */
 proto.protos.ExpressionResult.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getMesssage();
+  f = message.getMessage();
   if (f.length > 0) {
     writer.writeString(
       1,
@@ -686,16 +686,16 @@ proto.protos.ExpressionResult.serializeBinaryToWriter = function(message, writer
 
 
 /**
- * optional string Messsage = 1;
+ * optional string Message = 1;
  * @return {string}
  */
-proto.protos.ExpressionResult.prototype.getMesssage = function() {
+proto.protos.ExpressionResult.prototype.getMessage = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.protos.ExpressionResult.prototype.setMesssage = function(value) {
+proto.protos.ExpressionResult.prototype.setMessage = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
@@ -757,19 +757,12 @@ proto.protos.ExpressionResult.prototype.setOutput = function(value) {
  * @constructor
  */
 proto.protos.ComponentsExpression = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.protos.ComponentsExpression.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.protos.ComponentsExpression, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.protos.ComponentsExpression.displayName = 'proto.protos.ComponentsExpression';
 }
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.protos.ComponentsExpression.repeatedFields_ = [6];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -803,8 +796,7 @@ proto.protos.ComponentsExpression.toObject = function(includeInstance, msg) {
     caption: jspb.Message.getFieldWithDefault(msg, 3, ""),
     description: jspb.Message.getFieldWithDefault(msg, 4, ""),
     expressionstr: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    expressionresultList: jspb.Message.toObjectList(msg.getExpressionresultList(),
-    proto.protos.ExpressionResult.toObject, includeInstance),
+    expressionresult: (f = msg.getExpressionresult()) && proto.protos.ExpressionResult.toObject(includeInstance, f),
     logicvalue: jspb.Message.getFieldWithDefault(msg, 7, 0),
     metaattributeMap: (f = msg.getMetaattributeMap()) ? f.toObject(includeInstance, undefined) : []
   };
@@ -866,7 +858,7 @@ proto.protos.ComponentsExpression.deserializeBinaryFromReader = function(msg, re
     case 6:
       var value = new proto.protos.ExpressionResult;
       reader.readMessage(value,proto.protos.ExpressionResult.deserializeBinaryFromReader);
-      msg.addExpressionresult(value);
+      msg.setExpressionresult(value);
       break;
     case 7:
       var value = /** @type {number} */ (reader.readInt32());
@@ -941,9 +933,9 @@ proto.protos.ComponentsExpression.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getExpressionresultList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
+  f = message.getExpressionresult();
+  if (f != null) {
+    writer.writeMessage(
       6,
       f,
       proto.protos.ExpressionResult.serializeBinaryToWriter
@@ -1039,35 +1031,32 @@ proto.protos.ComponentsExpression.prototype.setExpressionstr = function(value) {
 
 
 /**
- * repeated ExpressionResult ExpressionResult = 6;
- * If you change this array by adding, removing or replacing elements, or if you
- * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.protos.ExpressionResult>}
+ * optional ExpressionResult ExpressionResult = 6;
+ * @return {?proto.protos.ExpressionResult}
  */
-proto.protos.ComponentsExpression.prototype.getExpressionresultList = function() {
-  return /** @type{!Array.<!proto.protos.ExpressionResult>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.protos.ExpressionResult, 6));
+proto.protos.ComponentsExpression.prototype.getExpressionresult = function() {
+  return /** @type{?proto.protos.ExpressionResult} */ (
+    jspb.Message.getWrapperField(this, proto.protos.ExpressionResult, 6));
 };
 
 
-/** @param {!Array.<!proto.protos.ExpressionResult>} value */
-proto.protos.ComponentsExpression.prototype.setExpressionresultList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 6, value);
+/** @param {?proto.protos.ExpressionResult|undefined} value */
+proto.protos.ComponentsExpression.prototype.setExpressionresult = function(value) {
+  jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+proto.protos.ComponentsExpression.prototype.clearExpressionresult = function() {
+  this.setExpressionresult(undefined);
 };
 
 
 /**
- * @param {!proto.protos.ExpressionResult=} opt_value
- * @param {number=} opt_index
- * @return {!proto.protos.ExpressionResult}
+ * Returns whether this field is set.
+ * @return {!boolean}
  */
-proto.protos.ComponentsExpression.prototype.addExpressionresult = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 6, opt_value, proto.protos.ExpressionResult, opt_index);
-};
-
-
-proto.protos.ComponentsExpression.prototype.clearExpressionresultList = function() {
-  this.setExpressionresultList([]);
+proto.protos.ComponentsExpression.prototype.hasExpressionresult = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

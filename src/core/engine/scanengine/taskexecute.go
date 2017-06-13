@@ -54,18 +54,38 @@ func _TaskExecute() {
 			continue
 		}
 
-		beegoLog.Debug("contract execute")
-		contractData, ok := responseResult.Data.([]interface{})
-		if !ok || len(contractData) == 0 {
-			beegoLog.Error("responseResult.Data is not ok for type []interface {}. type is %T, or value is [], value is %+v",
-				responseResult.Data, responseResult.Data)
+		beegoLog.Debug("get responseResult data")
+		// 1
+		contractData, ok := responseResult.Data.(interface{})
+		if !ok {
+			beegoLog.Error("responseResult.Data.(interface{}) is error")
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
-		slContractData, _ := json.Marshal(contractData[0])
+		// 2
+		mapData, ok := contractData.([]interface{})
+		if !ok {
+			beegoLog.Error("contractData.([]map[string]interface{}) error")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
+			continue
+		}
+
+		if len(mapData) == 0 { // 没有查询到contract
+			beegoLog.Error("get contract is null")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
+			continue
+		}
+
+		slContractData, err := json.Marshal(mapData[0])
+		if err != nil {
+			beegoLog.Error(err)
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
+			continue
+		}
 		beegoLog.Debug(string(slContractData))
 
+		beegoLog.Debug("contract execute")
 		go _Execute(string(slContractData), strContractTask.ContractId, strContractTask.ContractHashId)
 	}
 
@@ -74,10 +94,12 @@ func _TaskExecute() {
 
 //---------------------------------------------------------------------------
 func _Execute(strData, strContractID, strContractHashID string) {
-	task_execute_time := monitor.Monitor.NewTiming()
+
 	contractExecuter := execengine.NewContractExecuter()
 	//strData为完整的Output结构体
+	task_load_time := monitor.Monitor.NewTiming()
 	err := contractExecuter.Load(strData)
+	task_load_time.Send("task_execute")
 	if err != nil {
 		beegoLog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
@@ -86,7 +108,9 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	//执行引擎初始化环境
 	contractExecuter.Prepare()
 	//执行机启动合约执行
+	task_execute_time := monitor.Monitor.NewTiming()
 	ret, err := contractExecuter.Start()
+	task_execute_time.Send("task_execute")
 	if err != nil {
 		beegoLog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
@@ -94,16 +118,14 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	}
 	if ret == 0 {
 		beegoLog.Error("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
-		monitor.Monitor.Count("task_execute_fail", 1)
 	} else if ret == -1 {
 		beegoLog.Error("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
-		monitor.Monitor.Count("task_execute_fail", 1)
 	} else if ret == 1 {
 		beegoLog.Debug("合约执行完成")
 	}
 	//执行机销毁合约
 	contractExecuter.Destory()
-	task_execute_time.Send("task_execute")
+
 }
 
 //---------------------------------------------------------------------------

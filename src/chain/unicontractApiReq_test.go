@@ -127,7 +127,7 @@ func TestFrozenAsset(t *testing.T) {
 }
 
 func Test_GetTxByConHashId(t *testing.T) {
-	jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", "95bc7829f6a65c7dc140eaa32e88c8f389f8e4d90a08a9b4e5fe4b9d902e7f1d")
+	jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", "46112fe0dc939bb5092fc5d0b177a874decb2ae352000d62431945e0aa123cc8")
 	responseResult, err := GetTxByConHashId(jsonBody)
 	if err != nil {
 		t.Error(err)

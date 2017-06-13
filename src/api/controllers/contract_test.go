@@ -248,7 +248,7 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	return requestBody, nil
 }
 
-//var default_url = "http://36.110.71.170:66/v1/contract/"
+var default_url = "http://36.110.71.170:66/v1/contract/"
 
 //var default_url = "http://192.168.1.14:8088/v1/contract/"
 //var default_url = "http://36.110.71.170:66/v1/contract/"
@@ -261,7 +261,7 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 
 //var default_url = "http://localhost:8088/v1/contract/"
 
-var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"
+//var default_url = "http://www.wxcsdb88.com:8088/v1/contract/"
 
 func Test_AuthSignature(t *testing.T) {
 	url := default_url + "authSignature"
@@ -290,7 +290,7 @@ func Test_AuthSignature(t *testing.T) {
 }
 
 func Test_CreatContract(t *testing.T) {
-	for i := 1; i <= 2; i++ {
+	for i := 1; i <= 100000; i++ {
 
 		url := default_url + "create"
 		produceValid := true

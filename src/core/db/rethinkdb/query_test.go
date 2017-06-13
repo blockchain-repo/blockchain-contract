@@ -13,6 +13,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"reflect"
 )
 
 func init() {
@@ -210,11 +211,11 @@ func Test_GetContractStatsCount(t *testing.T) {
 	}
 	fmt.Println(count)
 
-	number, err := strconv.Atoi(count)
-	if err != nil {
-		t.Error(err)
-	}
-	fmt.Println(number)
+	//number, err := strconv.Atoi(count)
+	//if err != nil {
+	//	t.Error(err)
+	//}
+	//fmt.Println(number)
 }
 
 /*----------------------------- contracts end---------------------------------------*/
@@ -621,7 +622,7 @@ func Test_SetTaskScheduleFlagBatch(t *testing.T) {
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "466eecfb-6352-4af8-b81d-a4a88f0c8432"
+	strID := "b68a09ce-96f1-433e-8df2-5c1f3552a984"
 	err := SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -749,6 +750,12 @@ func Test_GetTaskScheduleCount(t *testing.T) {
 	logs.Error(count)
 	t.Logf("deleteNum is %d\n", count)
 	t.Logf("err is %+v\n", err)
+}
+
+func TestSession(t *testing.T) {
+	session := ConnectDB(DBNAME)
+
+	fmt.Println(reflect.TypeOf(session))
 }
 
 /*TaskSchedule end---------------------------------------------------------*/
