@@ -38,13 +38,10 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -55,13 +52,10 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -72,13 +66,10 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -89,13 +80,10 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -105,13 +93,10 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -124,13 +109,10 @@ func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error)
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -142,13 +124,10 @@ func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -162,13 +141,10 @@ func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, e
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -180,13 +156,10 @@ func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -197,13 +170,10 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -216,13 +186,10 @@ func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 
@@ -234,13 +201,10 @@ func FuncAutoSplitAccount(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
-
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
 

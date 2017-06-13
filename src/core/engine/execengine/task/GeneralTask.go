@@ -38,7 +38,7 @@ type GeneralTask struct {
 	TaskExecuteIdx int      `json:"TaskExecuteIdx"`
 	NextTasks      []string `json:"NextTasks"`
 	//选择分支条件，查询操作后，根据查询结果进行分支判定，以分支判定的值为最终值，保持多节点一致性
-	SelectBranchs []common.SelectBranchExpression `json:"SelectBranchs"`
+	SelectBranches []common.SelectBranchExpression `json:"SelectBranches"`
 }
 
 const (
@@ -51,7 +51,7 @@ const (
 	_DataValueSetterExpressionList = "_DataValueSetterExpressionList"
 	_TaskExecuteIdx                = "_TaskExecuteIdx"
 	_NextTasks                     = "_NextTasks"
-	_SelectBranchs                 = "_SelectBranchs"
+	_SelectBranches                = "_SelectBranches"
 )
 
 func NewGeneralTask() *GeneralTask {
@@ -285,10 +285,10 @@ func (gt *GeneralTask) InitGeneralTask() error {
 	}
 	common.AddProperty(gt, gt.PropertyTable, _NextTasks, gt.NextTasks)
 
-	if gt.SelectBranchs == nil {
-		gt.SelectBranchs = make([]common.SelectBranchExpression, 0)
+	if gt.SelectBranches == nil {
+		gt.SelectBranches = make([]common.SelectBranchExpression, 0)
 	}
-	common.AddProperty(gt, gt.PropertyTable, _SelectBranchs, gt.SelectBranchs)
+	common.AddProperty(gt, gt.PropertyTable, _SelectBranches, gt.SelectBranches)
 	return err
 }
 
@@ -327,8 +327,8 @@ func (gt *GeneralTask) GetDataValueSetterExpressionList() map[string]inf.IExpres
 	return dataexpress_property.GetValue().(map[string]inf.IExpression)
 }
 
-func (gt *GeneralTask) GetSelectBranchs() []common.SelectBranchExpression {
-	selectbranch_property := gt.PropertyTable[_SelectBranchs].(property.PropertyT)
+func (gt *GeneralTask) GetSelectBranches() []common.SelectBranchExpression {
+	selectbranch_property := gt.PropertyTable[_SelectBranches].(property.PropertyT)
 	return selectbranch_property.GetValue().([]common.SelectBranchExpression)
 }
 
@@ -387,11 +387,11 @@ func (gt *GeneralTask) AddDiscardCondition(p_condition string) {
 }
 
 //====属性Set方法
-func (gt *GeneralTask) SetSelectBranchs(p_selectbranchs []common.SelectBranchExpression) {
-	gt.SelectBranchs = p_selectbranchs
-	selectbranch_property := gt.PropertyTable[_SelectBranchs].(property.PropertyT)
+func (gt *GeneralTask) SetSelectBranches(p_selectbranchs []common.SelectBranchExpression) {
+	gt.SelectBranches = p_selectbranchs
+	selectbranch_property := gt.PropertyTable[_SelectBranches].(property.PropertyT)
 	selectbranch_property.SetValue(p_selectbranchs)
-	gt.PropertyTable[_SelectBranchs] = selectbranch_property
+	gt.PropertyTable[_SelectBranches] = selectbranch_property
 }
 
 //TODO: 缺少Compounddata考虑
@@ -891,7 +891,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int8, p_r
 		// 根据函数执行结果和分支情况决定最终的结果值
 		v_data := p_dataList[p_idx].(inf.IData)
 
-		select_branchs := gt.GetSelectBranchs()
+		select_branchs := gt.GetSelectBranches()
 		if len(select_branchs) != 0 {
 			for _, select_expression := range select_branchs {
 				select_object := select_expression

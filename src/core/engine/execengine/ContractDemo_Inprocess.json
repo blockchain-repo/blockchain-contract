@@ -138,7 +138,7 @@
                 "HardConvType": "float64"
               }
             ],
-            "SelectBranchs":[
+            "SelectBranches":[
               {"BranchExpressionStr":"data_A.Value>500"},
               {"BranchExpressionStr":"data_A.Value<=500"}
             ]
