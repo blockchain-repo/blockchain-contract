@@ -1,6 +1,5 @@
 package function
 
-import "time"
 import "unicontract/src/core/engine/common"
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -16,12 +15,22 @@ func FuncAutoTransferAssetAtTime(args ...interface{}) (common.OperateResult, err
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	day := time.Now().Day()
+	/*
+		  Args:
+	    	  0: ownerbefore(string):	the pubkey who transfer assets
+			  1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer.
+			2: contractStr(string):the contract str which this task execute
+			3: contractHashId(string): contractHashId
+			4: contractId(string): contractId
+			5: taskId(string): taskId
+			6: TaskExecuteIdx(int): TaskExecuteIdx
+			7: mainPubkey(string): the node pubkey which will freeze asset
+	*/
+	//FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
 	return v_result, v_err
 }
