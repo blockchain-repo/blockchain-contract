@@ -13,7 +13,7 @@ func init() {
 }
 
 func sendContractStatsToMonitor() {
-	timer := time.Tick(10 * time.Second)
+	timer := time.Tick(20 * time.Second)
 	for now := range timer {
 		logs.Info(now)
 		Contracts_number, err := rethinkdb.GetContractsCount()
@@ -40,6 +40,14 @@ func sendContractStatsToMonitor() {
 		if err != nil {
 			logs.Error(err)
 		}
+		task_send_flag_success, err := rethinkdb.GetTaskSendFlagCount(1)
+		if err != nil {
+			logs.Error(err)
+		}
+		task_send_flag_fail, err := rethinkdb.GetTaskSendFlagCount(0)
+		if err != nil {
+			logs.Error(err)
+		}
 		task_failed_Count, err := rethinkdb.GetTaskScheduleCount("FailedCount")
 		if err != nil {
 			logs.Error(err)
@@ -55,6 +63,8 @@ func sendContractStatsToMonitor() {
 		monitor.Monitor.Gauge("Contract_In_Process", common.StringToInt(Contract_In_Process))
 		monitor.Monitor.Gauge("Contract_Discarded", common.StringToInt(Contract_Discarded))
 		monitor.Monitor.Gauge("Contract_Completed", common.StringToInt(Contract_Completed))
+		monitor.Monitor.Gauge("task_send_flag_success", common.StringToInt(task_send_flag_success))
+		monitor.Monitor.Gauge("task_send_flag_fail", common.StringToInt(task_send_flag_fail))
 		monitor.Monitor.Gauge("task_failed_count", common.StringToInt(task_failed_Count))
 		monitor.Monitor.Gauge("task_wait_count", common.StringToInt(task_wait_Count))
 	}

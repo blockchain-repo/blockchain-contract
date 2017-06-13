@@ -13,6 +13,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"reflect"
 )
 
 func init() {
@@ -210,11 +211,11 @@ func Test_GetContractStatsCount(t *testing.T) {
 	}
 	fmt.Println(count)
 
-	number, err := strconv.Atoi(count)
-	if err != nil {
-		t.Error(err)
-	}
-	fmt.Println(number)
+	//number, err := strconv.Atoi(count)
+	//if err != nil {
+	//	t.Error(err)
+	//}
+	//fmt.Println(number)
 }
 
 /*----------------------------- contracts end---------------------------------------*/
@@ -749,6 +750,12 @@ func Test_GetTaskScheduleCount(t *testing.T) {
 	logs.Error(count)
 	t.Logf("deleteNum is %d\n", count)
 	t.Logf("err is %+v\n", err)
+}
+
+func TestSession(t *testing.T) {
+	session := ConnectDB(DBNAME)
+
+	fmt.Println(reflect.TypeOf(session))
 }
 
 /*TaskSchedule end---------------------------------------------------------*/

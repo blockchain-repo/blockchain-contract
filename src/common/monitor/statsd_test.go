@@ -1,10 +1,10 @@
 package monitor
 
 import (
-	"testing"
 	"fmt"
-	"time"
 	"math/rand"
+	"testing"
+	"time"
 )
 
 /**
@@ -19,9 +19,9 @@ func TestGetMonitorConfig(t *testing.T) {
 /**
  * function : 测试 将yaml中信息取出来
  */
-func TestGetMonitorParam(t *testing.T){
+func TestGetMonitorParam(t *testing.T) {
 
-	address,prefix,maxPacketSize := _GetMonitorParam()
+	address, prefix, maxPacketSize := _GetMonitorParam()
 	fmt.Println(address)
 	fmt.Println(prefix)
 	fmt.Println(maxPacketSize)
@@ -69,80 +69,80 @@ func TestInit(t *testing.T) {
  * function : 测试 Monitor方法
  */
 func TestMonitor(t *testing.T) {
-	Monitor.Gauge("GagueTest",1)
-	Monitor.Count("CountTest",1)
-	Monitor.Histogram("Histogram",1)
+	Monitor.Gauge("GagueTest", 1)
+	Monitor.Count("CountTest", 1)
+	Monitor.Histogram("Histogram", 1)
 	Monitor.Increment("INcrementTest")
 	Monitor.NewTiming().Send("NewTime")
-	Monitor.Timing("TimingTest",2)
-	Monitor.Unique("UniqueTest","ss")
+	Monitor.Timing("TimingTest", 2)
+	Monitor.Unique("UniqueTest", "ss")
 }
 
 /**
  * function : 测试 Gauge方法
  */
-func TestGague(t *testing.T){
-	fmt.Println("begin:",time.Now())
+func TestGague(t *testing.T) {
+	fmt.Println("begin:", time.Now())
 	for i := 1; i <= 100000; i++ {
-		Monitor.Gauge("GagueTest",i)
-		Monitor.Gauge("GagueTest2",100000-i)
+		Monitor.Gauge("GagueTest", i)
+		Monitor.Gauge("GagueTest2", 100000-i)
 	}
-	fmt.Println("end:",time.Now())
+	fmt.Println("end:", time.Now())
 }
 
 /**
  * function : 测试 Count方法
  */
-func TestCount(t *testing.T){
-	fmt.Println("begin:",time.Now())
+func TestCount(t *testing.T) {
+	fmt.Println("begin:", time.Now())
 	for i := 1; i <= 100000; i++ {
-		Monitor.Count("CountTest1",i)
-		Monitor.Count("CountTest2",100000-i)
+		Monitor.Count("CountTest1", i)
+		Monitor.Count("CountTest2", 100000-i)
 	}
-	fmt.Println("end:",time.Now())
+	fmt.Println("end:", time.Now())
 }
 
 /**
  * function : 测试 Count方法
  */
-func TestIncrement(t *testing.T){
-	fmt.Println("begin:",time.Now())
+func TestIncrement(t *testing.T) {
+	fmt.Println("begin:", time.Now())
 	for i := 1; i <= 10000; i++ {
 		Monitor.Increment("IncrementTest")
 	}
-	fmt.Println("end:",time.Now())
+	fmt.Println("end:", time.Now())
 }
 
 /**
  * function : 测试 方法
  */
-func TestTest(t *testing.T){
-	fmt.Println("begin:",time.Now())
+func TestTest(t *testing.T) {
+	fmt.Println("begin:", time.Now())
 	for i := 1; i <= 1000; i++ {
-		Monitor.Gauge("Twa",20000)
-		Monitor.Timing("TimeTest",11)
+		Monitor.Gauge("Twa", 20000)
+		Monitor.Timing("TimeTest", 11)
 	}
-	fmt.Println("end:",time.Now())
+	fmt.Println("end:", time.Now())
 
 }
 
 /**
  * function : 测试 方法
  */
-func TestTiming(t *testing.T){
-	for i := 1;i<=1000;i++ {
-		begin := time.Now().UnixNano()/1000000
-		end := time.Now().UnixNano()/1000000
+func TestTiming(t *testing.T) {
+	for i := 1; i <= 1000; i++ {
+		begin := time.Now().UnixNano() / 1000000
+		end := time.Now().UnixNano() / 1000000
 		time := end - begin
-		Monitor.Timing("TimeTest",time)
+		Monitor.Timing("TimeTest", time)
 	}
 }
 
 /**
  * function : 测试 方法
  */
-func TestNewTiming(t *testing.T){
-	for i:=1;i<=100;i++ {
+func TestNewTiming(t *testing.T) {
+	for i := 1; i <= 100; i++ {
 		Monitor.Increment("WJT")
 		Monitor.Flush()
 	}
@@ -151,12 +151,12 @@ func TestNewTiming(t *testing.T){
 /**
  * function : 测试 方法
  */
-func TestGaGUE(t *testing.T){
+func TestGaGUE(t *testing.T) {
 
-	for i:=1;i<=6000;i++ {
-		if i == 6000{
+	for i := 1; i <= 6000; i++ {
+		if i == 6000 {
 			fmt.Println(time.Now())
-			Monitor.Gauge("unichain",rand.Int())
+			Monitor.Gauge("unichain", rand.Int())
 		}
 	}
 
@@ -165,46 +165,45 @@ func TestGaGUE(t *testing.T){
 /**
  * function : 测试 方法
  */
-func TestGague1(t *testing.T){
-	begin := time.Now().UnixNano()/1000000
-	fmt.Println("begin:",time.Now().UnixNano()/1000000)
-	for i:=1;i<=10000;i++ {
+func TestGague1(t *testing.T) {
+	begin := time.Now().UnixNano() / 1000000
+	fmt.Println("begin:", time.Now().UnixNano()/1000000)
+	for i := 1; i <= 10000; i++ {
 		Monitor.Increment("ssss")
-		Monitor.Gauge("zzz",i)
+		Monitor.Gauge("zzz", i)
 	}
-	fmt.Println("end:",time.Now().UnixNano()/1000000)
-	end := time.Now().UnixNano()/1000000
-	fmt.Println(end -begin)
+	fmt.Println("end:", time.Now().UnixNano()/1000000)
+	end := time.Now().UnixNano() / 1000000
+	fmt.Println(end - begin)
 }
 
 /**
  * function : 测试 方法
  */
-func TestTime2(t *testing.T){
+func TestTime2(t *testing.T) {
 
-	monitorFunc := func(){
+	monitorFunc := func() {
 		defer Monitor.NewTiming().Send("AA")
 	}
 
 	monitorFunc()
 }
 
-
 /**
  * function : 测试 方法
  */
-func TestTime3(t *testing.T){
+func TestTime3(t *testing.T) {
 	monitor1 := _GetMonitorClient()
 	//begin := time.Now().UnixNano()/1000000
 	//end := time.Now().UnixNano()/1000000
 	//timeT := end - begin
-	monitor1.Timing("aaaaaaaaaaaaa",1)
-	monitor1.Timing("aaaaaaaaaaaaa",2)
-	monitor1.Timing("aaaaaaaaaaaaa",3)
+	monitor1.Timing("aaaaaaaaaaaaa", 1)
+	monitor1.Timing("aaaaaaaaaaaaa", 2)
+	monitor1.Timing("aaaaaaaaaaaaa", 3)
 	monitor1.Flush()
-	monitor1.Timing("aaaaaaaaaaaaa",4)
-	monitor1.Timing("aaaaaaaaaaaaa",5)
-	monitor1.Timing("aaaaaaaaaaaaa",6)
+	monitor1.Timing("aaaaaaaaaaaaa", 4)
+	monitor1.Timing("aaaaaaaaaaaaa", 5)
+	monitor1.Timing("aaaaaaaaaaaaa", 6)
 	monitor1.Flush()
 	fmt.Println(time.Now())
 }
@@ -212,18 +211,18 @@ func TestTime3(t *testing.T){
 /**
  * function : 测试 方法
  */
-func TestTime(t *testing.T){
+func TestTime(t *testing.T) {
 
 }
 
 /**
  * function : 测试 方法
  */
-func TestTime5(t *testing.T){
+func TestTime5(t *testing.T) {
 	monitor1 := _GetMonitorClient()
-	for i:=1;i<=5;i++ {
+	for i := 1; i <= 5; i++ {
 
-		monitor1.Count("CCCCCCCCCCCCCCCCCC",-2)
+		monitor1.Count("CCCCCCCCCCCCCCCCCC", -2)
 	}
 
 	monitor1.Flush()
@@ -233,25 +232,21 @@ func TestTime5(t *testing.T){
 /**
  * function : 测试 方法
  */
-func TestTime6(t *testing.T){
+func TestTime6(t *testing.T) {
 	monitor1 := _GetMonitorClient()
-	for i:=1;i<=100000;i++ {
-		monitor1.Unique("AAA","SSSSSSSSS")
+	for i := 1; i <= 100000; i++ {
+		monitor1.Unique("AAA", "SSSSSSSSS")
 	}
 	monitor1.Flush()
 
 }
 
-func TestTest1(t *testing.T){
+func TestTest1(t *testing.T) {
 	monitor1 := _GetMonitorClient()
-	for i:=1;i<=1000;i++ {
-		monitor1.Gauge("HAHAHAHAHAHAHAHAHAHA",1)
-		monitor1.Gauge("HEHEHEHEHEHHEHEHEHHE",2)
+	for i := 1; i <= 1000; i++ {
+		monitor1.Gauge("HAHAHAHAHAHAHAHAHAHA", 1)
+		monitor1.Gauge("HEHEHEHEHEHHEHEHEHHE", 2)
 	}
 	monitor1.Flush()
 
 }
-
-
-
-

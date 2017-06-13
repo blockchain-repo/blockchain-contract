@@ -94,10 +94,12 @@ func _TaskExecute() {
 
 //---------------------------------------------------------------------------
 func _Execute(strData, strContractID, strContractHashID string) {
-	task_execute_time := monitor.Monitor.NewTiming()
+
 	contractExecuter := execengine.NewContractExecuter()
 	//strData为完整的Output结构体
+	task_load_time := monitor.Monitor.NewTiming()
 	err := contractExecuter.Load(strData)
+	task_load_time.Send("task_execute")
 	if err != nil {
 		beegoLog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
@@ -106,7 +108,9 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	//执行引擎初始化环境
 	contractExecuter.Prepare()
 	//执行机启动合约执行
+	task_execute_time := monitor.Monitor.NewTiming()
 	ret, err := contractExecuter.Start()
+	task_execute_time.Send("task_execute")
 	if err != nil {
 		beegoLog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
@@ -114,16 +118,14 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	}
 	if ret == 0 {
 		beegoLog.Error("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
-		monitor.Monitor.Count("task_execute_fail", 1)
 	} else if ret == -1 {
 		beegoLog.Error("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
-		monitor.Monitor.Count("task_execute_fail", 1)
 	} else if ret == 1 {
 		beegoLog.Debug("合约执行完成")
 	}
 	//执行机销毁合约
 	contractExecuter.Destory()
-	task_execute_time.Send("task_execute")
+
 }
 
 //---------------------------------------------------------------------------

@@ -1033,4 +1033,26 @@ func GetTaskScheduleCount(stat string) (string, error) {
 	return blo, nil
 }
 
+// 删除一系列id的任务
+func GetTaskSendFlagCount(stat int) (string, error) {
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("SendFlag").Eq(stat)).
+		Count().Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return blo, nil
+}
+
 /*TaskSchedule end---------------------------------------------------------*/
