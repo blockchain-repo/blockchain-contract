@@ -54,18 +54,38 @@ func _TaskExecute() {
 			continue
 		}
 
-		beegoLog.Debug("contract execute")
+		beegoLog.Debug("get responseResult data")
+		// 1
 		contractData, ok := responseResult.Data.(interface{})
 		if !ok {
-			beegoLog.Error("responseResult.Data is not ok for type []interface {}. type is %T, or value is [], value is %+v",
-				responseResult.Data, responseResult.Data)
+			beegoLog.Error("responseResult.Data.(interface{}) is error")
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
-		slContractData, _ := json.Marshal(contractData)
+		// 2
+		mapData, ok := contractData.([]interface{})
+		if !ok {
+			beegoLog.Error("contractData.([]map[string]interface{}) error")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
+			continue
+		}
+
+		if len(mapData) == 0 { // 没有查询到contract
+			beegoLog.Error("get contract is null")
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
+			continue
+		}
+
+		slContractData, err := json.Marshal(mapData[0])
+		if err != nil {
+			beegoLog.Error(err)
+			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
+			continue
+		}
 		beegoLog.Debug(string(slContractData))
 
+		beegoLog.Debug("contract execute")
 		go _Execute(string(slContractData), strContractTask.ContractId, strContractTask.ContractHashId)
 	}
 
