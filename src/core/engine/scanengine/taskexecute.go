@@ -99,7 +99,7 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	//strData为完整的Output结构体
 	task_load_time := monitor.Monitor.NewTiming()
 	err := contractExecuter.Load(strData)
-	task_load_time.Send("task_execute")
+	task_load_time.Send("task_load")
 	if err != nil {
 		beegoLog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
