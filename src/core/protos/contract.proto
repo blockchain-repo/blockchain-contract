@@ -5,9 +5,23 @@ option java_package = "com.uniledger.protos";
 option java_outer_classname = "ProtoContract";
 //option java_multiple_files = true;
 
+
+//message StringStringMapFieldEntry {
+//    string Key = 1;
+//    string Value = 2;
+//}
+//
+//message StringInt32MapFieldEntry {
+//    //string
+//    string Key = 1;
+//    //int32
+//    int32 Value = 2;
+//}
+
 message ContractSignature{
     string OwnerPubkey = 1;
     string Signature = 2;
+    //13 bit
     string SignTimestamp = 3;
 
 }
@@ -19,12 +33,15 @@ message ContractAsset{
     string Description = 4;
     string Unit = 5;
     float Amount= 6;
-    map<string, string> MetaData = 7;
+    map<string,string> MetaData = 7;
 }
 
 message ExpressionResult {
     string Messsage = 1;
     int32 Code = 2;
+    string Data = 3;
+    string OutPut = 4;
+
 }
 
 message ComponentsExpression {
@@ -33,8 +50,9 @@ message ComponentsExpression {
     string Caption = 3;
     string Description = 4;
     string ExpressionStr = 5;
-    ExpressionResult ExpressionResult = 6;
+    repeated ExpressionResult ExpressionResult = 6;
     int32 LogicValue = 7;
+    map<string,string> MetaAttribute = 8;
 }
 
 message ComponentDataSub{
@@ -47,12 +65,12 @@ message ComponentDataSub{
     repeated string Category = 7; // []string Category
     bool Mandatory = 9;
     string Unit = 10;
-    map<string, int32> Options = 11;
+    map<string,int32> Options = 11;
     string Format = 12;
     //Value interface{} int64
-    int64 ValueInt = 13;
+    int32 ValueInt = 13;
     //Value interface{} unit64
-    uint64 ValueUint = 14;
+    uint32 ValueUint = 14;
     //Value interface{} float64
     double ValueFloat = 15;
     //Value interface{} string
@@ -87,7 +105,7 @@ message ComponentData{
     ComponentDataSub Parent = 8;
     bool Mandatory = 9;
     string Unit = 10;
-    map<string, int32> Options = 11;
+    map<string,int32> Options = 11;
     string Format = 12;
     //Value interface{} int64
     int32 ValueInt = 13;
@@ -157,8 +175,8 @@ message ContractComponent{
     repeated string NextTasks = 9;
     repeated ComponentData DataList = 10;
     repeated ComponentsExpression DataValueSetterExpressionList = 11;
-    ContractComponentSub CandidateList = 12;
-    ContractComponentSub DecisionResult = 13;
+    repeated ContractComponentSub CandidateList = 12;
+    repeated ContractComponentSub DecisionResult = 13;
     repeated string TaskList = 14;
     repeated string SupportArguments = 15;
     repeated string AgainstArguments = 16;
@@ -169,7 +187,10 @@ message ContractComponent{
     string TaskId = 20;
     //2017-05-27 17:10:00 add
     repeated SelectBranchExpression SelectBranches = 21;
+    map<string,string> MetaAttribute = 22;
 }
+
+
 
 message ContractBody {
     string ContractId = 1; // uuid
@@ -188,7 +209,7 @@ message ContractBody {
     repeated ContractComponent ContractComponents = 14;
     // add date: 2017-05-11 map[string]interface{} 合约属性MetaData
 //    bytes MetaAttribute = 15;
-    map<string, string> MetaAttribute = 15;
+    map<string,string> MetaAttribute= 15;
     repeated string NextTasks = 16;
 }
 

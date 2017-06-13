@@ -53,14 +53,13 @@ func _ScanTaskSchedule() {
 		for _, value := range slTasks {
 			beegoLog.Debug("contract [%v] enter queue", value)
 			gchTaskQueue <- value
+			//wsp@monitor
+			monitor.Monitor.Count("task_running", 1)
 			err = engineCommon.UpdateMonitorSend(value.Id)
 			if err != nil {
 				beegoLog.Error(err.Error())
 			}
 		}
-
-		//task fail count send to monitor,modify value
-		monitor.Monitor.Gauge("task_fail_count", 1)
 	}
 
 	gwgTaskExe.Done()
