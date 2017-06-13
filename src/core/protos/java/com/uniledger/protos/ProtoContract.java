@@ -3207,9 +3207,9 @@ public final class ProtoContract {
         int index);
 
     /**
-     * <code>int64 LogicValue = 7;</code>
+     * <code>int32 LogicValue = 7;</code>
      */
-    long getLogicValue();
+    int getLogicValue();
 
     /**
      * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
@@ -3263,7 +3263,7 @@ public final class ProtoContract {
       description_ = "";
       expressionStr_ = "";
       expressionResult_ = java.util.Collections.emptyList();
-      logicValue_ = 0L;
+      logicValue_ = 0;
     }
 
     @java.lang.Override
@@ -3332,7 +3332,7 @@ public final class ProtoContract {
             }
             case 56: {
 
-              logicValue_ = input.readInt64();
+              logicValue_ = input.readInt32();
               break;
             }
             case 66: {
@@ -3592,11 +3592,11 @@ public final class ProtoContract {
     }
 
     public static final int LOGICVALUE_FIELD_NUMBER = 7;
-    private long logicValue_;
+    private int logicValue_;
     /**
-     * <code>int64 LogicValue = 7;</code>
+     * <code>int32 LogicValue = 7;</code>
      */
-    public long getLogicValue() {
+    public int getLogicValue() {
       return logicValue_;
     }
 
@@ -3706,8 +3706,8 @@ public final class ProtoContract {
       for (int i = 0; i < expressionResult_.size(); i++) {
         output.writeMessage(6, expressionResult_.get(i));
       }
-      if (logicValue_ != 0L) {
-        output.writeInt64(7, logicValue_);
+      if (logicValue_ != 0) {
+        output.writeInt32(7, logicValue_);
       }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
@@ -3741,9 +3741,9 @@ public final class ProtoContract {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, expressionResult_.get(i));
       }
-      if (logicValue_ != 0L) {
+      if (logicValue_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(7, logicValue_);
+          .computeInt32Size(7, logicValue_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetMetaAttribute().getMap().entrySet()) {
@@ -3812,8 +3812,7 @@ public final class ProtoContract {
         hash = (53 * hash) + getExpressionResultList().hashCode();
       }
       hash = (37 * hash) + LOGICVALUE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getLogicValue());
+      hash = (53 * hash) + getLogicValue();
       if (!internalGetMetaAttribute().getMap().isEmpty()) {
         hash = (37 * hash) + METAATTRIBUTE_FIELD_NUMBER;
         hash = (53 * hash) + internalGetMetaAttribute().hashCode();
@@ -3986,7 +3985,7 @@ public final class ProtoContract {
         } else {
           expressionResultBuilder_.clear();
         }
-        logicValue_ = 0L;
+        logicValue_ = 0;
 
         internalGetMutableMetaAttribute().clear();
         return this;
@@ -4118,7 +4117,7 @@ public final class ProtoContract {
             }
           }
         }
-        if (other.getLogicValue() != 0L) {
+        if (other.getLogicValue() != 0) {
           setLogicValue(other.getLogicValue());
         }
         internalGetMutableMetaAttribute().mergeFrom(
@@ -4735,28 +4734,28 @@ public final class ProtoContract {
         return expressionResultBuilder_;
       }
 
-      private long logicValue_ ;
+      private int logicValue_ ;
       /**
-       * <code>int64 LogicValue = 7;</code>
+       * <code>int32 LogicValue = 7;</code>
        */
-      public long getLogicValue() {
+      public int getLogicValue() {
         return logicValue_;
       }
       /**
-       * <code>int64 LogicValue = 7;</code>
+       * <code>int32 LogicValue = 7;</code>
        */
-      public Builder setLogicValue(long value) {
+      public Builder setLogicValue(int value) {
         
         logicValue_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 LogicValue = 7;</code>
+       * <code>int32 LogicValue = 7;</code>
        */
       public Builder clearLogicValue() {
         
-        logicValue_ = 0L;
+        logicValue_ = 0;
         onChanged();
         return this;
       }
@@ -5095,18 +5094,18 @@ public final class ProtoContract {
      *Value interface{} int64
      * </pre>
      *
-     * <code>int64 ValueInt = 13;</code>
+     * <code>int32 ValueInt = 13;</code>
      */
-    long getValueInt();
+    int getValueInt();
 
     /**
      * <pre>
      *Value interface{} unit64
      * </pre>
      *
-     * <code>uint64 ValueUint = 14;</code>
+     * <code>uint32 ValueUint = 14;</code>
      */
-    long getValueUint();
+    int getValueUint();
 
     /**
      * <pre>
@@ -5277,8 +5276,8 @@ public final class ProtoContract {
       mandatory_ = false;
       unit_ = "";
       format_ = "";
-      valueInt_ = 0L;
-      valueUint_ = 0L;
+      valueInt_ = 0;
+      valueUint_ = 0;
       valueFloat_ = 0D;
       valueString_ = "";
       defaultValueInt_ = 0;
@@ -5392,12 +5391,12 @@ public final class ProtoContract {
             }
             case 104: {
 
-              valueInt_ = input.readInt64();
+              valueInt_ = input.readInt32();
               break;
             }
             case 112: {
 
-              valueUint_ = input.readUInt64();
+              valueUint_ = input.readUInt32();
               break;
             }
             case 121: {
@@ -5945,28 +5944,28 @@ public final class ProtoContract {
     }
 
     public static final int VALUEINT_FIELD_NUMBER = 13;
-    private long valueInt_;
+    private int valueInt_;
     /**
      * <pre>
      *Value interface{} int64
      * </pre>
      *
-     * <code>int64 ValueInt = 13;</code>
+     * <code>int32 ValueInt = 13;</code>
      */
-    public long getValueInt() {
+    public int getValueInt() {
       return valueInt_;
     }
 
     public static final int VALUEUINT_FIELD_NUMBER = 14;
-    private long valueUint_;
+    private int valueUint_;
     /**
      * <pre>
      *Value interface{} unit64
      * </pre>
      *
-     * <code>uint64 ValueUint = 14;</code>
+     * <code>uint32 ValueUint = 14;</code>
      */
-    public long getValueUint() {
+    public int getValueUint() {
       return valueUint_;
     }
 
@@ -6260,11 +6259,11 @@ public final class ProtoContract {
       if (!getFormatBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 12, format_);
       }
-      if (valueInt_ != 0L) {
-        output.writeInt64(13, valueInt_);
+      if (valueInt_ != 0) {
+        output.writeInt32(13, valueInt_);
       }
-      if (valueUint_ != 0L) {
-        output.writeUInt64(14, valueUint_);
+      if (valueUint_ != 0) {
+        output.writeUInt32(14, valueUint_);
       }
       if (valueFloat_ != 0D) {
         output.writeDouble(15, valueFloat_);
@@ -6358,13 +6357,13 @@ public final class ProtoContract {
       if (!getFormatBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, format_);
       }
-      if (valueInt_ != 0L) {
+      if (valueInt_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(13, valueInt_);
+          .computeInt32Size(13, valueInt_);
       }
-      if (valueUint_ != 0L) {
+      if (valueUint_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(14, valueUint_);
+          .computeUInt32Size(14, valueUint_);
       }
       if (valueFloat_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
@@ -6529,11 +6528,9 @@ public final class ProtoContract {
       hash = (37 * hash) + FORMAT_FIELD_NUMBER;
       hash = (53 * hash) + getFormat().hashCode();
       hash = (37 * hash) + VALUEINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getValueInt());
+      hash = (53 * hash) + getValueInt();
       hash = (37 * hash) + VALUEUINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getValueUint());
+      hash = (53 * hash) + getValueUint();
       hash = (37 * hash) + VALUEFLOAT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getValueFloat()));
@@ -6732,9 +6729,9 @@ public final class ProtoContract {
         internalGetMutableOptions().clear();
         format_ = "";
 
-        valueInt_ = 0L;
+        valueInt_ = 0;
 
-        valueUint_ = 0L;
+        valueUint_ = 0;
 
         valueFloat_ = 0D;
 
@@ -6906,10 +6903,10 @@ public final class ProtoContract {
           format_ = other.format_;
           onChanged();
         }
-        if (other.getValueInt() != 0L) {
+        if (other.getValueInt() != 0) {
           setValueInt(other.getValueInt());
         }
-        if (other.getValueUint() != 0L) {
+        if (other.getValueUint() != 0) {
           setValueUint(other.getValueUint());
         }
         if (other.getValueFloat() != 0D) {
@@ -7820,15 +7817,15 @@ public final class ProtoContract {
         return this;
       }
 
-      private long valueInt_ ;
+      private int valueInt_ ;
       /**
        * <pre>
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
-      public long getValueInt() {
+      public int getValueInt() {
         return valueInt_;
       }
       /**
@@ -7836,9 +7833,9 @@ public final class ProtoContract {
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
-      public Builder setValueInt(long value) {
+      public Builder setValueInt(int value) {
         
         valueInt_ = value;
         onChanged();
@@ -7849,24 +7846,24 @@ public final class ProtoContract {
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
       public Builder clearValueInt() {
         
-        valueInt_ = 0L;
+        valueInt_ = 0;
         onChanged();
         return this;
       }
 
-      private long valueUint_ ;
+      private int valueUint_ ;
       /**
        * <pre>
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
-      public long getValueUint() {
+      public int getValueUint() {
         return valueUint_;
       }
       /**
@@ -7874,9 +7871,9 @@ public final class ProtoContract {
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
-      public Builder setValueUint(long value) {
+      public Builder setValueUint(int value) {
         
         valueUint_ = value;
         onChanged();
@@ -7887,11 +7884,11 @@ public final class ProtoContract {
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
       public Builder clearValueUint() {
         
-        valueUint_ = 0L;
+        valueUint_ = 0;
         onChanged();
         return this;
       }
@@ -8732,18 +8729,18 @@ public final class ProtoContract {
      *Value interface{} int64
      * </pre>
      *
-     * <code>int64 ValueInt = 13;</code>
+     * <code>int32 ValueInt = 13;</code>
      */
-    long getValueInt();
+    int getValueInt();
 
     /**
      * <pre>
      *Value interface{} unit64
      * </pre>
      *
-     * <code>uint64 ValueUint = 14;</code>
+     * <code>uint32 ValueUint = 14;</code>
      */
-    long getValueUint();
+    int getValueUint();
 
     /**
      * <pre>
@@ -8822,15 +8819,15 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    java.util.List<java.lang.Long> getDataRangeIntList();
+    java.util.List<java.lang.Integer> getDataRangeIntList();
     /**
      * <pre>
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
     int getDataRangeIntCount();
     /**
@@ -8838,24 +8835,24 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    long getDataRangeInt(int index);
+    int getDataRangeInt(int index);
 
     /**
      * <pre>
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    java.util.List<java.lang.Long> getDataRangeUintList();
+    java.util.List<java.lang.Integer> getDataRangeUintList();
     /**
      * <pre>
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
     int getDataRangeUintCount();
     /**
@@ -8863,9 +8860,9 @@ public final class ProtoContract {
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    long getDataRangeUint(int index);
+    int getDataRangeUint(int index);
 
     /**
      * <pre>
@@ -8914,8 +8911,8 @@ public final class ProtoContract {
       mandatory_ = false;
       unit_ = "";
       format_ = "";
-      valueInt_ = 0L;
-      valueUint_ = 0L;
+      valueInt_ = 0;
+      valueUint_ = 0;
       valueFloat_ = 0D;
       valueString_ = "";
       defaultValueInt_ = 0;
@@ -9042,12 +9039,12 @@ public final class ProtoContract {
             }
             case 104: {
 
-              valueInt_ = input.readInt64();
+              valueInt_ = input.readInt32();
               break;
             }
             case 112: {
 
-              valueUint_ = input.readUInt64();
+              valueUint_ = input.readUInt32();
               break;
             }
             case 121: {
@@ -9084,42 +9081,42 @@ public final class ProtoContract {
             }
             case 168: {
               if (!((mutable_bitField0_ & 0x00100000) == 0x00100000)) {
-                dataRangeInt_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00100000;
               }
-              dataRangeInt_.add(input.readInt64());
+              dataRangeInt_.add(input.readInt32());
               break;
             }
             case 170: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00100000) == 0x00100000) && input.getBytesUntilLimit() > 0) {
-                dataRangeInt_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00100000;
               }
               while (input.getBytesUntilLimit() > 0) {
-                dataRangeInt_.add(input.readInt64());
+                dataRangeInt_.add(input.readInt32());
               }
               input.popLimit(limit);
               break;
             }
             case 176: {
               if (!((mutable_bitField0_ & 0x00200000) == 0x00200000)) {
-                dataRangeUint_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00200000;
               }
-              dataRangeUint_.add(input.readUInt64());
+              dataRangeUint_.add(input.readUInt32());
               break;
             }
             case 178: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00200000) == 0x00200000) && input.getBytesUntilLimit() > 0) {
-                dataRangeUint_ = new java.util.ArrayList<java.lang.Long>();
+                dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>();
                 mutable_bitField0_ |= 0x00200000;
               }
               while (input.getBytesUntilLimit() > 0) {
-                dataRangeUint_.add(input.readUInt64());
+                dataRangeUint_.add(input.readUInt32());
               }
               input.popLimit(limit);
               break;
@@ -9616,28 +9613,28 @@ public final class ProtoContract {
     }
 
     public static final int VALUEINT_FIELD_NUMBER = 13;
-    private long valueInt_;
+    private int valueInt_;
     /**
      * <pre>
      *Value interface{} int64
      * </pre>
      *
-     * <code>int64 ValueInt = 13;</code>
+     * <code>int32 ValueInt = 13;</code>
      */
-    public long getValueInt() {
+    public int getValueInt() {
       return valueInt_;
     }
 
     public static final int VALUEUINT_FIELD_NUMBER = 14;
-    private long valueUint_;
+    private int valueUint_;
     /**
      * <pre>
      *Value interface{} unit64
      * </pre>
      *
-     * <code>uint64 ValueUint = 14;</code>
+     * <code>uint32 ValueUint = 14;</code>
      */
-    public long getValueUint() {
+    public int getValueUint() {
       return valueUint_;
     }
 
@@ -9778,15 +9775,15 @@ public final class ProtoContract {
     }
 
     public static final int DATARANGEINT_FIELD_NUMBER = 21;
-    private java.util.List<java.lang.Long> dataRangeInt_;
+    private java.util.List<java.lang.Integer> dataRangeInt_;
     /**
      * <pre>
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    public java.util.List<java.lang.Long>
+    public java.util.List<java.lang.Integer>
         getDataRangeIntList() {
       return dataRangeInt_;
     }
@@ -9795,7 +9792,7 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
     public int getDataRangeIntCount() {
       return dataRangeInt_.size();
@@ -9805,23 +9802,23 @@ public final class ProtoContract {
      *DataRange interface{} int64
      * </pre>
      *
-     * <code>repeated int64 DataRangeInt = 21;</code>
+     * <code>repeated int32 DataRangeInt = 21;</code>
      */
-    public long getDataRangeInt(int index) {
+    public int getDataRangeInt(int index) {
       return dataRangeInt_.get(index);
     }
     private int dataRangeIntMemoizedSerializedSize = -1;
 
     public static final int DATARANGEUINT_FIELD_NUMBER = 22;
-    private java.util.List<java.lang.Long> dataRangeUint_;
+    private java.util.List<java.lang.Integer> dataRangeUint_;
     /**
      * <pre>
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    public java.util.List<java.lang.Long>
+    public java.util.List<java.lang.Integer>
         getDataRangeUintList() {
       return dataRangeUint_;
     }
@@ -9830,7 +9827,7 @@ public final class ProtoContract {
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
     public int getDataRangeUintCount() {
       return dataRangeUint_.size();
@@ -9840,9 +9837,9 @@ public final class ProtoContract {
      *DataRange interface{} unit64
      * </pre>
      *
-     * <code>repeated uint64 DataRangeUint = 22;</code>
+     * <code>repeated uint32 DataRangeUint = 22;</code>
      */
-    public long getDataRangeUint(int index) {
+    public int getDataRangeUint(int index) {
       return dataRangeUint_.get(index);
     }
     private int dataRangeUintMemoizedSerializedSize = -1;
@@ -9934,11 +9931,11 @@ public final class ProtoContract {
       if (!getFormatBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 12, format_);
       }
-      if (valueInt_ != 0L) {
-        output.writeInt64(13, valueInt_);
+      if (valueInt_ != 0) {
+        output.writeInt32(13, valueInt_);
       }
-      if (valueUint_ != 0L) {
-        output.writeUInt64(14, valueUint_);
+      if (valueUint_ != 0) {
+        output.writeUInt32(14, valueUint_);
       }
       if (valueFloat_ != 0D) {
         output.writeDouble(15, valueFloat_);
@@ -9963,14 +9960,14 @@ public final class ProtoContract {
         output.writeUInt32NoTag(dataRangeIntMemoizedSerializedSize);
       }
       for (int i = 0; i < dataRangeInt_.size(); i++) {
-        output.writeInt64NoTag(dataRangeInt_.get(i));
+        output.writeInt32NoTag(dataRangeInt_.get(i));
       }
       if (getDataRangeUintList().size() > 0) {
         output.writeUInt32NoTag(178);
         output.writeUInt32NoTag(dataRangeUintMemoizedSerializedSize);
       }
       for (int i = 0; i < dataRangeUint_.size(); i++) {
-        output.writeUInt64NoTag(dataRangeUint_.get(i));
+        output.writeUInt32NoTag(dataRangeUint_.get(i));
       }
       if (getDataRangeFloatList().size() > 0) {
         output.writeUInt32NoTag(186);
@@ -10036,13 +10033,13 @@ public final class ProtoContract {
       if (!getFormatBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, format_);
       }
-      if (valueInt_ != 0L) {
+      if (valueInt_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(13, valueInt_);
+          .computeInt32Size(13, valueInt_);
       }
-      if (valueUint_ != 0L) {
+      if (valueUint_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(14, valueUint_);
+          .computeUInt32Size(14, valueUint_);
       }
       if (valueFloat_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
@@ -10070,7 +10067,7 @@ public final class ProtoContract {
         int dataSize = 0;
         for (int i = 0; i < dataRangeInt_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt64SizeNoTag(dataRangeInt_.get(i));
+            .computeInt32SizeNoTag(dataRangeInt_.get(i));
         }
         size += dataSize;
         if (!getDataRangeIntList().isEmpty()) {
@@ -10084,7 +10081,7 @@ public final class ProtoContract {
         int dataSize = 0;
         for (int i = 0; i < dataRangeUint_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeUInt64SizeNoTag(dataRangeUint_.get(i));
+            .computeUInt32SizeNoTag(dataRangeUint_.get(i));
         }
         size += dataSize;
         if (!getDataRangeUintList().isEmpty()) {
@@ -10216,11 +10213,9 @@ public final class ProtoContract {
       hash = (37 * hash) + FORMAT_FIELD_NUMBER;
       hash = (53 * hash) + getFormat().hashCode();
       hash = (37 * hash) + VALUEINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getValueInt());
+      hash = (53 * hash) + getValueInt();
       hash = (37 * hash) + VALUEUINT_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getValueUint());
+      hash = (53 * hash) + getValueUint();
       hash = (37 * hash) + VALUEFLOAT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getValueFloat()));
@@ -10425,9 +10420,9 @@ public final class ProtoContract {
         internalGetMutableOptions().clear();
         format_ = "";
 
-        valueInt_ = 0L;
+        valueInt_ = 0;
 
-        valueUint_ = 0L;
+        valueUint_ = 0;
 
         valueFloat_ = 0D;
 
@@ -10607,10 +10602,10 @@ public final class ProtoContract {
           format_ = other.format_;
           onChanged();
         }
-        if (other.getValueInt() != 0L) {
+        if (other.getValueInt() != 0) {
           setValueInt(other.getValueInt());
         }
-        if (other.getValueUint() != 0L) {
+        if (other.getValueUint() != 0) {
           setValueUint(other.getValueUint());
         }
         if (other.getValueFloat() != 0D) {
@@ -11638,15 +11633,15 @@ public final class ProtoContract {
         return this;
       }
 
-      private long valueInt_ ;
+      private int valueInt_ ;
       /**
        * <pre>
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
-      public long getValueInt() {
+      public int getValueInt() {
         return valueInt_;
       }
       /**
@@ -11654,9 +11649,9 @@ public final class ProtoContract {
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
-      public Builder setValueInt(long value) {
+      public Builder setValueInt(int value) {
         
         valueInt_ = value;
         onChanged();
@@ -11667,24 +11662,24 @@ public final class ProtoContract {
        *Value interface{} int64
        * </pre>
        *
-       * <code>int64 ValueInt = 13;</code>
+       * <code>int32 ValueInt = 13;</code>
        */
       public Builder clearValueInt() {
         
-        valueInt_ = 0L;
+        valueInt_ = 0;
         onChanged();
         return this;
       }
 
-      private long valueUint_ ;
+      private int valueUint_ ;
       /**
        * <pre>
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
-      public long getValueUint() {
+      public int getValueUint() {
         return valueUint_;
       }
       /**
@@ -11692,9 +11687,9 @@ public final class ProtoContract {
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
-      public Builder setValueUint(long value) {
+      public Builder setValueUint(int value) {
         
         valueUint_ = value;
         onChanged();
@@ -11705,11 +11700,11 @@ public final class ProtoContract {
        *Value interface{} unit64
        * </pre>
        *
-       * <code>uint64 ValueUint = 14;</code>
+       * <code>uint32 ValueUint = 14;</code>
        */
       public Builder clearValueUint() {
         
-        valueUint_ = 0L;
+        valueUint_ = 0;
         onChanged();
         return this;
       }
@@ -12044,10 +12039,10 @@ public final class ProtoContract {
         return this;
       }
 
-      private java.util.List<java.lang.Long> dataRangeInt_ = java.util.Collections.emptyList();
+      private java.util.List<java.lang.Integer> dataRangeInt_ = java.util.Collections.emptyList();
       private void ensureDataRangeIntIsMutable() {
         if (!((bitField0_ & 0x00100000) == 0x00100000)) {
-          dataRangeInt_ = new java.util.ArrayList<java.lang.Long>(dataRangeInt_);
+          dataRangeInt_ = new java.util.ArrayList<java.lang.Integer>(dataRangeInt_);
           bitField0_ |= 0x00100000;
          }
       }
@@ -12056,9 +12051,9 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
-      public java.util.List<java.lang.Long>
+      public java.util.List<java.lang.Integer>
           getDataRangeIntList() {
         return java.util.Collections.unmodifiableList(dataRangeInt_);
       }
@@ -12067,7 +12062,7 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public int getDataRangeIntCount() {
         return dataRangeInt_.size();
@@ -12077,9 +12072,9 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
-      public long getDataRangeInt(int index) {
+      public int getDataRangeInt(int index) {
         return dataRangeInt_.get(index);
       }
       /**
@@ -12087,10 +12082,10 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public Builder setDataRangeInt(
-          int index, long value) {
+          int index, int value) {
         ensureDataRangeIntIsMutable();
         dataRangeInt_.set(index, value);
         onChanged();
@@ -12101,9 +12096,9 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
-      public Builder addDataRangeInt(long value) {
+      public Builder addDataRangeInt(int value) {
         ensureDataRangeIntIsMutable();
         dataRangeInt_.add(value);
         onChanged();
@@ -12114,10 +12109,10 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public Builder addAllDataRangeInt(
-          java.lang.Iterable<? extends java.lang.Long> values) {
+          java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureDataRangeIntIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, dataRangeInt_);
@@ -12129,7 +12124,7 @@ public final class ProtoContract {
        *DataRange interface{} int64
        * </pre>
        *
-       * <code>repeated int64 DataRangeInt = 21;</code>
+       * <code>repeated int32 DataRangeInt = 21;</code>
        */
       public Builder clearDataRangeInt() {
         dataRangeInt_ = java.util.Collections.emptyList();
@@ -12138,10 +12133,10 @@ public final class ProtoContract {
         return this;
       }
 
-      private java.util.List<java.lang.Long> dataRangeUint_ = java.util.Collections.emptyList();
+      private java.util.List<java.lang.Integer> dataRangeUint_ = java.util.Collections.emptyList();
       private void ensureDataRangeUintIsMutable() {
         if (!((bitField0_ & 0x00200000) == 0x00200000)) {
-          dataRangeUint_ = new java.util.ArrayList<java.lang.Long>(dataRangeUint_);
+          dataRangeUint_ = new java.util.ArrayList<java.lang.Integer>(dataRangeUint_);
           bitField0_ |= 0x00200000;
          }
       }
@@ -12150,9 +12145,9 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
-      public java.util.List<java.lang.Long>
+      public java.util.List<java.lang.Integer>
           getDataRangeUintList() {
         return java.util.Collections.unmodifiableList(dataRangeUint_);
       }
@@ -12161,7 +12156,7 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public int getDataRangeUintCount() {
         return dataRangeUint_.size();
@@ -12171,9 +12166,9 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
-      public long getDataRangeUint(int index) {
+      public int getDataRangeUint(int index) {
         return dataRangeUint_.get(index);
       }
       /**
@@ -12181,10 +12176,10 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public Builder setDataRangeUint(
-          int index, long value) {
+          int index, int value) {
         ensureDataRangeUintIsMutable();
         dataRangeUint_.set(index, value);
         onChanged();
@@ -12195,9 +12190,9 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
-      public Builder addDataRangeUint(long value) {
+      public Builder addDataRangeUint(int value) {
         ensureDataRangeUintIsMutable();
         dataRangeUint_.add(value);
         onChanged();
@@ -12208,10 +12203,10 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public Builder addAllDataRangeUint(
-          java.lang.Iterable<? extends java.lang.Long> values) {
+          java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureDataRangeUintIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, dataRangeUint_);
@@ -12223,7 +12218,7 @@ public final class ProtoContract {
        *DataRange interface{} unit64
        * </pre>
        *
-       * <code>repeated uint64 DataRangeUint = 22;</code>
+       * <code>repeated uint32 DataRangeUint = 22;</code>
        */
       public Builder clearDataRangeUint() {
         dataRangeUint_ = java.util.Collections.emptyList();
@@ -29038,7 +29033,7 @@ public final class ProtoContract {
       "Cname\030\001 \001(\t\022\r\n\005Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 " +
       "\001(\t\022\023\n\013Description\030\004 \001(\t\022\025\n\rExpressionSt" +
       "r\030\005 \001(\t\0222\n\020ExpressionResult\030\006 \003(\0132\030.prot" +
-      "os.ExpressionResult\022\022\n\nLogicValue\030\007 \001(\003\022" +
+      "os.ExpressionResult\022\022\n\nLogicValue\030\007 \001(\005\022" +
       "F\n\rMetaAttribute\030\010 \003(\0132/.protos.Componen" +
       "tsExpression.MetaAttributeEntry\0324\n\022MetaA" +
       "ttributeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(" +
@@ -29048,8 +29043,8 @@ public final class ProtoContract {
       "rdConvType\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022\021\n\tMa" +
       "ndatory\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0226\n\007Options\030\013" +
       " \003(\0132%.protos.ComponentDataSub.OptionsEn" +
-      "try\022\016\n\006Format\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n" +
-      "\tValueUint\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013" +
+      "try\022\016\n\006Format\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\005\022\021\n" +
+      "\tValueUint\030\016 \001(\r\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013" +
       "ValueString\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001" +
       "(\005\022\030\n\020DefaultValueUint\030\022 \001(\r\022\031\n\021DefaultV" +
       "alueFloat\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 " +
@@ -29063,12 +29058,12 @@ public final class ProtoContract {
       "(\0132\030.protos.ComponentDataSub\022\021\n\tMandator" +
       "y\030\t \001(\010\022\014\n\004Unit\030\n \001(\t\0223\n\007Options\030\013 \003(\0132\"" +
       ".protos.ComponentData.OptionsEntry\022\016\n\006Fo" +
-      "rmat\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\003\022\021\n\tValueUin",
-      "t\030\016 \001(\004\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013ValueStri" +
+      "rmat\030\014 \001(\t\022\020\n\010ValueInt\030\r \001(\005\022\021\n\tValueUin",
+      "t\030\016 \001(\r\022\022\n\nValueFloat\030\017 \001(\001\022\023\n\013ValueStri" +
       "ng\030\020 \001(\t\022\027\n\017DefaultValueInt\030\021 \001(\005\022\030\n\020Def" +
       "aultValueUint\030\022 \001(\r\022\031\n\021DefaultValueFloat" +
       "\030\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024\n\014Da" +
-      "taRangeInt\030\025 \003(\003\022\025\n\rDataRangeUint\030\026 \003(\004\022" +
+      "taRangeInt\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 \003(\r\022" +
       "\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEntry\022" +
       "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026Selec" +
       "tBranchExpression\022\033\n\023BranchExpressionStr" +

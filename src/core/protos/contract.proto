@@ -51,7 +51,7 @@ message ComponentsExpression {
     string Description = 4;
     string ExpressionStr = 5;
     repeated ExpressionResult ExpressionResult = 6;
-    int64 LogicValue = 7;
+    int32 LogicValue = 7;
     map<string,string> MetaAttribute = 8;
 }
 
@@ -68,9 +68,9 @@ message ComponentDataSub{
     map<string,int32> Options = 11;
     string Format = 12;
     //Value interface{} int64
-    int64 ValueInt = 13;
+    int32 ValueInt = 13;
     //Value interface{} unit64
-    uint64 ValueUint = 14;
+    uint32 ValueUint = 14;
     //Value interface{} float64
     double ValueFloat = 15;
     //Value interface{} string
@@ -108,9 +108,9 @@ message ComponentData{
     map<string,int32> Options = 11;
     string Format = 12;
     //Value interface{} int64
-    int64 ValueInt = 13;
+    int32 ValueInt = 13;
     //Value interface{} unit64
-    uint64 ValueUint = 14;
+    uint32 ValueUint = 14;
     //Value interface{} float64
     double ValueFloat = 15;
     //Value interface{} string
@@ -126,9 +126,9 @@ message ComponentData{
     string DefaultValueString = 20;
 
     //DataRange interface{} int64
-    repeated int64 DataRangeInt = 21;
+    repeated int32 DataRangeInt = 21;
     //DataRange interface{} unit64
-    repeated uint64 DataRangeUint = 22;
+    repeated uint32 DataRangeUint = 22;
     //DataRange interface{} float64
     repeated double DataRangeFloat = 23;
 

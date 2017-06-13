@@ -869,7 +869,7 @@ proto.protos.ComponentsExpression.deserializeBinaryFromReader = function(msg, re
       msg.addExpressionresult(value);
       break;
     case 7:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setLogicvalue(value);
       break;
     case 8:
@@ -951,7 +951,7 @@ proto.protos.ComponentsExpression.serializeBinaryToWriter = function(message, wr
   }
   f = message.getLogicvalue();
   if (f !== 0) {
-    writer.writeInt64(
+    writer.writeInt32(
       7,
       f
     );
@@ -1072,7 +1072,7 @@ proto.protos.ComponentsExpression.prototype.clearExpressionresultList = function
 
 
 /**
- * optional int64 LogicValue = 7;
+ * optional int32 LogicValue = 7;
  * @return {number}
  */
 proto.protos.ComponentsExpression.prototype.getLogicvalue = function() {
@@ -1262,11 +1262,11 @@ proto.protos.ComponentDataSub.deserializeBinaryFromReader = function(msg, reader
       msg.setFormat(value);
       break;
     case 13:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setValueint(value);
       break;
     case 14:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {number} */ (reader.readUint32());
       msg.setValueuint(value);
       break;
     case 15:
@@ -1409,14 +1409,14 @@ proto.protos.ComponentDataSub.serializeBinaryToWriter = function(message, writer
   }
   f = message.getValueint();
   if (f !== 0) {
-    writer.writeInt64(
+    writer.writeInt32(
       13,
       f
     );
   }
   f = message.getValueuint();
   if (f !== 0) {
-    writer.writeUint64(
+    writer.writeUint32(
       14,
       f
     );
@@ -1674,7 +1674,7 @@ proto.protos.ComponentDataSub.prototype.setFormat = function(value) {
 
 
 /**
- * optional int64 ValueInt = 13;
+ * optional int32 ValueInt = 13;
  * @return {number}
  */
 proto.protos.ComponentDataSub.prototype.getValueint = function() {
@@ -1689,7 +1689,7 @@ proto.protos.ComponentDataSub.prototype.setValueint = function(value) {
 
 
 /**
- * optional uint64 ValueUint = 14;
+ * optional uint32 ValueUint = 14;
  * @return {number}
  */
 proto.protos.ComponentDataSub.prototype.getValueuint = function() {
@@ -2050,11 +2050,11 @@ proto.protos.ComponentData.deserializeBinaryFromReader = function(msg, reader) {
       msg.setFormat(value);
       break;
     case 13:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setValueint(value);
       break;
     case 14:
-      var value = /** @type {number} */ (reader.readUint64());
+      var value = /** @type {number} */ (reader.readUint32());
       msg.setValueuint(value);
       break;
     case 15:
@@ -2082,11 +2082,11 @@ proto.protos.ComponentData.deserializeBinaryFromReader = function(msg, reader) {
       msg.setDefaultvaluestring(value);
       break;
     case 21:
-      var value = /** @type {!Array.<number>} */ (reader.readPackedInt64());
+      var value = /** @type {!Array.<number>} */ (reader.readPackedInt32());
       msg.setDatarangeintList(value);
       break;
     case 22:
-      var value = /** @type {!Array.<number>} */ (reader.readPackedUint64());
+      var value = /** @type {!Array.<number>} */ (reader.readPackedUint32());
       msg.setDatarangeuintList(value);
       break;
     case 23:
@@ -2205,14 +2205,14 @@ proto.protos.ComponentData.serializeBinaryToWriter = function(message, writer) {
   }
   f = message.getValueint();
   if (f !== 0) {
-    writer.writeInt64(
+    writer.writeInt32(
       13,
       f
     );
   }
   f = message.getValueuint();
   if (f !== 0) {
-    writer.writeUint64(
+    writer.writeUint32(
       14,
       f
     );
@@ -2261,14 +2261,14 @@ proto.protos.ComponentData.serializeBinaryToWriter = function(message, writer) {
   }
   f = message.getDatarangeintList();
   if (f.length > 0) {
-    writer.writePackedInt64(
+    writer.writePackedInt32(
       21,
       f
     );
   }
   f = message.getDatarangeuintList();
   if (f.length > 0) {
-    writer.writePackedUint64(
+    writer.writePackedUint32(
       22,
       f
     );
@@ -2500,7 +2500,7 @@ proto.protos.ComponentData.prototype.setFormat = function(value) {
 
 
 /**
- * optional int64 ValueInt = 13;
+ * optional int32 ValueInt = 13;
  * @return {number}
  */
 proto.protos.ComponentData.prototype.getValueint = function() {
@@ -2515,7 +2515,7 @@ proto.protos.ComponentData.prototype.setValueint = function(value) {
 
 
 /**
- * optional uint64 ValueUint = 14;
+ * optional uint32 ValueUint = 14;
  * @return {number}
  */
 proto.protos.ComponentData.prototype.getValueuint = function() {
@@ -2620,7 +2620,7 @@ proto.protos.ComponentData.prototype.setDefaultvaluestring = function(value) {
 
 
 /**
- * repeated int64 DataRangeInt = 21;
+ * repeated int32 DataRangeInt = 21;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<number>}
@@ -2651,7 +2651,7 @@ proto.protos.ComponentData.prototype.clearDatarangeintList = function() {
 
 
 /**
- * repeated uint64 DataRangeUint = 22;
+ * repeated uint32 DataRangeUint = 22;
  * If you change this array by adding, removing or replacing elements, or if you
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<number>}
