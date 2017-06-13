@@ -37,7 +37,7 @@ message ContractAsset{
 }
 
 message ExpressionResult {
-    string Messsage = 1;
+    string Message = 1;
     int32 Code = 2;
     string Data = 3;
     string OutPut = 4;
@@ -50,7 +50,7 @@ message ComponentsExpression {
     string Caption = 3;
     string Description = 4;
     string ExpressionStr = 5;
-    repeated ExpressionResult ExpressionResult = 6;
+    ExpressionResult ExpressionResult = 6;
     int32 LogicValue = 7;
     map<string,string> MetaAttribute = 8;
 }

@@ -55,15 +55,15 @@ func _TaskExecute() {
 		}
 
 		beegoLog.Debug("contract execute")
-		contractData, ok := responseResult.Data.([]interface{})
-		if !ok || len(contractData) == 0 {
+		contractData, ok := responseResult.Data.(interface{})
+		if !ok {
 			beegoLog.Error("responseResult.Data is not ok for type []interface {}. type is %T, or value is [], value is %+v",
 				responseResult.Data, responseResult.Data)
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
-		slContractData, _ := json.Marshal(contractData[0])
+		slContractData, _ := json.Marshal(contractData)
 		beegoLog.Debug(string(slContractData))
 
 		go _Execute(string(slContractData), strContractTask.ContractId, strContractTask.ContractHashId)
