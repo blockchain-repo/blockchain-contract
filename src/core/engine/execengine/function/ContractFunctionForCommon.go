@@ -3,12 +3,13 @@ package function
 import (
 	"errors"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"strconv"
 	"time"
 	"unicontract/src/config"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/transaction"
+
+	"github.com/astaxie/beego/logs"
 )
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -229,6 +230,7 @@ func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 

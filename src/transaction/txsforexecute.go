@@ -2,12 +2,14 @@ package transaction
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"fmt"
 	"sort"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr string,
@@ -99,6 +101,9 @@ func ExecuteInterimComplete(contractOutPut string, taskStatus string) (outputStr
 
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
 	logs.Info(b)
+	if !b {
+		err = fmt.Errorf("ExecuteInterimComplete fail!")
+	}
 	return common.StructSerialize(contractModel), err
 }
 

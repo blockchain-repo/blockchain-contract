@@ -973,6 +973,8 @@ func (cc *CognitiveContract) UpdateContractState() bool {
 	switch v_contract_state {
 	case constdef.ContractState[constdef.Contract_Signature]:
 		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
+	case constdef.ContractState[constdef.Contract_Create]:
+		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
 	}
 	return v_bool
 }
