@@ -290,7 +290,7 @@ func Test_AuthSignature(t *testing.T) {
 }
 
 func Test_CreatContract(t *testing.T) {
-	for i := 1; i <= 2; i++ {
+	for i := 1; i <= 20; i++ {
 
 		url := default_url + "create"
 		produceValid := true
