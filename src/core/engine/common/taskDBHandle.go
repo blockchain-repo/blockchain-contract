@@ -172,13 +172,14 @@ func UpdateMonitorSucc(strContractID string,
 	strContractHashIDNew string,
 	strTaskIdNew string,
 	strTaskStateNew string,
-	nTaskExecuteIndexNew int) error {
+	nTaskExecuteIndexNew int,
+	nFlag int) error {
 
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
 		len(strContractHashIdOld) == 0 ||
-		len(strTaskIdOld) == 0 ||
+		//len(strTaskIdOld) == 0 ||
 		//len(strTaskStateOld) == 0 ||
 		len(strContractHashIDNew) == 0 ||
 		len(strTaskIdNew) == 0 ||
@@ -193,9 +194,9 @@ func UpdateMonitorSucc(strContractID string,
 		if len(strContractHashIdOld) == 0 {
 			beegoLog.Error("len(strContractHashIdOld) == 0")
 		}
-		if len(strTaskIdOld) == 0 {
-			beegoLog.Error("len(strTaskIdOld) == 0")
-		}
+		//if len(strTaskIdOld) == 0 {
+		//	beegoLog.Error("len(strTaskIdOld) == 0")
+		//}
 		//if len(strTaskStateOld) == 0 {
 		//	beegoLog.Error("len(strTaskStateOld) == 0")
 		//}
@@ -252,6 +253,7 @@ func UpdateMonitorSucc(strContractID string,
 	}
 
 	var taskSchedule model.TaskSchedule
+	taskSchedule.SendFlag = nFlag
 	taskSchedule.Id = common.GenerateUUID()
 	taskSchedule.ContractId = strContractID
 	taskSchedule.ContractHashId = strContractHashIDNew

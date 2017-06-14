@@ -868,13 +868,14 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			r_err = common.UpdateMonitorSucc(
 				v_contract.GetContractId(),
 				v_contract.GetId(),
-				v_contract.GetOrgTaskId(),
 				gt.GetState(),
+				v_contract.GetOrgTaskId(),
 				v_contract.GetOrgTaskExecuteIdx(),
 				v_contract.GetOutputId(),
 				v_contract.GetOutputTaskId(),
 				gt.GetState(),
 				v_contract.GetOutputTaskExecuteIdx(),
+				0,
 			)
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
@@ -887,19 +888,19 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		}
 	case 1:
 		//执行成功：1 更新contractID1 的flag=1, succNum+1, timestamp, 2.将contractID2插入到扫描监控表中 flag=1
-		// TODO  insert is flag=1
 		//    调用扫描引擎接口： UpdateMonitorSucc(contractID_old, contractID_new)
 		r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
 		r_err = common.UpdateMonitorSucc(
 			v_contract.GetContractId(),
 			v_contract.GetId(),
-			v_contract.GetOrgTaskId(),
 			gt.GetState(),
+			v_contract.GetOrgTaskId(),
 			v_contract.GetOrgTaskExecuteIdx(),
 			v_contract.GetOutputId(),
 			v_contract.GetOutputTaskId(),
 			gt.GetState(),
 			v_contract.GetOutputTaskExecuteIdx(),
+			0,
 		)
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Fail;")

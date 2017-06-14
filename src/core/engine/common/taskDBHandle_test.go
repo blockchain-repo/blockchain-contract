@@ -108,7 +108,7 @@ func Test_UpdateMonitorSucc(t *testing.T) {
 	strTaskStateNew := "new"
 	intTaskExecuteIdxNew := 23
 	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strTaskStateOld, strTaskId, intTaskExecuteIdx,
-		strContractHashIDNew, strTaskIdNew, strTaskStateNew, intTaskExecuteIdxNew)
+		strContractHashIDNew, strTaskIdNew, strTaskStateNew, intTaskExecuteIdxNew, 0)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {

@@ -622,7 +622,7 @@ func Test_SetTaskScheduleFlagBatch(t *testing.T) {
 }
 
 func Test_SetTaskScheduleFlag(t *testing.T) {
-	strID := "b68a09ce-96f1-433e-8df2-5c1f3552a984"
+	strID := "3b32d482-9194-4cbb-81e7-ec1390d623c8"
 	err := SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())

@@ -1,6 +1,8 @@
 package function
 
-import "unicontract/src/core/engine/common"
+import (
+	"unicontract/src/core/engine/common"
+)
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++合约机【ENERGYTRADING】能源交易专用扩展方法++++++++++
