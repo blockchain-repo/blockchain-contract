@@ -858,23 +858,25 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
-			next_tasks = f_s_task.(inf.ITask).GetNextTasks()
-			for _, t_task := range next_tasks {
-				//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
-				//      通过循环执行次数条件,退出循环执行
-				tmp_next_task := cc.GetTask(t_task)
-				if tmp_next_task != nil {
-					v_nexttask_object := tmp_next_task.(inf.ITask)
-					v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
-					v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
-					r_task_queue.Push(t_task)
+			/*
+				next_tasks = f_s_task.(inf.ITask).GetNextTasks()
+				for _, t_task := range next_tasks {
+					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
+					//      通过循环执行次数条件,退出循环执行
+					tmp_next_task := cc.GetTask(t_task)
+					if tmp_next_task != nil {
+						v_nexttask_object := tmp_next_task.(inf.ITask)
+						v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
+						v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
+						r_task_queue.Push(t_task)
+					}
 				}
-			}
-			//避免重复执行，将当前contractHashID转化为outputID,保证执行的是下一个任务
-			cc.SetId(cc.GetOutputId())
-			cc.SetOrgId(cc.GetOutputId())
-			cc.SetOrgTaskId(cc.GetOutputTaskId())
-			cc.SetOrgTaskExecuteIdx(cc.GetOutputTaskExecuteIdx())
+				//避免重复执行，将当前contractHashID转化为outputID,保证执行的是下一个任务
+				cc.SetId(cc.GetOutputId())
+				cc.SetOrgId(cc.GetOutputId())
+				cc.SetOrgTaskId(cc.GetOutputTaskId())
+				cc.SetOrgTaskExecuteIdx(cc.GetOutputTaskExecuteIdx())
+			*/
 		case 0: //执行条件不成立
 			if f_s_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
 				continue
