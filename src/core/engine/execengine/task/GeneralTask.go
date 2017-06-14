@@ -126,9 +126,9 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 		return r_ret, r_err
 	}
 	//处理中
-	r_ret, r_err = gt.Start()
-	if r_err != nil {
-		r_str_error = r_str_error + "[Run_Error]:" + r_err.Error()
+	r_ret, process_err := gt.Start()
+	if process_err != nil {
+		r_str_error = r_str_error + "[Run_Error]:" + process_err.Error()
 	}
 	switch r_ret {
 	case 1:
@@ -142,11 +142,13 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 		r_flag = 0
 	}
 	//后处理
-	r_err = gt.PostProcess(r_flag)
-	if r_err != nil {
-		r_str_error = r_str_error + "[PostProcess_Error]" + r_err.Error()
+	postProcess_err := gt.PostProcess(r_flag)
+	if postProcess_err != nil {
+		r_str_error = r_str_error + "[PostProcess_Error]" + postProcess_err.Error()
 	}
-	r_err = errors.New(r_str_error)
+	if r_str_error != "" {
+		r_err = errors.New(r_str_error)
+	}
 	return r_ret, r_err
 }
 func (gt *GeneralTask) GetTaskId() string {
@@ -847,19 +849,45 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			logs.Info(r_buf.String())
 		}
 	case 0:
-		//执行条件不满足：1.更新contractID1 的flag=0，timestamp
+		//执行条件不满足：
+		//    case1: State=Dormant or Inprocess .更新contractID1 的flag=0，waitNum+1, timestamp
+		//    case2: State=Complete 更新 contractID1 的flag=1,successNum+1, timestamp; 添加 contractID2 的记录 flag=0
 		//    调用扫描引擎接口： UpdateMonitorWait(contractID_old)
-		r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
-		if r_err != nil {
-			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
-			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			logs.Warning(r_buf.String())
-		} else {
-			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Succ;")
-			logs.Info(r_buf.String())
+		if gt.GetState() == constdef.TaskState[constdef.TaskState_Dormant] || gt.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
+			r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
+			if r_err != nil {
+				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
+				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+				logs.Warning(r_buf.String())
+			} else {
+				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Succ;")
+				logs.Info(r_buf.String())
+			}
+		} else if gt.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
+			r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
+			r_err = common.UpdateMonitorSucc(
+				v_contract.GetContractId(),
+				v_contract.GetId(),
+				v_contract.GetOrgTaskId(),
+				gt.GetState(),
+				v_contract.GetOrgTaskExecuteIdx(),
+				v_contract.GetOutputId(),
+				v_contract.GetOutputTaskId(),
+				gt.GetState(),
+				v_contract.GetOutputTaskExecuteIdx(),
+			)
+			if r_err != nil {
+				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
+				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+				logs.Warning(r_buf.String())
+			} else {
+				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Succ;")
+				logs.Info(r_buf.String())
+			}
 		}
 	case 1:
-		//执行成功：1 更新contractID1 的flag=1, succNum+1, timestamp, 2.将contractID2插入到扫描监控表中
+		//执行成功：1 更新contractID1 的flag=1, succNum+1, timestamp, 2.将contractID2插入到扫描监控表中 flag=1
+		// TODO  insert is flag=1
 		//    调用扫描引擎接口： UpdateMonitorSucc(contractID_old, contractID_new)
 		r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
 		r_err = common.UpdateMonitorSucc(
@@ -874,11 +902,11 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			v_contract.GetOutputTaskExecuteIdx(),
 		)
 		if r_err != nil {
-			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorSucc] Fail;")
+			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 			logs.Warning(r_buf.String())
 		} else {
-			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorSucc] Succ;")
+			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Succ;")
 			logs.Info(r_buf.String())
 		}
 	}

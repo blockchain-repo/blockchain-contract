@@ -793,9 +793,9 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	for _, v_task := range next_tasks {
 		r_task_queue.Push(v_task)
 	}
-	//判断后继任务是否有执行过(state_discard)的：
-	//     有(state_discard)，则清空队列，将该任务后继任务入队，继续判断；
-	//     有(state_inprocess,state_complete),则清空队列，将该任务入队，跳出判断，进入下一判断
+	//判断后继任务是否有执行过(state_discard 或 state_completed)的：
+	//     有(state_discard 或 state_completed)，则清空队列，将该任务后继任务入队，继续判断；
+	//     有(state_inprocess),则清空队列，将该任务入队，跳出判断，进入下一判断
 	//     无(且队列不空时)，继续判断
 	//     无(且队列为空时)，则将当前轮询的后继任务入队，跳出循环，进入下一判断
 	for !r_task_queue.Empty() {
@@ -809,7 +809,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			logs.Warning(r_buf.String())
 			return r_ret, r_err
 		}
-		if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Discard] {
+		if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Discard] || f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Completed] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
@@ -818,7 +818,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				r_task_queue.Push(t_task)
 			}
 			continue
-		} else if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_In_Progress] || f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Completed] {
+		} else if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
@@ -854,7 +854,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		r_ret, f_err = f_s_task.(inf.ITask).UpdateState()
 		switch r_ret {
 		case 1: //执行成功后，跳转到下一合约任务；
-			// 注意：如后描述暂不生效（后续任务不入队列了，等待共识成功后初始化到扫描监控表中，下次加载再执行）
+			// 注意：后续任务不入队列了，等待共识成功后初始化到扫描监控表中，下次加载再执行
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
@@ -870,6 +870,11 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 					r_task_queue.Push(t_task)
 				}
 			}
+			//避免重复执行，将当前contractHashID转化为outputID,保证执行的是下一个任务
+			cc.SetId(cc.GetOutputId())
+			cc.SetOrgId(cc.GetOutputId())
+			cc.SetOrgTaskId(cc.GetOutputTaskId())
+			cc.SetOrgTaskExecuteIdx(cc.GetOutputTaskExecuteIdx())
 		case 0: //执行条件不成立
 			if f_s_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
 				continue
