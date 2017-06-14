@@ -26,7 +26,6 @@ func init() {
 			beego.NSRouter("/query", &controllers.ContractController{}, "post:Query"),
 			beego.NSRouter("/queryAll", &controllers.ContractController{}, "post:QueryAll"),
 			beego.NSRouter("/queryLog", &controllers.ContractController{}, "post:QueryLog"),
-			beego.NSRouter("/track", &controllers.ContractController{}, "post:Track"),
 			beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
 			beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),
 			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),

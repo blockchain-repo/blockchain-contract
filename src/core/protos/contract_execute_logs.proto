@@ -1,0 +1,42 @@
+syntax = "proto3";
+package protos;
+
+option java_package = "com.uniledger.protos";
+option java_outer_classname = "ProtoContractList";
+
+import "contract.proto";
+
+message ContractExecuteLog{
+    string ContractHashId = 1;
+    // transaction.Relation.TaskId
+    string TaskId = 2;
+    // transaction timestamp
+    string Timestamp = 3;
+    // ContractBody.Caption
+    string Caption = 4;
+    // ContractBody.Cname
+    string Cname = 5;
+    // ContractBody.ContractId
+    string ContractId = 6;
+    // ContractBody.ContractOwners
+    repeated string ContractOwners = 7;
+    // ContractBody.ContractSignatures
+    repeated ContractSignature ContractSignatures = 8;
+    // ContractBody.ContractState
+    string ContractState = 9;
+    // ContractBody.CreateTime
+    string CreateTime = 10;
+    // ContractBody.Creator
+    string Creator = 11;
+    // ContractBody.Description
+    string Description = 12;
+    // ContractBody.StartTime
+    string StartTime = 13;
+    // ContractBody.EndTime
+    string EndTime = 14;
+}
+
+message ContractExecuteLogs {
+
+    repeated ContractExecuteLog ContractLogs = 1;
+}

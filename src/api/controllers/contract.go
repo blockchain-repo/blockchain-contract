@@ -197,11 +197,51 @@ func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos
 				Creator:            tempContract.ContractBody.Creator,
 			},
 		}
-		//contracts[i] = &contractModel[i].Contract
 	}
 	contractList.Contracts = contracts
 	logs.Info("query contract len is ", len(contractModel))
 	return contractList, nil
+}
+
+// special for contractOutputs Array to proto[] only for queryLog
+func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr string) (protos.ContractExecuteLogs, error) {
+	// 1. to contractOutputModel
+	var contractOutput []model.ContractOutput
+	err := json.Unmarshal([]byte(contractOutputsModelStr), &contractOutput)
+	// 2. to contract
+	var contractExecuteLogList protos.ContractExecuteLogs
+	var contractExecuteLogs []*protos.ContractExecuteLog
+	if err != nil {
+		logs.Error("error fromContractOutputsModelArrayStrToContractsForLog", err)
+		return contractExecuteLogList, err
+	}
+	contractExecuteLogs = make([]*protos.ContractExecuteLog, len(contractOutput))
+	for i := 0; i < len(contractOutput); i++ {
+		tempTransaction := contractOutput[i].Transaction
+		tempRelation := tempTransaction.Relation
+		tempContractBody := tempTransaction.ContractModel.ContractBody
+
+		contractExecuteLogs[i] = &protos.ContractExecuteLog{
+			ContractHashId:     tempRelation.ContractHashId,
+			TaskId:             tempRelation.TaskId,
+			Timestamp:          tempTransaction.Timestamp,
+			Caption:            tempContractBody.Caption,
+			Cname:              tempContractBody.Cname,
+			ContractId:         tempContractBody.ContractId,
+			ContractOwners:     tempContractBody.ContractOwners,
+			ContractSignatures: tempContractBody.ContractSignatures,
+			ContractState:      tempContractBody.ContractState,
+			CreateTime:         tempContractBody.CreateTime,
+			Creator:            tempContractBody.Creator,
+			Description:        tempContractBody.Description,
+			StartTime:          tempContractBody.StartTime,
+			EndTime:            tempContractBody.EndTime,
+		}
+
+	}
+	contractExecuteLogList.ContractLogs = contractExecuteLogs
+	logs.Info("query contractExecuteLogs len is ", len(contractExecuteLogs))
+	return contractExecuteLogList, nil
 }
 
 // @Title AuthSignature
@@ -478,77 +518,36 @@ func (c *ContractController) QueryLog() {
 		return
 	}
 
-	contractModelStr, err := rethinkdb.GetContractsLogByMapCondition(requestParamMap)
+	contractOutputsModelStr, err := rethinkdb.GetContractsLogByMapCondition(requestParamMap)
+
 	if err != nil {
-		logs.Error("API[Query]合约(Id="+contractId+")查询错误: ", err)
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		logs.Error("API[QueryLog]合约log(Id="+contractId+")查询错误: ", err)
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryLog]查询错误!")
 		return
 	}
 
-	if contractModelStr == "" {
-		logs.Warn("API[Query]合约(Id=" + contractId + ")不存在: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
+	if contractOutputsModelStr == "" {
+		logs.Warn("API[QueryLog]合约log(Id=" + contractId + ")不存在: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryLog](Id="+contractId+")不存在: ")
 		return
 	}
 	//todo 需要过滤字段,只提取需要的字段!
-	contractListProto, err := fromContractModelArrayStrToContractsForLog(contractModelStr)
+	contractExecuteLogListProto, err := fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr)
+	logs.Warn(contractExecuteLogListProto)
 	if err != nil {
-		logs.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
+		logs.Error("API[QueryLog]合约(Id=" + contractId + "), 转换失败(fromContractOutputsModelArrayStrToContractsForLog)")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
-	contractListProtoBytes, err := proto.Marshal(&contractListProto)
+	contractExecuteLogListProtoBytes, err := proto.Marshal(&contractExecuteLogListProto)
 	if err != nil {
-		logs.Error("API[QueryALl]合约, 转换失败(proto.Marshal) ")
+		logs.Error("API[QueryLog]合约, 转换失败(proto.Marshal) ")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
-	contractProtoStr := string(contractListProtoBytes)
-	c.responseJsonBody(contractProtoStr, true, "API[Query]查询合约成功!")
+	contractExecuteLogListProtoStr := string(contractExecuteLogListProtoBytes)
+	c.responseJsonBody(contractExecuteLogListProtoStr, true, "API[QueryLog]查询成功!")
 	//c.responseJsonBody(contractProtoStr, true, "API[Query] success!")
-}
-
-// @Title Track
-// @Description track contract by contract Id
-// @Param	cid		path 	string	true		"The key for contract"
-// @Success 200 {object} models.Contract
-// @Failure 403 cid is empty
-// @router /track [post]
-func (c *ContractController) Track() {
-	_, contract, err, status := c.parseProtoRequestBody()
-	if err != nil {
-		c.responseJsonBodyCode(status, "", false, err.Error())
-		return
-	}
-
-	contractId := contract.Id
-	if contractId == "" {
-		logs.Error("请输入合约Id")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "错误请求!")
-		return
-	}
-	contractTasksStr, err := rethinkdb.GetContractTasksByContractId(contractId)
-	if err != nil {
-		logs.Error("API[Track] GetContractTasksByContractId 查询失败 ", contractId)
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
-		return
-	}
-	if contractTasksStr == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractTask 不存在")
-		return
-	}
-
-	var contractTasks []model.ContractTask
-	err = json.Unmarshal([]byte(contractTasksStr), &contractTasks)
-
-	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "Unmarshal ContractTasks fail!")
-		return
-	}
-
-	//TODO track contract 合约跟踪
-	logs.Warn(c.Ctx.Request.RequestURI, "API[Track] 缺少合约跟踪查询方法!")
-	c.responseJsonBody(contract.Id, false, "API[Track] 缺少合约跟踪查询方法!")
 }
 
 // @Title Update
