@@ -97,12 +97,12 @@ func Test_EvaluateExpressionCandidate(t *testing.T) { // TODO ?
 
 func Test_EvaluateExpressionValue(t *testing.T) { // TODO ?
 	slTestString := []string{
-		"",
+		`FuncIsConPutInUnichian("a90b93a2567a018afe52258f02c39c4de9b25e2e539b81778dbb897a3f88fc92")`,
 	}
 
 	ep := NewExpressionParseEngine()
 	for _, value := range slTestString {
-		interface_, err := ep.EvaluateExpressionValue(value, value)
+		interface_, err := ep.EvaluateExpressionValue("Expression_Function", value)
 		if err != nil {
 			t.Error(err)
 		} else {

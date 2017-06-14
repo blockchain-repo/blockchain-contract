@@ -518,9 +518,7 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 	}
 	//默认的合约终止条件（当前合约步骤入链查询判定）
 	v_contract := gt.GetContract()
-	logs.Error("***************************************")
-	logs.Error("+v\n", v_contract)
-	v_default_function := "FuncIsConPutInUnichian(" + v_contract.GetOutputId() + ")"
+	v_default_function := "FuncIsConPutInUnichian(\"" + v_contract.GetOutputId() + "\")"
 	v_result, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_default_function)
 	if v_err != nil {
 		logs.Warning("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
@@ -691,8 +689,6 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		//Dormant方法中生成交易产出Output（针对资产方法，合约执行状态+交易产出）；如果没有交易产出Output，则在Complete中生成Output（纯合约执行状态）
 		//1 判断OutputStruct 是否为空，为空则需要在此构造产出结构体
 		var output_null_flag bool = false
-		logs.Error("==111111=======================")
-		logs.Error(gt.GetContract().GetOutputStruct())
 		if gt.GetContract().GetOutputStruct() == "" {
 			output_null_flag = true
 			var tmp_output common.OperateResult = common.OperateResult{}
@@ -706,8 +702,6 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				return r_ret, r_err
 			}
 			tmp_output, r_err = function.FuncInterim(str_json_contract, gt.GetContract().GetContractId(), gt.GetTaskId(), gt.GetTaskExecuteIdx())
-			logs.Error("====22222========================")
-			logs.Error(tmp_output)
 			if r_err != nil {
 				r_ret = -1
 				r_buf.WriteString("[Result]: Generate OutputStruct fail, FuncInterim generage output error;")
@@ -725,12 +719,8 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				logs.Error(r_buf.String())
 				return r_ret, r_err
 			}
-			logs.Error("====333333========================")
-			logs.Error(tmp_output.GetOutput().(string))
 			gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
 		}
-		logs.Error("====444444========================")
-		logs.Error(gt.GetContract().GetOutputStruct())
 		//4 OutputStruct插入到Output表中
 		var v_result common.OperateResult = common.OperateResult{}
 		if output_null_flag {
@@ -748,6 +738,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			return r_ret, r_err
 		}
 		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
+		gt.GetContract().SetOutputStruct(v_result.GetData().(string))
 		var map_output_first interface{} = common.Deserialize(gt.GetContract().GetOutputStruct())
 		if map_output_first == nil {
 			r_ret = -1
@@ -776,12 +767,10 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			return r_ret, r_err
 		}
 		var map_contract map[string]interface{} = map_transaction["Contract"].(map[string]interface{})
-		logs.Error("================")
-		logs.Error("contract.outputID:", map_contract["id"].(string))
 		gt.GetContract().SetOutputId(map_contract["id"].(string))
 		gt.GetContract().SetOutputTaskId(gt.GetTaskId())
 		gt.GetContract().SetOutputTaskExecuteIdx(gt.GetTaskExecuteIdx())
-		logs.Error("gt.GetContract():", gt.GetContract())
+		//logs.Error("gt.GetContract():", gt.GetContract())
 		logs.Error("gt.GetContract().GetOutputId():", gt.GetContract().GetOutputId())
 		logs.Info(r_buf.String(), " Inprocess to Complete....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Completed])

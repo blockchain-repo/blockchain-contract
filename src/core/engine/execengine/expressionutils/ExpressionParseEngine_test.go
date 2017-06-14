@@ -10,6 +10,7 @@ import (
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/execengine/data"
 	"unicontract/src/core/engine/execengine/expression"
+	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/task"
 )
@@ -34,8 +35,8 @@ func CreateComponent() inf.IComponent {
 	var v_datarange_1 [2]int = [2]int{1, 2}
 	var v_datarange_2 [2]int = [2]int{3, 4}
 	var v_data_arr_1 []interface{} = make([]interface{}, 0)
-	var data_1_1 data.IntData = data.IntData{GeneralData: v_general_data_1, DataRange: v_datarange_1}
-	var data_1_2 data.IntData = data.IntData{GeneralData: v_general_data_2, DataRange: v_datarange_2}
+	var data_1_1 data.IntData = data.IntData{GeneralData: v_general_data_1, DataRangeInt: v_datarange_1}
+	var data_1_2 data.IntData = data.IntData{GeneralData: v_general_data_2, DataRangeInt: v_datarange_2}
 	v_data_arr_1 = append(v_data_arr_1, data_1_1)
 	v_data_arr_1 = append(v_data_arr_1, data_1_2)
 
@@ -147,8 +148,8 @@ func TestReflectVariable(t *testing.T) {
 	var v_datarange_1 [2]int = [2]int{1, 2}
 	var v_datarange_2 [2]int = [2]int{3, 4}
 	var v_data_arr_1 []interface{} = make([]interface{}, 0)
-	var data_1_1 data.IntData = data.IntData{GeneralData: v_general_data_1, DataRange: v_datarange_1}
-	var data_1_2 data.IntData = data.IntData{GeneralData: v_general_data_2, DataRange: v_datarange_2}
+	var data_1_1 data.IntData = data.IntData{GeneralData: v_general_data_1, DataRangeInt: v_datarange_1}
+	var data_1_2 data.IntData = data.IntData{GeneralData: v_general_data_2, DataRangeInt: v_datarange_2}
 	v_data_arr_1 = append(v_data_arr_1, data_1_1)
 	v_data_arr_1 = append(v_data_arr_1, data_1_2)
 
@@ -285,5 +286,22 @@ func TestReflectVariable_2(t *testing.T) {
 }
 
 func TestRunFunction(t *testing.T) {
-	//TODO
+	v_express_parse := NewExpressionParseEngine()
+	v_express_parse.SetFunctionEngine(function.NewFunctionParseEngine())
+	slTestRightStr := []string{
+		`FuncIsConPutInUnichian("a90b93a2567a018afe52258f02c39c4de9b25e2e539b81778dbb897a3f88fc92")`,
+	}
+	for _, value := range slTestRightStr {
+		v_express_parse.RunFunction(value)
+	}
+
+	slTestErrorStr := []string{
+		"Func",
+		"func",
+	}
+	for index, value := range slTestErrorStr {
+		if v_express_parse.IsExprFunction(value) {
+			t.Errorf("index is [ %d ], value is [ %s ] is Function, Check Error!", index, value)
+		}
+	}
 }

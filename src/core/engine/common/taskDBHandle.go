@@ -76,6 +76,17 @@ func UpdateMonitorFail(strContractID string,
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
 		len(strContractHashID) == 0 {
+		beegoLog.Error("-------------------------------------")
+		if len(strNodePubkey) == 0 {
+			beegoLog.Error("len(strNodePubkey) == 0")
+		}
+		if len(strContractID) == 0 {
+			beegoLog.Error("len(strContractID) == 0")
+		}
+		if len(strContractHashID) == 0 {
+			beegoLog.Error("len(strContractHashID) == 0")
+		}
+		beegoLog.Error("-------------------------------------")
 		return fmt.Errorf("param is null")
 	}
 
@@ -113,6 +124,17 @@ func UpdateMonitorWait(strContractID string,
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
 		len(strContractHashID) == 0 {
+		beegoLog.Error("-------------------------------------")
+		if len(strNodePubkey) == 0 {
+			beegoLog.Error("len(strNodePubkey) == 0")
+		}
+		if len(strContractID) == 0 {
+			beegoLog.Error("len(strContractID) == 0")
+		}
+		if len(strContractHashID) == 0 {
+			beegoLog.Error("len(strContractHashID) == 0")
+		}
+		beegoLog.Error("-------------------------------------")
 		return fmt.Errorf("param is null")
 	}
 
@@ -157,10 +179,37 @@ func UpdateMonitorSucc(strContractID string,
 		len(strContractID) == 0 ||
 		len(strContractHashIdOld) == 0 ||
 		len(strTaskIdOld) == 0 ||
-		len(strTaskStateOld) == 0 ||
+		//len(strTaskStateOld) == 0 ||
 		len(strContractHashIDNew) == 0 ||
 		len(strTaskIdNew) == 0 ||
 		len(strTaskStateNew) == 0 {
+		beegoLog.Error("-------------------------------------")
+		if len(strNodePubkey) == 0 {
+			beegoLog.Error("len(strNodePubkey) == 0")
+		}
+		if len(strContractID) == 0 {
+			beegoLog.Error("len(strContractID) == 0")
+		}
+		if len(strContractHashIdOld) == 0 {
+			beegoLog.Error("len(strContractHashIdOld) == 0")
+		}
+		if len(strTaskIdOld) == 0 {
+			beegoLog.Error("len(strTaskIdOld) == 0")
+		}
+		//if len(strTaskStateOld) == 0 {
+		//	beegoLog.Error("len(strTaskStateOld) == 0")
+		//}
+		if len(strContractHashIDNew) == 0 {
+			beegoLog.Error("len(strContractHashIDNew) == 0")
+		}
+		if len(strTaskIdNew) == 0 {
+			beegoLog.Error("len(strTaskIdNew) == 0")
+		}
+		if len(strTaskStateNew) == 0 {
+			beegoLog.Error("len(strTaskStateNew) == 0")
+			beegoLog.Error("len(strTaskStateNew) == 0")
+		}
+		beegoLog.Error("-------------------------------------")
 		return fmt.Errorf("param is null")
 	}
 

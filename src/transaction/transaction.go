@@ -11,6 +11,7 @@ import (
 	"unicontract/src/core/model"
 
 	"github.com/astaxie/beego/logs"
+	"strings"
 )
 
 const (
@@ -326,6 +327,7 @@ func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
 }
 
 func IsOutputInUnichain(contractHashId string) (bool, error) {
+	contractHashId = strings.Trim(contractHashId, "\"")
 	param := `{"contract_hash_id":"` + contractHashId + `"}`
 	result, err := chain.GetTxByConHashId(param)
 	if err != nil {
@@ -333,14 +335,23 @@ func IsOutputInUnichain(contractHashId string) (bool, error) {
 		return false, err
 	}
 	logs.Info(result.Data)
-	output, ok := result.Data.([]interface{})
+	//output, ok := result.Data.([]interface{})
+	output, ok := result.Data.(interface{})
 	if !ok {
 		err = errors.New("type error")
 		logs.Error(err)
 		return false, err
 	}
-	logs.Info(len(output))
-	if len(output) > 0 {
+
+	sloutput, ok := output.([]interface{})
+	if !ok {
+		err = errors.New("output.([]interface{}) error")
+		logs.Error(err)
+		return false, err
+	}
+
+	logs.Info(len(sloutput))
+	if len(sloutput) > 0 {
 		return true, nil
 	}
 	return false, err

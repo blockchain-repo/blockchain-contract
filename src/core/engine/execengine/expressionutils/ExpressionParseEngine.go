@@ -725,23 +725,40 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	func_param_array := strings.Split(func_param_str, ",")
 	//函数调用
 	func_run := reflect.ValueOf(ep.FunctionEngine.ContractFunctions[func_name])
-	func_params := make([]reflect.Value, 0)
-	for _, v_args := range func_param_array {
+	func_params := make([]reflect.Value, len(func_param_array))
+	for index, v_args := range func_param_array {
+		isConstant := func(v string) bool {
+			return ep.IsExprNum(v) || ep.IsExprBool(v) || ep.IsExprFloat(v) || ep.IsExprString(v)
+		}(v_args)
+
 		//识别字符串，获取参数的值
-		v_arg_value, err := ep.EvaluateExpressionVariable(v_args)
-		if err != nil {
-			r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
-			r_buf.WriteString("[Error]: function args(" + v_args + ") parse error!")
-			logs.Warning(r_buf.String())
-			v_err = errors.New(" function args(" + v_args + ") parse error!")
-			v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
-			return v_result, v_err
+		if isConstant {
+			func_params[index] = reflect.ValueOf(v_args)
+		} else {
+			v_arg_value, err := ep.EvaluateExpressionVariable(v_args)
+			if err != nil {
+				r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
+				r_buf.WriteString("[Error]: function args(" + v_args + ") parse error!")
+				logs.Warning(r_buf.String())
+				v_err = errors.New(" function args(" + v_args + ") parse error!")
+				v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
+				return v_result, v_err
+			}
+			func_params[index] = reflect.ValueOf(v_arg_value)
 		}
-		func_params = append(func_params, reflect.ValueOf(v_arg_value))
 	}
 	func_result_arr := func_run.Call(func_params)
 
 	r_buf.WriteString("[Result]: RunFunction(" + p_function + ") success;")
 	logs.Info(r_buf.String())
-	return func_result_arr[0].Interface().(common.OperateResult), func_result_arr[1].Interface().(error)
+
+	retResult, ok1 := func_result_arr[0].Interface().(common.OperateResult)
+	if !ok1 {
+		retResult = common.OperateResult{}
+	}
+	retErr, ok2 := func_result_arr[1].Interface().(error)
+	if !ok2 {
+		retErr = nil
+	}
+	return retResult, retErr
 }

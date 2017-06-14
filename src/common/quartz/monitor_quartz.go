@@ -1,11 +1,12 @@
 package quartz
 
 import (
-	"github.com/astaxie/beego/logs"
 	"time"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/core/db/rethinkdb"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func init() {
@@ -67,6 +68,6 @@ func sendContractStatsToMonitor() {
 		monitor.Monitor.Gauge("task_send_flag_fail", common.StringToInt(task_send_flag_fail))
 		monitor.Monitor.Gauge("task_failed_count", common.StringToInt(task_failed_Count))
 		monitor.Monitor.Gauge("task_wait_count", common.StringToInt(task_wait_Count))
-		monitor.Monitor.Gauge("contract_decrease_rate", common.StringToInt(task_send_flag_success)/common.StringToInt(Contracts_number))
+		//monitor.Monitor.Gauge("contract_decrease_rate", common.StringToInt(task_send_flag_success)/common.StringToInt(Contracts_number))
 	}
 }
