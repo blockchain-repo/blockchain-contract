@@ -5,7 +5,6 @@ option java_package = "com.uniledger.protos";
 option java_outer_classname = "ProtoContract";
 //option java_multiple_files = true;
 
-
 //message StringStringMapFieldEntry {
 //    string Key = 1;
 //    string Value = 2;
@@ -18,7 +17,7 @@ option java_outer_classname = "ProtoContract";
 //    int32 Value = 2;
 //}
 
-message ContractSignature{
+message ContractSignature {
     string OwnerPubkey = 1;
     string Signature = 2;
     //13 bit
@@ -26,14 +25,14 @@ message ContractSignature{
 
 }
 
-message ContractAsset{
+message ContractAsset {
     string AssetId = 1;
     string Name = 2;
     string Caption = 3;
     string Description = 4;
     string Unit = 5;
-    float Amount= 6;
-    map<string,string> MetaData = 7;
+    float Amount = 6;
+    map<string, string> MetaData = 7;
 }
 
 message ExpressionResult {
@@ -52,10 +51,10 @@ message ComponentsExpression {
     string ExpressionStr = 5;
     ExpressionResult ExpressionResult = 6;
     int32 LogicValue = 7;
-    map<string,string> MetaAttribute = 8;
+    map<string, string> MetaAttribute = 8;
 }
 
-message ComponentDataSub{
+message ComponentDataSub {
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
@@ -65,7 +64,7 @@ message ComponentDataSub{
     repeated string Category = 7; // []string Category
     bool Mandatory = 9;
     string Unit = 10;
-    map<string,int32> Options = 11;
+    map<string, int32> Options = 11;
     string Format = 12;
     //Value interface{} int64
     int32 ValueInt = 13;
@@ -94,7 +93,7 @@ message ComponentDataSub{
 
 }
 
-message ComponentData{
+message ComponentData {
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
@@ -105,7 +104,7 @@ message ComponentData{
     ComponentDataSub Parent = 8;
     bool Mandatory = 9;
     string Unit = 10;
-    map<string,int32> Options = 11;
+    map<string, int32> Options = 11;
     string Format = 12;
     //Value interface{} int64
     int32 ValueInt = 13;
@@ -134,18 +133,18 @@ message ComponentData{
 
 }
 
-message SelectBranchExpression{
+message SelectBranchExpression {
     string BranchExpressionStr = 1;
-    string  BranchExpressionValue = 2;
+    string BranchExpressionValue = 2;
 }
 
-message ContractComponentSub{
+message ContractComponentSub {
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
     string Description = 4;
     string State = 5;
-    repeated ComponentsExpression PreCondition= 6;
+    repeated ComponentsExpression PreCondition = 6;
     repeated ComponentsExpression CompleteCondition = 7;
     repeated ComponentsExpression DiscardCondition = 8;
     repeated string NextTasks = 9;
@@ -163,13 +162,13 @@ message ContractComponentSub{
     repeated SelectBranchExpression SelectBranches = 21;
 }
 
-message ContractComponent{
+message ContractComponent {
     string Cname = 1;
     string Ctype = 2;
     string Caption = 3;
     string Description = 4;
     string State = 5;
-    repeated ComponentsExpression PreCondition= 6;
+    repeated ComponentsExpression PreCondition = 6;
     repeated ComponentsExpression CompleteCondition = 7;
     repeated ComponentsExpression DiscardCondition = 8;
     repeated string NextTasks = 9;
@@ -187,9 +186,8 @@ message ContractComponent{
     string TaskId = 20;
     //2017-05-27 17:10:00 add
     repeated SelectBranchExpression SelectBranches = 21;
-    map<string,string> MetaAttribute = 22;
+    map<string, string> MetaAttribute = 22;
 }
-
 
 
 message ContractBody {
@@ -208,8 +206,8 @@ message ContractBody {
     repeated ContractSignature ContractSignatures = 13;
     repeated ContractComponent ContractComponents = 14;
     // add date: 2017-05-11 map[string]interface{} 合约属性MetaData
-//    bytes MetaAttribute = 15;
-    map<string,string> MetaAttribute= 15;
+    //    bytes MetaAttribute = 15;
+    map<string, string> MetaAttribute = 15;
     repeated string NextTasks = 16;
 }
 
@@ -226,7 +224,7 @@ message ContractHead {
 }
 
 message Contract {
-    string id = 1;  //Hash contractBody except conotractSignatures
+    string id = 1; //Hash contractBody except conotractSignatures
     ContractHead ContractHead = 2;
     ContractBody ContractBody = 3;
 }

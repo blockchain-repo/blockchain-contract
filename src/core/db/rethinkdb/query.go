@@ -6,8 +6,6 @@ import (
 
 	"unicontract/src/common"
 
-	"strings"
-
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
 )
@@ -117,56 +115,42 @@ func GetContractsByContractId(contractId string) (string, error) {
 	return common.Serialize(blo), nil
 }
 
-// 根据传入条件查询合约, 仅取出一条
+//根据传入条件查询 execute 合约 仅取出一条 , ContractState = Contract_Signature
 func GetOneContractByMapCondition(conditions map[string]interface{}) (string, error) {
 	contractId, _ := conditions["contractId"].(string)
-	owner, _ := conditions["owner"].(string)
-	if owner == "" {
-		return "", errors.New("owner blank")
+	if contractId == "" {
+		return "", errors.New("contractId blank")
 	}
-	status, ok := conditions["status"].(string)
-	logs.Warn(ok)
+	owner, _ := conditions["owner"].(string)
+	//if owner == "" {
+	//	return "", errors.New("owner blank")
+	//}
+	//status, ok := conditions["status"].(string)
+	//logs.Warn(ok)
 	session := ConnectDB(DBNAME)
-
 	var res *r.Cursor
 	var err error
-	if contractId != "" && status != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
+	if owner != "" {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq("Contract_Signature")).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			Run(session)
-		//Filter(r.Row.Field("ContractBody").Field("Cname").Contains(name)).Run(session) //must sequence, not use this
-	} else if contractId == "" && status != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractState").Match(status)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
-			Ungroup().Field("reduction").
-			//Limit(1).Run(session)
-			Run(session)
-
-	} else if contractId != "" && status == "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
-			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
 	} else {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq("Contract_Signature")).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
-
 	}
+
 	if err != nil {
 		return "", err
 	}
@@ -181,89 +165,59 @@ func GetOneContractByMapCondition(conditions map[string]interface{}) (string, er
 	return common.Serialize(blo), nil
 }
 
-// 根据传入条件查询合约
+// 根据传入条件查询 execute 合约, ContractState = Contract_Signature
 func GetContractsByMapCondition(conditions map[string]interface{}) (string, error) {
-	status, _ := conditions["status"].(string)
+	//status, _ := conditions["status"].(string)
 	contractId, _ := conditions["contractId"].(string)
 	owner, _ := conditions["owner"].(string)
-	if owner == "" {
-		return "", errors.New("owner blank")
-	}
-	contractName, _ := conditions["contractName"].(string)
-	contractName = strings.Trim(contractName, " ")
+	//if owner == "" {
+	//	return "", errors.New("owner blank")
+	//}
+	//contractName, _ := conditions["contractName"].(string)
+	//contractName = strings.Trim(contractName, " ")
+	contractState := "Contract_Signature"
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 	var err error
-	if contractId != "" && contractName != "" && status != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).
-			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
-			Ungroup().Field("reduction").
-			Run(session)
-	} else if contractId != "" && contractName != "" && status == "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
-			Ungroup().Field("reduction").
-			Run(session)
 
-	} else if contractId != "" && contractName == "" && status != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
+	if contractId == "" && owner == "" {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
-	} else if contractId == "" && contractName != "" && status != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).
-			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
+	} else if contractId == "" && owner != "" {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
-	} else if contractId != "" && contractName == "" && status == "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
+	} else if contractId != "" && owner == "" {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			Run(session)
-	} else if contractId == "" && contractName != "" && status == "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("Cname").Match(contractName)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
-			Ungroup().Field("reduction").
-			Run(session)
-	} else if contractId == "" && contractName == "" && status != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractState").Eq(status)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
-			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
 	} else {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Group(r.Row.Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("ContractHead").Field("OperateTime")).
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
 	}
+
 	if err != nil {
 		return "", err
 	}
@@ -282,10 +236,10 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 // 根据传入条件查询合约
 func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, error) {
 	contractId, _ := conditions["contractId"].(string)
-	owner, _ := conditions["owner"].(string)
-	if owner == "" {
-		return "", errors.New("owner blank")
-	}
+	//owner, _ := conditions["owner"].(string)
+	//if owner == "" {
+	//	return "", errors.New("owner blank")
+	//}
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
@@ -293,11 +247,14 @@ func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, e
 	var res *r.Cursor
 	var err error
 	if contractId != "" {
-		res, err = r.Table(TABLE_CONTRACTS).
-			Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractId)).
-			OrderBy(r.Asc(r.Row.Field("ContractHead").Field("OperateTime"))).Run(session)
-		//OrderBy(r.Desc(r.Row.Field("ContractHead").Field("OperateTime"))).Run(session)
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
+			Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Run(session)
 
 	}
 	if err != nil {
