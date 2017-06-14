@@ -1,7 +1,11 @@
 package model
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/logs"
+	"strings"
 	"testing"
 	"unicontract/src/common"
 	"unicontract/src/config"
@@ -297,3 +301,25 @@ func Test_GenerateId(t *testing.T) {
 	}
 
 }
+
+func TestHash(t *testing.T) {
+	//temp := "hello unich>ain 2017"
+	ddd := `{"Caption":"购智能手机返话费合约产品协议","Cname":"contract_mobilecallback","ContractId":"contract test from js->java->go-python","ContractOwners":["3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ","BbfY4Dc5s8dTP1Z1yixnetezRKYREHqwbP8GQGh3WyVS"],"StartTime":"1496535120000"}`
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	_ = enc.Encode(ddd)
+
+	ser := strings.TrimSpace(buf.String())
+	logs.Info(ser)
+	hash := common.HashData(ser)
+	logs.Info(hash)
+}
+
+//c2219c1a23b637f9a1dac5cbea7625b2de8b100a6e65e5a92f555b7ab8e37424
+//b5ce10fe914d4195fcb8e9072e3cdaaded517c2a2913759978ffc46ab5024db7
+
+//408c606f08e709778a68a5f6adc793caf7907f28f9d41772c013e305195cd343
+
+//fd6264142534a7a68431f5bee5fab7b74609ccfceff8a67ff5af10b3d200e2b0	hello unich>ain 2017
+//27045bf50089651906c5cc43510332c33e9df035428bf6989ed58a1bb7ea1832  hello unichain 2017

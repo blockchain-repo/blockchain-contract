@@ -99,24 +99,24 @@ func txQueryEists(arg interface{}) interface{} {
 func txSend(arg interface{}) interface{} {
 	logs.Info("txElection step5 : send contractoutput")
 	//write the contract to the taskschedule
-	// TODO 1.判断合约的状态为contract_signature 2.判断签名的个数和owner的个数是一致的
 	coModel := arg.(model.ContractOutput)
-	if coModel.Transaction.ContractModel.ContractBody.ContractState != "Contract_Create" {
-		return nil
-	}
-	var taskSchedule model.TaskSchedule
-	taskSchedule.ContractHashId = coModel.Transaction.ContractModel.Id
-	taskSchedule.ContractId = coModel.Transaction.ContractModel.ContractBody.ContractId
-	taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
-	taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
+	contractOwner := coModel.Transaction.ContractModel.ContractBody.ContractOwners
+	contractSign := coModel.Transaction.ContractModel.ContractBody.ContractSignatures
+	contractState := coModel.Transaction.ContractModel.ContractBody.ContractState
+	if ("Contract_Signature" == contractState) && (len(contractSign) == len(contractOwner)) {
+		var taskSchedule model.TaskSchedule
+		taskSchedule.ContractHashId = coModel.Transaction.ContractModel.Id
+		taskSchedule.ContractId = coModel.Transaction.ContractModel.ContractBody.ContractId
+		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime
+		taskSchedule.EndTime = coModel.Transaction.ContractModel.ContractBody.EndTime
 
-	taskSchedule_write_time := monitor.Monitor.NewTiming()
-	err := engineCommon.InsertTaskSchedules(taskSchedule)
-	taskSchedule_write_time.Send("taskSchedule_write")
-	if err != nil {
-		logs.Error("err is \" %s \"\n", err.Error())
+		taskSchedule_write_time := monitor.Monitor.NewTiming()
+		err := engineCommon.InsertTaskSchedules(taskSchedule)
+		taskSchedule_write_time.Send("taskSchedule_write")
+		if err != nil {
+			logs.Error("err is \" %s \"\n", err.Error())
+		}
 	}
-
 	//write the contractoutput to unichain.
 	result, err := chain.CreateContractTx(common.StructSerialize(coModel))
 	if err != nil {
