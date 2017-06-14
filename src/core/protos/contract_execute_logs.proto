@@ -2,7 +2,7 @@ syntax = "proto3";
 package protos;
 
 option java_package = "com.uniledger.protos";
-option java_outer_classname = "ProtoContractList";
+option java_outer_classname = "ContractExecuteLogs";
 
 import "contract.proto";
 
@@ -36,7 +36,7 @@ message ContractExecuteLog{
     string EndTime = 14;
 }
 
-message ContractExecuteLogs {
+message ContractExecuteLogList {
 
     repeated ContractExecuteLog ContractLogs = 1;
 }

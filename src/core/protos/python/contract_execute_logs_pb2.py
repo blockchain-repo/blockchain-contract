@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='contract_execute_logs.proto',
   package='protos',
   syntax='proto3',
-  serialized_pb=_b('\n\x1b\x63ontract_execute_logs.proto\x12\x06protos\x1a\x0e\x63ontract.proto\"\xc7\x02\n\x12\x43ontractExecuteLog\x12\x16\n\x0e\x43ontractHashId\x18\x01 \x01(\t\x12\x0e\n\x06TaskId\x18\x02 \x01(\t\x12\x11\n\tTimestamp\x18\x03 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x04 \x01(\t\x12\r\n\x05\x43name\x18\x05 \x01(\t\x12\x12\n\nContractId\x18\x06 \x01(\t\x12\x16\n\x0e\x43ontractOwners\x18\x07 \x03(\t\x12\x35\n\x12\x43ontractSignatures\x18\x08 \x03(\x0b\x32\x19.protos.ContractSignature\x12\x15\n\rContractState\x18\t \x01(\t\x12\x12\n\nCreateTime\x18\n \x01(\t\x12\x0f\n\x07\x43reator\x18\x0b \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x0c \x01(\t\x12\x11\n\tStartTime\x18\r \x01(\t\x12\x0f\n\x07\x45ndTime\x18\x0e \x01(\t\"G\n\x13\x43ontractExecuteLogs\x12\x30\n\x0c\x43ontractLogs\x18\x01 \x03(\x0b\x32\x1a.protos.ContractExecuteLogB)\n\x14\x63om.uniledger.protosB\x11ProtoContractListb\x06proto3')
+  serialized_pb=_b('\n\x1b\x63ontract_execute_logs.proto\x12\x06protos\x1a\x0e\x63ontract.proto\"\xc7\x02\n\x12\x43ontractExecuteLog\x12\x16\n\x0e\x43ontractHashId\x18\x01 \x01(\t\x12\x0e\n\x06TaskId\x18\x02 \x01(\t\x12\x11\n\tTimestamp\x18\x03 \x01(\t\x12\x0f\n\x07\x43\x61ption\x18\x04 \x01(\t\x12\r\n\x05\x43name\x18\x05 \x01(\t\x12\x12\n\nContractId\x18\x06 \x01(\t\x12\x16\n\x0e\x43ontractOwners\x18\x07 \x03(\t\x12\x35\n\x12\x43ontractSignatures\x18\x08 \x03(\x0b\x32\x19.protos.ContractSignature\x12\x15\n\rContractState\x18\t \x01(\t\x12\x12\n\nCreateTime\x18\n \x01(\t\x12\x0f\n\x07\x43reator\x18\x0b \x01(\t\x12\x13\n\x0b\x44\x65scription\x18\x0c \x01(\t\x12\x11\n\tStartTime\x18\r \x01(\t\x12\x0f\n\x07\x45ndTime\x18\x0e \x01(\t\"J\n\x16\x43ontractExecuteLogList\x12\x30\n\x0c\x43ontractLogs\x18\x01 \x03(\x0b\x32\x1a.protos.ContractExecuteLogB+\n\x14\x63om.uniledger.protosB\x13\x43ontractExecuteLogsb\x06proto3')
   ,
   dependencies=[contract__pb2.DESCRIPTOR,])
 
@@ -149,15 +149,15 @@ _CONTRACTEXECUTELOG = _descriptor.Descriptor(
 )
 
 
-_CONTRACTEXECUTELOGS = _descriptor.Descriptor(
-  name='ContractExecuteLogs',
-  full_name='protos.ContractExecuteLogs',
+_CONTRACTEXECUTELOGLIST = _descriptor.Descriptor(
+  name='ContractExecuteLogList',
+  full_name='protos.ContractExecuteLogList',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ContractLogs', full_name='protos.ContractExecuteLogs.ContractLogs', index=0,
+      name='ContractLogs', full_name='protos.ContractExecuteLogList.ContractLogs', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -176,13 +176,13 @@ _CONTRACTEXECUTELOGS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=385,
-  serialized_end=456,
+  serialized_end=459,
 )
 
 _CONTRACTEXECUTELOG.fields_by_name['ContractSignatures'].message_type = contract__pb2._CONTRACTSIGNATURE
-_CONTRACTEXECUTELOGS.fields_by_name['ContractLogs'].message_type = _CONTRACTEXECUTELOG
+_CONTRACTEXECUTELOGLIST.fields_by_name['ContractLogs'].message_type = _CONTRACTEXECUTELOG
 DESCRIPTOR.message_types_by_name['ContractExecuteLog'] = _CONTRACTEXECUTELOG
-DESCRIPTOR.message_types_by_name['ContractExecuteLogs'] = _CONTRACTEXECUTELOGS
+DESCRIPTOR.message_types_by_name['ContractExecuteLogList'] = _CONTRACTEXECUTELOGLIST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ContractExecuteLog = _reflection.GeneratedProtocolMessageType('ContractExecuteLog', (_message.Message,), dict(
@@ -192,14 +192,14 @@ ContractExecuteLog = _reflection.GeneratedProtocolMessageType('ContractExecuteLo
   ))
 _sym_db.RegisterMessage(ContractExecuteLog)
 
-ContractExecuteLogs = _reflection.GeneratedProtocolMessageType('ContractExecuteLogs', (_message.Message,), dict(
-  DESCRIPTOR = _CONTRACTEXECUTELOGS,
+ContractExecuteLogList = _reflection.GeneratedProtocolMessageType('ContractExecuteLogList', (_message.Message,), dict(
+  DESCRIPTOR = _CONTRACTEXECUTELOGLIST,
   __module__ = 'contract_execute_logs_pb2'
-  # @@protoc_insertion_point(class_scope:protos.ContractExecuteLogs)
+  # @@protoc_insertion_point(class_scope:protos.ContractExecuteLogList)
   ))
-_sym_db.RegisterMessage(ContractExecuteLogs)
+_sym_db.RegisterMessage(ContractExecuteLogList)
 
 
 DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\024com.uniledger.protosB\021ProtoContractList'))
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\024com.uniledger.protosB\023ContractExecuteLogs'))
 # @@protoc_insertion_point(module_scope)

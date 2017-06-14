@@ -15,7 +15,7 @@ goog.provide('proto.protos.ContractBody');
 goog.provide('proto.protos.ContractComponent');
 goog.provide('proto.protos.ContractComponentSub');
 goog.provide('proto.protos.ContractExecuteLog');
-goog.provide('proto.protos.ContractExecuteLogs');
+goog.provide('proto.protos.ContractExecuteLogList');
 goog.provide('proto.protos.ContractHead');
 goog.provide('proto.protos.ContractList');
 goog.provide('proto.protos.ContractSignature');
@@ -6344,19 +6344,19 @@ proto.protos.ContractExecuteLog.prototype.setEndtime = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.protos.ContractExecuteLogs = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.protos.ContractExecuteLogs.repeatedFields_, null);
+proto.protos.ContractExecuteLogList = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.protos.ContractExecuteLogList.repeatedFields_, null);
 };
-goog.inherits(proto.protos.ContractExecuteLogs, jspb.Message);
+goog.inherits(proto.protos.ContractExecuteLogList, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.protos.ContractExecuteLogs.displayName = 'proto.protos.ContractExecuteLogs';
+  proto.protos.ContractExecuteLogList.displayName = 'proto.protos.ContractExecuteLogList';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.protos.ContractExecuteLogs.repeatedFields_ = [1];
+proto.protos.ContractExecuteLogList.repeatedFields_ = [1];
 
 
 
@@ -6371,8 +6371,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.protos.ContractExecuteLogs.prototype.toObject = function(opt_includeInstance) {
-  return proto.protos.ContractExecuteLogs.toObject(opt_includeInstance, this);
+proto.protos.ContractExecuteLogList.prototype.toObject = function(opt_includeInstance) {
+  return proto.protos.ContractExecuteLogList.toObject(opt_includeInstance, this);
 };
 
 
@@ -6381,10 +6381,10 @@ proto.protos.ContractExecuteLogs.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.protos.ContractExecuteLogs} msg The msg instance to transform.
+ * @param {!proto.protos.ContractExecuteLogList} msg The msg instance to transform.
  * @return {!Object}
  */
-proto.protos.ContractExecuteLogs.toObject = function(includeInstance, msg) {
+proto.protos.ContractExecuteLogList.toObject = function(includeInstance, msg) {
   var f, obj = {
     contractlogsList: jspb.Message.toObjectList(msg.getContractlogsList(),
     proto.protos.ContractExecuteLog.toObject, includeInstance)
@@ -6401,23 +6401,23 @@ proto.protos.ContractExecuteLogs.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.protos.ContractExecuteLogs}
+ * @return {!proto.protos.ContractExecuteLogList}
  */
-proto.protos.ContractExecuteLogs.deserializeBinary = function(bytes) {
+proto.protos.ContractExecuteLogList.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.protos.ContractExecuteLogs;
-  return proto.protos.ContractExecuteLogs.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.protos.ContractExecuteLogList;
+  return proto.protos.ContractExecuteLogList.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.protos.ContractExecuteLogs} msg The message object to deserialize into.
+ * @param {!proto.protos.ContractExecuteLogList} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.protos.ContractExecuteLogs}
+ * @return {!proto.protos.ContractExecuteLogList}
  */
-proto.protos.ContractExecuteLogs.deserializeBinaryFromReader = function(msg, reader) {
+proto.protos.ContractExecuteLogList.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -6442,9 +6442,9 @@ proto.protos.ContractExecuteLogs.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.protos.ContractExecuteLogs.prototype.serializeBinary = function() {
+proto.protos.ContractExecuteLogList.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.protos.ContractExecuteLogs.serializeBinaryToWriter(this, writer);
+  proto.protos.ContractExecuteLogList.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -6452,10 +6452,10 @@ proto.protos.ContractExecuteLogs.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.protos.ContractExecuteLogs} message
+ * @param {!proto.protos.ContractExecuteLogList} message
  * @param {!jspb.BinaryWriter} writer
  */
-proto.protos.ContractExecuteLogs.serializeBinaryToWriter = function(message, writer) {
+proto.protos.ContractExecuteLogList.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getContractlogsList();
   if (f.length > 0) {
@@ -6474,14 +6474,14 @@ proto.protos.ContractExecuteLogs.serializeBinaryToWriter = function(message, wri
  * replace the array itself, then you must call the setter to update it.
  * @return {!Array.<!proto.protos.ContractExecuteLog>}
  */
-proto.protos.ContractExecuteLogs.prototype.getContractlogsList = function() {
+proto.protos.ContractExecuteLogList.prototype.getContractlogsList = function() {
   return /** @type{!Array.<!proto.protos.ContractExecuteLog>} */ (
     jspb.Message.getRepeatedWrapperField(this, proto.protos.ContractExecuteLog, 1));
 };
 
 
 /** @param {!Array.<!proto.protos.ContractExecuteLog>} value */
-proto.protos.ContractExecuteLogs.prototype.setContractlogsList = function(value) {
+proto.protos.ContractExecuteLogList.prototype.setContractlogsList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
@@ -6491,12 +6491,12 @@ proto.protos.ContractExecuteLogs.prototype.setContractlogsList = function(value)
  * @param {number=} opt_index
  * @return {!proto.protos.ContractExecuteLog}
  */
-proto.protos.ContractExecuteLogs.prototype.addContractlogs = function(opt_value, opt_index) {
+proto.protos.ContractExecuteLogList.prototype.addContractlogs = function(opt_value, opt_index) {
   return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.protos.ContractExecuteLog, opt_index);
 };
 
 
-proto.protos.ContractExecuteLogs.prototype.clearContractlogsList = function() {
+proto.protos.ContractExecuteLogList.prototype.clearContractlogsList = function() {
   this.setContractlogsList([]);
 };
 

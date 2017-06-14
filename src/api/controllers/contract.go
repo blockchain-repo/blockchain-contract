@@ -204,12 +204,12 @@ func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos
 }
 
 // special for contractOutputs Array to proto[] only for queryLog
-func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr string) (protos.ContractExecuteLogs, error) {
+func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr string) (protos.ContractExecuteLogList, error) {
 	// 1. to contractOutputModel
 	var contractOutput []model.ContractOutput
 	err := json.Unmarshal([]byte(contractOutputsModelStr), &contractOutput)
 	// 2. to contract
-	var contractExecuteLogList protos.ContractExecuteLogs
+	var contractExecuteLogList protos.ContractExecuteLogList
 	var contractExecuteLogs []*protos.ContractExecuteLog
 	if err != nil {
 		logs.Error("error fromContractOutputsModelArrayStrToContractsForLog", err)
