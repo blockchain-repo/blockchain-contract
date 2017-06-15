@@ -209,19 +209,19 @@ func (ce *ContractExecuter) Start() (int8, error) {
 	//    3. ret=1 ： 合约执行完成
 	r_ret, r_err = ce.contract_executer.UpdateTasksState()
 	if r_ret == 0 {
-		r_buf.WriteString("任务未达到执行条件,等待再次扫描执行;")
+		r_buf.WriteString("合约任务未达到执行条件,等待再次扫描执行;")
 		if r_err != nil {
 			r_buf.WriteString("[Error]:" + r_err.Error())
 		}
 		logs.Warning(r_buf.String())
 	} else if r_ret == -1 {
-		r_buf.WriteString("任务执行失败,等待再次扫描执行;")
+		r_buf.WriteString("合约任务执行失败,等待再次扫描执行;")
 		if r_err != nil {
 			r_buf.WriteString("[Error]:" + r_err.Error())
 		}
 		logs.Warning(r_buf.String())
 	} else {
-		r_buf.WriteString("合约执行完成;")
+		r_buf.WriteString("合约任务执行完成;")
 		logs.Info(r_buf.String())
 	}
 	return r_ret, r_err

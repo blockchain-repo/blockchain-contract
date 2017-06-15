@@ -1,15 +1,16 @@
 package table
 
 import (
+	"fmt"
 	"testing"
+	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/data"
 	"unicontract/src/core/engine/execengine/expression"
+	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/task"
-	"fmt"
-	"unicontract/src/core/engine/execengine/constdef"
 )
 
-func CreateGeneralDataObject() data.GeneralData{
+func CreateGeneralDataObject() data.GeneralData {
 	t_data := new(data.GeneralData)
 	t_data.InitGeneralData()
 	t_data.SetCname("TestGeneralData")
@@ -20,9 +21,10 @@ func CreateGeneralDataObject() data.GeneralData{
 	return *t_data
 }
 
-func CreateGeneralTaskObject() task.GeneralTask{
+func CreateGeneralTaskObject() task.GeneralTask {
 	t_task := new(task.GeneralTask)
 	t_task.InitGeneralTask()
+	t_task.SetTaskId("Task-UUID-0001")
 	t_task.SetCname("TestGeneralTask")
 	t_task.SetCaption("task")
 	t_task.SetDescription("test general task")
@@ -30,7 +32,7 @@ func CreateGeneralTaskObject() task.GeneralTask{
 	return *t_task
 }
 
-func CreateGeneralExpressionObject() expression.GeneralExpression{
+func CreateGeneralExpressionObject() expression.GeneralExpression {
 	t_expression := new(expression.GeneralExpression)
 	t_expression.InitExpression()
 	t_expression.SetCname("TestGeneralExpression")
@@ -40,30 +42,28 @@ func CreateGeneralExpressionObject() expression.GeneralExpression{
 	return *t_expression
 }
 
-func TestGetComponentType(t *testing.T){
-	v_str := ""
-	v_data := *data.NewGeneralData()
-	v_task := *task.NewGeneralTask()
-	v_express := *expression.NewGeneralExpression("")
-
+func TestGetComponentType(t *testing.T) {
 	v_comp_table := new(ComponentTable)
-	if v_comp_table.getComponentType(v_str) != constdef.ComponentType[constdef.Component_Unknown] {
-		t.Error("Type is not Unknow!")
-	}
-
-	if v_comp_table.getComponentType(v_data) != constdef.ComponentType[constdef.Component_Data]  {
+	//v_type, _ := v_comp_table.getComponentType(v_str)
+	//if v_type != constdef.ComponentType[constdef.Component_Unknown] {
+	//	t.Error("Type is not Unknow!")
+	//}
+	var inf_data inf.IData = data.NewGeneralData()
+	v_type, _ := v_comp_table.getComponentType(inf_data)
+	if v_type != constdef.ComponentType[constdef.Component_Data] {
 		t.Error("Type is not Data!")
 	}
-
-	if v_comp_table.getComponentType(v_task) != constdef.ComponentType[constdef.Component_Task]  {
+	var inf_task inf.ITask = task.NewGeneralTask()
+	v_type, _ = v_comp_table.getComponentType(inf_task)
+	if v_type != constdef.ComponentType[constdef.Component_Task] {
 		t.Error("Type is not Task!")
 	}
-
-	if v_comp_table.getComponentType(v_express) != constdef.ComponentType[constdef.Component_Expression]  {
+	var inf_expression inf.IExpression = expression.NewGeneralExpression("")
+	v_type, _ = v_comp_table.getComponentType(inf_expression)
+	if v_type != constdef.ComponentType[constdef.Component_Expression] {
 		t.Error("Type is not Expression!")
 	}
 }
-
 
 func TestComponentTableAll(t *testing.T) {
 	//compTable map[string][]map[string]component.GeneralComponent
@@ -71,43 +71,43 @@ func TestComponentTableAll(t *testing.T) {
 	v_data := CreateGeneralDataObject()
 	v_task := CreateGeneralTaskObject()
 	v_expression := CreateGeneralExpressionObject()
-    //test AddComponent
-	t_comp_table.AddComponent(v_data.GetCname(), v_data)
+	//test AddComponent
+	t_comp_table.AddComponent(v_data)
 	fmt.Println(t_comp_table)
-    if v_value,ok := t_comp_table.CompTable["1"];!ok {
+	if v_value, ok := t_comp_table.CompTable["1"]; !ok {
 		t.Error("component_table add Data Error!")
-	} else if len(v_value) != 1{
+	} else if len(v_value) != 1 {
 		t.Error("component_table add Data, element length Error")
 	} else {
-		for t_key,t_value := range v_value[0] {
+		for t_key, t_value := range v_value[0] {
 			tt_value := t_value.(data.GeneralData)
 			if t_key != "TestGeneralData" || tt_value.GetCname() != "TestGeneralData" {
 				t.Error("component_table add Data, data info Error!")
 			}
 		}
 	}
-	t_comp_table.AddComponent(v_task.GetCname(), v_task)
+	t_comp_table.AddComponent(v_task)
 	fmt.Println(t_comp_table)
-	if v_value,ok := t_comp_table.CompTable["2"];!ok {
+	if v_value, ok := t_comp_table.CompTable["2"]; !ok {
 		t.Error("component_table add Task Error!")
-	} else if len(v_value) != 1{
+	} else if len(v_value) != 1 {
 		t.Error("component_table add Task, element length Error")
 	} else {
-		for t_key,t_value := range v_value[0] {
+		for t_key, t_value := range v_value[0] {
 			tt_value := t_value.(task.GeneralTask)
 			if t_key != "TestGeneralTask" || tt_value.GetCname() != "TestGeneralTask" {
 				t.Error("component_table add Task, task info Error!")
 			}
 		}
 	}
-	t_comp_table.AddComponent(v_expression.GetCname(), v_expression)
+	t_comp_table.AddComponent(v_expression)
 	fmt.Println(t_comp_table)
-	if v_value,ok := t_comp_table.CompTable["3"];!ok {
+	if v_value, ok := t_comp_table.CompTable["3"]; !ok {
 		t.Error("component_table add Expression Error!")
-	} else if len(v_value) != 1{
+	} else if len(v_value) != 1 {
 		t.Error("component_table add Expression, element length Error")
 	} else {
-		for t_key,t_value := range v_value[0] {
+		for t_key, t_value := range v_value[0] {
 			tt_value := t_value.(expression.GeneralExpression)
 			if t_key != "TestGeneralExpression" || tt_value.GetCname() != "TestGeneralExpression" {
 				t.Error("component_table add Expression, expression info Error!")
@@ -147,7 +147,7 @@ func TestComponentTableAll(t *testing.T) {
 	if len(ct_component_1) != 1 {
 		t.Error("GetComponentByType Data Error,length error!")
 	} else {
-		if _,ok := ct_component_1[0]["TestGeneralData"]; !ok {
+		if _, ok := ct_component_1[0]["TestGeneralData"]; !ok {
 			t.Error("GetComponentByType Data Error, element not exist!")
 		}
 	}
@@ -155,7 +155,7 @@ func TestComponentTableAll(t *testing.T) {
 	if len(ct_component_2) != 1 {
 		t.Error("GetComponentByType Task Error,length error!")
 	} else {
-		if _,ok := ct_component_2[0]["TestGeneralTask"]; !ok {
+		if _, ok := ct_component_2[0]["TestGeneralTask"]; !ok {
 			t.Error("GetComponentByType Task Error, element not exist!")
 		}
 	}
@@ -163,8 +163,20 @@ func TestComponentTableAll(t *testing.T) {
 	if len(ct_component_3) != 1 {
 		t.Error("GetComponentByType Expression Error,length error!")
 	} else {
-		if _,ok := ct_component_3[0]["TestGeneralExpression"]; !ok {
+		if _, ok := ct_component_3[0]["TestGeneralExpression"]; !ok {
 			t.Error("GetComponentByType Expression Error, element not exist!")
 		}
+	}
+
+	//test GetTaskByID
+	id_component_1 := t_comp_table.GetTaskByID("Task-UUID-0001", "2")
+	if id_component_1 == nil {
+		t.Error("GetTaskByID Error!")
+	} else {
+		id_comp_1 := id_component_1.(task.GeneralTask)
+		if id_comp_1.GetCname() != "TestGeneralTask" {
+			t.Error("GetTaskByID, check name Error!")
+		}
+		t.Error("GetTaskByID, check name Error!")
 	}
 }

@@ -138,7 +138,7 @@
                 "HardConvType": "float64"
               }
             ],
-            "SelectBranches":[
+            "SelectBranchs":[
               {"BranchExpressionStr":"data_A.Value>500"},
               {"BranchExpressionStr":"data_A.Value<=500"}
             ]
@@ -333,7 +333,7 @@
             ],
             "NextTasks": [
               "action_E",
-              "actionF"
+              "action_F"
             ],
             "DataValueSetterExpressionList": [
               {
@@ -464,7 +464,7 @@
                 "LogicValue": 1
               }
             ],
-            "DiscardCondition": [
+            "DisgardCondition": [
               {
                 "Cname": "expression_discond_F",
                 "Caption": "",

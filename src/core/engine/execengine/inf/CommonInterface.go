@@ -12,6 +12,7 @@ type ICognitiveContract interface {
 	GetUCVMVersion() string
 	GetUCVMCopyRight() string
 	GetTask(string) interface{}
+	GetTaskByID(string) interface{}
 	GetComponentTtem(string) interface{}
 	GetPropertyItem(string) interface{}
 	AddComponent(IComponent)

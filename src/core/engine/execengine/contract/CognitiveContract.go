@@ -135,6 +135,10 @@ func (cc *CognitiveContract) GetTask(p_name string) interface{} {
 	return cc.ComponentTable.GetComponent(p_name, constdef.ComponentType[constdef.Component_Task])
 }
 
+func (cc *CognitiveContract) GetTaskByID(p_task_id string) interface{} {
+	return cc.ComponentTable.GetTaskByID(p_task_id, constdef.ComponentType[constdef.Component_Task])
+}
+
 func (cc *CognitiveContract) GetComponentTtem(p_name string) interface{} {
 	return cc.ComponentTable.GetComponent(p_name, "")
 }
@@ -793,6 +797,11 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	for _, v_task := range next_tasks {
 		r_task_queue.Push(v_task)
 	}
+	//根据合约中记录的当前执行任务ID（OrgTaskId）获取任务名称
+	var do_process_task inf.ITask
+	if cc.GetOrgTaskId() != "" {
+		do_process_task = cc.GetTaskByID(cc.GetOrgTaskId()).(inf.ITask)
+	}
 	//判断后继任务是否有执行过(state_discard 或 state_completed)的：
 	//     有(state_discard 或 state_completed)，则清空队列，将该任务后继任务入队，继续判断；
 	//     有(state_inprocess),则清空队列，将该任务入队，跳出判断，进入下一判断
@@ -805,7 +814,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			r_ret = -1
 			r_err = errors.New("Judge Task, GetTask is null!")
 			r_buf.WriteString("[Result]: UpdateTasksState fail;")
-			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			r_buf.WriteString("[Error]: " + tmp_str_task.(string) + "," + r_err.Error() + ";")
 			logs.Warning(r_buf.String())
 			return r_ret, r_err
 		}
@@ -813,11 +822,26 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
+			//通过合约中记录的当前执行任务，则直接对后继任务进行重置，解决循环执行问题
 			next_tasks = f_f_task.(inf.ITask).GetNextTasks()
-			for _, t_task := range next_tasks {
-				r_task_queue.Push(t_task)
+			if f_f_task.(inf.ITask).GetName() == do_process_task.(inf.ITask).GetName() {
+				for _, t_task := range next_tasks {
+					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
+					//      通过循环执行次数条件,退出循环执行
+					tmp_next_task := cc.GetTask(t_task)
+					if tmp_next_task != nil {
+						v_nexttask_object := tmp_next_task.(inf.ITask)
+						v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
+						v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
+						r_task_queue.Push(t_task)
+					}
+				}
+			} else {
+				for _, t_task := range next_tasks {
+					r_task_queue.Push(t_task)
+				}
+				continue
 			}
-			continue
 		} else if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
