@@ -11,9 +11,10 @@ import (
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
 
+	"reflect"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
-	"reflect"
 )
 
 func init() {
@@ -759,3 +760,168 @@ func TestSession(t *testing.T) {
 }
 
 /*TaskSchedule end---------------------------------------------------------*/
+
+/*智能微网demo start---------------------------------------------------------*/
+func Test_InsertEnergyTradingDemoRole(t *testing.T) {
+	var slString []string
+
+	strPublicKey, _ := common.GenerateKeyPair()
+	person1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "个人",
+		PublicKey:   strPublicKey,
+		Infermation: "",
+		Type:        0,
+	}
+	sldata, _ := json.Marshal(person1)
+	slString = append(slString, string(sldata))
+
+	strPublicKey, _ = common.GenerateKeyPair()
+	mapInformation := make(map[string]string)
+	mapInformation["ownerPublicKey"] = person1.PublicKey
+	slInformation, _ := json.Marshal(mapInformation)
+	electricityMeter1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "个人电表",
+		PublicKey:   strPublicKey,
+		Infermation: string(slInformation),
+		Type:        1,
+	}
+	sldata, _ = json.Marshal(electricityMeter1)
+	slString = append(slString, string(sldata))
+
+	strPublicKey, _ = common.GenerateKeyPair()
+	operator1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "运营商",
+		PublicKey:   strPublicKey,
+		Infermation: "",
+		Type:        2,
+	}
+	sldata, _ = json.Marshal(operator1)
+	slString = append(slString, string(sldata))
+
+	strPublicKey, _ = common.GenerateKeyPair()
+	wind1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "风电",
+		PublicKey:   strPublicKey,
+		Infermation: "",
+		Type:        3,
+	}
+	sldata, _ = json.Marshal(wind1)
+	slString = append(slString, string(sldata))
+
+	strPublicKey, _ = common.GenerateKeyPair()
+	light1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "光电",
+		PublicKey:   strPublicKey,
+		Infermation: "",
+		Type:        4,
+	}
+	sldata, _ = json.Marshal(light1)
+	slString = append(slString, string(sldata))
+
+	strPublicKey, _ = common.GenerateKeyPair()
+	fire1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "火电",
+		PublicKey:   strPublicKey,
+		Infermation: "",
+		Type:        5,
+	}
+	sldata, _ = json.Marshal(fire1)
+	slString = append(slString, string(sldata))
+
+	strPublicKey, _ = common.GenerateKeyPair()
+	guowang1 := model.DemoRole{
+		Id:          common.GenerateUUID(),
+		Name:        "国网",
+		PublicKey:   strPublicKey,
+		Infermation: "",
+		Type:        6,
+	}
+	sldata, _ = json.Marshal(guowang1)
+	slString = append(slString, string(sldata))
+
+	for _, v := range slString {
+		err := InsertEnergyTradingDemoRole(v)
+		if err != nil {
+			t.Error(err)
+		}
+	}
+}
+
+func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
+	electricityMeter1 := model.DemoEnergy{
+		Id:               common.GenerateUUID(),
+		PublicKey:        "5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm",
+		Timestamp:        common.GenTimestamp(),
+		Electricity:      200,
+		TotalElectricity: 500,
+		Money:            300,
+		Type:             0,
+	}
+	sldata, _ := json.Marshal(electricityMeter1)
+
+	err := InsertEnergyTradingDemoEnergy(string(sldata))
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func Test_InsertTransaction_Bill(t *testing.T) {
+	// bill
+	/*
+			type DemoBill struct {
+			Id        string `json:"id"`
+			PublicKey string
+			Timestamp string
+			Type      int // 0：用户账户充值 1：用户购电充值 2：电表耗电 3：分张
+		}
+	*/
+	strPublicKey, _ := common.GenerateKeyPair()
+	bill1 := model.DemoBill{
+		Id:        common.GenerateUUID(),
+		PublicKey: strPublicKey,
+		Timestamp: common.GenTimestamp(),
+		Type:      1,
+	}
+	sldata, _ := json.Marshal(bill1)
+	err := InsertEnergyTradingDemoBill(string(sldata))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	// transaction
+	/*
+			type DemoTransaction struct {
+			Id            string  `json:"id"`
+			BillId        string  // 对应的票据表id
+			Timestamp     string  // 交易时间戳
+			FromPublicKey string  // 付款方
+			ToPublicKey   string  // 收款方
+			Money         float64 // 金额
+			Type          int     // 0：用户账户充值 1：用户购电充值 2：分张
+		}
+	*/
+	transaction1 := model.DemoTransaction{
+		Id:            common.GenerateUUID(),
+		BillId:        bill1.Id,
+		Timestamp:     common.GenTimestamp(),
+		FromPublicKey: "64mDgEqY9KGp3NCfJPrrjiruL9hmuYiimmaD2234UYWd",
+		ToPublicKey:   "95b4DQfoNCh3o6jdy2k2AjCoZQrSUVubC5fFxEfRDpPH",
+		Money:         100,
+		Type:          1,
+	}
+	sldata, _ = json.Marshal(transaction1)
+
+	err = InsertEnergyTradingDemoTransaction(string(sldata))
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+/*智能微网demo end---------------------------------------------------------*/

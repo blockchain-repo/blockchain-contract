@@ -791,7 +791,9 @@ func (gt *GeneralTask) Complete() (int8, error) {
 	} else {
 		executeEngineConf = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
 	}
+
 	var v_sleep_num int = executeEngineConf["task_complete_sleep_count"].(int)
+	time.Sleep(time.Second * time.Duration(executeEngineConf["task_complete_sleep_time"].(int)))
 	for v_sleep_num > 0 {
 		v_sleep_num = v_sleep_num - 1
 		r_ret, r_err = gt.Discard()
@@ -840,6 +842,13 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
 		//    调用扫描引擎接口： UpdateMonitorFail(contractID_old)
 		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
+		logs.Error("-----------------------------------------------")
+		logs.Error("ContractId:" + v_contract.GetContractId())
+		logs.Error("Id:" + v_contract.GetId())
+		logs.Error("TaskId:" + gt.GetTaskId())
+		logs.Error("State:" + gt.GetState())
+		logs.Error("TaskExecuteIdx:%d", gt.GetTaskExecuteIdx())
+		logs.Error("-----------------------------------------------")
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")

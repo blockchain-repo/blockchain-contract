@@ -17,6 +17,14 @@ const (
 	TABLE_CONTRACT_OUTPUTS     = "ContractOutputs"
 	TABLE_SEND_FAILING_RECORDS = "SendFailingRecords"
 	TABLE_TASK_SCHEDULE        = "TaskSchedule"
+
+	//-------------------------------------------------------
+	// 智能微网demo所需要数据表
+	TABLE_ENERGYTRADINGDEMO_ROLE        = "EnergyTradingDemoRole"
+	TABLE_ENERGYTRADINGDEMO_ENERGY      = "EnergyTradingDemoEnergy"
+	TABLE_ENERGYTRADINGDEMO_TRANSACTION = "EnergyTradingDemoTransaction"
+	TABLE_ENERGYTRADINGDEMO_BILL        = "EnergyTradingDemoBill"
+	//-------------------------------------------------------
 )
 
 var Tables = []string{TABLE_CONTRACTS,
@@ -25,7 +33,12 @@ var Tables = []string{TABLE_CONTRACTS,
 	TABLE_CONSENSUS_FAILURES,
 	TABLE_CONTRACT_OUTPUTS,
 	TABLE_SEND_FAILING_RECORDS,
-	TABLE_TASK_SCHEDULE}
+	TABLE_TASK_SCHEDULE,
+	TABLE_ENERGYTRADINGDEMO_ROLE,
+	TABLE_ENERGYTRADINGDEMO_ENERGY,
+	TABLE_ENERGYTRADINGDEMO_TRANSACTION,
+	TABLE_ENERGYTRADINGDEMO_BILL,
+}
 
 func CreateTable(db string, name string) {
 	session := ConnectDB(db)

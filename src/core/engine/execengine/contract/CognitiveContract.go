@@ -825,6 +825,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			//通过合约中记录的当前执行任务，则直接对后继任务进行重置，解决循环执行问题
 			next_tasks = f_f_task.(inf.ITask).GetNextTasks()
 			if f_f_task.(inf.ITask).GetName() == do_process_task.(inf.ITask).GetName() {
+				logs.Error("=========== NowProcessTask:" + do_process_task.(inf.ITask).GetName())
+				logs.Error("=========== NextProcessTask:" + f_f_task.(inf.ITask).GetName())
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
@@ -837,6 +839,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 					}
 				}
 			} else {
+				logs.Error("----------- NowProcessTask:" + do_process_task.(inf.ITask).GetName())
+				logs.Error("----------- NextProcessTask:" + f_f_task.(inf.ITask).GetName())
 				for _, t_task := range next_tasks {
 					r_task_queue.Push(t_task)
 				}

@@ -1,6 +1,8 @@
 package function
 
 import (
+	"fmt"
+	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/common"
 )
 
@@ -57,12 +59,30 @@ import (
 //Args: User_A  string  电表公钥
 func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	publickey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	money, err := rethinkdb.GetMoneyFromEnergy(publickey)
+	if err != nil {
+		v_result.SetMessage(err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
-	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
+	v_result.SetData(fmt.Sprintf("{\"money\":%f}", money))
 	return v_result, v_err
 }
 
@@ -71,12 +91,31 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 //Args: UserA  string  用户公钥
 func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	publickey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	money, err := rethinkdb.GetUserMoneyFromTransaction(publickey)
+	if err != nil {
+		v_result.SetMessage(err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
+	v_result.SetData(fmt.Sprintf("{\"money\":%f}", money))
 	return v_result, v_err
 }
 

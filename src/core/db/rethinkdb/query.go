@@ -981,7 +981,6 @@ func DeleteTaskSchedules(slID []interface{}) (int, error) {
 }
 
 //---------------------------------------------------------------------------
-// 删除一系列id的任务
 func GetTaskScheduleCount(stat string) (string, error) {
 
 	session := ConnectDB(DBNAME)
@@ -1003,7 +1002,6 @@ func GetTaskScheduleCount(stat string) (string, error) {
 	return blo, nil
 }
 
-// 删除一系列id的任务
 func GetTaskSendFlagCount(stat int) (string, error) {
 
 	session := ConnectDB(DBNAME)
@@ -1026,3 +1024,135 @@ func GetTaskSendFlagCount(stat int) (string, error) {
 }
 
 /*TaskSchedule end---------------------------------------------------------*/
+
+/*智能微网demo start---------------------------------------------------------*/
+func _Insert(strDBName, strTableName, strJson string) error {
+	if len(strJson) == 0 {
+		return fmt.Errorf("param is null")
+	}
+	session := ConnectDB(strDBName)
+	res, err := r.Table(strTableName).Insert(r.JSON(strJson)).RunWrite(session)
+	if err != nil {
+		return err
+	}
+	if res.Inserted >= 1 {
+		return nil
+	}
+	return fmt.Errorf("insert %s error", strTableName)
+}
+
+//---------------------------------------------------------------------------
+// 插入 EnergyTradingDemoRole 表
+func InsertEnergyTradingDemoRole(strJson string) error {
+	return _Insert(DBNAME, TABLE_ENERGYTRADINGDEMO_ROLE, strJson)
+}
+
+//---------------------------------------------------------------------------
+// 插入 EnergyTradingDemoEnergy 表
+func InsertEnergyTradingDemoEnergy(strJson string) error {
+	return _Insert(DBNAME, TABLE_ENERGYTRADINGDEMO_ENERGY, strJson)
+}
+
+//---------------------------------------------------------------------------
+// 插入 EnergyTradingDemoTransaction 表
+func InsertEnergyTradingDemoTransaction(strJson string) error {
+	return _Insert(DBNAME, TABLE_ENERGYTRADINGDEMO_TRANSACTION, strJson)
+}
+
+//---------------------------------------------------------------------------
+// 插入 EnergyTradingDemoBill 表
+func InsertEnergyTradingDemoBill(strJson string) error {
+	return _Insert(DBNAME, TABLE_ENERGYTRADINGDEMO_BILL, strJson)
+}
+
+//---------------------------------------------------------------------------
+// 获取电表余额
+func GetMoneyFromEnergy(strPublicKey string) (float64, error) {
+	if len(strPublicKey) == 0 {
+		return 0, fmt.Errorf("param is null")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_ENERGY).
+		Filter(r.Row.Field("PublicKey").Eq(strPublicKey)).
+		OrderBy(r.Desc("Timestamp")).
+		Run(session)
+	if err != nil {
+		return 0, err
+	}
+
+	if res.IsNil() {
+		return 0, fmt.Errorf("is null")
+	}
+
+	var items []map[string]interface{}
+	err = res.All(&items)
+	if err != nil {
+		return 0, err
+	}
+
+	money, ok := items[0]["Money"].(float64)
+	if !ok {
+		return 0, fmt.Errorf("items[0][\"Money\"].(float64) is error")
+	}
+
+	return money, nil
+}
+
+//---------------------------------------------------------------------------
+// 获取用户账户余额
+func GetUserMoneyFromTransaction(strPublicKey string) (float64, error) {
+	if len(strPublicKey) == 0 {
+		return 0, fmt.Errorf("param is null")
+	}
+
+	// 先查充值的金额
+	in, err := _GetMoney("ToPublicKey", strPublicKey)
+	if err != nil {
+		return 0, err
+	}
+
+	// 再查购电的金额
+	out, err := _GetMoney("FromPublicKey", strPublicKey)
+	if err != nil {
+		return 0, err
+	}
+
+	return (in - out), nil
+}
+
+func _GetMoney(strField, strPublicKey string) (float64, error) {
+	var money float64
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_TRANSACTION).
+		Filter(r.Row.Field(strField).Eq(strPublicKey)).
+		Run(session)
+	if err != nil {
+		return 0, err
+	}
+
+	if res.IsNil() {
+		return 0, fmt.Errorf("no recharge transaction!")
+	}
+
+	var items []map[string]interface{}
+	err = res.All(&items)
+	if err != nil {
+		return 0, err
+	}
+
+	for _, v := range items {
+		money += v["Money"].(float64)
+	}
+
+	return money, nil
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+/*智能微网demo end---------------------------------------------------------*/
