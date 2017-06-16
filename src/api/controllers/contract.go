@@ -218,22 +218,26 @@ func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr s
 	contractExecuteLogs = make([]*protos.ContractExecuteLog, len(contractOutput))
 	for i := 0; i < len(contractOutput); i++ {
 		tempTransaction := contractOutput[i].Transaction
-		tempRelation := tempTransaction.Relation
-		tempContractBody := tempTransaction.ContractModel.ContractBody
+		tempRelation := contractOutput[i].Transaction.Relation
+		tempContractBody := contractOutput[i].Transaction.ContractModel.ContractBody
 		taskId := tempRelation.TaskId
 		if taskId == "" {
 			logs.Error("taskId is blank!", err)
 			return contractExecuteLogList, err
 		}
 		tempContractComponents := tempContractBody.ContractComponents
-		var tempContractComponent *protos.ContractComponent
+		logs.Warn("i ", i, taskId, "\n\n", len(tempContractComponents))
+		var tempContractComponent protos.ContractComponent
 		for j := 0; j < len(tempContractComponents); j++ {
+			logs.Warn(j, tempContractComponents[i].Caption)
+			logs.Warn(tempContractComponents[i].TaskId, taskId)
 			if tempContractComponents[i].TaskId == taskId {
-				tempContractComponent = tempContractComponents[i]
+				tempContractComponent = *tempContractComponents[i]
 				break
 			}
 		}
 
+		logs.Error(tempContractComponent)
 		contractExecuteLogs[i] = &protos.ContractExecuteLog{
 			ContractHashId: tempRelation.ContractHashId,
 			TaskId:         taskId,
@@ -551,10 +555,10 @@ func (c *ContractController) QueryLog() {
 	contractState, _ := requestParamMap["status"].(string)
 	owner, _ := requestParamMap["owner"].(string)
 
-	contractId, _ := requestParamMap["contractId"].(string)
-	//if !ok {
-	//	logs.Error("contractId type error")
-	//}
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		logs.Error("contractId type error")
+	}
 	contractName, _ := requestParamMap["contractName"].(string)
 	/*------------------- requestParams end ------------------*/
 	logs.Warn("Body: ", c.Ctx.Request.Body)
