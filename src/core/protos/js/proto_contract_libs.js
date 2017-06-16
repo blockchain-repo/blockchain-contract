@@ -5810,19 +5810,12 @@ proto.protos.Contract.prototype.hasContractbody = function() {
  * @constructor
  */
 proto.protos.ContractExecuteLog = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.protos.ContractExecuteLog.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.protos.ContractExecuteLog, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.protos.ContractExecuteLog.displayName = 'proto.protos.ContractExecuteLog';
 }
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.protos.ContractExecuteLog.repeatedFields_ = [7,8];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -5856,16 +5849,11 @@ proto.protos.ContractExecuteLog.toObject = function(includeInstance, msg) {
     timestamp: jspb.Message.getFieldWithDefault(msg, 3, ""),
     caption: jspb.Message.getFieldWithDefault(msg, 4, ""),
     cname: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    contractid: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    contractownersList: jspb.Message.getField(msg, 7),
-    contractsignaturesList: jspb.Message.toObjectList(msg.getContractsignaturesList(),
-    proto.protos.ContractSignature.toObject, includeInstance),
-    contractstate: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    createtime: jspb.Message.getFieldWithDefault(msg, 10, ""),
-    creator: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    description: jspb.Message.getFieldWithDefault(msg, 12, ""),
-    starttime: jspb.Message.getFieldWithDefault(msg, 13, ""),
-    endtime: jspb.Message.getFieldWithDefault(msg, 14, "")
+    ctype: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    description: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    metaattributeMap: (f = msg.getMetaattributeMap()) ? f.toObject(includeInstance, undefined) : [],
+    state: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    createtime: jspb.Message.getFieldWithDefault(msg, 10, "")
   };
 
   if (includeInstance) {
@@ -5924,40 +5912,25 @@ proto.protos.ContractExecuteLog.deserializeBinaryFromReader = function(msg, read
       break;
     case 6:
       var value = /** @type {string} */ (reader.readString());
-      msg.setContractid(value);
+      msg.setCtype(value);
       break;
     case 7:
       var value = /** @type {string} */ (reader.readString());
-      msg.addContractowners(value);
+      msg.setDescription(value);
       break;
     case 8:
-      var value = new proto.protos.ContractSignature;
-      reader.readMessage(value,proto.protos.ContractSignature.deserializeBinaryFromReader);
-      msg.addContractsignatures(value);
+      var value = msg.getMetaattributeMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString);
+         });
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.setContractstate(value);
+      msg.setState(value);
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
       msg.setCreatetime(value);
-      break;
-    case 11:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setCreator(value);
-      break;
-    case 12:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setDescription(value);
-      break;
-    case 13:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setStarttime(value);
-      break;
-    case 14:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setEndtime(value);
       break;
     default:
       reader.skipField();
@@ -6022,29 +5995,25 @@ proto.protos.ContractExecuteLog.serializeBinaryToWriter = function(message, writ
       f
     );
   }
-  f = message.getContractid();
+  f = message.getCtype();
   if (f.length > 0) {
     writer.writeString(
       6,
       f
     );
   }
-  f = message.getContractownersList();
+  f = message.getDescription();
   if (f.length > 0) {
-    writer.writeRepeatedString(
+    writer.writeString(
       7,
       f
     );
   }
-  f = message.getContractsignaturesList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
-      8,
-      f,
-      proto.protos.ContractSignature.serializeBinaryToWriter
-    );
+  f = message.getMetaattributeMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(8, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
-  f = message.getContractstate();
+  f = message.getState();
   if (f.length > 0) {
     writer.writeString(
       9,
@@ -6055,34 +6024,6 @@ proto.protos.ContractExecuteLog.serializeBinaryToWriter = function(message, writ
   if (f.length > 0) {
     writer.writeString(
       10,
-      f
-    );
-  }
-  f = message.getCreator();
-  if (f.length > 0) {
-    writer.writeString(
-      11,
-      f
-    );
-  }
-  f = message.getDescription();
-  if (f.length > 0) {
-    writer.writeString(
-      12,
-      f
-    );
-  }
-  f = message.getStarttime();
-  if (f.length > 0) {
-    writer.writeString(
-      13,
-      f
-    );
-  }
-  f = message.getEndtime();
-  if (f.length > 0) {
-    writer.writeString(
-      14,
       f
     );
   }
@@ -6165,95 +6106,64 @@ proto.protos.ContractExecuteLog.prototype.setCname = function(value) {
 
 
 /**
- * optional string ContractId = 6;
+ * optional string Ctype = 6;
  * @return {string}
  */
-proto.protos.ContractExecuteLog.prototype.getContractid = function() {
+proto.protos.ContractExecuteLog.prototype.getCtype = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
 
 /** @param {string} value */
-proto.protos.ContractExecuteLog.prototype.setContractid = function(value) {
+proto.protos.ContractExecuteLog.prototype.setCtype = function(value) {
   jspb.Message.setField(this, 6, value);
 };
 
 
 /**
- * repeated string ContractOwners = 7;
- * If you change this array by adding, removing or replacing elements, or if you
- * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<string>}
- */
-proto.protos.ContractExecuteLog.prototype.getContractownersList = function() {
-  return /** @type {!Array.<string>} */ (jspb.Message.getField(this, 7));
-};
-
-
-/** @param {!Array.<string>} value */
-proto.protos.ContractExecuteLog.prototype.setContractownersList = function(value) {
-  jspb.Message.setField(this, 7, value || []);
-};
-
-
-/**
- * @param {!string} value
- * @param {number=} opt_index
- */
-proto.protos.ContractExecuteLog.prototype.addContractowners = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 7, value, opt_index);
-};
-
-
-proto.protos.ContractExecuteLog.prototype.clearContractownersList = function() {
-  this.setContractownersList([]);
-};
-
-
-/**
- * repeated ContractSignature ContractSignatures = 8;
- * If you change this array by adding, removing or replacing elements, or if you
- * replace the array itself, then you must call the setter to update it.
- * @return {!Array.<!proto.protos.ContractSignature>}
- */
-proto.protos.ContractExecuteLog.prototype.getContractsignaturesList = function() {
-  return /** @type{!Array.<!proto.protos.ContractSignature>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.protos.ContractSignature, 8));
-};
-
-
-/** @param {!Array.<!proto.protos.ContractSignature>} value */
-proto.protos.ContractExecuteLog.prototype.setContractsignaturesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 8, value);
-};
-
-
-/**
- * @param {!proto.protos.ContractSignature=} opt_value
- * @param {number=} opt_index
- * @return {!proto.protos.ContractSignature}
- */
-proto.protos.ContractExecuteLog.prototype.addContractsignatures = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 8, opt_value, proto.protos.ContractSignature, opt_index);
-};
-
-
-proto.protos.ContractExecuteLog.prototype.clearContractsignaturesList = function() {
-  this.setContractsignaturesList([]);
-};
-
-
-/**
- * optional string ContractState = 9;
+ * optional string Description = 7;
  * @return {string}
  */
-proto.protos.ContractExecuteLog.prototype.getContractstate = function() {
+proto.protos.ContractExecuteLog.prototype.getDescription = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ContractExecuteLog.prototype.setDescription = function(value) {
+  jspb.Message.setField(this, 7, value);
+};
+
+
+/**
+ * map<string, string> MetaAttribute = 8;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.protos.ContractExecuteLog.prototype.getMetaattributeMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 8, opt_noLazyCreate,
+      null));
+};
+
+
+proto.protos.ContractExecuteLog.prototype.clearMetaattributeMap = function() {
+  this.getMetaattributeMap().clear();
+};
+
+
+/**
+ * optional string State = 9;
+ * @return {string}
+ */
+proto.protos.ContractExecuteLog.prototype.getState = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
 };
 
 
 /** @param {string} value */
-proto.protos.ContractExecuteLog.prototype.setContractstate = function(value) {
+proto.protos.ContractExecuteLog.prototype.setState = function(value) {
   jspb.Message.setField(this, 9, value);
 };
 
@@ -6270,66 +6180,6 @@ proto.protos.ContractExecuteLog.prototype.getCreatetime = function() {
 /** @param {string} value */
 proto.protos.ContractExecuteLog.prototype.setCreatetime = function(value) {
   jspb.Message.setField(this, 10, value);
-};
-
-
-/**
- * optional string Creator = 11;
- * @return {string}
- */
-proto.protos.ContractExecuteLog.prototype.getCreator = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ContractExecuteLog.prototype.setCreator = function(value) {
-  jspb.Message.setField(this, 11, value);
-};
-
-
-/**
- * optional string Description = 12;
- * @return {string}
- */
-proto.protos.ContractExecuteLog.prototype.getDescription = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ContractExecuteLog.prototype.setDescription = function(value) {
-  jspb.Message.setField(this, 12, value);
-};
-
-
-/**
- * optional string StartTime = 13;
- * @return {string}
- */
-proto.protos.ContractExecuteLog.prototype.getStarttime = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ContractExecuteLog.prototype.setStarttime = function(value) {
-  jspb.Message.setField(this, 13, value);
-};
-
-
-/**
- * optional string EndTime = 14;
- * @return {string}
- */
-proto.protos.ContractExecuteLog.prototype.getEndtime = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 14, ""));
-};
-
-
-/** @param {string} value */
-proto.protos.ContractExecuteLog.prototype.setEndtime = function(value) {
-  jspb.Message.setField(this, 14, value);
 };
 
 

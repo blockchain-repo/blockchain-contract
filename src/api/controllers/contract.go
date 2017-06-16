@@ -220,22 +220,31 @@ func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr s
 		tempTransaction := contractOutput[i].Transaction
 		tempRelation := tempTransaction.Relation
 		tempContractBody := tempTransaction.ContractModel.ContractBody
+		taskId := tempRelation.TaskId
+		if taskId == "" {
+			logs.Error("taskId is blank!", err)
+			return contractExecuteLogList, err
+		}
+		tempContractComponents := tempContractBody.ContractComponents
+		var tempContractComponent *protos.ContractComponent
+		for j := 0; j < len(tempContractComponents); j++ {
+			if tempContractComponents[i].TaskId == taskId {
+				tempContractComponent = tempContractComponents[i]
+				break
+			}
+		}
 
 		contractExecuteLogs[i] = &protos.ContractExecuteLog{
-			ContractHashId:     tempRelation.ContractHashId,
-			TaskId:             tempRelation.TaskId,
-			Timestamp:          tempTransaction.Timestamp,
-			Caption:            tempContractBody.Caption,
-			Cname:              tempContractBody.Cname,
-			ContractId:         tempContractBody.ContractId,
-			ContractOwners:     tempContractBody.ContractOwners,
-			ContractSignatures: tempContractBody.ContractSignatures,
-			ContractState:      tempContractBody.ContractState,
-			CreateTime:         tempContractBody.CreateTime,
-			Creator:            tempContractBody.Creator,
-			Description:        tempContractBody.Description,
-			StartTime:          tempContractBody.StartTime,
-			EndTime:            tempContractBody.EndTime,
+			ContractHashId: tempRelation.ContractHashId,
+			TaskId:         taskId,
+			Timestamp:      tempTransaction.Timestamp,
+			Caption:        tempContractComponent.Caption,
+			Cname:          tempContractComponent.Cname,
+			CreateTime:     tempContractBody.CreateTime,
+			Ctype:          tempContractComponent.Ctype,
+			Description:    tempContractComponent.Description,
+			State:          tempContractComponent.State,
+			MetaAttribute:  tempContractComponent.MetaAttribute,
 		}
 
 	}
@@ -367,6 +376,46 @@ func (c *ContractController) Terminate() {
 	logs.Warn(c.Ctx.Request.RequestURI, "API[Signature]缺少终止合约方法!", "合约Id:", contract.Id)
 	c.responseJsonBody(contract.Id, false, "API[Terminate]合约终止失败!")
 	//c.responseJsonBody(contract.Id, true, "合约终止成功!")
+}
+
+func (c *ContractController) QueryPublishContract() {
+
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	/*------------------- requestParams start ------------------*/
+	contractState := "Contract_Create"
+	contractId, _ := requestParamMap["contractId"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+	/*------------------- requestParams end ------------------*/
+	logs.Warn("Body: ", c.Ctx.Request.Body)
+
+	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s]",
+		c.Ctx.Request.RequestURI, token, owner, contractState, contractId))
+	if token == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+	if contractId == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		return
+	}
+	contractModelStr, err := rethinkdb.GetPublishContractByMapCondition(requestParamMap)
+	if err != nil {
+		logs.Error("API[QueryPublishContract]合约(Id=" + contractId + ")查询错误: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryPublishContract]合约查询错误!")
+		return
+	}
+
+	if contractModelStr == "" {
+		logs.Warn("API[QueryPublishContract]合约(Id=" + contractId + ")不存在: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryPublishContract]合约(Id="+contractId+")不存在: ")
+		return
+	}
+
+	c.responseJsonBody(contractModelStr, true, "API[QueryPublishContract]查询合约成功!")
 }
 
 // @Title Query
