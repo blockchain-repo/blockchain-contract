@@ -1083,10 +1083,12 @@ func (cc *CognitiveContract) UpdateContractComponents(p_task_component interface
 		if v_component == nil {
 			continue
 		}
-		if v_component.(inf.ITask).GetTaskId() == p_task_component.(inf.ITask).GetTaskId() {
-			new_task_components = append(new_task_components, p_task_component)
-		} else {
-			new_task_components = append(new_task_components, v_component)
+		for _, v_value := range v_component.(map[string]interface{}) {
+			if v_value.(inf.ITask).GetTaskId() == p_task_component.(inf.ITask).GetTaskId() {
+				new_task_components = append(new_task_components, p_task_component)
+			} else {
+				new_task_components = append(new_task_components, v_value)
+			}
 		}
 	}
 	cc.SetContractComponents(new_task_components)
