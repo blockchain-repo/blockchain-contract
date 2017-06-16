@@ -1,9 +1,8 @@
 package component
 
 import (
-	"github.com/astaxie/beego/logs"
-
 	"bytes"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -93,7 +92,8 @@ func (gc *GeneralComponent) InitGeneralComponent() error {
 			err = errors.New("GeneralComponent Need Cname!")
 			return err
 
-			}*/
+		}
+	*/
 	if gc.PropertyTable == nil {
 		gc.PropertyTable = make(map[string]interface{}, 0)
 	}

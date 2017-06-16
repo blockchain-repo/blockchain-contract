@@ -115,7 +115,7 @@ func FuncGetAdminIfContinueReply(args ...interface{}) (common.OperateResult, err
 
 //G 达到封顶头寸  或 管理员不允许购买，认购失败
 //任务退出：
-func FuncExit(args ...interface{}) (common.OperateResult, error) {
+func FuncPurchaseExit(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 	//认购失败，合约终止
@@ -129,7 +129,7 @@ func FuncExit(args ...interface{}) (common.OperateResult, error) {
 
 //H 未达到封顶头寸 或 管理员允许购买，认购成功
 //任务完成
-func FuncSuccess(args ...interface{}) (common.OperateResult, error) {
+func FuncPurchaseSuccess(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -161,7 +161,7 @@ func FuncGetUserPrincipalAndInterest(args ...interface{}) (common.OperateResult,
 //Args: user_A    string  用户A
 //      user_B    string  中心账户B
 //      amount    int     本金+利息
-func FuncFailAndRefund(args ...interface{}) (common.OperateResult, error) {
+func FuncPurchaseFailAndRefund(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -176,7 +176,7 @@ func FuncFailAndRefund(args ...interface{}) (common.OperateResult, error) {
 //K 募集期外，达到募集规模：产品成立，原认购产品有效
 //原产品有效，成功退出
 //Args:  user_A  string
-func FuncSuccessOrgProduct(args ...interface{}) (common.OperateResult, error) {
+func FuncPurchaseSuccessOrgProduct(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -203,7 +203,7 @@ func FuncSignatureProduct(args ...interface{}) (common.OperateResult, error) {
 
 //M 【无需函数】募集期内没有认购份额，判定是否达到募集规模（dicisison组件）
 //N 未达到募集规模，产品失败，不可新购产品
-func FuncFailNewProduct(args ...interface{}) (common.OperateResult, error) {
+func FuncPurchaseFailNewProduct(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -216,7 +216,7 @@ func FuncFailNewProduct(args ...interface{}) (common.OperateResult, error) {
 }
 
 //O 达到募集规模，产品成立，可以新购产品，获取申购份额,认购成功
-func FuncSuccessNewProduct(args ...interface{}) (common.OperateResult, error) {
+func FuncPurchaseSuccessNewProduct(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -228,15 +228,17 @@ func FuncSuccessNewProduct(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-/*
 //===============理财产品赎回================================================
-//J   获取用户持有金额
-func Func(args ...interface{}) (common.OperateResult, error) {
+//J   获取用户持有指定产品的总金额
+//Args: product_A  string
+//      user_A     string
+func FuncGetUserTotalShare(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
+	//查询交易表，获取用户 user_A 购买指定产品的总金额
 	//构建返回值
 	v_result = common.OperateResult{}
+	return v_result, v_err
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData("test success")
@@ -244,10 +246,14 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //K  获取用户持有期
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args: FromPeriod  string  产品的募集期起始日期
+//      user_A      string
+//      product_A   string
+func FuncGetUserHoldPeriod(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
+	//获取用户购买产品Product_A 的起始日期
+	//计算用户针对该产品的持有期
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -257,7 +263,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //L   持有期小于7天，赎回失败【不可赎回】
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncRedeemFail(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -269,21 +275,10 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//A.  持有期大于等于7天，获取用户赎回份额
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
+//A.  【无需函数】持有期大于等于7天，获取用户赎回份额（从合约读取赎回份额）
 
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//B  全部赎回，终止合约，停止利息计算
-func Func(args ...interface{}) (common.OperateResult, error) {
+//B  全部赎回： 终止合约，停止利息计算
+func FuncRedeemAllProcess(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -308,8 +303,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//E  大额赎回，通知管理员
-func Func(args ...interface{}) (common.OperateResult, error) {
+//E  大额赎回：通知管理员
+func FuncRedeemLargeProcess(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -322,7 +317,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //F  获取上次大额赎回时间
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncGetLastRedeemLargeTime(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -334,8 +329,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//G  是连续两天大额赎回，限制操作
-func Func(args ...interface{}) (common.OperateResult, error) {
+//G  是连续两天大额赎回：限制操作
+func FuncRedeemLimit(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -347,21 +342,10 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//H  不是连续两天大额赎回，确定赎回额度
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
+//H  【无需函数】不是连续两天大额赎回：确定赎回额度（从步骤A中获取）
 
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//I  小额赎回 或 大额赎回不受限 赎回转账
-func Func(args ...interface{}) (common.OperateResult, error) {
+//I  小额赎回 或 大额赎回不受限：赎回转账
+func FuncRedeemSmallProcess(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -374,7 +358,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //M 获取上一工作日理财计划的净产值
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncTotalOutValueLastDay(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -388,7 +372,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 
 //===============理财产品收益计算============================================
 //A. 每天指定时间，查询截止当前的认购金额
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args: user_A  string
+func FuncGetUserPurchase(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -401,7 +386,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //B. 每天指定时间，查询截止当前的 账户余额
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args: user_A  string
+func FuncGetUserBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -414,7 +400,9 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //C. 判定上一工作日是否为募集期内
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args: RaisePeriodFrom  string
+//      RaisePeriodTo    string
+func FuncCheckNowInRaisePeriod(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -427,7 +415,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //D 募集期内，理财合约未终止，查询人民币活期存款利率
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncGetDepositRate(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -440,7 +428,10 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //E 募集期内，以人民币活期存款利率计算利息,并将利息转账给账户
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args: user_A        string
+//      totaolbalance float
+//      depositRate   float
+func FuncCalcAndTransferInterest(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -452,8 +443,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//G.募集期外，理财合约未终止，查询上一工作日实际年化收益率
-func Func(args ...interface{}) (common.OperateResult, error) {
+//G.募集期外：理财合约未终止，查询上一工作日实际年化收益率
+func FuncGetYearYieldRateOfLastDay(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -465,8 +456,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//H.募集期外，以上一工作日年化收益率计算利息,并将利息累加到认购金额中
-func Func(args ...interface{}) (common.OperateResult, error) {
+//H.募集期外：以上一工作日年化收益率计算利息,并将利息累加到认购金额中
+func FuncCalcAndPlusInterest(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -478,8 +469,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//F. 募集期外，计算用户理财实际收益，并将收益转入管理账户
-func Func(args ...interface{}) (common.OperateResult, error) {
+//F. 募集期外：计算用户理财实际收益，并将收益转入管理账户
+func FuncCalcUserRealIncome(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -492,7 +483,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //I. 计算理财委托托管费，并由管理账户转账给托管人账户
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -505,7 +496,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //O.计算用户预期收益，并由管理账户转账到用户账户
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -518,33 +509,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //J.查询用户理财合约状态，是否为终止
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//K.募集期内，理财合约终止，停止计算利息
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //L 查询用户理财合约状态，是否为终止
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncQueryContractState(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -556,8 +522,9 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//M 募集期外，理财合约终止，停止计算利息
-func Func(args ...interface{}) (common.OperateResult, error) {
+//K.募集期内：理财合约终止，停止计算利息
+//M 募集期外：理财合约终止，停止计算利息
+func FuncTerminateContract(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -570,7 +537,7 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //N.认购金额为0，停止计算利息
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncStopCalcInterest(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -584,72 +551,13 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 
 //===============理财产品终止================================================
 //A. 访问资源池查询终止条件1：不可抗力导致理财计划无法继续运行；
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //B. 访问资源池查询终止条件2：市场波动、异常风险事件发生；
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //C. 访问资源池查询终止条件3：付息人与管理人提前结束合作关系；
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //D. 访问资源池查询终止条件4：付息人违约；
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //E. 访问资源池查询终止条件5：申购资质账户少于2户；
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //F. 访问资源池查询终止条件6：理财规模低于100万份；
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args： condition_A  string
+func FuncGetConditionState(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -661,34 +569,10 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//G. 判断终止条件，进行决策是否终止合约
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//H. 条件不满足，理财合约继续，sleep 5s
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//I. 条件满足，理财合约终止，记录终止日期
-func Func(args ...interface{}) (common.OperateResult, error) {
+//G. 【无需函数】判断终止条件，进行决策是否终止合约（decision）
+//H. 【无需函数】条件不满足：理财合约继续，sleep 5s（使用公有函数）
+//I. 条件满足：理财合约终止，记录终止日期
+func FuncAbnormalEnd(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -702,7 +586,8 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 
 //===============理财金额+利息 返还客户======================================
 //A. 查询用户余额
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args: User_A   string
+func FuncUserTotalRemain(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -715,7 +600,9 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //B. 查询待付托管费用总额
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args:  User_A  string
+//       User_B  string
+func FuncPayTotalTrustFee(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -728,7 +615,9 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //C. 查询待付管理费用总额
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args:  User_A  string
+//       User_C  string
+func FuncPayTotalManageFee(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -741,7 +630,9 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //D. 查询理财产品状态
-func Func(args ...interface{}) (common.OperateResult, error) {
+//Args： User_A    string
+//       Product_A string
+func FuncGetProductState(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -754,20 +645,15 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 }
 
 //E  产品状态为管理方终止：将用户账户余额（本金+预期利息），转账到银行账户
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
 //F  产品状态为正常终止：将用户账户余额（本金+预期利息），转账到银行账户
-func Func(args ...interface{}) (common.OperateResult, error) {
+//H  当前日期为季度末：将托管方账户余额转账到银行账户
+//J  当前日期不为季度末  或  托管账户余额转账成功：将管理费用转账到银行账户
+//Args: user_A  string
+//      user_Bank_A  string
+//      user_B  string
+//      user_Bank_B  string
+//      amount  float
+func FuncBankTransfer(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -779,44 +665,6 @@ func Func(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//G 产品状态为运行中：查询当前日期
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//H  当前日期为季度末，将托管方账户余额转账到银行账户
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
-
-//J  当前日期不为季度末  或  托管账户余额转账成功，将管理费用转账到银行账户
-func Func(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
+//G 【无需新函数】产品状态为运行中：查询当前日期（使用公用的GetNowTime()）
 
 //===========================================================================
-*/

@@ -766,6 +766,9 @@ func (cc *CognitiveContract) SetNextTasks(p_NextTasks []string) {
 	nexttasks_property.SetValue(p_NextTasks)
 	cc.PropertyTable[_NextTasks] = nexttasks_property
 }
+func (cc *CognitiveContract) SetContractComponents(p_components []interface{}) {
+	cc.ContractBody.ContractComponents = p_components
+}
 
 //====任务执行
 // 1.从start节点的后继任务开始运行，将后续任务如队列
@@ -830,13 +833,16 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
-					tmp_next_task := cc.GetTask(t_task)
-					if tmp_next_task != nil {
-						v_nexttask_object := tmp_next_task.(inf.ITask)
-						v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
-						v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
-						r_task_queue.Push(t_task)
+					r_err = cc.UpdateLoopExecuteTask(t_task)
+					if r_err != nil {
+						r_ret = -1
+						r_err = errors.New("UpdateLoopExecuteTask fai!")
+						r_buf.WriteString("[Result]: UpdateLoopExecuteTask fail;")
+						r_buf.WriteString("[Error]: " + t_task + "," + r_err.Error() + ";")
+						logs.Warning(r_buf.String())
+						return r_ret, r_err
 					}
+					r_task_queue.Push(t_task)
 				}
 			} else {
 				logs.Error("----------- NowProcessTask:" + do_process_task.(inf.ITask).GetName())
@@ -891,12 +897,14 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
-					tmp_next_task := cc.GetTask(t_task)
-					if tmp_next_task != nil {
-						v_nexttask_object := tmp_next_task.(inf.ITask)
-						v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
-						v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
-						r_task_queue.Push(t_task)
+					r_err = cc.UpdateLoopExecuteTask(t_task)
+					if r_err != nil {
+						r_ret = -1
+						r_err = errors.New("UpdateLoopExecuteTask fai!")
+						r_buf.WriteString("[Result]: UpdateLoopExecuteTask fail;")
+						r_buf.WriteString("[Error]: " + t_task + "," + r_err.Error() + ";")
+						logs.Warning(r_buf.String())
+						return r_ret, r_err
 					}
 				}
 				//避免重复执行，将当前contractHashID转化为outputID,保证执行的是下一个任务
@@ -1035,4 +1043,52 @@ func (cc *CognitiveContract) SetOrgTaskInfo(p_relation_map map[string]interface{
 	cc.SetOrgTaskExecuteIdx(v_taskIndexID)
 
 	return v_err
+}
+
+//更新合约中指定的任务信息内容
+//Args: p_task_name  string   待修改任务的名称
+func (cc *CognitiveContract) UpdateLoopExecuteTask(p_task_name string) error {
+	var err error = nil
+	if p_task_name == "" {
+		err = fmt.Errorf("Param[p_task_name] is nil!")
+		return err
+	}
+	//update task value
+	task_component := cc.GetTask(p_task_name)
+	if task_component != nil {
+		v_nexttask_object := task_component.(inf.ITask)
+		v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
+		v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
+	}
+	//update component property
+	err = cc.UpdateContractComponents(task_component)
+	if err != nil {
+		return err
+	}
+	//update component_table
+	err = cc.ComponentTable.UpdateComponent(constdef.ComponentType[constdef.Component_Task], p_task_name, task_component)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+//更新合约属性ContractComponents，任务组件有更新，需要将整个结构体进行修改
+//Args: p_task_component interface{} 待更新的合约任务组件
+func (cc *CognitiveContract) UpdateContractComponents(p_task_component interface{}) error {
+	var err error = nil
+	var task_components []interface{} = cc.GetContractComponents()
+	var new_task_components []interface{} = make([]interface{}, 0)
+	for _, v_component := range task_components {
+		if v_component == nil {
+			continue
+		}
+		if v_component.(inf.ITask).GetTaskId() == p_task_component.(inf.ITask).GetTaskId() {
+			new_task_components = append(new_task_components, p_task_component)
+		} else {
+			new_task_components = append(new_task_components, v_component)
+		}
+	}
+	cc.SetContractComponents(new_task_components)
+	return err
 }
