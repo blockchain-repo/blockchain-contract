@@ -659,7 +659,7 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
-	mapMeterRemainMoney[meterKey] += money
+	mapMeterRemainMoney[meterKey] -= money
 
 	//构建返回值
 	v_result = common.OperateResult{}
