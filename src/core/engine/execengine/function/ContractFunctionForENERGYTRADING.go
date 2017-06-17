@@ -14,6 +14,12 @@ import (
 	"unicontract/src/core/model"
 )
 
+var mapMeterRemainMoney map[string]float64
+
+func init() {
+	mapMeterRemainMoney = make(map[string]float64)
+}
+
 // 传入时间戳，获得该时间戳所对应的电价级别
 // in  ： 13位时间戳字符串             string
 // out ： 级别（波谷：1 波平：2 波峰：3） int
@@ -362,8 +368,13 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 		return v_result, v_err
 	}
 
-	// 电表充值
-	// TODO 修改电表余额
+	// 修改电表余额
+	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+	mapMeterRemainMoney[meterKey] += money
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -642,9 +653,13 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 
-	// TODO 修改电表余额
-	_ = userPublicKey
-	_ = money
+	// 修改电表余额
+	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+	mapMeterRemainMoney[meterKey] += money
 
 	//构建返回值
 	v_result = common.OperateResult{}
