@@ -249,7 +249,8 @@ func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
 	}
 	var contractOutPut string = args[0].(string)
 	var taskStatus string = args[1].(string)
-	outputStr, v_err := transaction.ExecuteInterimComplete(contractOutPut, taskStatus)
+	var contractState = args[2].(string)
+	outputStr, v_err := transaction.ExecuteInterimComplete(contractOutPut, taskStatus, contractState)
 	if v_err != nil {
 		return v_result, v_err
 	}

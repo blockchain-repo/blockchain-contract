@@ -39,7 +39,7 @@ func Create(tx_signers []string, recipients [][2]interface{}, metadata *model.Me
 	outputs := []*model.ConditionsItem{}
 	for index, recipient := range recipients {
 		pubkey := recipient[0].(string)
-		amount := recipient[1].(int)
+		amount := recipient[1].(float64)
 		output := &model.ConditionsItem{}
 		output.GenerateOutput(index, isFeeze, pubkey, amount)
 		outputs = append(outputs, output)
@@ -64,7 +64,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	isFeeze := false
 	//generate inputs
 	var inputs = []*model.Fulfillment{}
-	var balance int = 0
+	var balance float64 = 0
 	var spentFlag float64 = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
 	logs.Info(operation)
 	if operation == _FREEZE {
@@ -118,10 +118,10 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 
 	//generate outputs
 	outputs := []*model.ConditionsItem{}
-	amounts := 0
+	var amounts float64 = 0
 	for index, recipient := range recipients {
 		pubkey := recipient[0].(string)
-		amount := recipient[1].(int)
+		amount := recipient[1].(float64)
 		output := &model.ConditionsItem{}
 		output.GenerateOutput(index, isFeeze, pubkey, amount)
 		outputs = append(outputs, output)
@@ -165,7 +165,7 @@ func GetAllUnspent(pubkey string, contractId string) {
 }
 
 // the unspent asset only include 'unfreeze'
-func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
+func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal float64) {
 	param := "unspent=true&public_key=" + pubkey
 	result, err := chain.GetUnspentTxs(param)
 	if err != nil {
@@ -173,7 +173,7 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal int) {
 		return nil, 0
 	}
 	inputs := []*model.Fulfillment{}
-	var balance int
+	var balance float64
 	for index, unspend := range result.Data.([]interface{}) {
 		//logs.Info("unspend-map====",unspend)
 		unspenStruct := model.UnSpentOutput{}
@@ -228,7 +228,7 @@ return:
 		3:the frozen asset had transfer;
 		4:get muti-frozen-asset;
 */
-func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum int) (inps []*model.Fulfillment, bal int, flag float64) {
+func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum int) (inps []*model.Fulfillment, bal float64, flag float64) {
 
 	taskNumStr := strconv.Itoa(taskNum)
 	param := "unspent=true&public_key=" + pubkey + "&contract_id=" + contractId + "&task_id=" + taskId + "&task_num=" + taskNumStr
@@ -244,7 +244,7 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 	}
 
 	inputs := []*model.Fulfillment{}
-	var balance int
+	var balance float64
 	logs.Info(result.Data)
 	flag = result.Data.([]interface{})[0].(float64)
 	unspendSlice := result.Data.([]interface{})[1].([]interface{})

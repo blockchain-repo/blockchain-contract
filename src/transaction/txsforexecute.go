@@ -89,11 +89,12 @@ func ExecuteInterim(metadataStr string, relationStr string, contractStr string) 
 	return common.StructSerialize(output), err
 }
 
-func ExecuteInterimComplete(contractOutPut string, taskStatus string) (outputStr string, err error) {
+func ExecuteInterimComplete(contractOutPut string, taskStatus string, contractState string) (outputStr string, err error) {
 	var contractModel model.ContractOutput
 	err = json.Unmarshal([]byte(contractOutPut), &contractModel)
 	taskId := contractModel.Transaction.Relation.TaskId
 
+	UpdateContractState(&contractModel, contractState)
 	UpdateTaskStauts(&contractModel, taskId, taskStatus)
 
 	contractModel.Id = contractModel.GenerateId()
@@ -120,7 +121,12 @@ func GenerateRelation(contractHashId string, contractId string, taskId string, t
 	}
 	return common.Serialize(relation)
 }
-
+func UpdateContractState(contractModel *model.ContractOutput, contractState string) {
+	contractModel.Transaction.ContractModel.ContractBody.ContractState = contractState
+	contractModel.Transaction.ContractModel.Id = common.HashData(common.StructSerialize(contractModel.Transaction.ContractModel.ContractBody))
+	contractModel.Transaction.Relation.ContractHashId = contractModel.Transaction.ContractModel.Id
+	contractModel.Id = common.HashData(common.StructSerialize(contractModel))
+}
 func UpdateTaskStauts(contractModel *model.ContractOutput, taskId string, taskStatus string) {
 	task := contractModel.Transaction.ContractModel.ContractBody.ContractComponents
 	for index, component := range task {
@@ -136,4 +142,16 @@ func UpdateTaskStauts(contractModel *model.ContractOutput, taskId string, taskSt
 func ExecuteGetContract(contractId string) (string, error) {
 	con, err := GetContractFromUnichain(contractId)
 	return common.StructSerialize(con), err
+}
+
+func GetInterestCount(pubkey string) float64 {
+	var interest float64
+	//todo
+	return interest
+}
+
+func SaveEarnings(puekey string, totaolbalance float64, depositRate float64, interest float64) bool {
+	var flag bool = false
+
+	return flag
 }

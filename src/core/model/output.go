@@ -14,14 +14,14 @@ type Condition struct {
 }
 
 type ConditionsItem struct {
-	Amount      int        `json:"amount"`
+	Amount      float64    `json:"amount"`
 	Cid         int        `json:"cid"`
 	Condition   *Condition `json:"condition"`
 	OwnersAfter []string   `json:"owners_after"`
 	Isfreeze    bool       `json:"isfreeze"`
 }
 
-func (c *ConditionsItem) GenerateOutput(cid int, isFeeze bool, pub string, amount int) {
+func (c *ConditionsItem) GenerateOutput(cid int, isFeeze bool, pub string, amount float64) {
 	condetails := ConditionDetails{
 		Bitmask:   32,
 		PublicKey: pub,

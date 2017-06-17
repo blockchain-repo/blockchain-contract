@@ -1,9 +1,15 @@
 package function
 
 import (
+	"errors"
 	"fmt"
+	"github.com/astaxie/beego/logs"
+	"math/rand"
 	"strconv"
+	"time"
+	"unicontract/src/config"
 	"unicontract/src/core/engine/common"
+	"unicontract/src/transaction"
 )
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -371,17 +377,40 @@ func FuncTotalOutValueLastDay(args ...interface{}) (common.OperateResult, error)
 }
 
 //===============理财产品收益计算============================================
+
+/*
+earnings:
+{
+"id":"uuid",
+"username":"alice",
+"pubkey":"key...",
+"contractid":"conid",
+"raiseStart":"date",
+"raiseEnd":"date",
+"raiseAmount":20000,
+"balanceAmount":21
+"purchaseAmount":20,
+"date":"date",
+"isRaise":true,
+"rate":0.01,
+"yield":1
+"timestamp":123144
+}
+*/
 //A. 每天指定时间，查询截止当前的认购金额
 //Args: user_A  string
 func FuncGetUserPurchase(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
+	var pubkey string = ""
+	var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
+	logs.Info("unspentAmount", unspentAmount)
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(unspentAmount)
 	return v_result, v_err
 }
 
@@ -390,27 +419,60 @@ func FuncGetUserPurchase(args ...interface{}) (common.OperateResult, error) {
 func FuncGetUserBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
+	var pubkey string = ""
+	var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
+	logs.Info("unspentAmount", unspentAmount)
+	var interest = transaction.GetInterestCount(pubkey)
+	logs.Info("interest", interest)
+	var count = unspentAmount + interest
+	logs.Info("count", count)
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(count)
 	return v_result, v_err
 }
 
 //C. 判定上一工作日是否为募集期内
 //Args: RaisePeriodFrom  string
 //      RaisePeriodTo    string
-func FuncCheckNowInRaisePeriod(args ...interface{}) (common.OperateResult, error) {
+func FuncCheckLastDayInRaisePeriod(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
+
+	var RaisePeriodFrom string = "2017-06-18 11:00:00"
+	var RaisePeriodTo string = "2017-06-17 16:00:00"
+
+	format := "2006-01-02 15:04:05"
+	start, _ := time.Parse(format, RaisePeriodFrom)
+	end, _ := time.Parse(format, RaisePeriodTo)
+	//now, _ := time.Parse(format, "2017-06-18 15:19:58")
+	now, _ := time.Parse(format, time.Now().Format(format))
+	d, _ := time.ParseDuration("-24h")
+	var dateCheck time.Time = now.Add(d)
+	logs.Info(dateCheck)
+	var week = dateCheck.Weekday()
+	logs.Info(week)
+	var sunday time.Weekday = 0
+	var sturday time.Weekday = 6
+	if sunday == week {
+		logs.Info(sunday)
+		d, _ := time.ParseDuration("-48h")
+		dateCheck = dateCheck.Add(d)
+	}
+	if sturday == week {
+		logs.Info(sturday)
+		d, _ := time.ParseDuration("-24h")
+		dateCheck = dateCheck.Add(d)
+	}
+	var isIn bool = dateCheck.After(start) && dateCheck.Before(end)
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(isIn)
 	return v_result, v_err
 }
 
@@ -418,12 +480,12 @@ func FuncCheckNowInRaisePeriod(args ...interface{}) (common.OperateResult, error
 func FuncGetDepositRate(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
+	rate := 0.003
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(rate)
 	return v_result, v_err
 }
 
@@ -434,12 +496,20 @@ func FuncGetDepositRate(args ...interface{}) (common.OperateResult, error) {
 func FuncCalcAndTransferInterest(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
+	var puekey string = ""
+	var totaolbalance float64 = 0.0
+	var depositRate float64 = 0.003
+	var interest = (totaolbalance * depositRate) / 360
+	//insert into table earnings
+	var flag bool = transaction.SaveEarnings(puekey, totaolbalance, depositRate, interest)
+	if !flag {
+		//error
+	}
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(interest)
 	return v_result, v_err
 }
 
@@ -447,26 +517,36 @@ func FuncCalcAndTransferInterest(args ...interface{}) (common.OperateResult, err
 func FuncGetYearYieldRateOfLastDay(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
+	var rate float64 = 0.03
+	//var realrate = rand.Float64() * rate
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	realrate := (r.Float64() + 0.5) * rate
+	logs.Info(realrate)
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(realrate)
 	return v_result, v_err
 }
 
-//H.募集期外：以上一工作日年化收益率计算利息,并将利息累加到认购金额中
-func FuncCalcAndPlusInterest(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
+////H.募集期外：以上一工作日年化收益率计算利息,并将利息累加到认购金额中
+//func FuncCalcAndPlusInterest(args ...interface{}) (common.OperateResult, error) {
+//	var v_result common.OperateResult
+//	var v_err error = nil
+//
+//	//构建返回值
+//	v_result = common.OperateResult{}
+//	v_result.SetCode(200)
+//	v_result.SetMessage("process success!")
+//	v_result.SetData("test success")
+//	return v_result, v_err
+//}
 
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
+func getRealIncome(purchaseMoney float64, rate float64) float64 {
+	var realIncome float64 = 0.0
+	realIncome = purchaseMoney * rate / 360
+	return realIncome
 }
 
 //F. 募集期外：计算用户理财实际收益，并将收益转入管理账户
@@ -474,37 +554,193 @@ func FuncCalcUserRealIncome(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
+	var rate float64 = 0.03
+	var purchaseMoney float64 = 0.0
+	var contractStr string = args[2].(string)
+	var contractId string = args[3].(string)
+	var taskId string = args[4].(string)
+	var taskIndex int = args[5].(int)
+
+	var realIncome = getRealIncome(purchaseMoney, rate)
+
+	var ownerBefore = ""
+	var recipients [][2]interface{} = [][2]interface{}{[2]interface{}{ownerBefore, realIncome}}
+
+	var contractHashId string = ""
+
+	var metadataStr string = ""
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+	//tx_signers []string, recipients [][2]interface{}, metadataStr string,
+	//relationStr string, contractStr string
+	outputStr, v_err := transaction.ExecuteCreate(ownerBefore, recipients, metadataStr, relationStr, contractStr)
+	logs.Info(outputStr)
+	if v_err != nil {
+		return v_result, v_err
+	}
+
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(realIncome)
 	return v_result, v_err
 }
 
 //I. 计算理财委托托管费，并由管理账户转账给托管人账户
 func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
+	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
+	//var v_map_args map[string]interface{} = nil
+	if len(args) != 7 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
+
+	//user provide  管理账户
+	var ownerBefore string = args[0].(string)
+	//托管人
+	var ownerAfter string = args[1].(string)
+	var realIncome float64 = args[2].(float64)
+	realIncome = realIncome * 0.1
+	var recipients [][2]interface{} = [][2]interface{}{[2]interface{}{ownerAfter, realIncome}}
+	//executer provide
+	var contractStr string = args[2].(string)
+	var contractId string = args[3].(string)
+	var taskId string = args[4].(string)
+	var taskIndex int = args[5].(int)
+	var mainPubkey string = args[6].(string)
+	var contractHashId string = ""
+	var metadataStr string = ""
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+
+	var outputStr string
+	/*
+		do freeze
+	*/
+	mykey := config.Config.Keypair.PublicKey
+	//check main pubkey
+	if mainPubkey == mykey {
+		//if mainNode, do freeze;
+		var reciForFre [][2]interface{} = [][2]interface{}{
+			[2]interface{}{ownerBefore, realIncome},
+		}
+		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
+		//if v_err != nil {
+		//	logs.Error(v_err)
+		//	v_result.SetCode(400)
+		//	v_result.SetMessage(v_err.Error())
+		//	return v_result, v_err
+		//}
+		//wait for the freeze asset write into the unichain
+		time.Sleep(time.Second * 3)
+	} else {
+		// not mainNode, wait for the main node write the freeze-asset into the unchain
+		time.Sleep(time.Second * 5)
+	}
+	/*
+		do transfer
+	*/
+	logs.Info("for ")
+	for i := 0; i <= 3; i++ {
+		//transfer asset
+		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
+		if v_err != nil && i == 3 {
+			logs.Error(v_err)
+			v_result.SetCode(400)
+			v_result.SetMessage(v_err.Error())
+			return v_result, v_err
+		}
+		if v_err == nil {
+			break
+		}
+		if i != 3 {
+			time.Sleep(time.Second * 5)
+		}
+	}
 	//构建返回值
-	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(outputStr)
 	return v_result, v_err
 }
 
 //O.计算用户预期收益，并由管理账户转账到用户账户
 func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
+	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
+	//var v_map_args map[string]interface{} = nil
+	if len(args) != 7 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
+
+	//user provide  管理账户
+	var ownerBefore string = args[0].(string)
+	//托管人
+	var ownerAfter string = args[1].(string)
+	var realIncome float64 = args[2].(float64)
+	realIncome = realIncome * 0.6
+	var recipients [][2]interface{} = [][2]interface{}{[2]interface{}{ownerAfter, realIncome * 0.6}}
+	//executer provide
+	var contractStr string = args[2].(string)
+	var contractId string = args[3].(string)
+	var taskId string = args[4].(string)
+	var taskIndex int = args[5].(int)
+	var mainPubkey string = args[6].(string)
+	var contractHashId string = ""
+	var metadataStr string = ""
+	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
+
+	var outputStr string
+	/*
+		do freeze
+	*/
+	mykey := config.Config.Keypair.PublicKey
+	//check main pubkey
+	if mainPubkey == mykey {
+		//if mainNode, do freeze;
+		var reciForFre [][2]interface{} = [][2]interface{}{
+			[2]interface{}{ownerBefore, realIncome},
+		}
+		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
+		//if v_err != nil {
+		//	logs.Error(v_err)
+		//	v_result.SetCode(400)
+		//	v_result.SetMessage(v_err.Error())
+		//	return v_result, v_err
+		//}
+		//wait for the freeze asset write into the unichain
+		time.Sleep(time.Second * 3)
+	} else {
+		// not mainNode, wait for the main node write the freeze-asset into the unchain
+		time.Sleep(time.Second * 5)
+	}
+	/*
+		do transfer
+	*/
+	logs.Info("for ")
+	for i := 0; i <= 3; i++ {
+		//transfer asset
+		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
+		if v_err != nil && i == 3 {
+			logs.Error(v_err)
+			v_result.SetCode(400)
+			v_result.SetMessage(v_err.Error())
+			return v_result, v_err
+		}
+		if v_err == nil {
+			break
+		}
+		if i != 3 {
+			time.Sleep(time.Second * 5)
+		}
+	}
 	//构建返回值
-	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
+	v_result.SetData(outputStr)
 	return v_result, v_err
 }
 
@@ -523,7 +759,7 @@ func FuncQueryContractState(args ...interface{}) (common.OperateResult, error) {
 }
 
 //K.募集期内：理财合约终止，停止计算利息
-//M 募集期外：理财合约终止，停止计算利息
+//M 募集期外：终止理财合约，停止计算利息
 func FuncTerminateContract(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil

@@ -27,6 +27,8 @@ const (
 	TABLE_ENERGYTRADINGDEMO_MSGNOTICE   = "EnergyTradingDemoMsgNotice"
 	TABLE_ENERGYTRADINGDEMO_PRICE       = "EnergyTradingDemoPrice"
 	//-------------------------------------------------------
+	//tables for tianan
+	TABLE_EARNINGS = "Earnings"
 )
 
 var Tables = []string{TABLE_CONTRACTS,
@@ -42,6 +44,7 @@ var Tables = []string{TABLE_CONTRACTS,
 	TABLE_ENERGYTRADINGDEMO_BILL,
 	TABLE_ENERGYTRADINGDEMO_MSGNOTICE,
 	TABLE_ENERGYTRADINGDEMO_PRICE,
+	TABLE_EARNINGS,
 }
 
 func CreateTable(db string, name string) {
