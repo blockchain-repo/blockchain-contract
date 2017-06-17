@@ -279,7 +279,7 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, error) {
 	contractId, _ := conditions["contractId"].(string)
 	owner, _ := conditions["owner"].(string)
-	owner = ""
+	//owner = ""
 	//if owner == "" {
 	//	return "", errors.New("owner blank")
 	//}

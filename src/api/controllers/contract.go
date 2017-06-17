@@ -218,21 +218,18 @@ func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr s
 	contractExecuteLogs = make([]*protos.ContractExecuteLog, len(contractOutput))
 	for i := 0; i < len(contractOutput); i++ {
 		tempTransaction := contractOutput[i].Transaction
-		tempRelation := contractOutput[i].Transaction.Relation
-		tempContractBody := contractOutput[i].Transaction.ContractModel.ContractBody
+		tempRelation := tempTransaction.Relation
+		tempContractBody := tempTransaction.ContractModel.ContractBody
 		taskId := tempRelation.TaskId
 		if taskId == "" {
 			logs.Error("taskId is blank!", err)
 			return contractExecuteLogList, err
 		}
 		tempContractComponents := tempContractBody.ContractComponents
-		logs.Warn("i ", i, taskId, "\n\n", len(tempContractComponents))
 		var tempContractComponent protos.ContractComponent
 		for j := 0; j < len(tempContractComponents); j++ {
-			logs.Warn(j, tempContractComponents[i].Caption)
-			logs.Warn(tempContractComponents[i].TaskId, taskId)
-			if tempContractComponents[i].TaskId == taskId {
-				tempContractComponent = *tempContractComponents[i]
+			if tempContractComponents[j].TaskId == taskId {
+				tempContractComponent = *tempContractComponents[j]
 				break
 			}
 		}
