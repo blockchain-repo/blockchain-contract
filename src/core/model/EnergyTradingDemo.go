@@ -53,8 +53,10 @@ type DemoMsgNotice struct {
 type DemoPrice struct {
 	Id          string  `json:"id"`
 	Level       int     // 阶梯等级
-	One         float64 // 波峰电价
+	Low         float64 // 此阶梯下限电量
+	High        float64 // 此阶段上限电量
+	One         float64 // 波谷电价
 	Two         float64 // 波平电价
-	Three       float64 // 波谷电价
+	Three       float64 // 波峰电价
 	Description string  // 阶梯电价描述
 }

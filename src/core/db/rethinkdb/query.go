@@ -1413,4 +1413,55 @@ func GetMeterInformation(strPublicKey, startTime, endTime string) (float64, floa
 }
 
 //---------------------------------------------------------------------------
+// 获得某时间段内各个发电厂的发电量
+func GetPowerPlantEnergy(slPubkey []string, startTime, endTime string) (map[string]float64, error) {
+	energys := make(map[string]float64)
+	var err error
+
+	for index, value := range slPubkey {
+		energys[slPubkey[index]], err = _GetEnergy(value, startTime, endTime)
+		if err != nil {
+			return energys, err
+		}
+	}
+
+	return energys, nil
+}
+
+func _GetEnergy(strPublickey string, startTime, endTime string) (float64, error) {
+	var energy float64
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_ENERGY).
+		Filter(r.Row.Field("PublicKey").Eq(strPublickey)).
+		Filter(r.Row.Field("Timestamp").Ge(startTime)).
+		Filter(r.Row.Field("Timestamp").Le(endTime)).
+		Run(session)
+	if err != nil {
+		return energy, err
+	}
+
+	if res.IsNil() {
+		return energy, fmt.Errorf("no power plant")
+	}
+
+	var items []map[string]interface{}
+	err = res.All(&items)
+	if err != nil {
+		return energy, err
+	}
+
+	for _, v := range items {
+		e, ok := v["Electricity"].(float64)
+		if !ok {
+			return energy, fmt.Errorf("[\"Electricity\"].(float64) is error")
+		}
+		energy += e
+	}
+
+	return energy, nil
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
 /*智能微网demo end---------------------------------------------------------*/

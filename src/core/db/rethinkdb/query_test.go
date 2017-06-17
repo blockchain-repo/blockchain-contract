@@ -3,6 +3,7 @@ package rethinkdb
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"strconv"
 	"testing"
 	"time"
@@ -854,13 +855,14 @@ func Test_InsertEnergyTradingDemoRole(t *testing.T) {
 }
 
 func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
-	electricityMeter1 := model.DemoEnergy{
+	// 模拟采集电表耗电
+	/*electricityMeter1 := model.DemoEnergy{
 		Id:               common.GenerateUUID(),
 		PublicKey:        "5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm",
 		Timestamp:        common.GenTimestamp(),
-		Electricity:      530,
-		TotalElectricity: 230,
-		Money:            300,
+		Electricity:      580,
+		TotalElectricity: 280,
+		Money:            280,
 		Type:             0,
 	}
 	sldata, _ := json.Marshal(electricityMeter1)
@@ -868,6 +870,50 @@ func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
 	err := InsertEnergyTradingDemoEnergy(string(sldata))
 	if err != nil {
 		t.Error(err)
+	}*/
+
+	/*
+			type DemoEnergy struct {
+			Id               string `json:"id"`
+			PublicKey        string
+			Timestamp        string  // 时间戳
+			Electricity      float64 // 当前总电量（电）
+			TotalElectricity float64 // 只当为电表时有效，当月总耗电量（电）
+			Money            float64 // 只当为电表时有效，代表当前表内余额（钱）
+			Type             int     // 0：电表 1：风电 2：光电 3：火电 4：国网
+		}
+	*/
+	// 模拟采集发电厂发电
+	slKey := []string{
+		"9Vqg4tSk9ocLfhwj2eeNgKgNR65oSV7WF9kYDu1HiwdM", // 风
+		"3XmEh9ZtvDAcxtgiFL11cw9YAppCqhQaWQ6mrKxWhbom", // 光
+		"H7tMDKFPMGsG2pV4Lpcic5MQiN1fKkqVaj6A15MMgNTQ", // 火
+		"4nkFyWhLrUAGZxr1Ku5NreywPPA6HEKkpqV2hDgr1kLU", // 国网
+	}
+	var m float64
+	for i, v := range slKey {
+		if i == 0 {
+			m = float64(55)
+		} else if i == 1 {
+			m = float64(45)
+		} else if i == 2 {
+			m = float64(65)
+		} else {
+			m = float64(60)
+		}
+		electricityPowerPlant1 := model.DemoEnergy{
+			Id:          common.GenerateUUID(),
+			PublicKey:   v,
+			Timestamp:   common.GenTimestamp(),
+			Electricity: m,
+			Type:        i + 1,
+		}
+		sldata, _ := json.Marshal(electricityPowerPlant1)
+
+		err := InsertEnergyTradingDemoEnergy(string(sldata))
+		if err != nil {
+			t.Error(err)
+		}
 	}
 }
 
@@ -878,7 +924,7 @@ func Test_InsertTransaction_Bill(t *testing.T) {
 			Id        string `json:"id"`
 			PublicKey string
 			Timestamp string
-			Type      int // 0：用户账户充值 1：用户购电充值 2：电表耗电 3：分张
+			Type      int // 0：用户账户充值 1：用户购电充值 2：分张
 		}
 	*/
 	strPublicKey, _ := common.GenerateKeyPair()
@@ -938,10 +984,12 @@ func Test_InsertEnergyTradingDemoPrice(t *testing.T) {
 	price1 := model.DemoPrice{
 		Id:          common.GenerateUUID(),
 		Level:       1,
-		One:         3,
+		Low:         1,
+		High:        240,
+		One:         1,
 		Two:         2,
-		Three:       1,
-		Description: "0-1000",
+		Three:       3,
+		Description: "第一阶梯",
 	}
 	sldata, _ := json.Marshal(price1)
 	err := InsertEnergyTradingDemoPrice(string(sldata))
@@ -952,10 +1000,12 @@ func Test_InsertEnergyTradingDemoPrice(t *testing.T) {
 	price2 := model.DemoPrice{
 		Id:          common.GenerateUUID(),
 		Level:       2,
-		One:         4,
+		Low:         241,
+		High:        400,
+		One:         2,
 		Two:         3,
-		Three:       2,
-		Description: "1001-3000",
+		Three:       4,
+		Description: "第二阶梯",
 	}
 	sldata, _ = json.Marshal(price2)
 	err = InsertEnergyTradingDemoPrice(string(sldata))
@@ -966,10 +1016,12 @@ func Test_InsertEnergyTradingDemoPrice(t *testing.T) {
 	price3 := model.DemoPrice{
 		Id:          common.GenerateUUID(),
 		Level:       3,
-		One:         5,
+		Low:         401,
+		High:        math.MaxFloat64,
+		One:         3,
 		Two:         4,
-		Three:       3,
-		Description: "3001-...",
+		Three:       5,
+		Description: "第三阶梯",
 	}
 	sldata, _ = json.Marshal(price3)
 	err = InsertEnergyTradingDemoPrice(string(sldata))
@@ -1029,6 +1081,22 @@ func Test_GetMeterinforFromEnergy(t *testing.T) {
 		return
 	}
 	t.Log(item)
+}
+
+func Test_GetPowerPlantEnergy(t *testing.T) {
+	slKey := []string{
+		"9Vqg4tSk9ocLfhwj2eeNgKgNR65oSV7WF9kYDu1HiwdM", // 风
+		"3XmEh9ZtvDAcxtgiFL11cw9YAppCqhQaWQ6mrKxWhbom", // 光
+		"H7tMDKFPMGsG2pV4Lpcic5MQiN1fKkqVaj6A15MMgNTQ", // 火
+		"4nkFyWhLrUAGZxr1Ku5NreywPPA6HEKkpqV2hDgr1kLU", // 国网
+	}
+
+	m, err := GetPowerPlantEnergy(slKey, "1497679290000", "1497682890000")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(m)
 }
 
 /*智能微网demo end---------------------------------------------------------*/

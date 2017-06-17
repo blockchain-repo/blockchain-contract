@@ -7,14 +7,136 @@ import (
 )
 
 import (
+	"strconv"
 	common2 "unicontract/src/common"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
 )
 
-func init() {
+// 传入时间戳，获得该时间戳所对应的电价级别
+// in  ： 13位时间戳字符串             string
+// out ： 级别（波谷：1 波平：2 波峰：3） int
+func _GetPriceLevel(timeStamp string) (int, error) {
+	format := "2006-01-02 15:04:05"
 
+	now := time.Now()
+
+	//--------------------------------------------------------------
+	// 波峰时间段
+	three_1_Start := fmt.Sprintf("%s 08:00:00", now.Format("2006-01-02"))
+	three_1_End := fmt.Sprintf("%s 12:00:00", now.Format("2006-01-02"))
+	three_2_Start := fmt.Sprintf("%s 19:00:00", now.Format("2006-01-02"))
+	three_2_End := fmt.Sprintf("%s 23:00:00", now.Format("2006-01-02"))
+
+	three_1_Start_T, _ := time.Parse(format, three_1_Start)
+	three_1_End_T, _ := time.Parse(format, three_1_End)
+	three_2_Start_T, _ := time.Parse(format, three_2_Start)
+	three_2_End_T, _ := time.Parse(format, three_2_End)
+
+	//--------------------------------------------------------------
+	// 波平时间段
+	two_1_Start := fmt.Sprintf("%s 07:00:00", now.Format("2006-01-02"))
+	two_1_End := fmt.Sprintf("%s 08:00:00", now.Format("2006-01-02"))
+	two_2_Start := fmt.Sprintf("%s 12:00:00", now.Format("2006-01-02"))
+	two_2_End := fmt.Sprintf("%s 19:00:00", now.Format("2006-01-02"))
+
+	two_1_Start_T, _ := time.Parse(format, two_1_Start)
+	two_1_End_T, _ := time.Parse(format, two_1_End)
+	two_2_Start_T, _ := time.Parse(format, two_2_Start)
+	two_2_End_T, _ := time.Parse(format, two_2_End)
+
+	//--------------------------------------------------------------
+	// 波谷时间段
+	one_1_Start := fmt.Sprintf("%s 23:00:00", now.Format("2006-01-02"))
+	one_1_End := fmt.Sprintf("%s 00:00:00", now.Add(time.Hour*24).Format("2006-01-02"))
+	one_2_Start := fmt.Sprintf("%s 00:00:00", now.Format("2006-01-02"))
+	one_2_End := fmt.Sprintf("%s 07:00:00", now.Format("2006-01-02"))
+
+	one_1_Start_T, _ := time.Parse(format, one_1_Start)
+	one_1_End_T, _ := time.Parse(format, one_1_End)
+	one_2_Start_T, _ := time.Parse(format, one_2_Start)
+	one_2_End_T, _ := time.Parse(format, one_2_End)
+
+	//--------------------------------------------------------------
+	timeStamp_, _ := strconv.Atoi(timeStamp)
+	tm := time.Unix(int64(timeStamp_)/1000, 0)
+	timeTest, err := time.Parse(format, tm.Format(format))
+	if err != nil {
+		return 0, err
+	}
+
+	//--------------------------------------------------------------
+	if (timeTest.After(three_1_Start_T) && timeTest.Before(three_1_End_T)) ||
+		(timeTest.After(three_2_Start_T) && timeTest.Before(three_2_End_T)) {
+		return 3, nil
+	} else if (timeTest.After(two_1_Start_T) && timeTest.Before(two_1_End_T)) ||
+		(timeTest.After(two_2_Start_T) && timeTest.Before(two_2_End_T)) {
+		return 2, nil
+	} else if (timeTest.After(one_1_Start_T) && timeTest.Before(one_1_End_T)) ||
+		(timeTest.After(one_2_Start_T) && timeTest.Before(one_2_End_T)) {
+		return 1, nil
+	}
+
+	return 0, nil
+}
+
+// 计算电费
+func _CalcElecPrice(electricity, electricityTotal float64, timeStamp string) (float64, error) {
+	var price float64
+	var err error
+
+	// 获得各阶梯电价
+	prices, err := rethinkdb.GetPrice()
+	if err != nil {
+		return price, err
+	}
+
+	// 判断属于哪个阶梯
+	slPrices := make([]float64, 3) // 峰、平、谷电价
+	for _, v := range prices {
+		low, ok := v["Low"].(float64)
+		if !ok {
+			return price, fmt.Errorf("v[\"Low\"].(float64) is error")
+		}
+		high, ok := v["High"].(float64)
+		if !ok {
+			return price, fmt.Errorf("v[\"High\"].(float64) is error")
+		}
+
+		if electricityTotal >= low && low <= high {
+			slPrices[0], ok = v["One"].(float64)
+			if !ok {
+				return price, fmt.Errorf("v[\"One\"].(float64) is error")
+			}
+
+			slPrices[1], ok = v["Two"].(float64)
+			if !ok {
+				return price, fmt.Errorf("v[\"Two\"].(float64) is error")
+			}
+
+			slPrices[2], ok = v["Three"].(float64)
+			if !ok {
+				return price, fmt.Errorf("v[\"Three\"].(float64) is error")
+			}
+			break
+		}
+	}
+
+	// 判断波峰平谷
+	flag, err := _GetPriceLevel(timeStamp)
+	if err != nil {
+		return price, err
+	}
+
+	if flag == 0 {
+		return price, fmt.Errorf("timeStamp is error")
+	}
+
+	// 计算电价
+	price = slPrices[flag-1] * electricity
+
+	return price, nil
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -131,8 +253,8 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 }
 
 //短信提示账户：交易账户余额不足，自动购电操作无法完成；请及时充值50元到交易账户中
-//Args: User_A  string 用户账户
-//      50      int    充值额度
+//Args: User_A  string     用户账户
+//      50      float64    充值额度
 func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	v_result.SetCode(500)
@@ -149,9 +271,9 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 
-	money, ok := args[1].(int)
+	money, ok := args[1].(float64)
 	if !ok {
-		v_result.SetMessage("args[1].(int) is error!")
+		v_result.SetMessage("args[1].(float64) is error!")
 		return v_result, v_err
 	}
 
@@ -159,7 +281,7 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 	msgNotice.Id = common2.GenerateUUID()
 	msgNotice.NoticePublicKey = publickey
 	msgNotice.Timestamp = common2.GenTimestamp()
-	msgNotice.Msg = fmt.Sprintf("请及时充值%d元到交易账户中，谢谢您的合作。", money)
+	msgNotice.Msg = fmt.Sprintf("请及时充值%0.2f元到交易账户中，谢谢您的合作。", money)
 	msgNotice.Type = 0
 
 	slData, _ := json.Marshal(msgNotice)
@@ -178,9 +300,9 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 }
 
 //电表自动购电50元（链上进行资产转移50给运营账户；同时访问电表接口，给电表充值50元）
-//Args:  User_A   string  将用户账户中的钱50元，转到运营商账户
+//Args:  User_A   string      将用户账户中的钱50元，转到运营商账户
 //       Ccount_D string
-//       50       int     充值额度
+//       50       float64     充值额度
 func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	v_result.SetCode(500)
@@ -203,9 +325,9 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 		return v_result, v_err
 	}
 
-	money, ok := args[2].(int)
+	money, ok := args[2].(float64)
 	if !ok {
-		v_result.SetMessage("args[2].(int) is error!")
+		v_result.SetMessage("args[2].(float64) is error!")
 		return v_result, v_err
 	}
 
@@ -229,7 +351,7 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 		Timestamp:     common.GenTimestamp(),
 		FromPublicKey: userPublicKey,
 		ToPublicKey:   operatorPublicKey,
-		Money:         float64(money),
+		Money:         money,
 		Type:          1,
 	}
 	sldata, _ = json.Marshal(transaction1)
@@ -329,7 +451,7 @@ func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
 }
 
 //A 根据电表账户从能源连上获取 上一时间点--—当前时间点的耗电量（分段时间点耗电量）、电表余额、当月截止当前总耗电量
-//Args: ElecUser_A  string  电表交易用户
+//Args: ElecUser_A  string  用户key
 //      startTime   string
 //      endTime     string
 func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error) {
@@ -393,26 +515,87 @@ func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(price)
+	slData, _ := json.Marshal(price)
+	v_result.SetData(string(slData))
 	return v_result, v_err
 }
 
 //D. 根据用户耗电量对应出相应的电价，并计算用户消耗的电费、更新后的余额
 //根据用户电表账户计算当前消耗的电量、将消耗对应电价计算消耗的金额、电表余额；
-//Args: user_A              string  用户交易账户
-//      electricity         string  当前耗电量
-//      electricityTotal    string  当月总耗电量
-//      startTime           string  采集的开始时间
+//Args: user_A              string   用户key
+//      electricity         float64  当前耗电量
+//      electricityTotal    float64  当月总耗电量
+//      startTime           string   采集的开始时间
+//      endTime             string   采集的终止时间
 //Return: consume_money   消耗金额
 //        remain_money    电表余额
 func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	userPublicKey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	electricity, ok := args[1].(float64)
+	if !ok {
+		v_result.SetMessage("args[1].(float64) is error!")
+		return v_result, v_err
+	}
+
+	electricityTotal, ok := args[2].(float64)
+	if !ok {
+		v_result.SetMessage("args[2].(float64) is error!")
+		return v_result, v_err
+	}
+
+	startTime, ok := args[3].(string)
+	if !ok {
+		v_result.SetMessage("args[3].(string) is error!")
+		return v_result, v_err
+	}
+
+	endTime, ok := args[4].(string)
+	if !ok {
+		v_result.SetMessage("args[4].(string) is error!")
+		return v_result, v_err
+	}
+	_ = endTime
+
+	// 计算电价
+	prices, v_err := _CalcElecPrice(electricity, electricityTotal, startTime)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	// 获得电表key
+	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	// 获得电表余额
+	money, v_err := rethinkdb.GetMoneyFromEnergy(meterKey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
+	v_result.SetData(fmt.Sprintf("{\"consume\":%f,\"money\":%f}", prices, money-prices))
 	return v_result, v_err
 }
 
@@ -422,7 +605,10 @@ func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, e
 //      other_transfer string   各用户转账金额列表
 func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	// 空操作
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -433,7 +619,7 @@ func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult
 
 //F 修改电表余额
 //Args：  user_A   string   elec_account
-//        amount   int      电表余额
+//       amount   float64      电表余额
 func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	v_result.SetCode(500)
@@ -450,9 +636,9 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 
-	money, ok := args[1].(int)
+	money, ok := args[1].(float64)
 	if !ok {
-		v_result.SetMessage("args[1].(int)!")
+		v_result.SetMessage("args[1].(float64)!")
 		return v_result, v_err
 	}
 
@@ -474,7 +660,108 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 //Return : split_percent string  各合约用户分账比例
 func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	strPowerPlants, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	// 反序列化各发电厂key
+	var slPowerPlants []string
+	v_err = json.Unmarshal([]byte(strPowerPlants), &slPowerPlants)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	if len(slPowerPlants) == 0 {
+		if !ok {
+			v_result.SetMessage("power plant key is null!")
+			return v_result, v_err
+		}
+	}
+
+	startTime, ok := args[1].(string)
+	if !ok {
+		v_result.SetMessage("args[1].(string) is error!")
+		return v_result, v_err
+	}
+
+	endTime, ok := args[2].(string)
+	if !ok {
+		v_result.SetMessage("args[2].(string) is error!")
+		return v_result, v_err
+	}
+
+	// 获得各个发电厂此时段的发电量
+	mapEnergy, v_err := rethinkdb.GetPowerPlantEnergy(slPowerPlants, startTime, endTime)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	//构建返回值
+	v_result = common.OperateResult{}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	slData, _ := json.Marshal(mapEnergy)
+	v_result.SetData(string(slData))
+	return v_result, v_err
+}
+
+//J. 根据各发电厂全天比例、进行合约分账
+//Args: user_B        string   运营商交易账户
+//      split_percent string   合约分账各方分账的比例
+//      money         float    要分帐的金额
+func FuncAutoSplitAccount(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	operatorKey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	strPowerPlants, ok := args[1].(string)
+	if !ok {
+		v_result.SetMessage("args[1].(string) is error!")
+		return v_result, v_err
+	}
+
+	// 反序列化发电厂分帐比例
+	var mapPowerPlants map[string]float64
+	v_err = json.Unmarshal([]byte(strPowerPlants), &mapPowerPlants)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	money, ok := args[2].(float64)
+	if !ok {
+		v_result.SetMessage("args[2].(float64) is error!")
+		return v_result, v_err
+	}
+
+	v_err = _AutoSplitAccount(money, operatorKey, mapPowerPlants)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -483,19 +770,63 @@ func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//J. 根据各发电厂全天比例、进行合约分账
-//Args: user_B       string   运营商交易账户
-//      other_users  string   发电厂及合约分账的各交易账户
-//      split_percent string  合约分账各方分账的比例
-func FuncAutoSplitAccount(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
+func _AutoSplitAccount(money float64, strOperatorKey string, mapPowerPlants map[string]float64) (err error) {
+	var totalElectricity float64
 
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	return v_result, v_err
+	for _, v := range mapPowerPlants {
+		totalElectricity += v
+	}
+
+	if totalElectricity == 0 {
+		return fmt.Errorf("totalElectricity is 0")
+	}
+
+	// 运营商留下20%
+	money = money * 0.8
+
+	var count int
+	var money1 float64
+	for key, value := range mapPowerPlants {
+		count++
+		// bill
+		strPublicKey, _ := common2.GenerateKeyPair()
+		bill1 := model.DemoBill{
+			Id:        common2.GenerateUUID(),
+			PublicKey: strPublicKey,
+			Timestamp: common2.GenTimestamp(),
+			Type:      2,
+		}
+		sldata, _ := json.Marshal(bill1)
+		err = rethinkdb.InsertEnergyTradingDemoBill(string(sldata))
+		if err != nil {
+			return
+		}
+
+		// transaction
+		moneySplit := money * (value / totalElectricity)
+		if count == len(mapPowerPlants) {
+			moneySplit = money - money1
+		} else {
+			money1 += moneySplit
+		}
+		transaction1 := model.DemoTransaction{
+			Id:            common2.GenerateUUID(),
+			BillId:        bill1.Id,
+			Timestamp:     common.GenTimestamp(),
+			FromPublicKey: strOperatorKey,
+			ToPublicKey:   key,
+			Money:         moneySplit,
+			Type:          2,
+		}
+		sldata, _ = json.Marshal(transaction1)
+
+		err = rethinkdb.InsertEnergyTradingDemoTransaction(string(sldata))
+		if err != nil {
+			return
+		}
+	}
+
+	return nil
 }
 
 //K.获取当前时间（作为下次休眠判断的起始时间）
