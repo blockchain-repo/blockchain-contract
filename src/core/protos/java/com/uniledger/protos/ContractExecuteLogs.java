@@ -66,7 +66,7 @@ public final class ContractExecuteLogs {
 
     /**
      * <pre>
-     * ContractBody.Caption
+     * ContractComponents.Caption
      * </pre>
      *
      * <code>string Caption = 4;</code>
@@ -74,7 +74,7 @@ public final class ContractExecuteLogs {
     java.lang.String getCaption();
     /**
      * <pre>
-     * ContractBody.Caption
+     * ContractComponents.Caption
      * </pre>
      *
      * <code>string Caption = 4;</code>
@@ -84,7 +84,7 @@ public final class ContractExecuteLogs {
 
     /**
      * <pre>
-     * ContractBody.Cname
+     * ContractComponents.Cname
      * </pre>
      *
      * <code>string Cname = 5;</code>
@@ -92,7 +92,7 @@ public final class ContractExecuteLogs {
     java.lang.String getCname();
     /**
      * <pre>
-     * ContractBody.Cname
+     * ContractComponents.Cname
      * </pre>
      *
      * <code>string Cname = 5;</code>
@@ -102,118 +102,111 @@ public final class ContractExecuteLogs {
 
     /**
      * <pre>
-     * ContractBody.ContractId
+     * ContractComponents.Cname
      * </pre>
      *
-     * <code>string ContractId = 6;</code>
+     * <code>string Ctype = 6;</code>
      */
-    java.lang.String getContractId();
+    java.lang.String getCtype();
     /**
      * <pre>
-     * ContractBody.ContractId
+     * ContractComponents.Cname
      * </pre>
      *
-     * <code>string ContractId = 6;</code>
+     * <code>string Ctype = 6;</code>
      */
     com.google.protobuf.ByteString
-        getContractIdBytes();
+        getCtypeBytes();
 
     /**
      * <pre>
-     * ContractBody.ContractOwners
+     * ContractComponents.Description
      * </pre>
      *
-     * <code>repeated string ContractOwners = 7;</code>
+     * <code>string Description = 7;</code>
      */
-    java.util.List<java.lang.String>
-        getContractOwnersList();
+    java.lang.String getDescription();
     /**
      * <pre>
-     * ContractBody.ContractOwners
+     * ContractComponents.Description
      * </pre>
      *
-     * <code>repeated string ContractOwners = 7;</code>
-     */
-    int getContractOwnersCount();
-    /**
-     * <pre>
-     * ContractBody.ContractOwners
-     * </pre>
-     *
-     * <code>repeated string ContractOwners = 7;</code>
-     */
-    java.lang.String getContractOwners(int index);
-    /**
-     * <pre>
-     * ContractBody.ContractOwners
-     * </pre>
-     *
-     * <code>repeated string ContractOwners = 7;</code>
+     * <code>string Description = 7;</code>
      */
     com.google.protobuf.ByteString
-        getContractOwnersBytes(int index);
+        getDescriptionBytes();
 
     /**
      * <pre>
-     * ContractBody.ContractSignatures
+     * ContractComponents.MetaAttribute
      * </pre>
      *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
      */
-    java.util.List<com.uniledger.protos.ProtoContract.ContractSignature> 
-        getContractSignaturesList();
+    int getMetaAttributeCount();
     /**
      * <pre>
-     * ContractBody.ContractSignatures
+     * ContractComponents.MetaAttribute
      * </pre>
      *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
      */
-    com.uniledger.protos.ProtoContract.ContractSignature getContractSignatures(int index);
+    boolean containsMetaAttribute(
+        java.lang.String key);
+    /**
+     * Use {@link #getMetaAttributeMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getMetaAttribute();
     /**
      * <pre>
-     * ContractBody.ContractSignatures
+     * ContractComponents.MetaAttribute
      * </pre>
      *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
      */
-    int getContractSignaturesCount();
+    java.util.Map<java.lang.String, java.lang.String>
+    getMetaAttributeMap();
     /**
      * <pre>
-     * ContractBody.ContractSignatures
+     * ContractComponents.MetaAttribute
      * </pre>
      *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
      */
-    java.util.List<? extends com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder> 
-        getContractSignaturesOrBuilderList();
+
+    java.lang.String getMetaAttributeOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue);
     /**
      * <pre>
-     * ContractBody.ContractSignatures
+     * ContractComponents.MetaAttribute
      * </pre>
      *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
      */
-    com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder getContractSignaturesOrBuilder(
-        int index);
+
+    java.lang.String getMetaAttributeOrThrow(
+        java.lang.String key);
 
     /**
      * <pre>
-     * ContractBody.ContractState
+     * ContractComponents.State
      * </pre>
      *
-     * <code>string ContractState = 9;</code>
+     * <code>string State = 9;</code>
      */
-    java.lang.String getContractState();
+    java.lang.String getState();
     /**
      * <pre>
-     * ContractBody.ContractState
+     * ContractComponents.State
      * </pre>
      *
-     * <code>string ContractState = 9;</code>
+     * <code>string State = 9;</code>
      */
     com.google.protobuf.ByteString
-        getContractStateBytes();
+        getStateBytes();
 
     /**
      * <pre>
@@ -232,78 +225,6 @@ public final class ContractExecuteLogs {
      */
     com.google.protobuf.ByteString
         getCreateTimeBytes();
-
-    /**
-     * <pre>
-     * ContractBody.Creator
-     * </pre>
-     *
-     * <code>string Creator = 11;</code>
-     */
-    java.lang.String getCreator();
-    /**
-     * <pre>
-     * ContractBody.Creator
-     * </pre>
-     *
-     * <code>string Creator = 11;</code>
-     */
-    com.google.protobuf.ByteString
-        getCreatorBytes();
-
-    /**
-     * <pre>
-     * ContractBody.Description
-     * </pre>
-     *
-     * <code>string Description = 12;</code>
-     */
-    java.lang.String getDescription();
-    /**
-     * <pre>
-     * ContractBody.Description
-     * </pre>
-     *
-     * <code>string Description = 12;</code>
-     */
-    com.google.protobuf.ByteString
-        getDescriptionBytes();
-
-    /**
-     * <pre>
-     * ContractBody.StartTime
-     * </pre>
-     *
-     * <code>string StartTime = 13;</code>
-     */
-    java.lang.String getStartTime();
-    /**
-     * <pre>
-     * ContractBody.StartTime
-     * </pre>
-     *
-     * <code>string StartTime = 13;</code>
-     */
-    com.google.protobuf.ByteString
-        getStartTimeBytes();
-
-    /**
-     * <pre>
-     * ContractBody.EndTime
-     * </pre>
-     *
-     * <code>string EndTime = 14;</code>
-     */
-    java.lang.String getEndTime();
-    /**
-     * <pre>
-     * ContractBody.EndTime
-     * </pre>
-     *
-     * <code>string EndTime = 14;</code>
-     */
-    com.google.protobuf.ByteString
-        getEndTimeBytes();
   }
   /**
    * Protobuf type {@code protos.ContractExecuteLog}
@@ -322,15 +243,10 @@ public final class ContractExecuteLogs {
       timestamp_ = "";
       caption_ = "";
       cname_ = "";
-      contractId_ = "";
-      contractOwners_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      contractSignatures_ = java.util.Collections.emptyList();
-      contractState_ = "";
-      createTime_ = "";
-      creator_ = "";
+      ctype_ = "";
       description_ = "";
-      startTime_ = "";
-      endTime_ = "";
+      state_ = "";
+      createTime_ = "";
     }
 
     @java.lang.Override
@@ -391,61 +307,38 @@ public final class ContractExecuteLogs {
             case 50: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              contractId_ = s;
+              ctype_ = s;
               break;
             }
             case 58: {
               java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                contractOwners_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000040;
-              }
-              contractOwners_.add(s);
+
+              description_ = s;
               break;
             }
             case 66: {
               if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-                contractSignatures_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ContractSignature>();
+                metaAttribute_ = com.google.protobuf.MapField.newMapField(
+                    MetaAttributeDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000080;
               }
-              contractSignatures_.add(
-                  input.readMessage(com.uniledger.protos.ProtoContract.ContractSignature.parser(), extensionRegistry));
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              metaAttribute__ = input.readMessage(
+                  MetaAttributeDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              metaAttribute_.getMutableMap().put(
+                  metaAttribute__.getKey(), metaAttribute__.getValue());
               break;
             }
             case 74: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              contractState_ = s;
+              state_ = s;
               break;
             }
             case 82: {
               java.lang.String s = input.readStringRequireUtf8();
 
               createTime_ = s;
-              break;
-            }
-            case 90: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              creator_ = s;
-              break;
-            }
-            case 98: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              description_ = s;
-              break;
-            }
-            case 106: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              startTime_ = s;
-              break;
-            }
-            case 114: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              endTime_ = s;
               break;
             }
           }
@@ -456,12 +349,6 @@ public final class ContractExecuteLogs {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-          contractOwners_ = contractOwners_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-          contractSignatures_ = java.util.Collections.unmodifiableList(contractSignatures_);
-        }
         makeExtensionsImmutable();
       }
     }
@@ -470,6 +357,17 @@ public final class ContractExecuteLogs {
       return com.uniledger.protos.ContractExecuteLogs.internal_static_protos_ContractExecuteLog_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 8:
+          return internalGetMetaAttribute();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.uniledger.protos.ContractExecuteLogs.internal_static_protos_ContractExecuteLog_fieldAccessorTable
@@ -600,7 +498,7 @@ public final class ContractExecuteLogs {
     private volatile java.lang.Object caption_;
     /**
      * <pre>
-     * ContractBody.Caption
+     * ContractComponents.Caption
      * </pre>
      *
      * <code>string Caption = 4;</code>
@@ -619,7 +517,7 @@ public final class ContractExecuteLogs {
     }
     /**
      * <pre>
-     * ContractBody.Caption
+     * ContractComponents.Caption
      * </pre>
      *
      * <code>string Caption = 4;</code>
@@ -642,7 +540,7 @@ public final class ContractExecuteLogs {
     private volatile java.lang.Object cname_;
     /**
      * <pre>
-     * ContractBody.Cname
+     * ContractComponents.Cname
      * </pre>
      *
      * <code>string Cname = 5;</code>
@@ -661,7 +559,7 @@ public final class ContractExecuteLogs {
     }
     /**
      * <pre>
-     * ContractBody.Cname
+     * ContractComponents.Cname
      * </pre>
      *
      * <code>string Cname = 5;</code>
@@ -680,184 +578,218 @@ public final class ContractExecuteLogs {
       }
     }
 
-    public static final int CONTRACTID_FIELD_NUMBER = 6;
-    private volatile java.lang.Object contractId_;
+    public static final int CTYPE_FIELD_NUMBER = 6;
+    private volatile java.lang.Object ctype_;
     /**
      * <pre>
-     * ContractBody.ContractId
+     * ContractComponents.Cname
      * </pre>
      *
-     * <code>string ContractId = 6;</code>
+     * <code>string Ctype = 6;</code>
      */
-    public java.lang.String getContractId() {
-      java.lang.Object ref = contractId_;
+    public java.lang.String getCtype() {
+      java.lang.Object ref = ctype_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        contractId_ = s;
+        ctype_ = s;
         return s;
       }
     }
     /**
      * <pre>
-     * ContractBody.ContractId
+     * ContractComponents.Cname
      * </pre>
      *
-     * <code>string ContractId = 6;</code>
+     * <code>string Ctype = 6;</code>
      */
     public com.google.protobuf.ByteString
-        getContractIdBytes() {
-      java.lang.Object ref = contractId_;
+        getCtypeBytes() {
+      java.lang.Object ref = ctype_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        contractId_ = b;
+        ctype_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int CONTRACTOWNERS_FIELD_NUMBER = 7;
-    private com.google.protobuf.LazyStringList contractOwners_;
+    public static final int DESCRIPTION_FIELD_NUMBER = 7;
+    private volatile java.lang.Object description_;
     /**
      * <pre>
-     * ContractBody.ContractOwners
+     * ContractComponents.Description
      * </pre>
      *
-     * <code>repeated string ContractOwners = 7;</code>
+     * <code>string Description = 7;</code>
      */
-    public com.google.protobuf.ProtocolStringList
-        getContractOwnersList() {
-      return contractOwners_;
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractOwners
-     * </pre>
-     *
-     * <code>repeated string ContractOwners = 7;</code>
-     */
-    public int getContractOwnersCount() {
-      return contractOwners_.size();
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractOwners
-     * </pre>
-     *
-     * <code>repeated string ContractOwners = 7;</code>
-     */
-    public java.lang.String getContractOwners(int index) {
-      return contractOwners_.get(index);
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractOwners
-     * </pre>
-     *
-     * <code>repeated string ContractOwners = 7;</code>
-     */
-    public com.google.protobuf.ByteString
-        getContractOwnersBytes(int index) {
-      return contractOwners_.getByteString(index);
-    }
-
-    public static final int CONTRACTSIGNATURES_FIELD_NUMBER = 8;
-    private java.util.List<com.uniledger.protos.ProtoContract.ContractSignature> contractSignatures_;
-    /**
-     * <pre>
-     * ContractBody.ContractSignatures
-     * </pre>
-     *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-     */
-    public java.util.List<com.uniledger.protos.ProtoContract.ContractSignature> getContractSignaturesList() {
-      return contractSignatures_;
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractSignatures
-     * </pre>
-     *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-     */
-    public java.util.List<? extends com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder> 
-        getContractSignaturesOrBuilderList() {
-      return contractSignatures_;
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractSignatures
-     * </pre>
-     *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-     */
-    public int getContractSignaturesCount() {
-      return contractSignatures_.size();
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractSignatures
-     * </pre>
-     *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-     */
-    public com.uniledger.protos.ProtoContract.ContractSignature getContractSignatures(int index) {
-      return contractSignatures_.get(index);
-    }
-    /**
-     * <pre>
-     * ContractBody.ContractSignatures
-     * </pre>
-     *
-     * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-     */
-    public com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder getContractSignaturesOrBuilder(
-        int index) {
-      return contractSignatures_.get(index);
-    }
-
-    public static final int CONTRACTSTATE_FIELD_NUMBER = 9;
-    private volatile java.lang.Object contractState_;
-    /**
-     * <pre>
-     * ContractBody.ContractState
-     * </pre>
-     *
-     * <code>string ContractState = 9;</code>
-     */
-    public java.lang.String getContractState() {
-      java.lang.Object ref = contractState_;
+    public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        contractState_ = s;
+        description_ = s;
         return s;
       }
     }
     /**
      * <pre>
-     * ContractBody.ContractState
+     * ContractComponents.Description
      * </pre>
      *
-     * <code>string ContractState = 9;</code>
+     * <code>string Description = 7;</code>
      */
     public com.google.protobuf.ByteString
-        getContractStateBytes() {
-      java.lang.Object ref = contractState_;
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        contractState_ = b;
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int METAATTRIBUTE_FIELD_NUMBER = 8;
+    private static final class MetaAttributeDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  com.uniledger.protos.ContractExecuteLogs.internal_static_protos_ContractExecuteLog_MetaAttributeEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> metaAttribute_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetMetaAttribute() {
+      if (metaAttribute_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            MetaAttributeDefaultEntryHolder.defaultEntry);
+      }
+      return metaAttribute_;
+    }
+
+    public int getMetaAttributeCount() {
+      return internalGetMetaAttribute().getMap().size();
+    }
+    /**
+     * <pre>
+     * ContractComponents.MetaAttribute
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+     */
+
+    public boolean containsMetaAttribute(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetMetaAttribute().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getMetaAttributeMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getMetaAttribute() {
+      return getMetaAttributeMap();
+    }
+    /**
+     * <pre>
+     * ContractComponents.MetaAttribute
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+     */
+
+    public java.util.Map<java.lang.String, java.lang.String> getMetaAttributeMap() {
+      return internalGetMetaAttribute().getMap();
+    }
+    /**
+     * <pre>
+     * ContractComponents.MetaAttribute
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+     */
+
+    public java.lang.String getMetaAttributeOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetMetaAttribute().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * ContractComponents.MetaAttribute
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+     */
+
+    public java.lang.String getMetaAttributeOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetMetaAttribute().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int STATE_FIELD_NUMBER = 9;
+    private volatile java.lang.Object state_;
+    /**
+     * <pre>
+     * ContractComponents.State
+     * </pre>
+     *
+     * <code>string State = 9;</code>
+     */
+    public java.lang.String getState() {
+      java.lang.Object ref = state_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        state_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * ContractComponents.State
+     * </pre>
+     *
+     * <code>string State = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getStateBytes() {
+      java.lang.Object ref = state_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        state_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -906,174 +838,6 @@ public final class ContractExecuteLogs {
       }
     }
 
-    public static final int CREATOR_FIELD_NUMBER = 11;
-    private volatile java.lang.Object creator_;
-    /**
-     * <pre>
-     * ContractBody.Creator
-     * </pre>
-     *
-     * <code>string Creator = 11;</code>
-     */
-    public java.lang.String getCreator() {
-      java.lang.Object ref = creator_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        creator_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * ContractBody.Creator
-     * </pre>
-     *
-     * <code>string Creator = 11;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCreatorBytes() {
-      java.lang.Object ref = creator_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        creator_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int DESCRIPTION_FIELD_NUMBER = 12;
-    private volatile java.lang.Object description_;
-    /**
-     * <pre>
-     * ContractBody.Description
-     * </pre>
-     *
-     * <code>string Description = 12;</code>
-     */
-    public java.lang.String getDescription() {
-      java.lang.Object ref = description_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        description_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * ContractBody.Description
-     * </pre>
-     *
-     * <code>string Description = 12;</code>
-     */
-    public com.google.protobuf.ByteString
-        getDescriptionBytes() {
-      java.lang.Object ref = description_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        description_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int STARTTIME_FIELD_NUMBER = 13;
-    private volatile java.lang.Object startTime_;
-    /**
-     * <pre>
-     * ContractBody.StartTime
-     * </pre>
-     *
-     * <code>string StartTime = 13;</code>
-     */
-    public java.lang.String getStartTime() {
-      java.lang.Object ref = startTime_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        startTime_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * ContractBody.StartTime
-     * </pre>
-     *
-     * <code>string StartTime = 13;</code>
-     */
-    public com.google.protobuf.ByteString
-        getStartTimeBytes() {
-      java.lang.Object ref = startTime_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        startTime_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ENDTIME_FIELD_NUMBER = 14;
-    private volatile java.lang.Object endTime_;
-    /**
-     * <pre>
-     * ContractBody.EndTime
-     * </pre>
-     *
-     * <code>string EndTime = 14;</code>
-     */
-    public java.lang.String getEndTime() {
-      java.lang.Object ref = endTime_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        endTime_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * ContractBody.EndTime
-     * </pre>
-     *
-     * <code>string EndTime = 14;</code>
-     */
-    public com.google.protobuf.ByteString
-        getEndTimeBytes() {
-      java.lang.Object ref = endTime_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        endTime_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1101,32 +865,23 @@ public final class ContractExecuteLogs {
       if (!getCnameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, cname_);
       }
-      if (!getContractIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, contractId_);
+      if (!getCtypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, ctype_);
       }
-      for (int i = 0; i < contractOwners_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, contractOwners_.getRaw(i));
+      if (!getDescriptionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, description_);
       }
-      for (int i = 0; i < contractSignatures_.size(); i++) {
-        output.writeMessage(8, contractSignatures_.get(i));
-      }
-      if (!getContractStateBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, contractState_);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetMetaAttribute(),
+          MetaAttributeDefaultEntryHolder.defaultEntry,
+          8);
+      if (!getStateBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, state_);
       }
       if (!getCreateTimeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 10, createTime_);
-      }
-      if (!getCreatorBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, creator_);
-      }
-      if (!getDescriptionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, description_);
-      }
-      if (!getStartTimeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 13, startTime_);
-      }
-      if (!getEndTimeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 14, endTime_);
       }
     }
 
@@ -1150,38 +905,27 @@ public final class ContractExecuteLogs {
       if (!getCnameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, cname_);
       }
-      if (!getContractIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, contractId_);
+      if (!getCtypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, ctype_);
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < contractOwners_.size(); i++) {
-          dataSize += computeStringSizeNoTag(contractOwners_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getContractOwnersList().size();
+      if (!getDescriptionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, description_);
       }
-      for (int i = 0; i < contractSignatures_.size(); i++) {
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetMetaAttribute().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        metaAttribute__ = MetaAttributeDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, contractSignatures_.get(i));
+            .computeMessageSize(8, metaAttribute__);
       }
-      if (!getContractStateBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, contractState_);
+      if (!getStateBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, state_);
       }
       if (!getCreateTimeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, createTime_);
-      }
-      if (!getCreatorBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, creator_);
-      }
-      if (!getDescriptionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, description_);
-      }
-      if (!getStartTimeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, startTime_);
-      }
-      if (!getEndTimeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(14, endTime_);
       }
       memoizedSize = size;
       return size;
@@ -1209,24 +953,16 @@ public final class ContractExecuteLogs {
           .equals(other.getCaption());
       result = result && getCname()
           .equals(other.getCname());
-      result = result && getContractId()
-          .equals(other.getContractId());
-      result = result && getContractOwnersList()
-          .equals(other.getContractOwnersList());
-      result = result && getContractSignaturesList()
-          .equals(other.getContractSignaturesList());
-      result = result && getContractState()
-          .equals(other.getContractState());
-      result = result && getCreateTime()
-          .equals(other.getCreateTime());
-      result = result && getCreator()
-          .equals(other.getCreator());
+      result = result && getCtype()
+          .equals(other.getCtype());
       result = result && getDescription()
           .equals(other.getDescription());
-      result = result && getStartTime()
-          .equals(other.getStartTime());
-      result = result && getEndTime()
-          .equals(other.getEndTime());
+      result = result && internalGetMetaAttribute().equals(
+          other.internalGetMetaAttribute());
+      result = result && getState()
+          .equals(other.getState());
+      result = result && getCreateTime()
+          .equals(other.getCreateTime());
       return result;
     }
 
@@ -1247,28 +983,18 @@ public final class ContractExecuteLogs {
       hash = (53 * hash) + getCaption().hashCode();
       hash = (37 * hash) + CNAME_FIELD_NUMBER;
       hash = (53 * hash) + getCname().hashCode();
-      hash = (37 * hash) + CONTRACTID_FIELD_NUMBER;
-      hash = (53 * hash) + getContractId().hashCode();
-      if (getContractOwnersCount() > 0) {
-        hash = (37 * hash) + CONTRACTOWNERS_FIELD_NUMBER;
-        hash = (53 * hash) + getContractOwnersList().hashCode();
-      }
-      if (getContractSignaturesCount() > 0) {
-        hash = (37 * hash) + CONTRACTSIGNATURES_FIELD_NUMBER;
-        hash = (53 * hash) + getContractSignaturesList().hashCode();
-      }
-      hash = (37 * hash) + CONTRACTSTATE_FIELD_NUMBER;
-      hash = (53 * hash) + getContractState().hashCode();
-      hash = (37 * hash) + CREATETIME_FIELD_NUMBER;
-      hash = (53 * hash) + getCreateTime().hashCode();
-      hash = (37 * hash) + CREATOR_FIELD_NUMBER;
-      hash = (53 * hash) + getCreator().hashCode();
+      hash = (37 * hash) + CTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getCtype().hashCode();
       hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
       hash = (53 * hash) + getDescription().hashCode();
-      hash = (37 * hash) + STARTTIME_FIELD_NUMBER;
-      hash = (53 * hash) + getStartTime().hashCode();
-      hash = (37 * hash) + ENDTIME_FIELD_NUMBER;
-      hash = (53 * hash) + getEndTime().hashCode();
+      if (!internalGetMetaAttribute().getMap().isEmpty()) {
+        hash = (37 * hash) + METAATTRIBUTE_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetMetaAttribute().hashCode();
+      }
+      hash = (37 * hash) + STATE_FIELD_NUMBER;
+      hash = (53 * hash) + getState().hashCode();
+      hash = (37 * hash) + CREATETIME_FIELD_NUMBER;
+      hash = (53 * hash) + getCreateTime().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1374,6 +1100,28 @@ public final class ContractExecuteLogs {
         return com.uniledger.protos.ContractExecuteLogs.internal_static_protos_ContractExecuteLog_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 8:
+            return internalGetMetaAttribute();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 8:
+            return internalGetMutableMetaAttribute();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.uniledger.protos.ContractExecuteLogs.internal_static_protos_ContractExecuteLog_fieldAccessorTable
@@ -1394,7 +1142,6 @@ public final class ContractExecuteLogs {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getContractSignaturesFieldBuilder();
         }
       }
       public Builder clear() {
@@ -1409,27 +1156,14 @@ public final class ContractExecuteLogs {
 
         cname_ = "";
 
-        contractId_ = "";
-
-        contractOwners_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000040);
-        if (contractSignaturesBuilder_ == null) {
-          contractSignatures_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000080);
-        } else {
-          contractSignaturesBuilder_.clear();
-        }
-        contractState_ = "";
-
-        createTime_ = "";
-
-        creator_ = "";
+        ctype_ = "";
 
         description_ = "";
 
-        startTime_ = "";
+        internalGetMutableMetaAttribute().clear();
+        state_ = "";
 
-        endTime_ = "";
+        createTime_ = "";
 
         return this;
       }
@@ -1460,27 +1194,12 @@ public final class ContractExecuteLogs {
         result.timestamp_ = timestamp_;
         result.caption_ = caption_;
         result.cname_ = cname_;
-        result.contractId_ = contractId_;
-        if (((bitField0_ & 0x00000040) == 0x00000040)) {
-          contractOwners_ = contractOwners_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000040);
-        }
-        result.contractOwners_ = contractOwners_;
-        if (contractSignaturesBuilder_ == null) {
-          if (((bitField0_ & 0x00000080) == 0x00000080)) {
-            contractSignatures_ = java.util.Collections.unmodifiableList(contractSignatures_);
-            bitField0_ = (bitField0_ & ~0x00000080);
-          }
-          result.contractSignatures_ = contractSignatures_;
-        } else {
-          result.contractSignatures_ = contractSignaturesBuilder_.build();
-        }
-        result.contractState_ = contractState_;
-        result.createTime_ = createTime_;
-        result.creator_ = creator_;
+        result.ctype_ = ctype_;
         result.description_ = description_;
-        result.startTime_ = startTime_;
-        result.endTime_ = endTime_;
+        result.metaAttribute_ = internalGetMetaAttribute();
+        result.metaAttribute_.makeImmutable();
+        result.state_ = state_;
+        result.createTime_ = createTime_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1543,68 +1262,22 @@ public final class ContractExecuteLogs {
           cname_ = other.cname_;
           onChanged();
         }
-        if (!other.getContractId().isEmpty()) {
-          contractId_ = other.contractId_;
-          onChanged();
-        }
-        if (!other.contractOwners_.isEmpty()) {
-          if (contractOwners_.isEmpty()) {
-            contractOwners_ = other.contractOwners_;
-            bitField0_ = (bitField0_ & ~0x00000040);
-          } else {
-            ensureContractOwnersIsMutable();
-            contractOwners_.addAll(other.contractOwners_);
-          }
-          onChanged();
-        }
-        if (contractSignaturesBuilder_ == null) {
-          if (!other.contractSignatures_.isEmpty()) {
-            if (contractSignatures_.isEmpty()) {
-              contractSignatures_ = other.contractSignatures_;
-              bitField0_ = (bitField0_ & ~0x00000080);
-            } else {
-              ensureContractSignaturesIsMutable();
-              contractSignatures_.addAll(other.contractSignatures_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.contractSignatures_.isEmpty()) {
-            if (contractSignaturesBuilder_.isEmpty()) {
-              contractSignaturesBuilder_.dispose();
-              contractSignaturesBuilder_ = null;
-              contractSignatures_ = other.contractSignatures_;
-              bitField0_ = (bitField0_ & ~0x00000080);
-              contractSignaturesBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getContractSignaturesFieldBuilder() : null;
-            } else {
-              contractSignaturesBuilder_.addAllMessages(other.contractSignatures_);
-            }
-          }
-        }
-        if (!other.getContractState().isEmpty()) {
-          contractState_ = other.contractState_;
-          onChanged();
-        }
-        if (!other.getCreateTime().isEmpty()) {
-          createTime_ = other.createTime_;
-          onChanged();
-        }
-        if (!other.getCreator().isEmpty()) {
-          creator_ = other.creator_;
+        if (!other.getCtype().isEmpty()) {
+          ctype_ = other.ctype_;
           onChanged();
         }
         if (!other.getDescription().isEmpty()) {
           description_ = other.description_;
           onChanged();
         }
-        if (!other.getStartTime().isEmpty()) {
-          startTime_ = other.startTime_;
+        internalGetMutableMetaAttribute().mergeFrom(
+            other.internalGetMetaAttribute());
+        if (!other.getState().isEmpty()) {
+          state_ = other.state_;
           onChanged();
         }
-        if (!other.getEndTime().isEmpty()) {
-          endTime_ = other.endTime_;
+        if (!other.getCreateTime().isEmpty()) {
+          createTime_ = other.createTime_;
           onChanged();
         }
         onChanged();
@@ -1884,7 +1557,7 @@ public final class ContractExecuteLogs {
       private java.lang.Object caption_ = "";
       /**
        * <pre>
-       * ContractBody.Caption
+       * ContractComponents.Caption
        * </pre>
        *
        * <code>string Caption = 4;</code>
@@ -1903,7 +1576,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Caption
+       * ContractComponents.Caption
        * </pre>
        *
        * <code>string Caption = 4;</code>
@@ -1923,7 +1596,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Caption
+       * ContractComponents.Caption
        * </pre>
        *
        * <code>string Caption = 4;</code>
@@ -1940,7 +1613,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Caption
+       * ContractComponents.Caption
        * </pre>
        *
        * <code>string Caption = 4;</code>
@@ -1953,7 +1626,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Caption
+       * ContractComponents.Caption
        * </pre>
        *
        * <code>string Caption = 4;</code>
@@ -1973,7 +1646,7 @@ public final class ContractExecuteLogs {
       private java.lang.Object cname_ = "";
       /**
        * <pre>
-       * ContractBody.Cname
+       * ContractComponents.Cname
        * </pre>
        *
        * <code>string Cname = 5;</code>
@@ -1992,7 +1665,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Cname
+       * ContractComponents.Cname
        * </pre>
        *
        * <code>string Cname = 5;</code>
@@ -2012,7 +1685,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Cname
+       * ContractComponents.Cname
        * </pre>
        *
        * <code>string Cname = 5;</code>
@@ -2029,7 +1702,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Cname
+       * ContractComponents.Cname
        * </pre>
        *
        * <code>string Cname = 5;</code>
@@ -2042,7 +1715,7 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.Cname
+       * ContractComponents.Cname
        * </pre>
        *
        * <code>string Cname = 5;</code>
@@ -2059,21 +1732,21 @@ public final class ContractExecuteLogs {
         return this;
       }
 
-      private java.lang.Object contractId_ = "";
+      private java.lang.Object ctype_ = "";
       /**
        * <pre>
-       * ContractBody.ContractId
+       * ContractComponents.Cname
        * </pre>
        *
-       * <code>string ContractId = 6;</code>
+       * <code>string Ctype = 6;</code>
        */
-      public java.lang.String getContractId() {
-        java.lang.Object ref = contractId_;
+      public java.lang.String getCtype() {
+        java.lang.Object ref = ctype_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          contractId_ = s;
+          ctype_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
@@ -2081,19 +1754,19 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.ContractId
+       * ContractComponents.Cname
        * </pre>
        *
-       * <code>string ContractId = 6;</code>
+       * <code>string Ctype = 6;</code>
        */
       public com.google.protobuf.ByteString
-          getContractIdBytes() {
-        java.lang.Object ref = contractId_;
+          getCtypeBytes() {
+        java.lang.Object ref = ctype_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          contractId_ = b;
+          ctype_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
@@ -2101,510 +1774,68 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.ContractId
+       * ContractComponents.Cname
        * </pre>
        *
-       * <code>string ContractId = 6;</code>
+       * <code>string Ctype = 6;</code>
        */
-      public Builder setContractId(
+      public Builder setCtype(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        contractId_ = value;
+        ctype_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * ContractBody.ContractId
+       * ContractComponents.Cname
        * </pre>
        *
-       * <code>string ContractId = 6;</code>
+       * <code>string Ctype = 6;</code>
        */
-      public Builder clearContractId() {
+      public Builder clearCtype() {
         
-        contractId_ = getDefaultInstance().getContractId();
+        ctype_ = getDefaultInstance().getCtype();
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * ContractBody.ContractId
+       * ContractComponents.Cname
        * </pre>
        *
-       * <code>string ContractId = 6;</code>
+       * <code>string Ctype = 6;</code>
        */
-      public Builder setContractIdBytes(
+      public Builder setCtypeBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        contractId_ = value;
+        ctype_ = value;
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.LazyStringList contractOwners_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureContractOwnersIsMutable() {
-        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          contractOwners_ = new com.google.protobuf.LazyStringArrayList(contractOwners_);
-          bitField0_ |= 0x00000040;
-         }
-      }
+      private java.lang.Object description_ = "";
       /**
        * <pre>
-       * ContractBody.ContractOwners
+       * ContractComponents.Description
        * </pre>
        *
-       * <code>repeated string ContractOwners = 7;</code>
+       * <code>string Description = 7;</code>
        */
-      public com.google.protobuf.ProtocolStringList
-          getContractOwnersList() {
-        return contractOwners_.getUnmodifiableView();
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public int getContractOwnersCount() {
-        return contractOwners_.size();
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public java.lang.String getContractOwners(int index) {
-        return contractOwners_.get(index);
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public com.google.protobuf.ByteString
-          getContractOwnersBytes(int index) {
-        return contractOwners_.getByteString(index);
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public Builder setContractOwners(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureContractOwnersIsMutable();
-        contractOwners_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public Builder addContractOwners(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureContractOwnersIsMutable();
-        contractOwners_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public Builder addAllContractOwners(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureContractOwnersIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, contractOwners_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public Builder clearContractOwners() {
-        contractOwners_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000040);
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractOwners
-       * </pre>
-       *
-       * <code>repeated string ContractOwners = 7;</code>
-       */
-      public Builder addContractOwnersBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        ensureContractOwnersIsMutable();
-        contractOwners_.add(value);
-        onChanged();
-        return this;
-      }
-
-      private java.util.List<com.uniledger.protos.ProtoContract.ContractSignature> contractSignatures_ =
-        java.util.Collections.emptyList();
-      private void ensureContractSignaturesIsMutable() {
-        if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-          contractSignatures_ = new java.util.ArrayList<com.uniledger.protos.ProtoContract.ContractSignature>(contractSignatures_);
-          bitField0_ |= 0x00000080;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ContractSignature, com.uniledger.protos.ProtoContract.ContractSignature.Builder, com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder> contractSignaturesBuilder_;
-
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public java.util.List<com.uniledger.protos.ProtoContract.ContractSignature> getContractSignaturesList() {
-        if (contractSignaturesBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(contractSignatures_);
-        } else {
-          return contractSignaturesBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public int getContractSignaturesCount() {
-        if (contractSignaturesBuilder_ == null) {
-          return contractSignatures_.size();
-        } else {
-          return contractSignaturesBuilder_.getCount();
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public com.uniledger.protos.ProtoContract.ContractSignature getContractSignatures(int index) {
-        if (contractSignaturesBuilder_ == null) {
-          return contractSignatures_.get(index);
-        } else {
-          return contractSignaturesBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder setContractSignatures(
-          int index, com.uniledger.protos.ProtoContract.ContractSignature value) {
-        if (contractSignaturesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.set(index, value);
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder setContractSignatures(
-          int index, com.uniledger.protos.ProtoContract.ContractSignature.Builder builderForValue) {
-        if (contractSignaturesBuilder_ == null) {
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder addContractSignatures(com.uniledger.protos.ProtoContract.ContractSignature value) {
-        if (contractSignaturesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.add(value);
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder addContractSignatures(
-          int index, com.uniledger.protos.ProtoContract.ContractSignature value) {
-        if (contractSignaturesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.add(index, value);
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder addContractSignatures(
-          com.uniledger.protos.ProtoContract.ContractSignature.Builder builderForValue) {
-        if (contractSignaturesBuilder_ == null) {
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.add(builderForValue.build());
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder addContractSignatures(
-          int index, com.uniledger.protos.ProtoContract.ContractSignature.Builder builderForValue) {
-        if (contractSignaturesBuilder_ == null) {
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder addAllContractSignatures(
-          java.lang.Iterable<? extends com.uniledger.protos.ProtoContract.ContractSignature> values) {
-        if (contractSignaturesBuilder_ == null) {
-          ensureContractSignaturesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, contractSignatures_);
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder clearContractSignatures() {
-        if (contractSignaturesBuilder_ == null) {
-          contractSignatures_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000080);
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public Builder removeContractSignatures(int index) {
-        if (contractSignaturesBuilder_ == null) {
-          ensureContractSignaturesIsMutable();
-          contractSignatures_.remove(index);
-          onChanged();
-        } else {
-          contractSignaturesBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public com.uniledger.protos.ProtoContract.ContractSignature.Builder getContractSignaturesBuilder(
-          int index) {
-        return getContractSignaturesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder getContractSignaturesOrBuilder(
-          int index) {
-        if (contractSignaturesBuilder_ == null) {
-          return contractSignatures_.get(index);  } else {
-          return contractSignaturesBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public java.util.List<? extends com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder> 
-           getContractSignaturesOrBuilderList() {
-        if (contractSignaturesBuilder_ != null) {
-          return contractSignaturesBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(contractSignatures_);
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public com.uniledger.protos.ProtoContract.ContractSignature.Builder addContractSignaturesBuilder() {
-        return getContractSignaturesFieldBuilder().addBuilder(
-            com.uniledger.protos.ProtoContract.ContractSignature.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public com.uniledger.protos.ProtoContract.ContractSignature.Builder addContractSignaturesBuilder(
-          int index) {
-        return getContractSignaturesFieldBuilder().addBuilder(
-            index, com.uniledger.protos.ProtoContract.ContractSignature.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * ContractBody.ContractSignatures
-       * </pre>
-       *
-       * <code>repeated .protos.ContractSignature ContractSignatures = 8;</code>
-       */
-      public java.util.List<com.uniledger.protos.ProtoContract.ContractSignature.Builder> 
-           getContractSignaturesBuilderList() {
-        return getContractSignaturesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.uniledger.protos.ProtoContract.ContractSignature, com.uniledger.protos.ProtoContract.ContractSignature.Builder, com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder> 
-          getContractSignaturesFieldBuilder() {
-        if (contractSignaturesBuilder_ == null) {
-          contractSignaturesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.uniledger.protos.ProtoContract.ContractSignature, com.uniledger.protos.ProtoContract.ContractSignature.Builder, com.uniledger.protos.ProtoContract.ContractSignatureOrBuilder>(
-                  contractSignatures_,
-                  ((bitField0_ & 0x00000080) == 0x00000080),
-                  getParentForChildren(),
-                  isClean());
-          contractSignatures_ = null;
-        }
-        return contractSignaturesBuilder_;
-      }
-
-      private java.lang.Object contractState_ = "";
-      /**
-       * <pre>
-       * ContractBody.ContractState
-       * </pre>
-       *
-       * <code>string ContractState = 9;</code>
-       */
-      public java.lang.String getContractState() {
-        java.lang.Object ref = contractState_;
+      public java.lang.String getDescription() {
+        java.lang.Object ref = description_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          contractState_ = s;
+          description_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
@@ -2612,19 +1843,19 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.ContractState
+       * ContractComponents.Description
        * </pre>
        *
-       * <code>string ContractState = 9;</code>
+       * <code>string Description = 7;</code>
        */
       public com.google.protobuf.ByteString
-          getContractStateBytes() {
-        java.lang.Object ref = contractState_;
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          contractState_ = b;
+          description_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
@@ -2632,49 +1863,289 @@ public final class ContractExecuteLogs {
       }
       /**
        * <pre>
-       * ContractBody.ContractState
+       * ContractComponents.Description
        * </pre>
        *
-       * <code>string ContractState = 9;</code>
+       * <code>string Description = 7;</code>
        */
-      public Builder setContractState(
+      public Builder setDescription(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        contractState_ = value;
+        description_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * ContractBody.ContractState
+       * ContractComponents.Description
        * </pre>
        *
-       * <code>string ContractState = 9;</code>
+       * <code>string Description = 7;</code>
        */
-      public Builder clearContractState() {
+      public Builder clearDescription() {
         
-        contractState_ = getDefaultInstance().getContractState();
+        description_ = getDefaultInstance().getDescription();
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * ContractBody.ContractState
+       * ContractComponents.Description
        * </pre>
        *
-       * <code>string ContractState = 9;</code>
+       * <code>string Description = 7;</code>
        */
-      public Builder setContractStateBytes(
+      public Builder setDescriptionBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        contractState_ = value;
+        description_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> metaAttribute_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMetaAttribute() {
+        if (metaAttribute_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              MetaAttributeDefaultEntryHolder.defaultEntry);
+        }
+        return metaAttribute_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutableMetaAttribute() {
+        onChanged();;
+        if (metaAttribute_ == null) {
+          metaAttribute_ = com.google.protobuf.MapField.newMapField(
+              MetaAttributeDefaultEntryHolder.defaultEntry);
+        }
+        if (!metaAttribute_.isMutable()) {
+          metaAttribute_ = metaAttribute_.copy();
+        }
+        return metaAttribute_;
+      }
+
+      public int getMetaAttributeCount() {
+        return internalGetMetaAttribute().getMap().size();
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+
+      public boolean containsMetaAttribute(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        return internalGetMetaAttribute().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getMetaAttributeMap()} instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getMetaAttribute() {
+        return getMetaAttributeMap();
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+
+      public java.util.Map<java.lang.String, java.lang.String> getMetaAttributeMap() {
+        return internalGetMetaAttribute().getMap();
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+
+      public java.lang.String getMetaAttributeOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetMetaAttribute().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+
+      public java.lang.String getMetaAttributeOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetMetaAttribute().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearMetaAttribute() {
+        internalGetMutableMetaAttribute().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+
+      public Builder removeMetaAttribute(
+          java.lang.String key) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableMetaAttribute().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutableMetaAttribute() {
+        return internalGetMutableMetaAttribute().getMutableMap();
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+      public Builder putMetaAttribute(
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new java.lang.NullPointerException(); }
+        if (value == null) { throw new java.lang.NullPointerException(); }
+        internalGetMutableMetaAttribute().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * ContractComponents.MetaAttribute
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; MetaAttribute = 8;</code>
+       */
+
+      public Builder putAllMetaAttribute(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        internalGetMutableMetaAttribute().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private java.lang.Object state_ = "";
+      /**
+       * <pre>
+       * ContractComponents.State
+       * </pre>
+       *
+       * <code>string State = 9;</code>
+       */
+      public java.lang.String getState() {
+        java.lang.Object ref = state_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          state_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * ContractComponents.State
+       * </pre>
+       *
+       * <code>string State = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getStateBytes() {
+        java.lang.Object ref = state_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          state_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * ContractComponents.State
+       * </pre>
+       *
+       * <code>string State = 9;</code>
+       */
+      public Builder setState(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        state_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * ContractComponents.State
+       * </pre>
+       *
+       * <code>string State = 9;</code>
+       */
+      public Builder clearState() {
+        
+        state_ = getDefaultInstance().getState();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * ContractComponents.State
+       * </pre>
+       *
+       * <code>string State = 9;</code>
+       */
+      public Builder setStateBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        state_ = value;
         onChanged();
         return this;
       }
@@ -2764,362 +2235,6 @@ public final class ContractExecuteLogs {
   checkByteStringIsUtf8(value);
         
         createTime_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object creator_ = "";
-      /**
-       * <pre>
-       * ContractBody.Creator
-       * </pre>
-       *
-       * <code>string Creator = 11;</code>
-       */
-      public java.lang.String getCreator() {
-        java.lang.Object ref = creator_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          creator_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.Creator
-       * </pre>
-       *
-       * <code>string Creator = 11;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCreatorBytes() {
-        java.lang.Object ref = creator_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          creator_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.Creator
-       * </pre>
-       *
-       * <code>string Creator = 11;</code>
-       */
-      public Builder setCreator(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        creator_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.Creator
-       * </pre>
-       *
-       * <code>string Creator = 11;</code>
-       */
-      public Builder clearCreator() {
-        
-        creator_ = getDefaultInstance().getCreator();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.Creator
-       * </pre>
-       *
-       * <code>string Creator = 11;</code>
-       */
-      public Builder setCreatorBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        creator_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object description_ = "";
-      /**
-       * <pre>
-       * ContractBody.Description
-       * </pre>
-       *
-       * <code>string Description = 12;</code>
-       */
-      public java.lang.String getDescription() {
-        java.lang.Object ref = description_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          description_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.Description
-       * </pre>
-       *
-       * <code>string Description = 12;</code>
-       */
-      public com.google.protobuf.ByteString
-          getDescriptionBytes() {
-        java.lang.Object ref = description_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          description_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.Description
-       * </pre>
-       *
-       * <code>string Description = 12;</code>
-       */
-      public Builder setDescription(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        description_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.Description
-       * </pre>
-       *
-       * <code>string Description = 12;</code>
-       */
-      public Builder clearDescription() {
-        
-        description_ = getDefaultInstance().getDescription();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.Description
-       * </pre>
-       *
-       * <code>string Description = 12;</code>
-       */
-      public Builder setDescriptionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        description_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object startTime_ = "";
-      /**
-       * <pre>
-       * ContractBody.StartTime
-       * </pre>
-       *
-       * <code>string StartTime = 13;</code>
-       */
-      public java.lang.String getStartTime() {
-        java.lang.Object ref = startTime_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          startTime_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.StartTime
-       * </pre>
-       *
-       * <code>string StartTime = 13;</code>
-       */
-      public com.google.protobuf.ByteString
-          getStartTimeBytes() {
-        java.lang.Object ref = startTime_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          startTime_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.StartTime
-       * </pre>
-       *
-       * <code>string StartTime = 13;</code>
-       */
-      public Builder setStartTime(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        startTime_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.StartTime
-       * </pre>
-       *
-       * <code>string StartTime = 13;</code>
-       */
-      public Builder clearStartTime() {
-        
-        startTime_ = getDefaultInstance().getStartTime();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.StartTime
-       * </pre>
-       *
-       * <code>string StartTime = 13;</code>
-       */
-      public Builder setStartTimeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        startTime_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object endTime_ = "";
-      /**
-       * <pre>
-       * ContractBody.EndTime
-       * </pre>
-       *
-       * <code>string EndTime = 14;</code>
-       */
-      public java.lang.String getEndTime() {
-        java.lang.Object ref = endTime_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          endTime_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.EndTime
-       * </pre>
-       *
-       * <code>string EndTime = 14;</code>
-       */
-      public com.google.protobuf.ByteString
-          getEndTimeBytes() {
-        java.lang.Object ref = endTime_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          endTime_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * ContractBody.EndTime
-       * </pre>
-       *
-       * <code>string EndTime = 14;</code>
-       */
-      public Builder setEndTime(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        endTime_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.EndTime
-       * </pre>
-       *
-       * <code>string EndTime = 14;</code>
-       */
-      public Builder clearEndTime() {
-        
-        endTime_ = getDefaultInstance().getEndTime();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * ContractBody.EndTime
-       * </pre>
-       *
-       * <code>string EndTime = 14;</code>
-       */
-      public Builder setEndTimeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        endTime_ = value;
         onChanged();
         return this;
       }
@@ -3924,6 +3039,11 @@ public final class ContractExecuteLogs {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_ContractExecuteLog_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_ContractExecuteLog_MetaAttributeEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_ContractExecuteLog_MetaAttributeEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ContractExecuteLogList_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -3938,18 +3058,18 @@ public final class ContractExecuteLogs {
   static {
     java.lang.String[] descriptorData = {
       "\n\033contract_execute_logs.proto\022\006protos\032\016c" +
-      "ontract.proto\"\307\002\n\022ContractExecuteLog\022\026\n\016" +
+      "ontract.proto\"\262\002\n\022ContractExecuteLog\022\026\n\016" +
       "ContractHashId\030\001 \001(\t\022\016\n\006TaskId\030\002 \001(\t\022\021\n\t" +
       "Timestamp\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\r\n\005Cnam" +
-      "e\030\005 \001(\t\022\022\n\nContractId\030\006 \001(\t\022\026\n\016ContractO" +
-      "wners\030\007 \003(\t\0225\n\022ContractSignatures\030\010 \003(\0132" +
-      "\031.protos.ContractSignature\022\025\n\rContractSt" +
-      "ate\030\t \001(\t\022\022\n\nCreateTime\030\n \001(\t\022\017\n\007Creator" +
-      "\030\013 \001(\t\022\023\n\013Description\030\014 \001(\t\022\021\n\tStartTime" +
-      "\030\r \001(\t\022\017\n\007EndTime\030\016 \001(\t\"J\n\026ContractExecu",
-      "teLogList\0220\n\014ContractLogs\030\001 \003(\0132\032.protos" +
-      ".ContractExecuteLogB+\n\024com.uniledger.pro" +
-      "tosB\023ContractExecuteLogsb\006proto3"
+      "e\030\005 \001(\t\022\r\n\005Ctype\030\006 \001(\t\022\023\n\013Description\030\007 " +
+      "\001(\t\022D\n\rMetaAttribute\030\010 \003(\0132-.protos.Cont" +
+      "ractExecuteLog.MetaAttributeEntry\022\r\n\005Sta" +
+      "te\030\t \001(\t\022\022\n\nCreateTime\030\n \001(\t\0324\n\022MetaAttr" +
+      "ibuteEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
+      "8\001\"J\n\026ContractExecuteLogList\0220\n\014Contract",
+      "Logs\030\001 \003(\0132\032.protos.ContractExecuteLogB+" +
+      "\n\024com.uniledger.protosB\023ContractExecuteL" +
+      "ogsb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3969,7 +3089,13 @@ public final class ContractExecuteLogs {
     internal_static_protos_ContractExecuteLog_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ContractExecuteLog_descriptor,
-        new java.lang.String[] { "ContractHashId", "TaskId", "Timestamp", "Caption", "Cname", "ContractId", "ContractOwners", "ContractSignatures", "ContractState", "CreateTime", "Creator", "Description", "StartTime", "EndTime", });
+        new java.lang.String[] { "ContractHashId", "TaskId", "Timestamp", "Caption", "Cname", "Ctype", "Description", "MetaAttribute", "State", "CreateTime", });
+    internal_static_protos_ContractExecuteLog_MetaAttributeEntry_descriptor =
+      internal_static_protos_ContractExecuteLog_descriptor.getNestedTypes().get(0);
+    internal_static_protos_ContractExecuteLog_MetaAttributeEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_ContractExecuteLog_MetaAttributeEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     internal_static_protos_ContractExecuteLogList_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_protos_ContractExecuteLogList_fieldAccessorTable = new

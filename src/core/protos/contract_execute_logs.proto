@@ -12,28 +12,20 @@ message ContractExecuteLog{
     string TaskId = 2;
     // transaction timestamp
     string Timestamp = 3;
-    // ContractBody.Caption
+    // ContractComponents.Caption
     string Caption = 4;
-    // ContractBody.Cname
+    // ContractComponents.Cname
     string Cname = 5;
-    // ContractBody.ContractId
-    string ContractId = 6;
-    // ContractBody.ContractOwners
-    repeated string ContractOwners = 7;
-    // ContractBody.ContractSignatures
-    repeated ContractSignature ContractSignatures = 8;
-    // ContractBody.ContractState
-    string ContractState = 9;
+    // ContractComponents.Cname
+    string Ctype = 6;
+    // ContractComponents.Description
+    string Description = 7;
+    // ContractComponents.MetaAttribute
+    map<string, string> MetaAttribute = 8;
+    // ContractComponents.State
+    string State = 9;
     // ContractBody.CreateTime
     string CreateTime = 10;
-    // ContractBody.Creator
-    string Creator = 11;
-    // ContractBody.Description
-    string Description = 12;
-    // ContractBody.StartTime
-    string StartTime = 13;
-    // ContractBody.EndTime
-    string EndTime = 14;
 }
 
 message ContractExecuteLogList {
