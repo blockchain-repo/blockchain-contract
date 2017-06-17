@@ -46,6 +46,11 @@ func (td TextData) GetCtype() string {
 func (td TextData) SetValue(p_Value interface{}) {
 	td.SetValueString(p_Value)
 }
+func (td TextData) CleanValueInProcess() {
+	td.GeneralData.CleanValueInProcess()
+	td.SetValueString("")
+	td.SetDefaultValueString("")
+}
 
 //====================描述态==========================
 

@@ -17,6 +17,7 @@ import (
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
 
+	"fmt"
 	"github.com/astaxie/beego/logs"
 )
 
@@ -182,8 +183,100 @@ func (gt *GeneralTask) SetTaskExecuteIdx(int_idx int) {
 	gt.PropertyTable[_TaskExecuteIdx] = taskexecuteidx_property
 }
 
+//清空任务组件中的中间结果值
+//  清空内容：DataList:    DataValueSetterExpressionList:
+func (gt *GeneralTask) CleanValueInProcess() {
+	if gt.GetDataList() != nil {
+		for v_key, v_value := range gt.GetDataList() {
+			v_value.CleanValueInProcess()
+			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_key, v_value)
+		}
+	}
+	if gt.GetDataValueSetterExpressionList() != nil {
+		for v_key, v_value := range gt.GetDataValueSetterExpressionList() {
+			v_value.CleanValueInProcess()
+			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_key, v_value)
+		}
+	}
+}
+
 //===============描述态=====================
 //反序列化实现运行态 map结构 到 数组结构的转化
+//将任务中的执行态的Data & Expression 属性更新到描述态中
+func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
+	var err error = nil
+	// State
+	gt.State = gt.GetState()
+	// TaskExecuteIdx
+	gt.TaskExecuteIdx = gt.GetTaskExecuteIdx()
+	// Data组件信息 更新到描述态
+	var new_data_array []interface{} = make([]interface{}, len(gt.DataList))
+	for v_idx, v_data := range gt.DataList {
+		if v_data == nil {
+			err = fmt.Errorf("gt.DataList has nil data!")
+			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_data_map := v_data.(map[string]interface{})
+		new_data := gt.GetContract().GetData(v_data_map["Cname"].(string))
+		new_data_array[v_idx] = new_data
+	}
+	gt.DataList = new_data_array
+
+	//Expression组件(DataValueSetterExpressionList)信息 更新到描述态
+	var new_expression_array []interface{} = make([]interface{}, len(gt.DataValueSetterExpressionList))
+	for v_idx, v_expression := range gt.DataValueSetterExpressionList {
+		if v_expression == nil {
+			err = fmt.Errorf("gt.DataValueSetterExpressionList has nil data!")
+			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_expression_map := v_expression.(map[string]interface{})
+		new_expression := gt.GetContract().GetExpression(v_expression_map["Cname"].(string))
+		new_expression_array[v_idx] = new_expression
+	}
+	gt.DataValueSetterExpressionList = new_expression_array
+	//Expression组件(PreCondition)信息 更新到描述态
+	var new_pre_array []interface{} = make([]interface{}, len(gt.PreCondition))
+	for v_idx, v_pre := range gt.PreCondition {
+		if v_pre == nil {
+			err = fmt.Errorf("gt.PreCondition has nil data!")
+			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_pre_map := v_pre.(map[string]interface{})
+		new_pre := gt.GetContract().GetExpression(v_pre_map["Cname"].(string))
+		new_pre_array[v_idx] = new_pre
+	}
+	gt.PreCondition = new_pre_array
+	//Expression组件(CompleteCondition)信息 更新到描述态
+	var new_complete_array []interface{} = make([]interface{}, len(gt.CompleteCondition))
+	for v_idx, v_complete := range gt.CompleteCondition {
+		if v_complete == nil {
+			err = fmt.Errorf("gt.CompleteCondition has nil data!")
+			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_complete_map := v_complete.(map[string]interface{})
+		new_complete := gt.GetContract().GetExpression(v_complete_map["Cname"].(string))
+		new_complete_array[v_idx] = new_complete
+	}
+	gt.CompleteCondition = new_complete_array
+	//Expression组件(DiscardCondition)信息 更新到描述态
+	var new_discard_array []interface{} = make([]interface{}, len(gt.DiscardCondition))
+	for v_idx, v_discard := range gt.DiscardCondition {
+		if v_discard == nil {
+			err = fmt.Errorf("gt.DiscardCondition has nil data!")
+			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_discard_map := v_discard.(map[string]interface{})
+		new_discard := gt.GetContract().GetExpression(v_discard_map["Cname"].(string))
+		new_discard_array[v_idx] = new_discard
+	}
+	gt.DiscardCondition = new_discard_array
+	return gt, err
+}
 
 //===============运行态=====================
 //Init中实现描述态 数组格式 到 map结构的转化
@@ -212,7 +305,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case inf.IExpression:
 			case *inf.IExpression:
 				tmp_precondition := p_precondition.(inf.IExpression)
-				map_precondition[tmp_precondition.GetExpressionStr()] = tmp_precondition
+				map_precondition[tmp_precondition.GetName()] = tmp_precondition
 			}
 		}
 	}
@@ -228,7 +321,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case inf.IExpression:
 			case *inf.IExpression:
 				tmp_completecondition := p_completecondition.(inf.IExpression)
-				map_completecondition[tmp_completecondition.GetExpressionStr()] = tmp_completecondition
+				map_completecondition[tmp_completecondition.GetName()] = tmp_completecondition
 			}
 		}
 	}
@@ -244,7 +337,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case inf.IExpression:
 			case *inf.IExpression:
 				tmp_discardcondition := p_discardcondition.(inf.IExpression)
-				map_discardcondition[tmp_discardcondition.GetExpressionStr()] = tmp_discardcondition
+				map_discardcondition[tmp_discardcondition.GetName()] = tmp_discardcondition
 			}
 		}
 	}
@@ -276,7 +369,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case inf.IExpression:
 			case *inf.IExpression:
 				tmp_express := p_express.(inf.IExpression)
-				map_dataexpressionlist[tmp_express.GetExpressionStr()] = tmp_express
+				map_dataexpressionlist[tmp_express.GetName()] = tmp_express
 			}
 		}
 	}
@@ -352,40 +445,110 @@ func (gt *GeneralTask) AddNextTasks(task string) {
 	}
 }
 
-func (gt *GeneralTask) AddPreCondition(p_condition string) {
+func (gt *GeneralTask) AddPreCondition(p_name string, p_condition string) {
 	precondition_property := gt.PropertyTable[_PreCondition].(property.PropertyT)
 	if precondition_property.GetValue() == nil {
 		precondition_property.SetValue(make(map[string]inf.IExpression, 0))
 	}
 	map_precondition := precondition_property.GetValue().(map[string]inf.IExpression)
-	map_precondition[p_condition] = expression.NewGeneralExpression(p_condition)
+	map_precondition[p_name] = expression.NewGeneralExpression(p_condition)
 
 	precondition_property.SetValue(map_precondition)
 	gt.PropertyTable[_PreCondition] = precondition_property
 }
 
-func (gt *GeneralTask) AddCompleteCondition(p_condition string) {
+func (gt *GeneralTask) AddCompleteCondition(p_name string, p_condition string) {
 	completecondition_property := gt.PropertyTable[_CompleteCondition].(property.PropertyT)
 	if completecondition_property.GetValue() == nil {
 		completecondition_property.SetValue(make(map[string]inf.IExpression, 0))
 	}
 	map_completecondition := completecondition_property.GetValue().(map[string]inf.IExpression)
-	map_completecondition[p_condition] = expression.NewGeneralExpression(p_condition)
+	map_completecondition[p_name] = expression.NewGeneralExpression(p_condition)
 
 	completecondition_property.SetValue(map_completecondition)
 	gt.PropertyTable[_CompleteCondition] = completecondition_property
 }
 
-func (gt *GeneralTask) AddDiscardCondition(p_condition string) {
+func (gt *GeneralTask) AddDiscardCondition(p_name string, p_condition string) {
 	Discardcondition_property := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
 	if Discardcondition_property.GetValue() == nil {
 		Discardcondition_property.SetValue(make([]inf.IExpression, 0))
 	}
 	map_Discardcondition := Discardcondition_property.GetValue().(map[string]inf.IExpression)
-	map_Discardcondition[p_condition] = expression.NewGeneralExpression(p_condition)
+	map_Discardcondition[p_name] = expression.NewGeneralExpression(p_condition)
 
 	Discardcondition_property.SetValue(map_Discardcondition)
 	gt.PropertyTable[_DiscardCondition] = Discardcondition_property
+}
+
+func (gt *GeneralTask) AddDataSetterExpressionAndData(p_name string, p_dataSetterExpresstionStr string, p_data inf.IData) {
+	gt.AddDataSetterExpression(p_name, p_dataSetterExpresstionStr)
+	gt.AddData(p_data)
+}
+
+func (gt *GeneralTask) AddDataSetterExpression(p_name string, p_dataSetterExpresstionStr string) {
+	if gt.PropertyTable[_DataValueSetterExpressionList] == nil {
+		return
+	}
+	dataexpressionlist_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	if dataexpressionlist_property.GetValue() == nil {
+		map_dataexpressionlist := make(map[string]inf.IExpression, 0)
+		dataexpressionlist_property.SetValue(map_dataexpressionlist)
+	}
+	if p_dataSetterExpresstionStr != "" {
+		map_dataexpresslist := dataexpressionlist_property.GetValue().(map[string]inf.IExpression)
+		map_dataexpresslist[p_name] = expression.NewGeneralExpression(p_dataSetterExpresstionStr)
+		dataexpressionlist_property.SetValue(map_dataexpresslist)
+		gt.PropertyTable[_DataValueSetterExpressionList] = dataexpressionlist_property
+	}
+}
+
+func (gt *GeneralTask) AddData(p_data inf.IData) {
+	if gt.PropertyTable[_DataList] == nil {
+		return
+	}
+	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
+	if datalist_property.GetValue() == nil {
+		map_datalist := make(map[string]inf.IData, 0)
+		datalist_property.SetValue(map_datalist)
+	}
+	map_datalist := datalist_property.GetValue().(map[string]inf.IData)
+	map_datalist[p_data.GetName()] = p_data
+	datalist_property.SetValue(map_datalist)
+	gt.PropertyTable[_DataList] = datalist_property
+}
+
+func (gt *GeneralTask) RemoveDataSetterExpressionAndData(p_expressionname string, p_dataname string) {
+	gt.RemoveDataSetterExpression(p_expressionname)
+	gt.RemoveData(p_dataname)
+}
+
+func (gt *GeneralTask) RemoveDataSetterExpression(p_expressionname string) {
+	if gt.PropertyTable[_DataValueSetterExpressionList] == nil {
+		return
+	}
+	dataExpression_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	if dataExpression_property.GetValue() != nil {
+		map_dataExpression := dataExpression_property.GetValue().(map[string]inf.IExpression)
+		delete(map_dataExpression, p_expressionname)
+		dataExpression_property.SetValue(map_dataExpression)
+		gt.PropertyTable[_DataValueSetterExpressionList] = dataExpression_property
+	}
+	return
+}
+
+func (gt *GeneralTask) RemoveData(p_name string) {
+	if gt.PropertyTable[_DataList] == nil {
+		return
+	}
+	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
+	if datalist_property.GetValue() != nil {
+		map_datalist := datalist_property.GetValue().(map[string]inf.IData)
+		delete(map_datalist, p_name)
+		datalist_property.SetValue(map_datalist)
+		gt.PropertyTable[_DataList] = datalist_property
+	}
+	return
 }
 
 //====属性Set方法
@@ -413,7 +576,6 @@ func (gt *GeneralTask) GetData(p_name string) (interface{}, error) {
 	}
 }
 
-//TODO: 缺少Compounddata考虑
 func (gt *GeneralTask) GetDataExpression(p_name string) (interface{}, error) {
 	var err error = nil
 	dataexpressionlist_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
@@ -427,52 +589,6 @@ func (gt *GeneralTask) GetDataExpression(p_name string) (interface{}, error) {
 	} else {
 		err = errors.New("DataValueSetterExpressionList is nil,find dataExpression[" + p_name + "] Error!")
 		return nil, err
-	}
-}
-
-func (gt *GeneralTask) AddData(p_data inf.IData, p_dataSetterExpresstionStr string) {
-	if gt.PropertyTable[_DataList] == nil {
-		return
-	}
-	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
-	dataexpressionlist_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
-	if datalist_property.GetValue() == nil {
-		map_datalist := make(map[string]inf.IData, 0)
-		datalist_property.SetValue(map_datalist)
-		map_dataexpressionlist := make(map[string]inf.IExpression, 0)
-		dataexpressionlist_property.SetValue(map_dataexpressionlist)
-	}
-
-	map_datalist := datalist_property.GetValue().(map[string]inf.IData)
-	map_datalist[p_data.GetName()] = p_data
-	datalist_property.SetValue(map_datalist)
-	gt.PropertyTable[_DataList] = datalist_property
-	//TODO: contract.component_table add component
-	if p_dataSetterExpresstionStr != "" {
-		map_dataexpresslist := dataexpressionlist_property.GetValue().(map[string]inf.IExpression)
-		map_dataexpresslist[p_data.GetName()] = expression.NewGeneralExpression(p_dataSetterExpresstionStr)
-		dataexpressionlist_property.SetValue(map_dataexpresslist)
-		gt.PropertyTable[_DataValueSetterExpressionList] = dataexpressionlist_property
-	}
-}
-
-func (gt *GeneralTask) RemoveData(p_name string) {
-	if gt.PropertyTable[_DataList] == nil {
-		return
-	}
-	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
-	if datalist_property.GetValue() != nil {
-		map_datalist := datalist_property.GetValue().(map[string]inf.IData)
-		delete(map_datalist, p_name)
-		datalist_property.SetValue(map_datalist)
-		gt.PropertyTable[_DataList] = datalist_property
-	} //TODO: contract.component_table delete component
-	dataExpression_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
-	if dataExpression_property.GetValue() != nil {
-		map_dataExpression := dataExpression_property.GetValue().(map[string]inf.IExpression)
-		delete(map_dataExpression, p_name)
-		dataExpression_property.SetValue(map_dataExpression)
-		gt.PropertyTable[_DataValueSetterExpressionList] = dataExpression_property
 	}
 }
 
@@ -633,6 +749,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 			gt.ConsistentValue(gt.DataList, v_idx, v_result_object)
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
+			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_result_object)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != "" {
 				gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
@@ -926,6 +1043,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 //由于查询分支结果的不确定性，使用分支条件赋予预估值，使得多节点 不同时运行结果一致性
 func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int8, p_result common.OperateResult) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
+	var v_data inf.IData
 	switch gt.GetCtype() {
 	case constdef.TaskType[constdef.Task_Enquiry]:
 		// 根据函数执行结果和分支情况决定最终的结果值
@@ -965,10 +1083,5 @@ func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int8, p_r
 		v_data := p_dataList[p_idx].(inf.IData)
 		v_data.SetValue(p_result.GetData())
 	}
-}
-
-func (gt *GeneralTask) TestMethod() error {
-	var r_err error = nil
-
-	return r_err
+	gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_data.GetName(), v_data)
 }

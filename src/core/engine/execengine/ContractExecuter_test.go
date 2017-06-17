@@ -128,7 +128,7 @@ func PrintContract(v_contract *contract.CognitiveContract) {
 
 func TestContractAllLife_New(t *testing.T) {
 	//Read from file
-	var file_path string = "./ContractDemo.json"
+	var file_path string = "./ContractDemo_Digcard.json"
 	v_byte, err := ReadFile(file_path)
 	if err != nil {
 		t.Error("Read File Error!")
@@ -190,6 +190,15 @@ func TestContractAllLife_New(t *testing.T) {
 	fmt.Println("=============Test Start ========================================================")
 	_, err = v_contract_execute.Start()
 	fmt.Println(err)
+
+	PrintContract(v_contract_execute.contract_executer)
+
+	fmt.Println("=============Test Export Json========================================================")
+	r_str_json2, err := v_contract_execute.ExportToJson()
+	if err != nil {
+		t.Error("Export Error!")
+	}
+	fmt.Println("Export Json Result: ", r_str_json2)
 }
 
 func TestContractAllLife_HasInprocess(t *testing.T) {

@@ -51,6 +51,11 @@ func (fd FloatData) GetCtype() string {
 func (fd FloatData) SetValue(p_Value interface{}) {
 	fd.SetValueFloat(p_Value)
 }
+func (fd FloatData) CleanValueInProcess() {
+	fd.GeneralData.CleanValueInProcess()
+	fd.SetValueFloat(0.0)
+	fd.SetDefaultValueFloat(0.0)
+}
 
 //====================描述态==========================
 

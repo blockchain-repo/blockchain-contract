@@ -52,6 +52,12 @@ func (nd IntData) SetValue(p_Value interface{}) {
 	nd.SetValueInt(p_Value)
 }
 
+func (nd IntData) CleanValueInProcess() {
+	nd.GeneralData.CleanValueInProcess()
+	nd.SetDefaultValueInt(0)
+	nd.SetValueInt(0)
+}
+
 //====================描述态==========================
 
 //====================运行态==========================

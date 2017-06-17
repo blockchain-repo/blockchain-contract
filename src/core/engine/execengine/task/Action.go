@@ -67,6 +67,14 @@ func (a Action) SetTaskExecuteIdx(int_idx int) {
 	a.Enquiry.SetTaskExecuteIdx(int_idx)
 }
 
+func (a Action) CleanValueInProcess() {
+	a.Enquiry.CleanValueInProcess()
+}
+
+func (a Action) UpdateStaticState() (interface{}, error) {
+	return a.GeneralTask.UpdateStaticState()
+}
+
 //===============描述态=====================
 
 //===============运行态=====================

@@ -1,7 +1,8 @@
 package task
 
 import (
-	"fmt"
+	"github.com/astaxie/beego/logs"
+	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
@@ -57,39 +58,7 @@ func (d Decision) GetNextTasks() []string {
 }
 
 func (d Decision) UpdateState() (int8, error) {
-	var r_ret int8 = 0
-	var r_err error = nil
-	switch d.GetState() {
-	case constdef.TaskState[constdef.TaskState_Dormant]:
-		r_ret, r_err = d.Start()
-		//正常执行，转入下一任务
-		if r_ret == 1 {
-			// TODO 调用公用方法，执行后继任务
-		} else if r_ret == -1 { //轮询等待后，执行失败，则进行回滚
-			//TODO 回滚
-		} else if r_ret == 0 { //轮询等待后，条件不成立，则暂时退出
-			//TODO log打印
-		}
-	case constdef.TaskState[constdef.TaskState_In_Progress]:
-		r_ret, r_err = d.Complete()
-		//正常执行，转入下一任务
-		if r_ret == 1 {
-			// TODO 调用公用方法，执行后继任务
-		} else if r_ret == -1 { //轮询等待后，执行失败，则进行回滚
-			//TODO 回滚
-		} else if r_ret == 0 { //轮询等待后，条件不成立，则暂时退出
-			//TODO log打印
-		}
-	case constdef.TaskState[constdef.TaskState_Completed]:
-		r_ret, r_err = d.Discard()
-		//正常执行，转入下一任务
-		if r_ret == 1 {
-			// TODO 调用公用方法，执行后继任务
-		} else { //轮询等待后，条件不成立或执行失败，则暂时退出
-			//TODO log打印
-		}
-	}
-	return r_ret, r_err
+	return d.Enquiry.UpdateState()
 }
 func (d Decision) GetTaskId() string {
 	return d.Enquiry.GetTaskId()
@@ -105,6 +74,15 @@ func (d Decision) SetTaskId(str_taskId string) {
 
 func (d Decision) SetTaskExecuteIdx(int_idx int) {
 	d.Enquiry.SetTaskExecuteIdx(int_idx)
+}
+
+func (d Decision) CleanValueInProcess() {
+	d.Enquiry.CleanValueInProcess()
+	d.ResetDecisionResult()
+}
+
+func (d Decision) UpdateStaticState() (interface{}, error) {
+	return d.Enquiry.UpdateStaticState()
 }
 
 //====================描述态==========================
@@ -130,7 +108,7 @@ func (d *Decision) InitDecision() error {
 	var err error = nil
 	err = d.InitEnquriy()
 	if err != nil {
-		//TODO log
+		logs.Error("InitDecision fail[" + err.Error() + "]")
 		return err
 	}
 	d.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision])
@@ -142,14 +120,7 @@ func (d *Decision) InitDecision() error {
 	for _, p_cand := range d.CandidateList {
 		map_candidatelist[p_cand.GetName()] = p_cand
 	}
-	d.AddProperty(d, _CandidateList, map_candidatelist)
-	if map_candidatelist == nil {
-		fmt.Println("1111111111111111")
-	}
-	if d.PropertyTable[_CandidateList] == nil {
-		fmt.Println("2222222222222")
-	}
-	fmt.Println(d.PropertyTable[_CandidateList])
+	common.AddProperty(d, d.PropertyTable, _CandidateList, map_candidatelist)
 	//decisionresult arrar to map
 	if d.DecisionResult == nil {
 		d.DecisionResult = make([]DecisionCandidate, 0)
@@ -158,7 +129,7 @@ func (d *Decision) InitDecision() error {
 	for _, p_result := range d.DecisionResult {
 		map_decisionResult[p_result.GetName()] = p_result
 	}
-	d.AddProperty(d, _DecisionResult, map_decisionResult)
+	common.AddProperty(d, d.PropertyTable, _DecisionResult, map_decisionResult)
 	return err
 }
 

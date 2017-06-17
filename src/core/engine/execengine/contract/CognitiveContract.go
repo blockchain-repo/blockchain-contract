@@ -322,7 +322,31 @@ func (model *CognitiveContract) Serialize() (string, error) {
 	if model == nil {
 		return "", err
 	}
-	//TODO：序列化时，ContratComponents的值转化(由ComponentTable得来)
+
+	var task_count int = len(model.ComponentTable.CompTable[constdef.ComponentType[constdef.Component_Task]])
+	component_array := model.ComponentTable.CompTable[constdef.ComponentType[constdef.Component_Task]]
+	var new_contract_components []interface{} = make([]interface{}, task_count)
+	for v_idx, _ := range component_array {
+		if len(component_array[v_idx]) == 0 {
+			err = fmt.Errorf("ComponentTable has nil task!")
+			logs.Error("Contract Serialize fail[" + err.Error() + "]")
+			return "", err
+		}
+		//type: map[string]inf.ITask
+		for v_key, _ := range component_array[v_idx] {
+			//update data & expression in task
+			new_task, err := component_array[v_idx][v_key].(inf.ITask).UpdateStaticState()
+			if err != nil {
+				err = fmt.Errorf("Task.UpdateStaticState fail!")
+				logs.Error("Task.UpdateStaticState fail[" + err.Error() + "]")
+				return "", err
+			}
+			task_map := common.Deserialize(common.Serialize(new_task))
+			new_contract_components[v_idx] = task_map
+			break
+		}
+	}
+	model.ContractBody.ContractComponents = new_contract_components
 	if s_model, err := json.Marshal(model); err == nil {
 		return string(s_model), err
 	} else {
@@ -1045,6 +1069,19 @@ func (cc *CognitiveContract) SetOrgTaskInfo(p_relation_map map[string]interface{
 	return v_err
 }
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//更新执行态中的组件信息 【接口方法】
+//Args; p_ctype     string       类型(task, data, expression)
+//      p_name      string       名称
+//      p_component interface{}  组件
+func (cc *CognitiveContract) UpdateComponentRunningState(p_ctype string, p_name string, p_component interface{}) error {
+	err := cc.ComponentTable.UpdateComponent(p_ctype, p_name, p_component)
+	if err != nil {
+		logs.Error("UpdateComponentRunningState fail, Ctype: " + p_ctype + ", Name: " + p_name)
+	}
+	return err
+}
+
 //更新合约中指定的任务信息内容
 //Args: p_task_name  string   待修改任务的名称
 func (cc *CognitiveContract) UpdateLoopExecuteTask(p_task_name string) error {
@@ -1057,8 +1094,13 @@ func (cc *CognitiveContract) UpdateLoopExecuteTask(p_task_name string) error {
 	task_component := cc.GetTask(p_task_name)
 	if task_component != nil {
 		v_nexttask_object := task_component.(inf.ITask)
-		v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
-		v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
+		if v_nexttask_object.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Completed] ||
+			v_nexttask_object.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Discard] {
+			//待循环执行的任务需要修改：State, TaskExecuteIdx；清空结果值
+			v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
+			v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
+			v_nexttask_object.CleanValueInProcess()
+		}
 	}
 	//update component property
 	err = cc.UpdateContractComponents(task_component)
@@ -1066,7 +1108,7 @@ func (cc *CognitiveContract) UpdateLoopExecuteTask(p_task_name string) error {
 		return err
 	}
 	//update component_table
-	err = cc.ComponentTable.UpdateComponent(constdef.ComponentType[constdef.Component_Task], p_task_name, task_component)
+	err = cc.UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Task], p_task_name, task_component)
 	if err != nil {
 		return err
 	}
@@ -1083,12 +1125,16 @@ func (cc *CognitiveContract) UpdateContractComponents(p_task_component interface
 		if v_component == nil {
 			continue
 		}
-		for _, v_value := range v_component.(map[string]interface{}) {
-			if v_value.(inf.ITask).GetTaskId() == p_task_component.(inf.ITask).GetTaskId() {
-				new_task_components = append(new_task_components, p_task_component)
-			} else {
-				new_task_components = append(new_task_components, v_value)
-			}
+		//序列回来的component是map结构
+		map_component := v_component.(map[string]interface{})
+		//识别map中的中任务名称
+		if map_component["TaskId"] == p_task_component.(inf.ITask).GetTaskId() {
+			//构造map结构的Task
+			var str_json string = common.Serialize(p_task_component)
+			var map_component interface{} = common.Deserialize(str_json)
+			new_task_components = append(new_task_components, map_component)
+		} else {
+			new_task_components = append(new_task_components, v_component)
 		}
 	}
 	cc.SetContractComponents(new_task_components)

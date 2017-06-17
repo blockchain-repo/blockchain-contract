@@ -75,6 +75,14 @@ func (p Plan) SetTaskExecuteIdx(int_idx int) {
 	p.GeneralTask.SetTaskExecuteIdx(int_idx)
 }
 
+func (p Plan) CleanValueInProcess() {
+	p.GeneralTask.CleanValueInProcess()
+}
+
+func (p Plan) UpdateStaticState() (interface{}, error) {
+	return p.GeneralTask.UpdateStaticState()
+}
+
 //====================描述态==========================
 //TODO 反序列化任务数组
 

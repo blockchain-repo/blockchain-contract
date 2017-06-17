@@ -52,6 +52,8 @@ func NewContractExecuter() *ContractExecuter {
 //====运行生命周期：Load(描述态到运行态) =》 Prepare =》 Run  =》 Stop
 //将描述态加载到内存中，形成运行态（即初始化Contract、ComponentTable、PropertyTable）
 //Args: p_str_json      => 完整的contract Output结构体JSON
+//说明：
+//   反序列化回来的都是map类型， property_table中都是实际的struct
 func (ce *ContractExecuter) Load(p_str_json string) error {
 	var err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
@@ -166,6 +168,7 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		logs.Error(r_buf.String())
 		return err
 	}
+
 	r_buf.WriteString("[Result]:Load Success!")
 	logs.Info(r_buf.String())
 	return err

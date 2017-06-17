@@ -41,6 +41,9 @@ func (ad ArrayData) GetCtype() string {
 func (ad ArrayData) SetValue(p_Value interface{}) {
 	ad.GeneralData.SetValue(p_Value)
 }
+func (ad ArrayData) CleanValueInProcess() {
+	ad.GeneralData.CleanValueInProcess()
+}
 
 //====================描述态==========================
 

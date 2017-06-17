@@ -67,7 +67,7 @@
                 "Cname": "expression_precond_A",
                 "Caption": "查询用户账户前提条件",
                 "Description": "当前日期大于等于合约生效起始日期",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -81,7 +81,7 @@
                 "Cname": "expression_discond_A",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "true",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -95,7 +95,7 @@
                 "Cname": "expression_comcond_A",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "expression_data_A.ExpressionResult.code ==200",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -127,7 +127,7 @@
                 "Cname": "data_A",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Data.Data_Float",
+                "Ctype": "Component_Data.Data_Numeric_Float",
                 "Unit": "元",
                 "Value": "600",
                 "DefaultValue": "0",
@@ -152,7 +152,7 @@
                 "Cname": "expression_precond_B",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "contract_mobilecallback.StartTime>=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime<=\"2017-12-31 23:59:59\"&&data_A.Value>500",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -166,7 +166,7 @@
                 "Cname": "expression_discond_B",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "true",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -180,7 +180,7 @@
                 "Cname": "expression_comcond_B",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "expression_data_B.ExpressionResult.code==200",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -221,7 +221,7 @@
                 "Cname": "expression_precond_C",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Exporess_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "contract_mobilecallback.StartTime>=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime<=\"2017-12-31 23:59:59\"&.data_A.Value<500",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -235,7 +235,7 @@
                 "Cname": "expression_discond_C",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Exporess_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "true",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -249,7 +249,7 @@
                 "Cname": "expression_comcond_C",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Exporess_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "expression_data_C.ExpressionResult.code==200",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -266,7 +266,7 @@
                 "Cname": "expression_data_C",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Exporess_Function",
+                "Ctype": "Component_Expression.Expression_Function",
                 "ExpressionStr": "FuncDeposit(contract_mobilecallback.ContractOwners.0， 500)",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -283,14 +283,14 @@
             "Caption": "查询用户月消费额",
             "Description": "查询用户A当月消费额度，是否大于58元",
             "Ctype": "Component_Task.Task_Enquiry",
-            "State": "TaskState_Dormant",
+            "State": "TaskState_Completed",
             "TaskExecuteIdx":0,
             "PreCondition": [
               {
                 "Cname": "expression_precond_D",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -304,7 +304,7 @@
                 "Cname": "expression_discond_D",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "true",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -318,7 +318,7 @@
                 "Cname": "expression_comcond_D",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "expression_data_D.ExpressionResult.code==200",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -350,7 +350,7 @@
                 "Cname": "data_D",
                 "Caption": "用户A月消费额",
                 "Description": "",
-                "Ctype": "Component_Data.Data_Float",
+                "Ctype": "Component_Data.Data_Numeric_Float",
                 "Unit": "元",
                 "Value": "80",
                 "DefaultValue": "0",
@@ -364,14 +364,14 @@
             "Caption": "移动运营商下月1号返移动用户A20元",
             "Description": "移动用户A当月消费58元以上：移动运营商B下月1号返还话费20元；连续返还12个月",
             "Ctype": "Component_Task.Task_Action",
-            "State": "TaskState_Dormant",
+            "State": "TaskState_Completed",
             "TaskExecuteIdx":0,
             "PreCondition": [
               {
                 "Cname": "expression_precond_E",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"&&FuncGetNowDay()==1&&FuncGetNowDate()!= data_E.Value&& data_D.Value>=58",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -385,7 +385,7 @@
                 "Cname": "expression_discond_E",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "true",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -399,7 +399,7 @@
                 "Cname": "expression_comcond_E",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "expression_data_E.ExpressionResult.code ==200",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -451,7 +451,7 @@
                 "Cname": "expression_precond_F",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"&&FuncGetNowDay()==1&&FuncGetNowDate()!=data_E.Value&&data_D.Value<58",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -465,7 +465,7 @@
                 "Cname": "expression_discond_F",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "true",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -479,7 +479,7 @@
                 "Cname": "expression_discond_F",
                 "Caption": "",
                 "Description": "",
-                "Ctype": "Component_Expression.Expression_LogicArgument",
+                "Ctype": "Component_Expression.Expression_Condition",
                 "ExpressionStr": "expression_data_F.ExpressionResult.code==200",
                 "ExpressionResult": {
                   "Message": "Operatesuccess.",
@@ -525,14 +525,14 @@
       "ContractHashId": "63841426ea1c501745d56ce47a4e7b93bf85841d54f2c77102ce488ac0ce8b51",
       "ContractId": "feca0672-4ad7-4d9a-ad57-83d48db2269b",
       "TaskExecuteIdx": 0,
-      "TaskId": "taskId",
+      "TaskId": "UUID110-1234-11115",
       "Voters": [
         "7mQXR8NY9M1Uj86VM4CHnacY8fpLPudfmn5DaJGgXDi9"
       ],
       "Votes": [
         {
           "NodePubkey": "7mQXR8NY9M1Uj86VM4CHnacY8fpLPudfmn5DaJGgXDi9",
-          "Signature": "2dpZi2t79EGaNeUA3teUdTkE1dKwUh5n5LmwsY5inrBqghMQR3siSmsSmQmFFsf3QHyCYiuuA7oSYEKc41SWwTgg",
+          "Signature": "2dpZi2t79EGaNeUA3teUdTkE1dKwUh5n5LmwsY5inrBqghMQtaskIdR3siSmsSmQmFFsf3QHyCYiuuA7oSYEKc41SWwTgg",
           "Vote": {
             "InvalidReason": "invalid reason",
             "IsValid": true,

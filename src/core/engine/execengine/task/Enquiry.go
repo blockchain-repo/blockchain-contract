@@ -70,6 +70,14 @@ func (e Enquiry) SetTaskExecuteIdx(int_idx int) {
 	e.GeneralTask.SetTaskExecuteIdx(int_idx)
 }
 
+func (e Enquiry) CleanValueInProcess() {
+	e.GeneralTask.CleanValueInProcess()
+}
+
+func (e Enquiry) UpdateStaticState() (interface{}, error) {
+	return e.GeneralTask.UpdateStaticState()
+}
+
 //===============描述态=====================
 
 //===============运行态=====================

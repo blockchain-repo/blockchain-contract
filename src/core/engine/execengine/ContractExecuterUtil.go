@@ -92,7 +92,7 @@ func loadTask(p_contract *contract.CognitiveContract, p_component interface{}) e
 		}
 		p_contract.AddComponent(p_task)
 	}
-	r_buf.WriteString("[Result]:　LoadTask success;")
+	r_buf.WriteString("[Cname]: " + map_task["Cname"].(string) + "[Ctype]: " + map_task["Ctype"].(string) + "[Result]: LoadTask success;")
 	logs.Info(r_buf.String())
 	return err
 }
@@ -110,7 +110,6 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 	map_task := m_task.(map[string]interface{})
 	switch map_task["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry]:
-
 		pre_conditions := map_task["PreCondition"]
 		for _, p_value := range pre_conditions.([]interface{}) {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
@@ -305,7 +304,7 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 	}
-	r_buf.WriteString("[Result]: loadTaskInnerComponent success;")
+	r_buf.WriteString("[Cname]: " + map_task["Cname"].(string) + "[Ctype]: " + map_task["Ctype"].(string) + "[Result]: loadTaskInnerComponent success;")
 	logs.Info(r_buf.String())
 	return err
 }
@@ -584,7 +583,7 @@ func loadData(p_contract *contract.CognitiveContract, m_data interface{}, p_task
 		//3 添加data组件到component_table中
 		p_contract.AddComponent(p_data)
 	}
-	r_buf.WriteString("[Result]: loadTaskInnerComponent success;")
+	r_buf.WriteString("[Cname]: " + map_data["Cname"].(string) + "[Ctype]: " + map_data["Ctype"].(string) + "[Result]: loadData success;")
 	logs.Info(r_buf.String())
 	return err
 }
@@ -603,7 +602,7 @@ func loadExpression(p_contract *contract.CognitiveContract, p_expression interfa
 	map_expression := p_expression.(map[string]interface{})
 	switch map_expression["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Condition]:
-		object_expression := &expression.LogicArgument{}
+		object_expression := expression.NewLogicArgument()
 		byte_task, err := json.Marshal(map_expression)
 		if err != nil {
 			r_buf.WriteString("[Result]: Component_Expression(Expression_Condition)Marshal fail;")
@@ -628,7 +627,7 @@ func loadExpression(p_contract *contract.CognitiveContract, p_expression interfa
 		}
 		p_contract.AddComponent(object_expression)
 	case constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Function]:
-		object_expression := &expression.Function{}
+		object_expression := expression.NewFunction()
 		byte_task, err := json.Marshal(map_expression)
 		if err != nil {
 			r_buf.WriteString("[Result]: Component_Expression(Expression_Function)Marshal fail;")
@@ -678,7 +677,7 @@ func loadExpression(p_contract *contract.CognitiveContract, p_expression interfa
 		}
 		p_contract.AddComponent(object_expression)
 	}
-	r_buf.WriteString("[Result]: loadExpression success;")
+	r_buf.WriteString("[Cname]: " + map_expression["Cname"].(string) + "[Ctype]: " + map_expression["Ctype"].(string) + "[Result]: loadExpression success;")
 	logs.Info(r_buf.String())
 	return err
 }

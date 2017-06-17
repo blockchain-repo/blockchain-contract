@@ -25,7 +25,7 @@
           {
             "Caption": "",
             "Cname": "expression_comcond_A",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -89,7 +89,7 @@
           {
             "Caption": "",
             "Cname": "expression_discond_A",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -111,7 +111,7 @@
           {
             "Caption": "查询用户账户前提条件",
             "Cname": "expression_precond_A",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "当前日期大于等于合约生效起始日期",
             "ExpressionResult": {
               "Code": 200,
@@ -151,7 +151,7 @@
           {
             "Caption": "",
             "Cname": "expression_comcond_B",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -189,7 +189,7 @@
           {
             "Caption": "",
             "Cname": "expression_discond_B",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -210,7 +210,7 @@
           {
             "Caption": "",
             "Cname": "expression_precond_B",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -260,7 +260,7 @@
           {
             "Caption": "",
             "Cname": "expression_data_C",
-            "Ctype": "Component_Expression.Exporess_Function",
+            "Ctype": "Component_Expression.Expression_Function",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -331,7 +331,7 @@
           {
             "Caption": "",
             "Cname": "expression_comcond_D",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -395,7 +395,7 @@
           {
             "Caption": "",
             "Cname": "expression_discond_D",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -417,7 +417,7 @@
           {
             "Caption": "",
             "Cname": "expression_precond_D",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -448,7 +448,7 @@
           {
             "Caption": "",
             "Cname": "expression_comcond_E",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -512,7 +512,7 @@
           {
             "Caption": "",
             "Cname": "expression_discond_E",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -533,7 +533,7 @@
           {
             "Caption": "",
             "Cname": "expression_precond_E",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -564,7 +564,7 @@
           {
             "Caption": "",
             "Cname": "expression_discond_F",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -628,7 +628,7 @@
           {
             "Caption": "",
             "Cname": "expression_discond_F",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,
@@ -649,7 +649,7 @@
           {
             "Caption": "",
             "Cname": "expression_precond_F",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "Description": "",
             "ExpressionResult": {
               "Code": 200,

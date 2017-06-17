@@ -18,6 +18,11 @@ type OperateResult struct {
 	Output  interface{} `json:"Output"`
 }
 
+func NewOperateResult() *OperateResult {
+	or := &OperateResult{}
+	return or
+}
+
 func (or *OperateResult) GetMessage() string {
 	return or.Message
 }

@@ -1,7 +1,10 @@
 package table
 
 import (
+	"fmt"
+	"reflect"
 	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/expression"
 	"unicontract/src/core/engine/execengine/inf"
 )
 
@@ -32,6 +35,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 	case inf.IData:
 		r_type = constdef.ComponentType[constdef.Component_Data]
 		r_name = p_component.(inf.IData).GetName()
+
 	case *inf.ITask:
 		r_type = constdef.ComponentType[constdef.Component_Task]
 		r_name = p_component.(inf.ITask).GetName()
@@ -41,10 +45,17 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 	case *inf.IExpression:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		r_name = p_component.(inf.IExpression).GetName()
+	case *expression.LogicArgument:
+		r_type = constdef.ComponentType[constdef.Component_Expression]
+		r_name = p_component.(inf.IExpression).GetName()
+	case *expression.Function:
+		r_type = constdef.ComponentType[constdef.Component_Expression]
+		r_name = p_component.(inf.IExpression).GetName()
 	case inf.IExpression:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		r_name = p_component.(inf.IExpression).GetName()
 	default:
+		fmt.Println(reflect.ValueOf(p_component).Type())
 		r_type = constdef.ComponentType[constdef.Component_Unknown]
 		r_name = p_component.(inf.IComponent).GetName()
 	}

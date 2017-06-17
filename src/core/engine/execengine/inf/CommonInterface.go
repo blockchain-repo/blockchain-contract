@@ -12,12 +12,15 @@ type ICognitiveContract interface {
 	GetUCVMVersion() string
 	GetUCVMCopyRight() string
 	GetTask(string) interface{}
+	GetData(string) interface{}
+	GetExpression(string) interface{}
 	GetTaskByID(string) interface{}
 	GetComponentTtem(string) interface{}
 	GetPropertyItem(string) interface{}
 	AddComponent(IComponent)
 	EvaluateExpression(string, string) (interface{}, error)
 	ProcessString(string) string
+	UpdateComponentRunningState(string, string, interface{}) error
 
 	SetContract(ICognitiveContract)
 	GetContract() ICognitiveContract
@@ -60,6 +63,7 @@ type IData interface {
 	GetCtype() string
 	GetValue() interface{}
 	SetValue(interface{})
+	CleanValueInProcess()
 }
 
 //task interface
@@ -77,6 +81,8 @@ type ITask interface {
 	GetTaskExecuteIdx() int
 	SetTaskId(string)
 	SetTaskExecuteIdx(int)
+	CleanValueInProcess()
+	UpdateStaticState() (interface{}, error)
 }
 
 //expression interface
@@ -87,4 +93,5 @@ type IExpression interface {
 	GetCtype() string
 	GetExpressionStr() string
 	SetExpressionResult(p_expresult interface{})
+	CleanValueInProcess()
 }

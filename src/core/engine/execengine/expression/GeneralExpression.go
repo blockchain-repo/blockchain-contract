@@ -45,11 +45,15 @@ func (ge GeneralExpression) GetCtype() string {
 	return ctype_property.GetValue().(string)
 }
 
-func (ge *GeneralExpression) SetExpressionResult(p_expresult interface{}) {
+func (ge GeneralExpression) SetExpressionResult(p_expresult interface{}) {
 	ge.ExpressionResult = p_expresult.(common.OperateResult)
 	result_property := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	result_property.SetValue(p_expresult)
 	ge.PropertyTable[_ExpressionResult] = result_property
+}
+
+func (ge GeneralExpression) CleanValueInProcess() {
+	ge.SetExpressionResult(common.NewOperateResult())
 }
 
 //===============描述态=====================
@@ -70,8 +74,7 @@ func (ge *GeneralExpression) InitExpression() error {
 		logs.Error("InitExpression fail[" + err.Error() + "]")
 		return err
 	}
-	ge.Ctype = common.TernaryOperator(ge.Ctype == "", constdef.ComponentType[constdef.Component_Expression], ge.Ctype).(string)
-	ge.SetCtype(ge.Ctype)
+	ge.SetCtype(constdef.ComponentType[constdef.Component_Expression])
 	common.AddProperty(ge, ge.PropertyTable, _ExpressionStr, ge.ExpressionStr)
 	common.AddProperty(ge, ge.PropertyTable, _ExpressionResult, ge.ExpressionResult)
 

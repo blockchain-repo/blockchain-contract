@@ -46,6 +46,9 @@ func (dd DateData) GetCtype() string {
 func (dd DateData) SetValue(p_Value interface{}) {
 	dd.GeneralData.SetValue(p_Value)
 }
+func (dd DateData) CleanValueInProcess() {
+	dd.GeneralData.CleanValueInProcess()
+}
 
 //====================描述态==========================
 

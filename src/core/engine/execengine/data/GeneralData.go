@@ -1,49 +1,50 @@
 package data
 
 import (
-	"strconv"
-	"unicontract/src/core/engine/execengine/component"
-	"unicontract/src/core/engine/execengine/inf"
 	"fmt"
-	"unicontract/src/core/engine/execengine/property"
-	"unicontract/src/core/engine/common"
-	"unicontract/src/core/engine/execengine/constdef"
 	"github.com/astaxie/beego/logs"
+	"strconv"
+	"unicontract/src/core/engine/common"
+	"unicontract/src/core/engine/execengine/component"
+	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/inf"
+	"unicontract/src/core/engine/execengine/property"
 )
 
-type GeneralData struct{
+type GeneralData struct {
 	component.GeneralComponent
-	Value interface{} `json:"Value"`
-	DefaultValue interface{} `json:"DefaultValue"`
-	Unit string `json:"Unit"`
-	ModifyDate string `json:"ModifyDate"`
-	HardConvType string `json:"HardConvType"`
-	Mandatory bool `json:"Mandatory"`
-	Category []string `json:"Category"`
-	Options map[string]int `json:"Options"`
-	Parent inf.IData `json:"Parent"`
+	Value        interface{}    `json:"Value"`
+	DefaultValue interface{}    `json:"DefaultValue"`
+	Unit         string         `json:"Unit"`
+	ModifyDate   string         `json:"ModifyDate"`
+	HardConvType string         `json:"HardConvType"`
+	Mandatory    bool           `json:"Mandatory"`
+	Category     []string       `json:"Category"`
+	Options      map[string]int `json:"Options"`
+	Parent       inf.IData      `json:"Parent"`
 }
 
 const (
-	_Value = "_Value"
+	_Value        = "_Value"
 	_DefaultValue = "_DefaultValue"
-	_Unit = "_Unit"
-	_ModifyDate = "_ModifyDate"
+	_Unit         = "_Unit"
+	_ModifyDate   = "_ModifyDate"
 	_HardConvType = "_HardConvType"
-	_Mandatory = "_Mandatory"
-	_Category = "_Category"
-	_Options = "_Options"
-	_Parent = "_Parent"
-	_DataRange = "_DataRange"
+	_Mandatory    = "_Mandatory"
+	_Category     = "_Category"
+	_Options      = "_Options"
+	_Parent       = "_Parent"
+	_DataRange    = "_DataRange"
 )
 
-func NewGeneralData()*GeneralData{
+func NewGeneralData() *GeneralData {
 	d := &GeneralData{}
 	return d
 }
+
 //===============接口实现===================
-func (gd GeneralData)GetName()string{
-	if gd.PropertyTable[_Parent] != nil  {
+func (gd GeneralData) GetName() string {
+	if gd.PropertyTable[_Parent] != nil {
 		parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
 		if parent_property.GetValue() != nil {
 			v_general_data := parent_property.GetValue().(inf.IData)
@@ -57,7 +58,7 @@ func (gd GeneralData)GetName()string{
 	return gd.GetCname()
 }
 
-func (gd GeneralData) GetValue() interface{}{
+func (gd GeneralData) GetValue() interface{} {
 	value_property := gd.PropertyTable[_Value].(property.PropertyT)
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
@@ -67,21 +68,21 @@ func (gd GeneralData) GetValue() interface{}{
 		case string:
 			v_default = gd.GetDefaultValue().(string)
 			v_contract := gd.GeneralComponent.GetContract()
-			v_default,_ = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Constant], gd.GetDefaultValue().(string))
+			v_default, _ = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Constant], gd.GetDefaultValue().(string))
 		default:
 			v_default = gd.GetDefaultValue()
 		}
 		return v_default
 	}
 }
-func (gd GeneralData)SetContract(p_contract inf.ICognitiveContract) {
+func (gd GeneralData) SetContract(p_contract inf.ICognitiveContract) {
 	gd.GeneralComponent.SetContract(p_contract)
 }
 
-func (gd GeneralData)GetContract() inf.ICognitiveContract {
+func (gd GeneralData) GetContract() inf.ICognitiveContract {
 	return gd.GeneralComponent.GetContract()
 }
-func (gc GeneralData)GetCtype()string{
+func (gc GeneralData) GetCtype() string {
 	if gc.PropertyTable["_Ctype"] == nil {
 		return ""
 	}
@@ -89,23 +90,30 @@ func (gc GeneralData)GetCtype()string{
 	return ctype_property.GetValue().(string)
 }
 
-func (gd *GeneralData) SetValue(p_Value interface{}){
+func (gd GeneralData) SetValue(p_Value interface{}) {
 	gd.Value = p_Value
 	value_property := gd.PropertyTable[_Value].(property.PropertyT)
 	value_property.SetValue(p_Value)
 	gd.PropertyTable[_Value] = value_property
 }
+
+func (gd GeneralData) CleanValueInProcess() {
+	gd.SetValue(nil)
+	gd.SetDefaultValue(nil)
+}
+
 //===============描述态=====================
-func (gd *GeneralData)ToString() interface{}{
+func (gd *GeneralData) ToString() interface{} {
 	value_property := gd.PropertyTable[_Value].(property.PropertyT)
 	return value_property.GetValue()
 }
+
 //===============运行态=====================
-func (gd *GeneralData) InitGeneralData()error {
+func (gd *GeneralData) InitGeneralData() error {
 	var err error = nil
 	err = gd.InitGeneralComponent()
 	if err != nil {
-		logs.Error("InitGeneralData fail["+err.Error()+"]")
+		logs.Error("InitGeneralData fail[" + err.Error() + "]")
 		return err
 	}
 	gd.SetCtype(constdef.ComponentType[constdef.Component_Data])
@@ -131,7 +139,7 @@ func (gd *GeneralData) InitGeneralData()error {
 	return err
 }
 
-func (gd *GeneralData) Aquired()bool {
+func (gd *GeneralData) Aquired() bool {
 	value_property := gd.PropertyTable[_Value].(property.PropertyT)
 	if value_property.GetValue() != nil {
 		return true
@@ -140,14 +148,14 @@ func (gd *GeneralData) Aquired()bool {
 	}
 }
 
-func (gd *GeneralData) ResetOptions(p_listoption []string){
+func (gd *GeneralData) ResetOptions(p_listoption []string) {
 	option_property := gd.PropertyTable[_Options].(property.PropertyT)
 	if option_property.GetValue() == nil {
 		option_property.SetValue(make(map[string]int, 0))
 	}
 	option_map := option_property.GetValue().(map[string]int)
 	if p_listoption != nil {
-		for _,Value := range p_listoption {
+		for _, Value := range p_listoption {
 			option_map[Value] = 0
 		}
 	}
@@ -156,7 +164,7 @@ func (gd *GeneralData) ResetOptions(p_listoption []string){
 	gd.Options = option_map
 }
 
-func (gd *GeneralData) InputOptions(){
+func (gd *GeneralData) InputOptions() {
 	option_property := gd.PropertyTable[_Options].(property.PropertyT)
 	if option_property.GetValue() == nil {
 		option_property.SetValue(make(map[string]int, 0))
@@ -165,11 +173,11 @@ func (gd *GeneralData) InputOptions(){
 	fmt.Println("input 1->yes  0->no")
 	var input string = ""
 	var err error = nil
-	for key,_ := range option_map {
+	for key, _ := range option_map {
 		fmt.Println("do you have ", key, " ?")
-		_,err_input := fmt.Scanln(&input)
+		_, err_input := fmt.Scanln(&input)
 		if err_input != nil {
-			option_map[key],err = strconv.Atoi(input)
+			option_map[key], err = strconv.Atoi(input)
 			if err != nil {
 				fmt.Println("Get input[", key, "] Error!")
 			}
@@ -182,7 +190,7 @@ func (gd *GeneralData) InputOptions(){
 	gd.Options = option_map
 }
 
-func (gd *GeneralData) Optionsum()int {
+func (gd *GeneralData) Optionsum() int {
 	option_property := gd.PropertyTable[_Options].(property.PropertyT)
 	if option_property.GetValue() == nil {
 		option_property.SetValue(make(map[string]int, 0))
@@ -197,7 +205,7 @@ func (gd *GeneralData) Optionsum()int {
 	return sum
 }
 
-func (gd *GeneralData) IsCategorical()bool{
+func (gd *GeneralData) IsCategorical() bool {
 	category_property := gd.PropertyTable[_Category].(property.PropertyT)
 	var r_flag bool = false
 	if category_property.GetValue() != nil && len(category_property.GetValue().([]string)) > 0 {
@@ -208,14 +216,14 @@ func (gd *GeneralData) IsCategorical()bool{
 	return r_flag
 }
 
-func (gd *GeneralData) AddCategory(arr_Category []string){
+func (gd *GeneralData) AddCategory(arr_Category []string) {
 	category_property := gd.PropertyTable[_Category].(property.PropertyT)
 	if category_property.GetValue() == nil {
 		category_property.SetValue(make([]string, 0))
 	}
 	category_arr := category_property.GetValue().([]string)
 	if len(arr_Category) > 0 {
-		for _,f_Value := range arr_Category {
+		for _, f_Value := range arr_Category {
 			category_arr = append(category_arr, f_Value)
 		}
 	}
@@ -231,11 +239,11 @@ func (gd *GeneralData) RemoveCategory(arr_Category []interface{}) {
 	}
 	category_arr := category_property.GetValue().([]interface{})
 	if category_arr != nil && len(category_arr) > 0 {
-		if len(arr_Category) >0 {
-			for _,f_Value := range arr_Category {
+		if len(arr_Category) > 0 {
+			for _, f_Value := range arr_Category {
 				for g_idx, g_value := range category_arr {
 					if g_value == f_Value {
-						category_arr = append(category_arr[:g_idx],category_arr[g_idx+1:]...)
+						category_arr = append(category_arr[:g_idx], category_arr[g_idx+1:]...)
 					}
 				}
 			}
@@ -256,7 +264,7 @@ func (gd *GeneralData) CheckRange(p_Value interface{}) bool {
 	if category_arr == nil || len(category_arr) == 0 {
 		r_flag = false
 	} else {
-		for _,f_Value := range category_arr {
+		for _, f_Value := range category_arr {
 			if f_Value == p_Value {
 				r_flag = true
 				break
@@ -267,62 +275,63 @@ func (gd *GeneralData) CheckRange(p_Value interface{}) bool {
 }
 
 //====属性Get方法
-func (gd *GeneralData) GetDefaultValue()interface{}{
+func (gd *GeneralData) GetDefaultValue() interface{} {
 	defaultvalue_property := gd.PropertyTable[_DefaultValue].(property.PropertyT)
 	return defaultvalue_property.GetValue()
 }
 
-func (gd *GeneralData) GetUnit() string{
+func (gd *GeneralData) GetUnit() string {
 	unit_property := gd.PropertyTable[_Unit].(property.PropertyT)
 	return unit_property.GetValue().(string)
 }
-func (gd *GeneralData) GetModifyDate()string{
+func (gd *GeneralData) GetModifyDate() string {
 	modifydate_property := gd.PropertyTable[_ModifyDate].(property.PropertyT)
 	return modifydate_property.GetValue().(string)
 }
 
-func (gd *GeneralData) GetHardConvType()string{
+func (gd *GeneralData) GetHardConvType() string {
 	hardconvtype_property := gd.PropertyTable[_HardConvType].(property.PropertyT)
 	return hardconvtype_property.GetValue().(string)
 }
 
-func (gd *GeneralData) GetCategory()[]string{
+func (gd *GeneralData) GetCategory() []string {
 	category_property := gd.PropertyTable[_Category].(property.PropertyT)
 	return category_property.GetValue().([]string)
 }
 
-func (gd *GeneralData) GetParent()inf.IData{
+func (gd *GeneralData) GetParent() inf.IData {
 	parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
 	return parent_property.GetValue().(inf.IData)
 }
 
-func (gd *GeneralData) GetMandatory()bool{
+func (gd *GeneralData) GetMandatory() bool {
 	mandatory_property := gd.PropertyTable[_Mandatory].(property.PropertyT)
 	return mandatory_property.GetValue().(bool)
 }
+
 //====属性Set方法
-func (gd *GeneralData) SetDefaultValue(p_DefaultValue interface{}){
+func (gd *GeneralData) SetDefaultValue(p_DefaultValue interface{}) {
 	gd.DefaultValue = p_DefaultValue
 	defaultvalue_property := gd.PropertyTable[_DefaultValue].(property.PropertyT)
 	defaultvalue_property.SetValue(p_DefaultValue)
 	gd.PropertyTable[_DefaultValue] = defaultvalue_property
 }
 
-func (gd *GeneralData) SetUnit(p_Unit string){
+func (gd *GeneralData) SetUnit(p_Unit string) {
 	gd.Unit = p_Unit
 	unit_property := gd.PropertyTable[_Unit].(property.PropertyT)
 	unit_property.SetValue(p_Unit)
 	gd.PropertyTable[_Unit] = unit_property
 }
 
-func (gd *GeneralData) SetHardConvType(p_convtype string){
+func (gd *GeneralData) SetHardConvType(p_convtype string) {
 	gd.HardConvType = p_convtype
 	hardconvtype_property := gd.PropertyTable[_HardConvType].(property.PropertyT)
 	hardconvtype_property.SetValue(p_convtype)
 	gd.PropertyTable[_HardConvType] = hardconvtype_property
 }
 
-func (gd *GeneralData) SetModifyDate(p_date string){
+func (gd *GeneralData) SetModifyDate(p_date string) {
 	if p_date == "" {
 		p_date = common.GenDate()
 	}
@@ -332,14 +341,14 @@ func (gd *GeneralData) SetModifyDate(p_date string){
 	gd.PropertyTable[_ModifyDate] = modifydate_property
 }
 
-func (gd *GeneralData) SetParent(p_Parent inf.IData){
+func (gd *GeneralData) SetParent(p_Parent inf.IData) {
 	gd.Parent = p_Parent
 	parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
 	parent_property.SetValue(p_Parent)
 	gd.PropertyTable[_Parent] = parent_property
 }
 
-func (gd *GeneralData) SetMandatory(p_Mandatory bool){
+func (gd *GeneralData) SetMandatory(p_Mandatory bool) {
 	gd.Mandatory = p_Mandatory
 	mandatory_property := gd.PropertyTable[_Mandatory].(property.PropertyT)
 	mandatory_property.SetValue(p_Mandatory)

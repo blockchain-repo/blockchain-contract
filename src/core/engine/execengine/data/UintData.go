@@ -55,6 +55,11 @@ func (ud UintData) GetCtype() string {
 func (ud UintData) SetValue(p_Value interface{}) {
 	ud.SetValueUint(p_Value)
 }
+func (ud UintData) CleanValueInProcess() {
+	ud.GeneralData.CleanValueInProcess()
+	ud.SetValueUint(0)
+	ud.SetDefaultValueUint(0)
+}
 
 //====================描述态==========================
 

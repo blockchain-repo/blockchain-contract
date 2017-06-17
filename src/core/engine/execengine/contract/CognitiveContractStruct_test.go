@@ -228,7 +228,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_precond_A",
 "Caption":"查询用户账户前提条件",
 "Description":"当前日期大于等于合约生效起始日期",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -240,7 +240,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_discond_A",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"true",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -252,7 +252,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_comcond_A",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"expression_data_A.ExpressionResult['code']==200",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -301,7 +301,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_precond_B",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&enquiry_A.data_A>500",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -313,7 +313,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_discond_B",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"true",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -325,7 +325,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_comcond_B",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"expression_data_B.ExpressionResult['code']==200",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -402,7 +402,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_data_C",
 "Caption":"",
 "Description":"",
-"Ctype":"Exporess_Function",
+"Ctype":"Expression_Function",
 "ExpressionStr":"deposit(AXXXXXXXXXX)",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -423,7 +423,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_precond_D",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -435,7 +435,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_discond_D",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"true",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -447,7 +447,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_comcond_D",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"expression_data_D.ExpressionResult['code']==200",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -496,7 +496,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_precond_E",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&getNowDay()==1&&getNowDate()!=action_E.data_E&&enquiry_D.data_D>=58",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -508,7 +508,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_discond_E",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"true",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -520,7 +520,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_comcond_E",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"expression_data_E.ExpressionResult['code']==200",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -568,7 +568,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_precond_F",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"contract_mobilecallback.StartTime()>=\"2017-01-0112:00:00\"&&contract_mobilecallback.EndTime()<=\"2017-12-3123:59:59\"&&getNowDay()==1&&getNowDate()!=action_E.data_E&&enquiry_D.data_D<58",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -580,7 +580,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_discond_F",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"true",
 "ExpressionResult":{
 "Message":"Operatesuccess.",
@@ -592,7 +592,7 @@ func TestContractStruct_all(t *testing.T) {
 "Cname":"expression_discond_F",
 "Caption":"",
 "Description":"",
-"Ctype":"Expression_LogicArgument",
+"Ctype":"Expression_Condition",
 "ExpressionStr":"expression_data_F.ExpressionResult['code']==200",
 "ExpressionResult":{
 "Message":"Operatesuccess.",

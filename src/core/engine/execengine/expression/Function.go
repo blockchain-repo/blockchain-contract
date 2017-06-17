@@ -1,7 +1,7 @@
 package expression
 
 import (
-	"unicontract/src/core/engine/common"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 )
@@ -31,8 +31,11 @@ func (f Function) GetCtype() string {
 func (f Function) GetExpressionStr() string {
 	return f.GeneralExpression.GetExpressionStr()
 }
-func (f Function) SetExpressionResult(p_expresult common.OperateResult) {
+func (f Function) SetExpressionResult(p_expresult interface{}) {
 	f.GeneralExpression.SetExpressionResult(p_expresult)
+}
+func (f Function) CleanValueInProcess() {
+	f.GeneralExpression.CleanValueInProcess()
 }
 
 //===============描述态=====================
@@ -45,11 +48,10 @@ func (f *Function) InitFunction() error {
 	var err error = nil
 	err = f.InitExpression()
 	if err != nil {
-		//TODO log
+		logs.Warning("InitExpression fail[" + err.Error() + "]")
 		return err
 	}
-	f.Ctype = common.TernaryOperator(f.Ctype == "", constdef.ComponentType[constdef.Component_Expression]+"."+constdef.ExpressionType[constdef.Expression_Function], f.Ctype).(string)
-	f.SetCtype(f.Ctype)
+	f.SetCtype(constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Function])
 
 	return err
 }

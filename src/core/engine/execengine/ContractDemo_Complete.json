@@ -67,7 +67,7 @@
             "Cname": "expression_precond_A",
             "Caption": "查询用户账户前提条件",
             "Description": "当前日期大于等于合约生效起始日期",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -81,7 +81,7 @@
             "Cname": "expression_discond_A",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "true",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -95,7 +95,7 @@
             "Cname": "expression_comcond_A",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "expression_data_A.ExpressionResult.code ==200",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -152,7 +152,7 @@
             "Cname": "expression_precond_B",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "contract_mobilecallback.StartTime>=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime<=\"2017-12-31 23:59:59\"&&data_A.Value>500",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -166,7 +166,7 @@
             "Cname": "expression_discond_B",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "true",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -180,7 +180,7 @@
             "Cname": "expression_comcond_B",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "expression_data_B.ExpressionResult.code==200",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -266,7 +266,7 @@
             "Cname": "expression_data_C",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Exporess_Function",
+            "Ctype": "Component_Expression.Expression_Function",
             "ExpressionStr": "FuncDeposit(contract_mobilecallback.ContractOwners.0， 500)",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -290,7 +290,7 @@
             "Cname": "expression_precond_D",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -304,7 +304,7 @@
             "Cname": "expression_discond_D",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "true",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -318,7 +318,7 @@
             "Cname": "expression_comcond_D",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "expression_data_D.ExpressionResult.code==200",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -371,7 +371,7 @@
             "Cname": "expression_precond_E",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"&&FuncGetNowDay()==1&&FuncGetNowDate()!= data_E.Value&& data_D.Value>=58",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -385,7 +385,7 @@
             "Cname": "expression_discond_E",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "true",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -399,7 +399,7 @@
             "Cname": "expression_comcond_E",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "expression_data_E.ExpressionResult.code ==200",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -451,7 +451,7 @@
             "Cname": "expression_precond_F",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "contract_mobilecallback.StartTime >=\"2017-01-01 12:00:00\"&&contract_mobilecallback.EndTime <=\"2017-12-31 23:59:59\"&&FuncGetNowDay()==1&&FuncGetNowDate()!=data_E.Value&&data_D.Value<58",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -465,7 +465,7 @@
             "Cname": "expression_discond_F",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "true",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
@@ -479,7 +479,7 @@
             "Cname": "expression_discond_F",
             "Caption": "",
             "Description": "",
-            "Ctype": "Component_Expression.Expression_LogicArgument",
+            "Ctype": "Component_Expression.Expression_Condition",
             "ExpressionStr": "expression_data_F.ExpressionResult.code==200",
             "ExpressionResult": {
               "Message": "Operatesuccess.",
