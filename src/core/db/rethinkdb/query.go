@@ -1066,6 +1066,18 @@ func InsertEnergyTradingDemoBill(strJson string) error {
 }
 
 //---------------------------------------------------------------------------
+// 插入 EnergyTradingDemoMsgNotice 表
+func InsertEnergyTradingDemoMsgNotice(strJson string) error {
+	return _Insert(DBNAME, TABLE_ENERGYTRADINGDEMO_MSGNOTICE, strJson)
+}
+
+//---------------------------------------------------------------------------
+// 插入 EnergyTradingDemoPrice 表
+func InsertEnergyTradingDemoPrice(strJson string) error {
+	return _Insert(DBNAME, TABLE_ENERGYTRADINGDEMO_PRICE, strJson)
+}
+
+//---------------------------------------------------------------------------
 // 获取电表余额
 func GetMoneyFromEnergy(strPublicKey string) (float64, error) {
 	if len(strPublicKey) == 0 {
@@ -1089,6 +1101,10 @@ func GetMoneyFromEnergy(strPublicKey string) (float64, error) {
 	err = res.All(&items)
 	if err != nil {
 		return 0, err
+	}
+
+	if len(items) == 0 {
+		return 0, fmt.Errorf("is null")
 	}
 
 	money, ok := items[0]["Money"].(float64)
@@ -1132,13 +1148,17 @@ func _GetMoney(strField, strPublicKey string) (float64, error) {
 	}
 
 	if res.IsNil() {
-		return 0, fmt.Errorf("no recharge transaction!")
+		return 0, fmt.Errorf("no recharge transaction")
 	}
 
 	var items []map[string]interface{}
 	err = res.All(&items)
 	if err != nil {
 		return 0, err
+	}
+
+	if len(items) == 0 {
+		return 0, fmt.Errorf("no recharge transaction")
 	}
 
 	for _, v := range items {
@@ -1149,10 +1169,211 @@ func _GetMoney(strField, strPublicKey string) (float64, error) {
 }
 
 //---------------------------------------------------------------------------
+// 通过用户key查询电表key
+func GetMeterKeyByUserKey(strUserKey string) (string, error) {
+	if len(strUserKey) == 0 {
+		return "", fmt.Errorf("param is null")
+	}
+
+	information := fmt.Sprintf("{\"ownerPublicKey\":\"%s\"}", strUserKey)
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_ROLE).
+		Filter(r.Row.Field("Infermation").Eq(information)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", fmt.Errorf("this user has no meter")
+	}
+
+	var item map[string]interface{}
+	err = res.One(&item)
+	if err != nil {
+		return "", err
+	}
+
+	meterKey, ok := item["PublicKey"].(string)
+	if !ok {
+		return "", fmt.Errorf("item[\"PublicKey\"].(string) is error")
+	}
+
+	return meterKey, nil
+}
+
 //---------------------------------------------------------------------------
+// 获取阶梯电价
+func GetPrice() ([]map[string]interface{}, error) {
+	var items []map[string]interface{}
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_PRICE).
+		Run(session)
+	if err != nil {
+		return items, err
+	}
+
+	if res.IsNil() {
+		return items, fmt.Errorf("no price")
+	}
+
+	err = res.All(&items)
+	if err != nil {
+		return items, err
+	}
+
+	return items, nil
+}
+
 //---------------------------------------------------------------------------
+// 查询电表最后查询时间点
+func GetMeterQueryLastTime(strPublicKey string) (string, error) {
+	if len(strPublicKey) == 0 {
+		return "", fmt.Errorf("param is null")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_ROLE).
+		Filter(r.Row.Field("PublicKey").Eq(strPublicKey)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", fmt.Errorf("no meter")
+	}
+
+	var item map[string]interface{}
+	err = res.One(&item)
+	if err != nil {
+		return "", err
+	}
+
+	LastTimestamp, ok := item["LastTimestamp"].(string)
+	if !ok {
+		return "", fmt.Errorf("item[\"LastTimestamp\"].(string) is error")
+	}
+
+	return LastTimestamp, nil
+}
+
 //---------------------------------------------------------------------------
+// 更新电表最后查询时间点
+func UpdateMeterQueryLastTime(strPublicKey, strTimestamp string) error {
+	if len(strPublicKey) == 0 ||
+		len(strTimestamp) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	json := fmt.Sprintf("{\"LastTimestamp\":\"%s\"}", strTimestamp)
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_ROLE).
+		Filter(r.Row.Field("PublicKey").Eq(strPublicKey)).
+		Update(r.JSON(json)).
+		RunWrite(session)
+	if err != nil {
+		return err
+	}
+	if res.Replaced|res.Unchanged >= 1 {
+
+	} else {
+		return fmt.Errorf("update failed")
+	}
+	return nil
+}
+
 //---------------------------------------------------------------------------
+// 获得某个时间点的电表信息from EnergyTradingDemoEnergy
+func GetMeterinforFromEnergy(strPublicKey, strTimestamp string, desc bool) (map[string]interface{}, error) {
+	var item map[string]interface{}
+	if len(strPublicKey) == 0 {
+		return item, fmt.Errorf("param is null")
+	}
+
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	var err error
+	if desc {
+		res, err = r.Table(TABLE_ENERGYTRADINGDEMO_ENERGY).
+			Filter(r.Row.Field("PublicKey").Eq(strPublicKey)).
+			Filter(r.Row.Field("Timestamp").Le(strTimestamp)).
+			OrderBy(r.Desc("Timestamp")).
+			Run(session)
+	} else {
+		res, err = r.Table(TABLE_ENERGYTRADINGDEMO_ENERGY).
+			Filter(r.Row.Field("PublicKey").Eq(strPublicKey)).
+			Filter(r.Row.Field("Timestamp").Ge(strTimestamp)).
+			OrderBy("Timestamp").
+			Run(session)
+	}
+
+	if err != nil {
+		return item, err
+	}
+
+	if res.IsNil() {
+		return item, fmt.Errorf("is null")
+	}
+
+	err = res.One(&item)
+	if err != nil {
+		return item, err
+	}
+
+	return item, nil
+}
+
 //---------------------------------------------------------------------------
+// 获得电表某两个时间段的耗电量，以及此时的电表余额和当月耗电量
+func GetMeterInformation(strPublicKey, startTime, endTime string) (float64, float64, float64, error) {
+	if len(strPublicKey) == 0 ||
+		len(startTime) == 0 ||
+		len(endTime) == 0 {
+		return 0, 0, 0, fmt.Errorf("param is null")
+	}
+
+	// 获得电表key
+	meterKey, err := GetMeterKeyByUserKey(strPublicKey)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+
+	// 获得上个时间点的电表信息
+	meter1, err := GetMeterinforFromEnergy(meterKey, startTime, false)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+
+	// 获得当前时间点的电表信息
+	meter2, err := GetMeterinforFromEnergy(meterKey, endTime, true)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+
+	// 获得耗电量、当前余额、当月耗电量
+	electricity1, ok := meter1["Electricity"].(float64)
+	if !ok {
+		return 0, 0, 0, fmt.Errorf("meter1[\"Electricity\"].(float64) is error")
+	}
+
+	electricity2, ok := meter2["Electricity"].(float64)
+	if !ok {
+		return 0, 0, 0, fmt.Errorf("meter2[\"Electricity\"].(float64) is error")
+	}
+
+	money, ok := meter2["Money"].(float64)
+	if !ok {
+		return 0, 0, 0, fmt.Errorf("meter2[\"Money\"].(float64) is error")
+	}
+
+	totalElectricity, ok := meter2["TotalElectricity"].(float64)
+	if !ok {
+		return 0, 0, 0, fmt.Errorf("meter2[\"TotalElectricity\"].(float64) is error")
+	}
+
+	return (electricity2 - electricity1), money, totalElectricity, nil
+}
+
 //---------------------------------------------------------------------------
 /*智能微网demo end---------------------------------------------------------*/

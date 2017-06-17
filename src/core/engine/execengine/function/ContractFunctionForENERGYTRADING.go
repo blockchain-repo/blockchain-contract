@@ -1,10 +1,21 @@
 package function
 
 import (
+	"encoding/json"
 	"fmt"
+	"time"
+)
+
+import (
+	common2 "unicontract/src/common"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/common"
+	"unicontract/src/core/model"
 )
+
+func init() {
+
+}
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++合约机【ENERGYTRADING】能源交易专用扩展方法++++++++++
@@ -73,9 +84,9 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 		return v_result, v_err
 	}
 
-	money, err := rethinkdb.GetMoneyFromEnergy(publickey)
-	if err != nil {
-		v_result.SetMessage(err.Error())
+	money, v_err := rethinkdb.GetMoneyFromEnergy(publickey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
 
@@ -105,9 +116,9 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 		return v_result, v_err
 	}
 
-	money, err := rethinkdb.GetUserMoneyFromTransaction(publickey)
-	if err != nil {
-		v_result.SetMessage(err.Error())
+	money, v_err := rethinkdb.GetUserMoneyFromTransaction(publickey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
 
@@ -124,7 +135,40 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 //      50      int    充值额度
 func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	publickey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	money, ok := args[1].(int)
+	if !ok {
+		v_result.SetMessage("args[1].(int) is error!")
+		return v_result, v_err
+	}
+
+	var msgNotice model.DemoMsgNotice
+	msgNotice.Id = common2.GenerateUUID()
+	msgNotice.NoticePublicKey = publickey
+	msgNotice.Timestamp = common2.GenTimestamp()
+	msgNotice.Msg = fmt.Sprintf("请及时充值%d元到交易账户中，谢谢您的合作。", money)
+	msgNotice.Type = 0
+
+	slData, _ := json.Marshal(msgNotice)
+
+	v_err = rethinkdb.InsertEnergyTradingDemoMsgNotice(string(slData))
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -136,9 +180,68 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 //电表自动购电50元（链上进行资产转移50给运营账户；同时访问电表接口，给电表充值50元）
 //Args:  User_A   string  将用户账户中的钱50元，转到运营商账户
 //       Ccount_D string
+//       50       int     充值额度
 func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	userPublicKey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	operatorPublicKey, ok := args[1].(string)
+	if !ok {
+		v_result.SetMessage("args[1].(string) is error!")
+		return v_result, v_err
+	}
+
+	money, ok := args[2].(int)
+	if !ok {
+		v_result.SetMessage("args[2].(int) is error!")
+		return v_result, v_err
+	}
+
+	// 用户->运营商
+	bill1 := model.DemoBill{
+		Id:        common2.GenerateUUID(),
+		PublicKey: "",
+		Timestamp: common.GenTimestamp(),
+		Type:      1,
+	}
+	sldata, _ := json.Marshal(bill1)
+	v_err = rethinkdb.InsertEnergyTradingDemoBill(string(sldata))
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	transaction1 := model.DemoTransaction{
+		Id:            common2.GenerateUUID(),
+		BillId:        bill1.Id,
+		Timestamp:     common.GenTimestamp(),
+		FromPublicKey: userPublicKey,
+		ToPublicKey:   operatorPublicKey,
+		Money:         float64(money),
+		Type:          1,
+	}
+	sldata, _ = json.Marshal(transaction1)
+
+	v_err = rethinkdb.InsertEnergyTradingDemoTransaction(string(sldata))
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	// 电表充值
+	// TODO 修改电表余额
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -148,10 +251,24 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 }
 
 //自动休眠1小时
-//Args： SleepTime  int
+//Args： SleepTime  int 单位是秒
 func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	sleeptime, ok := args[0].(int)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	time.Sleep(time.Second * time.Duration(sleeptime))
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -161,18 +278,99 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 }
 
 //++++++++++++++++耗电消耗 及 自动分账合约++++++++++++++++++++++++++++++++++++++++++
-//A 根据电表账户从能源连上获取 上一时间点--—当前时间点的耗电量（分段时间点耗电量）、上一时间点电表余额、当月截止当前总耗电量
-//Args: ElecUser_A  string  电表交易用户
-//      LastTime
-//      NowTime
-func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error) {
+// 获取查询起始时间
+// userKey string
+func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	userPublicKey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	// 获得电表key
+	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	// 获得上次查询时间
+	lastTime, v_err := rethinkdb.GetMeterQueryLastTime(meterKey)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	// 获得当前时间
+	nowTime := common2.GenTimestamp()
+
+	// 更新上次查询时间
+	v_err = rethinkdb.UpdateMeterQueryLastTime(meterKey, nowTime)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
+	v_result.SetData(fmt.Sprintf("{\"start\":\"%s\",\"end\":\"%s\"}", lastTime, nowTime))
+	return v_result, v_err
+}
+
+//A 根据电表账户从能源连上获取 上一时间点--—当前时间点的耗电量（分段时间点耗电量）、电表余额、当月截止当前总耗电量
+//Args: ElecUser_A  string  电表交易用户
+//      startTime   string
+//      endTime     string
+func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	userPublicKey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	startTime, ok := args[1].(string)
+	if !ok {
+		v_result.SetMessage("args[1].(string) is error!")
+		return v_result, v_err
+	}
+
+	endTime, ok := args[2].(string)
+	if !ok {
+		v_result.SetMessage("args[2].(string) is error!")
+		return v_result, v_err
+	}
+
+	electricity, money, totalElectricity, v_err := rethinkdb.GetMeterInformation(userPublicKey, startTime, endTime)
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+
+	//构建返回值
+	v_result = common.OperateResult{}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(fmt.Sprintf("{\"electricity\":%f,\"money\":%f,\"totalElectricity\":%f}", electricity, money, totalElectricity))
 	return v_result, v_err
 }
 
@@ -182,19 +380,29 @@ func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error)
 //获取电价信息（波峰平谷电价 & 阶梯电价）
 func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	price, v_err := rethinkdb.GetPrice()
+	if v_err != nil {
+		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
+	v_result.SetData(price)
 	return v_result, v_err
 }
 
 //D. 根据用户耗电量对应出相应的电价，并计算用户消耗的电费、更新后的余额
 //根据用户电表账户计算当前消耗的电量、将消耗对应电价计算消耗的金额、电表余额；
-//Args: user_A     string  用户交易账户
-//      price_List string  电价列表json结构串
+//Args: user_A              string  用户交易账户
+//      electricity         string  当前耗电量
+//      electricityTotal    string  当月总耗电量
+//      startTime           string  采集的开始时间
 //Return: consume_money   消耗金额
 //        remain_money    电表余额
 func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, error) {
@@ -228,7 +436,29 @@ func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult
 //        amount   int      电表余额
 func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
-	var v_err error = nil
+	v_result.SetCode(500)
+	var v_err error
+
+	if len(args) == 0 {
+		v_result.SetMessage("param is null!")
+		return v_result, v_err
+	}
+
+	userPublicKey, ok := args[0].(string)
+	if !ok {
+		v_result.SetMessage("args[0].(string) is error!")
+		return v_result, v_err
+	}
+
+	money, ok := args[1].(int)
+	if !ok {
+		v_result.SetMessage("args[1].(int)!")
+		return v_result, v_err
+	}
+
+	// TODO 修改电表余额
+	_ = userPublicKey
+	_ = money
 
 	//构建返回值
 	v_result = common.OperateResult{}

@@ -858,8 +858,8 @@ func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
 		Id:               common.GenerateUUID(),
 		PublicKey:        "5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm",
 		Timestamp:        common.GenTimestamp(),
-		Electricity:      200,
-		TotalElectricity: 500,
+		Electricity:      530,
+		TotalElectricity: 230,
 		Money:            300,
 		Type:             0,
 	}
@@ -922,6 +922,113 @@ func Test_InsertTransaction_Bill(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func Test_InsertEnergyTradingDemoPrice(t *testing.T) {
+	/*
+			type DemoPrice struct {
+			Id          string  `json:"id"`
+			Level       int     // 阶梯等级
+			One         float64 // 波峰电价
+			Two         float64 // 波平电价
+			Three       float64 // 波谷电价
+			Description string  // 阶梯电价描述
+		}
+	*/
+	price1 := model.DemoPrice{
+		Id:          common.GenerateUUID(),
+		Level:       1,
+		One:         3,
+		Two:         2,
+		Three:       1,
+		Description: "0-1000",
+	}
+	sldata, _ := json.Marshal(price1)
+	err := InsertEnergyTradingDemoPrice(string(sldata))
+	if err != nil {
+		t.Error(err)
+	}
+
+	price2 := model.DemoPrice{
+		Id:          common.GenerateUUID(),
+		Level:       2,
+		One:         4,
+		Two:         3,
+		Three:       2,
+		Description: "1001-3000",
+	}
+	sldata, _ = json.Marshal(price2)
+	err = InsertEnergyTradingDemoPrice(string(sldata))
+	if err != nil {
+		t.Error(err)
+	}
+
+	price3 := model.DemoPrice{
+		Id:          common.GenerateUUID(),
+		Level:       3,
+		One:         5,
+		Two:         4,
+		Three:       3,
+		Description: "3001-...",
+	}
+	sldata, _ = json.Marshal(price3)
+	err = InsertEnergyTradingDemoPrice(string(sldata))
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func Test_GetMeterKeyByUserKey(t *testing.T) {
+	key := "64mDgEqY9KGp3NCfJPrrjiruL9hmuYiimmaD2234UYWd"
+	meterKey, err := GetMeterKeyByUserKey(key)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(meterKey)
+}
+
+func Test_GetPrice(t *testing.T) {
+	price, err := GetPrice()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(price)
+}
+
+func Test_GetMeterQueryLastTime(t *testing.T) {
+	timestamp, err := GetMeterQueryLastTime("5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(timestamp)
+}
+
+func Test_UpdateMeterQueryLastTime(t *testing.T) {
+	err := UpdateMeterQueryLastTime("5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm", "1497595656727")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log("ok")
+}
+
+func Test_GetMeterinforFromEnergy(t *testing.T) {
+	item, err := GetMeterinforFromEnergy("5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm", "1497595656727", false)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(item)
+
+	item, err = GetMeterinforFromEnergy("5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm", common.GenTimestamp(), true)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(item)
 }
 
 /*智能微网demo end---------------------------------------------------------*/
