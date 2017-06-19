@@ -3,21 +3,118 @@ package function
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
+	"strconv"
 	"time"
 )
 
 import (
-	"strconv"
 	common2 "unicontract/src/common"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
 )
 
+import (
+	"github.com/astaxie/beego/logs"
+)
+
+type PowerPlants struct {
+	Key   string
+	Type_ int
+}
+
+type MeterInfor struct {
+	Electricity      float64 // 当前用量
+	TotalElectricity float64 // 当月总量
+	Key              string
+}
+
 var mapMeterRemainMoney map[string]float64
+var slPowerPlantsKey []PowerPlants
+var slMeterKey []MeterInfor
 
 func init() {
 	mapMeterRemainMoney = make(map[string]float64)
+
+	// 获得电表和发电厂的key，用于模拟使用
+	// 电表
+	var err error
+	keys, err := rethinkdb.GetRolePublicKey(1)
+	if err != nil {
+		logs.Error(err)
+	}
+
+	for _, value := range keys {
+		MeterInfor_ := MeterInfor{
+			Key:              value,
+			Electricity:      500,
+			TotalElectricity: 245,
+		}
+		slMeterKey = append(slMeterKey, MeterInfor_)
+	}
+
+	// 发电厂
+	type_ := []int{2, 3, 4, 5, 6}
+	for _, v := range type_ {
+		keys, err := rethinkdb.GetRolePublicKey(v)
+		if err != nil {
+			logs.Error(err)
+		}
+
+		for _, value := range keys {
+			PowerPlants_ := PowerPlants{
+				Key:   value,
+				Type_: v,
+			}
+			slPowerPlantsKey = append(slPowerPlantsKey, PowerPlants_)
+		}
+	}
+}
+
+// 1.模拟ELINK采集电表数据功能；2.模拟采集发电厂发电数据功能
+func Simulate() {
+	rand.Seed(time.Now().UnixNano())
+	ticker := time.NewTicker(10 * time.Minute)
+	for _ = range ticker.C {
+		// 模拟采集电表数据
+		for index, v := range slMeterKey {
+			slMeterKey[index].Electricity += 1
+			slMeterKey[index].TotalElectricity += 1
+			electricityMeter1 := model.DemoEnergy{
+				Id:               common2.GenerateUUID(),
+				PublicKey:        v.Key,
+				Timestamp:        common2.GenTimestamp(),
+				Electricity:      slMeterKey[index].Electricity,
+				TotalElectricity: slMeterKey[index].TotalElectricity,
+				Money:            mapMeterRemainMoney[v.Key],
+				Type:             0,
+			}
+			sldata, _ := json.Marshal(electricityMeter1)
+
+			err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
+			if err != nil {
+				logs.Error(err)
+			}
+		}
+
+		// 模拟采集发电厂数据
+		for _, v := range slPowerPlantsKey {
+			electricityPowerPlant1 := model.DemoEnergy{
+				Id:          common2.GenerateUUID(),
+				PublicKey:   v.Key,
+				Timestamp:   common2.GenTimestamp(),
+				Electricity: float64(rand.Intn(1000)),
+				Type:        v.Type_,
+			}
+			sldata, _ := json.Marshal(electricityPowerPlant1)
+
+			err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
+			if err != nil {
+				logs.Error(err)
+			}
+		}
+	}
 }
 
 // 传入时间戳，获得该时间戳所对应的电价级别
@@ -657,6 +754,10 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
 	if v_err != nil {
 		v_result.SetMessage(v_err.Error())
+		return v_result, v_err
+	}
+	if mapMeterRemainMoney[meterKey] < money {
+		v_result.SetMessage("remain money is not enough")
 		return v_result, v_err
 	}
 	mapMeterRemainMoney[meterKey] -= money

@@ -1099,4 +1099,28 @@ func Test_GetPowerPlantEnergy(t *testing.T) {
 	t.Log(m)
 }
 
+func Test_GetRolePublicKey(t *testing.T) {
+	// 电表
+	meterkeys, err := GetRolePublicKey(1)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(meterkeys)
+
+	// 发电厂
+	var powerplantskeys []string
+	type_ := []int{2, 3, 4, 5, 6}
+	for _, e := range type_ {
+		keys, err := GetRolePublicKey(e)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		powerplantskeys = append(powerplantskeys, keys...)
+	}
+
+	t.Log(powerplantskeys)
+}
+
 /*智能微网demo end---------------------------------------------------------*/

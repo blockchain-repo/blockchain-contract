@@ -1462,6 +1462,38 @@ func _GetEnergy(strPublickey string, startTime, endTime string) (float64, error)
 }
 
 //---------------------------------------------------------------------------
+// 获得相应类型role的publickey
+func GetRolePublicKey(type_ int) ([]string, error) {
+	var slKeys []string
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_ROLE).
+		Filter(r.Row.Field("Type").Eq(type_)).
+		Run(session)
+	if err != nil {
+		return slKeys, err
+	}
+
+	if res.IsNil() {
+		return slKeys, fmt.Errorf("no role")
+	}
+
+	var items []map[string]interface{}
+	err = res.All(&items)
+	if err != nil {
+		return slKeys, err
+	}
+
+	for _, v := range items {
+		e, ok := v["PublicKey"].(string)
+		if !ok {
+			return slKeys, fmt.Errorf("[\"PublicKey\"].(string) is error")
+		}
+
+		slKeys = append(slKeys, e)
+	}
+	return slKeys, nil
+}
+
 //---------------------------------------------------------------------------
 
 /*智能微网demo end---------------------------------------------------------*/
