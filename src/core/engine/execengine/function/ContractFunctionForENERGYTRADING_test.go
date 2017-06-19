@@ -109,3 +109,8 @@ func Test_FuncAutoSplitAccount(t *testing.T) {
 	}
 	t.Log(result)
 }
+
+func Test_init(t *testing.T) {
+	t.Log(slPowerPlantsKey)
+	t.Log(slMeterKey)
+}
