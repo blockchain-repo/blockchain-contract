@@ -388,12 +388,13 @@ earnings:
 "raiseStart":"date",
 "raiseEnd":"date",
 "raiseAmount":20000,
-"balanceAmount":21
+"firstPurchaseAmount":20,
+"balanceAmount":21,
 "purchaseAmount":20,
 "date":"date",
 "isRaise":true,
 "rate":0.01,
-"yield":1
+"yield":1,
 "timestamp":123144
 }
 */
@@ -403,14 +404,15 @@ func FuncGetUserPurchase(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 	var pubkey string = ""
-	var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
-	logs.Info("unspentAmount", unspentAmount)
+	//var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
+	var purchaseAmount = transaction.GetPurchaseAmount(pubkey)
+	logs.Info("purchaseAmount", purchaseAmount)
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(unspentAmount)
+	v_result.SetData(purchaseAmount)
 	return v_result, v_err
 }
 
@@ -420,17 +422,17 @@ func FuncGetUserBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 	var pubkey string = ""
-	var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
-	logs.Info("unspentAmount", unspentAmount)
+	//var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
+	//logs.Info("unspentAmount", unspentAmount)
 	var interest = transaction.GetInterestCount(pubkey)
 	logs.Info("interest", interest)
-	var count = unspentAmount + interest
-	logs.Info("count", count)
+	//var count = unspentAmount + interest
+	logs.Info("count", interest)
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(count)
+	v_result.SetData(interest)
 	return v_result, v_err
 }
 
@@ -497,11 +499,13 @@ func FuncCalcAndTransferInterest(args ...interface{}) (common.OperateResult, err
 	var v_result common.OperateResult
 	var v_err error = nil
 	var puekey string = ""
-	var totaolbalance float64 = 0.0
+	var firstPurchaseAmount = 0.0
 	var depositRate float64 = 0.003
-	var interest = (totaolbalance * depositRate) / 360
+	var interest = (firstPurchaseAmount * depositRate) / 360
+	purchaseAmount := firstPurchaseAmount
+	yeild := 0.0
 	//insert into table earnings
-	var flag bool = transaction.SaveEarnings(puekey, totaolbalance, depositRate, interest)
+	var flag bool = transaction.SaveEarnings(puekey, true, depositRate, firstPurchaseAmount, interest, purchaseAmount, yeild)
 	if !flag {
 		//error
 	}
@@ -554,14 +558,15 @@ func FuncCalcUserRealIncome(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
-	var rate float64 = 0.03
+	var realrate float64 = 0.03
 	var purchaseMoney float64 = 0.0
+
 	var contractStr string = args[2].(string)
 	var contractId string = args[3].(string)
 	var taskId string = args[4].(string)
 	var taskIndex int = args[5].(int)
 
-	var realIncome = getRealIncome(purchaseMoney, rate)
+	var realIncome = getRealIncome(purchaseMoney, realrate)
 
 	var ownerBefore = ""
 	var recipients [][2]interface{} = [][2]interface{}{[2]interface{}{ownerBefore, realIncome}}
@@ -569,6 +574,18 @@ func FuncCalcUserRealIncome(args ...interface{}) (common.OperateResult, error) {
 	var contractHashId string = ""
 
 	var metadataStr string = ""
+
+	res := transaction.GetInfoByUser(ownerBefore)
+	firstPurchaseAmount := res["firstPurchaseAmount"].(float64)
+	interest := res["interest"].(float64)
+	purchaseAmount := res["purchaseAmount"].(float64) + res["yeild"].(float64)
+	yeild := purchaseAmount * realrate
+
+	var flag bool = transaction.SaveEarnings(ownerBefore, false, realrate, firstPurchaseAmount, interest, purchaseAmount, yeild)
+	if !flag {
+
+	}
+
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 	//tx_signers []string, recipients [][2]interface{}, metadataStr string,
 	//relationStr string, contractStr string
@@ -612,6 +629,19 @@ func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, e
 	var mainPubkey string = args[6].(string)
 	var contractHashId string = ""
 	var metadataStr string = ""
+	var realrate = 0.0
+	//logs.Info(realrate)
+	res := transaction.GetInfoByUser(ownerAfter)
+	firstPurchaseAmount := res["firstPurchaseAmount"].(float64)
+	interest := res["interest"].(float64)
+	purchaseAmount := res["purchaseAmount"].(float64) + res["yeild"].(float64)
+	yeild := purchaseAmount * realrate
+
+	var flag bool = transaction.SaveEarnings(ownerAfter, false, realrate, firstPurchaseAmount, interest, purchaseAmount, yeild)
+	if !flag {
+
+	}
+
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 
 	var outputStr string
@@ -681,7 +711,8 @@ func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult,
 	//托管人
 	var ownerAfter string = args[1].(string)
 	var realIncome float64 = args[2].(float64)
-	realIncome = realIncome * 0.6
+	var realrate = 0.0
+	//realIncome = realIncome * 0.6
 	var recipients [][2]interface{} = [][2]interface{}{[2]interface{}{ownerAfter, realIncome * 0.6}}
 	//executer provide
 	var contractStr string = args[2].(string)
@@ -691,6 +722,17 @@ func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult,
 	var mainPubkey string = args[6].(string)
 	var contractHashId string = ""
 	var metadataStr string = ""
+
+	res := transaction.GetInfoByUser(ownerAfter)
+	firstPurchaseAmount := res["firstPurchaseAmount"].(float64)
+	interest := res["interest"].(float64)
+	purchaseAmount := res["purchaseAmount"].(float64) + res["yeild"].(float64)
+	yeild := purchaseAmount * realrate
+
+	var flag bool = transaction.SaveEarnings(ownerAfter, false, realrate, firstPurchaseAmount, interest, purchaseAmount, yeild)
+	if !flag {
+
+	}
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
 
 	var outputStr string
@@ -702,7 +744,7 @@ func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult,
 	if mainPubkey == mykey {
 		//if mainNode, do freeze;
 		var reciForFre [][2]interface{} = [][2]interface{}{
-			[2]interface{}{ownerBefore, realIncome},
+			[2]interface{}{ownerBefore, realIncome * 0.6},
 		}
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
 		//if v_err != nil {

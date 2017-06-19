@@ -1465,3 +1465,48 @@ func _GetEnergy(strPublickey string, startTime, endTime string) (float64, error)
 //---------------------------------------------------------------------------
 
 /*智能微网demo end---------------------------------------------------------*/
+
+/* tianan */
+func GetInfoByUser(pubkey string) (map[string]interface{}, error) {
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	//var resYield *r.Cursor
+	var err error
+	res, _ = r.Table(TABLE_EARNINGS).Filter(r.Row.Field("pubkey").Eq(pubkey)).Max(r.Row.Field("timestamp")).Run(session)
+
+	logs.Info(res)
+	var blo map[string]interface{}
+	err = res.One(&blo)
+	if err != nil {
+		return blo, err
+	}
+	return blo, nil
+}
+
+func GetLastInterest(pubkey string) ([]map[string]interface{}, error) {
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	var err error
+	res, _ = r.Table(TABLE_EARNINGS).Filter(r.Row.Field("pubkey").Eq(pubkey)).Run(session)
+
+	logs.Info(res)
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return blo, err
+	}
+	return blo, nil
+}
+
+func InsertInterestCount(str string) bool {
+	if str == "" {
+		return false
+	}
+	res := Insert(DBNAME, TABLE_EARNINGS, str)
+	if res.Inserted >= 1 {
+		return true
+	}
+	return false
+}
+
+/* tianan end*/

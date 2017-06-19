@@ -1100,3 +1100,18 @@ func Test_GetPowerPlantEnergy(t *testing.T) {
 }
 
 /*智能微网demo end---------------------------------------------------------*/
+
+func Test_InsertInterestCount(t *testing.T) {
+	str := `{"username":"alice","pubkey":"key...","contractid":"conid","raiseStart":"date","raiseEnd":"date","raiseAmount":20000,"firstPurchaseAmount":20,"balanceAmount":21,"purchaseAmount":20,"date":"2","isRaise":false,"rate":0.02,"yield":2,"timestamp":123147}`
+	InsertInterestCount(str)
+}
+
+func Test_GetInfoByUser(t *testing.T) {
+	res, _ := GetInfoByUser("key...")
+	logs.Info(res)
+}
+
+func Test_GetLastInterest(t *testing.T) {
+	res, _ := GetLastInterest("key...")
+	logs.Info(res)
+}

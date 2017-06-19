@@ -10,6 +10,7 @@ import (
 	"unicontract/src/core/model"
 
 	"github.com/astaxie/beego/logs"
+	"time"
 )
 
 func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr string,
@@ -144,14 +145,53 @@ func ExecuteGetContract(contractId string) (string, error) {
 	return common.StructSerialize(con), err
 }
 
-func GetInterestCount(pubkey string) float64 {
-	var interest float64
-	//todo
-	return interest
+func GetPurchaseAmount(pubkey string) float64 {
+	res, _ := rethinkdb.GetInfoByUser(pubkey)
+	countAmount := res["purchaseAmount"].(float64) + res["yield"].(float64)
+	return countAmount
 }
 
-func SaveEarnings(puekey string, totaolbalance float64, depositRate float64, interest float64) bool {
-	var flag bool = false
+func GetInfoByUser(pubkey string)map[string]interface{}{
+	res, _ := rethinkdb.GetInfoByUser(pubkey)
+	logs.Info(res)
+	return  res
+}
+//
 
-	return flag
+//
+func GetInterestCount(pubkey string) float64 {
+	res, _ := rethinkdb.GetLastInterest(pubkey)
+	countInterest := 0.0
+	countYeild := 0.0
+	firstPurchaseAmount := 0.0
+	for _, r := range res {
+		firstPurchaseAmount = r["firstPurchaseAmount"].(float64)
+		countInterest = countInterest + r["yield"].(float64)
+		countYeild = countYeild + r["yield"].(float64)
+	}
+	logs.Info(countInterest + countYeild + firstPurchaseAmount)
+
+	return countInterest + countYeild + firstPurchaseAmount
+}
+
+func SaveEarnings(pubkey string, isRaise bool, rate float64, firstPurchaseAmount float64, interest float64, purchaseAmount float64, yeild float64) bool {
+	res, _ := rethinkdb.GetInfoByUser(pubkey)
+	delete(res, "id")
+	format := "2006-01-02 15:04:05"
+	//now, _ := time.Parse(format, "2017-06-18 15:19:58")
+	now, _ := time.Parse(format, time.Now().Format(format))
+	res["date"] = now
+	res["isRaise"] = isRaise
+	res["rate"] = rate
+	res["firstPurchaseAmount"] = firstPurchaseAmount
+	res["interest"] = interest
+	res["purchaseAmount"] = purchaseAmount
+	res["yeild"] = yeild
+
+	logs.Info(res)
+	str := common.Serialize(res)
+	logs.Info(str)
+	result := rethinkdb.InsertInterestCount(str)
+
+	return result
 }
