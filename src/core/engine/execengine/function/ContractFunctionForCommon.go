@@ -243,7 +243,7 @@ func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
-	if len(args) != 2 {
+	if len(args) != 3 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}

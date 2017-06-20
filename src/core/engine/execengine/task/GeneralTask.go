@@ -843,7 +843,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		//4 OutputStruct插入到Output表中
 		var v_result common.OperateResult = common.OperateResult{}
 		if output_null_flag {
-			v_result, r_err = function.FuncInterimComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
+			v_result, r_err = function.FuncInterimComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed], gt.GetContract().GetContractState())
 		} else {
 			v_result, r_err = function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
 		}

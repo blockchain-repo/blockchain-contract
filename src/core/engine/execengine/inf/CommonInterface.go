@@ -26,6 +26,7 @@ type ICognitiveContract interface {
 	GetContract() ICognitiveContract
 	GetName() string
 	GetCtype() string
+	GetContractState() string
 
 	GetId() string
 	GetOrgTaskId() string
