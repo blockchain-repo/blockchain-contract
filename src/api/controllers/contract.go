@@ -379,6 +379,46 @@ func (c *ContractController) Terminate() {
 	//c.responseJsonBody(contract.Id, true, "合约终止成功!")
 }
 
+// query the contract content with the contractId and oners
+func (c *ContractController) QueryContractContent() {
+
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	/*------------------- requestParams start ------------------*/
+	contractId, _ := requestParamMap["contractId"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+	/*------------------- requestParams end ------------------*/
+
+	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractId=%s]",
+		c.Ctx.Request.RequestURI, token, owner, contractId))
+	if token == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+	if contractId == "" {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		return
+	}
+	contractModelStr, err := rethinkdb.GetContractContentByMapCondition(requestParamMap)
+	//logs.Warn("QueryContractContent:\n", contractModelStr)
+	if err != nil {
+		logs.Error("API[QueryContractContent]合约(Id=" + contractId + ")查询错误: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryContractContent]合约查询错误!")
+		return
+	}
+
+	if contractModelStr == "" {
+		logs.Warn("API[QueryContractContent]合约(Id=" + contractId + ")不存在: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryContractContent]合约(Id="+contractId+")不存在: ")
+		return
+	}
+
+	c.responseJsonBody(contractModelStr, true, "API[QueryContractContent]查询合约成功!")
+}
+
 func (c *ContractController) QueryPublishContract() {
 
 	var requestParamMap map[string]interface{}
@@ -391,7 +431,7 @@ func (c *ContractController) QueryPublishContract() {
 	contractId, _ := requestParamMap["contractId"].(string)
 	owner, _ := requestParamMap["owner"].(string)
 	/*------------------- requestParams end ------------------*/
-	logs.Warn("Body: ", c.Ctx.Request.Body)
+	//logs.Warn("Body: ", c.Ctx.Request.Body)
 
 	logs.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s]",
 		c.Ctx.Request.RequestURI, token, owner, contractState, contractId))
