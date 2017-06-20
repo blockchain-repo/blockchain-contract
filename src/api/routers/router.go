@@ -31,6 +31,11 @@ func init() {
 			beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
 			beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),
 			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),
+			//demo使用---------------------------------------------------------------------------------------------------
+			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "post:QueryOutput"),
+			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "post:QueryOutputNum"),
+			beego.NSRouter("/queryOutputDuration", &controllers.ContractController{}, "post:QueryOutputDuration"),
+			//demo使用---------------------------------------------------------------------------------------------------
 		),
 	)
 	beego.AddNamespace(ns)

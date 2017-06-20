@@ -220,6 +220,30 @@ func Test_GetContractStatsCount(t *testing.T) {
 	//fmt.Println(number)
 }
 
+func Test_QueryOutput(t *testing.T) {
+	output, err := QueryOutput("170614121259039057")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(output)
+}
+
+func Test_QueryOutputNum(t *testing.T) {
+	count, err := QueryOutputNum("170614121259039057")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(count)
+}
+
+func Test_QueryContractStartTime(t *testing.T) {
+	startTime, err := QueryContractStartTime("170614121259039057")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(startTime)
+}
+
 /*----------------------------- contracts end---------------------------------------*/
 
 /*----------------------------- votes start---------------------------------------*/

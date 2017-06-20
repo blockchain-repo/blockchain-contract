@@ -3,6 +3,7 @@ package rethinkdb
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"unicontract/src/common"
 
@@ -497,6 +498,96 @@ func GetContractStatsCount(stat string) (string, error) {
 	}
 	return blo, nil
 }
+
+//demo使用---------------------------------------------------------------------------------------------------------------
+func QueryOutput(contractID string) (string, error) {
+	if len(contractID) == 0 {
+		return "", fmt.Errorf("contractID is null")
+	}
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).
+		Filter(r.Row.Field("transaction").Field("Relation").Field("ContractId").Eq(contractID)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(blo), nil
+}
+
+func QueryOutputNum(contractID string) (int, error) {
+	var count int
+	if len(contractID) == 0 {
+		return count, fmt.Errorf("contractID is null")
+	}
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).
+		Filter(r.Row.Field("transaction").Field("Relation").Field("ContractId").Eq(contractID)).
+		Count().Run(session)
+	if err != nil {
+		return count, err
+	}
+	if res.IsNil() {
+		return count, nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return count, err
+	}
+
+	count, err = strconv.Atoi(blo)
+	if err != nil {
+		return count, err
+	}
+
+	return count, nil
+}
+
+func QueryContractStartTime(contractID string) (string, error) {
+	if len(contractID) == 0 {
+		return "", fmt.Errorf("contractID is null")
+	}
+
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACTS).
+		Filter(r.Row.Field("ContractBody").Field("ContractId").Eq(contractID)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo map[string]interface{}
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+
+	body, ok := blo["ContractBody"].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("error")
+	}
+
+	startTime, ok := body["StartTime"].(string)
+	if !ok {
+		return "", fmt.Errorf("error")
+	}
+	return startTime, nil
+}
+
+//demo使用---------------------------------------------------------------------------------------------------------------
 
 /*----------------------------- contracts end---------------------------------------*/
 

@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -753,3 +754,106 @@ func (c *ContractController) PressTest() {
 	c.responseJsonBody(contract.Id, true, "API[PressTest] insert contract Id "+contractModel.Id+"]")
 
 }
+
+//demo使用---------------------------------------------------------------------------------------------------------------
+func (c *ContractController) QueryOutput() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	if len(token) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
+		return
+	}
+	if len(contractId) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		return
+	}
+
+	output, err := rethinkdb.QueryOutput(contractId)
+	if err != nil {
+		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		return
+	}
+
+	c.responseJsonBody(output, true, "API[Query]查询合约成功!")
+}
+
+func (c *ContractController) QueryOutputNum() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	if len(token) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
+		return
+	}
+	if len(contractId) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		return
+	}
+
+	count, err := rethinkdb.QueryOutputNum(contractId)
+	if err != nil {
+		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		return
+	}
+
+	c.responseJsonBody(fmt.Sprintf(`{"count":%d}`, count), true, "API[Query]查询合约成功!")
+}
+
+func (c *ContractController) QueryOutputDuration() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	if len(token) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
+		return
+	}
+	if len(contractId) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		return
+	}
+
+	startTime, err := rethinkdb.QueryContractStartTime(contractId)
+	if err != nil {
+		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		return
+	}
+
+	nowTime := common.GenTimestamp()
+
+	start, err := strconv.Atoi(startTime)
+	now, err := strconv.Atoi(nowTime)
+
+	hours := ((now - start) / 1000) / 3600
+
+	c.responseJsonBody(fmt.Sprintf(`{"duration":%d}`, hours), true, "API[Query]查询合约成功!")
+}
+
+//demo使用---------------------------------------------------------------------------------------------------------------
