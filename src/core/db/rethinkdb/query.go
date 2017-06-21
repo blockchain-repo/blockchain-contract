@@ -3,12 +3,10 @@ package rethinkdb
 import (
 	"errors"
 	"fmt"
-	"strconv"
-
-	"unicontract/src/common"
-
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
+	"strconv"
+	"unicontract/src/common"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
