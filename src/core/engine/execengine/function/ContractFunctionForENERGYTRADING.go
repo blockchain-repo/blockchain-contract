@@ -30,21 +30,50 @@ type MeterInfor struct {
 	Key              string
 }
 
+// 电表余额
 var mapMeterRemainMoney map[string]float64
-var slPowerPlantsKey []PowerPlants
+
+// 电表key
 var slMeterKey []MeterInfor
+
+// 发电厂key
+var slPowerPlantsKey []PowerPlants
+
+// 个人key
+var slPersonKey []string
+
+// 运营商key
+var slOperatorKey []string
+
+// 起始时间
+var strStartTime string
+var strEndTime string
+
+// 消耗电量
+var fElectricity float64
+var fTotalElectricity float64
+
+var fMoney float64
+
+var mapEnergy map[string]float64
 
 func init() {
 	mapMeterRemainMoney = make(map[string]float64)
+	mapEnergy = make(map[string]float64)
 
-	// 获得电表和发电厂的key，用于模拟使用
-	// 电表
-	var err error
-	keys, err := rethinkdb.GetRolePublicKey(1)
+	// 获得个人、运营商、电表、发电厂的key
+	// 个人
+	keys, err := rethinkdb.GetRolePublicKey(0)
 	if err != nil {
 		logs.Error(err)
 	}
+	slPersonKey = append(slPersonKey, keys...)
 
+	// 电表
+	keys, err = rethinkdb.GetRolePublicKey(1)
+	if err != nil {
+		logs.Error(err)
+	}
 	for _, value := range keys {
 		MeterInfor_ := MeterInfor{
 			Key:              value,
@@ -54,8 +83,15 @@ func init() {
 		slMeterKey = append(slMeterKey, MeterInfor_)
 	}
 
+	// 运营商
+	keys, err = rethinkdb.GetRolePublicKey(2)
+	if err != nil {
+		logs.Error(err)
+	}
+	slOperatorKey = append(slOperatorKey, keys...)
+
 	// 发电厂
-	type_ := []int{2, 3, 4, 5, 6}
+	type_ := []int{3, 4, 5, 6}
 	for _, v := range type_ {
 		keys, err := rethinkdb.GetRolePublicKey(v)
 		if err != nil {
@@ -298,16 +334,17 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	publickey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//publickey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	publickey := slMeterKey[0].Key
 
 	money, v_err := rethinkdb.GetMoneyFromEnergy(publickey)
 	if v_err != nil {
@@ -330,16 +367,17 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	publickey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//publickey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	publickey := slPersonKey[0]
 
 	money, v_err := rethinkdb.GetUserMoneyFromTransaction(publickey)
 	if v_err != nil {
@@ -363,22 +401,25 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
 
-	publickey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
+	//publickey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//money, ok := args[1].(float64)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(float64) is error!")
+	//	return v_result, v_err
+	//}
 
-	money, ok := args[1].(float64)
-	if !ok {
-		v_result.SetMessage("args[1].(float64) is error!")
-		return v_result, v_err
-	}
+	publickey := slPersonKey[0]
+	money := float64(50)
 
 	var msgNotice model.DemoMsgNotice
 	msgNotice.Id = common2.GenerateUUID()
@@ -411,28 +452,31 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	userPublicKey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
-
-	operatorPublicKey, ok := args[1].(string)
-	if !ok {
-		v_result.SetMessage("args[1].(string) is error!")
-		return v_result, v_err
-	}
-
-	money, ok := args[2].(float64)
-	if !ok {
-		v_result.SetMessage("args[2].(float64) is error!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//userPublicKey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//operatorPublicKey, ok := args[1].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//money, ok := args[2].(float64)
+	//if !ok {
+	//	v_result.SetMessage("args[2].(float64) is error!")
+	//	return v_result, v_err
+	//}
+	userPublicKey := slPersonKey[0]
+	operatorPublicKey := slOperatorKey[0]
+	money := float64(50)
 
 	// 用户->运营商
 	bill1 := model.DemoBill{
@@ -487,18 +531,20 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//sleeptime, ok := args[0].(int)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
 
-	sleeptime, ok := args[0].(int)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
+	sleeptime := 1
 
-	time.Sleep(time.Second * time.Duration(sleeptime))
+	time.Sleep(time.Minute * 60 * time.Duration(sleeptime))
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -515,16 +561,17 @@ func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	userPublicKey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//userPublicKey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	userPublicKey := slPersonKey[0]
 
 	// 获得电表key
 	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
@@ -539,9 +586,11 @@ func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
+	strStartTime = lastTime
 
 	// 获得当前时间
 	nowTime := common2.GenTimestamp()
+	strEndTime = nowTime
 
 	// 更新上次查询时间
 	v_err = rethinkdb.UpdateMeterQueryLastTime(meterKey, nowTime)
@@ -567,34 +616,39 @@ func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error)
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	userPublicKey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
-
-	startTime, ok := args[1].(string)
-	if !ok {
-		v_result.SetMessage("args[1].(string) is error!")
-		return v_result, v_err
-	}
-
-	endTime, ok := args[2].(string)
-	if !ok {
-		v_result.SetMessage("args[2].(string) is error!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//userPublicKey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//startTime, ok := args[1].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//endTime, ok := args[2].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[2].(string) is error!")
+	//	return v_result, v_err
+	//}
+	userPublicKey := slPersonKey[0]
+	startTime := strStartTime
+	endTime := strEndTime
 
 	electricity, money, totalElectricity, v_err := rethinkdb.GetMeterInformation(userPublicKey, startTime, endTime)
 	if v_err != nil {
 		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
+	fElectricity = electricity
+	fTotalElectricity = totalElectricity
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -642,41 +696,45 @@ func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, e
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	userPublicKey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
-
-	electricity, ok := args[1].(float64)
-	if !ok {
-		v_result.SetMessage("args[1].(float64) is error!")
-		return v_result, v_err
-	}
-
-	electricityTotal, ok := args[2].(float64)
-	if !ok {
-		v_result.SetMessage("args[2].(float64) is error!")
-		return v_result, v_err
-	}
-
-	startTime, ok := args[3].(string)
-	if !ok {
-		v_result.SetMessage("args[3].(string) is error!")
-		return v_result, v_err
-	}
-
-	endTime, ok := args[4].(string)
-	if !ok {
-		v_result.SetMessage("args[4].(string) is error!")
-		return v_result, v_err
-	}
-	_ = endTime
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//userPublicKey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//electricity, ok := args[1].(float64)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(float64) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//electricityTotal, ok := args[2].(float64)
+	//if !ok {
+	//	v_result.SetMessage("args[2].(float64) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//startTime, ok := args[3].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[3].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//endTime, ok := args[4].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[4].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//_ = endTime
+	userPublicKey := slPersonKey[0]
+	electricity := fElectricity
+	electricityTotal := fTotalElectricity
+	startTime := strStartTime
 
 	// 计算电价
 	prices, v_err := _CalcElecPrice(electricity, electricityTotal, startTime)
@@ -698,6 +756,7 @@ func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, e
 		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
+	fMoney = money
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -733,22 +792,24 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	userPublicKey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
-
-	money, ok := args[1].(float64)
-	if !ok {
-		v_result.SetMessage("args[1].(float64)!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//userPublicKey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//money, ok := args[1].(float64)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(float64)!")
+	//	return v_result, v_err
+	//}
+	userPublicKey := slPersonKey[0]
+	money := fMoney
 
 	// 修改电表余额
 	meterKey, v_err := rethinkdb.GetMeterKeyByUserKey(userPublicKey)
@@ -756,11 +817,7 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
-	if mapMeterRemainMoney[meterKey] < money {
-		v_result.SetMessage("remain money is not enough")
-		return v_result, v_err
-	}
-	mapMeterRemainMoney[meterKey] -= money
+	mapMeterRemainMoney[meterKey] = money
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -779,56 +836,64 @@ func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//strPowerPlants, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//// 反序列化各发电厂key
+	//var slPowerPlants []string
+	//v_err = json.Unmarshal([]byte(strPowerPlants), &slPowerPlants)
+	//if v_err != nil {
+	//	v_result.SetMessage(v_err.Error())
+	//	return v_result, v_err
+	//}
+	//
+	//if len(slPowerPlants) == 0 {
+	//	if !ok {
+	//		v_result.SetMessage("power plant key is null!")
+	//		return v_result, v_err
+	//	}
+	//}
+	//
+	//startTime, ok := args[1].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//endTime, ok := args[2].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[2].(string) is error!")
+	//	return v_result, v_err
+	//}
 
-	strPowerPlants, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
-
-	// 反序列化各发电厂key
 	var slPowerPlants []string
-	v_err = json.Unmarshal([]byte(strPowerPlants), &slPowerPlants)
-	if v_err != nil {
-		v_result.SetMessage(v_err.Error())
-		return v_result, v_err
+	for _, v := range slPowerPlantsKey {
+		slPowerPlants = append(slPowerPlants, v.Key)
 	}
-
-	if len(slPowerPlants) == 0 {
-		if !ok {
-			v_result.SetMessage("power plant key is null!")
-			return v_result, v_err
-		}
-	}
-
-	startTime, ok := args[1].(string)
-	if !ok {
-		v_result.SetMessage("args[1].(string) is error!")
-		return v_result, v_err
-	}
-
-	endTime, ok := args[2].(string)
-	if !ok {
-		v_result.SetMessage("args[2].(string) is error!")
-		return v_result, v_err
-	}
+	startTime := strStartTime
+	endTime := strEndTime
 
 	// 获得各个发电厂此时段的发电量
-	mapEnergy, v_err := rethinkdb.GetPowerPlantEnergy(slPowerPlants, startTime, endTime)
+	energys, v_err := rethinkdb.GetPowerPlantEnergy(slPowerPlants, startTime, endTime)
 	if v_err != nil {
 		v_result.SetMessage(v_err.Error())
 		return v_result, v_err
 	}
+	mapEnergy = energys
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	slData, _ := json.Marshal(mapEnergy)
+	slData, _ := json.Marshal(energys)
 	v_result.SetData(string(slData))
 	return v_result, v_err
 }
@@ -842,36 +907,40 @@ func FuncAutoSplitAccount(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(500)
 	var v_err error
 
-	if len(args) == 0 {
-		v_result.SetMessage("param is null!")
-		return v_result, v_err
-	}
-
-	operatorKey, ok := args[0].(string)
-	if !ok {
-		v_result.SetMessage("args[0].(string) is error!")
-		return v_result, v_err
-	}
-
-	strPowerPlants, ok := args[1].(string)
-	if !ok {
-		v_result.SetMessage("args[1].(string) is error!")
-		return v_result, v_err
-	}
-
-	// 反序列化发电厂分帐比例
-	var mapPowerPlants map[string]float64
-	v_err = json.Unmarshal([]byte(strPowerPlants), &mapPowerPlants)
-	if v_err != nil {
-		v_result.SetMessage(v_err.Error())
-		return v_result, v_err
-	}
-
-	money, ok := args[2].(float64)
-	if !ok {
-		v_result.SetMessage("args[2].(float64) is error!")
-		return v_result, v_err
-	}
+	//if len(args) == 0 {
+	//	v_result.SetMessage("param is null!")
+	//	return v_result, v_err
+	//}
+	//
+	//operatorKey, ok := args[0].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[0].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//strPowerPlants, ok := args[1].(string)
+	//if !ok {
+	//	v_result.SetMessage("args[1].(string) is error!")
+	//	return v_result, v_err
+	//}
+	//
+	//// 反序列化发电厂分帐比例
+	//var mapPowerPlants map[string]float64
+	//v_err = json.Unmarshal([]byte(strPowerPlants), &mapPowerPlants)
+	//if v_err != nil {
+	//	v_result.SetMessage(v_err.Error())
+	//	return v_result, v_err
+	//}
+	//
+	//money, ok := args[2].(float64)
+	//if !ok {
+	//	v_result.SetMessage("args[2].(float64) is error!")
+	//	return v_result, v_err
+	//}
+	operatorKey := slOperatorKey[0]
+	mapPowerPlants := make(map[string]float64)
+	mapPowerPlants = mapEnergy
+	money := fMoney
 
 	v_err = _AutoSplitAccount(money, operatorKey, mapPowerPlants)
 	if v_err != nil {
