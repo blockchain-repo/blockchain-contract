@@ -422,6 +422,36 @@ func (cc CognitiveContract) SetOutputStruct(p_OutputStruct string) {
 	cc.PropertyTable[_OutputStruct] = OutputStruct_property
 }
 
+func (gc *CognitiveContract) GetMainPubkey() string {
+	if gc.PropertyTable[_MainPubkey] == nil {
+		return ""
+	}
+	mainpubkey_property, ok := gc.PropertyTable[_MainPubkey].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := mainpubkey_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
+}
+
+func (cc CognitiveContract) SetMainPubkey(p_mainPubkey string) {
+	//Take case: Setter method need set value for gc.xxxxxx
+	cc.ContractHead.MainPubkey = p_mainPubkey
+	mainpubkey_property, ok := cc.PropertyTable[_MainPubkey].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
+	mainpubkey_property.SetValue(p_mainPubkey)
+	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
+	cc.PropertyTable[_MainPubkey] = mainpubkey_property
+}
+
 //===============描述态=====================
 //合约对象序列化
 func (model *CognitiveContract) Serialize() (string, error) {

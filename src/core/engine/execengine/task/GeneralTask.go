@@ -19,6 +19,9 @@ import (
 
 	"fmt"
 	"github.com/astaxie/beego/logs"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 type GeneralTask struct {
@@ -742,7 +745,42 @@ func (gt *GeneralTask) Start() (int8, error) {
 		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
 			//1 函数识别 & 执行
-			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], v_expr_object.GetExpressionStr())
+			str_function := v_expr_object.GetExpressionStr()
+			str_function = strings.TrimSpace(str_function)
+			reg := regexp.MustCompile("FuncTransferAsset\\(")
+			v_str := reg.FindString(str_function)
+			v_beginwith_flag := false
+			if "" != v_str {
+				v_beginwith_flag = true
+			} else {
+				v_beginwith_flag = false
+			}
+			if v_beginwith_flag {
+				str_json_contract, r_err := gt.GetContract().Serialize()
+				if r_err != nil || str_json_contract == "" {
+					r_ret = -1
+					r_buf.WriteString("[Result]: Generate OutputStruct fail, str_json_contract Serialize fail;")
+					r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+					r_buf.WriteString("Start fail....")
+					logs.Error(r_buf.String())
+					return r_ret, r_err
+				}
+				var func_buf bytes.Buffer = bytes.Buffer{}
+				func_buf.WriteString(strings.Trim(str_function, ")"))
+				func_buf.WriteString(", ")
+				func_buf.WriteString(str_json_contract)
+				func_buf.WriteString(", ")
+				func_buf.WriteString(gt.GetContract().GetContractId())
+				func_buf.WriteString(", ")
+				func_buf.WriteString(gt.GetTaskId())
+				func_buf.WriteString(", ")
+				func_buf.WriteString(strconv.FormatInt(int64(gt.GetTaskExecuteIdx()), 10))
+				func_buf.WriteString(", ")
+				func_buf.WriteString(gt.GetContract().GetMainPubkey())
+				func_buf.WriteString(")")
+				str_function = func_buf.String()
+			}
+			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值

@@ -44,6 +44,9 @@ type ICognitiveContract interface {
 	SetOutputTaskExecuteIdx(int)
 	SetOutputStruct(string)
 
+	GetMainPubkey() string
+	SetMainPubkey(string)
+
 	Serialize() (string, error)
 	Deserialize(p_str string) (interface{}, error)
 }
