@@ -87,13 +87,13 @@ func (gt *GeneralTask) GetState() string {
 	if gt.PropertyTable[_State] == nil {
 		return ""
 	}
-	state_property,ok := gt.PropertyTable[_State].(property.PropertyT)
-	if !ok{
+	state_property, ok := gt.PropertyTable[_State].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
-	str,ok:=state_property.GetValue().(string)
-	if !ok{
+	str, ok := state_property.GetValue().(string)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
@@ -111,13 +111,13 @@ func (gt *GeneralTask) GetNextTasks() []string {
 	if gt.PropertyTable[_NextTasks] == nil {
 		return nil
 	}
-	nexttask_property,ok := gt.PropertyTable[_NextTasks].(property.PropertyT)
-	if !ok{
+	nexttask_property, ok := gt.PropertyTable[_NextTasks].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return nil
 	}
-	sl,ok:=nexttask_property.GetValue().([]string)
-	if !ok{
+	sl, ok := nexttask_property.GetValue().([]string)
+	if !ok {
 		logs.Error("assert error")
 		return nil
 	}
@@ -178,8 +178,8 @@ func (gt *GeneralTask) GetTaskId() string {
 		return ""
 	}
 	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
-	str,ok:=taskid_property.GetValue().(string)
-	if !ok{
+	str, ok := taskid_property.GetValue().(string)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
@@ -760,6 +760,12 @@ func (gt *GeneralTask) Start() (int8, error) {
 	var r_err error = nil
 	if gt.IsDormant() && gt.testPreCondition() {
 		var exec_flag bool = true
+		//如果没有后继任务，则最后一个任务执行结束后，合约完成
+		//在此处更新合约状态为【完成】,随着任务执行的产出，完成入链
+		if len(gt.GetNextTasks()) == 0 {
+			gt.GetContract().UpdateContractState(constdef.ContractState[constdef.Contract_Completed])
+		}
+
 		//var data_array []interface{} = gt.DataList
 		//循环遍历函数表达式列表，执行函数
 		//注意：限制只可有一个Output交易产出

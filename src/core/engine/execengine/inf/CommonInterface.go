@@ -47,6 +47,8 @@ type ICognitiveContract interface {
 	GetMainPubkey() string
 	SetMainPubkey(string)
 
+	UpdateContractState(string) bool
+
 	Serialize() (string, error)
 	Deserialize(p_str string) (interface{}, error)
 }

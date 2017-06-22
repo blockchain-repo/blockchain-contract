@@ -511,6 +511,41 @@ func (model *CognitiveContract) Deserialize(p_str string) (interface{}, error) {
 	return model, err
 }
 
+//更新合约状态ContractState
+//Args: p_state string
+//return: true 更新成功； false 更新失败；
+func (cc *CognitiveContract) UpdateContractState(p_state string) bool {
+	var v_bool bool = true
+	var v_contract_state string = cc.GetContractState()
+	if p_state != "" {
+		var v_exit_flag bool = false
+		for _, v_value := range constdef.ContractState {
+			if p_state == v_value {
+				v_exit_flag = true
+				break
+			}
+		}
+		if !v_exit_flag {
+			v_bool = false
+			logs.Error("UpdateContractState fail,[" + p_state + "]is not exist!")
+			return v_bool
+		} else {
+			cc.SetContractState(p_state)
+			logs.Info("UpdateContractState success, contract_state change to " + p_state)
+			return v_bool
+		}
+	}
+	switch v_contract_state {
+	case constdef.ContractState[constdef.Contract_Signature]:
+		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
+	case constdef.ContractState[constdef.Contract_Create]:
+		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
+	case constdef.ContractState[constdef.Contract_In_Process]:
+		cc.SetContractState(constdef.ContractState[constdef.Contract_Completed])
+	}
+	return v_bool
+}
+
 //===============运行态=====================
 //为防止包重复，本保内的属性，在该包内添加；公有的使用common中的
 func (cc *CognitiveContract) AddProperty(object interface{}, str_name string, value interface{}) property.PropertyT {
@@ -1403,6 +1438,8 @@ func (cc *CognitiveContract) CanExecute() bool {
 	var v_contract_state string = cc.GetContractState()
 	if v_contract_state == constdef.ContractState[constdef.Contract_Completed] || v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
 		logs.Warning("ContractState is Completed or Discarded, contract can't execute!")
+		//此时强制更新扫描表合约执行状态，防止再次被扫描加载
+
 		v_bool = false
 		return v_bool
 	}
@@ -1477,20 +1514,6 @@ func (cc *CognitiveContract) CanExecute() bool {
 		logs.Error("Now_date gt EndTime, contract can't execute!")
 		v_bool = false
 		return v_bool
-	}
-	return v_bool
-}
-
-//更新合约状态ContractState
-//return: true 更新成功； false 更新失败；
-func (cc *CognitiveContract) UpdateContractState() bool {
-	var v_bool bool = true
-	var v_contract_state string = cc.GetContractState()
-	switch v_contract_state {
-	case constdef.ContractState[constdef.Contract_Signature]:
-		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
-	case constdef.ContractState[constdef.Contract_Create]:
-		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
 	}
 	return v_bool
 }

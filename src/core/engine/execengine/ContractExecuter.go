@@ -174,7 +174,7 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		logs.Error(r_buf.String())
 		return err
 	}
-	if !ce.contract_executer.UpdateContractState() {
+	if !ce.contract_executer.UpdateContractState("") {
 		err = errors.New("Update ContractState Error;")
 		r_buf.WriteString("[Result]: Load Fail;")
 		r_buf.WriteString("[Error]: Update ContractState Error;")
