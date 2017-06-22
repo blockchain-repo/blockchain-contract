@@ -1,6 +1,7 @@
 package task
 
 import (
+	"bytes"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -11,7 +12,7 @@ import (
 type Decision struct {
 	Enquiry
 	CandidateList  []DecisionCandidate `json:"CandidateList"`
-	DecisionResult []DecisionCandidate `json:"DecisionResult"`
+	DecisionResult []DecisionCandidate `json:"DecisionResult"` //作废，无用字段，决策结果都在CandidateList中体现；每个决策候选集，一个决策结果
 }
 
 const (
@@ -226,4 +227,53 @@ func (d *Decision) RemoveDecisionResult(p_cand []DecisionCandidate) {
 		resultlist_property.SetValue(map_resultlist)
 		d.PropertyTable[_DecisionResult] = resultlist_property
 	}
+}
+
+//针对决策单独进行Start操作
+func (gt *Decision) Start() (int8, error) {
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	r_buf.WriteString("Contract Runing:Dormant State.")
+	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
+	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
+	logs.Info(r_buf.String(), " begin....")
+	var r_ret int8 = 0
+	var r_err error = nil
+	if gt.IsDormant() && gt.testPreCondition() {
+		var exec_flag bool = true
+
+		var v_idx int8 = 0
+		for _, v_candidate := range gt.GetCandidateList() {
+			v_candidate.ResetSupport()
+			v_candidate.Eval()
+			v_idx = v_idx + 1
+		}
+		//执行失败，返回 -1
+		if !exec_flag {
+			r_ret = -1
+			r_buf.WriteString("[Result]: Task execute fail;")
+			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			r_buf.WriteString("fail....")
+			logs.Error(r_buf.String())
+			return r_ret, r_err
+		}
+		r_buf.WriteString("[Result]: Task execute success;")
+		logs.Info(r_buf.String(), " Dormant to Inprocess....")
+		gt.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
+	} else if gt.IsDormant() && !gt.testPreCondition() { //未达到执行条件，返回 0
+		r_ret = 0
+		r_buf.WriteString("[Result]: preCondition not true;")
+		logs.Warning(r_buf.String(), " exit....")
+		return r_ret, r_err
+	}
+	//执行完动作后需要等待执行完成
+	var v_exit_flag int8 = 0
+	for v_exit_flag == 0 {
+		r_ret, r_err = gt.Complete()
+		if r_ret == 0 {
+			continue
+		} else {
+			break
+		}
+	}
+	return r_ret, r_err
 }
