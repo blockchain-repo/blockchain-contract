@@ -15,6 +15,13 @@ import (
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++合约机公用方法集+++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//获取当前日期FuncGetNowDay()
+//获取当前时间FuncGetNowDate()
+//休眠指定时间FuncSleepTime(sleeptime)
+//资产转移FuncTransferAsset(user_A, '{user_B, amount}')
+//资产创建FuncCreateAsset(user_A, '{user_B, amount}')
+//获取合约产出FuncGetContracOutputtById(contract_id)
+//合约产出是否入链FuncIsConPutInUnichian(id)
 
 //测试方法
 func FuncTestMethod(args ...interface{}) (common.OperateResult, error) {
@@ -38,6 +45,59 @@ func FuncTestMethod(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData("test success")
+	return v_result, v_err
+}
+
+//获取当前日期的Day: int
+func FuncGetNowDay(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult
+	var v_err error = nil
+
+	day := time.Now().Day()
+
+	//构建返回值
+	v_result = common.OperateResult{}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(day)
+	return v_result, v_err
+}
+
+//获取当前时间 Date: 2017-06-20 17:00:00
+func FuncGetNowDate(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult
+	var v_err error = nil
+
+	timestamp := time.Now().Unix()
+	tm := time.Unix(timestamp, 0)
+	str_date := tm.Format("2006-01-02 03:04:05")
+
+	//构建返回值
+	v_result = common.OperateResult{}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(str_date)
+	return v_result, v_err
+}
+
+//休眠指定时间
+//Args: sleeptime int
+func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult
+	var v_err error = nil
+	if len(args) != 1 {
+		v_err = errors.New("param num error")
+		return v_result, v_err
+	}
+	//user provide
+	var sleeptime int = args[0].(int)
+	time.Sleep(time.Second * time.Duration(sleeptime))
+
+	//构建返回值
+	v_result = common.OperateResult{}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData("")
 	return v_result, v_err
 }
 

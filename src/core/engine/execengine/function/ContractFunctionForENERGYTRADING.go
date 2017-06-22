@@ -326,6 +326,20 @@ func _CalcElecPrice(electricity, electricityTotal float64, timeStamp string) (fl
 //    运营商分账给火电，提供分账票据
 
 //++++++++++++++++自动购电合约++++++++++++++++++++++++++++++++++++++++++++++++++++
+//查询电表余额FuncQueryAmmeterBalance(user_A)
+//查询用户账户余额FuncQueryAccountBalance(user_A)
+//短信提示账户充钱FuncNoticeDeposit(user_A, user_remainmoney)
+//电表自动购电50元FuncAutoPurchasingElectricity(user_A, user_B, amount)
+//自动休眠1小时FuncAutoSleeping(sleeptime)
+//获取查询起始时间FuncGetStartEndTime(user_A)
+//获取电表消耗电量等信息FuncGetPowerConsumeParam(user_A, stat_begintime, stat_endtime)
+//获取查询起始时间FuncGetPowerPrice()
+//计算用户消耗的电费FuncCalcConsumeAmountAndMoney(user_A, elec_amount, elec_month_tatalamount, stat_begintime, stat_endtime)
+//打印分账票据FuncTransferElecChargeToPlatform(user_B, user_others, user_transfers)
+//修改电表余额FuncUpdateElecBalance(user_A, elec_amount)
+//计算合约分账比例FuncCalcAndSplitRatio(user_B, stat_begintime, stat_endtime)
+//合约分账FuncAutoSplitAccount(user_B, Split_percent, money)
+
 //查询电表余额
 //    访问电力能源链，读取用户电表余额
 //Args: User_A  string  电表公钥

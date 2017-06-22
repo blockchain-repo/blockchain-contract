@@ -15,31 +15,57 @@ import (
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++合约机【天安金交中心】专用扩展方法++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////函数集合：
+//// 购买合约
+//查询用户募集期内认购份额FuncQueryUserTotalShareInPeriod(user_A, product_A)
+//获取产品当期已募集总额FuncQueryProductTotalShareInPeriod(product_A, user_B)
+//询问管理员是否允许继续购买FuncAskAdminIfContinue(user_B)
+//获取管理员回复的是否继续购买信息FuncGetAdminIfContinueReply(user_B)
+//认购失败【达到封顶头寸 或 管理员不允许购买】FuncPurchaseExit()
+//认购成功【未达到封顶头寸 或 管理员允许购买】FuncPurchaseSuccess()
+//没达到募集规模：获取用户的资金及利息FuncGetUserPrincipalAndInterest(user_A)
+//募集期外，没达到募集规模：原认购产品失败，退还资金及利息FuncPurchaseFailAndRefund(user_A, user_B, amount)
+//募集期外，达到募集规模：产品成立，原认购产品有效FuncPurchaseSuccessOrgProduct(user_A)
+//签订认购协议FuncSignatureProduct()
+//未达到募集规模，产品失败，不可新购产品FuncPurchaseFailNewProduct()
+//达到募集规模，产品成立，可以新购产品，认购成功FuncPurchaseSuccessNewProduct()
 
-//样例方法
-func FuncTIANJSExample(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-	var v_map_args map[string]interface{} = nil
-	if len(args) != 0 {
-		v_map_args = make(map[string]interface{}, 0)
-	}
-	//识别可变参数
-	for v_idx, v_args := range args {
-		tmp_arg := "v_arg_" + strconv.Itoa(v_idx)
-		v_map_args[tmp_arg] = v_args
-	}
-	//调用参数
-	for v_name, v_value := range v_map_args {
-		fmt.Println(v_name, ":", v_value)
-	}
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData("test success")
-	return v_result, v_err
-}
+//// 赎回合约
+//获取用户已购产品总金额FuncGetUserTotalShare(product_A, user_A)
+//获取用户持有期FuncGetUserHoldPeriod(period_from, user_A, product_A)
+//赎回失败[持有期小于7天]，FuncRedeemFail
+//全部赎回FuncRedeemAllProcess
+//计算账户赎回总额度FuncCalcTotalAmount
+//通知管理员【大额赎回】FuncRedeemLargeProcess
+//获取上次大额赎回时间FuncGetLastRedeemLargeTime
+//是连续两天大额赎回【限制操作】FuncRedeemLimit
+//赎回转账【小额赎回或大额赎回不受限】FuncRedeemSmallProcess
+//获取上一工作日理财计划的净产值FuncTotalOutValueLastDay
+
+//// 收益计算
+//查询截止当前的认购金额FuncGetUserPurchase(user_A)
+//查询截止当前的账户余额FuncGetUserBalance(user_A)
+//判定上一工作日是否为募集期内FuncCheckLastDayInRaisePeriod(period_from, period_to)
+//查询人民币活期存款利率FuncGetDepositRate()
+//计算活期利息转账给账户FuncCalcAndTransferInterest(user_a, total_amount, rate)
+//查询上一工作日实际年化收益率FuncGetYearYieldRateOfLastDay()
+//计算用户理财实际收益并转账FuncCalcUserRealIncome()
+//计算理财委托托管费并转账FuncCalcAndTransferTrusteeTee()
+//计算用户预期收益并转账FuncCalcAndTransferExpectIncome()
+//查询用户理财合约状态FuncQueryContractState()
+//终止理财合约，停止计息FuncTerminateContract()
+//认购金额为0，停止计息FuncStopCalcInterest()
+
+//// 合约终止
+//获取合约终止条件FuncGetConditionState(cond_A)
+//理财合约终止FuncAbnormalEnd()
+
+//// 账务结算
+//查询交易账户余额FuncUserTotalRemain(user_A)
+//查询待付托管费用FuncPayTotalTrustFee(user_A, user_B)
+//查询待付管理费用FuncPayTotalManageFee(user_A, user_C)
+//查询理财产品状态FuncGetProductState(user_A, product_A)
+//转账到银行账户FuncBankTransfer(user_A, bank_A, user_B, bank_B, amount)
 
 //===============理财产品申购================================================
 //区分身份链、交易链（将理财看做钱份额，1元比1份）、理财产品链
@@ -297,7 +323,7 @@ func FuncRedeemAllProcess(args ...interface{}) (common.OperateResult, error) {
 }
 
 //C. 计算账户赎回总额度
-func Func(args ...interface{}) (common.OperateResult, error) {
+func FuncCalcTotalAmount(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 
@@ -398,6 +424,7 @@ earnings:
 "timestamp":123144
 }
 */
+
 //A. 每天指定时间，查询截止当前的认购金额
 //Args: user_A  string
 func FuncGetUserPurchase(args ...interface{}) (common.OperateResult, error) {

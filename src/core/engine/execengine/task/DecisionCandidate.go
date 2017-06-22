@@ -88,16 +88,16 @@ func (dc *DecisionCandidate) InitDecisionCandidate() error {
 
 func (dc *DecisionCandidate) AddText(p_strarr []string) {
 	if p_strarr != nil {
-		text_property,ok := dc.PropertyTable[_Text].(property.PropertyT)
-		if !ok{
+		text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
 		if text_property.GetValue() == nil {
 			text_property.SetValue(make([]string, 0))
 		}
-		map_text,ok := text_property.GetValue().(map[string]string)
-		if !ok{
+		map_text, ok := text_property.GetValue().(map[string]string)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
@@ -110,14 +110,14 @@ func (dc *DecisionCandidate) AddText(p_strarr []string) {
 }
 
 func (dc *DecisionCandidate) ShowText() {
-	text_property,ok := dc.PropertyTable[_Text].(property.PropertyT)
-	if !ok{
+	text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}
 	if text_property.GetValue() != nil {
-		map_text,ok := text_property.GetValue().(map[string]string)
-		if !ok{
+		map_text, ok := text_property.GetValue().(map[string]string)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
@@ -129,16 +129,16 @@ func (dc *DecisionCandidate) ShowText() {
 
 func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 	if p_Support != "" {
-		supports_property,ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
-		if !ok{
+		supports_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
 		if supports_property.GetValue() == nil {
 			supports_property.SetValue(make(map[string]string, 0))
 		}
-		map_supports,ok := supports_property.GetValue().(map[string]string)
-		if !ok{
+		map_supports, ok := supports_property.GetValue().(map[string]string)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
@@ -150,16 +150,16 @@ func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 
 func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 	if p_against != "" {
-		against_property,ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
-		if !ok{
+		against_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
 		if against_property.GetValue() == nil {
 			against_property.SetValue(make(map[string]string, 0))
 		}
-		map_againsts,ok := against_property.GetValue().(map[string]string)
-		if !ok{
+		map_againsts, ok := against_property.GetValue().(map[string]string)
+		if !ok {
 			logs.Error("assert error")
 			return
 		}
@@ -171,8 +171,8 @@ func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 
 func (dc *DecisionCandidate) ResetSupport() {
 	dc.Support = 0
-	support_property,ok := dc.PropertyTable[_Support].(property.PropertyT)
-	if !ok{
+	support_property, ok := dc.PropertyTable[_Support].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}
@@ -191,14 +191,14 @@ func (dc *DecisionCandidate) Eval() int {
 	var Support_bool interface{}
 	var against_bool interface{}
 	var err error = nil
-	supports_property,ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
-	if !ok{
+	supports_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}
 	if supports_property.GetValue() != nil {
-		m,ok:=supports_property.GetValue().(map[string]string)
-		if !ok{
+		m, ok := supports_property.GetValue().(map[string]string)
+		if !ok {
 			logs.Error("assert error")
 			return 0
 		}
@@ -208,8 +208,8 @@ func (dc *DecisionCandidate) Eval() int {
 			if err != nil {
 				logs.Warning("DecisionCandidate.Eval fail[" + err.Error() + "]")
 			}
-			b,ok:=Support_bool.(bool)
-			if !ok{
+			b, ok := Support_bool.(bool)
+			if !ok {
 				logs.Error("assert error")
 				return 0
 			}
@@ -218,15 +218,15 @@ func (dc *DecisionCandidate) Eval() int {
 			}
 		}
 	}
-	against_property,ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
-	if !ok{
+	against_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}
 
 	if against_property.GetValue() != nil {
-		m,ok:=against_property.GetValue().(map[string]string)
-		if !ok{
+		m, ok := against_property.GetValue().(map[string]string)
+		if !ok {
 			logs.Error("assert error")
 			return 0
 		}
@@ -236,8 +236,8 @@ func (dc *DecisionCandidate) Eval() int {
 			if err != nil {
 				logs.Warning("DecisionCandidate.Eval fail[" + err.Error() + "]")
 			}
-			b,ok:=against_bool.(bool)
-			if !ok{
+			b, ok := against_bool.(bool)
+			if !ok {
 				logs.Error("assert error")
 				return 0
 			}

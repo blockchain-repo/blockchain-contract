@@ -2,11 +2,11 @@ package function
 
 import (
 	"errors"
+	"fmt"
+	"github.com/astaxie/beego/logs"
 	"strconv"
 	"time"
 	"unicontract/src/core/engine/common"
-	"github.com/astaxie/beego/logs"
-	"fmt"
 )
 
 var (
@@ -33,38 +33,13 @@ func init() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++合约机【DEMO】专用扩展方法++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//获取用户余额FuncGetBalance(user_A)
+//资金转账FuncTanferMoney(user_A, user_B, amount)
+//账户充值FuncDeposit(user_A, amount)
+//查询用户月消耗话费FuncQueryMonthConsumption(user_A)
+//返还话费FuncBackTelephoneFare(user_B, user_A, amount)
 
-//获取当前日期的Day int
-func FuncGetNowDay(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	day := time.Now().Day()
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData(day)
-	return v_result, v_err
-}
-
-func FuncGetNowDate(args ...interface{}) (common.OperateResult, error) {
-	var v_result common.OperateResult
-	var v_err error = nil
-
-	timestamp := time.Now().Unix()
-	tm := time.Unix(timestamp, 0)
-	str_date := tm.Format("2006-01-02 03:04:05")
-
-	//构建返回值
-	v_result = common.OperateResult{}
-	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
-	v_result.SetData(str_date)
-	return v_result, v_err
-}
-
+//获取用户余额
 func FuncGetBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -74,10 +49,10 @@ func FuncGetBalance(args ...interface{}) (common.OperateResult, error) {
 		v_err = errors.New("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
-	arg_0,ok := args[0].(string)
-	if !ok{
+	arg_0, ok := args[0].(string)
+	if !ok {
 		logs.Error("assert error")
-		return v_result,fmt.Errorf("assert error")
+		return v_result, fmt.Errorf("assert error")
 	}
 	balance_amount := BANK_BALANCE[arg_0]
 
@@ -88,6 +63,7 @@ func FuncGetBalance(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+//资产转移
 func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -99,15 +75,15 @@ func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 
-	arg_A,ok := args[0].(string)
-	if !ok{
+	arg_A, ok := args[0].(string)
+	if !ok {
 		logs.Error("assert error")
-		return v_result,fmt.Errorf("assert error")
+		return v_result, fmt.Errorf("assert error")
 	}
-	arg_B,ok := args[1].(string)
-	if !ok{
+	arg_B, ok := args[1].(string)
+	if !ok {
 		logs.Error("assert error")
-		return v_result,fmt.Errorf("assert error")
+		return v_result, fmt.Errorf("assert error")
 	}
 	var arg_money float64 = args[2].(float64)
 
@@ -127,6 +103,7 @@ func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+//账户充值
 func FuncDeposit(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -149,6 +126,7 @@ func FuncDeposit(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+//查询用户月消耗话费
 func FuncQueryMonthConsumption(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -167,6 +145,7 @@ func FuncQueryMonthConsumption(args ...interface{}) (common.OperateResult, error
 	return v_result, v_err
 }
 
+//返还话费
 func FuncBackTelephoneFare(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil

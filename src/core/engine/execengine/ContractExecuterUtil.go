@@ -303,29 +303,15 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 				return err
 			}
 		}
-		data_list := map_task["DataList"]
-		sl14, ok := data_list.([]interface{})
+		candidate_list := map_task["CandidateList"]
+		sl14, ok := candidate_list.([]interface{})
 		if !ok {
 			logs.Error("assert error")
 			return fmt.Errorf("assert error")
 		}
 		for _, p_value := range sl14 {
-			if err := loadData(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadData[Decision.DataList] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
-			}
-		}
-		dataexpress_list := map_task["DataValueSetterExpressionList"]
-		sl15, ok := dataexpress_list.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl15 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Decision.DataValueSetterExpressionList] fail;")
+			if err := loadCandidate(p_contract, p_value, p_task); err != nil {
+				r_buf.WriteString("[Result]: loadCandidate[Decision.CandidateList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
 				logs.Warning(r_buf.String())
 				return err
@@ -801,6 +787,49 @@ func loadExpression(p_contract *contract.CognitiveContract, p_expression interfa
 		p_contract.AddComponent(object_expression)
 	}
 	r_buf.WriteString("[Cname]: " + map_expression["Cname"].(string) + "[Ctype]: " + map_expression["Ctype"].(string) + "[Result]: loadExpression success;")
+	logs.Info(r_buf.String())
+	return err
+}
+
+func loadCandidate(p_contract *contract.CognitiveContract, p_candidate interface{}, p_task interface{}) error {
+	var err error = nil
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	r_buf.WriteString("loadCandidate...;")
+	if p_contract == nil || p_task == nil || p_candidate == nil {
+		err = errors.New("Param[p_contract or p_task or p_candidate] is null!")
+		r_buf.WriteString("[Result]: loadCandidate fail;")
+		r_buf.WriteString("[Error]:　" + err.Error() + ";")
+		logs.Warning(r_buf.String())
+		return err
+	}
+	map_candidate := p_candidate.(map[string]interface{})
+	switch map_candidate["Ctype"] {
+	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.ExpressionType[constdef.Task_DecisionCandidate]:
+		object_candidate := task.NewDecisionCandidate()
+		byte_task, err := json.Marshal(map_candidate)
+		if err != nil {
+			r_buf.WriteString("[Result]: Component_Task(Task_DecisionCandidate)Marshal fail;")
+			r_buf.WriteString("[Error]: " + err.Error() + ";")
+			logs.Warning(r_buf.String())
+			return err
+		}
+		err = json.Unmarshal(byte_task, &object_candidate)
+		if err != nil {
+			r_buf.WriteString("[Result]: Component_Task(Task_DecisionCandidate)Unmarshal fail;")
+			r_buf.WriteString("[Error]: " + err.Error() + ";")
+			logs.Warning(r_buf.String())
+			return err
+		}
+		err = object_candidate.InitDecisionCandidate()
+		if err != nil {
+			r_buf.WriteString("[Result]: Component_Task(Task_DecisionCandidate)InitDecisionCandidate fail;")
+			r_buf.WriteString("[Error]: " + err.Error() + ";")
+			logs.Warning(r_buf.String())
+			return err
+		}
+		p_contract.AddComponent(object_candidate)
+	}
+	r_buf.WriteString("[Cname]: " + map_candidate["Cname"].(string) + "[Ctype]: " + map_candidate["Ctype"].(string) + "[Result]: loadCandidate success;")
 	logs.Info(r_buf.String())
 	return err
 }

@@ -35,6 +35,8 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 	}
 	//Add Common Method,Here
 	//TODO: when add method in ContractFunctionForCommon.go，must add it here
+	bif.ContractFunctions["FuncGetNowDay"] = FuncGetNowDay
+	bif.ContractFunctions["FuncGetNowDate"] = FuncGetNowDate
 	bif.ContractFunctions["FuncTestMethod"] = FuncTestMethod
 	bif.ContractFunctions["FuncCreateAsset"] = FuncCreateAsset
 	bif.ContractFunctions["FuncTransferAsset"] = FuncTransferAsset
@@ -61,7 +63,11 @@ func (bif *FunctionParseEngine) LoadFunctionDEMO() error {
 	}
 	//Add Common Method,Here
 	//TODO: when add method in ContractFunctionForCommon.go，must add it here
-
+	bif.ContractFunctions["FuncGetBalance"] = FuncGetBalance
+	bif.ContractFunctions["FuncTanferMoney"] = FuncTanferMoney
+	bif.ContractFunctions["FuncDeposit"] = FuncDeposit
+	bif.ContractFunctions["FuncQueryMonthConsumption"] = FuncQueryMonthConsumption
+	bif.ContractFunctions["FuncBackTelephoneFare"] = FuncBackTelephoneFare
 	return v_err
 }
 
@@ -80,8 +86,53 @@ func (bif *FunctionParseEngine) LoadFunctionTIANJS() error {
 	}
 	//Add Common Method,Here
 	//TODO: when add method in ContractFunctionForCommon.go，must add it here
-	bif.ContractFunctions["FuncTIANJSExample"] = FuncTIANJSExample
-
+	// 购买合约
+	bif.ContractFunctions["FuncQueryUserTotalShareInPeriod"] = FuncQueryUserTotalShareInPeriod
+	bif.ContractFunctions["FuncQueryProductTotalShareInPeriod"] = FuncQueryProductTotalShareInPeriod
+	bif.ContractFunctions["FuncAskAdminIfContinue"] = FuncAskAdminIfContinue
+	bif.ContractFunctions["FuncGetAdminIfContinueReply"] = FuncGetAdminIfContinueReply
+	bif.ContractFunctions["FuncPurchaseExit"] = FuncPurchaseExit
+	bif.ContractFunctions["FuncPurchaseSuccess"] = FuncPurchaseSuccess
+	bif.ContractFunctions["FuncGetUserPrincipalAndInterest"] = FuncGetUserPrincipalAndInterest
+	bif.ContractFunctions["FuncPurchaseFailAndRefund"] = FuncPurchaseFailAndRefund
+	bif.ContractFunctions["FuncPurchaseSuccessOrgProduct"] = FuncPurchaseSuccessOrgProduct
+	bif.ContractFunctions["FuncSignatureProduct"] = FuncSignatureProduct
+	bif.ContractFunctions["FuncPurchaseFailNewProduct"] = FuncPurchaseFailNewProduct
+	bif.ContractFunctions["FuncPurchaseSuccessNewProduct"] = FuncPurchaseSuccessNewProduct
+	// 赎回合约
+	bif.ContractFunctions["FuncGetUserTotalShare"] = FuncGetUserTotalShare
+	bif.ContractFunctions["FuncGetUserHoldPeriod"] = FuncGetUserHoldPeriod
+	bif.ContractFunctions["FuncRedeemFail"] = FuncRedeemFail
+	bif.ContractFunctions["FuncRedeemAllProcess"] = FuncRedeemAllProcess
+	bif.ContractFunctions["FuncCalcTotalAmount"] = FuncCalcTotalAmount
+	bif.ContractFunctions["FuncRedeemLargeProcess"] = FuncRedeemLargeProcess
+	bif.ContractFunctions["FuncGetLastRedeemLargeTime"] = FuncGetLastRedeemLargeTime
+	bif.ContractFunctions["FuncRedeemLimit"] = FuncRedeemLimit
+	bif.ContractFunctions["FuncRedeemSmallProcess"] = FuncRedeemSmallProcess
+	bif.ContractFunctions["FuncTotalOutValueLastDay"] = FuncTotalOutValueLastDay
+	// 收益计算
+	bif.ContractFunctions["FuncGetUserPurchase"] = FuncGetUserPurchase
+	bif.ContractFunctions["FuncGetUserBalance"] = FuncGetUserBalance
+	bif.ContractFunctions["FuncCheckLastDayInRaisePeriod"] = FuncCheckLastDayInRaisePeriod
+	bif.ContractFunctions["FuncGetDepositRate"] = FuncGetDepositRate
+	bif.ContractFunctions["FuncCalcAndTransferInterest"] = FuncCalcAndTransferInterest
+	bif.ContractFunctions["FuncGetYearYieldRateOfLastDay"] = FuncGetYearYieldRateOfLastDay
+	bif.ContractFunctions["FuncCalcUserRealIncome"] = FuncCalcUserRealIncome
+	bif.ContractFunctions["FuncCalcAndTransferTrusteeTee"] = FuncCalcAndTransferTrusteeTee
+	bif.ContractFunctions["FuncCalcAndTransferExpectIncome"] = FuncCalcAndTransferExpectIncome
+	bif.ContractFunctions["FuncQueryContractState"] = FuncQueryContractState
+	bif.ContractFunctions["FuncQueryContractState"] = FuncQueryContractState
+	bif.ContractFunctions["FuncTerminateContract"] = FuncTerminateContract
+	bif.ContractFunctions["FuncStopCalcInterest"] = FuncStopCalcInterest
+	// 合约终止
+	bif.ContractFunctions["FuncGetConditionState"] = FuncGetConditionState
+	bif.ContractFunctions["FuncAbnormalEnd"] = FuncAbnormalEnd
+	// 账务结算
+	bif.ContractFunctions["FuncUserTotalRemain"] = FuncUserTotalRemain
+	bif.ContractFunctions["FuncPayTotalTrustFee"] = FuncPayTotalTrustFee
+	bif.ContractFunctions["FuncPayTotalManageFee"] = FuncPayTotalManageFee
+	bif.ContractFunctions["FuncGetProductState"] = FuncGetProductState
+	bif.ContractFunctions["FuncBankTransfer"] = FuncBankTransfer
 	return v_err
 }
 
@@ -101,6 +152,83 @@ func (bif *FunctionParseEngine) LoadFunctionGUANGXIBIAMAO() error {
 	//Add Common Method,Here
 	//TODO: when add method in ContractFunctionForCommon.go，must add it here
 	bif.ContractFunctions["FuncBIANMAOExample"] = FuncBIANMAOExample
+
+	return v_err
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//=====ENEGYTRADING [能源交易]
+func (bif *FunctionParseEngine) LoadFunctionENEGYTRADING() error {
+	var v_err error = nil
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	if bif.ContractFunctions == nil {
+		r_buf.WriteString("[Result]: LoadFunctionENEGYTRADING fail;")
+		r_buf.WriteString("[Error]: ContractFunctions is nil!")
+		logs.Error(r_buf.String())
+		v_err = errors.New("ContractFunctions is nil!")
+		return v_err
+	}
+	//Add Common Method,Here
+	//TODO: when add method in ContractFunctionForCommon.go，must add it here
+	bif.ContractFunctions["FuncBIANMAOExample"] = FuncBIANMAOExample
+	bif.ContractFunctions["FuncQueryAmmeterBalance"] = FuncQueryAmmeterBalance
+	bif.ContractFunctions["FuncQueryAccountBalance"] = FuncQueryAccountBalance
+	bif.ContractFunctions["FuncNoticeDeposit"] = FuncNoticeDeposit
+	bif.ContractFunctions["FuncAutoPurchasingElectricity"] = FuncAutoPurchasingElectricity
+	bif.ContractFunctions["FuncAutoSleeping"] = FuncAutoSleeping
+	bif.ContractFunctions["FuncGetStartEndTime"] = FuncGetStartEndTime
+	bif.ContractFunctions["FuncGetPowerConsumeParam"] = FuncGetPowerConsumeParam
+	bif.ContractFunctions["FuncGetPowerPrice"] = FuncGetPowerPrice
+	bif.ContractFunctions["FuncCalcConsumeAmountAndMoney"] = FuncCalcConsumeAmountAndMoney
+	bif.ContractFunctions["FuncTransferElecChargeToPlatform"] = FuncTransferElecChargeToPlatform
+	bif.ContractFunctions["FuncUpdateElecBalance"] = FuncUpdateElecBalance
+	bif.ContractFunctions["FuncCalcAndSplitRatio"] = FuncCalcAndSplitRatio
+	bif.ContractFunctions["FuncAutoSplitAccount"] = FuncAutoSplitAccount
+	return v_err
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//=====TRANSFER [转账支付]
+func (bif *FunctionParseEngine) LoadFunctionTRANSFER() error {
+	var v_err error = nil
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	if bif.ContractFunctions == nil {
+		r_buf.WriteString("[Result]: LoadFunctionTRANSFER fail;")
+		r_buf.WriteString("[Error]: ContractFunctions is nil!")
+		logs.Error(r_buf.String())
+		v_err = errors.New("ContractFunctions is nil!")
+		return v_err
+	}
+	//Add Common Method,Here
+	//TODO: when add method in ContractFunctionForCommon.go，must add it here
+	bif.ContractFunctions["FuncAutoTransferAssetAtTime"] = FuncAutoTransferAssetAtTime
+
+	return v_err
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//=====RENTPAYMENT 【房租自动缴纳合约】
+func (bif *FunctionParseEngine) LoadFunctionRENTPAYMENT() error {
+	var v_err error = nil
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	if bif.ContractFunctions == nil {
+		r_buf.WriteString("[Result]: LoadFunctionRENTPAYMENT fail;")
+		r_buf.WriteString("[Error]: ContractFunctions is nil!")
+		logs.Error(r_buf.String())
+		v_err = errors.New("ContractFunctions is nil!")
+		return v_err
+	}
+	//Add Common Method,Here
+	bif.ContractFunctions["FuncIfContinueToPayNextMonth"] = FuncIfContinueToPayNextMonth
+	bif.ContractFunctions["FuncContractExitForComplete"] = FuncContractExitForComplete
+	bif.ContractFunctions["FuncQueryUserBalance"] = FuncQueryUserBalance
+	bif.ContractFunctions["FuncTransferMoney"] = FuncTransferMoney
+	bif.ContractFunctions["FuncPrintReceipt"] = FuncPrintReceipt
+	bif.ContractFunctions["FuncRemindAccount"] = FuncRemindAccount
+	bif.ContractFunctions["FuncNoAction"] = FuncNoAction
 
 	return v_err
 }

@@ -70,5 +70,5 @@ var ExpressionRegexp = map[int]string{
 	Regexp_Name_Data_Compound:      "data_compound_",
 	Regexp_Name_Data_OperateResult: "data_operateresult_",
 	Regexp_Name_Expr_Func:          "expression_function_",
-	Regexp_Name_Expr_Argu:          "expression_logicargument_",
+	Regexp_Name_Expr_Argu:          "expression_condition_",
 }
