@@ -924,7 +924,12 @@ func GetID(strNodePubkey, strContractID string, strContractHashId string) (strin
 		return "", err
 	}
 
-	return tasks["id"].(string), nil
+	id, ok := tasks["id"].(string)
+	if !ok {
+		return "", fmt.Errorf("assert error")
+	}
+
+	return id, nil
 }
 
 //---------------------------------------------------------------------------
@@ -948,7 +953,17 @@ func GetValidTime(strID string) (string, string, error) {
 		return "", "", err
 	}
 
-	return tasks["StartTime"].(string), tasks["EndTime"].(string), nil
+	startTime,ok:=tasks["StartTime"].(string)
+	if !ok{
+		return "","",fmt.Errorf("assert error")
+	}
+
+	endTime,ok:=tasks["EndTime"].(string)
+	if !ok{
+		return "","",fmt.Errorf("assert error")
+	}
+
+	return startTime, endTime, nil
 }
 
 //---------------------------------------------------------------------------
@@ -994,7 +1009,10 @@ func SetTaskScheduleFlag(strID string, alreadySend bool) error {
 			return err
 		}
 
-		overFlag := task["OverFlag"].(float64)
+		overFlag,ok := task["OverFlag"].(float64)
+		if !ok{
+			return fmt.Errorf("assert error")
+		}
 		if overFlag != 1 {
 			sendflag = 0
 		} else {
@@ -1358,7 +1376,11 @@ func _GetMoney(strField, strPublicKey string) (float64, error) {
 	}
 
 	for _, v := range items {
-		money += v["Money"].(float64)
+		value,ok:=v["Money"].(float64)
+		if !ok{
+			return money,fmt.Errorf("assert error")
+		}
+		money += value
 	}
 
 	return money, nil

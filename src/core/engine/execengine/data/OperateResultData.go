@@ -1,10 +1,11 @@
 package data
 
 import (
-	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
+
+	"github.com/astaxie/beego/logs"
 )
 
 type OperateResultData struct {
@@ -19,7 +20,11 @@ func NewOperateResultData() *OperateResultData {
 //====================接口方法========================
 func (nd OperateResultData) GetName() string {
 	if nd.PropertyTable[_Parent] != nil {
-		parent_property := nd.PropertyTable[_Parent].(property.PropertyT)
+		parent_property, ok := nd.PropertyTable[_Parent].(property.PropertyT)
+		if !ok {
+			logs.Error("assert error")
+			return ""
+		}
 		if parent_property.GetValue() != nil {
 			v_general_data := parent_property.GetValue().(inf.IData)
 			if v_general_data.GetName() != "" {
@@ -33,12 +38,22 @@ func (nd OperateResultData) GetName() string {
 }
 
 func (td OperateResultData) GetValue() interface{} {
-	value_property := td.PropertyTable[_Value].(property.PropertyT)
+	value_property, ok := td.PropertyTable[_Value].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	} else {
 		v_contract := td.GeneralComponent.GetContract()
-		v_default := v_contract.ProcessString(td.GetDefaultValue().(string))
+		str, ok := td.GetDefaultValue().(string)
+		if !ok {
+			logs.Error("assert error")
+			return ""
+		}
+		v_default := v_contract.ProcessString(str)
+
 		return v_default
 	}
 }
@@ -52,8 +67,17 @@ func (gc OperateResultData) GetCtype() string {
 	if gc.PropertyTable["_Ctype"] == nil {
 		return ""
 	}
-	ctype_property := gc.PropertyTable["_Ctype"].(property.PropertyT)
-	return ctype_property.GetValue().(string)
+	ctype_property, ok := gc.PropertyTable["_Ctype"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := ctype_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (gc OperateResultData) CleanValueInProcess() {
 	gc.GeneralData.CleanValueInProcess()

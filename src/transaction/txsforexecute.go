@@ -147,27 +147,44 @@ func ExecuteGetContract(contractId string) (string, error) {
 
 func GetPurchaseAmount(pubkey string) float64 {
 	res, _ := rethinkdb.GetInfoByUser(pubkey)
-	countAmount := res["purchaseAmount"].(float64) + res["yield"].(float64)
+	purchaseAmount, ok := res["purchaseAmount"].(float64)
+	if !ok {
+		purchaseAmount = float64(0)
+	}
+	yield, ok := res["yield"].(float64)
+	if !ok {
+		yield = float64(0)
+	}
+	countAmount := purchaseAmount + yield
 	return countAmount
 }
 
-func GetInfoByUser(pubkey string)map[string]interface{}{
+func GetInfoByUser(pubkey string) map[string]interface{} {
 	res, _ := rethinkdb.GetInfoByUser(pubkey)
 	logs.Info(res)
-	return  res
+	return res
 }
+
 //
 
 //
 func GetInterestCount(pubkey string) float64 {
 	res, _ := rethinkdb.GetLastInterest(pubkey)
+	ok := false
 	countInterest := 0.0
 	countYeild := 0.0
 	firstPurchaseAmount := 0.0
 	for _, r := range res {
-		firstPurchaseAmount = r["firstPurchaseAmount"].(float64)
-		countInterest = countInterest + r["yield"].(float64)
-		countYeild = countYeild + r["yield"].(float64)
+		firstPurchaseAmount, ok = r["firstPurchaseAmount"].(float64)
+		if !ok {
+			firstPurchaseAmount = float64(0)
+		}
+		tmp, ok := r["yield"].(float64)
+		if !ok {
+			tmp = float64(0)
+		}
+		countInterest = countInterest + tmp
+		countYeild = countYeild + tmp
 	}
 	logs.Info(countInterest + countYeild + firstPurchaseAmount)
 

@@ -38,8 +38,14 @@ func Create(tx_signers []string, recipients [][2]interface{}, metadata *model.Me
 	//generate outputs
 	outputs := []*model.ConditionsItem{}
 	for index, recipient := range recipients {
-		pubkey := recipient[0].(string)
-		amount := recipient[1].(float64)
+		pubkey, ok := recipient[0].(string)
+		if !ok {
+			pubkey = ""
+		}
+		amount, ok := recipient[1].(float64)
+		if !ok {
+			amount = float64(0)
+		}
 		output := &model.ConditionsItem{}
 		output.GenerateOutput(index, isFeeze, pubkey, amount)
 		outputs = append(outputs, output)
@@ -76,7 +82,11 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 		}
 		//generate inputs
 		inputs, balance = GetUnfreezeUnspent(ownerbefore)
-		if len(recipients) != 1 || recipients[0][0].(string) != ownerbefore {
+		str, ok := recipients[0][0].(string)
+		if !ok {
+			str = ""
+		}
+		if len(recipients) != 1 || str != ownerbefore {
 			err := errors.New("The opertion `FREEZE` should has one ownerafter = ownerbefore !")
 			return model.ContractOutput{}, err
 		}
@@ -120,8 +130,14 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	outputs := []*model.ConditionsItem{}
 	var amounts float64 = 0
 	for index, recipient := range recipients {
-		pubkey := recipient[0].(string)
-		amount := recipient[1].(float64)
+		pubkey, ok := recipient[0].(string)
+		if !ok {
+			pubkey = ""
+		}
+		amount, ok := recipient[1].(float64)
+		if !ok {
+			amount = float64(0)
+		}
 		output := &model.ConditionsItem{}
 		output.GenerateOutput(index, isFeeze, pubkey, amount)
 		outputs = append(outputs, output)
@@ -174,6 +190,7 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal float64) 
 	}
 	inputs := []*model.Fulfillment{}
 	var balance float64
+	// TODO 断言写法要改
 	for index, unspend := range result.Data.([]interface{}) {
 		//logs.Info("unspend-map====",unspend)
 		unspenStruct := model.UnSpentOutput{}
@@ -246,6 +263,7 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 	inputs := []*model.Fulfillment{}
 	var balance float64
 	logs.Info(result.Data)
+	// TODO 断言写法要改
 	flag = result.Data.([]interface{})[0].(float64)
 	unspendSlice := result.Data.([]interface{})[1].([]interface{})
 	for index, unspend := range unspendSlice {

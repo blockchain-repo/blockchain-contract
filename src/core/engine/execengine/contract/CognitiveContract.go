@@ -119,8 +119,15 @@ func NewCognitiveContract() *CognitiveContract {
 
 //===============接口实现===================
 func (cc CognitiveContract) GetContractId() string {
-	contractid_property := cc.PropertyTable[_ContractId].(property.PropertyT)
-	return contractid_property.GetValue().(string)
+	contractid_property, ok := cc.PropertyTable[_ContractId].(property.PropertyT)
+	if !ok {
+		return ""
+	}
+	value, ok := contractid_property.GetValue().(string)
+	if !ok {
+		return ""
+	}
+	return value
 }
 
 func (cc CognitiveContract) GetUCVMVersion() string {
@@ -147,7 +154,10 @@ func (cc *CognitiveContract) GetComponentTtem(p_name string) interface{} {
 //Return: interface{}
 func (cc *CognitiveContract) GetPropertyItem(p_name string) interface{} {
 	if p_name != "" && cc.PropertyTable != nil {
-		v_property := cc.PropertyTable[p_name].(property.PropertyT)
+		v_property, ok := cc.PropertyTable[p_name].(property.PropertyT)
+		if !ok {
+			return nil
+		}
 		return v_property.GetValue()
 	}
 	return nil
@@ -193,72 +203,145 @@ func (gc *CognitiveContract) GetCtype() string {
 	if gc.PropertyTable[_Ctype] == nil {
 		return ""
 	}
-	ctype_property := gc.PropertyTable[_Ctype].(property.PropertyT)
-	return ctype_property.GetValue().(string)
+	ctype_property, ok := gc.PropertyTable[_Ctype].(property.PropertyT)
+	if !ok {
+		return ""
+	}
+	value, ok := ctype_property.GetValue().(string)
+	if !ok {
+		return ""
+	}
+	return value
 }
 
 func (gc *CognitiveContract) GetId() string {
 	if gc.PropertyTable[_Id] == nil {
 		return ""
 	}
-	id_property := gc.PropertyTable[_Id].(property.PropertyT)
-	return id_property.GetValue().(string)
+	id_property, ok := gc.PropertyTable[_Id].(property.PropertyT)
+	if !ok {
+		return ""
+	}
+	str, ok := id_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (gc *CognitiveContract) GetOrgTaskId() string {
 	if gc.PropertyTable[_OrgTaskId] == nil {
 		return ""
 	}
-	orgtaskid_property := gc.PropertyTable[_OrgTaskId].(property.PropertyT)
-	return orgtaskid_property.GetValue().(string)
+	orgtaskid_property, ok := gc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := orgtaskid_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (gc *CognitiveContract) GetOrgTaskExecuteIdx() int {
 	if gc.PropertyTable[_OrgTaskExecuteIdx] == nil {
 		return 0
 	}
-	orgtaskexecuteidx_property := gc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
-	return orgtaskexecuteidx_property.GetValue().(int)
+	orgtaskexecuteidx_property, ok := gc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return 0
+	}
+	value, ok := orgtaskexecuteidx_property.GetValue().(int)
+	if !ok {
+		logs.Error("assert error")
+		return 0
+	}
+	return value
 }
 
 func (gc *CognitiveContract) GetOutputId() string {
 	if gc.PropertyTable[_OutputId] == nil {
 		return ""
 	}
-	outputid_property := gc.PropertyTable[_OutputId].(property.PropertyT)
-	return outputid_property.GetValue().(string)
+	outputid_property, ok := gc.PropertyTable[_OutputId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := outputid_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (gc *CognitiveContract) GetOutputTaskId() string {
 	if gc.PropertyTable[_OutputTaskId] == nil {
 		return ""
 	}
-	OutputTaskId_property := gc.PropertyTable[_OutputTaskId].(property.PropertyT)
-	return OutputTaskId_property.GetValue().(string)
+	OutputTaskId_property, ok := gc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := OutputTaskId_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (gc *CognitiveContract) GetOutputTaskExecuteIdx() int {
 	if gc.PropertyTable[_OutputTaskExecuteIdx] == nil {
 		return 0
 	}
-	OutputTaskExecuteIdx_property := gc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
-	return OutputTaskExecuteIdx_property.GetValue().(int)
+	OutputTaskExecuteIdx_property, ok := gc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return 0
+	}
+	value, ok := OutputTaskExecuteIdx_property.GetValue().(int)
+	if !ok {
+		logs.Error("assert error")
+		return 0
+	}
+	return value
 }
 
 func (gc *CognitiveContract) GetOutputStruct() string {
 	if gc.PropertyTable[_OutputStruct] == nil {
 		return ""
 	}
-	outputstruct_property := gc.PropertyTable[_OutputStruct].(property.PropertyT)
+	outputstruct_property, ok := gc.PropertyTable[_OutputStruct].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
 	if outputstruct_property.GetValue() == nil {
 		return ""
 	}
-	return outputstruct_property.GetValue().(string)
+	str, ok := outputstruct_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (cc CognitiveContract) SetOrgId(p_OrgId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OrgId = p_OrgId
-	OrgId_property := cc.PropertyTable[_OrgId].(property.PropertyT)
+	OrgId_property, ok := cc.PropertyTable[_OrgId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	OrgId_property.SetValue(p_OrgId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OrgId] = OrgId_property
@@ -266,7 +349,11 @@ func (cc CognitiveContract) SetOrgId(p_OrgId string) {
 func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OrgTaskId = p_OrgTaskId
-	OrgTaskId_property := cc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	OrgTaskId_property, ok := cc.PropertyTable[_OrgTaskId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	OrgTaskId_property.SetValue(p_OrgTaskId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OrgTaskId] = OrgTaskId_property
@@ -275,7 +362,11 @@ func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
 func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OrgTaskExecuteIdx = p_OrgTaskExecuteIdx
-	OrgTaskExecuteIdx_property := cc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	OrgTaskExecuteIdx_property, ok := cc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	OrgTaskExecuteIdx_property.SetValue(p_OrgTaskExecuteIdx)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OrgTaskExecuteIdx] = OrgTaskExecuteIdx_property
@@ -283,7 +374,11 @@ func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
 func (cc CognitiveContract) SetOutputId(p_outputId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OutputId = p_outputId
-	outputid_property := cc.PropertyTable[_OutputId].(property.PropertyT)
+	outputid_property, ok := cc.PropertyTable[_OutputId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	outputid_property.SetValue(p_outputId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OutputId] = outputid_property
@@ -291,7 +386,11 @@ func (cc CognitiveContract) SetOutputId(p_outputId string) {
 func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OutputTaskId = p_OutputTaskId
-	OutputTaskId_property := cc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	OutputTaskId_property, ok := cc.PropertyTable[_OutputTaskId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	OutputTaskId_property.SetValue(p_OutputTaskId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OutputTaskId] = OutputTaskId_property
@@ -300,7 +399,11 @@ func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
 func (cc CognitiveContract) SetOutputTaskExecuteIdx(p_OutputTaskExecuteIdx int) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OutputTaskExecuteIdx = p_OutputTaskExecuteIdx
-	OutputTaskExecuteIdx_property := cc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	OutputTaskExecuteIdx_property, ok := cc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	OutputTaskExecuteIdx_property.SetValue(p_OutputTaskExecuteIdx)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OutputTaskExecuteIdx] = OutputTaskExecuteIdx_property
@@ -309,7 +412,11 @@ func (cc CognitiveContract) SetOutputTaskExecuteIdx(p_OutputTaskExecuteIdx int) 
 func (cc CognitiveContract) SetOutputStruct(p_OutputStruct string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OutputStruct = p_OutputStruct
-	OutputStruct_property := cc.PropertyTable[_OutputStruct].(property.PropertyT)
+	OutputStruct_property, ok := cc.PropertyTable[_OutputStruct].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	OutputStruct_property.SetValue(p_OutputStruct)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OutputStruct] = OutputStruct_property
@@ -335,7 +442,12 @@ func (model *CognitiveContract) Serialize() (string, error) {
 		//type: map[string]inf.ITask
 		for v_key, _ := range component_array[v_idx] {
 			//update data & expression in task
-			new_task, err := component_array[v_idx][v_key].(inf.ITask).UpdateStaticState()
+			ttask, ok := component_array[v_idx][v_key].(inf.ITask)
+			if !ok {
+				logs.Error("assert error")
+				return "", fmt.Errorf("assert error")
+			}
+			new_task, err := ttask.UpdateStaticState()
 			if err != nil {
 				err = fmt.Errorf("Task.UpdateStaticState fail!")
 				logs.Error("Task.UpdateStaticState fail[" + err.Error() + "]")
@@ -378,6 +490,7 @@ func (cc *CognitiveContract) AddProperty(object interface{}, str_name string, va
 		cc.PropertyTable[str_name] = pro_object
 		return pro_object
 	}
+	// TODO 断言写法修要修改
 	switch value.(type) {
 	case []ContractAsset:
 		pro_object = property.PropertyT{Name: str_name}
@@ -463,13 +576,23 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	}
 	//将描述态数据加载成运行态，因此value都是gc.xxxx(描述态的)
 	common.AddProperty(cc, cc.PropertyTable, _Cname, cc.ContractBody.Cname)
-	cc.ContractBody.Ctype = common.TernaryOperator(cc.ContractBody.Ctype == "", constdef.ComponentType[constdef.Component_Contract], cc.ContractBody.Ctype).(string)
+	str, ok := common.TernaryOperator(cc.ContractBody.Ctype == "", constdef.ComponentType[constdef.Component_Contract], cc.ContractBody.Ctype).(string)
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
+	cc.ContractBody.Ctype = str
 	common.AddProperty(cc, cc.PropertyTable, _Ctype, cc.ContractBody.Ctype)
 	common.AddProperty(cc, cc.PropertyTable, _Caption, cc.ContractBody.Caption)
 	common.AddProperty(cc, cc.PropertyTable, _Description, cc.ContractBody.Description)
 	common.AddProperty(cc, cc.PropertyTable, _MetaAttribute, cc.ContractBody.MetaAttribute)
 	common.AddProperty(cc, cc.PropertyTable, _ContractId, cc.ContractBody.ContractId)
-	cc.ContractBody.ContractState = common.TernaryOperator(cc.ContractBody.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractBody.ContractState).(string)
+	str, ok = common.TernaryOperator(cc.ContractBody.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractBody.ContractState).(string)
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
+	cc.ContractBody.ContractState = str
 	common.AddProperty(cc, cc.PropertyTable, _ContractState, cc.ContractBody.ContractState)
 	common.AddProperty(cc, cc.PropertyTable, _Creator, cc.ContractBody.Creator)
 	common.AddProperty(cc, cc.PropertyTable, _CreateTime, cc.ContractBody.CreateTime)
@@ -520,51 +643,110 @@ func (cc *CognitiveContract) loadExpressionParser() {
 
 //====动态增加
 func (cc *CognitiveContract) AddContractWoner(p_owner string) {
-	contractOwners_property := cc.PropertyTable[_ContractOwners].(property.PropertyT)
+	contractOwners_property, ok := cc.PropertyTable[_ContractOwners].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	if contractOwners_property.GetValue() == nil {
 		contractOwners_property.SetValue(make([]string, 0))
 	}
 	if p_owner != "" {
-		v_subject_list := contractOwners_property.GetValue().([]string)
+		v_subject_list, ok := contractOwners_property.GetValue().([]string)
+		if !ok {
+			logs.Error("assert error")
+			return
+		}
 		contractOwners_property.SetValue(append(v_subject_list, p_owner))
 	}
 	cc.PropertyTable[_ContractOwners] = contractOwners_property
-	cc.ContractBody.ContractOwners = contractOwners_property.GetValue().([]string)
+	cc.ContractBody.ContractOwners, ok = contractOwners_property.GetValue().([]string)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 }
 func (cc *CognitiveContract) AddContractAsset(p_asset ContractAsset) {
-	contractAssets_property := cc.PropertyTable[_ContractAssets].(property.PropertyT)
+	contractAssets_property, ok := cc.PropertyTable[_ContractAssets].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	if contractAssets_property.GetValue() != nil {
 		contractAssets_property.SetValue(make([]ContractAsset, 0))
 	}
-	v_asset_list := contractAssets_property.GetValue().([]ContractAsset)
+	v_asset_list, ok := contractAssets_property.GetValue().([]ContractAsset)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	contractAssets_property.SetValue(append(v_asset_list, p_asset))
 
 	cc.PropertyTable[_ContractAssets] = contractAssets_property
-	cc.ContractBody.ContractAssets = contractAssets_property.GetValue().([]ContractAsset)
+	cc.ContractBody.ContractAssets, ok = contractAssets_property.GetValue().([]ContractAsset)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 }
 func (cc *CognitiveContract) AddSignature(p_signature ContractSignature) {
-	contractSignature_property := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
+	contractSignature_property, ok := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	if contractSignature_property.GetValue() != nil {
 		contractSignature_property.SetValue(make([]ContractSignature, 0))
 	}
-	v_signature_list := contractSignature_property.GetValue().([]ContractSignature)
+	v_signature_list, ok := contractSignature_property.GetValue().([]ContractSignature)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	contractSignature_property.SetValue(append(v_signature_list, p_signature))
 
 	cc.PropertyTable[_ContractSignatures] = contractSignature_property
-	cc.ContractBody.ContractSignatures = contractSignature_property.GetValue().([]ContractSignature)
+	cc.ContractBody.ContractSignatures, ok = contractSignature_property.GetValue().([]ContractSignature)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 }
 func (gc *CognitiveContract) AddMetaAttribute(metaProperty interface{}) {
-	if metaProperty != nil && len(metaProperty.(map[string]string)) != 0 {
-		metaAttribute_property := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
-		if metaAttribute_property.GetValue() == nil || len(metaAttribute_property.GetValue().(map[string]string)) == 0 {
+	tmp, ok := metaProperty.(map[string]string)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
+	if metaProperty != nil && len(tmp) != 0 {
+		metaAttribute_property, ok := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
+		if !ok {
+			logs.Error("assert error")
+			return
+		}
+		tmp, ok := metaAttribute_property.GetValue().(map[string]string)
+		if !ok {
+			logs.Error("assert error")
+			return
+		}
+		if metaAttribute_property.GetValue() == nil || len(tmp) == 0 {
 			metaAttribute_property.SetValue(make(map[string]string, 0))
 		}
-		v_metaProperty := metaProperty.(map[string]string)
+		v_metaProperty, ok := metaProperty.(map[string]string)
+		if !ok {
+			logs.Error("assert error")
+			return
+		}
 		for key, value := range v_metaProperty {
+			// TODO ??????????
 			metaAttribute_property.GetValue().(map[string]string)[key] = value
 		}
 		gc.PropertyTable[_MetaAttribute] = metaAttribute_property
-		gc.ContractBody.MetaAttribute = metaAttribute_property.GetValue().(map[string]string)
+		gc.ContractBody.MetaAttribute, ok = metaAttribute_property.GetValue().(map[string]string)
+		if !ok {
+			logs.Error("assert error")
+			return
+		}
 	}
 }
 
@@ -601,7 +783,12 @@ func (cc *CognitiveContract) GetPropertyTable() map[string]interface{} {
 //return: property.propertyT
 func (cc *CognitiveContract) GetProperty(p_name string) interface{} {
 	if p_name != "" && cc.PropertyTable != nil {
-		return cc.PropertyTable[p_name].(property.PropertyT)
+		value, ok := cc.PropertyTable[p_name].(property.PropertyT)
+		if !ok {
+			logs.Error("assert error")
+			return nil
+		}
+		return value
 	}
 	return nil
 }

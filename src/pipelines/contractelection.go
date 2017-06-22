@@ -88,7 +88,11 @@ func ceChangefeed() {
 	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
 	for res.Next(&value) {
 		beegoLog.Debug("1.1 ceChangefeed get new_val")
-		mValue := value.(map[string]interface{})
+		mValue,ok := value.(map[string]interface{})
+		if !ok{
+			beegoLog.Error("assert error")
+			break
+		}
 		// 提取new_val的值
 		new_val := mValue["new_val"]
 		if new_val == nil {
