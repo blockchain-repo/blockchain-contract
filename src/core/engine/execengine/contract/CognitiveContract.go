@@ -520,7 +520,6 @@ func (cc *CognitiveContract) AddProperty(object interface{}, str_name string, va
 		cc.PropertyTable[str_name] = pro_object
 		return pro_object
 	}
-	// TODO 断言写法修要修改
 	switch value.(type) {
 	case []ContractAsset:
 		pro_object = property.PropertyT{Name: str_name}

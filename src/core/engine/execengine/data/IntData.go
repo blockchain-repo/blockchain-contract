@@ -8,6 +8,7 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
+	"fmt"
 )
 
 //支持int中的各种类型int8, int16, int32, int64; 不可直接用int
@@ -83,11 +84,16 @@ func (nd *IntData) InitIntData() error {
 
 //====属性Get方法
 func (nd *IntData) GetDataRangeInt() [2]int {
+	// TODO assert
 	dataRangeInt_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
 	return dataRangeInt_property.GetValue().([2]int)
 }
 func (nd *IntData) GetValueInt() interface{} {
-	value_property := nd.PropertyTable[_ValueInt].(property.PropertyT)
+	value_property,ok := nd.PropertyTable[_ValueInt].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	} else {
@@ -96,7 +102,11 @@ func (nd *IntData) GetValueInt() interface{} {
 	}
 }
 func (nd *IntData) GetDefaultValueInt() interface{} {
-	value_property := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
+	value_property,ok := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	}
@@ -106,8 +116,17 @@ func (nd *IntData) GetDefaultValueInt() interface{} {
 //====属性Set方法
 func (nd *IntData) SetValueInt(p_ValueInt interface{}) {
 	if p_ValueInt != nil {
-		nd.ValueInt = p_ValueInt.(int)
-		value_property := nd.PropertyTable[_ValueInt].(property.PropertyT)
+		ok:=false
+		nd.ValueInt,ok = p_ValueInt.(int)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
+		value_property,ok := nd.PropertyTable[_ValueInt].(property.PropertyT)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		value_property.SetValue(p_ValueInt)
 		nd.PropertyTable[_ValueInt] = value_property
 	}
@@ -115,8 +134,17 @@ func (nd *IntData) SetValueInt(p_ValueInt interface{}) {
 
 func (nd *IntData) SetDefaultValueInt(p_DefaultValueInt interface{}) {
 	if p_DefaultValueInt != nil {
-		nd.DefaultValueInt = p_DefaultValueInt.(int)
-		defaultvalue_property := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
+		ok:=false
+		nd.DefaultValueInt,ok = p_DefaultValueInt.(int)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
+		defaultvalue_property,ok := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		defaultvalue_property.SetValue(p_DefaultValueInt)
 		nd.PropertyTable[_DefaultValueInt] = defaultvalue_property
 	}
@@ -126,14 +154,22 @@ func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 	if data_range[0] == 0 && data_range[1] == 0 {
 		var data_range [2]int = [2]int{-2147483647, 2147483647}
 		nd.DataRangeInt = data_range
-		datarangeint_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+		datarangeint_property,ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+		if !ok{
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
 		datarangeint_property.SetValue(data_range)
 		nd.PropertyTable[_DataRangeInt] = datarangeint_property
 	} else {
 		var f_range [2]int = data_range
 		if f_range[0] <= f_range[1] {
 			nd.DataRangeInt = f_range
-			datarangeint_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+			datarangeint_property,ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+			if !ok{
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
 			datarangeint_property.SetValue(data_range)
 			nd.PropertyTable[_DataRangeInt] = datarangeint_property
 		} else {
@@ -163,13 +199,22 @@ func (nd *IntData) CheckRange(check_data int) bool {
 }
 
 func (nd *IntData) Add(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata ,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
 	case GeneralData:
 		v_data := p_data.(GeneralData)
-		f_rightdata = v_data.GetValue().(int)
+		ok:=false
+		f_rightdata,ok = v_data.GetValue().(int)
+		if !ok{
+			logs.Error("assert error")
+			return 0,fmt.Errorf("assert error")
+		}
 	case int:
 		f_rightdata = p_data.(int)
 	default:
@@ -179,13 +224,22 @@ func (nd *IntData) Add(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) RAdd(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata ,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
 	case GeneralData:
 		v_data := p_data.(GeneralData)
-		f_rightdata = v_data.GetValue().(int)
+		ok:=false
+		f_rightdata,ok = v_data.GetValue().(int)
+		if !ok{
+			logs.Error("assert error")
+			return 0,fmt.Errorf("assert error")
+		}
 	case int:
 		f_rightdata = p_data.(int)
 	default:
@@ -195,13 +249,22 @@ func (nd *IntData) RAdd(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) Sub(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata ,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0, fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
 	case GeneralData:
 		v_data := p_data.(GeneralData)
-		f_rightdata = v_data.GetValue().(int)
+		ok:=false
+		f_rightdata,ok = v_data.GetValue().(int)
+		if !ok{
+			logs.Error("assert error")
+			return 0,fmt.Errorf("assert error")
+		}
 	case int:
 		f_rightdata = p_data.(int)
 	default:
@@ -211,13 +274,22 @@ func (nd *IntData) Sub(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) RSub(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata ,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
 	case GeneralData:
 		v_data := p_data.(GeneralData)
-		f_rightdata = v_data.GetValue().(int)
+		ok:=false
+		f_rightdata,ok = v_data.GetValue().(int)
+		if !ok{
+			logs.Error("assert error")
+			return 0,fmt.Errorf("assert error")
+		}
 	case int:
 		f_rightdata = p_data.(int)
 	default:
@@ -227,13 +299,22 @@ func (nd *IntData) RSub(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) Mul(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata, ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
 	case GeneralData:
 		v_data := p_data.(GeneralData)
-		f_rightdata = v_data.GetValue().(int)
+		ok:=false
+		f_rightdata,ok = v_data.GetValue().(int)
+		if !ok{
+			logs.Error("assert error")
+			return 0,fmt.Errorf("assert error")
+		}
 	case int:
 		f_rightdata = p_data.(int)
 	default:
@@ -259,7 +340,11 @@ func (nd *IntData) RMul(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) Div(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
@@ -278,7 +363,11 @@ func (nd *IntData) Div(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) RDiv(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
@@ -297,13 +386,22 @@ func (nd *IntData) RDiv(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) Mod(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {
 	case GeneralData:
 		v_data := p_data.(GeneralData)
-		f_rightdata = v_data.GetValue().(int)
+		ok:=false
+		f_rightdata,ok = v_data.GetValue().(int)
+		if !ok{
+			logs.Error("assert error")
+			return 0,fmt.Errorf("assert error")
+		}
 	case int:
 		f_rightdata = p_data.(int)
 	default:
@@ -313,7 +411,11 @@ func (nd *IntData) Mod(p_data interface{}) (int, error) {
 }
 
 func (nd *IntData) RMod(p_data interface{}) (int, error) {
-	var f_leftdata int = nd.GetValue().(int)
+	f_leftdata ,ok := nd.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0,fmt.Errorf("assert error")
+	}
 	var f_rightdata int
 	var f_error error
 	switch p_data.(type) {

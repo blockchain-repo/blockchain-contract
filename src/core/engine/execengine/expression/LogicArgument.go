@@ -70,8 +70,17 @@ func (la *LogicArgument) InitLogicArgument() error {
 //====属性Get方法
 func (la *LogicArgument) GetLogicValue() int {
 	la.Eval()
-	loggicvalue_property := la.PropertyTable[_LogicValue].(property.PropertyT)
-	return loggicvalue_property.GetValue().(int)
+	loggicvalue_property,ok := la.PropertyTable[_LogicValue].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
+	n,ok:=loggicvalue_property.GetValue().(int)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
+	return n
 }
 
 //====属性Set方法
@@ -80,22 +89,44 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 		logs.Warning("[Param]p_int is nil，Check it!")
 		return
 	}
-	la.LogicValue = p_int.(int)
-	loggicvalue_property := la.PropertyTable[_LogicValue].(property.PropertyT)
+	ok:=false
+	la.LogicValue,ok = p_int.(int)
+	if !ok{
+		logs.Error("assert error")
+		return
+	}
+	loggicvalue_property,ok := la.PropertyTable[_LogicValue].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return
+	}
 	loggicvalue_property.SetValue(la.LogicValue)
 	la.PropertyTable[_LogicValue] = loggicvalue_property
 }
 
 func (la *LogicArgument) Eval() int {
-	expression_property := la.PropertyTable[_ExpressionStr].(property.PropertyT)
-	var v_expression string = expression_property.GetValue().(string)
+	expression_property,ok := la.PropertyTable[_ExpressionStr].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
+	v_expression,ok := expression_property.GetValue().(string)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
 	r_flag, r_err := la.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_expression)
 	if r_err != nil {
 		logs.Warning("LogicArgument.Eval fail[" + r_err.Error() + "]")
 		return la.LogicValue
 	}
 	var v_value int = 0
-	if r_flag.(bool) {
+	b,ok:=r_flag.(bool)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
+	if b {
 		v_value = 1
 	} else {
 		v_value = 0

@@ -75,7 +75,11 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		logs.Error(r_buf.String())
 		return err
 	}
-	var map_output_second map[string]interface{} = map_output_first.(map[string]interface{})
+	map_output_second, ok := map_output_first.(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	if map_output_second == nil || len(map_output_second) == 0 {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:json str deserialize fail;")
@@ -90,7 +94,11 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		logs.Error(r_buf.String())
 		return err
 	}
-	var map_transaction map[string]interface{} = map_output_second["transaction"].(map[string]interface{})
+	map_transaction, ok := map_output_second["transaction"].(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	if map_transaction["Contract"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:json str deserialize fail;")
@@ -98,7 +106,11 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		logs.Error(r_buf.String())
 		return err
 	}
-	var map_contract map[string]interface{} = map_transaction["Contract"].(map[string]interface{})
+	map_contract, ok := map_transaction["Contract"].(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	if map_transaction["Relation"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:json str deserialize fail;")
@@ -106,7 +118,11 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		logs.Error(r_buf.String())
 		return err
 	}
-	var map_relation map[string]interface{} = map_transaction["Relation"].(map[string]interface{})
+	map_relation, ok := map_transaction["Relation"].(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	var str_json_contract string = common.Serialize(map_contract)
 	if str_json_contract == "" {
 		r_buf.WriteString("[Result]:Load Fail;")
@@ -117,12 +133,16 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	}
 	//l 反序列化
 	ret_contract, err := ce.contract_executer.Deserialize(str_json_contract)
-	ce.contract_executer = ret_contract.(*contract.CognitiveContract)
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:Error in Load(Deserialize)," + err.Error())
 		logs.Error(r_buf.String())
 		return err
+	}
+	ce.contract_executer, ok = ret_contract.(*contract.CognitiveContract)
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
 	}
 	//2 Init初始化, 填充contract property_table
 	err = ce.contract_executer.InitCognitiveContract()
@@ -177,8 +197,16 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 //合约运行生命周期：合约预处理
 func (ce *ContractExecuter) Prepare() {
 	//读取产品库函数配置
-	var ExecuteEngineConf map[interface{}]interface{} = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
-	var product_func_str string = ExecuteEngineConf["function_source"].(string)
+	ExecuteEngineConf, ok := engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
+	product_func_str, ok := ExecuteEngineConf["function_source"].(string)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	//TODO 加载特定产品函数库
 	for _, v_product := range strings.Split(product_func_str, ",") {
 		switch v_product {
@@ -287,31 +315,86 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 	r_buf.WriteString("[CName]:" + ce.contract_executer.GetCname() + "; ")
 	r_buf.WriteString("[ContractId]:" + ce.contract_executer.GetContractId() + "; ")
 	//1 解析json串，映射成text文本
-	contractId := ce.contract_executer.PropertyTable["_ContractId"].(property.PropertyT)
-	r_bytes.WriteString(contractId.GetName() + ":" + contractId.GetValue().(string) + "\n")
+	contractId, ok := ce.contract_executer.PropertyTable["_ContractId"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	c_id, ok := contractId.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	r_bytes.WriteString(contractId.GetName() + ":" + c_id + "\n")
 
-	contractOwner := ce.contract_executer.PropertyTable["_ContractOwners"].(property.PropertyT)
-	r_bytes.WriteString(contractOwner.GetName() + ":" + contractOwner.GetValue().([]string)[0] + "  " + contractOwner.GetValue().([]string)[1] + "\n")
-
-	contractCreateTime := ce.contract_executer.PropertyTable["_CreateTime"].(property.PropertyT)
-	r_bytes.WriteString(contractCreateTime.GetName() + ":" + contractCreateTime.GetValue().(string) + "\n")
-	contractStartTime := ce.contract_executer.PropertyTable["_StartTime"].(property.PropertyT)
-	r_bytes.WriteString(contractStartTime.GetName() + ":" + contractStartTime.GetValue().(string) + "\n")
-	contractEndTime := ce.contract_executer.PropertyTable["_EndTime"].(property.PropertyT)
-	r_bytes.WriteString(contractEndTime.GetName() + ":" + contractEndTime.GetValue().(string) + "\n")
-
-	contractAssets := ce.contract_executer.PropertyTable["_ContractAssets"].(property.PropertyT)
-	arr_contractAsset := contractAssets.GetValue().([]contract.ContractAsset)
+	contractOwner, ok := ce.contract_executer.PropertyTable["_ContractOwners"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	c_own, ok := contractOwner.GetValue().([]string)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	r_bytes.WriteString(contractOwner.GetName() + ":" + c_own[0] + "  " + c_own[1] + "\n")
+	contractCreateTime, ok := ce.contract_executer.PropertyTable["_CreateTime"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	str, ok := contractCreateTime.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	r_bytes.WriteString(contractCreateTime.GetName() + ":" + str + "\n")
+	contractStartTime, ok := ce.contract_executer.PropertyTable["_StartTime"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	str, ok = contractStartTime.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	r_bytes.WriteString(contractStartTime.GetName() + ":" + str + "\n")
+	contractEndTime, ok := ce.contract_executer.PropertyTable["_EndTime"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	str, ok = contractEndTime.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	r_bytes.WriteString(contractEndTime.GetName() + ":" + str + "\n")
+	contractAssets, ok := ce.contract_executer.PropertyTable["_ContractAssets"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	arr_contractAsset, ok := contractAssets.GetValue().([]contract.ContractAsset)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
 	r_bytes.WriteString(contractAssets.GetName() + ":" + "\n")
 	for _, p_asset := range arr_contractAsset {
 		r_bytes.WriteString("    _AssetCaption" + ":" + p_asset.GetCaption() + "\n")
 		r_bytes.WriteString("    _AssetDescription" + ":" + p_asset.GetDescription() + "\n")
 		r_bytes.WriteString("    _AssetUnit" + ":" + p_asset.GetUnit() + "\n")
-		r_bytes.WriteString("    _AssetAmount" + ":" + strconv.FormatFloat(p_asset.GetAmount().(float64), 'f', 10, 64) + "\n")
+		f, ok := p_asset.GetAmount().(float64)
+		if !ok {
+			logs.Error("assert error")
+			return "", fmt.Errorf("assert error")
+		}
+		r_bytes.WriteString("    _AssetAmount" + ":" + strconv.FormatFloat(f, 'f', 10, 64) + "\n")
 		for m_key, m_value := range p_asset.GetMetaData() {
 			r_bytes.WriteString("  " + m_key + ":" + m_value + "\n")
 		}
-
 	}
 	//map[string][]map[string]interface{}
 	contractComponents := ce.contract_executer.ComponentTable.CompTable
@@ -319,14 +402,27 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 		for _, a_component_map := range v_component_arr {
 			for v_key, v_value := range a_component_map {
 				if v_component_type == constdef.ComponentType[constdef.Component_Task] {
-					r_bytes.WriteString(v_key + ":" + v_value.(inf.ITask).GetDescription() + "\n")
+					ttask, ok := v_value.(inf.ITask)
+					if !ok {
+						logs.Error("assert error")
+						return "", fmt.Errorf("assert error")
+					}
+					r_bytes.WriteString(v_key + ":" + ttask.GetDescription() + "\n")
 				}
 			}
 		}
 	}
 
-	contractSignature := ce.contract_executer.PropertyTable["_ContractSignatures"].(property.PropertyT)
-	arr_signatures := contractSignature.GetValue().([]contract.ContractSignature)
+	contractSignature, ok := ce.contract_executer.PropertyTable["_ContractSignatures"].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
+	arr_signatures, ok := contractSignature.GetValue().([]contract.ContractSignature)
+	if !ok {
+		logs.Error("assert error")
+		return "", fmt.Errorf("assert error")
+	}
 	r_bytes.WriteString(contractSignature.GetName() + ":" + "\n")
 	for _, p_signature := range arr_signatures {
 		r_bytes.WriteString("    _OwnerPubkey" + ":" + p_signature.GetOwnerPubkey() + "\n")

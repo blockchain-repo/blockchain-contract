@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/contract"
@@ -23,7 +24,11 @@ func loadTask(p_contract *contract.CognitiveContract, p_component interface{}) e
 		logs.Warning(r_buf.String())
 		return err
 	}
-	map_task := p_component.(map[string]interface{})
+	map_task, ok := p_component.(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	switch map_task["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry]:
 		//1.反序列化
@@ -107,11 +112,20 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 		logs.Warning(r_buf.String())
 		return err
 	}
-	map_task := m_task.(map[string]interface{})
+	map_task, ok := m_task.(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	switch map_task["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry]:
 		pre_conditions := map_task["PreCondition"]
-		for _, p_value := range pre_conditions.([]interface{}) {
+		sl1, ok := pre_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl1 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Enquiry.PreCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -120,7 +134,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		for _, p_value := range comp_conditions.([]interface{}) {
+		sl2, ok := comp_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl2 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Enquiry.CompleteCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -129,7 +148,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		for _, p_value := range digard_conditions.([]interface{}) {
+		sl3, ok := digard_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl3 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Enquiry.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -138,7 +162,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		data_list := map_task["DataList"]
-		for _, p_value := range data_list.([]interface{}) {
+		sl4, ok := data_list.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl4 {
 			if err := loadData(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadData[Enquiry.DataList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -147,7 +176,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		dataexpress_list := map_task["DataValueSetterExpressionList"]
-		for _, p_value := range dataexpress_list.([]interface{}) {
+		sl5, ok := dataexpress_list.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl5 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Enquiry.DataValueSetterExpressionList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -157,7 +191,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Action]:
 		pre_conditions := map_task["PreCondition"]
-		for _, p_value := range pre_conditions.([]interface{}) {
+		sl6, ok := pre_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl6 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Action.PreCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -166,7 +205,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		for _, p_value := range comp_conditions.([]interface{}) {
+		sl7, ok := comp_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl7 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Action.CompleteCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -175,7 +219,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		for _, p_value := range digard_conditions.([]interface{}) {
+		sl8, ok := digard_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl8 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Action.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -184,7 +233,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		data_list := map_task["DataList"]
-		for _, p_value := range data_list.([]interface{}) {
+		sl9, ok := data_list.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl9 {
 			if err := loadData(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadData[Action.DataList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -193,7 +247,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		dataexpress_list := map_task["DataValueSetterExpressionList"]
-		for _, p_value := range dataexpress_list.([]interface{}) {
+		sl10, ok := dataexpress_list.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl10 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Action.DataValueSetterExpressionList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -203,7 +262,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision]:
 		pre_conditions := map_task["PreCondition"]
-		for _, p_value := range pre_conditions.([]interface{}) {
+		sl11, ok := pre_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl11 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Decision.PreCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -212,7 +276,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		for _, p_value := range comp_conditions.([]interface{}) {
+		sl12, ok := comp_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl12 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Decision.CompleteCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -221,7 +290,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		for _, p_value := range digard_conditions.([]interface{}) {
+		sl13, ok := digard_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl13 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Decision.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -230,7 +304,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		data_list := map_task["DataList"]
-		for _, p_value := range data_list.([]interface{}) {
+		sl14, ok := data_list.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl14 {
 			if err := loadData(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadData[Decision.DataList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -239,7 +318,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		dataexpress_list := map_task["DataValueSetterExpressionList"]
-		for _, p_value := range dataexpress_list.([]interface{}) {
+		sl15, ok := dataexpress_list.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl15 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Decision.DataValueSetterExpressionList] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -249,7 +333,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Plan]:
 		pre_conditions := map_task["PreCondition"]
-		for _, p_value := range pre_conditions.([]interface{}) {
+		sl16, ok := pre_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl16 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Plan.PreCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -258,7 +347,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		for _, p_value := range comp_conditions.([]interface{}) {
+		sl100, ok := comp_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl100 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Plan.CompleteCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -267,7 +361,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		for _, p_value := range digard_conditions.([]interface{}) {
+		sl17, ok := digard_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl17 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Plan.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -277,7 +376,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 		}
 	default:
 		pre_conditions := map_task["PreCondition"]
-		for _, p_value := range pre_conditions.([]interface{}) {
+		sl18, ok := pre_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl18 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Unknow.PreCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -286,7 +390,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		for _, p_value := range comp_conditions.([]interface{}) {
+		sl19, ok := comp_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl19 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Unknow.CompleteCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -295,7 +404,12 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		for _, p_value := range digard_conditions.([]interface{}) {
+		sl20, ok := digard_conditions.([]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		for _, p_value := range sl20 {
 			if err := loadExpression(p_contract, p_value, p_task); err != nil {
 				r_buf.WriteString("[Result]: loadExpression[Unknow.DiscardCondition] fail;")
 				r_buf.WriteString("[Error]: " + err.Error() + ";")
@@ -320,7 +434,11 @@ func loadData(p_contract *contract.CognitiveContract, m_data interface{}, p_task
 		logs.Warning(r_buf.String())
 		return err
 	}
-	map_data := m_data.(map[string]interface{})
+	map_data, ok := m_data.(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	switch map_data["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Int]:
 		//1.反序列化
@@ -599,7 +717,12 @@ func loadExpression(p_contract *contract.CognitiveContract, p_expression interfa
 		logs.Warning(r_buf.String())
 		return err
 	}
-	map_expression := p_expression.(map[string]interface{})
+	map_expression, ok := p_expression.(map[string]interface{})
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
+
 	switch map_expression["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Condition]:
 		object_expression := expression.NewLogicArgument()

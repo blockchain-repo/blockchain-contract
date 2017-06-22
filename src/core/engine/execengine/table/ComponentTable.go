@@ -6,6 +6,7 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/expression"
 	"unicontract/src/core/engine/execengine/inf"
+	"github.com/astaxie/beego/logs"
 )
 
 type ComponentTable struct {
@@ -25,39 +26,88 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 	var r_name string = ""
 	if p_component == nil {
 		r_type = constdef.ComponentType[constdef.Component_Unknown]
-		r_name = p_component.(inf.IComponent).GetName()
+		ccom,ok:=p_component.(inf.IComponent)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = ccom.GetName()
 		return r_type, r_name
 	}
 	switch p_component.(type) {
 	case *inf.IData:
 		r_type = constdef.ComponentType[constdef.Component_Data]
-		r_name = p_component.(inf.IData).GetName()
+		ddata,ok:=p_component.(inf.IData)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = ddata.GetName()
 	case inf.IData:
 		r_type = constdef.ComponentType[constdef.Component_Data]
-		r_name = p_component.(inf.IData).GetName()
-
+		ddata,ok:=p_component.(inf.IData)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = ddata.GetName()
 	case *inf.ITask:
 		r_type = constdef.ComponentType[constdef.Component_Task]
-		r_name = p_component.(inf.ITask).GetName()
+		ttask,ok:=p_component.(inf.ITask)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = ttask.GetName()
 	case inf.ITask:
 		r_type = constdef.ComponentType[constdef.Component_Task]
-		r_name = p_component.(inf.ITask).GetName()
+		ttask,ok:=p_component.(inf.ITask)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = ttask.GetName()
 	case *inf.IExpression:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
-		r_name = p_component.(inf.IExpression).GetName()
+		eexp,ok:=p_component.(inf.IExpression)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = eexp.GetName()
 	case *expression.LogicArgument:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
-		r_name = p_component.(inf.IExpression).GetName()
+		eexp,ok:=p_component.(inf.IExpression)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = eexp.GetName()
 	case *expression.Function:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
-		r_name = p_component.(inf.IExpression).GetName()
+		eexp,ok:=p_component.(inf.IExpression)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = eexp.GetName()
 	case inf.IExpression:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
-		r_name = p_component.(inf.IExpression).GetName()
+		eexp,ok:=p_component.(inf.IExpression)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = eexp.GetName()
 	default:
 		fmt.Println(reflect.ValueOf(p_component).Type())
 		r_type = constdef.ComponentType[constdef.Component_Unknown]
-		r_name = p_component.(inf.IComponent).GetName()
+		ccom,ok:=p_component.(inf.IComponent)
+		if !ok{
+			logs.Error("assert error")
+			return "",""
+		}
+		r_name = ccom.GetName()
 	}
 	return r_type, r_name
 }
@@ -115,7 +165,12 @@ func (ct *ComponentTable) GetTaskByID(cid string, ctype string) interface{} {
 					if v_value == nil {
 						continue
 					}
-					if v_value.(inf.ITask).GetTaskId() == cid {
+					ttask,ok:=v_value.(inf.ITask)
+					if !ok{
+						logs.Error("assert error")
+						return nil
+					}
+					if ttask.GetTaskId() == cid {
 						g_component = v_value
 						break
 					}

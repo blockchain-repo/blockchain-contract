@@ -155,7 +155,12 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 			logs.Warning("[Result]:EvaluateExpressionCondition fail(Code != 200);")
 			return v_return, v_err
 		}
-		v_return, v_err = strconv.ParseBool(v_common_result.GetData().(string))
+		str,ok:=v_common_result.GetData().(string)
+		if !ok{
+			logs.Error("assert error")
+			return v_return,fmt.Errorf("assert error")
+		}
+		v_return, v_err = strconv.ParseBool(str)
 	} else if ep.IsExprCondition(p_expression) {
 		v_return, v_err = ep.ParseExprConditionValue(p_expression)
 	}
@@ -496,7 +501,12 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 		logs.Warning("expression.Evaluate fail(" + v_err.Error() + ")")
 		return false, v_err
 	}
-	return v_result.(bool), v_err
+	b,ok:=v_result.(bool)
+	if !ok{
+		logs.Error("assert error")
+		return false,fmt.Errorf("assert error")
+	}
+	return b, v_err
 }
 
 //解析表达式的值 纯函数值
@@ -608,38 +618,87 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 //   描述组件：
 func (ep *ExpressionParseEngine) ReflectComponent(p_component interface{}, p_variable string) inf.IComponent {
 	var parse_component inf.IComponent
+	ok:=false
 	if ep.IsNameContract(p_variable) {
-		parse_component = p_component.(inf.ICognitiveContract)
+		parse_component,ok = p_component.(inf.ICognitiveContract)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameTaskEnquiry(p_variable) {
-		parse_component = p_component.(*task.Enquiry)
+		parse_component,ok = p_component.(*task.Enquiry)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameTaskAction(p_variable) {
-		parse_component = p_component.(*task.Action)
+		parse_component,ok = p_component.(*task.Action)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameTaskDecision(p_variable) {
-		parse_component = p_component.(*task.Decision)
+		parse_component,ok = p_component.(*task.Decision)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameTaskPlan(p_variable) {
-		parse_component = p_component.(*task.Plan)
+		parse_component,ok = p_component.(*task.Plan)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataInt(p_variable) {
-		parse_component = p_component.(*data.IntData)
+		parse_component,ok = p_component.(*data.IntData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataUint(p_variable) {
-		parse_component = p_component.(*data.UintData)
+		parse_component,ok = p_component.(*data.UintData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataFloat(p_variable) {
-		parse_component = p_component.(*data.FloatData)
+		parse_component,ok = p_component.(*data.FloatData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataText(p_variable) {
-		parse_component = p_component.(*data.TextData)
+		parse_component,ok = p_component.(*data.TextData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataDate(p_variable) {
-		parse_component = p_component.(*data.DateData)
+		parse_component,ok = p_component.(*data.DateData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataArray(p_variable) {
-		parse_component = p_component.(*data.ArrayData)
+		parse_component,ok = p_component.(*data.ArrayData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataMatrix(p_variable) {
-		parse_component = p_component.(*data.MatrixData)
+		parse_component,ok = p_component.(*data.MatrixData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataCompound(p_variable) {
-		parse_component = p_component.(*data.CompoundData)
+		parse_component,ok = p_component.(*data.CompoundData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameDataOperateResult(p_variable) {
-		parse_component = p_component.(*data.OperateResultData)
+		parse_component,ok = p_component.(*data.OperateResultData)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameExprFunc(p_variable) {
-		parse_component = p_component.(*expression.Function)
+		parse_component,ok = p_component.(*expression.Function)
+		if !ok{
+			logs.Error("assert error")
+		}
 	} else if ep.IsNameExprArgu(p_variable) {
-		parse_component = p_component.(*expression.LogicArgument)
+		parse_component,ok= p_component.(*expression.LogicArgument)
+		if !ok{
+			logs.Error("assert error")
+		}
 	}
 	return parse_component
 }

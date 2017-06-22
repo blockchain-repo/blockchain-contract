@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"time"
 	"unicontract/src/core/engine/common"
+	"github.com/astaxie/beego/logs"
+	"fmt"
 )
 
 var (
@@ -72,7 +74,11 @@ func FuncGetBalance(args ...interface{}) (common.OperateResult, error) {
 		v_err = errors.New("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
-	var arg_0 string = args[0].(string)
+	arg_0,ok := args[0].(string)
+	if !ok{
+		logs.Error("assert error")
+		return v_result,fmt.Errorf("assert error")
+	}
 	balance_amount := BANK_BALANCE[arg_0]
 
 	//构建返回值
@@ -93,8 +99,16 @@ func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 
-	var arg_A string = args[0].(string)
-	var arg_B string = args[1].(string)
+	arg_A,ok := args[0].(string)
+	if !ok{
+		logs.Error("assert error")
+		return v_result,fmt.Errorf("assert error")
+	}
+	arg_B,ok := args[1].(string)
+	if !ok{
+		logs.Error("assert error")
+		return v_result,fmt.Errorf("assert error")
+	}
 	var arg_money float64 = args[2].(float64)
 
 	if BANK_BALANCE[arg_A] < arg_money {

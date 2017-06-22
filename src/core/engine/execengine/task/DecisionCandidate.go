@@ -88,11 +88,19 @@ func (dc *DecisionCandidate) InitDecisionCandidate() error {
 
 func (dc *DecisionCandidate) AddText(p_strarr []string) {
 	if p_strarr != nil {
-		text_property := dc.PropertyTable[_Text].(property.PropertyT)
+		text_property,ok := dc.PropertyTable[_Text].(property.PropertyT)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		if text_property.GetValue() == nil {
 			text_property.SetValue(make([]string, 0))
 		}
-		map_text := text_property.GetValue().(map[string]string)
+		map_text,ok := text_property.GetValue().(map[string]string)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		for _, v_Text := range p_strarr {
 			map_text[v_Text] = v_Text
 		}
@@ -102,9 +110,17 @@ func (dc *DecisionCandidate) AddText(p_strarr []string) {
 }
 
 func (dc *DecisionCandidate) ShowText() {
-	text_property := dc.PropertyTable[_Text].(property.PropertyT)
+	text_property,ok := dc.PropertyTable[_Text].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return
+	}
 	if text_property.GetValue() != nil {
-		map_text := text_property.GetValue().(map[string]string)
+		map_text,ok := text_property.GetValue().(map[string]string)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		for _, v_Text := range map_text {
 			fmt.Println(v_Text)
 		}
@@ -113,11 +129,19 @@ func (dc *DecisionCandidate) ShowText() {
 
 func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 	if p_Support != "" {
-		supports_property := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+		supports_property,ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		if supports_property.GetValue() == nil {
 			supports_property.SetValue(make(map[string]string, 0))
 		}
-		map_supports := supports_property.GetValue().(map[string]string)
+		map_supports,ok := supports_property.GetValue().(map[string]string)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		map_supports[p_Support] = p_Support
 		supports_property.SetValue(map_supports)
 		dc.PropertyTable[_SupportArguments] = supports_property
@@ -126,11 +150,19 @@ func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 
 func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 	if p_against != "" {
-		against_property := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+		against_property,ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		if against_property.GetValue() == nil {
 			against_property.SetValue(make(map[string]string, 0))
 		}
-		map_againsts := against_property.GetValue().(map[string]string)
+		map_againsts,ok := against_property.GetValue().(map[string]string)
+		if !ok{
+			logs.Error("assert error")
+			return
+		}
 		map_againsts[p_against] = p_against
 		against_property.SetValue(map_againsts)
 		dc.PropertyTable[_SupportArguments] = against_property
@@ -139,7 +171,11 @@ func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 
 func (dc *DecisionCandidate) ResetSupport() {
 	dc.Support = 0
-	support_property := dc.PropertyTable[_Support].(property.PropertyT)
+	support_property,ok := dc.PropertyTable[_Support].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return
+	}
 	support_property.SetValue(0)
 	dc.PropertyTable[_Support] = support_property
 }
@@ -155,28 +191,57 @@ func (dc *DecisionCandidate) Eval() int {
 	var Support_bool interface{}
 	var against_bool interface{}
 	var err error = nil
-	supports_property := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+	supports_property,ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
 	if supports_property.GetValue() != nil {
-		for _, v_Support := range supports_property.GetValue().(map[string]string) {
+		m,ok:=supports_property.GetValue().(map[string]string)
+		if !ok{
+			logs.Error("assert error")
+			return 0
+		}
+		for _, v_Support := range m {
 			v_contract := dc.GetContract()
 			Support_bool, err = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_Support)
 			if err != nil {
 				logs.Warning("DecisionCandidate.Eval fail[" + err.Error() + "]")
 			}
-			if Support_bool.(bool) {
+			b,ok:=Support_bool.(bool)
+			if !ok{
+				logs.Error("assert error")
+				return 0
+			}
+			if b {
 				Support_sum += 1
 			}
 		}
 	}
-	against_property := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+	against_property,ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return 0
+	}
+
 	if against_property.GetValue() != nil {
-		for _, v_against := range against_property.GetValue().(map[string]string) {
+		m,ok:=against_property.GetValue().(map[string]string)
+		if !ok{
+			logs.Error("assert error")
+			return 0
+		}
+		for _, v_against := range m {
 			v_contract := dc.GetContract()
 			against_bool, err = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_against)
 			if err != nil {
 				logs.Warning("DecisionCandidate.Eval fail[" + err.Error() + "]")
 			}
-			if against_bool.(bool) {
+			b,ok:=against_bool.(bool)
+			if !ok{
+				logs.Error("assert error")
+				return 0
+			}
+			if b {
 				against_sum += 1
 			}
 		}

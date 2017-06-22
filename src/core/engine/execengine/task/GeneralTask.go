@@ -87,8 +87,17 @@ func (gt *GeneralTask) GetState() string {
 	if gt.PropertyTable[_State] == nil {
 		return ""
 	}
-	state_property := gt.PropertyTable[_State].(property.PropertyT)
-	return state_property.GetValue().(string)
+	state_property,ok := gt.PropertyTable[_State].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return ""
+	}
+	str,ok:=state_property.GetValue().(string)
+	if !ok{
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (gt *GeneralTask) SetState(p_state string) {
@@ -102,8 +111,17 @@ func (gt *GeneralTask) GetNextTasks() []string {
 	if gt.PropertyTable[_NextTasks] == nil {
 		return nil
 	}
-	nexttask_property := gt.PropertyTable[_NextTasks].(property.PropertyT)
-	return nexttask_property.GetValue().([]string)
+	nexttask_property,ok := gt.PropertyTable[_NextTasks].(property.PropertyT)
+	if !ok{
+		logs.Error("assert error")
+		return nil
+	}
+	sl,ok:=nexttask_property.GetValue().([]string)
+	if !ok{
+		logs.Error("assert error")
+		return nil
+	}
+	return sl
 }
 
 //当前任务生命周期的执行：（根据任务状态选择相应的执行态方法进入）
@@ -160,7 +178,12 @@ func (gt *GeneralTask) GetTaskId() string {
 		return ""
 	}
 	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
-	return taskid_property.GetValue().(string)
+	str,ok:=taskid_property.GetValue().(string)
+	if !ok{
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (gt *GeneralTask) GetTaskExecuteIdx() int {
