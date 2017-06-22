@@ -556,9 +556,9 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	//	return v_result, v_err
 	//}
 
-	sleeptime := 1
+	sleeptime := 30
 
-	time.Sleep(time.Minute * 60 * time.Duration(sleeptime))
+	time.Sleep(time.Minute * time.Duration(sleeptime))
 
 	//构建返回值
 	v_result = common.OperateResult{}
