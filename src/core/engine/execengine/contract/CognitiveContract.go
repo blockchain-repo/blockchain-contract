@@ -798,8 +798,17 @@ func (gc *CognitiveContract) GetCname() string {
 	if gc.PropertyTable[_Cname] == nil {
 		return ""
 	}
-	cname_property := gc.PropertyTable[_Cname].(property.PropertyT)
-	return cname_property.GetValue().(string)
+	cname_property, ok := gc.PropertyTable[_Cname].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := cname_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 
 func (gc *CognitiveContract) GetCaption() string {
@@ -807,8 +816,16 @@ func (gc *CognitiveContract) GetCaption() string {
 	if gc.PropertyTable[_Caption] == nil {
 		r_res = ""
 	} else {
-		caption_property := gc.PropertyTable[_Caption].(property.PropertyT)
-		r_res = caption_property.GetValue().(string)
+		caption_property, ok := gc.PropertyTable[_Caption].(property.PropertyT)
+		if !ok {
+			logs.Error("assert error")
+			return ""
+		}
+		r_res, ok = caption_property.GetValue().(string)
+		if !ok {
+			logs.Error("assert error")
+			return ""
+		}
 	}
 	return r_res
 }
@@ -816,8 +833,16 @@ func (gc *CognitiveContract) GetCaption() string {
 func (gc *CognitiveContract) GetDescription() string {
 	var r_res string = ""
 	if gc.PropertyTable[_Description] != nil {
-		description_property := gc.PropertyTable[_Description].(property.PropertyT)
-		r_res = description_property.GetValue().(string)
+		description_property, ok := gc.PropertyTable[_Description].(property.PropertyT)
+		if !ok {
+			logs.Error("assert error")
+			return ""
+		}
+		r_res, ok = description_property.GetValue().(string)
+		if !ok {
+			logs.Error("assert error")
+			return ""
+		}
 	}
 	return r_res
 }
@@ -826,15 +851,28 @@ func (gc *CognitiveContract) GetMetaAttribute() map[string]string {
 	if gc.PropertyTable[_MetaAttribute] == nil {
 		return nil
 	}
-	metaattribute_property := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
-	return metaattribute_property.GetValue().(map[string]string)
+	metaattribute_property, ok := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	v, ok := metaattribute_property.GetValue().(map[string]string)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	return v
 }
 
 //属性Set方法
 func (cc CognitiveContract) SetId(p_Id string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.Id = p_Id
-	id_property := cc.PropertyTable[_Id].(property.PropertyT)
+	id_property, ok := cc.PropertyTable[_Id].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	id_property.SetValue(p_Id)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_Id] = id_property
@@ -842,138 +880,279 @@ func (cc CognitiveContract) SetId(p_Id string) {
 func (gc *CognitiveContract) SetCname(str_name string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	gc.ContractBody.Cname = str_name
-	cname_property := gc.PropertyTable[_Cname].(property.PropertyT)
+	cname_property, ok := gc.PropertyTable[_Cname].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	cname_property.SetValue(str_name)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	gc.PropertyTable[_Cname] = cname_property
 }
 
 func (cc *CognitiveContract) GetContractState() string {
-	state_property := cc.PropertyTable[_ContractState].(property.PropertyT)
-	return state_property.GetValue().(string)
+	state_property, ok := cc.PropertyTable[_ContractState].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := state_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (cc *CognitiveContract) GetCreator() string {
-	creator_property := cc.PropertyTable[_Creator].(property.PropertyT)
-	return creator_property.GetValue().(string)
+	creator_property, ok := cc.PropertyTable[_Creator].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := creator_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (cc *CognitiveContract) GetCreateTime() string {
-	CreateTime_property := cc.PropertyTable[_CreateTime].(property.PropertyT)
-	return CreateTime_property.GetValue().(string)
+	CreateTime_property, ok := cc.PropertyTable[_CreateTime].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := CreateTime_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (cc *CognitiveContract) GetStartTime() string {
-	startTime_property := cc.PropertyTable[_StartTime].(property.PropertyT)
-	return startTime_property.GetValue().(string)
+	startTime_property, ok := cc.PropertyTable[_StartTime].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := startTime_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (cc *CognitiveContract) GetEndTime() string {
-	endTime_property := cc.PropertyTable[_EndTime].(property.PropertyT)
-	return endTime_property.GetValue().(string)
+	endTime_property, ok := cc.PropertyTable[_EndTime].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	str, ok := endTime_property.GetValue().(string)
+	if !ok {
+		logs.Error("assert error")
+		return ""
+	}
+	return str
 }
 func (cc *CognitiveContract) GetContractOwners() interface{} {
-	contractOwners_property := cc.PropertyTable[_ContractOwners].(property.PropertyT)
-	return contractOwners_property.GetValue().([]string)
+	contractOwners_property, ok := cc.PropertyTable[_ContractOwners].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	str, ok := contractOwners_property.GetValue().([]string)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	return str
 }
 func (cc *CognitiveContract) GetContractAssets() interface{} {
-	contractAssets_property := cc.PropertyTable[_ContractAssets].(property.PropertyT)
-	return contractAssets_property.GetValue().([]ContractAsset)
+	contractAssets_property, ok := cc.PropertyTable[_ContractAssets].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	str, ok := contractAssets_property.GetValue().([]ContractAsset)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	return str
 }
 func (cc *CognitiveContract) GetContractSignatures() interface{} {
-	contractSignatures := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
-	return contractSignatures.GetValue().([]ContractSignature)
+	contractSignatures, ok := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	str, ok := contractSignatures.GetValue().([]ContractSignature)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	return str
 }
 func (cc *CognitiveContract) GetContractComponents() []interface{} {
 	return cc.ContractBody.ContractComponents
 }
 func (cc *CognitiveContract) GetNextTasks() []string {
-	nexttasks_property := cc.PropertyTable[_NextTasks].(property.PropertyT)
-	return nexttasks_property.GetValue().([]string)
+	nexttasks_property, ok := cc.PropertyTable[_NextTasks].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	str, ok := nexttasks_property.GetValue().([]string)
+	if !ok {
+		logs.Error("assert error")
+		return nil
+	}
+	return str
 }
 
 //====属性Set方法
 func (gc *CognitiveContract) SetCtype(str_type string) {
 	gc.ContractBody.Ctype = str_type
-	ctype_property := gc.PropertyTable[_Ctype].(property.PropertyT)
+	ctype_property, ok := gc.PropertyTable[_Ctype].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	ctype_property.SetValue(str_type)
 	gc.PropertyTable[_Ctype] = ctype_property
 }
 
 func (gc *CognitiveContract) SetCaption(str_Caption string) {
 	gc.ContractBody.Caption = str_Caption
-	caption_property := gc.PropertyTable[_Caption].(property.PropertyT)
+	caption_property, ok := gc.PropertyTable[_Caption].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	caption_property.SetValue(str_Caption)
 	gc.PropertyTable[_Caption] = caption_property
 }
 
 func (gc *CognitiveContract) SetDescription(str_Description string) {
 	gc.ContractBody.Description = str_Description
-	description_property := gc.PropertyTable[_Description].(property.PropertyT)
+	description_property, ok := gc.PropertyTable[_Description].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	description_property.SetValue(str_Description)
 	gc.PropertyTable[_Description] = description_property
 }
 
 func (gc *CognitiveContract) SetMetaAttribute(p_metaAttribute map[string]string) {
 	gc.ContractBody.MetaAttribute = p_metaAttribute
-	metaAttribute_property := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
+	metaAttribute_property, ok := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	metaAttribute_property.SetValue(p_metaAttribute)
 	gc.PropertyTable[_MetaAttribute] = metaAttribute_property
 }
 
 func (cc *CognitiveContract) SetContractId(p_ConstractId string) {
 	cc.ContractBody.ContractId = p_ConstractId
-	contractid_property := cc.PropertyTable[_ContractId].(property.PropertyT)
+	contractid_property, ok := cc.PropertyTable[_ContractId].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	contractid_property.SetValue(p_ConstractId)
 	cc.PropertyTable[_ContractId] = contractid_property
 }
 func (cc *CognitiveContract) SetContractState(p_State string) {
 	cc.ContractBody.ContractState = p_State
-	state_property := cc.PropertyTable[_ContractState].(property.PropertyT)
+	state_property, ok := cc.PropertyTable[_ContractState].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	state_property.SetValue(p_State)
 	cc.PropertyTable[_ContractState] = state_property
 }
 func (cc *CognitiveContract) SetCreator(p_Creator string) {
 	cc.ContractBody.Creator = p_Creator
-	creator_property := cc.PropertyTable[_Creator].(property.PropertyT)
+	creator_property, ok := cc.PropertyTable[_Creator].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	creator_property.SetValue(p_Creator)
 	cc.PropertyTable[_Creator] = creator_property
 }
 func (cc *CognitiveContract) SetCreateTime(p_CreateTime string) {
 	cc.ContractBody.CreateTime = p_CreateTime
-	CreateTime_property := cc.PropertyTable[_CreateTime].(property.PropertyT)
+	CreateTime_property, ok := cc.PropertyTable[_CreateTime].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	CreateTime_property.SetValue(p_CreateTime)
 	cc.PropertyTable[_CreateTime] = CreateTime_property
 }
 func (cc *CognitiveContract) SetStartTime(p_StartTime string) {
 	cc.ContractBody.StartTime = p_StartTime
-	starttime_property := cc.PropertyTable[_StartTime].(property.PropertyT)
+	starttime_property, ok := cc.PropertyTable[_StartTime].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	starttime_property.SetValue(p_StartTime)
 	cc.PropertyTable[_StartTime] = starttime_property
 }
 func (cc *CognitiveContract) SetEndTime(p_EndTime string) {
 	cc.ContractBody.EndTime = p_EndTime
-	endtime_property := cc.PropertyTable[_EndTime].(property.PropertyT)
+	endtime_property, ok := cc.PropertyTable[_EndTime].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	endtime_property.SetValue(p_EndTime)
 	cc.PropertyTable[_EndTime] = endtime_property
 }
 func (cc *CognitiveContract) SetContractOwners(p_ContractOwners []string) {
 	cc.ContractBody.ContractOwners = p_ContractOwners
-	contractowners_property := cc.PropertyTable[_ContractOwners].(property.PropertyT)
+	contractowners_property, ok := cc.PropertyTable[_ContractOwners].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	contractowners_property.SetValue(p_ContractOwners)
 	cc.PropertyTable[_ContractOwners] = contractowners_property
 }
 func (cc *CognitiveContract) SetContractAssets(p_ContractAssets []ContractAsset) {
 	cc.ContractBody.ContractAssets = p_ContractAssets
-	contractassets_property := cc.PropertyTable[_ContractAssets].(property.PropertyT)
+	contractassets_property, ok := cc.PropertyTable[_ContractAssets].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	contractassets_property.SetValue(p_ContractAssets)
 	cc.PropertyTable[_ContractAssets] = contractassets_property
 }
 func (cc *CognitiveContract) SetContractSignatures(p_ContractSignatures []ContractSignature) {
 	cc.ContractBody.ContractSignatures = p_ContractSignatures
-	contractsignatures_property := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
+	contractsignatures_property, ok := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	contractsignatures_property.SetValue(p_ContractSignatures)
 	cc.PropertyTable[_ContractSignatures] = contractsignatures_property
 }
 func (cc *CognitiveContract) SetNextTasks(p_NextTasks []string) {
 	cc.ContractBody.NextTasks = p_NextTasks
-	nexttasks_property := cc.PropertyTable[_NextTasks].(property.PropertyT)
+	nexttasks_property, ok := cc.PropertyTable[_NextTasks].(property.PropertyT)
+	if !ok {
+		logs.Error("assert error")
+		return
+	}
 	nexttasks_property.SetValue(p_NextTasks)
 	cc.PropertyTable[_NextTasks] = nexttasks_property
 }
@@ -993,6 +1172,7 @@ func (cc *CognitiveContract) SetContractComponents(p_components []interface{}) {
 // 9.          不满足运行条件，继续判断同级任务
 // 10.         满足运行条件，则执行该任务，跳过队列中的其他同级任务
 func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
+	ok := false
 	var r_ret int8 = -1
 	var r_err error = nil
 	var next_tasks []string = cc.GetNextTasks()
@@ -1014,7 +1194,11 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	//根据合约中记录的当前执行任务ID（OrgTaskId）获取任务名称
 	var do_process_task inf.ITask
 	if cc.GetOrgTaskId() != "" {
-		do_process_task = cc.GetTaskByID(cc.GetOrgTaskId()).(inf.ITask)
+		do_process_task, ok = cc.GetTaskByID(cc.GetOrgTaskId()).(inf.ITask)
+		if !ok {
+			logs.Error("assert error")
+			return r_ret, fmt.Errorf("assert error")
+		}
 	}
 	//判断后继任务是否有执行过(state_discard 或 state_completed)的：
 	//     有(state_discard 或 state_completed)，则清空队列，将该任务后继任务入队，继续判断；
@@ -1023,24 +1207,44 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	//     无(且队列为空时)，则将当前轮询的后继任务入队，跳出循环，进入下一判断
 	for !r_task_queue.Empty() {
 		tmp_str_task := r_task_queue.Pop()
-		f_f_task := cc.GetTask(tmp_str_task.(string))
+		str, ok := tmp_str_task.(string)
+		if !ok {
+			logs.Error("assert error")
+			return r_ret, fmt.Errorf("assert error")
+		}
+		f_f_task := cc.GetTask(str)
 		if f_f_task == nil {
 			r_ret = -1
 			r_err = errors.New("Judge Task, GetTask is null!")
 			r_buf.WriteString("[Result]: UpdateTasksState fail;")
-			r_buf.WriteString("[Error]: " + tmp_str_task.(string) + "," + r_err.Error() + ";")
+			str, ok := tmp_str_task.(string)
+			if !ok {
+				logs.Error("assert error")
+				return r_ret, fmt.Errorf("assert error")
+			}
+			r_buf.WriteString("[Error]: " + str + "," + r_err.Error() + ";")
 			logs.Warning(r_buf.String())
 			return r_ret, r_err
 		}
-		if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Discard] || f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Completed] {
+		ttask, ok := f_f_task.(inf.ITask)
+		if !ok {
+			logs.Error("assert error")
+			return r_ret, fmt.Errorf("assert error")
+		}
+		if ttask.GetState() == constdef.TaskState[constdef.TaskState_Discard] || ttask.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
 			//通过合约中记录的当前执行任务，则直接对后继任务进行重置，解决循环执行问题
-			next_tasks = f_f_task.(inf.ITask).GetNextTasks()
-			if f_f_task.(inf.ITask).GetName() == do_process_task.(inf.ITask).GetName() {
-				logs.Error("=========== NowProcessTask:" + do_process_task.(inf.ITask).GetName())
-				logs.Error("=========== NextProcessTask:" + f_f_task.(inf.ITask).GetName())
+			next_tasks = ttask.GetNextTasks()
+			doTask, ok := do_process_task.(inf.ITask)
+			if !ok {
+				logs.Error("assert error")
+				return r_ret, fmt.Errorf("assert error")
+			}
+			if ttask.GetName() == doTask.GetName() {
+				logs.Error("=========== NowProcessTask:" + doTask.GetName())
+				logs.Error("=========== NextProcessTask:" + ttask.GetName())
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
@@ -1056,18 +1260,18 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 					r_task_queue.Push(t_task)
 				}
 			} else {
-				logs.Error("----------- NowProcessTask:" + do_process_task.(inf.ITask).GetName())
-				logs.Error("----------- NextProcessTask:" + f_f_task.(inf.ITask).GetName())
+				logs.Error("----------- NowProcessTask:" + doTask.GetName())
+				logs.Error("----------- NextProcessTask:" + ttask.GetName())
 				for _, t_task := range next_tasks {
 					r_task_queue.Push(t_task)
 				}
 				continue
 			}
-		} else if f_f_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
+		} else if ttask.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
-			r_task_queue.Push(f_f_task.(inf.ITask).GetName())
+			r_task_queue.Push(ttask.GetName())
 			break
 		} else if r_task_queue.Len() != 0 {
 			continue
@@ -1086,7 +1290,12 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	var f_err error = nil
 	for !r_task_queue.Empty() {
 		tmp_str_task := r_task_queue.Pop()
-		f_s_task := cc.GetTask(tmp_str_task.(string))
+		str, ok := tmp_str_task.(string)
+		if !ok {
+			logs.Error("assert error")
+			return r_ret, fmt.Errorf("assert error")
+		}
+		f_s_task := cc.GetTask(str)
 		if f_s_task == nil {
 			r_ret = -1
 			r_err = errors.New("Execute Task, GetTask is null!")
@@ -1095,8 +1304,12 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			logs.Warning(r_buf.String())
 			return r_ret, r_err
 		}
-
-		r_ret, f_err = f_s_task.(inf.ITask).UpdateState()
+		aaaaa, ok := f_s_task.(inf.ITask)
+		if !ok {
+			logs.Error("assert error")
+			return r_ret, fmt.Errorf("assert error")
+		}
+		r_ret, f_err = aaaaa.UpdateState()
 		switch r_ret {
 		case 1: //执行成功后，跳转到下一合约任务；
 			// 注意：后续任务不入队列了，等待共识成功后初始化到扫描监控表中，下次加载再执行
@@ -1104,7 +1317,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				r_task_queue.Pop()
 			}
 			/*
-				next_tasks = f_s_task.(inf.ITask).GetNextTasks()
+				next_tasks = aaaaa.GetNextTasks()
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
@@ -1125,14 +1338,14 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				cc.SetOrgTaskExecuteIdx(cc.GetOutputTaskExecuteIdx())
 			*/
 		case 0: //执行条件不成立
-			if f_s_task.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
+			if aaaaa.GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
 				continue
 			} else { //合约退出
-				r_err = errors.New("task[" + f_s_task.(inf.ITask).GetName() + "] condition not fullfill!")
+				r_err = errors.New("task[" + aaaaa.GetName() + "] condition not fullfill!")
 				break
 			}
 		case -1: //执行失败后，合约退出
-			r_err = errors.New("task[" + f_s_task.(inf.ITask).GetName() + "] execute fail!")
+			r_err = errors.New("task[" + aaaaa.GetName() + "] execute fail!")
 			break
 		}
 		if f_err != nil {
@@ -1146,8 +1359,18 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 //return :  true 可执行；  false 不可执行；
 func (cc *CognitiveContract) CanExecute() bool {
 	var v_bool bool = true
-	var v_owner_count int = len(cc.GetContractOwners().([]string))
-	var v_signature_count int = len(cc.GetContractSignatures().([]ContractSignature))
+	tmp, ok := cc.GetContractOwners().([]string)
+	if !ok {
+		logs.Error("assert error")
+		return false
+	}
+	var v_owner_count int = len(tmp)
+	tmp1, ok := cc.GetContractSignatures().([]ContractSignature)
+	if !ok {
+		logs.Error("assert error")
+		return false
+	}
+	var v_signature_count int = len(tmp1)
 	var v_contract_state string = cc.GetContractState()
 	if v_contract_state == constdef.ContractState[constdef.Contract_Completed] || v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
 		logs.Warning("ContractState is Completed or Discarded, contract can't execute!")
@@ -1164,8 +1387,18 @@ func (cc *CognitiveContract) CanExecute() bool {
 		}
 		//check owners signaature content
 		var v_idx int = 0
-		for _, v_owner := range cc.GetContractOwners().([]string) {
-			for v_idx, v_contract_signature := range cc.GetContractSignatures().([]ContractSignature) {
+		sl, ok := cc.GetContractOwners().([]string)
+		if !ok {
+			logs.Error("assert error")
+			return false
+		}
+		for _, v_owner := range sl {
+			sl1, ok := cc.GetContractSignatures().([]ContractSignature)
+			if !ok {
+				logs.Error("assert error")
+				return false
+			}
+			for v_idx, v_contract_signature := range sl1 {
 				if v_owner == v_contract_signature.GetOwnerPubkey() {
 					break
 				}
@@ -1244,13 +1477,26 @@ func (cc *CognitiveContract) SetOrgTaskInfo(p_relation_map map[string]interface{
 	}
 
 	//提取ContractHashID
-	var v_contractHashID string = p_relation_map["ContractHashId"].(string)
+	v_contractHashID, ok := p_relation_map["ContractHashId"].(string)
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	cc.SetOrgId(v_contractHashID)
 	//提取TaskID
-	var v_taskID string = p_relation_map["TaskId"].(string)
+	v_taskID, ok := p_relation_map["TaskId"].(string)
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
 	cc.SetOrgTaskId(v_taskID)
 	//提取TaskIndexID
-	var v_taskIndexID int = int(p_relation_map["TaskExecuteIdx"].(float64))
+	f, ok := p_relation_map["TaskExecuteIdx"].(float64)
+	if !ok {
+		logs.Error("assert error")
+		return fmt.Errorf("assert error")
+	}
+	var v_taskIndexID int = int(f)
 	cc.SetOrgTaskExecuteIdx(v_taskIndexID)
 
 	return v_err
@@ -1280,9 +1526,18 @@ func (cc *CognitiveContract) UpdateLoopExecuteTask(p_task_name string) error {
 	//update task value
 	task_component := cc.GetTask(p_task_name)
 	if task_component != nil {
-		v_nexttask_object := task_component.(inf.ITask)
-		if v_nexttask_object.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Completed] ||
-			v_nexttask_object.(inf.ITask).GetState() == constdef.TaskState[constdef.TaskState_Discard] {
+		v_nexttask_object, ok := task_component.(inf.ITask)
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		tmp, ok := v_nexttask_object.(inf.ITask)
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		if tmp.GetState() == constdef.TaskState[constdef.TaskState_Completed] ||
+			tmp.GetState() == constdef.TaskState[constdef.TaskState_Discard] {
 			//待循环执行的任务需要修改：State, TaskExecuteIdx；清空结果值
 			v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
 			v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
@@ -1313,9 +1568,18 @@ func (cc *CognitiveContract) UpdateContractComponents(p_task_component interface
 			continue
 		}
 		//序列回来的component是map结构
-		map_component := v_component.(map[string]interface{})
+		map_component, ok := v_component.(map[string]interface{})
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
 		//识别map中的中任务名称
-		if map_component["TaskId"] == p_task_component.(inf.ITask).GetTaskId() {
+		ttask, ok := p_task_component.(inf.ITask)
+		if !ok {
+			logs.Error("assert error")
+			return fmt.Errorf("assert error")
+		}
+		if map_component["TaskId"] == ttask.GetTaskId() {
 			//构造map结构的Task
 			var str_json string = common.Serialize(p_task_component)
 			var map_component interface{} = common.Deserialize(str_json)
