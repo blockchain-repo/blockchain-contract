@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -59,6 +60,9 @@ var mapEnergy map[string]float64
 
 func init() {
 	mapMeterRemainMoney = make(map[string]float64)
+	money, _ := rethinkdb.GetMoneyFromEnergy(slPersonKey[0])
+	mapMeterRemainMoney[slPersonKey[0]] = money
+
 	mapEnergy = make(map[string]float64)
 
 	// 获得个人、运营商、电表、发电厂的key
@@ -457,6 +461,53 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+//账户充值
+func _Recharge() {
+	// bill
+	/*
+			type DemoBill struct {
+			Id        string `json:"id"`
+			PublicKey string
+			Timestamp string
+			Type      int // 0：用户账户充值 1：用户购电充值 2：分张
+		}
+	*/
+	strPublicKey, _ := common2.GenerateKeyPair()
+	bill1 := model.DemoBill{
+		Id:        common2.GenerateUUID(),
+		PublicKey: strPublicKey,
+		Timestamp: common2.GenTimestamp(),
+		Type:      0,
+	}
+	sldata, _ := json.Marshal(bill1)
+	rethinkdb.InsertEnergyTradingDemoBill(string(sldata))
+
+	// transaction
+	/*
+			type DemoTransaction struct {
+			Id            string  `json:"id"`
+			BillId        string  // 对应的票据表id
+			Timestamp     string  // 交易时间戳
+			FromPublicKey string  // 付款方
+			ToPublicKey   string  // 收款方
+			Money         float64 // 金额
+			Type          int     // 0：用户账户充值 1：用户购电充值 2：分张
+		}
+	*/
+	transaction1 := model.DemoTransaction{
+		Id:            common2.GenerateUUID(),
+		BillId:        bill1.Id,
+		Timestamp:     common.GenTimestamp(),
+		FromPublicKey: "",
+		ToPublicKey:   slPersonKey[0],
+		Money:         300,
+		Type:          0,
+	}
+	sldata, _ = json.Marshal(transaction1)
+
+	rethinkdb.InsertEnergyTradingDemoTransaction(string(sldata))
+}
+
 //电表自动购电50元（链上进行资产转移50给运营账户；同时访问电表接口，给电表充值50元）
 //Args:  User_A   string      将用户账户中的钱50元，转到运营商账户
 //       Ccount_D string
@@ -555,6 +606,9 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	//	v_result.SetMessage("args[0].(string) is error!")
 	//	return v_result, v_err
 	//}
+
+	var once sync.Once
+	once.Do(_Recharge)
 
 	sleeptime := 30
 
