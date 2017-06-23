@@ -3,6 +3,7 @@ package function
 import (
 	"github.com/astaxie/beego/logs"
 	"strconv"
+	"strings"
 	"testing"
 	"unicontract/src/config"
 )
@@ -15,6 +16,20 @@ func TestBoo(t *testing.T) {
 	var s string = strconv.FormatBool(b)
 	logs.Info(b)
 	logs.Info(s)
+}
+
+func TestSplit(t *testing.T) {
+	s := strings.Split("a#100&b#200", "&")
+	logs.Info(s, len(s))
+	var re [][2]interface{} = [][2]interface{}{}
+	for i := 0; i < len(s); i++ {
+		ss := strings.Split(s[i], "#")
+		ownAfter := ss[0]
+		amount, _ := strconv.ParseFloat(ss[1], 64)
+		re = append(re, [2]interface{}{ownAfter, amount})
+		logs.Info(ss)
+	}
+	logs.Info(re)
 }
 
 func TestFuncCreateAsset(t *testing.T) {
