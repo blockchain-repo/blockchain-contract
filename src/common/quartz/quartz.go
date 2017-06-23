@@ -34,6 +34,7 @@ func sendFailingDataTimer() {
 			result, err := chain.CreateContractTx(common.Serialize(str))
 			if err != nil {
 				logs.Error(err.Error())
+				continue
 			}
 
 			if result.Code != 200 {
