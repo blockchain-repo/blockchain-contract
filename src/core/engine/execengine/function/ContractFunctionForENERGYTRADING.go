@@ -222,7 +222,7 @@ func init() {
 // 1.模拟ELINK采集电表数据功能；2.模拟采集发电厂发电数据功能
 func Simulate() {
 	rand.Seed(time.Now().UnixNano())
-	ticker := time.NewTicker(10 * time.Minute)
+	ticker := time.NewTicker(30 * time.Second)
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
