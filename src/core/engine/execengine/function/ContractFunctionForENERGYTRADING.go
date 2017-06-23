@@ -223,45 +223,52 @@ func init() {
 func Simulate() {
 	rand.Seed(time.Now().UnixNano())
 	ticker := time.NewTicker(10 * time.Minute)
-	for _ = range ticker.C {
-		// 模拟采集电表数据
-		for index, v := range slMeterKey {
-			slMeterKey[index].Electricity += 1
-			slMeterKey[index].TotalElectricity += 1
-			electricityMeter1 := model.DemoEnergy{
-				Id:               common2.GenerateUUID(),
-				PublicKey:        v.Key,
-				Timestamp:        common2.GenTimestamp(),
-				Electricity:      slMeterKey[index].Electricity,
-				TotalElectricity: slMeterKey[index].TotalElectricity,
-				Money:            mapMeterRemainMoney[v.Key],
-				Type:             0,
-			}
-			sldata, _ := json.Marshal(electricityMeter1)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		for _ = range ticker.C {
+			// 模拟采集电表数据
+			logs.Info("模拟采集电表数据")
+			for index, v := range slMeterKey {
+				slMeterKey[index].Electricity += 1
+				slMeterKey[index].TotalElectricity += 1
+				electricityMeter1 := model.DemoEnergy{
+					Id:               common2.GenerateUUID(),
+					PublicKey:        v.Key,
+					Timestamp:        common2.GenTimestamp(),
+					Electricity:      slMeterKey[index].Electricity,
+					TotalElectricity: slMeterKey[index].TotalElectricity,
+					Money:            mapMeterRemainMoney[v.Key],
+					Type:             0,
+				}
+				sldata, _ := json.Marshal(electricityMeter1)
 
-			err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
-			if err != nil {
-				logs.Error(err)
+				err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
+				if err != nil {
+					logs.Error(err)
+				}
+			}
+
+			// 模拟采集发电厂数据
+			logs.Info("模拟采集发电厂数据")
+			for _, v := range slPowerPlantsKey {
+				electricityPowerPlant1 := model.DemoEnergy{
+					Id:          common2.GenerateUUID(),
+					PublicKey:   v.Key,
+					Timestamp:   common2.GenTimestamp(),
+					Electricity: float64(rand.Intn(1000)),
+					Type:        v.Type_,
+				}
+				sldata, _ := json.Marshal(electricityPowerPlant1)
+
+				err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
+				if err != nil {
+					logs.Error(err)
+				}
 			}
 		}
-
-		// 模拟采集发电厂数据
-		for _, v := range slPowerPlantsKey {
-			electricityPowerPlant1 := model.DemoEnergy{
-				Id:          common2.GenerateUUID(),
-				PublicKey:   v.Key,
-				Timestamp:   common2.GenTimestamp(),
-				Electricity: float64(rand.Intn(1000)),
-				Type:        v.Type_,
-			}
-			sldata, _ := json.Marshal(electricityPowerPlant1)
-
-			err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
-			if err != nil {
-				logs.Error(err)
-			}
-		}
-	}
+	}()
+	wg.Wait()
 }
 
 // 传入时间戳，获得该时间戳所对应的电价级别
