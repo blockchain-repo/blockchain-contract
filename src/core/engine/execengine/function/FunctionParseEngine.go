@@ -139,7 +139,7 @@ func (bif *FunctionParseEngine) LoadFunctionTIANJS() error {
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 //=====GUANGXIBIANMAO Method(广西边贸)
-func (bif *FunctionParseEngine) LoadFunctionGUANGXIBIAMAO() error {
+func (bif *FunctionParseEngine) LoadFunctionGUANGXIBIANMAO() error {
 	var v_err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	if bif.ContractFunctions == nil {
@@ -159,7 +159,7 @@ func (bif *FunctionParseEngine) LoadFunctionGUANGXIBIAMAO() error {
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 //=====ENEGYTRADING [能源交易]
-func (bif *FunctionParseEngine) LoadFunctionENEGYTRADING() error {
+func (bif *FunctionParseEngine) LoadFunctionENERGYTRADING() error {
 	var v_err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	if bif.ContractFunctions == nil {
@@ -230,5 +230,63 @@ func (bif *FunctionParseEngine) LoadFunctionRENTPAYMENT() error {
 	bif.ContractFunctions["FuncRemindAccount"] = FuncRemindAccount
 	bif.ContractFunctions["FuncNoAction"] = FuncNoAction
 
+	return v_err
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//=====HOUSETRANSFER 【房屋交易】
+func (bif *FunctionParseEngine) LoadFunctionHOUSETRANSFER() error {
+	var v_err error = nil
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	if bif.ContractFunctions == nil {
+		r_buf.WriteString("[Result]: LoadFunctionHOUSETRANSFER fail;")
+		r_buf.WriteString("[Error]: ContractFunctions is nil!")
+		logs.Error(r_buf.String())
+		v_err = errors.New("ContractFunctions is nil!")
+		return v_err
+	}
+	//Add Common Method,Here
+	bif.ContractFunctions["FuncQueryHouse"] = FuncQueryHouse
+	bif.ContractFunctions["FuncExitForNoHouse"] = FuncExitForNoHouse
+	bif.ContractFunctions["FuncUserBalance"] = FuncUserBalance
+	bif.ContractFunctions["FuncTransferHouseFees"] = FuncTransferHouseFees
+	bif.ContractFunctions["FuncNoticeRecharge"] = FuncNoticeRecharge
+	bif.ContractFunctions["FuncQueryHouseFeesResult"] = FuncQueryHouseFeesResult
+	bif.ContractFunctions["FuncExitForTransferFail"] = FuncExitForTransferFail
+	bif.ContractFunctions["FuncTransferHouse"] = FuncTransferHouse
+	bif.ContractFunctions["FuncQueryHouseResult"] = FuncQueryHouseResult
+	bif.ContractFunctions["FuncExitForSuccess"] = FuncExitForSuccess
+	bif.ContractFunctions["FuncExitForHouseTransferFail"] = FuncExitForHouseTransferFail
+
+	return v_err
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//=====AUTOSELLER 【自动售卖机交易】
+func (bif *FunctionParseEngine) LoadFunctionAUTOSELLER() error {
+	var v_err error = nil
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	if bif.ContractFunctions == nil {
+		r_buf.WriteString("[Result]: LoadFunctionAUTOSELLER fail;")
+		r_buf.WriteString("[Error]: ContractFunctions is nil!")
+		logs.Error(r_buf.String())
+		v_err = errors.New("ContractFunctions is nil!")
+		return v_err
+	}
+	//Add Common Method,Here
+	bif.ContractFunctions["FuncGetUserSelectedStyle"] = FuncGetUserSelectedStyle
+	bif.ContractFunctions["FuncGetUserSelectedCount"] = FuncGetUserSelectedCount
+	bif.ContractFunctions["FuncQueryRemainingCount"] = FuncQueryRemainingCount
+	bif.ContractFunctions["FuncExitForNoRemaining"] = FuncExitForNoRemaining
+	bif.ContractFunctions["FuncCalculatedCost"] = FuncCalculatedCost
+	bif.ContractFunctions["FuncWaitPayMoney"] = FuncWaitPayMoney
+	bif.ContractFunctions["FuncQueryUserPayCount"] = FuncQueryUserPayCount
+	bif.ContractFunctions["FuncSupplyGoods"] = FuncSupplyGoods
+	bif.ContractFunctions["FuncQueryRemainingMoney"] = FuncQueryRemainingMoney
+	bif.ContractFunctions["FuncOddChange"] = FuncOddChange
+	bif.ContractFunctions["FuncExitForSuccess"] = FuncExitForSuccess
+	bif.ContractFunctions["FuncExitForTerminal"] = FuncExitForTerminal
 	return v_err
 }

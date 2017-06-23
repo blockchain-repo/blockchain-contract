@@ -6,18 +6,18 @@ import "unicontract/src/core/engine/common"
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++合约机【自动售卖机】专用扩展方法++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//获取用户输入的饮料种类FuncGetUserSelectedStyle()
-//获取用户输入的购买数量FuncGetUserSelectedCount()
-//查询购买饮料品种余量FuncQueryRemainingCount(style_A, count_A)
-//退出操作，提供机器饮料不足FuncExitForNoRemaining(style_A, count_A)
-//计算消耗总金额FuncCalculatedCost(style_A, count_A)
-//休眠等待用户支付FuncWaitPayMoney(sleeptime)
-//查询用户支付额度FuncQueryUserPayCount(user_A)
-//售卖机出饮料FuncSupplyGoods(style_A, count_A)
-//查询消耗余额FuncQueryRemainingMoney(user_A)
-//售卖机找零FuncOddChange(user_A)
-//退出操作，打印欢迎使用售卖机FuncExitForSuccess(user_A)
-//购买流程结束FuncExitForTerminal(user_A)
+//获取用户输入的饮料种类 FuncGetUserSelectedStyle()
+//获取用户输入的购买数量 FuncGetUserSelectedCount()
+//查询购买饮料品种余量 FuncQueryRemainingCount(style_A, count_A)
+//退出操作，提供机器饮料不足 FuncExitForNoRemaining(style_A, count_A)
+//计算消耗总金额 FuncCalculatedCost(style_A, count_A)
+//休眠等待用户支付 FuncWaitPayMoney(sleeptime)
+//查询用户支付额度 FuncQueryUserPayCount(user_A)
+//售卖机出饮料 FuncSupplyGoods(style_A, count_A)
+//查询消耗余额 FuncQueryRemainingMoney(user_A)
+//售卖机找零 FuncOddChange(user_A)
+//退出操作，打印欢迎使用售卖机 FuncExitForSuccess(user_A)
+//购买流程结束 FuncExitForTerminal(user_A)
 
 //获取用户输入的饮料种类
 func FuncGetUserSelectedStyle(args ...interface{}) (common.OperateResult, error) {

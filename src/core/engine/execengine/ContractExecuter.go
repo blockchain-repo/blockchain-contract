@@ -212,10 +212,20 @@ func (ce *ContractExecuter) Prepare() {
 		switch v_product {
 		case constdef.FunctionSource[constdef.FUNCTION_SRC_DEMO]:
 			ce.contract_executer.FunctionParseEngine.LoadFunctionDEMO()
+		case constdef.FunctionSource[constdef.FUNCTION_SRC_AUTOSELLER]:
+			ce.contract_executer.FunctionParseEngine.LoadFunctionAUTOSELLER()
+		case constdef.FunctionSource[constdef.FUNCTION_SRC_ENERGYTRADING]:
+			ce.contract_executer.FunctionParseEngine.LoadFunctionENERGYTRADING()
+		case constdef.FunctionSource[constdef.FUNCTION_SRC_GUANGXIBIANMAO]:
+			ce.contract_executer.FunctionParseEngine.LoadFunctionGUANGXIBIANMAO()
+		case constdef.FunctionSource[constdef.FUNCTION_SRC_HOUSETRANSFER]:
+			ce.contract_executer.FunctionParseEngine.LoadFunctionHOUSETRANSFER()
+		case constdef.FunctionSource[constdef.FUNCTION_SRC_RENTPAYMENT]:
+			ce.contract_executer.FunctionParseEngine.LoadFunctionRENTPAYMENT()
 		case constdef.FunctionSource[constdef.FUNCTION_SRC_TIANJS]:
 			ce.contract_executer.FunctionParseEngine.LoadFunctionTIANJS()
-		case constdef.FunctionSource[constdef.FUNCTION_SRC_GUANGXIBIANMAO]:
-			ce.contract_executer.FunctionParseEngine.LoadFunctionGUANGXIBIAMAO()
+		case constdef.FunctionSource[constdef.FUNCTION_SRC_TRANSFER]:
+			ce.contract_executer.FunctionParseEngine.LoadFunctionTRANSFER()
 		}
 	}
 }
