@@ -111,6 +111,9 @@ func Test_FuncAutoSplitAccount(t *testing.T) {
 }
 
 func Test_init(t *testing.T) {
-	t.Log(slPowerPlantsKey)
+	t.Log(slPersonKey)
+	t.Log(slOperatorKey)
 	t.Log(slMeterKey)
+	t.Log(slPowerPlantsKey)
+	t.Log(mapMeterRemainMoney)
 }

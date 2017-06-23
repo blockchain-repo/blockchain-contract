@@ -18,6 +18,7 @@ import (
 
 import (
 	"github.com/astaxie/beego/logs"
+	"math"
 )
 
 type PowerPlants struct {
@@ -60,9 +61,6 @@ var mapEnergy map[string]float64
 
 func init() {
 	mapMeterRemainMoney = make(map[string]float64)
-	money, _ := rethinkdb.GetMoneyFromEnergy(slPersonKey[0])
-	mapMeterRemainMoney[slPersonKey[0]] = money
-
 	mapEnergy = make(map[string]float64)
 
 	// 获得个人、运营商、电表、发电厂的key
@@ -70,13 +68,42 @@ func init() {
 	keys, err := rethinkdb.GetRolePublicKey(0)
 	if err != nil {
 		logs.Error(err)
+		// 数据库中没有个人角色，就插入一条
+		strPublicKey, _ := common2.GenerateKeyPair()
+		person1 := model.DemoRole{
+			Id:          common2.GenerateUUID(),
+			Name:        "个人",
+			PublicKey:   strPublicKey,
+			Infermation: "",
+			Type:        0,
+		}
+		sldata, _ := json.Marshal(person1)
+		rethinkdb.InsertEnergyTradingDemoRole(string(sldata))
+		keys = append(keys, strPublicKey)
 	}
 	slPersonKey = append(slPersonKey, keys...)
+
+	keys = nil
 
 	// 电表
 	keys, err = rethinkdb.GetRolePublicKey(1)
 	if err != nil {
 		logs.Error(err)
+		// 数据库中没有电表角色，就插入一条
+		strPublicKey, _ := common2.GenerateKeyPair()
+		mapInformation := make(map[string]string)
+		mapInformation["ownerPublicKey"] = slPersonKey[0]
+		slInformation, _ := json.Marshal(mapInformation)
+		electricityMeter1 := model.DemoRole{
+			Id:          common2.GenerateUUID(),
+			Name:        "个人电表",
+			PublicKey:   strPublicKey,
+			Infermation: string(slInformation),
+			Type:        1,
+		}
+		sldata, _ := json.Marshal(electricityMeter1)
+		rethinkdb.InsertEnergyTradingDemoRole(string(sldata))
+		keys = append(keys, strPublicKey)
 	}
 	for _, value := range keys {
 		MeterInfor_ := MeterInfor{
@@ -87,19 +114,52 @@ func init() {
 		slMeterKey = append(slMeterKey, MeterInfor_)
 	}
 
+	keys = nil
+
 	// 运营商
 	keys, err = rethinkdb.GetRolePublicKey(2)
 	if err != nil {
 		logs.Error(err)
+		// 数据库中没有运营商角色，就插入一条
+		strPublicKey, _ := common2.GenerateKeyPair()
+		operator1 := model.DemoRole{
+			Id:          common2.GenerateUUID(),
+			Name:        "运营商",
+			PublicKey:   strPublicKey,
+			Infermation: "",
+			Type:        2,
+		}
+		sldata, _ := json.Marshal(operator1)
+		rethinkdb.InsertEnergyTradingDemoRole(string(sldata))
+		keys = append(keys, strPublicKey)
 	}
 	slOperatorKey = append(slOperatorKey, keys...)
 
+	keys = nil
+
 	// 发电厂
+	mapBalabala := make(map[int]string)
+	mapBalabala[3] = "风电"
+	mapBalabala[4] = "光电"
+	mapBalabala[5] = "火电"
+	mapBalabala[6] = "国网"
 	type_ := []int{3, 4, 5, 6}
 	for _, v := range type_ {
 		keys, err := rethinkdb.GetRolePublicKey(v)
 		if err != nil {
 			logs.Error(err)
+			// 数据库中没有发电厂角色，就插入一条
+			strPublicKey, _ := common2.GenerateKeyPair()
+			R := model.DemoRole{
+				Id:          common2.GenerateUUID(),
+				Name:        mapBalabala[v],
+				PublicKey:   strPublicKey,
+				Infermation: "",
+				Type:        v,
+			}
+			sldata, _ := json.Marshal(R)
+			rethinkdb.InsertEnergyTradingDemoRole(string(sldata))
+			keys = append(keys, strPublicKey)
 		}
 
 		for _, value := range keys {
@@ -109,6 +169,53 @@ func init() {
 			}
 			slPowerPlantsKey = append(slPowerPlantsKey, PowerPlants_)
 		}
+	}
+
+	// 获得电表余额
+	money, _ := rethinkdb.GetMoneyFromEnergy(slPersonKey[0])
+	mapMeterRemainMoney[slPersonKey[0]] = money
+
+	// 如果电价表不存在数据，则插入数据
+	_, err = rethinkdb.GetPrice()
+	if err != nil {
+		price1 := model.DemoPrice{
+			Id:          common2.GenerateUUID(),
+			Level:       1,
+			Low:         1,
+			High:        240,
+			One:         1,
+			Two:         2,
+			Three:       3,
+			Description: "第一阶梯",
+		}
+		sldata, _ := json.Marshal(price1)
+		rethinkdb.InsertEnergyTradingDemoPrice(string(sldata))
+
+		price2 := model.DemoPrice{
+			Id:          common2.GenerateUUID(),
+			Level:       2,
+			Low:         241,
+			High:        400,
+			One:         2,
+			Two:         3,
+			Three:       4,
+			Description: "第二阶梯",
+		}
+		sldata, _ = json.Marshal(price2)
+		rethinkdb.InsertEnergyTradingDemoPrice(string(sldata))
+
+		price3 := model.DemoPrice{
+			Id:          common2.GenerateUUID(),
+			Level:       3,
+			Low:         401,
+			High:        math.MaxFloat64,
+			One:         3,
+			Two:         4,
+			Three:       5,
+			Description: "第三阶梯",
+		}
+		sldata, _ = json.Marshal(price3)
+		rethinkdb.InsertEnergyTradingDemoPrice(string(sldata))
 	}
 }
 
