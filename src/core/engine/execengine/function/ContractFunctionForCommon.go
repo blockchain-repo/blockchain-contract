@@ -245,7 +245,18 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	}
 	//user provide
 	var ownerBefore string = args[0].(string)
-	var recipients [][2]interface{} = args[1].([][2]interface{})
+	//var recipients [][2]interface{} = args[1].([][2]interface{})
+	var recipientsStr string = args[1].(string)
+	var recipients [][2]interface{} = [][2]interface{}{}
+	s := strings.Split(recipientsStr, "&")
+	//fmt.Println(s, len(s))
+	for i := 0; i < len(s); i++ {
+		ss := strings.Split(s[i], "#")
+		ownAfter := ss[0]
+		amount, _ := strconv.ParseFloat(ss[1], 64)
+		recipients = append(recipients, [2]interface{}{ownAfter, amount})
+	}
+
 	//executer provide
 	var contractStr string = args[2].(string)
 	var contractId string = args[3].(string)
