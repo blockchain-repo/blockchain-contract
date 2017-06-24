@@ -981,9 +981,9 @@ func Test_InsertTransaction_Bill(t *testing.T) {
 		Id:            common.GenerateUUID(),
 		BillId:        bill1.Id,
 		Timestamp:     common.GenTimestamp(),
-		FromPublicKey: "4PDhzMA1jvGJ8BNg6mm4WapU4Kh8NoxnmuMHQwcYSDc2",
-		ToPublicKey:   "H1un73xnFccfLZPJY5nLxSxcJpA2PkgEcDFmSK7fyjqU",
-		Money:         50,
+		FromPublicKey: "8URs5XN2omMfZ3pnJCs7R28KjY223mCb51Mg2rePT7z9",
+		ToPublicKey:   "8kEoPKoXPLUmnYNgYhTtf1Z7HXuoyq3WbL3wMtYubM6r",
+		Money:         60,
 		Type:          1,
 	}
 	sldata, _ = json.Marshal(transaction1)

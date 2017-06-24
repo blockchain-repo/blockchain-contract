@@ -95,11 +95,12 @@ func init() {
 		mapInformation["ownerPublicKey"] = slPersonKey[0]
 		slInformation, _ := json.Marshal(mapInformation)
 		electricityMeter1 := model.DemoRole{
-			Id:          common2.GenerateUUID(),
-			Name:        "个人电表",
-			PublicKey:   strPublicKey,
-			Infermation: string(slInformation),
-			Type:        1,
+			Id:            common2.GenerateUUID(),
+			Name:          "个人电表",
+			PublicKey:     strPublicKey,
+			Infermation:   string(slInformation),
+			LastTimestamp: common2.GenTimestamp(),
+			Type:          1,
 		}
 		sldata, _ := json.Marshal(electricityMeter1)
 		rethinkdb.InsertEnergyTradingDemoRole(string(sldata))
@@ -820,6 +821,7 @@ func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error)
 	//	v_result.SetMessage("args[2].(string) is error!")
 	//	return v_result, v_err
 	//}
+	FuncGetStartEndTime()
 	userPublicKey := slPersonKey[0]
 	startTime := strStartTime
 	endTime := strEndTime
