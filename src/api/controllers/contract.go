@@ -857,7 +857,7 @@ func (c *ContractController) QueryOutputDuration() {
 	c.responseJsonBody(fmt.Sprintf(`{"duration":%d}`, hours), true, "API[QueryOutputDuration]查询合约成功!")
 }
 
-func (c *ContractController) QueryAccount() {
+func (c *ContractController) QueryAccountBalance() {
 	var requestParamMap map[string]interface{}
 	requestBody := c.Ctx.Input.RequestBody
 	json.Unmarshal(requestBody, &requestParamMap)
@@ -870,7 +870,23 @@ func (c *ContractController) QueryAccount() {
 
 	data, _ := result.GetData().(string)
 
-	c.responseJsonBody(data, true, "API[QueryAccount]查询合约成功!")
+	c.responseJsonBody(data, true, "API[QueryAccountBalance]查询合约成功!")
+}
+
+func (c *ContractController) QueryAmmeterBalance() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	result, err := function.FuncQueryAmmeterBalance()
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		return
+	}
+
+	data, _ := result.GetData().(string)
+
+	c.responseJsonBody(data, true, "API[QueryAmmeterBalance]查询合约成功!")
 }
 
 func (c *ContractController) QueryRecords() {
