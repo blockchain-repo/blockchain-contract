@@ -981,9 +981,9 @@ func Test_InsertTransaction_Bill(t *testing.T) {
 		Id:            common.GenerateUUID(),
 		BillId:        bill1.Id,
 		Timestamp:     common.GenTimestamp(),
-		FromPublicKey: "64mDgEqY9KGp3NCfJPrrjiruL9hmuYiimmaD2234UYWd",
-		ToPublicKey:   "95b4DQfoNCh3o6jdy2k2AjCoZQrSUVubC5fFxEfRDpPH",
-		Money:         100,
+		FromPublicKey: "4PDhzMA1jvGJ8BNg6mm4WapU4Kh8NoxnmuMHQwcYSDc2",
+		ToPublicKey:   "H1un73xnFccfLZPJY5nLxSxcJpA2PkgEcDFmSK7fyjqU",
+		Money:         50,
 		Type:          1,
 	}
 	sldata, _ = json.Marshal(transaction1)
@@ -1145,6 +1145,15 @@ func Test_GetRolePublicKey(t *testing.T) {
 	}
 
 	t.Log(powerplantskeys)
+}
+
+func Test_GetTransactionRecords(t *testing.T) {
+	str, err := GetTransactionRecords()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(str)
 }
 
 /*智能微网demo end---------------------------------------------------------*/

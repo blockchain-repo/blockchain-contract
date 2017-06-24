@@ -35,6 +35,8 @@ func init() {
 			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "post:QueryOutput"),
 			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "post:QueryOutputNum"),
 			beego.NSRouter("/queryOutputDuration", &controllers.ContractController{}, "post:QueryOutputDuration"),
+			beego.NSRouter("/queryAccount", &controllers.ContractController{}, "post:QueryAccount"),
+			beego.NSRouter("/queryRecords", &controllers.ContractController{}, "post:QueryRecords"),
 			//demo使用---------------------------------------------------------------------------------------------------
 		),
 	)

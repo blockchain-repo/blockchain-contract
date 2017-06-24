@@ -14,6 +14,7 @@ import (
 	"unicontract/src/common/monitor"
 	"unicontract/src/core"
 	"unicontract/src/core/db/rethinkdb"
+	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/model"
 	"unicontract/src/core/protos"
 )
@@ -811,11 +812,11 @@ func (c *ContractController) QueryOutputNum() {
 	count, err := rethinkdb.QueryOutputNum(contractId)
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryOutputNum]合约查询错误!")
 		return
 	}
 
-	c.responseJsonBody(fmt.Sprintf(`{"count":%d}`, count), true, "API[Query]查询合约成功!")
+	c.responseJsonBody(fmt.Sprintf(`{"count":%d}`, count), true, "API[QueryOutputNum]查询合约成功!")
 }
 
 func (c *ContractController) QueryOutputDuration() {
@@ -842,7 +843,7 @@ func (c *ContractController) QueryOutputDuration() {
 	startTime, err := rethinkdb.QueryContractStartTime(contractId)
 	if err != nil {
 		logs.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryOutputDuration]合约查询错误!")
 		return
 	}
 
@@ -853,7 +854,43 @@ func (c *ContractController) QueryOutputDuration() {
 
 	hours := ((now - start) / 1000) / 3600
 
-	c.responseJsonBody(fmt.Sprintf(`{"duration":%d}`, hours), true, "API[Query]查询合约成功!")
+	c.responseJsonBody(fmt.Sprintf(`{"duration":%d}`, hours), true, "API[QueryOutputDuration]查询合约成功!")
+}
+
+func (c *ContractController) QueryAccount() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	result, err := function.FuncQueryAccountBalance()
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		return
+	}
+
+	data, _ := result.GetData().(string)
+
+	c.responseJsonBody(data, true, "API[QueryAccount]查询合约成功!")
+}
+
+func (c *ContractController) QueryRecords() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	if len(token) == 0 {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		return
+	}
+
+	str, err := rethinkdb.GetTransactionRecords()
+	if err != nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		return
+	}
+
+	c.responseJsonBody(str, true, "API[QueryRecords]查询合约成功!")
 }
 
 //demo使用---------------------------------------------------------------------------------------------------------------

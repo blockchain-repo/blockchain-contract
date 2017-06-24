@@ -1,11 +1,13 @@
 package rethinkdb
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	r "gopkg.in/gorethink/gorethink.v3"
 	"strconv"
+	"time"
 	"unicontract/src/common"
 )
 
@@ -953,14 +955,14 @@ func GetValidTime(strID string) (string, string, error) {
 		return "", "", err
 	}
 
-	startTime,ok:=tasks["StartTime"].(string)
-	if !ok{
-		return "","",fmt.Errorf("assert error")
+	startTime, ok := tasks["StartTime"].(string)
+	if !ok {
+		return "", "", fmt.Errorf("assert error")
 	}
 
-	endTime,ok:=tasks["EndTime"].(string)
-	if !ok{
-		return "","",fmt.Errorf("assert error")
+	endTime, ok := tasks["EndTime"].(string)
+	if !ok {
+		return "", "", fmt.Errorf("assert error")
 	}
 
 	return startTime, endTime, nil
@@ -1009,8 +1011,8 @@ func SetTaskScheduleFlag(strID string, alreadySend bool) error {
 			return err
 		}
 
-		overFlag,ok := task["OverFlag"].(float64)
-		if !ok{
+		overFlag, ok := task["OverFlag"].(float64)
+		if !ok {
 			return fmt.Errorf("assert error")
 		}
 		if overFlag != 1 {
@@ -1362,7 +1364,7 @@ func _GetMoney(strField, strPublicKey string) (float64, error) {
 	}
 
 	if res.IsNil() {
-		return 0, fmt.Errorf("no recharge transaction")
+		return 0, nil
 	}
 
 	var items []map[string]interface{}
@@ -1372,13 +1374,13 @@ func _GetMoney(strField, strPublicKey string) (float64, error) {
 	}
 
 	if len(items) == 0 {
-		return 0, fmt.Errorf("no recharge transaction")
+		return 0, nil
 	}
 
 	for _, v := range items {
-		value,ok:=v["Money"].(float64)
-		if !ok{
-			return money,fmt.Errorf("assert error")
+		value, ok := v["Money"].(float64)
+		if !ok {
+			return money, fmt.Errorf("assert error")
 		}
 		money += value
 	}
@@ -1676,6 +1678,47 @@ func GetRolePublicKey(type_ int) ([]string, error) {
 }
 
 //---------------------------------------------------------------------------
+// 获得转账记录
+func GetTransactionRecords() (string, error) {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_ENERGYTRADINGDEMO_TRANSACTION).
+		Filter(r.Row.Field("Type").Eq(1)).
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+
+	if res.IsNil() {
+		return "", fmt.Errorf("no records")
+	}
+
+	var items []map[string]interface{}
+	err = res.All(&items)
+	if err != nil {
+		return "", err
+	}
+
+	fotmat := "2006-01-02 15:04:05"
+	var slmap []map[string]interface{}
+	for _, value := range items {
+		mapRecords := make(map[string]interface{})
+		mapRecords["Id"], _ = value["id"].(string)
+		mapRecords["From"] = "个人"
+		mapRecords["To"] = "运营商"
+		mapRecords["Money"], _ = value["Money"].(float64)
+		strtimeStamp, _ := value["Timestamp"].(string)
+		timeStamp_, _ := strconv.Atoi(strtimeStamp)
+		tm := time.Unix(int64(timeStamp_)/1000, 0)
+		mapRecords["Timestamp"] = tm.Format(fotmat)
+		mapRecords["BillId"], _ = value["BillId"].(string)
+
+		slmap = append(slmap, mapRecords)
+	}
+
+	slData, _ := json.Marshal(slmap)
+
+	return string(slData), nil
+}
 
 /*智能微网demo end---------------------------------------------------------*/
 
