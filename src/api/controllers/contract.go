@@ -785,7 +785,9 @@ func (c *ContractController) QueryOutput() {
 		return
 	}
 
-	c.responseJsonBody(output, true, "API[Query]查询合约成功!")
+	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(output))))
+
 }
 
 func (c *ContractController) QueryOutputNum() {
@@ -816,7 +818,8 @@ func (c *ContractController) QueryOutputNum() {
 		return
 	}
 
-	c.responseJsonBody(fmt.Sprintf(`{"count":%d}`, count), true, "API[QueryOutputNum]查询合约成功!")
+	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`{"count":%d}`, count)))))
 }
 
 func (c *ContractController) QueryOutputDuration() {
@@ -854,7 +857,8 @@ func (c *ContractController) QueryOutputDuration() {
 
 	hours := ((now - start) / 1000) / 3600
 
-	c.responseJsonBody(fmt.Sprintf(`{"duration":%d}`, hours), true, "API[QueryOutputDuration]查询合约成功!")
+	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`{"duration":%d}`, hours)))))
 }
 
 func (c *ContractController) QueryAccountBalance() {
@@ -870,7 +874,8 @@ func (c *ContractController) QueryAccountBalance() {
 
 	data, _ := result.GetData().(string)
 
-	c.responseJsonBody(data, true, "API[QueryAccountBalance]查询合约成功!")
+	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(data))))
 }
 
 func (c *ContractController) QueryAmmeterBalance() {
@@ -886,7 +891,8 @@ func (c *ContractController) QueryAmmeterBalance() {
 
 	data, _ := result.GetData().(string)
 
-	c.responseJsonBody(data, true, "API[QueryAmmeterBalance]查询合约成功!")
+	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(data))))
 }
 
 func (c *ContractController) QueryRecords() {
@@ -906,7 +912,8 @@ func (c *ContractController) QueryRecords() {
 		return
 	}
 
-	c.responseJsonBody(str, true, "API[QueryRecords]查询合约成功!")
+	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(str))))
 }
 
 //demo使用---------------------------------------------------------------------------------------------------------------
