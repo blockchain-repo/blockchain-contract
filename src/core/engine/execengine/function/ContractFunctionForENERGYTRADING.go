@@ -568,6 +568,9 @@ func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 
+	// 充值
+	_Recharge()
+
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -720,9 +723,6 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	//	v_result.SetMessage("args[0].(string) is error!")
 	//	return v_result, v_err
 	//}
-
-	var once sync.Once
-	once.Do(_Recharge)
 
 	sleeptime := 30
 
