@@ -880,13 +880,13 @@ func Test_InsertEnergyTradingDemoRole(t *testing.T) {
 
 func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
 	// 模拟采集电表耗电
-	/*electricityMeter1 := model.DemoEnergy{
+	electricityMeter1 := model.DemoEnergy{
 		Id:               common.GenerateUUID(),
-		PublicKey:        "5x1hxnPWpHRpvwR3tdo7ygPZ77sSUkywY56VhGhaLpUm",
+		PublicKey:        "GpNgHgCAvaVXHwqyPCNR6yKd92Xshde87RejFaH3v3oB",
 		Timestamp:        common.GenTimestamp(),
 		Electricity:      580,
 		TotalElectricity: 280,
-		Money:            280,
+		Money:            110,
 		Type:             0,
 	}
 	sldata, _ := json.Marshal(electricityMeter1)
@@ -894,7 +894,7 @@ func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
 	err := InsertEnergyTradingDemoEnergy(string(sldata))
 	if err != nil {
 		t.Error(err)
-	}*/
+	}
 
 	/*
 			type DemoEnergy struct {
@@ -908,7 +908,7 @@ func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
 		}
 	*/
 	// 模拟采集发电厂发电
-	slKey := []string{
+	/*slKey := []string{
 		"9Vqg4tSk9ocLfhwj2eeNgKgNR65oSV7WF9kYDu1HiwdM", // 风
 		"3XmEh9ZtvDAcxtgiFL11cw9YAppCqhQaWQ6mrKxWhbom", // 光
 		"H7tMDKFPMGsG2pV4Lpcic5MQiN1fKkqVaj6A15MMgNTQ", // 火
@@ -938,7 +938,7 @@ func Test_InsertEnergyTradingDemoEnergy(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-	}
+	}*/
 }
 
 func Test_InsertTransaction_Bill(t *testing.T) {
@@ -981,9 +981,9 @@ func Test_InsertTransaction_Bill(t *testing.T) {
 		Id:            common.GenerateUUID(),
 		BillId:        bill1.Id,
 		Timestamp:     common.GenTimestamp(),
-		FromPublicKey: "8URs5XN2omMfZ3pnJCs7R28KjY223mCb51Mg2rePT7z9",
-		ToPublicKey:   "8kEoPKoXPLUmnYNgYhTtf1Z7HXuoyq3WbL3wMtYubM6r",
-		Money:         60,
+		FromPublicKey: "DwRyavLipw2mtd531bhFZMLyKWGTeGgCKJbcQitQj4Ca",
+		ToPublicKey:   "DmVKFKGsrKXqBMwEW7kL1t3cENHMF9t41QNunJYBnf1k",
+		Money:         50,
 		Type:          1,
 	}
 	sldata, _ = json.Marshal(transaction1)

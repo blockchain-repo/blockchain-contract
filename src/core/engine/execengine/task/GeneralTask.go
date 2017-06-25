@@ -955,7 +955,11 @@ func (gt *GeneralTask) Start() (int8, error) {
 		if !exec_flag {
 			r_ret = -1
 			r_buf.WriteString("[Result]: Task execute fail;")
-			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			if r_err == nil {
+				r_buf.WriteString("[Error]: " + "nil" + ";")
+			} else {
+				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			}
 			r_buf.WriteString("fail....")
 			logs.Error(r_buf.String())
 			return r_ret, r_err
