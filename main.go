@@ -71,8 +71,13 @@ func runStart() {
 	logs.Info("headNodeMonitor Init")
 	go headNodeMonitor.Start()
 	logs.Info("headNodeMonitor Start")
-	go function.Simulate()
-	logs.Info("demo Run")
+
+	demoStart, _ := beego.AppConfig.Bool("demoStart")
+	if demoStart {
+		go function.Simulate()
+		logs.Info("demo Run")
+	}
+
 	beego.Run()
 	logs.Info("beego Run")
 }
