@@ -166,6 +166,7 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 			return err
 		}
 	}
+	ce.contract_executer.AddComponent(ce.contract_executer)
 	//4 Check合约是否可以执行，并更新合约状态
 	if !ce.contract_executer.CanExecute() {
 		err = errors.New("Contract can not execute;")
