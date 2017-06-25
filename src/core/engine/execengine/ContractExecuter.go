@@ -342,12 +342,11 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 		logs.Error("assert error")
 		return "", fmt.Errorf("assert error")
 	}
-	c_own, ok := contractOwner.GetValue().([]string)
+	_, ok = contractOwner.GetValue().([]string)
 	if !ok {
 		logs.Error("assert error")
 		return "", fmt.Errorf("assert error")
 	}
-	r_bytes.WriteString(contractOwner.GetName() + ":" + c_own[0] + "  " + c_own[1] + "\n")
 	contractCreateTime, ok := ce.contract_executer.PropertyTable["_CreateTime"].(property.PropertyT)
 	if !ok {
 		logs.Error("assert error")

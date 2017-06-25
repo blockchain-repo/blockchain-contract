@@ -17,11 +17,13 @@ import (
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
 
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"regexp"
 	"strconv"
 	"strings"
+	"unicontract/src/core/engine/execengine/data"
 )
 
 type GeneralTask struct {
@@ -332,6 +334,16 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case *inf.IExpression:
 				tmp_precondition := p_precondition.(inf.IExpression)
 				map_precondition[tmp_precondition.GetName()] = tmp_precondition
+			case map[string]interface{}:
+				tmp_precondition := expression.NewLogicArgument()
+				tmp_byte_precondition, _ := json.Marshal(p_precondition)
+				err = json.Unmarshal(tmp_byte_precondition, &tmp_precondition)
+				if err != nil {
+					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					return err
+				}
+				tmp_precondition.InitLogicArgument()
+				map_precondition[tmp_precondition.GetName()] = tmp_precondition
 			}
 		}
 	}
@@ -347,6 +359,16 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case inf.IExpression:
 			case *inf.IExpression:
 				tmp_completecondition := p_completecondition.(inf.IExpression)
+				map_completecondition[tmp_completecondition.GetName()] = tmp_completecondition
+			case map[string]interface{}:
+				tmp_completecondition := expression.NewLogicArgument()
+				tmp_byte_completecondition, _ := json.Marshal(p_completecondition)
+				err = json.Unmarshal(tmp_byte_completecondition, &tmp_completecondition)
+				if err != nil {
+					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					return err
+				}
+				tmp_completecondition.InitLogicArgument()
 				map_completecondition[tmp_completecondition.GetName()] = tmp_completecondition
 			}
 		}
@@ -364,6 +386,16 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case *inf.IExpression:
 				tmp_discardcondition := p_discardcondition.(inf.IExpression)
 				map_discardcondition[tmp_discardcondition.GetName()] = tmp_discardcondition
+			case map[string]interface{}:
+				tmp_discardcondition := expression.NewLogicArgument()
+				tmp_byte_discardcondition, _ := json.Marshal(p_discardcondition)
+				err = json.Unmarshal(tmp_byte_discardcondition, &tmp_discardcondition)
+				if err != nil {
+					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					return err
+				}
+				tmp_discardcondition.InitLogicArgument()
+				map_discardcondition[tmp_discardcondition.GetName()] = tmp_discardcondition
 			}
 		}
 	}
@@ -380,6 +412,75 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case *inf.IData:
 				tmp_data := p_data.(inf.IData)
 				map_datalist[tmp_data.GetName()] = tmp_data
+			case map[string]interface{}:
+				p_data_map := p_data.(map[string]interface{})
+				_, ok := p_data_map["Ctype"].(string)
+				if !ok {
+					logs.Error("assert error!!")
+					continue
+				}
+				switch p_data_map["Ctype"].(string) {
+				case constdef.DataType[constdef.Data_Numeric_Int]:
+					tmp_data := data.NewIntData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitIntData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.DataType[constdef.Data_Numeric_Uint]:
+					tmp_data := data.NewUintData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitUintData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.DataType[constdef.Data_Numeric_Float]:
+					tmp_data := data.NewFloatData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitFloatData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.DataType[constdef.Data_Text]:
+					tmp_data := data.NewTextData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitTextData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.DataType[constdef.Data_Date]:
+					tmp_data := data.NewDateData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitDateData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.DataType[constdef.Data_OperateResultData]:
+					tmp_data := data.NewOperateResultData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitOperateResultData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				}
 			}
 		}
 	}
@@ -395,6 +496,15 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			case inf.IExpression:
 			case *inf.IExpression:
 				tmp_express := p_express.(inf.IExpression)
+				map_dataexpressionlist[tmp_express.GetName()] = tmp_express
+			case map[string]interface{}:
+				tmp_express := expression.NewFunction()
+				tmp_byte_express, _ := json.Marshal(p_express)
+				err = json.Unmarshal(tmp_byte_express, &tmp_express)
+				if err != nil {
+					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					return err
+				}
 				map_dataexpressionlist[tmp_express.GetName()] = tmp_express
 			}
 		}
