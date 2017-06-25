@@ -129,6 +129,7 @@ func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {
 	7: mainPubkey(string): the node pubkey which will freeze asset
 */
 func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
+	logs.Error("======In FuncTransferAsset==========")
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
@@ -137,7 +138,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
-
+	logs.Error("======after param check FuncTransferAsset==========")
 	//user provide
 	var ownerBefore string = args[0].(string)
 	var recipientsStr string = args[1].(string)
@@ -157,7 +158,14 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var taskId string = args[4].(string)
 	var taskIndex int = args[5].(int)
 	var mainPubkey string = args[6].(string)
-
+	logs.Error("======Param:=========")
+	logs.Error(ownerBefore)
+	logs.Error(recipientsStr)
+	logs.Error(contractStr)
+	logs.Error(contractId)
+	logs.Error(taskId)
+	logs.Error(taskIndex)
+	logs.Error(mainPubkey)
 	var contractHashId string = ""
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)

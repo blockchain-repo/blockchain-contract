@@ -772,12 +772,15 @@ func (gt *GeneralTask) Start() (int8, error) {
 		// TODO 待处理，避免一般操作任务，重复执行
 		var v_idx int8 = 0
 		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
+			logs.Error("======Start=======")
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
 			//1 函数识别 & 执行
 			str_function := v_expr_object.GetExpressionStr()
+			logs.Error("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
 			reg := regexp.MustCompile("FuncTransferAsset\\(")
 			v_str := reg.FindString(str_function)
+			logs.Error("==Match Function==" + v_str)
 			v_beginwith_flag := false
 			if "" != v_str {
 				v_beginwith_flag = true
@@ -785,6 +788,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				v_beginwith_flag = false
 			}
 			if v_beginwith_flag {
+				logs.Error("==execute FuncTransferAsset==")
 				str_json_contract, r_err := gt.GetContract().Serialize()
 				if r_err != nil || str_json_contract == "" {
 					r_ret = -1
@@ -808,6 +812,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString(gt.GetContract().GetMainPubkey())
 				func_buf.WriteString(")")
 				str_function = func_buf.String()
+				logs.Error("==after process Function==" + str_function)
 			}
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)

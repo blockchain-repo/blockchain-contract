@@ -3,7 +3,6 @@ package constdef
 import (
 	"fmt"
 	"regexp"
-	"strings"
 	"testing"
 )
 
