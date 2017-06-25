@@ -287,9 +287,12 @@ func TestReflectVariable_2(t *testing.T) {
 
 func TestRunFunction(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
-	v_express_parse.SetFunctionEngine(function.NewFunctionParseEngine())
+	v_function_engine := function.NewFunctionParseEngine()
+	v_function_engine.LoadFunctionsCommon()
+	v_express_parse.SetFunctionEngine(v_function_engine)
+
 	slTestRightStr := []string{
-		`FuncIsConPutInUnichian("a90b93a2567a018afe52258f02c39c4de9b25e2e539b81778dbb897a3f88fc92")`,
+		`FuncGetNowDateTimestamp()`,
 	}
 	for _, value := range slTestRightStr {
 		v_express_parse.RunFunction(value)

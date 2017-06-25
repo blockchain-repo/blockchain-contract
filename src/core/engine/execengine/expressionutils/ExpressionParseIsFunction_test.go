@@ -281,6 +281,7 @@ func Test_IsExprFunction(t *testing.T) {
 		"FuncA",
 		"FuncFunc",
 		`FuncIsConPutInUnichian("a90b93a2567a018afe52258f02c39c4de9b25e2e539b81778dbb897a3f88fc92")`,
+		`FuncIsConPutInUnichian(a.b.c)`,
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprFunction(value) {
