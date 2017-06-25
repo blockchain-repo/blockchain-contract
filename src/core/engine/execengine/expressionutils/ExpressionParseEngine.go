@@ -149,20 +149,20 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 	}
 	if ep.IsExprBool(p_expression) {
 		v_return, v_err = ep.ParseExprBoolValue(p_expression)
+	} else if ep.IsExprCondition(p_expression) {
+		v_return, v_err = ep.ParseExprConditionValue(p_expression)
 	} else if ep.IsExprFunction(p_expression) {
 		v_common_result, v_err := ep.ParseExprFunctionValue(p_expression)
 		if v_common_result.GetCode() != 200 {
 			logs.Warning("[Result]:EvaluateExpressionCondition fail(Code != 200);")
 			return v_return, v_err
 		}
-		str,ok:=v_common_result.GetData().(string)
-		if !ok{
+		str, ok := v_common_result.GetData().(string)
+		if !ok {
 			logs.Error("assert error")
-			return v_return,fmt.Errorf("assert error")
+			return v_return, fmt.Errorf("assert error")
 		}
 		v_return, v_err = strconv.ParseBool(str)
-	} else if ep.IsExprCondition(p_expression) {
-		v_return, v_err = ep.ParseExprConditionValue(p_expression)
 	}
 	if v_err != nil {
 		var r_buf bytes.Buffer = bytes.Buffer{}
@@ -472,12 +472,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 		logs.Warning("ParseVariablesInExprCondition fail(" + v_err.Error() + ")")
 		return false, v_err
 	}
-	//Eval 条件表达式的值
-	v_expression, v_err := govaluate.NewEvaluableExpression(p_expression)
-	if v_err != nil {
-		logs.Warning("govaluate.NewEvaluableExpression fail(" + v_err.Error() + ")")
-		return false, v_err
-	}
+
 	//识别并设置表达中的变量的值
 	v_parameters := make(map[string]interface{}, len(v_variables))
 	for _, v_param := range v_variables {
@@ -495,16 +490,22 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 			}
 		}
 	}
+	//Eval 条件表达式的值
+	v_expression, v_err := govaluate.NewEvaluableExpression(p_expression)
+	if v_err != nil {
+		logs.Warning("govaluate.NewEvaluableExpression fail(" + v_err.Error() + ")")
+		return false, v_err
+	}
 	//Eval 表达式的值
 	v_result, v_err := v_expression.Evaluate(v_parameters)
 	if v_err != nil {
 		logs.Warning("expression.Evaluate fail(" + v_err.Error() + ")")
 		return false, v_err
 	}
-	b,ok:=v_result.(bool)
-	if !ok{
+	b, ok := v_result.(bool)
+	if !ok {
 		logs.Error("assert error")
-		return false,fmt.Errorf("assert error")
+		return false, fmt.Errorf("assert error")
 	}
 	return b, v_err
 }
@@ -618,85 +619,85 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 //   描述组件：
 func (ep *ExpressionParseEngine) ReflectComponent(p_component interface{}, p_variable string) inf.IComponent {
 	var parse_component inf.IComponent
-	ok:=false
+	ok := false
 	if ep.IsNameContract(p_variable) {
-		parse_component,ok = p_component.(inf.ICognitiveContract)
-		if !ok{
+		parse_component, ok = p_component.(inf.ICognitiveContract)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameTaskEnquiry(p_variable) {
-		parse_component,ok = p_component.(*task.Enquiry)
-		if !ok{
+		parse_component, ok = p_component.(*task.Enquiry)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameTaskAction(p_variable) {
-		parse_component,ok = p_component.(*task.Action)
-		if !ok{
+		parse_component, ok = p_component.(*task.Action)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameTaskDecision(p_variable) {
-		parse_component,ok = p_component.(*task.Decision)
-		if !ok{
+		parse_component, ok = p_component.(*task.Decision)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameTaskPlan(p_variable) {
-		parse_component,ok = p_component.(*task.Plan)
-		if !ok{
+		parse_component, ok = p_component.(*task.Plan)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataInt(p_variable) {
-		parse_component,ok = p_component.(*data.IntData)
-		if !ok{
+		parse_component, ok = p_component.(*data.IntData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataUint(p_variable) {
-		parse_component,ok = p_component.(*data.UintData)
-		if !ok{
+		parse_component, ok = p_component.(*data.UintData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataFloat(p_variable) {
-		parse_component,ok = p_component.(*data.FloatData)
-		if !ok{
+		parse_component, ok = p_component.(*data.FloatData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataText(p_variable) {
-		parse_component,ok = p_component.(*data.TextData)
-		if !ok{
+		parse_component, ok = p_component.(*data.TextData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataDate(p_variable) {
-		parse_component,ok = p_component.(*data.DateData)
-		if !ok{
+		parse_component, ok = p_component.(*data.DateData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataArray(p_variable) {
-		parse_component,ok = p_component.(*data.ArrayData)
-		if !ok{
+		parse_component, ok = p_component.(*data.ArrayData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataMatrix(p_variable) {
-		parse_component,ok = p_component.(*data.MatrixData)
-		if !ok{
+		parse_component, ok = p_component.(*data.MatrixData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataCompound(p_variable) {
-		parse_component,ok = p_component.(*data.CompoundData)
-		if !ok{
+		parse_component, ok = p_component.(*data.CompoundData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameDataOperateResult(p_variable) {
-		parse_component,ok = p_component.(*data.OperateResultData)
-		if !ok{
+		parse_component, ok = p_component.(*data.OperateResultData)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameExprFunc(p_variable) {
-		parse_component,ok = p_component.(*expression.Function)
-		if !ok{
+		parse_component, ok = p_component.(*expression.Function)
+		if !ok {
 			logs.Error("assert error")
 		}
 	} else if ep.IsNameExprArgu(p_variable) {
-		parse_component,ok= p_component.(*expression.LogicArgument)
-		if !ok{
+		parse_component, ok = p_component.(*expression.LogicArgument)
+		if !ok {
 			logs.Error("assert error")
 		}
 	}
@@ -704,6 +705,50 @@ func (ep *ExpressionParseEngine) ReflectComponent(p_component interface{}, p_var
 }
 
 //---------------------------------------------------------------------------
+//截取字符串
+//Args:  str   待截断字符串
+//       start 字符串起点
+//       end   字符串终点
+func Substr2(str string, start int, end int) string {
+	rs := []rune(str)
+	length := len(rs)
+	if start < 0 || start > length {
+		panic("start is wrong")
+	}
+	if end < 0 || end > length {
+		panic("end is wrong")
+	}
+	return string(rs[start:end])
+}
+
+//按指定字符切割字符串
+//Args: 待切割字符串 p_str string
+//      切割符号集   p_reg string
+func SplitString(p_str string, p_reg string) map[string]string {
+	var map_result map[string]string = make(map[string]string, 0)
+	if p_str == "" {
+		return map_result
+	}
+	reg := regexp.MustCompile(constdef.ExpressionTagString)
+	dataSlice := reg.FindAllIndex([]byte(p_str), -1)
+	var int_begin int = 0
+	var int_end int = 0
+	var int_temp int = 0
+	for idx, v_array := range dataSlice {
+		if idx == 0 {
+			int_begin = 0
+		} else {
+			int_begin = int_temp
+		}
+		int_end = v_array[0]
+		int_temp = v_array[1]
+		map_result[Substr2(p_str, int_begin, int_end)] = Substr2(p_str, int_begin, int_end)
+	}
+	map_result[Substr2(p_str, int_temp, len(p_str))] = Substr2(p_str, int_temp, len(p_str))
+	fmt.Println(map_result)
+	return map_result
+}
+
 //识别条件表达式中变量数组
 func (ep *ExpressionParseEngine) ParseVariablesInExprCondition(p_expression string) (map[string]string, error) {
 	var v_return map[string]string = nil
@@ -715,7 +760,7 @@ func (ep *ExpressionParseEngine) ParseVariablesInExprCondition(p_expression stri
 	//初始化返回结果
 	v_return = make(map[string]string, 0)
 	//获取分隔符字符串
-	v_variable_arr := strings.Split(p_expression, constdef.ExpressionTagString)
+	v_variable_arr := SplitString(p_expression, constdef.ExpressionTagString)
 	for _, v_variable := range v_variable_arr {
 		v_variable = strings.TrimSpace(v_variable)
 		if v_variable == "" {

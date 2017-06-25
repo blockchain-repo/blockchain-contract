@@ -81,6 +81,19 @@ func FuncGetNowDate(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
+//获取时间戳
+func FuncGetNowDateTimestamp(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult
+	var v_err error = nil
+
+	//构建返回值
+	v_result = common.OperateResult{}
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(common.GenTimestamp())
+	return v_result, v_err
+}
+
 //休眠指定时间
 //Args: sleeptime int
 func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {

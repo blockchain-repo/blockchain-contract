@@ -120,287 +120,327 @@ func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task inter
 	switch map_task["Ctype"] {
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry]:
 		pre_conditions := map_task["PreCondition"]
-		sl1, ok := pre_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl1 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Enquiry.PreCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if pre_conditions != nil {
+			sl1, ok := pre_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl1 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Enquiry.PreCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		sl2, ok := comp_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl2 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Enquiry.CompleteCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if comp_conditions != nil {
+			sl2, ok := comp_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl2 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Enquiry.CompleteCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		sl3, ok := digard_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl3 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Enquiry.DiscardCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if digard_conditions != nil {
+			sl3, ok := digard_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl3 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Enquiry.DiscardCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		data_list := map_task["DataList"]
-		sl4, ok := data_list.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl4 {
-			if err := loadData(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadData[Enquiry.DataList] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if data_list != nil {
+			sl4, ok := data_list.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl4 {
+				if err := loadData(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadData[Enquiry.DataList] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		dataexpress_list := map_task["DataValueSetterExpressionList"]
-		sl5, ok := dataexpress_list.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl5 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Enquiry.DataValueSetterExpressionList] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if dataexpress_list != nil {
+			sl5, ok := dataexpress_list.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl5 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Enquiry.DataValueSetterExpressionList] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Action]:
 		pre_conditions := map_task["PreCondition"]
-		sl6, ok := pre_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl6 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Action.PreCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if pre_conditions != nil {
+			sl6, ok := pre_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl6 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Action.PreCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		sl7, ok := comp_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl7 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Action.CompleteCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if comp_conditions != nil {
+			sl7, ok := comp_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl7 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Action.CompleteCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		sl8, ok := digard_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl8 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Action.DiscardCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if digard_conditions != nil {
+			sl8, ok := digard_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl8 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Action.DiscardCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		data_list := map_task["DataList"]
-		sl9, ok := data_list.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl9 {
-			if err := loadData(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadData[Action.DataList] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if data_list != nil {
+			sl9, ok := data_list.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl9 {
+				if err := loadData(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadData[Action.DataList] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		dataexpress_list := map_task["DataValueSetterExpressionList"]
-		sl10, ok := dataexpress_list.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl10 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Action.DataValueSetterExpressionList] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if dataexpress_list != nil {
+			sl10, ok := dataexpress_list.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl10 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Action.DataValueSetterExpressionList] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision]:
 		pre_conditions := map_task["PreCondition"]
-		sl11, ok := pre_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl11 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Decision.PreCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if pre_conditions != nil {
+			sl11, ok := pre_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl11 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Decision.PreCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		sl12, ok := comp_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl12 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Decision.CompleteCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if comp_conditions != nil {
+			sl12, ok := comp_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl12 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Decision.CompleteCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		sl13, ok := digard_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl13 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Decision.DiscardCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if digard_conditions != nil {
+			sl13, ok := digard_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl13 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Decision.DiscardCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		candidate_list := map_task["CandidateList"]
-		sl14, ok := candidate_list.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl14 {
-			if err := loadCandidate(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadCandidate[Decision.CandidateList] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if candidate_list != nil {
+			sl14, ok := candidate_list.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl14 {
+				if err := loadCandidate(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadCandidate[Decision.CandidateList] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Plan]:
 		pre_conditions := map_task["PreCondition"]
-		sl16, ok := pre_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl16 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Plan.PreCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if pre_conditions != nil {
+			sl16, ok := pre_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl16 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Plan.PreCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		sl100, ok := comp_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl100 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Plan.CompleteCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if comp_conditions != nil {
+			sl100, ok := comp_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl100 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Plan.CompleteCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		sl17, ok := digard_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl17 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Plan.DiscardCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if digard_conditions != nil {
+			sl17, ok := digard_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl17 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Plan.DiscardCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 	default:
 		pre_conditions := map_task["PreCondition"]
-		sl18, ok := pre_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl18 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Unknow.PreCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if pre_conditions != nil {
+			sl18, ok := pre_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl18 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Unknow.PreCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		comp_conditions := map_task["CompleteCondition"]
-		sl19, ok := comp_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl19 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Unknow.CompleteCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if comp_conditions != nil {
+			sl19, ok := comp_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl19 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Unknow.CompleteCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 		digard_conditions := map_task["DiscardCondition"]
-		sl20, ok := digard_conditions.([]interface{})
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		for _, p_value := range sl20 {
-			if err := loadExpression(p_contract, p_value, p_task); err != nil {
-				r_buf.WriteString("[Result]: loadExpression[Unknow.DiscardCondition] fail;")
-				r_buf.WriteString("[Error]: " + err.Error() + ";")
-				logs.Warning(r_buf.String())
-				return err
+		if digard_conditions != nil {
+			sl20, ok := digard_conditions.([]interface{})
+			if !ok {
+				logs.Error("assert error")
+				return fmt.Errorf("assert error")
+			}
+			for _, p_value := range sl20 {
+				if err := loadExpression(p_contract, p_value, p_task); err != nil {
+					r_buf.WriteString("[Result]: loadExpression[Unknow.DiscardCondition] fail;")
+					r_buf.WriteString("[Error]: " + err.Error() + ";")
+					logs.Warning(r_buf.String())
+					return err
+				}
 			}
 		}
 	}

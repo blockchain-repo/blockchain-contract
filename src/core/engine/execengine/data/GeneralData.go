@@ -21,7 +21,8 @@ type GeneralData struct {
 	Mandatory    bool           `json:"Mandatory"`
 	Category     []string       `json:"Category"`
 	Options      map[string]int `json:"Options"`
-	Parent       inf.IData      `json:"Parent"`
+	//inf.IData
+	Parent interface{} `json:"Parent"`
 }
 
 const (
@@ -299,7 +300,7 @@ func (gd *GeneralData) GetCategory() []string {
 	return category_property.GetValue().([]string)
 }
 
-func (gd *GeneralData) GetParent() inf.IData {
+func (gd *GeneralData) GetParent() interface{} {
 	parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
 	return parent_property.GetValue().(inf.IData)
 }
@@ -341,7 +342,7 @@ func (gd *GeneralData) SetModifyDate(p_date string) {
 	gd.PropertyTable[_ModifyDate] = modifydate_property
 }
 
-func (gd *GeneralData) SetParent(p_Parent inf.IData) {
+func (gd *GeneralData) SetParent(p_Parent interface{}) {
 	gd.Parent = p_Parent
 	parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
 	parent_property.SetValue(p_Parent)

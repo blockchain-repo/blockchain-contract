@@ -171,3 +171,7 @@ func TestFuncIsConPutInUnichian(t *testing.T) {
 	logs.Info(res.Code)
 	logs.Info(res.Data)
 }
+
+func TestFuncGetNowDateTimestamp(t *testing.T) {
+	logs.Info(FuncGetNowDateTimestamp())
+}

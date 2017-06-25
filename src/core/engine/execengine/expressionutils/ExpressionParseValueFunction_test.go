@@ -135,7 +135,7 @@ func Test_ParseExprArrayValue(t *testing.T) { //TODO ?
 func Test_ParseExprConditionValue(t *testing.T) { //TODO ?
 	v_express_parse := NewExpressionParseEngine()
 	slTestRightStr := []string{
-		"",
+		"FuncGetNowDate() == '2017-06-23 17:56:00'",
 	}
 	for _, value := range slTestRightStr {
 		b, err := v_express_parse.ParseExprConditionValue(value)
