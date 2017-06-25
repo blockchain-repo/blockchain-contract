@@ -399,6 +399,9 @@ func (gt *GeneralTask) InitGeneralTask() error {
 			}
 		}
 	}
+	logs.Error("===========DataValuesetterExpressionList========")
+	logs.Error(map_dataexpressionlist)
+	logs.Error(gt.DataValueSetterExpressionList)
 	common.AddProperty(gt, gt.PropertyTable, _DataValueSetterExpressionList, map_dataexpressionlist)
 	//nextTask array to map
 	if gt.NextTasks == nil {
@@ -771,6 +774,8 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//注意：限制只可有一个Output交易产出
 		// TODO 待处理，避免一般操作任务，重复执行
 		var v_idx int8 = 0
+		logs.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
+		logs.Error(gt.GetDataValueSetterExpressionList())
 		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
 			logs.Error("======Start=======")
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
