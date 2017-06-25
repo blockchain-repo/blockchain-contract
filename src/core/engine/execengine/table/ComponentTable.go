@@ -214,9 +214,9 @@ func (ct *ComponentTable) GetComponentByType(c_type string) []map[string]interfa
 func (ct *ComponentTable) UpdateComponent(c_type string, c_name string, c_component interface{}) error {
 	var err error = nil
 	//获取ctype对应的组件数组
-	var new_task_component_array []map[string]interface{} = make([]map[string]interface{}, 0)
 	task_component_array := ct.CompTable[c_type]
-	for _, v_component_map := range task_component_array {
+	var new_task_component_array []map[string]interface{} = make([]map[string]interface{}, len(task_component_array))
+	for v_idx, v_component_map := range task_component_array {
 		//替换组件数组中对应的组件
 		for v_key, v_value := range v_component_map {
 			if v_key == c_name {
@@ -225,7 +225,7 @@ func (ct *ComponentTable) UpdateComponent(c_type string, c_name string, c_compon
 				v_component_map[v_key] = v_value
 			}
 		}
-		new_task_component_array = append(new_task_component_array, v_component_map)
+		new_task_component_array[v_idx] = v_component_map
 	}
 	//更新ctype对应的组件数组
 	ct.CompTable[c_type] = new_task_component_array

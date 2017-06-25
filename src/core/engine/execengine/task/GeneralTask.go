@@ -505,6 +505,9 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
+				fmt.Println("+++++++++++++++++++++++++++++++++++++++=")
+				fmt.Println(p_express)
+				fmt.Println(tmp_byte_express)
 				tmp_express.InitFunction()
 				map_dataexpressionlist[tmp_express.GetName()] = tmp_express
 			}
@@ -887,7 +890,6 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_expression_function_A）
 		logs.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
 		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
-			logs.Error("======Start=======")
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
 			//1 函数识别 & 执行
 			str_name := v_expr_object.GetName()
@@ -896,7 +898,6 @@ func (gt *GeneralTask) Start() (int8, error) {
 			str_function = strings.TrimSpace(str_function)
 			reg := regexp.MustCompile("FuncTransferAsset\\(")
 			v_str := reg.FindString(str_function)
-			logs.Error("==Match Function==" + v_str)
 			v_beginwith_flag := false
 			if "" != v_str {
 				v_beginwith_flag = true
@@ -904,7 +905,6 @@ func (gt *GeneralTask) Start() (int8, error) {
 				v_beginwith_flag = false
 			}
 			if v_beginwith_flag {
-				logs.Error("==execute FuncTransferAsset==")
 				str_json_contract, r_err := gt.GetContract().Serialize()
 				if r_err != nil || str_json_contract == "" {
 					r_ret = -1
@@ -914,6 +914,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 					logs.Error(r_buf.String())
 					return r_ret, r_err
 				}
+				logs.Info("===before transfer asset=====" + str_json_contract)
 				var func_buf bytes.Buffer = bytes.Buffer{}
 				func_buf.WriteString(strings.Trim(str_function, ")"))
 				func_buf.WriteString(", ")
@@ -937,12 +938,17 @@ func (gt *GeneralTask) Start() (int8, error) {
 			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
-			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_result_object)
+			last_json, _ := gt.GetContract().Serialize()
+			fmt.Println("========before update component=====", last_json)
+			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_expr_object)
+			now_json, _ := gt.GetContract().Serialize()
+			fmt.Println("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
 				_, ok := v_result_object.GetOutput().(string)
 				if ok {
 					gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
+					logs.Error("====after transfer asset==" + v_result_object.GetOutput().(string))
 				}
 			}
 			//3 执行结果判断
@@ -1033,6 +1039,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				return r_ret, r_err
 			}
 			gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
+			logs.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
 		}
 		//4 OutputStruct插入到Output表中
 		var v_result common.OperateResult = common.OperateResult{}
@@ -1052,6 +1059,8 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		}
 		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
 		gt.GetContract().SetOutputStruct(v_result.GetData().(string))
+		logs.Error("====after complete operate==" + v_result.GetData().(string))
+
 		var map_output_first interface{} = common.Deserialize(gt.GetContract().GetOutputStruct())
 		if map_output_first == nil {
 			r_ret = -1
