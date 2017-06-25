@@ -1310,7 +1310,7 @@ func GetMoneyFromEnergy(strPublicKey string) (float64, error) {
 	}
 
 	if res.IsNil() {
-		return 0, fmt.Errorf("is null")
+		return 0, nil
 	}
 
 	var items []map[string]interface{}
@@ -1320,7 +1320,7 @@ func GetMoneyFromEnergy(strPublicKey string) (float64, error) {
 	}
 
 	if len(items) == 0 {
-		return 0, fmt.Errorf("is null")
+		return 0, nil
 	}
 
 	money, ok := items[0]["Money"].(float64)
@@ -1709,6 +1709,7 @@ func GetTransactionRecords() (string, error) {
 		strtimeStamp, _ := value["Timestamp"].(string)
 		timeStamp_, _ := strconv.Atoi(strtimeStamp)
 		tm := time.Unix(int64(timeStamp_)/1000, 0)
+		//time1, _ := time.Parse(fotmat, tm.Format(fotmat))
 		mapRecords["Timestamp"] = tm.Format(fotmat)
 		mapRecords["BillId"], _ = value["BillId"].(string)
 
