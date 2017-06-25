@@ -420,7 +420,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					continue
 				}
 				switch p_data_map["Ctype"].(string) {
-				case constdef.DataType[constdef.Data_Numeric_Int]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Int]:
 					tmp_data := data.NewIntData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
@@ -430,7 +430,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					}
 					tmp_data.InitIntData()
 					map_datalist[tmp_data.GetName()] = tmp_data
-				case constdef.DataType[constdef.Data_Numeric_Uint]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Uint]:
 					tmp_data := data.NewUintData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
@@ -440,7 +440,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					}
 					tmp_data.InitUintData()
 					map_datalist[tmp_data.GetName()] = tmp_data
-				case constdef.DataType[constdef.Data_Numeric_Float]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Float]:
 					tmp_data := data.NewFloatData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
@@ -450,7 +450,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					}
 					tmp_data.InitFloatData()
 					map_datalist[tmp_data.GetName()] = tmp_data
-				case constdef.DataType[constdef.Data_Text]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Text]:
 					tmp_data := data.NewTextData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
@@ -460,7 +460,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					}
 					tmp_data.InitTextData()
 					map_datalist[tmp_data.GetName()] = tmp_data
-				case constdef.DataType[constdef.Data_Date]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Date]:
 					tmp_data := data.NewDateData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
@@ -470,7 +470,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					}
 					tmp_data.InitDateData()
 					map_datalist[tmp_data.GetName()] = tmp_data
-				case constdef.DataType[constdef.Data_OperateResultData]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResultData]:
 					tmp_data := data.NewOperateResultData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
@@ -505,6 +505,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
+				tmp_express.InitFunction()
 				map_dataexpressionlist[tmp_express.GetName()] = tmp_express
 			}
 		}
@@ -734,10 +735,10 @@ func (gt *GeneralTask) GetDataExpression(p_name string) (interface{}, error) {
 //====运行条件判断
 func (gt *GeneralTask) testCompleteCondition() bool {
 	var r_flag bool = false
-	if len(gt.GetPreCondition()) == 0 {
+	if len(gt.GetCompleteCondition()) == 0 {
 		r_flag = true
 	}
-	for _, value := range gt.GetPreCondition() {
+	for _, value := range gt.GetCompleteCondition() {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
@@ -883,13 +884,13 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//循环遍历函数表达式列表，执行函数
 		//注意：限制只可有一个Output交易产出
 		// TODO 待处理，避免一般操作任务，重复执行
-		var v_idx int8 = 0
+		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_expression_function_A）
 		logs.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
-		logs.Error(gt.GetDataValueSetterExpressionList())
 		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
 			logs.Error("======Start=======")
 			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
 			//1 函数识别 & 执行
+			str_name := v_expr_object.GetName()
 			str_function := v_expr_object.GetExpressionStr()
 			logs.Error("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
@@ -933,20 +934,22 @@ func (gt *GeneralTask) Start() (int8, error) {
 			v_result_object := v_result.(common.OperateResult)
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
-			gt.ConsistentValue(gt.DataList, v_idx, v_result_object)
+			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
 			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_result_object)
 			//  2.3 Output交易产出结构体赋值
-			if v_result_object.GetOutput() != "" {
-				gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
+			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
+				_, ok := v_result_object.GetOutput().(string)
+				if ok {
+					gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
+				}
 			}
 			//3 执行结果判断
 			if r_err != nil || v_result_object.GetCode() != 200 {
 				exec_flag = false
 				break
 			}
-			v_idx = v_idx + 1
 		}
 		//执行失败，返回 -1
 		if !exec_flag {
@@ -1228,14 +1231,22 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 }
 
 //由于查询分支结果的不确定性，使用分支条件赋予预估值，使得多节点 不同时运行结果一致性
-func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int8, p_result common.OperateResult) {
+//   通过 Cname进行对应function和data， expression_function_A \ data_int_expression_function_A
+func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name string, p_result common.OperateResult) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	var v_data inf.IData
+	//TODO :临时处理
+	if len(p_dataList) == 0 {
+		return
+	}
+	for v_key, v_value := range p_dataList {
+		if strings.Contains(v_key, p_name) {
+			v_data = v_value
+		}
+	}
 	switch gt.GetCtype() {
-	case constdef.TaskType[constdef.Task_Enquiry]:
+	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry]:
 		// 根据函数执行结果和分支情况决定最终的结果值
-		v_data := p_dataList[p_idx].(inf.IData)
-
 		select_branchs := gt.GetSelectBranches()
 		if len(select_branchs) != 0 {
 			for _, select_expression := range select_branchs {
@@ -1257,17 +1268,13 @@ func (gt *GeneralTask) ConsistentValue(p_dataList []interface{}, p_idx int8, p_r
 		} else {
 			v_data.SetValue(p_result.GetData())
 		}
-	case constdef.TaskType[constdef.Task_Action]:
-		v_data := p_dataList[p_idx].(inf.IData)
+	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Action]:
 		v_data.SetValue(p_result.GetData())
-	case constdef.TaskType[constdef.Task_Decision]:
-		v_data := p_dataList[p_idx].(inf.IData)
+	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision]:
 		v_data.SetValue(p_result.GetData())
-	case constdef.TaskType[constdef.Task_Plan]:
-		v_data := p_dataList[p_idx].(inf.IData)
+	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Plan]:
 		v_data.SetValue(p_result.GetData())
 	default:
-		v_data := p_dataList[p_idx].(inf.IData)
 		v_data.SetValue(p_result.GetData())
 	}
 	gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_data.GetName(), v_data)
