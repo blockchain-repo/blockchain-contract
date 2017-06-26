@@ -463,9 +463,9 @@ func _CalcElecPrice(electricity, electricityTotal float64, timeStamp string) (fl
 //    访问电力能源链，读取用户电表余额
 //Args: User_A  string  电表公钥
 func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) {
-	logs.Error("*********************************************************")
-	logs.Error("FuncQueryAmmeterBalance")
-	logs.Error("*********************************************************")
+	logs.Info("*********************************************************")
+	logs.Info("FuncQueryAmmeterBalance")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -499,9 +499,9 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 //    查询能源交易链,获取用户交易账户余额
 //Args: UserA  string  用户公钥
 func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) {
-	logs.Error("*********************************************************")
-	logs.Error("FuncQueryAccountBalance")
-	logs.Error("*********************************************************")
+	logs.Info("*********************************************************")
+	logs.Info("FuncQueryAccountBalance")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -536,9 +536,9 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 //Args: User_A  string     用户账户
 //      50      float64    充值额度
 func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
-	logs.Error("*********************************************************")
-	logs.Error("FuncNoticeDeposit")
-	logs.Error("*********************************************************")
+	logs.Info("*********************************************************")
+	logs.Info("FuncNoticeDeposit")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
