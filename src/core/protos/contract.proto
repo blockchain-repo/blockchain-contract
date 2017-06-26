@@ -130,6 +130,9 @@ message ComponentData {
     repeated uint32 DataRangeUint = 22;
     //DataRange interface{} float64
     repeated double DataRangeFloat = 23;
+    //add 2017-06-26
+    string Value = 24;
+    string DefaultValue = 25;
 
 }
 

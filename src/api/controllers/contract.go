@@ -687,11 +687,32 @@ func (c *ContractController) Test() {
 
 // for press test [pressTest]
 func (c *ContractController) PressTest() {
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	/*------------------- requestParams start ------------------*/
+	startTime, _ := requestParamMap["start"].(string)
+	endTime, _ := requestParamMap["end"].(string)
 	token, contract, err, status := c.parseProtoRequestBody()
+	if startTime == "" {
+		startTime = common.GenTimestamp()
+	}
+	if endTime == "" {
+		endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 300)
+	}
+	contractCaptionTemp := contract.ContractBody.Caption + "_" + time.Nanosecond.String()
+	contractIdTemp := contract.ContractBody.ContractId + "_" + time.Nanosecond.String()
+	contract.ContractBody.ContractId = contractIdTemp
+	contract.ContractBody.Caption = contractCaptionTemp
+
 	if err != nil {
 		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
 	}
+
+	//todo 1. replace createTime, Signatures, owner, start and end time!
 
 	//logs.Warn("Input contractDeserialize:\n", common.StructSerialize(contract))
 	contractModel := fromContractToContractModel(contract)

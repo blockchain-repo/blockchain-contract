@@ -1952,7 +1952,9 @@ proto.protos.ComponentData.toObject = function(includeInstance, msg) {
     defaultvaluestring: jspb.Message.getFieldWithDefault(msg, 20, ""),
     datarangeintList: jspb.Message.getField(msg, 21),
     datarangeuintList: jspb.Message.getField(msg, 22),
-    datarangefloatList: jspb.Message.getRepeatedFloatingPointField(msg, 23)
+    datarangefloatList: jspb.Message.getRepeatedFloatingPointField(msg, 23),
+    value: jspb.Message.getFieldWithDefault(msg, 24, ""),
+    defaultvalue: jspb.Message.getFieldWithDefault(msg, 25, "")
   };
 
   if (includeInstance) {
@@ -2083,6 +2085,14 @@ proto.protos.ComponentData.deserializeBinaryFromReader = function(msg, reader) {
     case 23:
       var value = /** @type {!Array.<number>} */ (reader.readPackedDouble());
       msg.setDatarangefloatList(value);
+      break;
+    case 24:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setValue(value);
+      break;
+    case 25:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDefaultvalue(value);
       break;
     default:
       reader.skipField();
@@ -2268,6 +2278,20 @@ proto.protos.ComponentData.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writePackedDouble(
       23,
+      f
+    );
+  }
+  f = message.getValue();
+  if (f.length > 0) {
+    writer.writeString(
+      24,
+      f
+    );
+  }
+  f = message.getDefaultvalue();
+  if (f.length > 0) {
+    writer.writeString(
+      25,
       f
     );
   }
@@ -2700,6 +2724,36 @@ proto.protos.ComponentData.prototype.addDatarangefloat = function(value, opt_ind
 
 proto.protos.ComponentData.prototype.clearDatarangefloatList = function() {
   this.setDatarangefloatList([]);
+};
+
+
+/**
+ * optional string Value = 24;
+ * @return {string}
+ */
+proto.protos.ComponentData.prototype.getValue = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 24, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ComponentData.prototype.setValue = function(value) {
+  jspb.Message.setField(this, 24, value);
+};
+
+
+/**
+ * optional string DefaultValue = 25;
+ * @return {string}
+ */
+proto.protos.ComponentData.prototype.getDefaultvalue = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 25, ""));
+};
+
+
+/** @param {string} value */
+proto.protos.ComponentData.prototype.setDefaultvalue = function(value) {
+  jspb.Message.setField(this, 25, value);
 };
 
 

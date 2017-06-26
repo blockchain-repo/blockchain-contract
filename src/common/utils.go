@@ -44,6 +44,21 @@ func GenSpecialTimestamp(fullTimeStr string) (string, error) {
 	return strconv.FormatInt(unix_time, 10), nil
 }
 
+func GenSpecialTimestampAfterSeconds(fullTimeStr string, seconds int64) (string, error) {
+	local, err := time.LoadLocation("Local")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	the_time, err := time.ParseInLocation("2006-01-02 15:04:05", fullTimeStr, local)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	unix_time := the_time.UnixNano()/1000000 + seconds*1000
+	return strconv.FormatInt(unix_time, 10), nil
+}
+
 func StructToMap(obj interface{}) (map[string]interface{}, error) {
 	var mapObj map[string]interface{}
 	objBytes, err := json.Marshal(obj)

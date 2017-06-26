@@ -8715,6 +8715,34 @@ public final class ProtoContract {
      * <code>repeated double DataRangeFloat = 23;</code>
      */
     double getDataRangeFloat(int index);
+
+    /**
+     * <pre>
+     *add 2017-06-26
+     * </pre>
+     *
+     * <code>string Value = 24;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <pre>
+     *add 2017-06-26
+     * </pre>
+     *
+     * <code>string Value = 24;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
+
+    /**
+     * <code>string DefaultValue = 25;</code>
+     */
+    java.lang.String getDefaultValue();
+    /**
+     * <code>string DefaultValue = 25;</code>
+     */
+    com.google.protobuf.ByteString
+        getDefaultValueBytes();
   }
   /**
    * Protobuf type {@code protos.ComponentData}
@@ -8749,6 +8777,8 @@ public final class ProtoContract {
       dataRangeInt_ = java.util.Collections.emptyList();
       dataRangeUint_ = java.util.Collections.emptyList();
       dataRangeFloat_ = java.util.Collections.emptyList();
+      value_ = "";
+      defaultValue_ = "";
     }
 
     @java.lang.Override
@@ -8967,6 +8997,18 @@ public final class ProtoContract {
                 dataRangeFloat_.add(input.readDouble());
               }
               input.popLimit(limit);
+              break;
+            }
+            case 194: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              value_ = s;
+              break;
+            }
+            case 202: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              defaultValue_ = s;
               break;
             }
           }
@@ -9706,6 +9748,82 @@ public final class ProtoContract {
     }
     private int dataRangeFloatMemoizedSerializedSize = -1;
 
+    public static final int VALUE_FIELD_NUMBER = 24;
+    private volatile java.lang.Object value_;
+    /**
+     * <pre>
+     *add 2017-06-26
+     * </pre>
+     *
+     * <code>string Value = 24;</code>
+     */
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        value_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *add 2017-06-26
+     * </pre>
+     *
+     * <code>string Value = 24;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        value_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DEFAULTVALUE_FIELD_NUMBER = 25;
+    private volatile java.lang.Object defaultValue_;
+    /**
+     * <code>string DefaultValue = 25;</code>
+     */
+    public java.lang.String getDefaultValue() {
+      java.lang.Object ref = defaultValue_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        defaultValue_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string DefaultValue = 25;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDefaultValueBytes() {
+      java.lang.Object ref = defaultValue_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        defaultValue_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -9802,6 +9920,12 @@ public final class ProtoContract {
       }
       for (int i = 0; i < dataRangeFloat_.size(); i++) {
         output.writeDoubleNoTag(dataRangeFloat_.get(i));
+      }
+      if (!getValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 24, value_);
+      }
+      if (!getDefaultValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 25, defaultValue_);
       }
     }
 
@@ -9929,6 +10053,12 @@ public final class ProtoContract {
         }
         dataRangeFloatMemoizedSerializedSize = dataSize;
       }
+      if (!getValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(24, value_);
+      }
+      if (!getDefaultValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(25, defaultValue_);
+      }
       memoizedSize = size;
       return size;
     }
@@ -9998,6 +10128,10 @@ public final class ProtoContract {
           .equals(other.getDataRangeUintList());
       result = result && getDataRangeFloatList()
           .equals(other.getDataRangeFloatList());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && getDefaultValue()
+          .equals(other.getDefaultValue());
       return result;
     }
 
@@ -10069,6 +10203,10 @@ public final class ProtoContract {
         hash = (37 * hash) + DATARANGEFLOAT_FIELD_NUMBER;
         hash = (53 * hash) + getDataRangeFloatList().hashCode();
       }
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (37 * hash) + DEFAULTVALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getDefaultValue().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -10269,6 +10407,10 @@ public final class ProtoContract {
         bitField0_ = (bitField0_ & ~0x00200000);
         dataRangeFloat_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00400000);
+        value_ = "";
+
+        defaultValue_ = "";
+
         return this;
       }
 
@@ -10337,6 +10479,8 @@ public final class ProtoContract {
           bitField0_ = (bitField0_ & ~0x00400000);
         }
         result.dataRangeFloat_ = dataRangeFloat_;
+        result.value_ = value_;
+        result.defaultValue_ = defaultValue_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -10483,6 +10627,14 @@ public final class ProtoContract {
             ensureDataRangeFloatIsMutable();
             dataRangeFloat_.addAll(other.dataRangeFloat_);
           }
+          onChanged();
+        }
+        if (!other.getValue().isEmpty()) {
+          value_ = other.value_;
+          onChanged();
+        }
+        if (!other.getDefaultValue().isEmpty()) {
+          defaultValue_ = other.defaultValue_;
           onChanged();
         }
         onChanged();
@@ -12144,6 +12296,164 @@ public final class ProtoContract {
       public Builder clearDataRangeFloat() {
         dataRangeFloat_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00400000);
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object value_ = "";
+      /**
+       * <pre>
+       *add 2017-06-26
+       * </pre>
+       *
+       * <code>string Value = 24;</code>
+       */
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          value_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *add 2017-06-26
+       * </pre>
+       *
+       * <code>string Value = 24;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *add 2017-06-26
+       * </pre>
+       *
+       * <code>string Value = 24;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *add 2017-06-26
+       * </pre>
+       *
+       * <code>string Value = 24;</code>
+       */
+      public Builder clearValue() {
+        
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *add 2017-06-26
+       * </pre>
+       *
+       * <code>string Value = 24;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        value_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object defaultValue_ = "";
+      /**
+       * <code>string DefaultValue = 25;</code>
+       */
+      public java.lang.String getDefaultValue() {
+        java.lang.Object ref = defaultValue_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          defaultValue_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string DefaultValue = 25;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDefaultValueBytes() {
+        java.lang.Object ref = defaultValue_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          defaultValue_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string DefaultValue = 25;</code>
+       */
+      public Builder setDefaultValue(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        defaultValue_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string DefaultValue = 25;</code>
+       */
+      public Builder clearDefaultValue() {
+        
+        defaultValue_ = getDefaultInstance().getDefaultValue();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string DefaultValue = 25;</code>
+       */
+      public Builder setDefaultValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        defaultValue_ = value;
         onChanged();
         return this;
       }
@@ -28878,7 +29188,7 @@ public final class ProtoContract {
       "(\t\022\024\n\014DataRangeInt\030\025 \003(\005\022\025\n\rDataRangeUin",
       "t\030\026 \003(\r\022\026\n\016DataRangeFloat\030\027 \003(\001\032.\n\014Optio" +
       "nsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"" +
-      "\314\004\n\rComponentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctyp" +
+      "\361\004\n\rComponentData\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctyp" +
       "e\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030" +
       "\004 \001(\t\022\022\n\nModifyDate\030\005 \001(\t\022\024\n\014HardConvTyp" +
       "e\030\006 \001(\t\022\020\n\010Category\030\007 \003(\t\022(\n\006Parent\030\010 \001(" +
@@ -28891,66 +29201,67 @@ public final class ProtoContract {
       "ultValueUint\030\022 \001(\r\022\031\n\021DefaultValueFloat\030" +
       "\023 \001(\001\022\032\n\022DefaultValueString\030\024 \001(\t\022\024\n\014Dat" +
       "aRangeInt\030\025 \003(\005\022\025\n\rDataRangeUint\030\026 \003(\r\022\026" +
-      "\n\016DataRangeFloat\030\027 \003(\001\032.\n\014OptionsEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026Select" +
-      "BranchExpression\022\033\n\023BranchExpressionStr\030" +
-      "\001 \001(\t\022\035\n\025BranchExpressionValue\030\002 \001(\t\"\324\004\n" +
-      "\024ContractComponentSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005",
-      "Ctype\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Descript" +
-      "ion\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition" +
-      "\030\006 \003(\0132\034.protos.ComponentsExpression\0227\n\021" +
-      "CompleteCondition\030\007 \003(\0132\034.protos.Compone" +
-      "ntsExpression\0226\n\020DiscardCondition\030\010 \003(\0132" +
-      "\034.protos.ComponentsExpression\022\021\n\tNextTas" +
-      "ks\030\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Comp" +
-      "onentData\022C\n\035DataValueSetterExpressionLi" +
-      "st\030\013 \003(\0132\034.protos.ComponentsExpression\022\020" +
-      "\n\010TaskList\030\016 \003(\t\022\030\n\020SupportArguments\030\017 \003",
-      "(\t\022\030\n\020AgainstArguments\030\020 \003(\t\022\017\n\007Support\030" +
-      "\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 " +
-      "\001(\005\022\016\n\006TaskId\030\024 \001(\t\0226\n\016SelectBranches\030\025 " +
-      "\003(\0132\036.protos.SelectBranchExpression\"\267\006\n\021" +
-      "ContractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctyp" +
-      "e\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030" +
-      "\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006 \003" +
-      "(\0132\034.protos.ComponentsExpression\0227\n\021Comp" +
-      "leteCondition\030\007 \003(\0132\034.protos.ComponentsE" +
-      "xpression\0226\n\020DiscardCondition\030\010 \003(\0132\034.pr",
-      "otos.ComponentsExpression\022\021\n\tNextTasks\030\t" +
-      " \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Componen" +
-      "tData\022C\n\035DataValueSetterExpressionList\030\013" +
-      " \003(\0132\034.protos.ComponentsExpression\0223\n\rCa" +
-      "ndidateList\030\014 \003(\0132\034.protos.ContractCompo" +
-      "nentSub\0224\n\016DecisionResult\030\r \003(\0132\034.protos" +
-      ".ContractComponentSub\022\020\n\010TaskList\030\016 \003(\t\022" +
-      "\030\n\020SupportArguments\030\017 \003(\t\022\030\n\020AgainstArgu" +
-      "ments\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003" +
-      "(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001",
-      "(\t\0226\n\016SelectBranches\030\025 \003(\0132\036.protos.Sele" +
-      "ctBranchExpression\022C\n\rMetaAttribute\030\026 \003(" +
-      "\0132,.protos.ContractComponent.MetaAttribu" +
-      "teEntry\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\204\004\n\014ContractBody\022\022" +
-      "\n\nContractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Cty" +
-      "pe\030\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Description" +
-      "\030\005 \001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creator" +
-      "\030\007 \001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTime\030" +
-      "\t \001(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwners",
-      "\030\013 \003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.protos." +
-      "ContractAsset\0225\n\022ContractSignatures\030\r \003(" +
-      "\0132\031.protos.ContractSignature\0225\n\022Contract" +
-      "Components\030\016 \003(\0132\031.protos.ContractCompon" +
-      "ent\022>\n\rMetaAttribute\030\017 \003(\0132\'.protos.Cont" +
-      "ractBody.MetaAttributeEntry\022\021\n\tNextTasks" +
-      "\030\020 \003(\t\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\n" +
-      "MainPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAss" +
-      "ignTime\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017Co",
-      "nsensusResult\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 " +
-      "\001(\t\022*\n\014ContractHead\030\002 \001(\0132\024.protos.Contr" +
-      "actHead\022*\n\014ContractBody\030\003 \001(\0132\024.protos.C" +
-      "ontractBodyB%\n\024com.uniledger.protosB\rPro" +
-      "toContractb\006proto3"
+      "\n\016DataRangeFloat\030\027 \003(\001\022\r\n\005Value\030\030 \001(\t\022\024\n" +
+      "\014DefaultValue\030\031 \001(\t\032.\n\014OptionsEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\"T\n\026SelectBra" +
+      "nchExpression\022\033\n\023BranchExpressionStr\030\001 \001" +
+      "(\t\022\035\n\025BranchExpressionValue\030\002 \001(\t\"\324\004\n\024Co",
+      "ntractComponentSub\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Cty" +
+      "pe\030\002 \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description" +
+      "\030\004 \001(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006 " +
+      "\003(\0132\034.protos.ComponentsExpression\0227\n\021Com" +
+      "pleteCondition\030\007 \003(\0132\034.protos.Components" +
+      "Expression\0226\n\020DiscardCondition\030\010 \003(\0132\034.p" +
+      "rotos.ComponentsExpression\022\021\n\tNextTasks\030" +
+      "\t \003(\t\022\'\n\010DataList\030\n \003(\0132\025.protos.Compone" +
+      "ntData\022C\n\035DataValueSetterExpressionList\030" +
+      "\013 \003(\0132\034.protos.ComponentsExpression\022\020\n\010T",
+      "askList\030\016 \003(\t\022\030\n\020SupportArguments\030\017 \003(\t\022" +
+      "\030\n\020AgainstArguments\030\020 \003(\t\022\017\n\007Support\030\021 \001" +
+      "(\005\022\014\n\004Text\030\022 \003(\t\022\026\n\016TaskExecuteIdx\030\023 \001(\005" +
+      "\022\016\n\006TaskId\030\024 \001(\t\0226\n\016SelectBranches\030\025 \003(\013" +
+      "2\036.protos.SelectBranchExpression\"\267\006\n\021Con" +
+      "tractComponent\022\r\n\005Cname\030\001 \001(\t\022\r\n\005Ctype\030\002" +
+      " \001(\t\022\017\n\007Caption\030\003 \001(\t\022\023\n\013Description\030\004 \001" +
+      "(\t\022\r\n\005State\030\005 \001(\t\0222\n\014PreCondition\030\006 \003(\0132" +
+      "\034.protos.ComponentsExpression\0227\n\021Complet" +
+      "eCondition\030\007 \003(\0132\034.protos.ComponentsExpr",
+      "ession\0226\n\020DiscardCondition\030\010 \003(\0132\034.proto" +
+      "s.ComponentsExpression\022\021\n\tNextTasks\030\t \003(" +
+      "\t\022\'\n\010DataList\030\n \003(\0132\025.protos.ComponentDa" +
+      "ta\022C\n\035DataValueSetterExpressionList\030\013 \003(" +
+      "\0132\034.protos.ComponentsExpression\0223\n\rCandi" +
+      "dateList\030\014 \003(\0132\034.protos.ContractComponen" +
+      "tSub\0224\n\016DecisionResult\030\r \003(\0132\034.protos.Co" +
+      "ntractComponentSub\022\020\n\010TaskList\030\016 \003(\t\022\030\n\020" +
+      "SupportArguments\030\017 \003(\t\022\030\n\020AgainstArgumen" +
+      "ts\030\020 \003(\t\022\017\n\007Support\030\021 \001(\005\022\014\n\004Text\030\022 \003(\t\022",
+      "\026\n\016TaskExecuteIdx\030\023 \001(\005\022\016\n\006TaskId\030\024 \001(\t\022" +
+      "6\n\016SelectBranches\030\025 \003(\0132\036.protos.SelectB" +
+      "ranchExpression\022C\n\rMetaAttribute\030\026 \003(\0132," +
+      ".protos.ContractComponent.MetaAttributeE" +
+      "ntry\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(\t\022" +
+      "\r\n\005value\030\002 \001(\t:\0028\001\"\204\004\n\014ContractBody\022\022\n\nC" +
+      "ontractId\030\001 \001(\t\022\r\n\005Cname\030\002 \001(\t\022\r\n\005Ctype\030" +
+      "\003 \001(\t\022\017\n\007Caption\030\004 \001(\t\022\023\n\013Description\030\005 " +
+      "\001(\t\022\025\n\rContractState\030\006 \001(\t\022\017\n\007Creator\030\007 " +
+      "\001(\t\022\022\n\nCreateTime\030\010 \001(\t\022\021\n\tStartTime\030\t \001",
+      "(\t\022\017\n\007EndTime\030\n \001(\t\022\026\n\016ContractOwners\030\013 " +
+      "\003(\t\022-\n\016ContractAssets\030\014 \003(\0132\025.protos.Con" +
+      "tractAsset\0225\n\022ContractSignatures\030\r \003(\0132\031" +
+      ".protos.ContractSignature\0225\n\022ContractCom" +
+      "ponents\030\016 \003(\0132\031.protos.ContractComponent" +
+      "\022>\n\rMetaAttribute\030\017 \003(\0132\'.protos.Contrac" +
+      "tBody.MetaAttributeEntry\022\021\n\tNextTasks\030\020 " +
+      "\003(\t\0324\n\022MetaAttributeEntry\022\013\n\003key\030\001 \001(\t\022\r" +
+      "\n\005value\030\002 \001(\t:\0028\001\"u\n\014ContractHead\022\022\n\nMai" +
+      "nPubkey\030\001 \001(\t\022\017\n\007Version\030\002 \001(\005\022\022\n\nAssign",
+      "Time\030\003 \001(\t\022\023\n\013OperateTime\030\004 \001(\t\022\027\n\017Conse" +
+      "nsusResult\030\005 \001(\005\"n\n\010Contract\022\n\n\002id\030\001 \001(\t" +
+      "\022*\n\014ContractHead\030\002 \001(\0132\024.protos.Contract" +
+      "Head\022*\n\014ContractBody\030\003 \001(\0132\024.protos.Cont" +
+      "ractBodyB%\n\024com.uniledger.protosB\rProtoC" +
+      "ontractb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -29017,7 +29328,7 @@ public final class ProtoContract {
     internal_static_protos_ComponentData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_ComponentData_descriptor,
-        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ModifyDate", "HardConvType", "Category", "Parent", "Mandatory", "Unit", "Options", "Format", "ValueInt", "ValueUint", "ValueFloat", "ValueString", "DefaultValueInt", "DefaultValueUint", "DefaultValueFloat", "DefaultValueString", "DataRangeInt", "DataRangeUint", "DataRangeFloat", });
+        new java.lang.String[] { "Cname", "Ctype", "Caption", "Description", "ModifyDate", "HardConvType", "Category", "Parent", "Mandatory", "Unit", "Options", "Format", "ValueInt", "ValueUint", "ValueFloat", "ValueString", "DefaultValueInt", "DefaultValueUint", "DefaultValueFloat", "DefaultValueString", "DataRangeInt", "DataRangeUint", "DataRangeFloat", "Value", "DefaultValue", });
     internal_static_protos_ComponentData_OptionsEntry_descriptor =
       internal_static_protos_ComponentData_descriptor.getNestedTypes().get(0);
     internal_static_protos_ComponentData_OptionsEntry_fieldAccessorTable = new
