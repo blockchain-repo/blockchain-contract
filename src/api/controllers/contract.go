@@ -722,13 +722,14 @@ func (c *ContractController) PressTest() {
 	contractModel.ContractBody.Caption = randomString
 	contractModel.ContractBody.Description = randomString
 
-	contractOwnersLen := 3
+	contractModel.ContractBody.CreateTime = common.GenTimestamp()
+	contractModel.ContractBody.StartTime = startTime
+	contractModel.ContractBody.EndTime = endTime
+
+
+	contractOwnersLen := 1
 	// 生成的合约签名人个数
 	contractSignaturesLen := contractOwnersLen
-
-	if contractSignaturesLen >= contractOwnersLen || contractSignaturesLen <= 0 {
-		contractSignaturesLen = contractOwnersLen
-	}
 
 	//generate contractOwnersLen keypair
 	owners := make(map[string]string)
