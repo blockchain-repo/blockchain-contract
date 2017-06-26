@@ -463,6 +463,9 @@ func _CalcElecPrice(electricity, electricityTotal float64, timeStamp string) (fl
 //    访问电力能源链，读取用户电表余额
 //Args: User_A  string  电表公钥
 func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) {
+	logs.Error("*********************************************************")
+	logs.Error("FuncQueryAmmeterBalance")
+	logs.Error("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -496,6 +499,9 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 //    查询能源交易链,获取用户交易账户余额
 //Args: UserA  string  用户公钥
 func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) {
+	logs.Error("*********************************************************")
+	logs.Error("FuncQueryAccountBalance")
+	logs.Error("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -530,6 +536,9 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 //Args: User_A  string     用户账户
 //      50      float64    充值额度
 func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
+	logs.Error("*********************************************************")
+	logs.Error("FuncNoticeDeposit")
+	logs.Error("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -631,6 +640,9 @@ func _Recharge() {
 //       Ccount_D string
 //       50       float64     充值额度
 func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncAutoPurchasingElectricity")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -710,6 +722,9 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 //自动休眠1小时
 //Args： SleepTime  int 单位是秒
 func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncAutoSleeping")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -727,12 +742,14 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 
 	sleeptime := 30
 
-	time.Sleep(time.Minute * time.Duration(sleeptime))
-
+	time.Sleep(time.Second * time.Duration(sleeptime))
+	logs.Info("*********************************************************")
+	logs.Info("sleep complete")
+	logs.Info("*********************************************************")
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
-	v_result.SetMessage("process success!")
+	v_result.SetMessage("auto sleep process success!")
 	return v_result, v_err
 }
 
@@ -740,6 +757,9 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 // 获取查询起始时间
 // userKey string
 func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncGetStartEndTime")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -795,6 +815,9 @@ func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
 //      startTime   string
 //      endTime     string
 func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncGetPowerConsumeParam")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -847,6 +870,9 @@ func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error)
 //C. 消耗电量大于0时，获取对应的电价(峰谷平电价 和 阶梯的综合电价)
 //获取电价信息（波峰平谷电价 & 阶梯电价）
 func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncGetPowerPrice")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -876,6 +902,9 @@ func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
 //Return: consume_money   消耗金额
 //        remain_money    电表余额
 func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncCalcConsumeAmountAndMoney")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -955,6 +984,9 @@ func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, e
 //      other_users    string   合约分账的各用户
 //      other_transfer string   各用户转账金额列表
 func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncTransferElecChargeToPlatform")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -972,6 +1004,9 @@ func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult
 //Args：  user_A   string   elec_account
 //       amount   float64      电表余额
 func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncUpdateElecBalance")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -1016,6 +1051,9 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 //      end_time    string   统计结束时间串
 //Return : split_percent string  各合约用户分账比例
 func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncCalcAndSplitRatio")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -1087,6 +1125,9 @@ func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
 //      split_percent string   合约分账各方分账的比例
 //      money         float    要分帐的金额
 func FuncAutoSplitAccount(args ...interface{}) (common.OperateResult, error) {
+	logs.Info("*********************************************************")
+	logs.Info("FuncAutoSplitAccount")
+	logs.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error

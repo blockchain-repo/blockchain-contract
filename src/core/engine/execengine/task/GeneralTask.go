@@ -933,16 +933,20 @@ func (gt *GeneralTask) Start() (int8, error) {
 			}
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
+			logs.Info("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+			logs.Info("+v", v_result_object)
+
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
 			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
+			logs.Info("-------------------------------------------------------")
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
 			last_json, _ := gt.GetContract().Serialize()
-			fmt.Println("========before update component=====", last_json)
+			logs.Error("========before update component=====", last_json)
 			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_expr_object)
 			now_json, _ := gt.GetContract().Serialize()
-			fmt.Println("========after update component=====", now_json)
+			logs.Error("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
 				_, ok := v_result_object.GetOutput().(string)

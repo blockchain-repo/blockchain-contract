@@ -540,8 +540,8 @@ func (cc *CognitiveContract) UpdateContractState(p_state string) bool {
 		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
 	case constdef.ContractState[constdef.Contract_Create]:
 		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
-	case constdef.ContractState[constdef.Contract_In_Process]:
-		cc.SetContractState(constdef.ContractState[constdef.Contract_Completed])
+		//case constdef.ContractState[constdef.Contract_In_Process]:
+		//	cc.SetContractState(constdef.ContractState[constdef.Contract_Completed])
 	}
 	return v_bool
 }
@@ -1583,13 +1583,8 @@ func (cc *CognitiveContract) UpdateLoopExecuteTask(p_task_name string) error {
 			logs.Error("assert error")
 			return fmt.Errorf("assert error")
 		}
-		tmp, ok := v_nexttask_object.(inf.ITask)
-		if !ok {
-			logs.Error("assert error")
-			return fmt.Errorf("assert error")
-		}
-		if tmp.GetState() == constdef.TaskState[constdef.TaskState_Completed] ||
-			tmp.GetState() == constdef.TaskState[constdef.TaskState_Discard] {
+		if v_nexttask_object.GetState() == constdef.TaskState[constdef.TaskState_Completed] ||
+			v_nexttask_object.GetState() == constdef.TaskState[constdef.TaskState_Discard] {
 			//待循环执行的任务需要修改：State, TaskExecuteIdx；清空结果值
 			v_nexttask_object.SetState(constdef.TaskState[constdef.TaskState_Dormant])
 			v_nexttask_object.SetTaskExecuteIdx(v_nexttask_object.GetTaskExecuteIdx() + 1)
