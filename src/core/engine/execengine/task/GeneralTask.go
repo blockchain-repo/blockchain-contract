@@ -923,9 +923,9 @@ func (gt *GeneralTask) Start() (int8, error) {
 				var func_buf bytes.Buffer = bytes.Buffer{}
 				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
 				func_buf.WriteString(strings.Trim(str_function, ")"))
-				func_buf.WriteString("@ \"")
+				func_buf.WriteString("@\"")
 				func_buf.WriteString(str_json_contract)
-				func_buf.WriteString("\"@ \"")
+				func_buf.WriteString("\"@\"")
 				func_buf.WriteString(gt.GetContract().GetContractId())
 				func_buf.WriteString("\", \"")
 				func_buf.WriteString(gt.GetTaskId())
