@@ -30,6 +30,6 @@ func GenContractByExecStr(c string) (con model.ContractModel, err error) {
 	//contract := model.ContractModel{}
 	var contract model.ContractModel
 	err = json.Unmarshal([]byte(c), &contract)
-	logs.Info("===contract: ", contract)
+	logs.Info("===contract: ", []byte(c))
 	return contract, err
 }
