@@ -207,7 +207,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		//if mainNode, do freeze;
 		logs.Info("mainPubkey ")
 		var reciForFre [][2]interface{} = [][2]interface{}{
-			[2]interface{}{ownerBefore, 100},
+			[2]interface{}{ownerBefore, money_amount},
 		}
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
 		//if v_err != nil {
