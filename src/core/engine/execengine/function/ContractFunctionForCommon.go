@@ -10,6 +10,7 @@ import (
 	"unicontract/src/transaction"
 
 	"github.com/astaxie/beego/logs"
+	"reflect"
 	"strings"
 )
 
@@ -104,8 +105,9 @@ func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {
 		return v_result, v_err
 	}
 	//user provide
-	var sleeptime int = args[0].(int)
-	time.Sleep(time.Second * time.Duration(sleeptime))
+	var sleeptime string = args[0].(string)
+	int_sleeptime, _ := strconv.Atoi(sleeptime)
+	time.Sleep(time.Second * time.Duration(int_sleeptime))
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -134,33 +136,55 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_err error = nil
 
 	//var v_map_args map[string]interface{} = nil
-	if len(args) != 7 {
+	if len(args) != 8 {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
 	logs.Error("======after param check FuncTransferAsset==========")
 	//user provide
-	var ownerBefore string = args[0].(string)
-	var recipientsStr string = args[1].(string)
-	var recipients [][2]interface{} = [][2]interface{}{}
-	s := strings.Split(recipientsStr, "&")
-	//fmt.Println(s, len(s))
-	for i := 0; i < len(s); i++ {
-		ss := strings.Split(s[i], "#")
-		ownAfter := ss[0]
-		amount, _ := strconv.ParseFloat(ss[1], 64)
-		recipients = append(recipients, [2]interface{}{ownAfter, amount})
+	var ownerBefore string = ""
+	switch args[0].(type) {
+	case reflect.Value:
+		ownerBefore = args[0].(reflect.Value).String()
+	case string:
+		ownerBefore = args[0].(string)
 	}
-
+	var recipientsStr string = ""
+	switch args[1].(type) {
+	case reflect.Value:
+		recipientsStr = args[1].(reflect.Value).String()
+	case string:
+		recipientsStr = args[1].(string)
+	}
+	var money_amount string = ""
+	switch args[2].(type) {
+	case reflect.Value:
+		money_amount = args[2].(reflect.Value).String()
+	case string:
+		money_amount = args[2].(string)
+	}
+	var recipients [][2]interface{} = [][2]interface{}{}
+	//s := strings.Split(recipientsStr, "&")
+	//fmt.Println(s, len(s))
+	//for i := 0; i < len(s); i++ {
+	//	ss := strings.Split(s[i], "#")
+	//	ownAfter := ss[0]
+	//	amount, _ := strconv.ParseFloat(ss[1], 64)
+	//	recipients = append(recipients, [2]interface{}{ownAfter, amount})
+	//}
+	amount, _ := strconv.ParseFloat(money_amount, 64)
+	recipients = append(recipients, [2]interface{}{recipientsStr, amount})
 	//executer provide
-	var contractStr string = args[2].(string)
-	var contractId string = args[3].(string)
-	var taskId string = args[4].(string)
-	var taskIndex int = args[5].(int)
-	var mainPubkey string = args[6].(string)
+	var contractStr string = args[3].(string)
+	var contractId string = args[4].(string)
+	var taskId string = args[5].(string)
+	var str_taskIndex string = args[6].(string)
+	taskIndex, _ := strconv.Atoi(str_taskIndex)
+	var mainPubkey string = args[7].(string)
 	logs.Error("======Param:=========")
 	logs.Error(ownerBefore)
 	logs.Error(recipientsStr)
+	logs.Error(money_amount)
 	logs.Error(contractStr)
 	logs.Error(contractId)
 	logs.Error(taskId)

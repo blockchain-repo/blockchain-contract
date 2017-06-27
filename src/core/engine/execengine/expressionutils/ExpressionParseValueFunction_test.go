@@ -2,6 +2,7 @@ package expressionutils
 
 import (
 	"testing"
+	"unicontract/src/core/engine/execengine/function"
 )
 
 func Test_ParseExpressionClassify(t *testing.T) {
@@ -148,9 +149,12 @@ func Test_ParseExprConditionValue(t *testing.T) { //TODO ?
 }
 
 func Test_ParseExprFunctionValue(t *testing.T) { //TODO ?
+	v_function := function.NewFunctionParseEngine()
+	v_function.LoadFunctionsCommon()
 	v_express_parse := NewExpressionParseEngine()
+	v_express_parse.SetFunctionEngine(v_function)
 	slTestRightStr := []string{
-		"",
+		"FuncSleepTime(5)",
 	}
 	for _, value := range slTestRightStr {
 		ret, err := v_express_parse.ParseExprFunctionValue(value)

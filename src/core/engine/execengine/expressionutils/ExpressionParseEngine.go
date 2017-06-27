@@ -52,6 +52,7 @@ func (ep *ExpressionParseEngine) SetContract(p_contract inf.ICognitiveContract) 
 //   4. 函数表达式   ExpressionType[Expression_Function]
 //   5. 决策表达式   ExpressionType[Expression_Candidate]
 func (ep *ExpressionParseEngine) EvaluateExpressionValue(p_exprtype string, p_expression string) (interface{}, error) {
+	fmt.Printf("=================", p_exprtype, p_expression)
 	var v_return interface{} = nil
 	var v_err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
@@ -851,17 +852,32 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	//正则匹配函数名
 	name_reg := regexp.MustCompile(`\s*([^\(]+)`)
 	func_name := strings.TrimSpace(name_reg.FindString(p_function))
-	logs.Info("func_name:", func_name)
+	logs.Info("=======func_name:", func_name)
 	//正则匹配函数的参数变量
 	param_reg := regexp.MustCompile(`\((.*)\)`)
 	func_param_str := strings.Trim(param_reg.FindString(p_function), "(|)")
-	logs.Info("func_params:", func_param_str)
+	logs.Info("=======func_params:", func_param_str)
 	//函数调用
 	func_run := reflect.ValueOf(ep.FunctionEngine.ContractFunctions[func_name])
 	var func_params []reflect.Value = nil
 	if func_param_str != "" {
 		//分割匹配的函数参数列表
-		func_param_array := strings.Split(func_param_str, ",")
+		//TODO 大参数解析（比如json串解析）
+		var func_param_array []string = make([]string, 8)
+		if func_name == "FuncTransferAsset" {
+			first_param_array := strings.Split(func_param_str, "@")
+			first_idx := 0
+			for t_idx, t_param := range strings.Split(first_param_array[0], ",") {
+				func_param_array[first_idx+t_idx] = t_param
+			}
+			func_param_array[3] = first_param_array[1]
+			second_idx := 4
+			for v_idx, v_param := range strings.Split(first_param_array[2], ",") {
+				func_param_array[second_idx+v_idx] = v_param
+			}
+		} else {
+			func_param_array = strings.Split(func_param_str, ",")
+		}
 		func_params = make([]reflect.Value, len(func_param_array))
 		for index, v_args := range func_param_array {
 			isConstant := func(v string) bool {

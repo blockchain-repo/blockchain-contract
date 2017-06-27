@@ -37,6 +37,7 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 	//TODO: when add method in ContractFunctionForCommon.go，must add it here
 	bif.ContractFunctions["FuncGetNowDay"] = FuncGetNowDay
 	bif.ContractFunctions["FuncGetNowDate"] = FuncGetNowDate
+	bif.ContractFunctions["FuncSleepTime"] = FuncSleepTime
 	bif.ContractFunctions["FuncGetNowDateTimestamp"] = FuncGetNowDateTimestamp
 	bif.ContractFunctions["FuncTestMethod"] = FuncTestMethod
 	bif.ContractFunctions["FuncCreateAsset"] = FuncCreateAsset

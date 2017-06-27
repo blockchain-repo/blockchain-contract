@@ -516,17 +516,11 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
-				fmt.Println("+++++++++++++++++++++++++++++++++++++++=")
-				fmt.Println(p_express)
-				fmt.Println(tmp_byte_express)
 				tmp_express.InitFunction()
 				map_dataexpressionlist[tmp_express.GetName()] = tmp_express
 			}
 		}
 	}
-	logs.Error("===========DataValuesetterExpressionList========")
-	logs.Error(map_dataexpressionlist)
-	logs.Error(gt.DataValueSetterExpressionList)
 	common.AddProperty(gt, gt.PropertyTable, _DataValueSetterExpressionList, map_dataexpressionlist)
 	//nextTask array to map
 	if gt.NextTasks == nil {
@@ -927,18 +921,19 @@ func (gt *GeneralTask) Start() (int8, error) {
 				}
 				logs.Info("===before transfer asset=====" + str_json_contract)
 				var func_buf bytes.Buffer = bytes.Buffer{}
+				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
 				func_buf.WriteString(strings.Trim(str_function, ")"))
-				func_buf.WriteString(", ")
+				func_buf.WriteString("@ \"")
 				func_buf.WriteString(str_json_contract)
-				func_buf.WriteString(", ")
+				func_buf.WriteString("\"@ \"")
 				func_buf.WriteString(gt.GetContract().GetContractId())
-				func_buf.WriteString(", ")
+				func_buf.WriteString("\", \"")
 				func_buf.WriteString(gt.GetTaskId())
-				func_buf.WriteString(", ")
+				func_buf.WriteString("\", ")
 				func_buf.WriteString(strconv.FormatInt(int64(gt.GetTaskExecuteIdx()), 10))
-				func_buf.WriteString(", ")
+				func_buf.WriteString(", \"")
 				func_buf.WriteString(gt.GetContract().GetMainPubkey())
-				func_buf.WriteString(")")
+				func_buf.WriteString("\")")
 				str_function = func_buf.String()
 				logs.Error("==after process Function==" + str_function)
 			}
