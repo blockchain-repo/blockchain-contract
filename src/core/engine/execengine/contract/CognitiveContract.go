@@ -1437,7 +1437,10 @@ func (cc *CognitiveContract) CanExecute() bool {
 	if v_contract_state == constdef.ContractState[constdef.Contract_Completed] || v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
 		logs.Warning("ContractState is Completed or Discarded, contract can't execute!")
 		//此时强制更新扫描表合约执行状态，防止再次被扫描加载
-
+		err := common.UpdateMonitorDeal(cc.GetContractId(), cc.GetId())
+		if err != nil {
+			logs.Error("Contract Completed or Discarded, Update Task Monitor fail[" + err.Error() + "]")
+		}
 		v_bool = false
 		return v_bool
 	}
