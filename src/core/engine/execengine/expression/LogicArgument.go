@@ -1,6 +1,7 @@
 package expression
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego/logs"
 	"strconv"
 	"unicontract/src/core/engine/common"
@@ -53,6 +54,25 @@ func (la *LogicArgument) ToString() string {
 	return la.GetCname() + ":" + strconv.Itoa(la.GetLogicValue())
 }
 
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (la *LogicArgument) RunningToStatic() {
+	la.Function.RunningToStatic()
+	logicValue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
+	if ok {
+		la.LogicValue, _ = logicValue_property.GetValue().(int)
+	}
+}
+
+func (la *LogicArgument) Serialize() (string, error) {
+	la.RunningToStatic()
+	if s_model, err := json.Marshal(la); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Expression fail[" + err.Error() + "]")
+		return "", err
+	}
+}
+
 //===============运行态=====================
 func (la *LogicArgument) InitLogicArgument() error {
 	var err error = nil
@@ -70,13 +90,13 @@ func (la *LogicArgument) InitLogicArgument() error {
 //====属性Get方法
 func (la *LogicArgument) GetLogicValue() int {
 	la.Eval()
-	loggicvalue_property,ok := la.PropertyTable[_LogicValue].(property.PropertyT)
-	if !ok{
+	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}
-	n,ok:=loggicvalue_property.GetValue().(int)
-	if !ok{
+	n, ok := loggicvalue_property.GetValue().(int)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}
@@ -89,14 +109,14 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 		logs.Warning("[Param]p_int is nil，Check it!")
 		return
 	}
-	ok:=false
-	la.LogicValue,ok = p_int.(int)
-	if !ok{
+	ok := false
+	la.LogicValue, ok = p_int.(int)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}
-	loggicvalue_property,ok := la.PropertyTable[_LogicValue].(property.PropertyT)
-	if !ok{
+	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}
@@ -105,13 +125,13 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 }
 
 func (la *LogicArgument) Eval() int {
-	expression_property,ok := la.PropertyTable[_ExpressionStr].(property.PropertyT)
-	if !ok{
+	expression_property, ok := la.PropertyTable[_ExpressionStr].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}
-	v_expression,ok := expression_property.GetValue().(string)
-	if !ok{
+	v_expression, ok := expression_property.GetValue().(string)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}
@@ -121,8 +141,8 @@ func (la *LogicArgument) Eval() int {
 		return la.LogicValue
 	}
 	var v_value int = 0
-	b,ok:=r_flag.(bool)
-	if !ok{
+	b, ok := r_flag.(bool)
+	if !ok {
 		logs.Error("assert error")
 		return 0
 	}

@@ -728,7 +728,7 @@ func loadData(p_contract *contract.CognitiveContract, m_data interface{}, p_task
 		p_contract.AddComponent(p_data)
 	}
 	r_buf.WriteString("[Cname]: " + map_data["Cname"].(string) + "[Ctype]: " + map_data["Ctype"].(string) + "[Result]: loadData success;")
-	logs.Info(r_buf.String())
+	//logs.Info(r_buf.String())
 	return err
 }
 
@@ -827,7 +827,7 @@ func loadExpression(p_contract *contract.CognitiveContract, p_expression interfa
 		p_contract.AddComponent(object_expression)
 	}
 	r_buf.WriteString("[Cname]: " + map_expression["Cname"].(string) + "[Ctype]: " + map_expression["Ctype"].(string) + "[Result]: loadExpression success;")
-	logs.Info(r_buf.String())
+	//logs.Info(r_buf.String())
 	return err
 }
 

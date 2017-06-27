@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"time"
@@ -51,6 +52,24 @@ func (dd DateData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (dd *DateData) RunningToStatic() {
+	dd.GeneralData.RunningToStatic()
+	format_property, ok := dd.PropertyTable[_Format].(property.PropertyT)
+	if ok {
+		dd.Format, _ = format_property.GetValue().(string)
+	}
+}
+
+func (dd *DateData) Serialize() (string, error) {
+	dd.RunningToStatic()
+	if s_model, err := json.Marshal(dd); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Date Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (dd *DateData) InitDateData() error {

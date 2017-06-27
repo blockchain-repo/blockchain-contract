@@ -2,6 +2,7 @@ package component
 
 import (
 	"bytes"
+	"encoding/json"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -81,6 +82,40 @@ func (nc *GeneralComponent) ToString() string {
 		str_res.WriteString(", " + v_key + ":" + v_value)
 	}
 	return str_res.String()
+}
+
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (gc *GeneralComponent) RunningToStatic() {
+	cname_property, ok := gc.PropertyTable[_Cname].(property.PropertyT)
+	if ok {
+		gc.Cname, _ = cname_property.GetValue().(string)
+	}
+	ctype_property, ok := gc.PropertyTable[_Ctype].(property.PropertyT)
+	if ok {
+		gc.Ctype, _ = ctype_property.GetValue().(string)
+	}
+	caption_property, ok := gc.PropertyTable[_Caption].(property.PropertyT)
+	if ok {
+		gc.Caption, _ = caption_property.GetValue().(string)
+	}
+	description_property, ok := gc.PropertyTable[_Description].(property.PropertyT)
+	if ok {
+		gc.Description, _ = description_property.GetValue().(string)
+	}
+	metaAttribute_property, ok := gc.PropertyTable[_MetaAttribute].(property.PropertyT)
+	if ok {
+		gc.MetaAttribute, _ = metaAttribute_property.GetValue().(map[string]string)
+	}
+}
+
+func (gc *GeneralComponent) Serialize() (string, error) {
+	gc.RunningToStatic()
+	if s_model, err := json.Marshal(gc); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Matrix Data fail[" + err.Error() + "]")
+		return "", err
+	}
 }
 
 //===============运行态=====================

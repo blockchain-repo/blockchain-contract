@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -46,6 +47,20 @@ func (ad ArrayData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (ad *ArrayData) RunningToStatic() {
+	ad.GeneralData.RunningToStatic()
+}
+
+func (ad *ArrayData) Serialize() (string, error) {
+	ad.RunningToStatic()
+	if s_model, err := json.Marshal(ad); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Matrix Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (ad *ArrayData) InitArrayData() error {

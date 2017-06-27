@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/logs"
 	"strconv"
@@ -107,6 +108,73 @@ func (gd GeneralData) CleanValueInProcess() {
 func (gd *GeneralData) ToString() interface{} {
 	value_property := gd.PropertyTable[_Value].(property.PropertyT)
 	return value_property.GetValue()
+}
+
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (gd *GeneralData) RunningToStatic() {
+	cname_property, ok := gd.PropertyTable["Cname"].(property.PropertyT)
+	if ok {
+		gd.Cname, _ = cname_property.GetValue().(string)
+	}
+	ctype_property, ok := gd.PropertyTable["Ctype"].(property.PropertyT)
+	if ok {
+		gd.Ctype, _ = ctype_property.GetValue().(string)
+	}
+	caption_property, ok := gd.PropertyTable["Caption"].(property.PropertyT)
+	if ok {
+		gd.Caption, _ = caption_property.GetValue().(string)
+	}
+	description_property, ok := gd.PropertyTable["Description"].(property.PropertyT)
+	if ok {
+		gd.Description, _ = description_property.GetValue().(string)
+	}
+	metaAttribute_property, ok := gd.PropertyTable["MetaAttribute"].(property.PropertyT)
+	if ok {
+		gd.MetaAttribute, _ = metaAttribute_property.GetValue().(map[string]string)
+	}
+
+	value_property, ok := gd.PropertyTable[_Value].(property.PropertyT)
+	if ok {
+		gd.Value = value_property.GetValue()
+	}
+	defaultValue_property, ok := gd.PropertyTable[_DefaultValue].(property.PropertyT)
+	if ok {
+		gd.DefaultValue = defaultValue_property.GetValue()
+	}
+	unit_property, ok := gd.PropertyTable[_Unit].(property.PropertyT)
+	if ok {
+		gd.Unit, _ = unit_property.GetValue().(string)
+	}
+	modifyDate_property, ok := gd.PropertyTable[_ModifyDate].(property.PropertyT)
+	if ok {
+		gd.ModifyDate, _ = modifyDate_property.GetValue().(string)
+	}
+	hardConvType_property, ok := gd.PropertyTable[_HardConvType].(property.PropertyT)
+	if ok {
+		gd.HardConvType, _ = hardConvType_property.GetValue().(string)
+	}
+	mandatory_property, ok := gd.PropertyTable[_Mandatory].(property.PropertyT)
+	if ok {
+		gd.Mandatory, _ = mandatory_property.GetValue().(bool)
+	}
+	ctegory_property, ok := gd.PropertyTable[_Category].(property.PropertyT)
+	if ok {
+		gd.Category, _ = ctegory_property.GetValue().([]string)
+	}
+	options_property, ok := gd.PropertyTable[_Options].(property.PropertyT)
+	if ok {
+		gd.Options, _ = options_property.GetValue().(map[string]int)
+	}
+}
+
+func (gd *GeneralData) Serialize() (string, error) {
+	gd.RunningToStatic()
+	if s_model, err := json.Marshal(gd); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Data Serialize fail[" + err.Error() + "]")
+		return "", err
+	}
 }
 
 //===============运行态=====================

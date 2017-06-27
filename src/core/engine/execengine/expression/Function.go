@@ -1,6 +1,7 @@
 package expression
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -41,6 +42,21 @@ func (f Function) CleanValueInProcess() {
 //===============描述态=====================
 func (f *Function) ToString() string {
 	return f.GetCname()
+}
+
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (f *Function) RunningToStatic() {
+	f.GeneralExpression.RunningToStatic()
+}
+
+func (f *Function) Serialize() (string, error) {
+	f.RunningToStatic()
+	if s_model, err := json.Marshal(f); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Expression fail[" + err.Error() + "]")
+		return "", err
+	}
 }
 
 //===============运行态=====================

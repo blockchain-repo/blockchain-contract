@@ -59,7 +59,7 @@ var fMoney float64
 
 var mapEnergy map[string]float64
 
-func init() {
+func __init() {
 	mapMeterRemainMoney = make(map[string]float64)
 	mapEnergy = make(map[string]float64)
 

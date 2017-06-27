@@ -5,6 +5,7 @@ import (
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
 
+	"encoding/json"
 	"github.com/astaxie/beego/logs"
 )
 
@@ -84,6 +85,20 @@ func (gc OperateResultData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (td *OperateResultData) RunningToStatic() {
+	td.GeneralData.RunningToStatic()
+}
+
+func (td *OperateResultData) Serialize() (string, error) {
+	td.RunningToStatic()
+	if s_model, err := json.Marshal(td); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract OperateResultData Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (td *OperateResultData) InitOperateResultData() error {

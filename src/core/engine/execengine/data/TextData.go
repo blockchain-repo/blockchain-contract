@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"strings"
@@ -12,8 +13,8 @@ import (
 
 type TextData struct {
 	GeneralData
-	ValueString        int `json:"ValueString"`
-	DefaultValueString int `json:"DefaultValueString"`
+	ValueString        string `json:"ValueString"`
+	DefaultValueString string `json:"DefaultValueString"`
 }
 
 const (
@@ -53,6 +54,28 @@ func (td TextData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (td *TextData) RunningToStatic() {
+	td.GeneralData.RunningToStatic()
+	valueString_property, ok := td.PropertyTable[_ValueString].(property.PropertyT)
+	if ok {
+		td.ValueString, _ = valueString_property.GetValue().(string)
+	}
+	defaultValueString_property, ok := td.PropertyTable[_DefaultValueString].(property.PropertyT)
+	if ok {
+		td.DefaultValueString, _ = defaultValueString_property.GetValue().(string)
+	}
+}
+
+func (td *TextData) Serialize() (string, error) {
+	td.RunningToStatic()
+	if s_model, err := json.Marshal(td); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Text Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (td *TextData) InitTextData() error {
@@ -90,7 +113,7 @@ func (td *TextData) GetDefaultValueString() interface{} {
 //=====Setter方法
 func (td *TextData) SetValueString(p_ValueString interface{}) {
 	if p_ValueString != nil {
-		td.ValueString = p_ValueString.(int)
+		td.ValueString = p_ValueString.(string)
 		value_property := td.PropertyTable[_ValueString].(property.PropertyT)
 		value_property.SetValue(p_ValueString)
 		td.PropertyTable[_ValueString] = value_property
@@ -99,7 +122,7 @@ func (td *TextData) SetValueString(p_ValueString interface{}) {
 
 func (td *TextData) SetDefaultValueString(p_DefaultValueString interface{}) {
 	if p_DefaultValueString != nil {
-		td.DefaultValueString = p_DefaultValueString.(int)
+		td.DefaultValueString = p_DefaultValueString.(string)
 		defaultvalue_property := td.PropertyTable[_DefaultValueString].(property.PropertyT)
 		defaultvalue_property.SetValue(p_DefaultValueString)
 		td.PropertyTable[_DefaultValueString] = defaultvalue_property

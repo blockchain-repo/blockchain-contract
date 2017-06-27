@@ -239,68 +239,79 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	gt.TaskExecuteIdx = gt.GetTaskExecuteIdx()
 	// Data组件信息 更新到描述态
 	var new_data_array []interface{} = make([]interface{}, len(gt.DataList))
-	for v_idx, v_data := range gt.DataList {
-		if v_data == nil {
+	for v_idx, _ := range gt.DataList {
+		if gt.DataList[v_idx] == nil {
 			err = fmt.Errorf("gt.DataList has nil data!")
 			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
-		v_data_map := v_data.(map[string]interface{})
+		v_data_map := gt.DataList[v_idx].(map[string]interface{})
 		new_data := gt.GetContract().GetData(v_data_map["Cname"].(string))
-		new_data_array[v_idx] = new_data
+
+		data_json, _ := new_data.(inf.IData).Serialize()
+		new_data_array[v_idx] = common.Deserialize(data_json)
 	}
 	gt.DataList = new_data_array
 
 	//Expression组件(DataValueSetterExpressionList)信息 更新到描述态
 	var new_expression_array []interface{} = make([]interface{}, len(gt.DataValueSetterExpressionList))
-	for v_idx, v_expression := range gt.DataValueSetterExpressionList {
-		if v_expression == nil {
+	for v_idx, _ := range gt.DataValueSetterExpressionList {
+		if gt.DataValueSetterExpressionList[v_idx] == nil {
 			err = fmt.Errorf("gt.DataValueSetterExpressionList has nil data!")
 			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
-		v_expression_map := v_expression.(map[string]interface{})
+		v_expression_map := gt.DataValueSetterExpressionList[v_idx].(map[string]interface{})
 		new_expression := gt.GetContract().GetExpression(v_expression_map["Cname"].(string))
-		new_expression_array[v_idx] = new_expression
+
+		expression_json, _ := new_expression.(inf.IExpression).Serialize()
+		new_expression_array[v_idx] = common.Deserialize(expression_json)
 	}
 	gt.DataValueSetterExpressionList = new_expression_array
 	//Expression组件(PreCondition)信息 更新到描述态
 	var new_pre_array []interface{} = make([]interface{}, len(gt.PreCondition))
-	for v_idx, v_pre := range gt.PreCondition {
-		if v_pre == nil {
+	for v_idx, _ := range gt.PreCondition {
+		if gt.PreCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.PreCondition has nil data!")
 			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
-		v_pre_map := v_pre.(map[string]interface{})
+		v_pre_map := gt.PreCondition[v_idx].(map[string]interface{})
 		new_pre := gt.GetContract().GetExpression(v_pre_map["Cname"].(string))
-		new_pre_array[v_idx] = new_pre
+
+		expression_json, _ := new_pre.(inf.IExpression).Serialize()
+		new_pre_array[v_idx] = common.Deserialize(expression_json)
+
 	}
 	gt.PreCondition = new_pre_array
 	//Expression组件(CompleteCondition)信息 更新到描述态
 	var new_complete_array []interface{} = make([]interface{}, len(gt.CompleteCondition))
-	for v_idx, v_complete := range gt.CompleteCondition {
-		if v_complete == nil {
+	for v_idx, _ := range gt.CompleteCondition {
+		if gt.CompleteCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.CompleteCondition has nil data!")
 			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
-		v_complete_map := v_complete.(map[string]interface{})
+		v_complete_map := gt.CompleteCondition[v_idx].(map[string]interface{})
 		new_complete := gt.GetContract().GetExpression(v_complete_map["Cname"].(string))
-		new_complete_array[v_idx] = new_complete
+
+		expression_json, _ := new_complete.(inf.IExpression).Serialize()
+		new_complete_array[v_idx] = common.Deserialize(expression_json)
 	}
 	gt.CompleteCondition = new_complete_array
 	//Expression组件(DiscardCondition)信息 更新到描述态
 	var new_discard_array []interface{} = make([]interface{}, len(gt.DiscardCondition))
-	for v_idx, v_discard := range gt.DiscardCondition {
-		if v_discard == nil {
+	for v_idx, _ := range gt.DiscardCondition {
+		if gt.DiscardCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.DiscardCondition has nil data!")
 			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
-		v_discard_map := v_discard.(map[string]interface{})
+		v_discard_map := gt.DiscardCondition[v_idx].(map[string]interface{})
 		new_discard := gt.GetContract().GetExpression(v_discard_map["Cname"].(string))
-		new_discard_array[v_idx] = new_discard
+
+		expression_json, _ := new_discard.(inf.IExpression).Serialize()
+		new_discard_array[v_idx] = common.Deserialize(expression_json)
 	}
 	gt.DiscardCondition = new_discard_array
 	return gt, err
@@ -889,8 +900,8 @@ func (gt *GeneralTask) Start() (int8, error) {
 		// TODO 待处理，避免一般操作任务，重复执行
 		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_expression_function_A）
 		logs.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
-		for _, v_dataValueSetterExpression := range gt.GetDataValueSetterExpressionList() {
-			v_expr_object := v_dataValueSetterExpression.(inf.IExpression)
+		for v_key, _ := range gt.GetDataValueSetterExpressionList() {
+			v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
 			//1 函数识别 & 执行
 			str_name := v_expr_object.GetName()
 			str_function := v_expr_object.GetExpressionStr()
@@ -933,20 +944,14 @@ func (gt *GeneralTask) Start() (int8, error) {
 			}
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
-			logs.Info("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-			logs.Info("+v", v_result_object)
-
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
 			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
-			logs.Info("-------------------------------------------------------")
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
-			last_json, _ := gt.GetContract().Serialize()
-			logs.Error("========before update component=====", last_json)
 			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_expr_object)
 			now_json, _ := gt.GetContract().Serialize()
-			logs.Error("========after update component=====", now_json)
+			fmt.Println("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
 				_, ok := v_result_object.GetOutput().(string)
@@ -1252,13 +1257,13 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name string, p_result common.OperateResult) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	var v_data inf.IData
-	//TODO :临时处理
+	//TODO :临时处理,把DataValueSetter 和 Data的名称保持一样的规则
 	if len(p_dataList) == 0 {
 		return
 	}
-	for v_key, v_value := range p_dataList {
+	for v_key, _ := range p_dataList {
 		if strings.Contains(v_key, p_name) {
-			v_data = v_value
+			v_data = p_dataList[v_key]
 		}
 	}
 	switch gt.GetCtype() {
@@ -1266,8 +1271,8 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 		// 根据函数执行结果和分支情况决定最终的结果值
 		select_branchs := gt.GetSelectBranches()
 		if len(select_branchs) != 0 {
-			for _, select_expression := range select_branchs {
-				select_object := select_expression
+			for v_idx, _ := range select_branchs {
+				select_object := select_branchs[v_idx]
 				select_value, select_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], select_object.GetBranchExpressionStr())
 				if select_err != nil {
 					r_buf.WriteString("[Result]: ConsistentValue fail;")
@@ -1284,6 +1289,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 			}
 		} else {
 			v_data.SetValue(p_result.GetData())
+
 		}
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Action]:
 		v_data.SetValue(p_result.GetData())

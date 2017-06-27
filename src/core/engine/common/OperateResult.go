@@ -53,7 +53,7 @@ func (or *OperateResult) ToString() string {
 	r_buf.WriteString(": [Code]: " + strconv.Itoa(or.Code))
 	r_buf.WriteString(", [Message]: " + or.Message)
 	r_buf.WriteString(", [Data]: ")
-	str,_:=or.Data.(string)
+	str, _ := or.Data.(string)
 	r_buf.WriteString(str)
 	return r_buf.String()
 }

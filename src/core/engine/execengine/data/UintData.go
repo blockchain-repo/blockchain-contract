@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego/logs"
@@ -14,8 +15,8 @@ import (
 //支持int中的各种类型uint8, uint16, uint32, uint64; 不可直接用unit
 type UintData struct {
 	GeneralData
-	ValueUint        int     `json:"ValueUint"`
-	DefaultValueUint int     `json:"DefaultValueUint"`
+	ValueUint        uint    `json:"ValueUint"`
+	DefaultValueUint uint    `json:"DefaultValueUint"`
 	DataRangeUint    [2]uint `json:"DataRangeUint"`
 }
 
@@ -62,6 +63,32 @@ func (ud UintData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (ud *UintData) RunningToStatic() {
+	ud.GeneralData.RunningToStatic()
+	valueUint_property, ok := ud.PropertyTable[_ValueUint].(property.PropertyT)
+	if ok {
+		ud.ValueUint, _ = valueUint_property.GetValue().(uint)
+	}
+	defaultValueUint_property, ok := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+	if ok {
+		ud.DefaultValueUint, _ = defaultValueUint_property.GetValue().(uint)
+	}
+	dtaRangeUint_property, ok := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+	if ok {
+		ud.DataRangeUint, _ = dtaRangeUint_property.GetValue().([2]uint)
+	}
+}
+
+func (ud *UintData) Serialize() (string, error) {
+	ud.RunningToStatic()
+	if s_model, err := json.Marshal(ud); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Uint Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (ud *UintData) InitUintData() error {
@@ -135,7 +162,7 @@ func (ud *UintData) SetDataRangeUint(data_range [2]uint) error {
 }
 func (ud *UintData) SetValueUint(p_ValueUint interface{}) {
 	if p_ValueUint != nil {
-		ud.ValueUint = p_ValueUint.(int)
+		ud.ValueUint = p_ValueUint.(uint)
 		value_property := ud.PropertyTable[_ValueUint].(property.PropertyT)
 		value_property.SetValue(p_ValueUint)
 		ud.PropertyTable[_ValueUint] = value_property
@@ -144,7 +171,7 @@ func (ud *UintData) SetValueUint(p_ValueUint interface{}) {
 
 func (ud *UintData) SetDefaultValueUint(p_DefaultValueUint interface{}) {
 	if p_DefaultValueUint != nil {
-		ud.DefaultValueUint = p_DefaultValueUint.(int)
+		ud.DefaultValueUint = p_DefaultValueUint.(uint)
 		defaultvalue_property := ud.PropertyTable[_DefaultValueUint].(property.PropertyT)
 		defaultvalue_property.SetValue(p_DefaultValueUint)
 		ud.PropertyTable[_DefaultValueUint] = defaultvalue_property

@@ -540,8 +540,6 @@ func (cc *CognitiveContract) UpdateContractState(p_state string) bool {
 		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
 	case constdef.ContractState[constdef.Contract_Create]:
 		cc.SetContractState(constdef.ContractState[constdef.Contract_In_Process])
-		//case constdef.ContractState[constdef.Contract_In_Process]:
-		//	cc.SetContractState(constdef.ContractState[constdef.Contract_Completed])
 	}
 	return v_bool
 }
@@ -1560,7 +1558,8 @@ func (cc *CognitiveContract) SetOrgTaskInfo(p_relation_map map[string]interface{
 //      p_name      string       名称
 //      p_component interface{}  组件
 func (cc *CognitiveContract) UpdateComponentRunningState(p_ctype string, p_name string, p_component interface{}) error {
-	err := cc.ComponentTable.UpdateComponent(p_ctype, p_name, p_component)
+	componentTable, err := cc.ComponentTable.UpdateComponent(p_ctype, p_name, p_component)
+	cc.ComponentTable = componentTable
 	if err != nil {
 		logs.Error("UpdateComponentRunningState fail, Ctype: " + p_ctype + ", Name: " + p_name)
 	}

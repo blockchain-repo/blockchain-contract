@@ -1,6 +1,7 @@
 package expression
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/common"
@@ -41,13 +42,13 @@ func (ge GeneralExpression) GetCtype() string {
 	if ge.PropertyTable["_Ctype"] == nil {
 		return ""
 	}
-	ctype_property,ok := ge.PropertyTable["_Ctype"].(property.PropertyT)
-	if !ok{
+	ctype_property, ok := ge.PropertyTable["_Ctype"].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
-	str,ok:=ctype_property.GetValue().(string)
-	if !ok{
+	str, ok := ctype_property.GetValue().(string)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
@@ -55,14 +56,14 @@ func (ge GeneralExpression) GetCtype() string {
 }
 
 func (ge GeneralExpression) SetExpressionResult(p_expresult interface{}) {
-	ok:=false
-	ge.ExpressionResult,ok = p_expresult.(common.OperateResult)
-	if !ok{
+	ok := false
+	ge.ExpressionResult, ok = p_expresult.(common.OperateResult)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}
-	result_property,ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
-	if !ok{
+	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}
@@ -71,12 +72,54 @@ func (ge GeneralExpression) SetExpressionResult(p_expresult interface{}) {
 }
 
 func (ge GeneralExpression) CleanValueInProcess() {
-	ge.SetExpressionResult(common.NewOperateResult())
+	ge.SetExpressionResult(common.OperateResult{Code: 0, Message: "", Data: "", Output: ""})
 }
 
 //===============描述态=====================
 func (ge *GeneralExpression) ToString() string {
 	return ge.GetCname() + ": " + ge.GetExpressionStr()
+}
+
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (ge *GeneralExpression) RunningToStatic() {
+	cname_property, ok := ge.PropertyTable["Cname"].(property.PropertyT)
+	if ok {
+		ge.Cname, _ = cname_property.GetValue().(string)
+	}
+	ctype_property, ok := ge.PropertyTable["Ctype"].(property.PropertyT)
+	if ok {
+		ge.Ctype, _ = ctype_property.GetValue().(string)
+	}
+	caption_property, ok := ge.PropertyTable["Caption"].(property.PropertyT)
+	if ok {
+		ge.Caption, _ = caption_property.GetValue().(string)
+	}
+	description_property, ok := ge.PropertyTable["Description"].(property.PropertyT)
+	if ok {
+		ge.Description, _ = description_property.GetValue().(string)
+	}
+	metaAttribute_property, ok := ge.PropertyTable["MetaAttribute"].(property.PropertyT)
+	if ok {
+		ge.MetaAttribute, _ = metaAttribute_property.GetValue().(map[string]string)
+	}
+	expressionStr_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
+	if ok {
+		ge.ExpressionStr, _ = expressionStr_property.GetValue().(string)
+	}
+	expressionResult_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
+	if ok {
+		ge.ExpressionResult, _ = expressionResult_property.GetValue().(common.OperateResult)
+	}
+}
+
+func (ge *GeneralExpression) Serialize() (string, error) {
+	ge.RunningToStatic()
+	if s_model, err := json.Marshal(ge); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Expression Serialize fail[" + err.Error() + "]")
+		return "", err
+	}
 }
 
 //===============运行态=====================
@@ -101,13 +144,13 @@ func (ge *GeneralExpression) InitExpression() error {
 
 //====属性Get方法
 func (ge *GeneralExpression) GetExpressionStr() string {
-	express_property,ok:= ge.PropertyTable[_ExpressionStr].(property.PropertyT)
-	if !ok{
+	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
-	str,ok:=express_property.GetValue().(string)
-	if !ok{
+	str, ok := express_property.GetValue().(string)
+	if !ok {
 		logs.Error("assert error")
 		return ""
 	}
@@ -116,13 +159,13 @@ func (ge *GeneralExpression) GetExpressionStr() string {
 
 func (ge *GeneralExpression) GetExpressionResult() common.OperateResult {
 	var result common.OperateResult
-	result_property,ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
-	if !ok{
+	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return result
 	}
-	result,ok=result_property.GetValue().(common.OperateResult)
-	if !ok{
+	result, ok = result_property.GetValue().(common.OperateResult)
+	if !ok {
 		logs.Error("assert error")
 	}
 	return result
@@ -131,8 +174,8 @@ func (ge *GeneralExpression) GetExpressionResult() common.OperateResult {
 //====Set方法
 func (ge *GeneralExpression) SetExpressionStr(p_expression string) {
 	ge.ExpressionStr = p_expression
-	express_property,ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
-	if !ok{
+	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
+	if !ok {
 		logs.Error("assert error")
 		return
 	}

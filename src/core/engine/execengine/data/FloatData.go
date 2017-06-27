@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/logs"
 	"math"
@@ -58,6 +59,32 @@ func (fd FloatData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (fd *FloatData) RunningToStatic() {
+	fd.GeneralData.RunningToStatic()
+	valueFloat_property, ok := fd.PropertyTable[_ValueFloat].(property.PropertyT)
+	if ok {
+		fd.ValueFloat, _ = valueFloat_property.GetValue().(float64)
+	}
+	defaultValueFloat_property, ok := fd.PropertyTable[_DefaultValueFloat].(property.PropertyT)
+	if ok {
+		fd.DefaultValueFloat, _ = defaultValueFloat_property.GetValue().(float64)
+	}
+	dataRangeFloat_property, ok := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
+	if ok {
+		fd.DataRangeFloat, _ = dataRangeFloat_property.GetValue().([2]float64)
+	}
+}
+
+func (fd *FloatData) Serialize() (string, error) {
+	fd.RunningToStatic()
+	if s_model, err := json.Marshal(fd); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Float Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (fd *FloatData) InitFloatData() error {

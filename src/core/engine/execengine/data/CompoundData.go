@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -50,6 +51,20 @@ func (cd CompoundData) CleanValueInProcess() {
 }
 
 //====================描述态==========================
+//序列化： 需要将运行态结构 序列化到 描述态中
+func (cd *CompoundData) RunningToStatic() {
+	cd.GeneralData.RunningToStatic()
+}
+
+func (cd *CompoundData) Serialize() (string, error) {
+	cd.RunningToStatic()
+	if s_model, err := json.Marshal(cd); err == nil {
+		return string(s_model), err
+	} else {
+		logs.Error("Contract Matrix Data fail[" + err.Error() + "]")
+		return "", err
+	}
+}
 
 //====================运行态==========================
 func (cd *CompoundData) InitCompoundData() error {
