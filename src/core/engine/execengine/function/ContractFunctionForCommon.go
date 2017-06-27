@@ -184,6 +184,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var contractStr string = args[3].(string)
 	contractStr = strings.TrimLeft(contractStr, "\"")
 	contractStr = strings.TrimRight(contractStr, "\"")
+	contractStr = strings.TrimLeft(contractStr, "\"")
 	var contractId string = args[4].(string)
 	contractId = strings.Replace(contractId, "\"", "", -1)
 	contractId = strings.Trim(contractId, " ")
