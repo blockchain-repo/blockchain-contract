@@ -298,15 +298,14 @@ func (c *ContractController) Create() {
 		Version: 1,
 	}
 	//TODO 额外验证 合约基本字段、owners、component为空
-	//contractHead := contractModel.ContractHead
-	//contractBody := contractModel.ContractBody
-	//components := contractModel.ContractBody.ContractComponents
-	//if contractHead == nil || contractBody == nil || contractBody.ContractOwners == nil || components == nil {
-	//	c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过!")
-	//	logs.Debug("API[Create] token is", token)
-	//	monitor.Monitor.Count("request_fail", 1)
-	//	return
-	//}
+	contractHead := contractModel.ContractHead
+	contractBody := contractModel.ContractBody
+	if contractHead == nil || contractBody == nil {
+		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过, Head or Body is blank!")
+		logs.Debug("API[Create] token is", token)
+		monitor.Monitor.Count("request_fail", 1)
+		return
+	}
 
 	contractValid := contractModel.Validate()
 	if !contractValid {
@@ -726,7 +725,12 @@ func (c *ContractController) PressTest() {
 	contractModel.ContractBody.StartTime = startTime
 	contractModel.ContractBody.EndTime = endTime
 
-
+	// lost head lead to nil pointer
+	if contractModel.ContractHead == nil {
+		contractModel.ContractHead = &protos.ContractHead{
+			Version: 1,
+		}
+	}
 	contractOwnersLen := 1
 	// 生成的合约签名人个数
 	contractSignaturesLen := contractOwnersLen

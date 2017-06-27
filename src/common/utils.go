@@ -44,7 +44,16 @@ func GenSpecialTimestamp(fullTimeStr string) (string, error) {
 	return strconv.FormatInt(unix_time, 10), nil
 }
 
-func GenSpecialTimestampAfterSeconds(fullTimeStr string, seconds int64) (string, error) {
+func GenSpecialTimestampAfterSeconds(timestamp string, seconds int64) (string, error) {
+	timestampInt64, err := strconv.ParseInt(timestamp, 10, 64)
+	if err != nil {
+		return timestamp, err
+	}
+	unix_time := timestampInt64 + seconds*1000
+	return strconv.FormatInt(unix_time, 10), nil
+}
+
+func GenSpecialTimestampAfterSecondsWithFullTimeStr(fullTimeStr string, seconds int64) (string, error) {
 	local, err := time.LoadLocation("Local")
 	if err != nil {
 		fmt.Println(err)
