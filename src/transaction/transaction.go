@@ -224,7 +224,7 @@ func GetAsset(ownerbefore string) model.Asset {
 	asset := model.Asset{}
 	//TODO  get asset
 	//asset.Id = common.GenerateUUID()
-	asset.Id = "f3c71d28-861e-4cf3-8907-48c713d3677e"
+	asset.Id = "20170628150000"
 	data := make(map[string]string)
 	data["money"] = "RMB"
 	asset.Data = data
