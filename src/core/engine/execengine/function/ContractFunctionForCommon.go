@@ -150,6 +150,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		ownerBefore = args[0].(string)
 	}
 	ownerBefore = strings.Replace(ownerBefore, "\"", "", -1)
+	ownerBefore = strings.Trim(ownerBefore, " ")
 	var recipientsStr string = ""
 	switch args[1].(type) {
 	case reflect.Value:
@@ -158,6 +159,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		recipientsStr = args[1].(string)
 	}
 	recipientsStr = strings.Replace(recipientsStr, "\"", "", -1)
+	recipientsStr = strings.Trim(recipientsStr, " ")
 	var money_amount string = ""
 	switch args[2].(type) {
 	case reflect.Value:
@@ -166,6 +168,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		money_amount = args[2].(string)
 	}
 	money_amount = strings.Replace(money_amount, "\"", "", -1)
+	money_amount = strings.Trim(money_amount, " ")
 	var recipients [][2]interface{} = [][2]interface{}{}
 	//s := strings.Split(recipientsStr, "&")
 	//fmt.Println(s, len(s))
@@ -183,13 +186,17 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	contractStr = strings.TrimRight(contractStr, "\"")
 	var contractId string = args[4].(string)
 	contractId = strings.Replace(contractId, "\"", "", -1)
+	contractId = strings.Trim(contractId, " ")
 	var taskId string = args[5].(string)
 	taskId = strings.Replace(taskId, "\"", "", -1)
+	taskId = strings.Trim(taskId, " ")
 	var str_taskIndex string = args[6].(string)
 	str_taskIndex = strings.Replace(str_taskIndex, "\"", "", -1)
+	str_taskIndex = strings.Trim(str_taskIndex, " ")
 	taskIndex, _ := strconv.Atoi(str_taskIndex)
 	var mainPubkey string = args[7].(string)
 	mainPubkey = strings.Replace(mainPubkey, "\"", "", -1)
+	mainPubkey = strings.Trim(mainPubkey, " ")
 	logs.Error("======Param:=========")
 	logs.Error(ownerBefore)
 	logs.Error(recipientsStr)
