@@ -199,6 +199,9 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		do freeze
 	*/
 	mykey := config.Config.Keypair.PublicKey
+	logs.Info("==MinPubkey: ", mainPubkey)
+	logs.Info("==mykey: ", mykey)
+	logs.Info("==equals: ", mainPubkey == mykey)
 	//check main pubkey
 	if mainPubkey == mykey {
 		//if mainNode, do freeze;
