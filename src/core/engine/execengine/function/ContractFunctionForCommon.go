@@ -149,6 +149,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	case string:
 		ownerBefore = args[0].(string)
 	}
+	ownerBefore = strings.Replace(ownerBefore, "\"", "", -1)
 	var recipientsStr string = ""
 	switch args[1].(type) {
 	case reflect.Value:
@@ -156,6 +157,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	case string:
 		recipientsStr = args[1].(string)
 	}
+	recipientsStr = strings.Replace(recipientsStr, "\"", "", -1)
 	var money_amount string = ""
 	switch args[2].(type) {
 	case reflect.Value:
@@ -163,6 +165,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	case string:
 		money_amount = args[2].(string)
 	}
+	money_amount = strings.Replace(money_amount, "\"", "", -1)
 	var recipients [][2]interface{} = [][2]interface{}{}
 	//s := strings.Split(recipientsStr, "&")
 	//fmt.Println(s, len(s))
@@ -176,11 +179,17 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	recipients = append(recipients, [2]interface{}{recipientsStr, amount})
 	//executer provide
 	var contractStr string = args[3].(string)
+	contractStr = strings.TrimLeft(contractStr, "\"")
+	contractStr = strings.TrimRight(contractStr, "\"")
 	var contractId string = args[4].(string)
+	contractId = strings.Replace(contractId, "\"", "", -1)
 	var taskId string = args[5].(string)
+	taskId = strings.Replace(taskId, "\"", "", -1)
 	var str_taskIndex string = args[6].(string)
+	str_taskIndex = strings.Replace(str_taskIndex, "\"", "", -1)
 	taskIndex, _ := strconv.Atoi(str_taskIndex)
 	var mainPubkey string = args[7].(string)
+	mainPubkey = strings.Replace(mainPubkey, "\"", "", -1)
 	logs.Error("======Param:=========")
 	logs.Error(ownerBefore)
 	logs.Error(recipientsStr)
@@ -207,7 +216,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		//if mainNode, do freeze;
 		logs.Info("mainPubkey ")
 		var reciForFre [][2]interface{} = [][2]interface{}{
-			[2]interface{}{ownerBefore, money_amount},
+			[2]interface{}{ownerBefore, amount},
 		}
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
 		//if v_err != nil {
