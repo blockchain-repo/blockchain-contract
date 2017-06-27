@@ -128,3 +128,10 @@ func Test_InsertTaskSchedules(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func Test_UpdateMonitorDeal(t *testing.T) {
+	err := UpdateMonitorDeal("170627144008249104", "bee43b640f8af8fe340a59b651bafef24156d71de650f35b6ae8f0d2f9e69e8e")
+	if err != nil {
+		t.Error(err)
+	}
+}

@@ -268,6 +268,29 @@ func UpdateMonitorSucc(strContractID string,
 }
 
 //---------------------------------------------------------------------------
+// 直接把task干死
+func UpdateMonitorDeal(strContractID string, strContractHashID string) error {
+	strNodePubkey := config.Config.Keypair.PublicKey
+	if len(strNodePubkey) == 0 ||
+		len(strContractID) == 0 ||
+		len(strContractHashID) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+		strContractHashID)
+	if err != nil {
+		return err
+	}
+
+	if len(strID) == 0 {
+		return fmt.Errorf("not find")
+	}
+
+	return rethinkdb.SetTaskScheduleOverFlag(strID)
+}
+
+//---------------------------------------------------------------------------
 // 只供头节点调用，根据公钥环为每个节点插入待执行任务
 func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 	var err error
