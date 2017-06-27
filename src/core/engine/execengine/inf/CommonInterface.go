@@ -70,6 +70,7 @@ type IData interface {
 	GetValue() interface{}
 	SetValue(interface{})
 	CleanValueInProcess()
+	Serialize() (string, error)
 }
 
 //task interface
@@ -100,4 +101,5 @@ type IExpression interface {
 	GetExpressionStr() string
 	SetExpressionResult(p_expresult interface{})
 	CleanValueInProcess()
+	Serialize() (string, error)
 }

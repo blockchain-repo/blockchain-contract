@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"reflect"
 	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/data"
 	"unicontract/src/core/engine/execengine/expression"
 	"unicontract/src/core/engine/execengine/inf"
 )
@@ -44,6 +45,14 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		}
 		r_name = ddata.GetName()
 	case inf.IData:
+		r_type = constdef.ComponentType[constdef.Component_Data]
+		ddata, ok := p_component.(inf.IData)
+		if !ok {
+			logs.Error("assert error")
+			return "", ""
+		}
+		r_name = ddata.GetName()
+	case *data.DateData:
 		r_type = constdef.ComponentType[constdef.Component_Data]
 		ddata, ok := p_component.(inf.IData)
 		if !ok {
@@ -142,13 +151,13 @@ func (ct *ComponentTable) AddComponent(p_component interface{}) {
 }
 
 func (ct *ComponentTable) GetComponent(cname string, ctype string) interface{} {
-	var g_component interface{}
 	if ctype == "" {
 		//总：map[string][]map[string]interface()
 		for _, ct_value := range ct.CompTable {
 			for _, ct_com := range ct_value {
 				if _, ok := ct_com[cname]; ok {
-					g_component = ct_com[cname]
+					g_component := ct_com[cname]
+					return g_component
 				}
 			}
 		}
@@ -160,12 +169,13 @@ func (ct *ComponentTable) GetComponent(cname string, ctype string) interface{} {
 			for _, v_comp := range v_comp_type {
 				//map[string]interface()
 				if r_res, ok := v_comp[cname]; ok {
-					g_component = r_res
+					g_component := r_res
+					return g_component
 				}
 			}
 		}
 	}
-	return g_component
+	return nil
 }
 
 func (ct *ComponentTable) GetTaskByID(cid string, ctype string) interface{} {
@@ -211,23 +221,27 @@ func (ct *ComponentTable) GetComponentByType(c_type string) []map[string]interfa
 //Args: c_type string 组件类型
 //      c_name string 组件名称
 //      c_component interface{} 组件
-func (ct *ComponentTable) UpdateComponent(c_type string, c_name string, c_component interface{}) error {
+func (ct *ComponentTable) UpdateComponent(c_type string, c_name string, c_component interface{}) (*ComponentTable, error) {
 	var err error = nil
+	if c_component == nil {
+		err = fmt.Errorf("UpdateComponent fail, param[c_component] is nil")
+		return ct, err
+	}
 	//获取ctype对应的组件数组
 	task_component_array := ct.CompTable[c_type]
 	var new_task_component_array []map[string]interface{} = make([]map[string]interface{}, len(task_component_array))
-	for v_idx, v_component_map := range task_component_array {
+	for v_idx, _ := range task_component_array {
 		//替换组件数组中对应的组件
-		for v_key, v_value := range v_component_map {
+		for v_key, v_value := range task_component_array[v_idx] {
 			if v_key == c_name {
-				v_component_map[v_key] = c_component
+				task_component_array[v_idx][v_key] = c_component
 			} else {
-				v_component_map[v_key] = v_value
+				task_component_array[v_idx][v_key] = v_value
 			}
 		}
-		new_task_component_array[v_idx] = v_component_map
+		new_task_component_array[v_idx] = task_component_array[v_idx]
 	}
 	//更新ctype对应的组件数组
 	ct.CompTable[c_type] = new_task_component_array
-	return err
+	return ct, err
 }

@@ -476,20 +476,41 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 	//识别并设置表达中的变量的值
 	v_parameters := make(map[string]interface{}, len(v_variables))
 	for _, v_param := range v_variables {
+		fmt.Println("======variable: " + v_param)
 		if ep.IsExprFunction(v_param) { //函数变量表达式
-			v_parameters[v_param], v_err = ep.ParseExprFunctionValue(v_param)
+			v_result, v_err := ep.ParseExprFunctionValue(v_param)
 			if v_err != nil {
 				logs.Warning("ParseExprFunctionValue fail(" + v_err.Error() + ")")
 				return false, v_err
 			}
+			_, ok := v_result.GetData().(string)
+			if !ok {
+				v_err = fmt.Errorf("ParseExprFunctionValue[" + v_param + "] fail!")
+				logs.Warning("ParseExprFunctionValue fail(" + v_err.Error() + ")!")
+				return false, v_err
+			}
+			v_parameters[v_param] = v_result.GetData().(string)
+			p_expression = strings.Replace(p_expression, v_param, v_result.GetData().(string), -1)
 		} else if ep.IsExprVariable(v_param) { // 变量表达式
-			v_parameters[v_param], v_err = ep.ParseExprVariableValue(v_param)
-			if v_err != nil {
+			v_result, v_err := ep.ParseExprVariableValue(v_param)
+			if v_err != nil || v_result == nil {
 				logs.Warning("ParseExprVariableValue fail(" + v_err.Error() + ")")
 				return false, v_err
 			}
+			v_parameters[v_param] = v_result
+			var str_result string = ""
+
+			switch v_result.(type) {
+			case string:
+				str_result = v_result.(string)
+			case reflect.Value:
+				str_result = v_result.(reflect.Value).String()
+			}
+			fmt.Println("=======variable: ", v_param, "  =====value: ", str_result)
+			p_expression = strings.Replace(p_expression, v_param, str_result, -1)
 		}
 	}
+	fmt.Println("====================expression 1: ", p_expression)
 	//Eval 条件表达式的值
 	v_expression, v_err := govaluate.NewEvaluableExpression(p_expression)
 	if v_err != nil {
@@ -497,7 +518,8 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 		return false, v_err
 	}
 	//Eval 表达式的值
-	v_result, v_err := v_expression.Evaluate(v_parameters)
+	//v_result, v_err := v_expression.Evaluate(v_parameters)
+	v_result, v_err := v_expression.Evaluate(nil)
 	if v_err != nil {
 		logs.Warning("expression.Evaluate fail(" + v_err.Error() + ")")
 		return false, v_err
@@ -550,18 +572,25 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	//识别第二层： property from property_table
 	var v_component_object reflect.Value = reflect.Value{}
 	var v_property_field reflect.Value = reflect.Value{}
+
 	v_component_object = reflect.ValueOf(parse_component).Elem()
-	v_property_field = v_component_object.FieldByName(v_variable_array[1])
+	fmt.Println("======component: ", v_variable_array[0], v_component_object.Kind(), "    ", v_component_object.Type(), "   ", v_component_object.Interface())
 	//两层达到时，直接返回值
 	if v_variable_count == 2 {
+		v_property_field = v_component_object.FieldByName(v_variable_array[1])
+		if !v_property_field.IsValid() {
+			v_err = fmt.Errorf("field[" + v_variable_array[1] + "] is not valid!")
+			return nil, v_err
+		}
+		fmt.Println("======field: ", v_variable_array[1], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+		fmt.Println("======field: ", v_property_field.Interface())
 		return v_property_field.Interface(), v_err
 	}
 	//识别第三层以后的：. subItem from array, map, and other
-	v_idx := 2
+	v_idx := 1
 	for v_idx < v_variable_count {
-		//fmt.Println(v_component_object.Kind(), "    ", v_component_object.Type(), "   ", v_component_object.Interface())
 		v_property_field = v_component_object.FieldByName(v_variable_array[v_idx])
-		//fmt.Println(v_property_field.Kind(), "    ", v_property_field.Type(), "   ", v_property_field.Interface())
+		fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		switch v_property_field.Kind() {
 		case reflect.Map:
 			v_idx = v_idx + 1
@@ -570,6 +599,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 			v_component_object = v_property_field.MapIndex(reflect.ValueOf(v_variable_array[v_idx]))
 			v_property_field = reflect.ValueOf(v_component_object)
+			fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		case reflect.Slice:
 			v_idx = v_idx + 1
 			if v_idx >= v_variable_count {
@@ -586,6 +616,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 				v_component_object = reflect.ValueOf(data_arr[v_arr_idx])
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
+			fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		case reflect.Array:
 			v_idx = v_idx + 1
 			if v_idx >= v_variable_count {
@@ -601,6 +632,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 				v_component_object = reflect.ValueOf(v_property_field.Interface())
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
+			fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		case reflect.Struct:
 			v_struct_property := v_property_field.Interface()
 			v_component_object = reflect.ValueOf(v_struct_property)
@@ -609,6 +641,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 		}
 		v_idx = v_idx + 1
 	}
+	fmt.Println("======field: ", v_property_field.Interface())
 	return v_property_field.Interface(), v_err
 }
 
@@ -819,12 +852,10 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	name_reg := regexp.MustCompile(`\s*([^\(]+)`)
 	func_name := strings.TrimSpace(name_reg.FindString(p_function))
 	logs.Info("func_name:", func_name)
-	fmt.Println("func_name:", func_name)
 	//正则匹配函数的参数变量
 	param_reg := regexp.MustCompile(`\((.*)\)`)
 	func_param_str := strings.Trim(param_reg.FindString(p_function), "(|)")
 	logs.Info("func_params:", func_param_str)
-	fmt.Println("func_params:", func_param_str)
 	//函数调用
 	func_run := reflect.ValueOf(ep.FunctionEngine.ContractFunctions[func_name])
 	var func_params []reflect.Value = nil

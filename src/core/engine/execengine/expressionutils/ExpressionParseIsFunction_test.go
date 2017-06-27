@@ -336,6 +336,7 @@ func Test_IsNameContract(t *testing.T) {
 	slTestRightStr := []string{
 		"contract_",
 		"contract_sss",
+		"contract_auto_electric",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsNameContract(value) {
