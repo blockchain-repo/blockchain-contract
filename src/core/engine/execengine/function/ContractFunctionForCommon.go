@@ -270,6 +270,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 
@@ -294,6 +295,7 @@ func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 
@@ -350,6 +352,7 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 
@@ -387,6 +390,7 @@ func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
 	v_result.SetOutput(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 
@@ -414,6 +418,7 @@ func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 
@@ -460,6 +465,7 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(outputStr)
+	v_result.SetOutput(outputStr)
 	return v_result, v_err
 }
 
