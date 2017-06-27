@@ -202,6 +202,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	//check main pubkey
 	if mainPubkey == mykey {
 		//if mainNode, do freeze;
+		logs.Info("mainPubkey ")
 		var reciForFre [][2]interface{} = [][2]interface{}{
 			[2]interface{}{ownerBefore, 100},
 		}
@@ -215,6 +216,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		//wait for the freeze asset write into the unichain
 		time.Sleep(time.Second * 3)
 	} else {
+		logs.Info("not mainPubkey ")
 		// not mainNode, wait for the main node write the freeze-asset into the unchain
 		time.Sleep(time.Second * 5)
 	}
