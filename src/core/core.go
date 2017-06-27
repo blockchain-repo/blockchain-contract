@@ -13,7 +13,6 @@ import (
 func WriteContract(contract model.ContractModel) bool {
 	rand.Seed(time.Now().UnixNano())
 	pubs := config.GetAllPublicKey()
-
 	contract.ContractHead.MainPubkey = pubs[rand.Intn(len(pubs))]
 	contract.ContractHead.AssignTime = common.GenTimestamp()
 	ok := r.InsertContract(contract.ToString())
