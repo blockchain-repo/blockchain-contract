@@ -29,7 +29,11 @@ func txHeadFilter(arg interface{}) interface{} {
 		return nil
 	}
 	//main node filter
-	mainNodeKey := conout.Transaction.ContractModel.ContractHead.MainPubkey
+	contractHead := conout.Transaction.ContractModel.ContractHead
+	mainNodeKey := ""
+	if contractHead != nil {
+		mainNodeKey = contractHead.MainPubkey
+	}
 	myNodeKey := config.Config.Keypair.PublicKey
 	if mainNodeKey != myNodeKey {
 		logs.Info("I am not the mainnode of the C-output %s", conout.Id)
