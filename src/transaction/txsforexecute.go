@@ -30,6 +30,7 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 	metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	asset := GetAsset(ownerbefore)
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
+	logs.Info("==after: ", contract)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {

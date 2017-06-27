@@ -182,9 +182,12 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	recipients = append(recipients, [2]interface{}{recipientsStr, amount})
 	//executer provide
 	var contractStr string = args[3].(string)
+	contractStr = strings.TrimLeft(contractStr, " ")
+	contractStr = strings.TrimRight(contractStr, " ")
 	contractStr = strings.TrimLeft(contractStr, "\"")
 	contractStr = strings.TrimRight(contractStr, "\"")
 	contractStr = strings.TrimLeft(contractStr, "\"")
+
 	var contractId string = args[4].(string)
 	contractId = strings.Replace(contractId, "\"", "", -1)
 	contractId = strings.Trim(contractId, " ")
@@ -226,7 +229,9 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		var reciForFre [][2]interface{} = [][2]interface{}{
 			[2]interface{}{ownerBefore, amount},
 		}
+		logs.Info("contractStr: ", contractStr)
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
+
 		//if v_err != nil {
 		//	logs.Error(v_err)
 		//	v_result.SetCode(400)

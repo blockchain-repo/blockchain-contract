@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"encoding/json"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/core/model"
 )
 
@@ -25,7 +26,9 @@ func GenRelationByExecStr(r string) (rela model.Relation, err error) {
 }
 
 func GenContractByExecStr(c string) (con model.ContractModel, err error) {
+	logs.Info("===c: ", c)
 	contract := model.ContractModel{}
 	err = json.Unmarshal([]byte(c), &contract)
+	logs.Info("===contract: ", contract)
 	return contract, err
 }
