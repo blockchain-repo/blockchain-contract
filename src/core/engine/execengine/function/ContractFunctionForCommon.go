@@ -182,7 +182,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	recipients = append(recipients, [2]interface{}{recipientsStr, amount})
 	//executer provide
 	var contractStr string = args[3].(string)
-	contractStr = strings.Replace(contractStr, "\\\\", "", -1)
+	contractStr = strings.Replace(contractStr, "\\\"", "\"", -1)
 	contractStr = strings.TrimLeft(contractStr, " ")
 	contractStr = strings.TrimRight(contractStr, " ")
 	contractStr = strings.TrimLeft(contractStr, "\"")
