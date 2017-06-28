@@ -705,6 +705,7 @@ func (c *ContractController) PressTest() {
 	contractIdTemp := contract.ContractBody.ContractId + "_" + time.Nanosecond.String()
 	contract.ContractBody.ContractId = contractIdTemp
 	contract.ContractBody.Caption = contractCaptionTemp
+	contract.ContractBody.ContractState = "Contract_Signature"
 
 	if err != nil {
 		c.responseJsonBodyCode(status, "", false, err.Error())

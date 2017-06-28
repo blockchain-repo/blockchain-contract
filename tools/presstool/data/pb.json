@@ -1,0 +1,646 @@
+{
+	"id": "f4e8d69cb4a5c48b0cf974e224578beb3c5e705c43891a0ab7f25295fa520182",
+	"ContractBody": {
+		"ContractId": "170627203513159645",
+		"Cname": "contract_auto_electric",
+		"Ctype": "Component_Contract",
+		"Caption": "按电表最低额度自动购电合约",
+		"Description": "智能微网电交易中，事先设计好交易模型合约；用户在客户端选择设置购电合约，设置合约参数（自动购电电表余额下限、自动购电金额额度、自动购电付款方式、自动购电合约生效期限等）；系统按照合约帮助用户完成电表余额不足时自动购电的过程。",
+		"ContractState": "Contract_Create",
+		"Creator": "F2P8cmiNbzr79QserzAh2LktZLdR6AgnNRfjQd6eMbB9",
+		"CreateTime": "1498386524000",
+		"StartTime": "1497978542000",
+		"EndTime": "1504112952000",
+		"ContractOwners": [
+			"3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+		],
+		"ContractAssets": [
+			{
+				"AssetId": "eba9535d-aa3f-4714-8e27-2e0178bae9e0",
+				"Name": "asset_electric",
+				"Caption": "",
+				"Description": "清洁能源电，包括风、光、火电",
+				"Unit": "",
+				"Amount": 0,
+				"MetaData": {}
+			}
+		],
+		"ContractSignatures": [],
+		"ContractComponents": [
+			{
+				"Cname": "task_action_sleep_G",
+				"Ctype": "Component_Task.Task_Action",
+				"Caption": "合约休眠30分钟",
+				"Description": "用户电表余额充足，合约休眠30分钟，等待下次循环判断",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_H",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：用户电表余额充足",
+						"ExpressionStr": "true",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_enquiry_ecletric_blance"
+				],
+				"DataList": [
+					{
+						"Cname": "",
+						"Ctype": "",
+						"Caption": "",
+						"Description": "",
+						"ModifyDate": "",
+						"HardConvType": "",
+						"Category": [],
+						"Parent": {
+							"Cname": "",
+							"Ctype": "",
+							"Caption": "",
+							"Description": "",
+							"ModifyDate": "",
+							"HardConvType": "",
+							"Category": [],
+							"Mandatory": false,
+							"Unit": "",
+							"Options": {},
+							"Format": "",
+							"ValueInt": 0,
+							"ValueUint": 0,
+							"ValueFloat": 0,
+							"ValueString": "",
+							"DefaultValueInt": 0,
+							"DefaultValueUint": 0,
+							"DefaultValueFloat": 0,
+							"DefaultValueString": "",
+							"DataRangeInt": [],
+							"DataRangeUint": [],
+							"DataRangeFloat": []
+						},
+						"Mandatory": false,
+						"Unit": "",
+						"Options": {},
+						"Format": "",
+						"ValueInt": 0,
+						"ValueUint": 0,
+						"ValueFloat": 0,
+						"ValueString": "",
+						"DefaultValueInt": 0,
+						"DefaultValueUint": 0,
+						"DefaultValueFloat": 0,
+						"DefaultValueString": "",
+						"DataRangeInt": [],
+						"DataRangeUint": [],
+						"DataRangeFloat": [],
+						"Value": "",
+						"DefaultValue": ""
+					}
+				],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_sleep_H",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "",
+						"ExpressionStr": "FuncAutoSleeping(10)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "237cc83a-a4ef-4340-b019-98b423f4dbcf",
+				"SelectBranches": [],
+				"MetaAttribute": {}
+			},
+			{
+				"Cname": "task_action_querybalance",
+				"Ctype": "Component_Task.Task_Action",
+				"Caption": "合约等待重新查询电表余额",
+				"Description": "获取电表余额",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_F",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：直接流转",
+						"ExpressionStr": "false",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_enquiry_ecletric_blance"
+				],
+				"DataList": [],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_F",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "等待用户充值后，再次扫描重新狗买",
+						"ExpressionStr": "FuncAutoSleeping(10)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "70ef911a-cfc1-43c1-930e-39c9b8efad2d",
+				"SelectBranches": [],
+				"MetaAttribute": {}
+			},
+			{
+				"Cname": "task_action_auto_purchase",
+				"Ctype": "Component_Task.Task_Action",
+				"Caption": "自动买电50元",
+				"Description": "用户余额充足时（余额>50），用户自动充值50元",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_E",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：用户账户余额充足，大于50元",
+						"ExpressionStr": "false",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_action_querybalance"
+				],
+				"DataList": [
+					{
+						"Cname": "data_float_expression_function_E",
+						"Ctype": "Component_Data.Data_Numeric_Float",
+						"Caption": "",
+						"Description": "用户购电充值",
+						"ModifyDate": "",
+						"HardConvType": "Data_Numeric_Float",
+						"Category": [],
+						"Parent": {
+							"Cname": "",
+							"Ctype": "",
+							"Caption": "",
+							"Description": "",
+							"ModifyDate": "",
+							"HardConvType": "",
+							"Category": [],
+							"Mandatory": false,
+							"Unit": "",
+							"Options": {},
+							"Format": "",
+							"ValueInt": 0,
+							"ValueUint": 0,
+							"ValueFloat": 0,
+							"ValueString": "",
+							"DefaultValueInt": 0,
+							"DefaultValueUint": 0,
+							"DefaultValueFloat": 0,
+							"DefaultValueString": "",
+							"DataRangeInt": [],
+							"DataRangeUint": [],
+							"DataRangeFloat": []
+						},
+						"Mandatory": false,
+						"Unit": "元",
+						"Options": {},
+						"Format": "",
+						"ValueInt": 0,
+						"ValueUint": 0,
+						"ValueFloat": 0,
+						"ValueString": "",
+						"DefaultValueInt": 0,
+						"DefaultValueUint": 0,
+						"DefaultValueFloat": 0,
+						"DefaultValueString": "",
+						"DataRangeInt": [],
+						"DataRangeUint": [],
+						"DataRangeFloat": [
+							0,
+							100000
+						],
+						"Value": "",
+						"DefaultValue": ""
+					}
+				],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_E",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "",
+						"ExpressionStr": "FuncAutoPurchasingElectricity(1,1,50)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "bb592677-99ef-4902-b416-8d8b225006e9",
+				"SelectBranches": [],
+				"MetaAttribute": {}
+			},
+			{
+				"Cname": "task_enquiry_user_balance",
+				"Ctype": "Component_Task.Task_Enquiry",
+				"Caption": "查询用户账户余额",
+				"Description": "查询指定账户剩余额度是否达到充值额度（如：50元）",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_B",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：用户电表余额小于等于10元时，需要自动充值",
+						"ExpressionStr": "false",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_action_auto_purchase",
+					"task_action_notie"
+				],
+				"DataList": [
+					{
+						"Cname": "data_float_expression_function_B",
+						"Ctype": "Component_Data.Data_Numeric_Float",
+						"Caption": "",
+						"Description": "查询结果：用户账户剩余额度",
+						"ModifyDate": "",
+						"HardConvType": "Data_Numeric_Float",
+						"Category": [],
+						"Parent": {
+							"Cname": "",
+							"Ctype": "",
+							"Caption": "",
+							"Description": "",
+							"ModifyDate": "",
+							"HardConvType": "",
+							"Category": [],
+							"Mandatory": false,
+							"Unit": "",
+							"Options": {},
+							"Format": "",
+							"ValueInt": 0,
+							"ValueUint": 0,
+							"ValueFloat": 0,
+							"ValueString": "",
+							"DefaultValueInt": 0,
+							"DefaultValueUint": 0,
+							"DefaultValueFloat": 0,
+							"DefaultValueString": "",
+							"DataRangeInt": [],
+							"DataRangeUint": [],
+							"DataRangeFloat": []
+						},
+						"Mandatory": false,
+						"Unit": "元",
+						"Options": {},
+						"Format": "",
+						"ValueInt": 0,
+						"ValueUint": 0,
+						"ValueFloat": 0,
+						"ValueString": "",
+						"DefaultValueInt": 0,
+						"DefaultValueUint": 0,
+						"DefaultValueFloat": 0,
+						"DefaultValueString": "",
+						"DataRangeInt": [],
+						"DataRangeUint": [],
+						"DataRangeFloat": [
+							0,
+							10000
+						],
+						"Value": "",
+						"DefaultValue": ""
+					}
+				],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_B",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "查询方法：获取用户账户余额",
+						"ExpressionStr": "FuncQueryAccountBalance(1)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "84a33e03-ba36-4f20-9dcb-4f2fab2745a0",
+				"SelectBranches": [
+					{
+						"BranchExpressionStr": "data_user_balance_B.Value <= 50",
+						"BranchExpressionValue": "45"
+					},
+					{
+						"BranchExpressionStr": "data_user_balance_B.Value > 50",
+						"BranchExpressionValue": "55"
+					}
+				],
+				"MetaAttribute": {}
+			},
+			{
+				"Cname": "task_action_wait_account",
+				"Ctype": "Component_Task.Task_Action",
+				"Caption": "等待用户充值",
+				"Description": "提醒账户充值后，需要等待用户账户充值",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_D",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：等待用户充值完成",
+						"ExpressionStr": "false",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_enquiry_user_balance"
+				],
+				"DataList": [],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_waitmoney",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "等待过程中，进行休眠",
+						"ExpressionStr": "FuncAutoSleeping(10)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "9f01501f-3219-4ca3-809c-0866cb8362fb",
+				"SelectBranches": [],
+				"MetaAttribute": {}
+			},
+			{
+				"Cname": "task_enquiry_ecletric_blance",
+				"Ctype": "Component_Task.Task_Enquiry",
+				"Caption": "查询用户电表余额",
+				"Description": "查询指定用户电表剩余金额",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_A",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：用户电表余额剩余指定额度（如：10元）",
+						"ExpressionStr": "true",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_enquiry_user_balance",
+					"task_action_sleep_G"
+				],
+				"DataList": [
+					{
+						"Cname": "data_float_expression_function_A",
+						"Ctype": "Component_Data.Data_Numeric_Float",
+						"Caption": "",
+						"Description": "查询结果：用户余额",
+						"ModifyDate": "",
+						"HardConvType": "Data_Numeric_Float",
+						"Category": [],
+						"Parent": {
+							"Cname": "",
+							"Ctype": "",
+							"Caption": "",
+							"Description": "",
+							"ModifyDate": "",
+							"HardConvType": "",
+							"Category": [],
+							"Mandatory": false,
+							"Unit": "",
+							"Options": {},
+							"Format": "",
+							"ValueInt": 0,
+							"ValueUint": 0,
+							"ValueFloat": 0,
+							"ValueString": "",
+							"DefaultValueInt": 0,
+							"DefaultValueUint": 0,
+							"DefaultValueFloat": 0,
+							"DefaultValueString": "",
+							"DataRangeInt": [],
+							"DataRangeUint": [],
+							"DataRangeFloat": []
+						},
+						"Mandatory": false,
+						"Unit": "元",
+						"Options": {},
+						"Format": "",
+						"ValueInt": 0,
+						"ValueUint": 0,
+						"ValueFloat": 0,
+						"ValueString": "",
+						"DefaultValueInt": 0,
+						"DefaultValueUint": 0,
+						"DefaultValueFloat": 0,
+						"DefaultValueString": "",
+						"DataRangeInt": [],
+						"DataRangeUint": [],
+						"DataRangeFloat": [
+							0,
+							10000
+						],
+						"Value": "",
+						"DefaultValue": ""
+					}
+				],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_A",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "查询动作：获取用户电表余额",
+						"ExpressionStr": "FuncQueryAmmeterBalance(1)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "37a3d808-8b1d-4e17-ad02-950241ef2518",
+				"SelectBranches": [
+					{
+						"BranchExpressionStr": "data_electric_balance_A.Value>10.0",
+						"BranchExpressionValue": "10"
+					},
+					{
+						"BranchExpressionStr": "data_electric_balance_A.Value<=10.0",
+						"BranchExpressionValue": "9"
+					}
+				],
+				"MetaAttribute": {}
+			},
+			{
+				"Cname": "task_action_notie",
+				"Ctype": "Component_Task.Task_Action",
+				"Caption": "提醒用户充值",
+				"Description": "当用户账户余额不足50元时，提醒用户充值",
+				"State": "TaskState_Dormant",
+				"PreCondition": [
+					{
+						"Cname": "expression_condition_pre_C",
+						"Ctype": "Component_Expression.Expression_Condition",
+						"Caption": "",
+						"Description": "前置条件：用户账户余额不足50元",
+						"ExpressionStr": "false",
+						"LogicValue": 0,
+						"MetaAttribute": {},
+						"ExpressionResult": null
+					}
+				],
+				"CompleteCondition": [],
+				"DiscardCondition": [],
+				"NextTasks": [
+					"task_action_wait_account"
+				],
+				"DataList": [],
+				"DataValueSetterExpressionList": [
+					{
+						"Cname": "expression_function_action_C",
+						"Ctype": "Component_Expression.Expression_Function",
+						"Caption": "",
+						"Description": "执行动作：提醒用户电费缴纳额度不足，请给账户充值。",
+						"ExpressionStr": "FuncNoticeDeposit(1,50)",
+						"ExpressionResult": {
+							"Message": "",
+							"Code": 0,
+							"Data": "",
+							"OutPut": ""
+						},
+						"LogicValue": 0,
+						"MetaAttribute": {}
+					}
+				],
+				"CandidateList": [],
+				"DecisionResult": [],
+				"TaskList": [],
+				"SupportArguments": [],
+				"AgainstArguments": [],
+				"Support": 0,
+				"Text": [],
+				"TaskExecuteIdx": 0,
+				"TaskId": "2716418b-c5e2-4103-900f-f717bd051c56",
+				"SelectBranches": [],
+				"MetaAttribute": {}
+			}
+		],
+		"MetaAttribute": {
+			"Version": "v1.0",
+			"Copyright": "uni-ledger",
+			"ElectricLowerLimit": "",
+			"AutoBuyAmount": "",
+			"NoticeWay": ""
+		},
+		"NextTasks": [
+			"task_enquiry_ecletric_blance"
+		]
+	}
+}
