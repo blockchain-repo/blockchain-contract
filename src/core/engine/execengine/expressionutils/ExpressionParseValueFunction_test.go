@@ -22,10 +22,10 @@ func Test_ParseExpressionClassify(t *testing.T) {
 		`"string"`,
 		`'string'`,
 		"2017-05-22 10:10:10",
-		"", // TODO 6.纯数组串
-		"", // TODO 7.条件表达式
-		"", // TODO 8.函数表达式
-		"", // TODO 9.变量表达式
+		"[1,2,3,4,5,6]",
+		"contract_transfer.ContractBody.ContractOwners.1 == 'true'",
+		`FuncIsConPutInUnichian(a.b.c)`,
+		"asdf.asdf.asdf",
 	}
 	for index, value := range slTestRightStr {
 		strRet := v_express_parse.ParseExpressionClassify(value)
@@ -74,7 +74,17 @@ func Test_ParseExprBoolValue(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 	slTestRightStr := []string{
 		"true",
+		"True",
+		"TRUE",
+		"1",
+		"T",
+		"t",
 		"false",
+		"False",
+		"FALSE",
+		"0",
+		"F",
+		"f",
 	}
 	for _, value := range slTestRightStr {
 		b, err := v_express_parse.ParseExprBoolValue(value)
@@ -92,6 +102,10 @@ func Test_ParseExprStringValue(t *testing.T) {
 		`"string"`,
 		`'string'`,
 		"`string`",
+		`"str ing"`,
+		`'str ing'`,
+		"`str ing`",
+		"string",
 	}
 	for _, value := range slTestRightStr {
 		strRet, err := v_express_parse.ParseExprStringValue(value)
@@ -118,10 +132,13 @@ func Test_ParseExprDateValue(t *testing.T) {
 	}
 }
 
-func Test_ParseExprArrayValue(t *testing.T) { //TODO ?
+func Test_ParseExprArrayValue(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 	slTestRightStr := []string{
-		"",
+		"[1,2,3,4,5,6]",
+		"[1a,2,3,4w,5,6]",
+		"[1 ,2, 3 ,4,  5,6  ]",
+		"[asdf.ddd,2,wwww.djdjd.jfu,4,5,6]",
 	}
 	for _, value := range slTestRightStr {
 		ret, err := v_express_parse.ParseExprArrayValue(value)
@@ -133,10 +150,14 @@ func Test_ParseExprArrayValue(t *testing.T) { //TODO ?
 	}
 }
 
-func Test_ParseExprConditionValue(t *testing.T) { //TODO ?
+func Test_ParseExprConditionValue(t *testing.T) {
+	v_function := function.NewFunctionParseEngine()
+	v_function.LoadFunctionsCommon()
 	v_express_parse := NewExpressionParseEngine()
+	v_express_parse.SetFunctionEngine(v_function)
+
 	slTestRightStr := []string{
-		"FuncGetNowDate() == '2017-06-23 17:56:00'",
+		`FuncGetNowDate() == "2017-07-03 05:26:49"`,
 	}
 	for _, value := range slTestRightStr {
 		b, err := v_express_parse.ParseExprConditionValue(value)
@@ -148,7 +169,7 @@ func Test_ParseExprConditionValue(t *testing.T) { //TODO ?
 	}
 }
 
-func Test_ParseExprFunctionValue(t *testing.T) { //TODO ?
+func Test_ParseExprFunctionValue(t *testing.T) {
 	v_function := function.NewFunctionParseEngine()
 	v_function.LoadFunctionsCommon()
 	v_express_parse := NewExpressionParseEngine()
@@ -166,7 +187,9 @@ func Test_ParseExprFunctionValue(t *testing.T) { //TODO ?
 	}
 }
 
-func Test_ParseExprVariableValue(t *testing.T) { //TODO ?
+func Test_ParseExprVariableValue(t *testing.T) {
+	// TODO 需要外部整体测试，单元测试不可以
+
 	v_express_parse := NewExpressionParseEngine()
 	slTestRightStr := []string{
 		"",
@@ -181,10 +204,11 @@ func Test_ParseExprVariableValue(t *testing.T) { //TODO ?
 	}
 }
 
-func Test_ParseVariablesInExprCondition(t *testing.T) { //TODO ?
+func Test_ParseVariablesInExprCondition(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 	slTestRightStr := []string{
-		"",
+		`FuncGetNowDate() == "2017-07-03 05:26:49"`,
+		`"FuncGetNowDate()" == "2017-07-03 05:26:49"`,
 	}
 	for _, value := range slTestRightStr {
 		ret, err := v_express_parse.ParseVariablesInExprCondition(value)

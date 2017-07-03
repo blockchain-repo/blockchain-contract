@@ -81,7 +81,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionValue(p_exprtype string, p_ex
 //常量表达式分类：
 //   1.纯数字      => 直接返回该表达式值 int64
 //   2.纯浮点数    => 直接返回该表达式值 float64
-//   3.纯bool值    => 直接返回该表达式值 bool
+//   3.纯bool值   => 直接返回该表达式值 bool
 //   4.纯字符串    => 直接返回该表达式值 string
 //   5.纯日期串    => 转化为时间戳再返回 int64
 //   6.纯数组串    => 转化为数组返回     []interface{}
@@ -90,8 +90,9 @@ func (ep *ExpressionParseEngine) EvaluateExpressionConstant(p_expression string)
 	var v_err error = nil
 
 	if p_expression == "" {
-		logs.Warning("EvaluateExpressionConstant Param[p_expression] is nil!")
-		return "", v_err
+		errMsg := "EvaluateExpressionConstant Param[p_expression] is nil!"
+		logs.Warning(errMsg)
+		return "", fmt.Errorf(errMsg)
 	}
 	var v_classify string = ep.ParseExpressionClassify(p_expression)
 	switch v_classify {
@@ -103,9 +104,9 @@ func (ep *ExpressionParseEngine) EvaluateExpressionConstant(p_expression string)
 		v_return, v_err = ep.ParseExprBoolValue(p_expression)
 	case constdef.ExpressionClassify[constdef.Expr_String]:
 		v_return, v_err = ep.ParseExprStringValue(p_expression)
-	case constdef.ExpressionClassify[constdef.Expr_Date]:
+	case constdef.ExpressionClassify[constdef.Expr_Date]: // TODO 现在返回的是字符串
 		v_return, v_err = ep.ParseExprDateValue(p_expression)
-	case constdef.ExpressionClassify[constdef.Expr_Array]:
+	case constdef.ExpressionClassify[constdef.Expr_Array]: // TODO 不只是识别纯数数组，任何数组均可
 		v_return, v_err = ep.ParseExprArrayValue(p_expression)
 	default:
 		v_return = p_expression
@@ -121,8 +122,9 @@ func (ep *ExpressionParseEngine) EvaluateExpressionVariable(p_expression string)
 	var v_err error = nil
 
 	if p_expression == "" {
-		logs.Warning("EvaluateExpressionVariable Param[p_expression] is nil!")
-		return v_return, v_err
+		errMsg := "EvaluateExpressionVariable Param[p_expression] is nil!"
+		logs.Warning(errMsg)
+		return v_return, fmt.Errorf(errMsg)
 	}
 	if ep.IsExprVariable(p_expression) {
 		v_return, v_err = ep.ParseExprVariableValue(p_expression)
@@ -145,8 +147,9 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 	var v_err error = nil
 
 	if p_expression == "" {
-		logs.Warning("EvaluateExpressionCondition Param[p_expression] is nil!")
-		return v_return, v_err
+		errMsg := "EvaluateExpressionCondition Param[p_expression] is nil!"
+		logs.Warning(errMsg)
+		return v_return, fmt.Errorf(errMsg)
 	}
 	if ep.IsExprBool(p_expression) {
 		v_return, v_err = ep.ParseExprBoolValue(p_expression)
@@ -181,8 +184,9 @@ func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string)
 	var v_return common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if p_expression == "" {
-		logs.Warning("EvaluateExpressionFunction Param[p_expression] is nil!")
-		return v_return, v_err
+		errMsg := "EvaluateExpressionFunction Param[p_expression] is nil!"
+		logs.Warning(errMsg)
+		return v_return, fmt.Errorf(errMsg)
 	}
 	if ep.IsExprFunction(p_expression) {
 		v_return, v_err = ep.ParseExprFunctionValue(p_expression)
@@ -202,7 +206,9 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCandidate(p_expression string
 	var v_return interface{} = nil
 	var v_err error = nil
 	if p_expression == "" {
-		return "", v_err
+		errMsg := "EvaluateExpressionCandidate Param[p_expression] is nil!"
+		logs.Warning(errMsg)
+		return v_return, fmt.Errorf(errMsg)
 	}
 	//TODO 待补充
 	return v_return, v_err
@@ -457,8 +463,8 @@ func (ep *ExpressionParseEngine) ParseExprArrayValue(p_expression string) ([]int
 	p_expression = strings.TrimRight(p_expression, "]")
 	//按，分隔符，获取数组元素
 	v_expression_array := strings.Split(p_expression, ",")
-	for v_expr := range v_expression_array {
-		v_return = append(v_return, v_expr)
+	for _, v_expr := range v_expression_array {
+		v_return = append(v_return, strings.TrimSpace(v_expr))
 	}
 	return v_return, v_err
 }

@@ -141,10 +141,12 @@ func Test_IsExprString(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
-		"",
+		//"",
 		"\"string\"",
 		`'string'`,
+		`'str   ing'`,
 		"`string`",
+		"`stri ng`",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprString(value) {
@@ -237,16 +239,16 @@ func Test_IsExprCondition(t *testing.T) {
 
 	slTestRightStr := []string{
 		"",
-		"a&&b", "a&&b||c", "!a", "!a&&!b", "!a&&!b||!c",
+		"a&&b", "a&&b||c", "!a&&!b", "!a&&!b||!c",
 		"a && b", "a&&b",
 		"a || b", "a||b",
 		"!a && !b", "!a &&!b", " !a &&!b", " ! a &&!b", "!a && ! b", " ! a && ! b ",
 		"a>b", "a >b", "a> b",
 		"a<b", "a <b", "a< b",
 		"a==b", "a ==b", "a== b",
+		"a!=b", "a !=b", "a!= b",
 		"a>=b", "a >=b", "a>= b",
 		"a<=b", "a <=b", "a<= b",
-		"!a", " !a", "! a", "!a ", "!!!!!!!a",
 		"a && b || c",
 		"contract_transfer.ContractBody.ContractOwners.1 == 'true'",
 		"a. && b. || c.", ". && . || .", //TODO 此种正则处理不了类似这种
@@ -262,6 +264,7 @@ func Test_IsExprCondition(t *testing.T) {
 		"a><=b",
 		"a> =b",
 		" !! !!!!!a",
+		"!a", " !a", "! a", "!a ", "!!!!!!!a",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprCondition(value) {
@@ -282,6 +285,7 @@ func Test_IsExprFunction(t *testing.T) {
 		"FuncFunc",
 		`FuncIsConPutInUnichian("a90b93a2567a018afe52258f02c39c4de9b25e2e539b81778dbb897a3f88fc92")`,
 		`FuncIsConPutInUnichian(a.b.c)`,
+		`FuncIsConPutInUnichian()`,
 		//`FuncTransferAsset(contract_transfer.ContractBody.ContractOwners.0,contract_transfer.ContractBody.MetaAttribute.TransferTo, `{"id":"9220b6c4287fbd09b2a35129cff0d0845e86b4376aa37fe79f63bfcd989b206d","ContractHead":{"AssignTime":"","MainPubkey":"3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ","OperateTime":"","Version":0,"ConsensusResult":0},"ContractBody":{"ContractId":"170627185915170571","Cname":"contract_transfer","Ctype":"Component_Contract","Caption":"单次转账合约","Description":"在指定时间内自动完成转账给某人","ContractState":"Contract_Completed","Creator":"6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu","CreateTime":"1498268948000","StartTime":"1497937998000","EndTime":"1498110801000","ContractOwners":["6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu"],"ContractAssets":[{"AssetId":"dbf6086e-da39-4d57-88e6-276d17825dca","Name":"asset_transfer","Caption":"","Description":"自动转账的资金","Unit":"元","Amount":0,"MetaData":{"":""}}],"ContractSignatures":[{"OwnerPubkey":"6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu","Signature":"3dcVvXFMmLaiZF6HP8W9LWxQAZoTKzF76X5CNzWsEFBM43qB2uowmqJ1UbpQJfeAC6imXiPQdPb3sDg7beeqTvUE","SignTimestamp":"1498561155101"}],"ContractComponents":[{"Caption":"自动转账","Cname":"action_transfer","CompleteCondition":[{"Caption":"","Cname":"expression_complete","Ctype":"Component_Expression.Expression_Condition","Description":"","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"true","LogicValue":0,"MetaAttribute":{}}],"Ctype":"Component_Task.Task_Action","DataList":[{"Caption":"","Category":[],"Cname":"data_action","Ctype":"Component_Data","DefaultValue":"","Description":"","HardConvType":"Data_OperateResultData","Mandatory":false,"MetaAttribute":{},"ModifyDate":"","Options":{},"Parent":{"Caption":"","Category":null,"Cname":"","Ctype":"","DataRangeFloat":null,"DataRangeInt":null,"DataRangeUint":null,"DefaultValueFloat":0,"DefaultValueInt":0,"DefaultValueString":"","DefaultValueUint":0,"Description":"","Format":"","HardConvType":"","Mandatory":false,"ModifyDate":"","Options":null,"Unit":"","ValueFloat":0,"ValueInt":0,"ValueString":"","ValueUint":0},"Unit":"","Value":""}],"DataValueSetterExpressionList":[{"Caption":"","Cname":"expression_function_action","Ctype":"Component_Expression.Expression_Function","Description":"转账","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"FuncTransferAsset(contract_transfer.ContractBody.ContractOwners.0,contract_transfer.ContractBody.MetaAttribute.TransferTo)","MetaAttribute":{}}],"Description":"达到指定转账时间，自动转账给某人","DiscardCondition":[{"Caption":"","Cname":"expression_discard","Ctype":"Component_Expression.Expression_Condition","Description":"","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"true","LogicValue":0,"MetaAttribute":{}}],"MetaAttribute":{},"NextTasks":[],"PreCondition":[{"Caption":"","Cname":"expression_pre_transfer","Ctype":"Component_Expression.Expression_Condition","Description":"在指定时间转账","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"data_date_expression_function_nowdate.Value \u003e=contract_transfer.ContractBody.MetaAttribute.TransferDate","LogicValue":0,"MetaAttribute":{}}],"SelectBranches":[],"State":"TaskState_Dormant","TaskExecuteIdx":0,"TaskId":"878729f4-dd37-4bcd-87cc-41855e03c74c"},{"Caption":"不达到转账日期，休眠5s","Cname":"task_action_sleep","CompleteCondition":[],"Ctype":"Component_Task.Task_Action","DataList":[],"DataValueSetterExpressionList":[{"Caption":"","Cname":"expression_function_sleep","Ctype":"Component_Expression.Expression_Function","Description":"","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"FuncSleepTime(5)","MetaAttribute":{}}],"Description":"判定当前时间是否达到转账日期，没有达到，需要休眠5是等待","DiscardCondition":[],"MetaAttribute":{},"NextTasks":["task_enquiry_nowdate"],"PreCondition":[{"Caption":"","Cname":"expression_condition_pre_sleep","Ctype":"Component_Expression.Expression_Condition","Description":"","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"data_date_expression_function_nowdate.Value \u003c contract_transfer.ContractBody.MetaAttribute.TransferDate ","LogicValue":0,"MetaAttribute":{}}],"SelectBranches":[],"State":"TaskState_Dormant","TaskExecuteIdx":0,"TaskId":"9be2f215-1b4e-4e87-9b12-1d279715a2f6"},{"Caption":"查询当前日期","Cname":"task_enquiry_nowdate","CompleteCondition":[],"Ctype":"Component_Task.Task_Enquiry","DataList":[{"Caption":"","Category":[],"Cname":"data_date_expression_function_nowdate","Ctype":"Component_Data.Data_Date","DefaultValue":"","Description":"","Format":"2006-01-02 15:04:05","HardConvType":"strToDate","Mandatory":false,"MetaAttribute":{},"ModifyDate":"","Options":{},"Parent":{"Caption":"","Category":null,"Cname":"","Ctype":"","DataRangeFloat":null,"DataRangeInt":null,"DataRangeUint":null,"DefaultValueFloat":0,"DefaultValueInt":0,"DefaultValueString":"","DefaultValueUint":0,"Description":"","Format":"","HardConvType":"","Mandatory":false,"ModifyDate":"","Options":null,"Unit":"","ValueFloat":0,"ValueInt":0,"ValueString":"","ValueUint":0},"Unit":"","Value":"1498572236535"}],"DataValueSetterExpressionList":[{"Caption":"","Cname":"expression_function_nowdate","Ctype":"Component_Expression.Expression_Function","Description":"","ExpressionResult":{"Code":200,"Data":"1498572236535","Message":"process success!","Output":""},"ExpressionStr":"FuncGetNowDateTimestamp()","MetaAttribute":{}}],"Description":"获取当期日期，用于判定是否达到转账日期","DiscardCondition":[],"MetaAttribute":{},"NextTasks":["action_transfer","task_action_sleep"],"PreCondition":[{"Caption":"","Cname":"expression_condition_pre_nowdate","Ctype":"Component_Expression.Expression_Condition","Description":"","ExpressionResult":{"Code":0,"Data":"","Message":"","Output":""},"ExpressionStr":"true","LogicValue":0,"MetaAttribute":{}}],"SelectBranches":[],"State":"TaskState_Completed","TaskExecuteIdx":0,"TaskId":"569c8b46-9e59-4157-8b31-5456ae8695b2"}],"NextTasks":["task_enquiry_nowdate"],"MetaAttribute":{"Copyright":"uni-ledger","TransferAmount":"111","TransferDate":"1498572236525","TransferTo":"6p7waxWGKDYKDJPve4v5oQyFV9Sj2a8Zrw6EHVEHZhGu","Version":"v1.0","_UCVM_CopyRight":"uni-ledger","_UCVM_Date":"2017-06-01 12:00:00","_UCVM_Version":"v1.0"}}}`, "170627185915170571", "878729f4-dd37-4bcd-87cc-41855e03c74c", 0, "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ")`
 	}
 	for index, value := range slTestRightStr {
@@ -311,6 +315,9 @@ func Test_IsExprVariable(t *testing.T) {
 		"_dddd",
 		"_",
 		"_22222",
+		"aaaa._222",
+		"aaaa._222_",
+		"aaaa.__",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprVariable(value) {
@@ -323,6 +330,8 @@ func Test_IsExprVariable(t *testing.T) {
 		"__.",
 		"3333",
 		"3333.",
+		"aaaa._",
+		"aaaa.222",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprVariable(value) {

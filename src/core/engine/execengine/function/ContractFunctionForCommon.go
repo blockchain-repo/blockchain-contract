@@ -72,7 +72,7 @@ func FuncGetNowDate(args ...interface{}) (common.OperateResult, error) {
 
 	timestamp := time.Now().Unix()
 	tm := time.Unix(timestamp, 0)
-	str_date := tm.Format("2006-01-02 03:04:05")
+	str_date := tm.Format("2006-01-02 15:04:05")
 
 	//构建返回值
 	v_result = common.OperateResult{}
