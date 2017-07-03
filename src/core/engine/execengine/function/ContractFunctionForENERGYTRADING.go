@@ -17,8 +17,9 @@ import (
 )
 
 import (
+	//	"math"
+
 	"github.com/astaxie/beego/logs"
-	"math"
 )
 
 type PowerPlants struct {
@@ -59,6 +60,7 @@ var fMoney float64
 
 var mapEnergy map[string]float64
 
+/*
 func __init() {
 	mapMeterRemainMoney = make(map[string]float64)
 	mapEnergy = make(map[string]float64)
@@ -219,6 +221,7 @@ func __init() {
 		rethinkdb.InsertEnergyTradingDemoPrice(string(sldata))
 	}
 }
+*/
 
 // 1.模拟ELINK采集电表数据功能；2.模拟采集发电厂发电数据功能
 func Simulate() {

@@ -2,6 +2,7 @@ package rethinkdb
 
 import (
 	"fmt"
+
 	"github.com/astaxie/beego/logs"
 
 	r "gopkg.in/gorethink/gorethink.v3"
@@ -20,12 +21,12 @@ const (
 
 	//-------------------------------------------------------
 	// 智能微网demo所需要数据表
-	TABLE_ENERGYTRADINGDEMO_ROLE        = "EnergyTradingDemoRole"
-	TABLE_ENERGYTRADINGDEMO_ENERGY      = "EnergyTradingDemoEnergy"
-	TABLE_ENERGYTRADINGDEMO_TRANSACTION = "EnergyTradingDemoTransaction"
-	TABLE_ENERGYTRADINGDEMO_BILL        = "EnergyTradingDemoBill"
-	TABLE_ENERGYTRADINGDEMO_MSGNOTICE   = "EnergyTradingDemoMsgNotice"
-	TABLE_ENERGYTRADINGDEMO_PRICE       = "EnergyTradingDemoPrice"
+	//TABLE_ENERGYTRADINGDEMO_ROLE        = "EnergyTradingDemoRole"
+	//TABLE_ENERGYTRADINGDEMO_ENERGY      = "EnergyTradingDemoEnergy"
+	//TABLE_ENERGYTRADINGDEMO_TRANSACTION = "EnergyTradingDemoTransaction"
+	//TABLE_ENERGYTRADINGDEMO_BILL        = "EnergyTradingDemoBill"
+	//TABLE_ENERGYTRADINGDEMO_MSGNOTICE   = "EnergyTradingDemoMsgNotice"
+	//TABLE_ENERGYTRADINGDEMO_PRICE       = "EnergyTradingDemoPrice"
 	//-------------------------------------------------------
 	//tables for tianan
 	TABLE_EARNINGS = "Earnings"
@@ -38,12 +39,12 @@ var Tables = []string{TABLE_CONTRACTS,
 	TABLE_CONTRACT_OUTPUTS,
 	TABLE_SEND_FAILING_RECORDS,
 	TABLE_TASK_SCHEDULE,
-	TABLE_ENERGYTRADINGDEMO_ROLE,
-	TABLE_ENERGYTRADINGDEMO_ENERGY,
-	TABLE_ENERGYTRADINGDEMO_TRANSACTION,
-	TABLE_ENERGYTRADINGDEMO_BILL,
-	TABLE_ENERGYTRADINGDEMO_MSGNOTICE,
-	TABLE_ENERGYTRADINGDEMO_PRICE,
+	//TABLE_ENERGYTRADINGDEMO_ROLE,
+	//TABLE_ENERGYTRADINGDEMO_ENERGY,
+	//TABLE_ENERGYTRADINGDEMO_TRANSACTION,
+	//TABLE_ENERGYTRADINGDEMO_BILL,
+	//TABLE_ENERGYTRADINGDEMO_MSGNOTICE,
+	//TABLE_ENERGYTRADINGDEMO_PRICE,
 	TABLE_EARNINGS,
 }
 

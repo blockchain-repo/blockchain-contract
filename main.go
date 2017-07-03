@@ -12,7 +12,6 @@ import (
 	"unicontract/src/core/control/headNodeMonitor"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine"
-	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/engine/scanengine"
 	"unicontract/src/pipelines"
 
@@ -71,13 +70,6 @@ func runStart() {
 	logs.Info("headNodeMonitor Init")
 	go headNodeMonitor.Start()
 	logs.Info("headNodeMonitor Start")
-
-	demoStart, _ := beego.AppConfig.Bool("demoStart")
-	if demoStart {
-		go function.Simulate()
-		logs.Info("demo Run")
-	}
-
 	beego.Run()
 	logs.Info("beego Run")
 }
