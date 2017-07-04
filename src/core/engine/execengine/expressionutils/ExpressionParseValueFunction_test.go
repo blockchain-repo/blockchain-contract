@@ -157,7 +157,11 @@ func Test_ParseExprConditionValue(t *testing.T) {
 	v_express_parse.SetFunctionEngine(v_function)
 
 	slTestRightStr := []string{
-		`FuncGetNowDate() == "2017-07-03 05:26:49"`,
+		//`FuncGetNowDate() == "2017-07-03 05:26:49"`, // not Condition
+		//`FuncGetNowDay() == "4"`, // not Condition
+		` 4 == 4`,
+		`"4" == "4"`,
+		`"4" == "3"`,
 	}
 	for _, value := range slTestRightStr {
 		b, err := v_express_parse.ParseExprConditionValue(value)
@@ -175,7 +179,12 @@ func Test_ParseExprFunctionValue(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 	v_express_parse.SetFunctionEngine(v_function)
 	slTestRightStr := []string{
-		"FuncSleepTime(5)",
+		//"FuncSleepTime(5)",
+		//"FuncGetNowDate()",
+		//"FuncTestMethod()",
+		//"FuncTestMethod(1)",
+		//"FuncTestMethod(1,2)",
+		"FuncTestMethod(asdf.asdf)", // TODO 需要外部整体测试，单元测试不可以
 	}
 	for _, value := range slTestRightStr {
 		ret, err := v_express_parse.ParseExprFunctionValue(value)
@@ -207,8 +216,13 @@ func Test_ParseExprVariableValue(t *testing.T) {
 func Test_ParseVariablesInExprCondition(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 	slTestRightStr := []string{
-		`FuncGetNowDate() == "2017-07-03 05:26:49"`,
-		`"FuncGetNowDate()" == "2017-07-03 05:26:49"`,
+		//`FuncGetNowDate() == "2017-07-03 05:26:49"`, // not Condition
+		//`"FuncGetNowDate()" == "2017-07-03 05:26:49"`, // not Condition
+		` 4 == 4`,
+		`"4" == "4"`,
+		`"4" == "3"`,
+		`contract1.contractbody.id == "3"`,
+		`contract1.contractbody.id == contract2.contractbody.id`,
 	}
 	for _, value := range slTestRightStr {
 		ret, err := v_express_parse.ParseVariablesInExprCondition(value)

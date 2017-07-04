@@ -2,6 +2,7 @@ package expressionutils
 
 import (
 	"testing"
+	"unicontract/src/core/engine/execengine/function"
 )
 
 func Test_EvaluateExpressionConstant(t *testing.T) {
@@ -55,15 +56,20 @@ func Test_EvaluateExpressionVariable(t *testing.T) {
 }
 
 func Test_EvaluateExpressionCondition(t *testing.T) {
-	// TODO 需要外部整体测试，单元测试不可以
-
+	v_function := function.NewFunctionParseEngine()
+	v_function.LoadFunctionsCommon()
+	ep := NewExpressionParseEngine()
+	ep.SetFunctionEngine(v_function)
 	slTestString := []string{
 		//"", // error
 		"true",
 		"false",
+		"1==1&&2>1",
+		"1==1&&2<1",
+		"1 == 1 && 2 > 1",
+		"(1 == 1) && (2 > 1)",
+		"FuncTestMethod1()",
 	}
-
-	ep := NewExpressionParseEngine()
 	for _, value := range slTestString {
 		interface_, err := ep.EvaluateExpressionCondition(value)
 		if err != nil {
@@ -75,15 +81,19 @@ func Test_EvaluateExpressionCondition(t *testing.T) {
 }
 
 func Test_EvaluateExpressionFunction(t *testing.T) {
-	// TODO 需要外部整体测试，单元测试不可以
-
+	v_function := function.NewFunctionParseEngine()
+	v_function.LoadFunctionsCommon()
+	v_express_parse := NewExpressionParseEngine()
+	v_express_parse.SetFunctionEngine(v_function)
 	slTestString := []string{
-		"",
+		"FuncSleepTime(5)",
+		"FuncGetNowDate()",
+		"FuncTestMethod()",
+		"FuncTestMethod(1)",
+		"FuncTestMethod(1,2)",
 	}
-
-	ep := NewExpressionParseEngine()
 	for _, value := range slTestString {
-		interface_, err := ep.EvaluateExpressionFunction(value)
+		interface_, err := v_express_parse.EvaluateExpressionFunction(value)
 		if err != nil {
 			t.Error(err)
 		} else {
@@ -109,16 +119,18 @@ func Test_EvaluateExpressionCandidate(t *testing.T) {
 }
 
 func Test_EvaluateExpressionValue(t *testing.T) {
-	// TODO 需要外部整体测试，单元测试不可以
-
-	slTestString := []string{
-		//`FuncIsConPutInUnichian("a90b93a2567a018afe52258f02c39c4de9b25e2e539b81778dbb897a3f88fc92")`,
-		`FuncGetNowDate() == FuncGetNowDate()`,
-	}
-
+	v_function := function.NewFunctionParseEngine()
+	v_function.LoadFunctionsCommon()
 	ep := NewExpressionParseEngine()
-	for _, value := range slTestString {
-		interface_, err := ep.EvaluateExpressionValue("Expression_Condition", value)
+	ep.SetFunctionEngine(v_function)
+	slTestString := map[string]string{
+		"Expression_Constant":  "1111111",
+		"Expression_Condition": "1 == 2 && 3 < 4",
+		"Expression_Function":  "FuncTestMethod1()",
+		"Expression_Variable":  "contract.contractbody", // TODO 需要外部整体测试，单元测试不可以
+	}
+	for key, value := range slTestString {
+		interface_, err := ep.EvaluateExpressionValue(key, value)
 		if err != nil {
 			t.Error(err)
 		} else {

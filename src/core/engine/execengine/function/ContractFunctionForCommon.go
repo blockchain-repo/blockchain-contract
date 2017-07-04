@@ -17,13 +17,6 @@ import (
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++合约机公用方法集+++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//获取当前日期FuncGetNowDay()
-//获取当前时间FuncGetNowDate()
-//休眠指定时间FuncSleepTime(sleeptime)
-//资产转移FuncTransferAsset(user_A, '{user_B, amount}')
-//资产创建FuncCreateAsset(user_A, '{user_B, amount}')
-//获取合约产出FuncGetContracOutputtById(contract_id)
-//合约产出是否入链FuncIsConPutInUnichian(id)
 
 //测试方法
 func FuncTestMethod(args ...interface{}) (common.OperateResult, error) {
@@ -50,18 +43,28 @@ func FuncTestMethod(args ...interface{}) (common.OperateResult, error) {
 	return v_result, v_err
 }
 
-//获取当前日期的Day: int
+//测试方法1
+func FuncTestMethod1(args ...interface{}) (common.OperateResult, error) {
+	var v_result common.OperateResult = common.OperateResult{}
+	var v_err error = nil
+
+	//构建返回值
+	v_result.SetCode(200)
+	v_result.SetMessage("process success!")
+	v_result.SetData(strconv.FormatBool(true))
+	return v_result, v_err
+}
+
+//获取当前日期的Day: int->string
 func FuncGetNowDay(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-
-	day := time.Now().Day()
 
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
-	v_result.SetData(day)
+	v_result.SetData(strconv.Itoa(time.Now().Day()))
 	return v_result, v_err
 }
 

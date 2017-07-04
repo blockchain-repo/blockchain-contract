@@ -40,6 +40,7 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 	bif.ContractFunctions["FuncSleepTime"] = FuncSleepTime
 	bif.ContractFunctions["FuncGetNowDateTimestamp"] = FuncGetNowDateTimestamp
 	bif.ContractFunctions["FuncTestMethod"] = FuncTestMethod
+	bif.ContractFunctions["FuncTestMethod1"] = FuncTestMethod1
 	bif.ContractFunctions["FuncCreateAsset"] = FuncCreateAsset
 	bif.ContractFunctions["FuncTransferAsset"] = FuncTransferAsset
 	bif.ContractFunctions["FuncTransferAssetComplete"] = FuncTransferAssetComplete

@@ -15,11 +15,6 @@ import (
 	"unicontract/src/core/engine/execengine/task"
 )
 
-//Test Function:
-//    ReflectComponent
-//    ReflectVariable
-//    RunFunction
-
 //---------------------------------------------------------------------------
 func CreateComponent() inf.IComponent {
 	var v_map_1 map[string]string = make(map[string]string, 0)

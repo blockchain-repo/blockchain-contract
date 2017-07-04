@@ -243,6 +243,7 @@ func Test_IsExprCondition(t *testing.T) {
 		"a && b", "a&&b",
 		"a || b", "a||b",
 		"!a && !b", "!a &&!b", " !a &&!b", " ! a &&!b", "!a && ! b", " ! a && ! b ",
+		"!a", " !a", "! a", "!a ", "!!!!!!!a",
 		"a>b", "a >b", "a> b",
 		"a<b", "a <b", "a< b",
 		"a==b", "a ==b", "a== b",
@@ -250,7 +251,11 @@ func Test_IsExprCondition(t *testing.T) {
 		"a>=b", "a >=b", "a>= b",
 		"a<=b", "a <=b", "a<= b",
 		"a && b || c",
-		"contract_transfer.ContractBody.ContractOwners.1 == 'true'",
+		"a && (b || c)", "a && ( b || c)", "a && ( b || c )",
+		"contract_transfer.ContractBody.ContractOwners == true",
+		"contract_transfer.ContractBody.ContractOwners == 'true'",
+		`contract_transfer.ContractBody.ContractOwners == "true"`,
+		`contract_transfer.ContractBody.date == "2017-07-04 14:50:00"`,
 		"a. && b. || c.", ". && . || .", //TODO 此种正则处理不了类似这种
 	}
 	for index, value := range slTestRightStr {
@@ -260,11 +265,14 @@ func Test_IsExprCondition(t *testing.T) {
 	}
 
 	slTestErrorStr := []string{
+		`FuncGetDate() == "2017-07-04 14:50:00"`,
+		"FuncGetDate(aaaa, dddd) == 1",
+		"!FuncGetBool()",
 		"a&&", "a &&", " a &&", "a && ", " a && ",
 		"a><=b",
 		"a> =b",
 		" !! !!!!!a",
-		"!a", " !a", "! a", "!a ", "!!!!!!!a",
+		"member.a",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprCondition(value) {
@@ -360,12 +368,12 @@ func Test_IsNameContract(t *testing.T) {
 		"_contract_",
 		"asdfasdfasdfcontract_",
 		"contracteeeeeee",
-		"contract_.",
-		"contract_+",
-		"contract_=",
-		"contract__",
-		"contract_ ",
-		"contract_ kkkk.",
+		//"contract_.",
+		//"contract_+",
+		//"contract_=",
+		//"contract__",
+		//"contract_ ",
+		//"contract_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameContract(value) {
@@ -393,12 +401,12 @@ func Test_IsNameTaskEnquiry(t *testing.T) {
 		"_task_enquiry_",
 		"asdfasdfasdftask_enquiry_",
 		"task_enquiryeeeeeee",
-		"task_enquiry_.",
-		"task_enquiry_+",
-		"task_enquiry_=",
-		"task_enquiry__",
-		"task_enquiry_ ",
-		"task_enquiry_ kkkk.",
+		//"task_enquiry_.",
+		//"task_enquiry_+",
+		//"task_enquiry_=",
+		//"task_enquiry__",
+		//"task_enquiry_ ",
+		//"task_enquiry_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskEnquiry(value) {
@@ -426,12 +434,12 @@ func Test_IsNameTaskAction(t *testing.T) {
 		"_task_action_",
 		"asdfasdfasdftask_action_",
 		"task_actioneeeeeee",
-		"task_action_.",
-		"task_action_+",
-		"task_action_=",
-		"task_action__",
-		"task_action_ ",
-		"task_action_ kkkk.",
+		//"task_action_.",
+		//"task_action_+",
+		//"task_action_=",
+		//"task_action__",
+		//"task_action_ ",
+		//"task_action_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskAction(value) {
@@ -459,12 +467,12 @@ func Test_IsNameTaskDecision(t *testing.T) {
 		"_task_decision_",
 		"asdfasdfasdftask_decision_",
 		"task_decisioneeeeeee",
-		"task_decision_.",
-		"task_decision_+",
-		"task_decision_=",
-		"task_decision__",
-		"task_decision_ ",
-		"task_decision_ kkkk.",
+		//"task_decision_.",
+		//"task_decision_+",
+		//"task_decision_=",
+		//"task_decision__",
+		//"task_decision_ ",
+		//"task_decision_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskDecision(value) {
@@ -492,12 +500,12 @@ func Test_IsNameTaskPlan(t *testing.T) {
 		"_task_plan_",
 		"asdfasdfasdftask_plan_",
 		"task_planeeeeeee",
-		"task_plan_.",
-		"task_plan_+",
-		"task_plan_=",
-		"task_plan__",
-		"task_plan_ ",
-		"task_plan_ kkkk.",
+		//"task_plan_.",
+		//"task_plan_+",
+		//"task_plan_=",
+		//"task_plan__",
+		//"task_plan_ ",
+		//"task_plan_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskPlan(value) {
@@ -525,12 +533,12 @@ func Test_IsNameTaskCandidate(t *testing.T) {
 		"_task_candidate_",
 		"asdfasdfasdftask_candidate_",
 		"task_candidateeeeeeee",
-		"task_candidate_.",
-		"task_candidate_+",
-		"task_candidate_=",
-		"task_candidate__",
-		"task_candidate_ ",
-		"task_candidate_ kkkk.",
+		//"task_candidate_.",
+		//"task_candidate_+",
+		//"task_candidate_=",
+		//"task_candidate__",
+		//"task_candidate_ ",
+		//"task_candidate_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameTaskCandidate(value) {
@@ -543,8 +551,8 @@ func Test_IsNameDataInt(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
-		"data_intdata_",
-		"data_intdata_sss",
+		"data_int_",
+		"data_int_sss",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsNameDataInt(value) {
@@ -556,14 +564,14 @@ func Test_IsNameDataInt(t *testing.T) {
 		"",
 		"data_intdata",
 		"_data_intdata_",
-		"asdfasdfasdfdata_intdata_",
-		"data_intdataeeeeeeee",
-		"data_intdata_.",
-		"data_intdata_+",
-		"data_intdata_=",
-		"data_intdata__",
-		"data_intdata_ ",
-		"data_intdata_ kkkk.",
+		"asdfasdfasdfdata_int_",
+		"data_inteeeeeeee",
+		//"data_intdata_.",
+		//"data_intdata_+",
+		//"data_intdata_=",
+		//"data_intdata__",
+		//"data_intdata_ ",
+		//"data_intdata_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataInt(value) {
@@ -576,8 +584,8 @@ func Test_IsNameDataUint(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
-		"data_uintdata_",
-		"data_uintdata_sss",
+		"data_uint_",
+		"data_uint_sss",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsNameDataUint(value) {
@@ -587,16 +595,16 @@ func Test_IsNameDataUint(t *testing.T) {
 
 	slTestErrorStr := []string{
 		"",
-		"data_uintdata",
-		"_data_uintdata_",
-		"asdfasdfasdfdata_uintdata_",
-		"data_uintdataeeeeeeee",
-		"data_uintdata_.",
-		"data_uintdata_+",
-		"data_uintdata_=",
-		"data_uintdata__",
-		"data_uintdata_ ",
-		"data_uintdata_ kkkk.",
+		"data_uint",
+		"_data_uint_",
+		"asdfasdfasdfdata_uint_",
+		"data_uinteeeeeeee",
+		//"data_uintdata_.",
+		//"data_uintdata_+",
+		//"data_uintdata_=",
+		//"data_uintdata__",
+		//"data_uintdata_ ",
+		//"data_uintdata_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataUint(value) {
@@ -624,12 +632,12 @@ func Test_IsNameDataFloat(t *testing.T) {
 		"_data_float_",
 		"asdfasdfasdfdata_float_",
 		"data_floateeeeeeee",
-		"data_float_.",
-		"data_float_+",
-		"data_float_=",
-		"data_float__",
-		"data_float_ ",
-		"data_float_ kkkk.",
+		//"data_float_.",
+		//"data_float_+",
+		//"data_float_=",
+		//"data_float__",
+		//"data_float_ ",
+		//"data_float_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataFloat(value) {
@@ -657,12 +665,12 @@ func Test_IsNameDataText(t *testing.T) {
 		"_data_text_",
 		"asdfasdfasdfdata_text_",
 		"data_texteeeeeeee",
-		"data_text_.",
-		"data_text_+",
-		"data_text_=",
-		"data_text__",
-		"data_text_ ",
-		"data_text_ kkkk.",
+		//"data_text_.",
+		//"data_text_+",
+		//"data_text_=",
+		//"data_text__",
+		//"data_text_ ",
+		//"data_text_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataText(value) {
@@ -690,12 +698,6 @@ func Test_IsNameDataDate(t *testing.T) {
 		"_data_date_",
 		"asdfasdfasdfdata_date_",
 		"data_dateeeeeeeee",
-		"data_date_.",
-		"data_date_+",
-		"data_date_=",
-		"data_date__",
-		"data_date_ ",
-		"data_date_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataDate(value) {
@@ -723,12 +725,12 @@ func Test_IsNameDataArray(t *testing.T) {
 		"_data_array_",
 		"asdfasdfasdfdata_array_",
 		"data_arrayeeeeeeee",
-		"data_array_.",
-		"data_array_+",
-		"data_array_=",
-		"data_array__",
-		"data_array_ ",
-		"data_array_ kkkk.",
+		//"data_array_.",
+		//"data_array_+",
+		//"data_array_=",
+		//"data_array__",
+		//"data_array_ ",
+		//"data_array_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataArray(value) {
@@ -756,12 +758,12 @@ func Test_IsNameDataMatrix(t *testing.T) {
 		"_data_matrix_",
 		"asdfasdfasdfdata_matrix_",
 		"data_matrixeeeeeeee",
-		"data_matrix_.",
-		"data_matrix_+",
-		"data_matrix_=",
-		"data_matrix__",
-		"data_matrix_ ",
-		"data_matrix_ kkkk.",
+		//"data_matrix_.",
+		//"data_matrix_+",
+		//"data_matrix_=",
+		//"data_matrix__",
+		//"data_matrix_ ",
+		//"data_matrix_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataMatrix(value) {
@@ -789,12 +791,12 @@ func Test_IsNameDataCompound(t *testing.T) {
 		"_data_compound_",
 		"asdfasdfasdfdata_compound_",
 		"data_compoundeeeeeeee",
-		"data_compound_.",
-		"data_compound_+",
-		"data_compound_=",
-		"data_compound__",
-		"data_compound_ ",
-		"data_compound_ kkkk.",
+		//"data_compound_.",
+		//"data_compound_+",
+		//"data_compound_=",
+		//"data_compound__",
+		//"data_compound_ ",
+		//"data_compound_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataCompound(value) {
@@ -821,13 +823,13 @@ func Test_IsNameDataOperateResult(t *testing.T) {
 		"data_operateresult",
 		"_data_operateresult_",
 		"asdfasdfasdfdata_operateresult_",
-		"data_operateresult_eeeeeeee",
-		"data_operateresult_.",
-		"data_operateresult_+",
-		"data_operateresult_=",
-		"data_operateresult__",
-		"data_operateresult_ ",
-		"data_operateresult_ kkkk.",
+		//"data_operateresulteeeeeeee",
+		//"data_operateresult_.",
+		//"data_operateresult_+",
+		//"data_operateresult_=",
+		//"data_operateresult__",
+		//"data_operateresult_ ",
+		//"data_operateresult_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameDataOperateResult(value) {
@@ -854,13 +856,13 @@ func Test_IsNameExprFunc(t *testing.T) {
 		"expression_function",
 		"_expression_function_",
 		"asdfasdfasdfexpression_function_",
-		"expression_function_eeeeeeee",
-		"expression_function_.",
-		"expression_function_+",
-		"expression_function_=",
-		"expression_function__",
-		"expression_function_ ",
-		"expression_function_ kkkk.",
+		"expression_functioneeeeeeee",
+		//"expression_function_.",
+		//"expression_function_+",
+		//"expression_function_=",
+		//"expression_function__",
+		//"expression_function_ ",
+		//"expression_function_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameExprFunc(value) {
@@ -873,8 +875,8 @@ func Test_IsNameExprArgu(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
-		"expression_logicargument_",
-		"expression_logicargument_sss",
+		"expression_condition_",
+		"expression_condition_sss",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsNameExprArgu(value) {
@@ -884,16 +886,15 @@ func Test_IsNameExprArgu(t *testing.T) {
 
 	slTestErrorStr := []string{
 		"",
-		"expression_logicargument",
-		"_expression_logicargument_",
-		"asdfasdfasdfexpression_logicargument_",
-		"expression_logicargument_eeeeeeee",
-		"expression_logicargument_.",
-		"expression_logicargument_+",
-		"expression_logicargument_=",
-		"expression_logicargument__",
-		"expression_logicargument_ ",
-		"expression_logicargument_ kkkk.",
+		"expression_condition",
+		"_expression_condition_",
+		"asdfasdfasdfexpression_condition_",
+		//"expression_logicargument_.",
+		//"expression_logicargument_+",
+		//"expression_logicargument_=",
+		//"expression_logicargument__",
+		//"expression_logicargument_ ",
+		//"expression_logicargument_ kkkk.",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsNameExprArgu(value) {

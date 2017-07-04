@@ -52,7 +52,6 @@ func (ep *ExpressionParseEngine) SetContract(p_contract inf.ICognitiveContract) 
 //   4. 函数表达式   ExpressionType[Expression_Function]
 //   5. 决策表达式   ExpressionType[Expression_Candidate]
 func (ep *ExpressionParseEngine) EvaluateExpressionValue(p_exprtype string, p_expression string) (interface{}, error) {
-	fmt.Printf("=================", p_exprtype, p_expression)
 	var v_return interface{} = nil
 	var v_err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
@@ -288,7 +287,11 @@ func (ep *ExpressionParseEngine) IsExprArray(p_expression string) bool {
 
 //解析字符串是否为 条件表达式
 func (ep *ExpressionParseEngine) IsExprCondition(p_expression string) bool {
-	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Condition])
+	if strings.Contains(p_expression, "Func") {
+		return false
+	} else {
+		return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Condition])
+	}
 }
 
 //解析字符串是否为 函数串表达式
