@@ -306,9 +306,9 @@ func TestContractAllLife_HasDigcard(t *testing.T) {
 	if err != nil {
 		t.Error("Read File Error!")
 	}
-	fmt.Println(v_byte)
+	t.Log(v_byte)
 	//1. Test Load
-	fmt.Println("=============Test Load========================================================")
+	t.Log("=============Test Load========================================================")
 	v_contract_execute := NewContractExecuter()
 	err = v_contract_execute.Load(string(v_byte))
 	if err != nil {
@@ -326,24 +326,26 @@ func TestContractAllLife_HasDigcard(t *testing.T) {
 	PrintContract(v_contract_execute.contract_executer)
 
 	//2. Test Export
-	fmt.Println("=============Test Export Json========================================================")
+	t.Log("=============Test Export Json========================================================")
 	r_str_json, err := v_contract_execute.ExportToJson()
 	if err != nil {
 		t.Error("Export Error!")
 	}
-	fmt.Println("Export Json Result: ", r_str_json)
+	t.Log("Export Json Result: ", r_str_json)
 
 	//2. Test Export
-	fmt.Println("=============Test Export Text========================================================")
+	t.Log("=============Test Export Text========================================================")
 	r_str_text, err := v_contract_execute.ExportToText()
 	if err != nil {
 		t.Error("Export Error!")
 	}
-	fmt.Println("Export Text Result: \n", r_str_text)
+	t.Log("Export Text Result: \n", r_str_text)
 	PrintContract(v_contract_execute.contract_executer)
 
+	//v_contract_execute.Prepare()
+
 	//3. Test Start
-	fmt.Println("=============Test Start ========================================================")
+	t.Log("=============Test Start ========================================================")
 	_, err = v_contract_execute.Start()
-	fmt.Println(err)
+	t.Log(err)
 }
