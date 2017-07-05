@@ -16,12 +16,13 @@ import (
 	"time"
 )
 
-import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
+//import (
+//	beegoLog "github.com/astaxie/beego/logs"
+//)
 
 import (
 	"unicontract/src/common/monitor"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
@@ -40,31 +41,31 @@ func _ScanFailedTask(flag int) {
 
 	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
 	for _ = range ticker.C {
-		beegoLog.Debug("query " + strLogFlag + " data")
+		uniledgerlog.Debug("query " + strLogFlag + " data")
 		strNodePubkey := config.Config.Keypair.PublicKey
 		retStr, err := engineCommon.GetMonitorNoSuccessData(strNodePubkey,
 			scanEngineConf[strThresholdName].(int), flag)
 		if err != nil {
-			beegoLog.Error(err.Error())
+			uniledgerlog.Error(err.Error())
 			continue
 		}
 
 		if len(retStr) == 0 {
-			beegoLog.Debug("no " + strLogFlag + " data")
+			uniledgerlog.Debug("no " + strLogFlag + " data")
 			continue
 		}
 
-		beegoLog.Debug("get " + strLogFlag + " tasks")
+		uniledgerlog.Debug("get " + strLogFlag + " tasks")
 		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
-		beegoLog.Debug("get task id slice")
+		uniledgerlog.Debug("get task id slice")
 		slID := _GetTaskID(slTasks)
 
-		beegoLog.Debug("handle task")
+		uniledgerlog.Debug("handle task")
 		engineCommon.UpdateMonitorSendBatch(slID)
 
-		beegoLog.Debug("record task")
+		uniledgerlog.Debug("record task")
 		_Record(flag, slID)
 
 		//task fail count send to monitor,modify value
@@ -99,10 +100,10 @@ func _Record(flag int, slID []interface{}) {
 
 	writeCount, err := _WriteFile(strRecordFile, strID)
 	if err != nil {
-		beegoLog.Error(err)
+		uniledgerlog.Error(err)
 	}
 	if writeCount != len(strID) {
-		beegoLog.Error("write count is error")
+		uniledgerlog.Error("write count is error")
 	}
 }
 

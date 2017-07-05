@@ -17,10 +17,7 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
-
-import (
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
@@ -30,34 +27,34 @@ import (
 func _CleanTaskSchedule() {
 	ticker := time.NewTicker(time.Minute * (time.Duration)(scanEngineConf["clean_time"].(int)))
 	for _ = range ticker.C {
-		beegoLog.Debug("query all success task")
+		uniledgerlog.Debug("query all success task")
 		strSuccessTask, err :=
 			rethinkdb.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
 		if err != nil {
-			beegoLog.Error(err)
+			uniledgerlog.Error(err)
 			continue
 		}
 
 		if len(strSuccessTask) == 0 {
-			beegoLog.Debug("success task is null")
+			uniledgerlog.Debug("success task is null")
 			continue
 		}
 
 		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(strSuccessTask), &slTasks)
 
-		beegoLog.Debug("success task filter")
+		uniledgerlog.Debug("success task filter")
 		slID := _TaskFilter(slTasks)
 
 		if len(slID) == 0 {
-			beegoLog.Debug("_TaskFilter return is null")
+			uniledgerlog.Debug("_TaskFilter return is null")
 			continue
 		}
 
-		beegoLog.Debug("success task delete")
+		uniledgerlog.Debug("success task delete")
 		deleteNum, err := rethinkdb.DeleteTaskSchedules(slID)
 		if deleteNum != len(slID) {
-			beegoLog.Error(err)
+			uniledgerlog.Error(err)
 		}
 	}
 	gwgTaskExe.Done()
@@ -74,7 +71,7 @@ func _TaskFilter(slTasks []model.TaskSchedule) []interface{} {
 	for index, value := range slTasks {
 		nTimePoint, err := strconv.Atoi(value.LastExecuteTime)
 		if err != nil {
-			beegoLog.Error(err)
+			uniledgerlog.Error(err)
 			continue
 		}
 		if int64(nTimePoint) < cleanTimePoint {

@@ -16,12 +16,9 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
-
-import (
 	"unicontract/src/chain"
 	"unicontract/src/common/monitor"
+	"unicontract/src/common/uniledgerlog"
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine"
 )
@@ -29,36 +26,36 @@ import (
 //---------------------------------------------------------------------------
 func _TaskExecute() {
 	for {
-		beegoLog.Debug("wait for ContractTask ...")
+		uniledgerlog.Debug("wait for ContractTask ...")
 		strContractTask, ok := <-gchTaskQueue
 		if !ok {
 			break
 		}
-		beegoLog.Debug("get ContractTask")
+		uniledgerlog.Debug("get ContractTask")
 		//wsp@monitor
 		monitor.Monitor.Count("task_running", -1)
-		beegoLog.Debug("query contract base on contractId")
+		uniledgerlog.Debug("query contract base on contractId")
 		jsonBody := fmt.Sprintf("{\"contract_hash_id\":\"%s\"}", strContractTask.ContractHashId)
 		//responseResult:  requestHandler.ResponseResult, data中存的是完整的Output结构体
 		responseResult, err := chain.GetTxByConHashId(jsonBody)
 		if err != nil || responseResult.Data == nil {
-			beegoLog.Error(err)
+			uniledgerlog.Error(err)
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
 		if responseResult.Code != _HTTP_OK {
-			beegoLog.Error("responseResult.Code is [ %d ]", responseResult.Code)
-			beegoLog.Error("responseResult.Message is [ %s ]", responseResult.Message)
+			uniledgerlog.Error("responseResult.Code is [ %d ]", responseResult.Code)
+			uniledgerlog.Error("responseResult.Message is [ %s ]", responseResult.Message)
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
-		beegoLog.Debug("get responseResult data")
+		uniledgerlog.Debug("get responseResult data")
 		// 1
 		contractData, ok := responseResult.Data.(interface{})
 		if !ok {
-			beegoLog.Error("responseResult.Data.(interface{}) is error")
+			uniledgerlog.Error("responseResult.Data.(interface{}) is error")
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
@@ -66,26 +63,26 @@ func _TaskExecute() {
 		// 2
 		mapData, ok := contractData.([]interface{})
 		if !ok {
-			beegoLog.Error("contractData.([]map[string]interface{}) error")
+			uniledgerlog.Error("contractData.([]map[string]interface{}) error")
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
 		if len(mapData) == 0 { // 没有查询到contract
-			beegoLog.Error("get contract is null")
+			uniledgerlog.Error("get contract is null")
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
 
 		slContractData, err := json.Marshal(mapData[0])
 		if err != nil {
-			beegoLog.Error(err)
+			uniledgerlog.Error(err)
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
-		beegoLog.Debug(string(slContractData))
+		uniledgerlog.Debug(string(slContractData))
 
-		beegoLog.Debug("contract execute")
+		uniledgerlog.Debug("contract execute")
 		go _Execute(string(slContractData), strContractTask.ContractId, strContractTask.ContractHashId)
 	}
 
@@ -94,14 +91,13 @@ func _TaskExecute() {
 
 //---------------------------------------------------------------------------
 func _Execute(strData, strContractID, strContractHashID string) {
-
 	contractExecuter := execengine.NewContractExecuter()
 	//strData为完整的Output结构体
 	task_load_time := monitor.Monitor.NewTiming()
 	err := contractExecuter.Load(strData)
 	task_load_time.Send("task_load")
 	if err != nil {
-		beegoLog.Error(err)
+		uniledgerlog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
 		return
 	}
@@ -112,16 +108,16 @@ func _Execute(strData, strContractID, strContractHashID string) {
 	ret, err := contractExecuter.Start()
 	task_execute_time.Send("task_execute")
 	if err != nil {
-		beegoLog.Error(err)
+		uniledgerlog.Error(err)
 		_UpdateToFailed(strContractID, strContractHashID)
 		return
 	}
 	if ret == 0 {
-		beegoLog.Error("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
+		uniledgerlog.Warn("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
 	} else if ret == -1 {
-		beegoLog.Error("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
+		uniledgerlog.Warn("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
 	} else if ret == 1 {
-		beegoLog.Debug("合约任务执行完成")
+		uniledgerlog.Info("合约任务执行完成")
 	}
 	//执行机销毁合约
 	contractExecuter.Destory()
@@ -132,7 +128,7 @@ func _Execute(strData, strContractID, strContractHashID string) {
 func _UpdateToWait(strContractID, strContractHashID string) {
 	err := engineCommon.UpdateMonitorWait(strContractID, strContractHashID, "0", "", 1)
 	if err != nil {
-		beegoLog.Error(err)
+		uniledgerlog.Error(err)
 	}
 }
 
@@ -140,7 +136,7 @@ func _UpdateToWait(strContractID, strContractHashID string) {
 func _UpdateToFailed(strContractID, strContractHashID string) {
 	err := engineCommon.UpdateMonitorFail(strContractID, strContractHashID, "0", "", 1)
 	if err != nil {
-		beegoLog.Error(err)
+		uniledgerlog.Error(err)
 	}
 }
 

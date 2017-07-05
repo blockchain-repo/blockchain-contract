@@ -16,11 +16,8 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
-
-import (
 	"unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
@@ -72,22 +69,21 @@ func UpdateMonitorFail(strContractID string,
 	strTaskId string,
 	strTaskState string,
 	nTaskExecuteIndex int) error {
+	var errMsg string
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
 		len(strContractHashID) == 0 {
-		beegoLog.Error("-------------------------------------")
 		if len(strNodePubkey) == 0 {
-			beegoLog.Error("len(strNodePubkey) == 0")
+			errMsg = "[strNodePubkey is null]"
 		}
 		if len(strContractID) == 0 {
-			beegoLog.Error("len(strContractID) == 0")
+			errMsg = "[strContractID is null]"
 		}
 		if len(strContractHashID) == 0 {
-			beegoLog.Error("len(strContractHashID) == 0")
+			errMsg = "[strContractHashID is null]"
 		}
-		beegoLog.Error("-------------------------------------")
-		return fmt.Errorf("param is null")
+		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
 	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
@@ -120,22 +116,21 @@ func UpdateMonitorWait(strContractID string,
 	strTaskId string,
 	strTaskState string,
 	nTaskExecuteIndex int) error {
+	var errMsg string
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
 		len(strContractHashID) == 0 {
-		beegoLog.Error("-------------------------------------")
 		if len(strNodePubkey) == 0 {
-			beegoLog.Error("len(strNodePubkey) == 0")
+			errMsg = "[strNodePubkey is null]"
 		}
 		if len(strContractID) == 0 {
-			beegoLog.Error("len(strContractID) == 0")
+			errMsg = "[strContractID is null]"
 		}
 		if len(strContractHashID) == 0 {
-			beegoLog.Error("len(strContractHashID) == 0")
+			errMsg = "[strContractHashID is null]"
 		}
-		beegoLog.Error("-------------------------------------")
-		return fmt.Errorf("param is null")
+		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
 	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
@@ -174,44 +169,33 @@ func UpdateMonitorSucc(strContractID string,
 	strTaskStateNew string,
 	nTaskExecuteIndexNew int,
 	nFlag int) error {
-
+	var errMsg string
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
 		len(strContractHashIdOld) == 0 ||
-		//len(strTaskIdOld) == 0 ||
-		//len(strTaskStateOld) == 0 ||
 		len(strContractHashIDNew) == 0 ||
 		len(strTaskIdNew) == 0 ||
 		len(strTaskStateNew) == 0 {
-		beegoLog.Error("-------------------------------------")
 		if len(strNodePubkey) == 0 {
-			beegoLog.Error("len(strNodePubkey) == 0")
+			errMsg = "[strNodePubkey is null]"
 		}
 		if len(strContractID) == 0 {
-			beegoLog.Error("len(strContractID) == 0")
+			errMsg = "[strContractID is null]"
 		}
 		if len(strContractHashIdOld) == 0 {
-			beegoLog.Error("len(strContractHashIdOld) == 0")
+			errMsg = "[strContractHashIdOld is null]"
 		}
-		//if len(strTaskIdOld) == 0 {
-		//	beegoLog.Error("len(strTaskIdOld) == 0")
-		//}
-		//if len(strTaskStateOld) == 0 {
-		//	beegoLog.Error("len(strTaskStateOld) == 0")
-		//}
 		if len(strContractHashIDNew) == 0 {
-			beegoLog.Error("len(strContractHashIDNew) == 0")
+			errMsg = "[strContractHashIDNew is null]"
 		}
 		if len(strTaskIdNew) == 0 {
-			beegoLog.Error("len(strTaskIdNew) == 0")
+			errMsg = "[strTaskIdNew is null]"
 		}
 		if len(strTaskStateNew) == 0 {
-			beegoLog.Error("len(strTaskStateNew) == 0")
-			beegoLog.Error("len(strTaskStateNew) == 0")
+			errMsg = "[strTaskStateNew is null]"
 		}
-		beegoLog.Error("-------------------------------------")
-		return fmt.Errorf("param is null")
+		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
 	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashIdOld)
@@ -312,7 +296,7 @@ func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 	}
 
 	nInsertCount, err := rethinkdb.InsertTaskSchedules(slMapTaskSchedule)
-	beegoLog.Debug("insert taskScheduled count is %d, err is %v", nInsertCount, err)
+	uniledgerlog.Debug("insert taskScheduled count is %d, err is %v", nInsertCount, err)
 	return err
 }
 

@@ -6,30 +6,30 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 //---------------------------------------------------------------------------
 func Start() {
 	if scanEngineConf["clean_data_on"].(int) == 1 {
-		beegoLog.Info("CleanTaskSchedule start")
+		uniledgerlog.Info("CleanTaskSchedule start")
 		gwgTaskExe.Add(1)
 		go _CleanTaskSchedule()
 	}
 
-	beegoLog.Info("ScanFailedTask start")
+	uniledgerlog.Info("ScanFailedTask start")
 	gwgTaskExe.Add(1)
 	go _ScanFailedTask(0)
 
-	beegoLog.Info("ScanWaitTask start")
+	uniledgerlog.Info("ScanWaitTask start")
 	gwgTaskExe.Add(1)
 	go _ScanFailedTask(1)
 
-	beegoLog.Info("TaskExecute start")
+	uniledgerlog.Info("TaskExecute start")
 	gwgTaskExe.Add(1)
 	go _TaskExecute()
 
-	beegoLog.Info("ScanTaskSchedule start")
+	uniledgerlog.Info("ScanTaskSchedule start")
 	gwgTaskExe.Add(1)
 	go _ScanTaskSchedule()
 
