@@ -14,7 +14,7 @@ import (
 type GeneralExpression struct {
 	component.GeneralComponent
 	ExpressionStr    string               `json:"ExpressionStr"`
-	ExpressionResult common.OperateResult `json:"ExpressionResult"`
+	ExpressionResult common.OperateResult `json:"-"`
 }
 
 const (

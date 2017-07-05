@@ -1278,7 +1278,16 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 					break
 				}
 				if select_value.(bool) {
-					v_data.SetValue(select_object.GetBranchExpressionValue())
+					select_final_value, select_final_err := gt.GetContract().EvaluateExpression("", select_object.GetBranchExpressionValue().(string))
+					if select_final_err != nil {
+						r_buf.WriteString("[Result]: ConsistentValue fail;")
+						r_buf.WriteString("[ContractId]: " + gt.GetContract().GetContractId() + ";")
+						r_buf.WriteString("[ConstractHashId]: " + gt.GetContract().GetOutputId() + ";")
+						r_buf.WriteString("[Error]: " + select_final_err.Error() + ";")
+						logs.Error(r_buf.String())
+						break
+					}
+					v_data.SetValue(select_final_value)
 					break
 				}
 			}

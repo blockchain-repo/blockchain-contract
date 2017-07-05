@@ -54,12 +54,18 @@ func (ep *ExpressionParseEngine) SetContract(p_contract inf.ICognitiveContract) 
 func (ep *ExpressionParseEngine) EvaluateExpressionValue(p_exprtype string, p_expression string) (interface{}, error) {
 	var v_return interface{} = nil
 	var v_err error = nil
-	var r_buf bytes.Buffer = bytes.Buffer{}
+	//表达式类型不录入的话，需要动态识别表达式类型：常量、变量、函数
 	if p_exprtype == "" || p_exprtype == constdef.ExpressionType[constdef.Expression_Unknown] {
-		r_buf.WriteString("[Result]:EvaluateExpressionValue(" + p_expression + ") fail;")
-		r_buf.WriteString("[Error]:param[p_exprtype] is null or not exist;")
-		logs.Warning(r_buf.String())
-		v_err = errors.New("param[p_exprtype] is null or not exist!")
+		if ep.IsExprConst(p_expression) {
+			v_return, v_err = ep.EvaluateExpressionConstant(p_expression)
+		} else if ep.IsExprVariable(p_expression) {
+			v_return, v_err = ep.EvaluateExpressionVariable(p_expression)
+		} else if ep.IsExprFunction(p_expression) {
+			v_func_return, v_err := ep.EvaluateExpressionFunction(p_expression)
+			if v_err == nil {
+				v_return = v_func_return.GetData()
+			}
+		}
 		return v_return, v_err
 	}
 	if p_exprtype == constdef.ExpressionType[constdef.Expression_Constant] {
@@ -297,6 +303,11 @@ func (ep *ExpressionParseEngine) IsExprCondition(p_expression string) bool {
 //解析字符串是否为 函数串表达式
 func (ep *ExpressionParseEngine) IsExprFunction(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Func])
+}
+
+//解析字符串是否为 常量表达式
+func (ep *ExpressionParseEngine) IsExprConst(p_expression string) bool {
+	return ep.IsExprFloat(p_expression) || ep.IsExprBool(p_expression) || ep.IsExprDate(p_expression) || ep.IsExprString(p_expression) || ep.IsExprNum(p_expression) || ep.IsExprArray(p_expression)
 }
 
 //解析字符串是否为 变量表达式
