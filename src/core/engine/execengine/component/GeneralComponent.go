@@ -3,7 +3,7 @@ package component
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -113,7 +113,7 @@ func (gc *GeneralComponent) Serialize() (string, error) {
 	if s_model, err := json.Marshal(gc); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Matrix Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Matrix Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -123,7 +123,7 @@ func (gc *GeneralComponent) InitGeneralComponent() error {
 	var err error = nil
 	/*
 		if gc.Cname == "" {
-			logs.Warning("GeneralComponent Need Cname!")
+			uniledgerlog.Warn("GeneralComponent Need Cname!")
 			err = errors.New("GeneralComponent Need Cname!")
 			return err
 
@@ -189,7 +189,7 @@ func (gc *GeneralComponent) AddMetaAttribute(metaProperty interface{}) {
 //====属性Get方法
 func (gc *GeneralComponent) GetCname() string {
 	if gc.PropertyTable[_Cname] == nil {
-		logs.Warning("property[Cname] is nil!")
+		uniledgerlog.Warn("property[Cname] is nil!")
 		return ""
 	}
 	cname_property := gc.PropertyTable[_Cname].(property.PropertyT)

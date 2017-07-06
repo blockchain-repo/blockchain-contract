@@ -3,8 +3,8 @@ package data
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"strconv"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -172,7 +172,7 @@ func (gd *GeneralData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(gd); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Data Serialize fail[" + err.Error() + "]")
+		uniledgerlog.Error("Data Serialize fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -182,7 +182,7 @@ func (gd *GeneralData) InitGeneralData() error {
 	var err error = nil
 	err = gd.InitGeneralComponent()
 	if err != nil {
-		logs.Error("InitGeneralData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitGeneralData fail[" + err.Error() + "]")
 		return err
 	}
 	gd.SetCtype(constdef.ComponentType[constdef.Component_Data])

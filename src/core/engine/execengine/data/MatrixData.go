@@ -2,7 +2,7 @@ package data
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
@@ -56,7 +56,7 @@ func (md *MatrixData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(md); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Matrix Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Matrix Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -66,7 +66,7 @@ func (md *MatrixData) InitMatrixData() error {
 	var err error = nil
 	err = md.InitGeneralData()
 	if err != nil {
-		logs.Error("InitMatrixData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitMatrixData fail[" + err.Error() + "]")
 		return err
 	}
 	md.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Matrix])

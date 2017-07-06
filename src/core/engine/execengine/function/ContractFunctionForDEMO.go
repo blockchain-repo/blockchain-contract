@@ -3,8 +3,8 @@ package function
 import (
 	"errors"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"strconv"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 )
 
@@ -50,7 +50,7 @@ func FuncGetBalance(args ...interface{}) (common.OperateResult, error) {
 	}
 	arg_0, ok := args[0].(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return v_result, fmt.Errorf("assert error")
 	}
 	balance_amount := BANK_BALANCE[arg_0]
@@ -76,12 +76,12 @@ func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 
 	arg_A, ok := args[0].(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return v_result, fmt.Errorf("assert error")
 	}
 	arg_B, ok := args[1].(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return v_result, fmt.Errorf("assert error")
 	}
 	var arg_money float64 = args[2].(float64)

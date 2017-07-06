@@ -1,7 +1,7 @@
 package task
 
 import (
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 )
@@ -85,7 +85,7 @@ func (e *Enquiry) InitEnquriy() error {
 	var err error = nil
 	err = e.InitGeneralTask()
 	if err != nil {
-		logs.Error("InitEnquriy fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitEnquriy fail[" + err.Error() + "]")
 		return err
 	}
 	e.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry])

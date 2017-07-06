@@ -2,8 +2,8 @@ package table
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"reflect"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/data"
 	"unicontract/src/core/engine/execengine/expression"
@@ -29,7 +29,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Unknown]
 		ccom, ok := p_component.(inf.IComponent)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ccom.GetName()
@@ -40,7 +40,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Data]
 		ddata, ok := p_component.(inf.IData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ddata.GetName()
@@ -48,7 +48,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Data]
 		ddata, ok := p_component.(inf.IData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ddata.GetName()
@@ -56,7 +56,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Data]
 		ddata, ok := p_component.(inf.IData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ddata.GetName()
@@ -64,7 +64,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Task]
 		ttask, ok := p_component.(inf.ITask)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ttask.GetName()
@@ -72,7 +72,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Task]
 		ttask, ok := p_component.(inf.ITask)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ttask.GetName()
@@ -80,7 +80,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		eexp, ok := p_component.(inf.IExpression)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = eexp.GetName()
@@ -88,7 +88,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		eexp, ok := p_component.(inf.IExpression)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = eexp.GetName()
@@ -96,7 +96,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		eexp, ok := p_component.(inf.IExpression)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = eexp.GetName()
@@ -104,7 +104,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		eexp, ok := p_component.(inf.IExpression)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = eexp.GetName()
@@ -112,7 +112,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Contract]
 		eexp, ok := p_component.(inf.ICognitiveContract)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = eexp.GetName()
@@ -120,7 +120,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Contract]
 		eexp, ok := p_component.(inf.ICognitiveContract)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = eexp.GetName()
@@ -129,7 +129,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		r_type = constdef.ComponentType[constdef.Component_Unknown]
 		ccom, ok := p_component.(inf.IComponent)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return "", ""
 		}
 		r_name = ccom.GetName()
@@ -193,7 +193,7 @@ func (ct *ComponentTable) GetTaskByID(cid string, ctype string) interface{} {
 					}
 					ttask, ok := v_value.(inf.ITask)
 					if !ok {
-						logs.Error("assert error")
+						uniledgerlog.Error("assert error")
 						return nil
 					}
 					if ttask.GetTaskId() == cid {

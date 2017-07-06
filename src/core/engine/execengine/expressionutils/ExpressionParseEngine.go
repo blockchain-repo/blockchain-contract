@@ -9,7 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
+
 	"gopkg.in/Knetic/govaluate.v2"
 
 	"unicontract/src/core/engine/common"
@@ -96,7 +97,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionConstant(p_expression string)
 
 	if p_expression == "" {
 		errMsg := "EvaluateExpressionConstant Param[p_expression] is nil!"
-		logs.Warning(errMsg)
+		uniledgerlog.Warn(errMsg)
 		return "", fmt.Errorf(errMsg)
 	}
 	var v_classify string = ep.ParseExpressionClassify(p_expression)
@@ -128,7 +129,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionVariable(p_expression string)
 
 	if p_expression == "" {
 		errMsg := "EvaluateExpressionVariable Param[p_expression] is nil!"
-		logs.Warning(errMsg)
+		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
 	if ep.IsExprVariable(p_expression) {
@@ -137,7 +138,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionVariable(p_expression string)
 			var r_buf bytes.Buffer = bytes.Buffer{}
 			r_buf.WriteString("[Result]:EvaluateExpressionVariable fail;")
 			r_buf.WriteString("[Error]:" + v_err.Error())
-			logs.Warning(r_buf.String())
+			uniledgerlog.Warn(r_buf.String())
 			return nil, v_err
 		}
 	}
@@ -153,7 +154,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 
 	if p_expression == "" {
 		errMsg := "EvaluateExpressionCondition Param[p_expression] is nil!"
-		logs.Warning(errMsg)
+		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
 	if ep.IsExprBool(p_expression) {
@@ -163,12 +164,12 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 	} else if ep.IsExprFunction(p_expression) {
 		v_common_result, v_err := ep.ParseExprFunctionValue(p_expression)
 		if v_common_result.GetCode() != 200 {
-			logs.Warning("[Result]:EvaluateExpressionCondition fail(Code != 200);")
+			uniledgerlog.Warn("[Result]:EvaluateExpressionCondition fail(Code != 200);")
 			return v_return, v_err
 		}
 		str, ok := v_common_result.GetData().(string)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return v_return, fmt.Errorf("assert error")
 		}
 		v_return, v_err = strconv.ParseBool(str)
@@ -177,7 +178,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 		var r_buf bytes.Buffer = bytes.Buffer{}
 		r_buf.WriteString("[Result]:EvaluateExpressionCondition fail;")
 		r_buf.WriteString("[Error]:" + v_err.Error())
-		logs.Warning(r_buf.String())
+		uniledgerlog.Warn(r_buf.String())
 	}
 	return v_return, v_err
 }
@@ -190,7 +191,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string)
 	var v_err error = nil
 	if p_expression == "" {
 		errMsg := "EvaluateExpressionFunction Param[p_expression] is nil!"
-		logs.Warning(errMsg)
+		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
 	if ep.IsExprFunction(p_expression) {
@@ -200,7 +201,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string)
 		var r_buf bytes.Buffer = bytes.Buffer{}
 		r_buf.WriteString("[Result]:EvaluateExpressionFunction fail;")
 		r_buf.WriteString("[Error]:" + v_err.Error())
-		logs.Warning(r_buf.String())
+		uniledgerlog.Warn(r_buf.String())
 	}
 	return v_return, v_err
 }
@@ -212,7 +213,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCandidate(p_expression string
 	var v_err error = nil
 	if p_expression == "" {
 		errMsg := "EvaluateExpressionCandidate Param[p_expression] is nil!"
-		logs.Warning(errMsg)
+		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
 	//TODO 待补充
@@ -490,7 +491,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 	//识别条件表达式中的变量 map[string]string
 	v_variables, v_err := ep.ParseVariablesInExprCondition(p_expression)
 	if v_err != nil {
-		logs.Warning("ParseVariablesInExprCondition fail(" + v_err.Error() + ")")
+		uniledgerlog.Warn("ParseVariablesInExprCondition fail(" + v_err.Error() + ")")
 		return false, v_err
 	}
 
@@ -501,13 +502,13 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 		if ep.IsExprFunction(v_param) { //函数变量表达式
 			v_result, v_err := ep.ParseExprFunctionValue(v_param)
 			if v_err != nil {
-				logs.Warning("ParseExprFunctionValue fail(" + v_err.Error() + ")")
+				uniledgerlog.Warn("ParseExprFunctionValue fail(" + v_err.Error() + ")")
 				return false, v_err
 			}
 			_, ok := v_result.GetData().(string)
 			if !ok {
 				v_err = fmt.Errorf("ParseExprFunctionValue[" + v_param + "] fail!")
-				logs.Warning("ParseExprFunctionValue fail(" + v_err.Error() + ")!")
+				uniledgerlog.Warn("ParseExprFunctionValue fail(" + v_err.Error() + ")!")
 				return false, v_err
 			}
 			v_parameters[v_param] = v_result.GetData().(string)
@@ -515,7 +516,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 		} else if ep.IsExprVariable(v_param) { // 变量表达式
 			v_result, v_err := ep.ParseExprVariableValue(v_param)
 			if v_err != nil || v_result == nil {
-				logs.Warning("ParseExprVariableValue fail(" + v_err.Error() + ")")
+				uniledgerlog.Warn("ParseExprVariableValue fail(" + v_err.Error() + ")")
 				return false, v_err
 			}
 			v_parameters[v_param] = v_result
@@ -535,19 +536,19 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 	//Eval 条件表达式的值
 	v_expression, v_err := govaluate.NewEvaluableExpression(p_expression)
 	if v_err != nil {
-		logs.Warning("govaluate.NewEvaluableExpression fail(" + v_err.Error() + ")")
+		uniledgerlog.Warn("govaluate.NewEvaluableExpression fail(" + v_err.Error() + ")")
 		return false, v_err
 	}
 	//Eval 表达式的值
 	//v_result, v_err := v_expression.Evaluate(v_parameters)
 	v_result, v_err := v_expression.Evaluate(nil)
 	if v_err != nil {
-		logs.Warning("expression.Evaluate fail(" + v_err.Error() + ")")
+		uniledgerlog.Warn("expression.Evaluate fail(" + v_err.Error() + ")")
 		return false, v_err
 	}
 	b, ok := v_result.(bool)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return false, fmt.Errorf("assert error")
 	}
 	return b, v_err
@@ -560,7 +561,7 @@ func (ep *ExpressionParseEngine) ParseExprFunctionValue(p_expression string) (co
 	var v_err error = nil
 	v_return, v_err = ep.RunFunction(p_expression)
 	if v_err != nil {
-		logs.Warning("RunFunction(" + p_expression + ") fail(" + v_err.Error() + ")")
+		uniledgerlog.Warn("RunFunction(" + p_expression + ") fail(" + v_err.Error() + ")")
 		return v_return, v_err
 	}
 	return v_return, v_err
@@ -677,82 +678,82 @@ func (ep *ExpressionParseEngine) ReflectComponent(p_component interface{}, p_var
 	if ep.IsNameContract(p_variable) {
 		parse_component, ok = p_component.(inf.ICognitiveContract)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameTaskEnquiry(p_variable) {
 		parse_component, ok = p_component.(*task.Enquiry)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameTaskAction(p_variable) {
 		parse_component, ok = p_component.(*task.Action)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameTaskDecision(p_variable) {
 		parse_component, ok = p_component.(*task.Decision)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameTaskPlan(p_variable) {
 		parse_component, ok = p_component.(*task.Plan)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataInt(p_variable) {
 		parse_component, ok = p_component.(*data.IntData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataUint(p_variable) {
 		parse_component, ok = p_component.(*data.UintData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataFloat(p_variable) {
 		parse_component, ok = p_component.(*data.FloatData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataText(p_variable) {
 		parse_component, ok = p_component.(*data.TextData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataDate(p_variable) {
 		parse_component, ok = p_component.(*data.DateData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataArray(p_variable) {
 		parse_component, ok = p_component.(*data.ArrayData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataMatrix(p_variable) {
 		parse_component, ok = p_component.(*data.MatrixData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataCompound(p_variable) {
 		parse_component, ok = p_component.(*data.CompoundData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameDataOperateResult(p_variable) {
 		parse_component, ok = p_component.(*data.OperateResultData)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameExprFunc(p_variable) {
 		parse_component, ok = p_component.(*expression.Function)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	} else if ep.IsNameExprArgu(p_variable) {
 		parse_component, ok = p_component.(*expression.LogicArgument)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 		}
 	}
 	return parse_component
@@ -808,7 +809,7 @@ func (ep *ExpressionParseEngine) ParseVariablesInExprCondition(p_expression stri
 	var v_return map[string]string = nil
 	var v_err error = nil
 	if p_expression == "" {
-		logs.Warning("ParseVariablesInExprCondition param is nil!")
+		uniledgerlog.Warn("ParseVariablesInExprCondition param is nil!")
 		return v_return, v_err
 	}
 	//初始化返回结果
@@ -855,7 +856,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	if p_function == "" {
 		r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
 		r_buf.WriteString("[Error]: param[p_function] is nil!")
-		logs.Warning(r_buf.String())
+		uniledgerlog.Warn(r_buf.String())
 		v_err = errors.New(" param[p_function] is nil!")
 		v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 		return v_result, v_err
@@ -864,7 +865,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	if v_bool, v_err := regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, p_function); !v_bool || v_err != nil {
 		r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
 		r_buf.WriteString("[Error]: param[p_function] format error!")
-		logs.Warning(r_buf.String())
+		uniledgerlog.Warn(r_buf.String())
 		v_err = errors.New(" param[p_function] format error!")
 		v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 		return v_result, v_err
@@ -872,11 +873,11 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	//正则匹配函数名
 	name_reg := regexp.MustCompile(`\s*([^\(]+)`)
 	func_name := strings.TrimSpace(name_reg.FindString(p_function))
-	logs.Info("=======func_name:", func_name)
+	uniledgerlog.Info("=======func_name:", func_name)
 	//正则匹配函数的参数变量
 	param_reg := regexp.MustCompile(`\((.*)\)`)
 	func_param_str := strings.Trim(param_reg.FindString(p_function), "(|)")
-	logs.Info("=======func_params:", func_param_str)
+	uniledgerlog.Info("=======func_params:", func_param_str)
 	//函数调用
 	func_run := reflect.ValueOf(ep.FunctionEngine.ContractFunctions[func_name])
 	var func_params []reflect.Value = nil
@@ -912,7 +913,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 				if err != nil {
 					r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
 					r_buf.WriteString("[Error]: function args(" + v_args + ") parse error!")
-					logs.Warning(r_buf.String())
+					uniledgerlog.Warn(r_buf.String())
 					v_err = errors.New(" function args(" + v_args + ") parse error!")
 					v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 					return v_result, v_err
@@ -923,7 +924,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	}
 	func_result_arr := func_run.Call(func_params)
 	r_buf.WriteString("[Result]: RunFunction(" + p_function + ") success;")
-	logs.Info(r_buf.String())
+	uniledgerlog.Info(r_buf.String())
 
 	retResult, ok1 := func_result_arr[0].Interface().(common.OperateResult)
 	if !ok1 {
@@ -933,6 +934,6 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	if !ok2 {
 		retErr = nil
 	}
-	logs.Info(retResult, retErr)
+	uniledgerlog.Info(retResult, retErr)
 	return retResult, retErr
 }

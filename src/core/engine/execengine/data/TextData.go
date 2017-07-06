@@ -3,8 +3,8 @@ package data
 import (
 	"encoding/json"
 	"errors"
-	"github.com/astaxie/beego/logs"
 	"strings"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -72,7 +72,7 @@ func (td *TextData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(td); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Text Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Text Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -82,7 +82,7 @@ func (td *TextData) InitTextData() error {
 	var err error = nil
 	err = td.InitGeneralData()
 	if err != nil {
-		logs.Error("InitTextData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitTextData fail[" + err.Error() + "]")
 		return err
 	}
 	td.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Text])

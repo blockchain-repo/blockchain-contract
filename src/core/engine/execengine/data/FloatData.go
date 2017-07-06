@@ -3,9 +3,9 @@ package data
 import (
 	"encoding/json"
 	"errors"
-	"github.com/astaxie/beego/logs"
 	"math"
 	"strconv"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -81,7 +81,7 @@ func (fd *FloatData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(fd); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Float Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Float Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -91,7 +91,7 @@ func (fd *FloatData) InitFloatData() error {
 	var err error = nil
 	err = fd.InitGeneralData()
 	if err != nil {
-		logs.Error("InitFloatData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitFloatData fail[" + err.Error() + "]")
 		return err
 	}
 	fd.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Float])

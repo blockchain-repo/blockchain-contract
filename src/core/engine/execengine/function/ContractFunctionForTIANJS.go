@@ -2,9 +2,9 @@ package function
 
 import (
 	"errors"
-	"github.com/astaxie/beego/logs"
 	"math/rand"
 	"time"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/transaction"
@@ -431,7 +431,7 @@ func FuncGetUserPurchase(args ...interface{}) (common.OperateResult, error) {
 	var pubkey string = ""
 	//var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
 	var purchaseAmount = transaction.GetPurchaseAmount(pubkey)
-	logs.Info("purchaseAmount", purchaseAmount)
+	uniledgerlog.Info("purchaseAmount", purchaseAmount)
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -448,11 +448,11 @@ func FuncGetUserBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_err error = nil
 	var pubkey string = ""
 	//var _, unspentAmount = transaction.GetUnfreezeUnspent(pubkey)
-	//logs.Info("unspentAmount", unspentAmount)
+	//uniledgerlog.Info("unspentAmount", unspentAmount)
 	var interest = transaction.GetInterestCount(pubkey)
-	logs.Info("interest", interest)
+	uniledgerlog.Info("interest", interest)
 	//var count = unspentAmount + interest
-	logs.Info("count", interest)
+	uniledgerlog.Info("count", interest)
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -478,18 +478,18 @@ func FuncCheckLastDayInRaisePeriod(args ...interface{}) (common.OperateResult, e
 	now, _ := time.Parse(format, time.Now().Format(format))
 	d, _ := time.ParseDuration("-24h")
 	var dateCheck time.Time = now.Add(d)
-	logs.Info(dateCheck)
+	uniledgerlog.Info(dateCheck)
 	var week = dateCheck.Weekday()
-	logs.Info(week)
+	uniledgerlog.Info(week)
 	var sunday time.Weekday = 0
 	var sturday time.Weekday = 6
 	if sunday == week {
-		logs.Info(sunday)
+		uniledgerlog.Info(sunday)
 		d, _ := time.ParseDuration("-48h")
 		dateCheck = dateCheck.Add(d)
 	}
 	if sturday == week {
-		logs.Info(sturday)
+		uniledgerlog.Info(sturday)
 		d, _ := time.ParseDuration("-24h")
 		dateCheck = dateCheck.Add(d)
 	}
@@ -550,7 +550,7 @@ func FuncGetYearYieldRateOfLastDay(args ...interface{}) (common.OperateResult, e
 	//var realrate = rand.Float64() * rate
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	realrate := (r.Float64() + 0.5) * rate
-	logs.Info(realrate)
+	uniledgerlog.Info(realrate)
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -615,7 +615,7 @@ func FuncCalcUserRealIncome(args ...interface{}) (common.OperateResult, error) {
 	//tx_signers []string, recipients [][2]interface{}, metadataStr string,
 	//relationStr string, contractStr string
 	outputStr, v_err := transaction.ExecuteCreate(ownerBefore, recipients, metadataStr, relationStr, contractStr)
-	logs.Info(outputStr)
+	uniledgerlog.Info(outputStr)
 	if v_err != nil {
 		return v_result, v_err
 	}
@@ -655,7 +655,7 @@ func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, e
 	var contractHashId string = ""
 	var metadataStr string = ""
 	var realrate = 0.0
-	//logs.Info(realrate)
+	//uniledgerlog.Info(realrate)
 	res := transaction.GetInfoByUser(ownerAfter)
 	firstPurchaseAmount := res["firstPurchaseAmount"].(float64)
 	interest := res["interest"].(float64)
@@ -682,7 +682,7 @@ func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, e
 		}
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
 		//if v_err != nil {
-		//	logs.Error(v_err)
+		//	uniledgerlog.Error(v_err)
 		//	v_result.SetCode(400)
 		//	v_result.SetMessage(v_err.Error())
 		//	return v_result, v_err
@@ -696,12 +696,12 @@ func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, e
 	/*
 		do transfer
 	*/
-	logs.Info("for ")
+	uniledgerlog.Info("for ")
 	for i := 0; i <= 3; i++ {
 		//transfer asset
 		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
 		if v_err != nil && i == 3 {
-			logs.Error(v_err)
+			uniledgerlog.Error(v_err)
 			v_result.SetCode(400)
 			v_result.SetMessage(v_err.Error())
 			return v_result, v_err
@@ -773,7 +773,7 @@ func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult,
 		}
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
 		//if v_err != nil {
-		//	logs.Error(v_err)
+		//	uniledgerlog.Error(v_err)
 		//	v_result.SetCode(400)
 		//	v_result.SetMessage(v_err.Error())
 		//	return v_result, v_err
@@ -787,12 +787,12 @@ func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult,
 	/*
 		do transfer
 	*/
-	logs.Info("for ")
+	uniledgerlog.Info("for ")
 	for i := 0; i <= 3; i++ {
 		//transfer asset
 		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
 		if v_err != nil && i == 3 {
-			logs.Error(v_err)
+			uniledgerlog.Error(v_err)
 			v_result.SetCode(400)
 			v_result.SetMessage(v_err.Error())
 			return v_result, v_err

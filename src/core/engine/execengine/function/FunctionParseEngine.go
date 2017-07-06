@@ -3,7 +3,7 @@ package function
 import (
 	"bytes"
 	"errors"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 )
 
@@ -29,7 +29,7 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionsCommon fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -60,7 +60,7 @@ func (bif *FunctionParseEngine) LoadFunctionDEMO() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionDEMO fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -83,7 +83,7 @@ func (bif *FunctionParseEngine) LoadFunctionTIANJS() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionTIANJS fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -148,7 +148,7 @@ func (bif *FunctionParseEngine) LoadFunctionGUANGXIBIANMAO() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionGUANGXIBIAMAO fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -168,7 +168,7 @@ func (bif *FunctionParseEngine) LoadFunctionENERGYTRADING() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionENEGYTRADING fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -200,7 +200,7 @@ func (bif *FunctionParseEngine) LoadFunctionTRANSFER() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionTRANSFER fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -220,7 +220,7 @@ func (bif *FunctionParseEngine) LoadFunctionRENTPAYMENT() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionRENTPAYMENT fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -245,7 +245,7 @@ func (bif *FunctionParseEngine) LoadFunctionHOUSETRANSFER() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionHOUSETRANSFER fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}
@@ -274,7 +274,7 @@ func (bif *FunctionParseEngine) LoadFunctionAUTOSELLER() error {
 	if bif.ContractFunctions == nil {
 		r_buf.WriteString("[Result]: LoadFunctionAUTOSELLER fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
-		logs.Error(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		v_err = errors.New("ContractFunctions is nil!")
 		return v_err
 	}

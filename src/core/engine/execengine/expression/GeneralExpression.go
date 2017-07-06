@@ -3,7 +3,7 @@ package expression
 import (
 	"encoding/json"
 	"errors"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -44,12 +44,12 @@ func (ge GeneralExpression) GetCtype() string {
 	}
 	ctype_property, ok := ge.PropertyTable["_Ctype"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	str, ok := ctype_property.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	return str
@@ -59,12 +59,12 @@ func (ge GeneralExpression) SetExpressionResult(p_expresult interface{}) {
 	ok := false
 	ge.ExpressionResult, ok = p_expresult.(common.OperateResult)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return
 	}
 	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return
 	}
 	result_property.SetValue(p_expresult)
@@ -117,7 +117,7 @@ func (ge *GeneralExpression) Serialize() (string, error) {
 	if s_model, err := json.Marshal(ge); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Expression Serialize fail[" + err.Error() + "]")
+		uniledgerlog.Error("Expression Serialize fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -126,13 +126,13 @@ func (ge *GeneralExpression) Serialize() (string, error) {
 func (ge *GeneralExpression) InitExpression() error {
 	var err error = nil
 	if ge.ExpressionStr == "" {
-		logs.Error("ExpressionStr is nil!")
+		uniledgerlog.Error("ExpressionStr is nil!")
 		errors.New("Expression need ExpressionStr!")
 		return err
 	}
 	err = ge.InitGeneralComponent()
 	if err != nil {
-		logs.Error("InitExpression fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitExpression fail[" + err.Error() + "]")
 		return err
 	}
 	ge.SetCtype(constdef.ComponentType[constdef.Component_Expression])
@@ -146,12 +146,12 @@ func (ge *GeneralExpression) InitExpression() error {
 func (ge *GeneralExpression) GetExpressionStr() string {
 	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	str, ok := express_property.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	return str
@@ -161,12 +161,12 @@ func (ge *GeneralExpression) GetExpressionResult() common.OperateResult {
 	var result common.OperateResult
 	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return result
 	}
 	result, ok = result_property.GetValue().(common.OperateResult)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 	}
 	return result
 }
@@ -176,7 +176,7 @@ func (ge *GeneralExpression) SetExpressionStr(p_expression string) {
 	ge.ExpressionStr = p_expression
 	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return
 	}
 	express_property.SetValue(p_expression)

@@ -17,9 +17,7 @@ import (
 )
 
 import (
-	//	"math"
-
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 type PowerPlants struct {
@@ -69,7 +67,7 @@ func __init() {
 	// 个人
 	keys, err := rethinkdb.GetRolePublicKey(0)
 	if err != nil {
-		logs.Error(err)
+		uniledgerlog.Error(err)
 		// 数据库中没有个人角色，就插入一条
 		strPublicKey, _ := common2.GenerateKeyPair()
 		person1 := model.DemoRole{
@@ -90,7 +88,7 @@ func __init() {
 	// 电表
 	keys, err = rethinkdb.GetRolePublicKey(1)
 	if err != nil {
-		logs.Error(err)
+		uniledgerlog.Error(err)
 		// 数据库中没有电表角色，就插入一条
 		strPublicKey, _ := common2.GenerateKeyPair()
 		mapInformation := make(map[string]string)
@@ -122,7 +120,7 @@ func __init() {
 	// 运营商
 	keys, err = rethinkdb.GetRolePublicKey(2)
 	if err != nil {
-		logs.Error(err)
+		uniledgerlog.Error(err)
 		// 数据库中没有运营商角色，就插入一条
 		strPublicKey, _ := common2.GenerateKeyPair()
 		operator1 := model.DemoRole{
@@ -150,7 +148,7 @@ func __init() {
 	for _, v := range type_ {
 		keys, err := rethinkdb.GetRolePublicKey(v)
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 			// 数据库中没有发电厂角色，就插入一条
 			strPublicKey, _ := common2.GenerateKeyPair()
 			R := model.DemoRole{
@@ -232,7 +230,7 @@ func Simulate() {
 	go func() {
 		for _ = range ticker.C {
 			// 模拟采集电表数据
-			logs.Info("模拟采集电表数据")
+			uniledgerlog.Info("模拟采集电表数据")
 			for index, v := range slMeterKey {
 				slMeterKey[index].Electricity += 1
 				slMeterKey[index].TotalElectricity += 1
@@ -249,12 +247,12 @@ func Simulate() {
 
 				err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
 				if err != nil {
-					logs.Error(err)
+					uniledgerlog.Error(err)
 				}
 			}
 
 			// 模拟采集发电厂数据
-			logs.Info("模拟采集发电厂数据")
+			uniledgerlog.Info("模拟采集发电厂数据")
 			for _, v := range slPowerPlantsKey {
 				electricityPowerPlant1 := model.DemoEnergy{
 					Id:          common2.GenerateUUID(),
@@ -267,7 +265,7 @@ func Simulate() {
 
 				err := rethinkdb.InsertEnergyTradingDemoEnergy(string(sldata))
 				if err != nil {
-					logs.Error(err)
+					uniledgerlog.Error(err)
 				}
 			}
 		}
@@ -466,9 +464,9 @@ func _CalcElecPrice(electricity, electricityTotal float64, timeStamp string) (fl
 //    访问电力能源链，读取用户电表余额
 //Args: User_A  string  电表公钥
 func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncQueryAmmeterBalance")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncQueryAmmeterBalance")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -502,9 +500,9 @@ func FuncQueryAmmeterBalance(args ...interface{}) (common.OperateResult, error) 
 //    查询能源交易链,获取用户交易账户余额
 //Args: UserA  string  用户公钥
 func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncQueryAccountBalance")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncQueryAccountBalance")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -539,9 +537,9 @@ func FuncQueryAccountBalance(args ...interface{}) (common.OperateResult, error) 
 //Args: User_A  string     用户账户
 //      50      float64    充值额度
 func FuncNoticeDeposit(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncNoticeDeposit")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncNoticeDeposit")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -643,9 +641,9 @@ func _Recharge() {
 //       Ccount_D string
 //       50       float64     充值额度
 func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncAutoPurchasingElectricity")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncAutoPurchasingElectricity")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -725,9 +723,9 @@ func FuncAutoPurchasingElectricity(args ...interface{}) (common.OperateResult, e
 //自动休眠1小时
 //Args： SleepTime  int 单位是秒
 func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncAutoSleeping")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncAutoSleeping")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -746,9 +744,9 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 	sleeptime := 30
 
 	time.Sleep(time.Second * time.Duration(sleeptime))
-	logs.Info("*********************************************************")
-	logs.Info("sleep complete")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("sleep complete")
+	uniledgerlog.Info("*********************************************************")
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -760,9 +758,9 @@ func FuncAutoSleeping(args ...interface{}) (common.OperateResult, error) {
 // 获取查询起始时间
 // userKey string
 func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncGetStartEndTime")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncGetStartEndTime")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -818,9 +816,9 @@ func FuncGetStartEndTime(args ...interface{}) (common.OperateResult, error) {
 //      startTime   string
 //      endTime     string
 func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncGetPowerConsumeParam")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncGetPowerConsumeParam")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -873,9 +871,9 @@ func FuncGetPowerConsumeParam(args ...interface{}) (common.OperateResult, error)
 //C. 消耗电量大于0时，获取对应的电价(峰谷平电价 和 阶梯的综合电价)
 //获取电价信息（波峰平谷电价 & 阶梯电价）
 func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncGetPowerPrice")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncGetPowerPrice")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -905,9 +903,9 @@ func FuncGetPowerPrice(args ...interface{}) (common.OperateResult, error) {
 //Return: consume_money   消耗金额
 //        remain_money    电表余额
 func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncCalcConsumeAmountAndMoney")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncCalcConsumeAmountAndMoney")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -987,9 +985,9 @@ func FuncCalcConsumeAmountAndMoney(args ...interface{}) (common.OperateResult, e
 //      other_users    string   合约分账的各用户
 //      other_transfer string   各用户转账金额列表
 func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncTransferElecChargeToPlatform")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncTransferElecChargeToPlatform")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -1007,9 +1005,9 @@ func FuncTransferElecChargeToPlatform(args ...interface{}) (common.OperateResult
 //Args：  user_A   string   elec_account
 //       amount   float64      电表余额
 func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncUpdateElecBalance")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncUpdateElecBalance")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -1054,9 +1052,9 @@ func FuncUpdateElecBalance(args ...interface{}) (common.OperateResult, error) {
 //      end_time    string   统计结束时间串
 //Return : split_percent string  各合约用户分账比例
 func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncCalcAndSplitRatio")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncCalcAndSplitRatio")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error
@@ -1128,9 +1126,9 @@ func FuncCalcAndSplitRatio(args ...interface{}) (common.OperateResult, error) {
 //      split_percent string   合约分账各方分账的比例
 //      money         float    要分帐的金额
 func FuncAutoSplitAccount(args ...interface{}) (common.OperateResult, error) {
-	logs.Info("*********************************************************")
-	logs.Info("FuncAutoSplitAccount")
-	logs.Info("*********************************************************")
+	uniledgerlog.Info("*********************************************************")
+	uniledgerlog.Info("FuncAutoSplitAccount")
+	uniledgerlog.Info("*********************************************************")
 	var v_result common.OperateResult
 	v_result.SetCode(500)
 	var v_err error

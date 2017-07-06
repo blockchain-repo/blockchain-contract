@@ -2,7 +2,7 @@ package task
 
 import (
 	"bytes"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -109,7 +109,7 @@ func (d *Decision) InitDecision() error {
 	var err error = nil
 	err = d.InitEnquriy()
 	if err != nil {
-		logs.Error("InitDecision fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitDecision fail[" + err.Error() + "]")
 		return err
 	}
 	d.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision])
@@ -235,7 +235,7 @@ func (gt *Decision) Start() (int8, error) {
 	r_buf.WriteString("Contract Runing:Dormant State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	logs.Info(r_buf.String(), " begin....")
+	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	if gt.IsDormant() && gt.testPreCondition() {
@@ -253,16 +253,16 @@ func (gt *Decision) Start() (int8, error) {
 			r_buf.WriteString("[Result]: Task execute fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 			r_buf.WriteString("fail....")
-			logs.Error(r_buf.String())
+			uniledgerlog.Error(r_buf.String())
 			return r_ret, r_err
 		}
 		r_buf.WriteString("[Result]: Task execute success;")
-		logs.Info(r_buf.String(), " Dormant to Inprocess....")
+		uniledgerlog.Info(r_buf.String(), " Dormant to Inprocess....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
 	} else if gt.IsDormant() && !gt.testPreCondition() { //未达到执行条件，返回 0
 		r_ret = 0
 		r_buf.WriteString("[Result]: preCondition not true;")
-		logs.Warning(r_buf.String(), " exit....")
+		uniledgerlog.Warn(r_buf.String(), " exit....")
 		return r_ret, r_err
 	}
 	//执行完动作后需要等待执行完成

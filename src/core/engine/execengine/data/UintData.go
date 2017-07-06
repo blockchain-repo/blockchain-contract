@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"strconv"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -85,7 +85,7 @@ func (ud *UintData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(ud); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Uint Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Uint Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -95,7 +95,7 @@ func (ud *UintData) InitUintData() error {
 	var err error = nil
 	err = ud.InitGeneralData()
 	if err != nil {
-		logs.Error("InitUintData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitUintData fail[" + err.Error() + "]")
 		return err
 	}
 	ud.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Uint])

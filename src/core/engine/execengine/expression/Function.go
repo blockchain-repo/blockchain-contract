@@ -2,7 +2,7 @@ package expression
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 )
@@ -54,7 +54,7 @@ func (f *Function) Serialize() (string, error) {
 	if s_model, err := json.Marshal(f); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Expression fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Expression fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -64,7 +64,7 @@ func (f *Function) InitFunction() error {
 	var err error = nil
 	err = f.InitExpression()
 	if err != nil {
-		logs.Warning("InitExpression fail[" + err.Error() + "]")
+		uniledgerlog.Warn("InitExpression fail[" + err.Error() + "]")
 		return err
 	}
 	f.SetCtype(constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Function])

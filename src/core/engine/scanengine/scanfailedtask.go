@@ -16,10 +16,6 @@ import (
 	"time"
 )
 
-//import (
-//	beegoLog "github.com/astaxie/beego/logs"
-//)
-
 import (
 	"unicontract/src/common/monitor"
 	"unicontract/src/common/uniledgerlog"

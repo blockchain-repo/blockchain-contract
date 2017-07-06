@@ -3,8 +3,8 @@ package data
 import (
 	"encoding/json"
 	"errors"
-	"github.com/astaxie/beego/logs"
 	"time"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -66,7 +66,7 @@ func (dd *DateData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(dd); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Date Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Date Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -76,7 +76,7 @@ func (dd *DateData) InitDateData() error {
 	var err error = nil
 	err = dd.InitGeneralData()
 	if err != nil {
-		logs.Error("InitGeneralData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitGeneralData fail[" + err.Error() + "]")
 		return err
 	}
 	dd.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Date])

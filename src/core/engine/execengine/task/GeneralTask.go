@@ -19,10 +19,10 @@ import (
 
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/logs"
 	"regexp"
 	"strconv"
 	"strings"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/data"
 )
 
@@ -91,12 +91,12 @@ func (gt *GeneralTask) GetState() string {
 	}
 	state_property, ok := gt.PropertyTable[_State].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	str, ok := state_property.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	return str
@@ -115,12 +115,12 @@ func (gt *GeneralTask) GetNextTasks() []string {
 	}
 	nexttask_property, ok := gt.PropertyTable[_NextTasks].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return nil
 	}
 	sl, ok := nexttask_property.GetValue().([]string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return nil
 	}
 	return sl
@@ -146,7 +146,7 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 	//预处理
 	r_err = gt.PreProcess()
 	if r_err != nil {
-		logs.Error("Task[" + gt.GetName() + "] PreProcess fail!")
+		uniledgerlog.Error("Task[" + gt.GetName() + "] PreProcess fail!")
 		return r_ret, r_err
 	}
 	//处理中
@@ -182,7 +182,7 @@ func (gt *GeneralTask) GetTaskId() string {
 	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
 	str, ok := taskid_property.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	return str
@@ -242,7 +242,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	for v_idx, _ := range gt.DataList {
 		if gt.DataList[v_idx] == nil {
 			err = fmt.Errorf("gt.DataList has nil data!")
-			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
 		v_data_map := gt.DataList[v_idx].(map[string]interface{})
@@ -258,7 +258,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	for v_idx, _ := range gt.DataValueSetterExpressionList {
 		if gt.DataValueSetterExpressionList[v_idx] == nil {
 			err = fmt.Errorf("gt.DataValueSetterExpressionList has nil data!")
-			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
 		v_expression_map := gt.DataValueSetterExpressionList[v_idx].(map[string]interface{})
@@ -273,7 +273,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	for v_idx, _ := range gt.PreCondition {
 		if gt.PreCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.PreCondition has nil data!")
-			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
 		v_pre_map := gt.PreCondition[v_idx].(map[string]interface{})
@@ -289,7 +289,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	for v_idx, _ := range gt.CompleteCondition {
 		if gt.CompleteCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.CompleteCondition has nil data!")
-			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
 		v_complete_map := gt.CompleteCondition[v_idx].(map[string]interface{})
@@ -304,7 +304,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	for v_idx, _ := range gt.DiscardCondition {
 		if gt.DiscardCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.DiscardCondition has nil data!")
-			logs.Error("UpdateStaticState fail[" + err.Error() + "]")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
 			return nil, err
 		}
 		v_discard_map := gt.DiscardCondition[v_idx].(map[string]interface{})
@@ -323,7 +323,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 	var err error = nil
 	err = gt.InitGeneralComponent()
 	if err != nil {
-		logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 		return err
 	}
 	gt.SetCtype(constdef.ComponentType[constdef.Component_Task])
@@ -350,7 +350,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_precondition, _ := json.Marshal(p_precondition)
 				err = json.Unmarshal(tmp_byte_precondition, &tmp_precondition)
 				if err != nil {
-					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_precondition.InitLogicArgument()
@@ -376,7 +376,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_completecondition, _ := json.Marshal(p_completecondition)
 				err = json.Unmarshal(tmp_byte_completecondition, &tmp_completecondition)
 				if err != nil {
-					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_completecondition.InitLogicArgument()
@@ -402,7 +402,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_discardcondition, _ := json.Marshal(p_discardcondition)
 				err = json.Unmarshal(tmp_byte_discardcondition, &tmp_discardcondition)
 				if err != nil {
-					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_discardcondition.InitLogicArgument()
@@ -427,7 +427,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				p_data_map := p_data.(map[string]interface{})
 				_, ok := p_data_map["Ctype"].(string)
 				if !ok {
-					logs.Error("assert error!!")
+					uniledgerlog.Error("assert error!!")
 					continue
 				}
 				switch p_data_map["Ctype"].(string) {
@@ -436,7 +436,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitIntData()
@@ -446,7 +446,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitUintData()
@@ -456,7 +456,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitFloatData()
@@ -466,7 +466,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitTextData()
@@ -476,7 +476,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitDateData()
@@ -486,7 +486,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitOperateResultData()
@@ -513,7 +513,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_express, _ := json.Marshal(p_express)
 				err = json.Unmarshal(tmp_byte_express, &tmp_express)
 				if err != nil {
-					logs.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_express.InitFunction()
@@ -750,7 +750,7 @@ func (gt *GeneralTask) testCompleteCondition() bool {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			logs.Warning("CompleteCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
+			uniledgerlog.Warn("CompleteCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -772,7 +772,7 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			logs.Warning("DiscardCondition EvaluateExpression[" + value.GetExpressionStr() + "] fail, [" + v_err.Error() + "]")
+			uniledgerlog.Warn("DiscardCondition EvaluateExpression[" + value.GetExpressionStr() + "] fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -787,11 +787,11 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 	v_default_function := "FuncIsConPutInUnichian(\"" + v_contract.GetOutputId() + "\")"
 	v_result, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_default_function)
 	if v_err != nil {
-		logs.Warning("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
+		uniledgerlog.Warn("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
 		r_flag = false
 	}
 	if !v_result.(bool) {
-		logs.Warning("DiscardCondition EvaluateExpression[" + v_default_function + "] result is false!")
+		uniledgerlog.Warn("DiscardCondition EvaluateExpression[" + v_default_function + "] result is false!")
 		r_flag = false
 	}
 	return r_flag
@@ -806,7 +806,7 @@ func (gt *GeneralTask) testPreCondition() bool {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			logs.Warning("PreCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
+			uniledgerlog.Warn("PreCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -845,7 +845,7 @@ func (gt *GeneralTask) PreProcess() error {
 	if gt.GetContract() == nil {
 		r_err = errors.New("PreProcess fail, GetContract is nil!")
 		r_buf.WriteString("PreProcess fail, GetContract is nil!")
-		logs.Warning(r_buf.String())
+		uniledgerlog.Warn(r_buf.String())
 		return r_err
 	}
 	//outputTaskId, outputTaskExecuteIdx赋值
@@ -860,12 +860,12 @@ func (gt *GeneralTask) Dormant() (int8, error) {
 	r_buf.WriteString("Contract Runing:Dormant State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	logs.Info(r_buf.String(), " begin....")
+	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	if gt.IsInProgress() || gt.IsCompleted() {
-		logs.Info("Task[", gt.GetName(), "] State[Start to Dormant]....")
-		logs.Info(r_buf.String(), " InProgress|Completed to Dormant....")
+		uniledgerlog.Info("Task[", gt.GetName(), "] State[Start to Dormant]....")
+		uniledgerlog.Info(r_buf.String(), " InProgress|Completed to Dormant....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Dormant])
 		//TODO 回滚需求清空中间变量的值
 	}
@@ -877,7 +877,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 	r_buf.WriteString("Contract Runing:Dormant State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	logs.Info(r_buf.String(), " begin....")
+	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	if gt.IsDormant() && gt.testPreCondition() {
@@ -893,13 +893,13 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//注意：限制只可有一个Output交易产出
 		// TODO 待处理，避免一般操作任务，重复执行
 		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_expression_function_A）
-		logs.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
+		uniledgerlog.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
 		for v_key, _ := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
 			//1 函数识别 & 执行
 			str_name := v_expr_object.GetName()
 			str_function := v_expr_object.GetExpressionStr()
-			logs.Error("==Function==" + str_function)
+			uniledgerlog.Error("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
 			reg := regexp.MustCompile("FuncTransferAsset\\(")
 			v_str := reg.FindString(str_function)
@@ -916,10 +916,10 @@ func (gt *GeneralTask) Start() (int8, error) {
 					r_buf.WriteString("[Result]: Generate OutputStruct fail, str_json_contract Serialize fail;")
 					r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 					r_buf.WriteString("Start fail....")
-					logs.Error(r_buf.String())
+					uniledgerlog.Error(r_buf.String())
 					return r_ret, r_err
 				}
-				logs.Info("===before transfer asset=====" + str_json_contract)
+				uniledgerlog.Info("===before transfer asset=====" + str_json_contract)
 				var func_buf bytes.Buffer = bytes.Buffer{}
 				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
 				func_buf.WriteString(strings.Trim(str_function, ")"))
@@ -935,7 +935,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString(gt.GetContract().GetMainPubkey())
 				func_buf.WriteString("\")")
 				str_function = func_buf.String()
-				logs.Error("==after process Function==" + str_function)
+				uniledgerlog.Error("==after process Function==" + str_function)
 			}
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
@@ -952,7 +952,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				_, ok := v_result_object.GetOutput().(string)
 				if ok {
 					gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
-					logs.Error("====after transfer asset==" + v_result_object.GetOutput().(string))
+					uniledgerlog.Error("====after transfer asset==" + v_result_object.GetOutput().(string))
 				}
 			}
 			//3 执行结果判断
@@ -971,16 +971,16 @@ func (gt *GeneralTask) Start() (int8, error) {
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 			}
 			r_buf.WriteString("fail....")
-			logs.Error(r_buf.String())
+			uniledgerlog.Error(r_buf.String())
 			return r_ret, r_err
 		}
 		r_buf.WriteString("[Result]: Task execute success;")
-		logs.Info(r_buf.String(), " Dormant to Inprocess....")
+		uniledgerlog.Info(r_buf.String(), " Dormant to Inprocess....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
 	} else if gt.IsDormant() && !gt.testPreCondition() { //未达到执行条件，返回 0
 		r_ret = 0
 		r_buf.WriteString("[Result]: preCondition not true;")
-		logs.Warning(r_buf.String(), " exit....")
+		uniledgerlog.Warn(r_buf.String(), " exit....")
 		return r_ret, r_err
 	}
 	//执行完动作后需要等待执行完成
@@ -1002,7 +1002,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	logs.Info(r_buf.String(), "Complete begin....")
+	uniledgerlog.Info(r_buf.String(), "Complete begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	// CompleteCondition 需要包含单节点任务执行结果条件
@@ -1021,7 +1021,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				r_buf.WriteString("[Result]: Generate OutputStruct fail, str_json_contract Serialize fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 				r_buf.WriteString("Complete fail....")
-				logs.Error(r_buf.String())
+				uniledgerlog.Error(r_buf.String())
 				return r_ret, r_err
 			}
 			tmp_output, r_err = function.FuncInterim(str_json_contract, gt.GetContract().GetContractId(), gt.GetTaskId(), gt.GetTaskExecuteIdx())
@@ -1030,7 +1030,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				r_buf.WriteString("[Result]: Generate OutputStruct fail, FuncInterim generage output error;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 				r_buf.WriteString("Complete fail....")
-				logs.Error(r_buf.String())
+				uniledgerlog.Error(r_buf.String())
 				return r_ret, r_err
 			}
 
@@ -1039,11 +1039,11 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				r_buf.WriteString("[Result]: Generate OutputStruct fail,FuncInterim generage output is nil;")
 				r_buf.WriteString("[Error]: outputStruct is nil;")
 				r_buf.WriteString("Complete fail....")
-				logs.Error(r_buf.String())
+				uniledgerlog.Error(r_buf.String())
 				return r_ret, r_err
 			}
 			gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
-			logs.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
+			uniledgerlog.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
 		}
 		//4 OutputStruct插入到Output表中
 		var v_result common.OperateResult = common.OperateResult{}
@@ -1058,12 +1058,12 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_buf.WriteString("[Result]: Task execute fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 			r_buf.WriteString("Complete fail....")
-			logs.Error(r_buf.String())
+			uniledgerlog.Error(r_buf.String())
 			return r_ret, r_err
 		}
 		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
 		gt.GetContract().SetOutputStruct(v_result.GetData().(string))
-		logs.Error("====after complete operate==" + v_result.GetData().(string))
+		uniledgerlog.Error("====after complete operate==" + v_result.GetData().(string))
 
 		var map_output_first interface{} = common.Deserialize(gt.GetContract().GetOutputStruct())
 		if map_output_first == nil {
@@ -1071,7 +1071,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_err = errors.New("Contract Output Deserialize fail!")
 			r_buf.WriteString("[Result]: CompleteCondition not true;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			logs.Warning(r_buf.String(), "Complete exit....")
+			uniledgerlog.Warn(r_buf.String(), "Complete exit....")
 			return r_ret, r_err
 		}
 		var map_output_second map[string]interface{} = map_output_first.(map[string]interface{})
@@ -1080,7 +1080,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_err = errors.New("Contract Output Struct Get fail!")
 			r_buf.WriteString("[Result]: CompleteCondition not true;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			logs.Warning(r_buf.String(), "Complete exit....")
+			uniledgerlog.Warn(r_buf.String(), "Complete exit....")
 			return r_ret, r_err
 		}
 		var map_transaction map[string]interface{} = map_output_second["transaction"].(map[string]interface{})
@@ -1089,21 +1089,21 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_err = errors.New("Contract HashId Get fail!")
 			r_buf.WriteString("[Result]: CompleteCondition not true;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			logs.Warning(r_buf.String(), "Complete exit....")
+			uniledgerlog.Warn(r_buf.String(), "Complete exit....")
 			return r_ret, r_err
 		}
 		var map_contract map[string]interface{} = map_transaction["Contract"].(map[string]interface{})
 		gt.GetContract().SetOutputId(map_contract["id"].(string))
 		gt.GetContract().SetOutputTaskId(gt.GetTaskId())
 		gt.GetContract().SetOutputTaskExecuteIdx(gt.GetTaskExecuteIdx())
-		//logs.Error("gt.GetContract():", gt.GetContract())
-		logs.Error("gt.GetContract().GetOutputId():", gt.GetContract().GetOutputId())
-		logs.Info(r_buf.String(), " Inprocess to Complete....")
+		//uniledgerlog.Error("gt.GetContract():", gt.GetContract())
+		uniledgerlog.Error("gt.GetContract().GetOutputId():", gt.GetContract().GetOutputId())
+		uniledgerlog.Info(r_buf.String(), " Inprocess to Complete....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Completed])
 	} else if gt.IsInProgress() && !gt.testCompleteCondition() {
 		r_ret = 0
 		r_buf.WriteString("[Result]: CompleteCondition not true;")
-		logs.Warning(r_buf.String(), "Complete exit....")
+		uniledgerlog.Warn(r_buf.String(), "Complete exit....")
 		return r_ret, r_err
 	}
 	//保证顺利执行，给执行方法留下执行时间，需要多次sleep等待执行
@@ -1136,7 +1136,7 @@ func (gt *GeneralTask) Discard() (int8, error) {
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	logs.Info(r_buf.String(), " begin....")
+	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	// DiscardCondition 需要包含多节点共识结果标识 (默认条件)
@@ -1144,7 +1144,7 @@ func (gt *GeneralTask) Discard() (int8, error) {
 	//   任务执行结果共识不通过，该任务需要重新执行；
 	if gt.IsCompleted() && gt.testDiscardCondition() {
 		//DiscardCondition中需要默认添加任务执行结果入链判断条件
-		logs.Info(r_buf.String(), " Complete to Discard....")
+		uniledgerlog.Info(r_buf.String(), " Complete to Discard....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Discard])
 		r_ret = 1
 	}
@@ -1166,20 +1166,20 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
 		//    调用扫描引擎接口： UpdateMonitorFail(contractID_old)
 		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
-		logs.Error("-----------------------------------------------")
-		logs.Error("ContractId:" + v_contract.GetContractId())
-		logs.Error("Id:" + v_contract.GetId())
-		logs.Error("TaskId:" + gt.GetTaskId())
-		logs.Error("State:" + gt.GetState())
-		logs.Error("TaskExecuteIdx:%d", gt.GetTaskExecuteIdx())
-		logs.Error("-----------------------------------------------")
+		uniledgerlog.Error("-----------------------------------------------")
+		uniledgerlog.Error("ContractId:" + v_contract.GetContractId())
+		uniledgerlog.Error("Id:" + v_contract.GetId())
+		uniledgerlog.Error("TaskId:" + gt.GetTaskId())
+		uniledgerlog.Error("State:" + gt.GetState())
+		uniledgerlog.Error("TaskExecuteIdx:%d", gt.GetTaskExecuteIdx())
+		uniledgerlog.Error("-----------------------------------------------")
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			logs.Warning(r_buf.String())
+			uniledgerlog.Warn(r_buf.String())
 		} else {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Succ;")
-			logs.Info(r_buf.String())
+			uniledgerlog.Info(r_buf.String())
 		}
 	case 0:
 		//执行条件不满足：
@@ -1191,10 +1191,10 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-				logs.Warning(r_buf.String())
+				uniledgerlog.Warn(r_buf.String())
 			} else {
 				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Succ;")
-				logs.Info(r_buf.String())
+				uniledgerlog.Info(r_buf.String())
 			}
 		} else if gt.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
 			r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
@@ -1213,10 +1213,10 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-				logs.Warning(r_buf.String())
+				uniledgerlog.Warn(r_buf.String())
 			} else {
 				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Succ;")
-				logs.Info(r_buf.String())
+				uniledgerlog.Info(r_buf.String())
 			}
 		}
 	case 1:
@@ -1238,10 +1238,10 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			logs.Warning(r_buf.String())
+			uniledgerlog.Warn(r_buf.String())
 		} else {
 			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Succ;")
-			logs.Info(r_buf.String())
+			uniledgerlog.Info(r_buf.String())
 		}
 	}
 	return r_err
@@ -1274,7 +1274,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 					r_buf.WriteString("[ContractId]: " + gt.GetContract().GetContractId() + ";")
 					r_buf.WriteString("[ConstractHashId]: " + gt.GetContract().GetOutputId() + ";")
 					r_buf.WriteString("[Error]: " + select_err.Error() + ";")
-					logs.Error(r_buf.String())
+					uniledgerlog.Error(r_buf.String())
 					break
 				}
 				if select_value.(bool) {
@@ -1284,7 +1284,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 						r_buf.WriteString("[ContractId]: " + gt.GetContract().GetContractId() + ";")
 						r_buf.WriteString("[ConstractHashId]: " + gt.GetContract().GetOutputId() + ";")
 						r_buf.WriteString("[Error]: " + select_final_err.Error() + ";")
-						logs.Error(r_buf.String())
+						uniledgerlog.Error(r_buf.String())
 						break
 					}
 					v_data.SetValue(select_final_value)

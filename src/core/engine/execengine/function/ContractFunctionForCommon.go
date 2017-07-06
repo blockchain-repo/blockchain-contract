@@ -9,9 +9,9 @@ import (
 	"unicontract/src/core/engine/common"
 	"unicontract/src/transaction"
 
-	"github.com/astaxie/beego/logs"
 	"reflect"
 	"strings"
+	"unicontract/src/common/uniledgerlog"
 )
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -134,7 +134,7 @@ func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {
 	7: mainPubkey(string): the node pubkey which will freeze asset
 */
 func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
-	logs.Error("======In FuncTransferAsset==========")
+	uniledgerlog.Error("======In FuncTransferAsset==========")
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
@@ -143,7 +143,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
-	logs.Error("======after param check FuncTransferAsset==========")
+	uniledgerlog.Error("======after param check FuncTransferAsset==========")
 	//user provide
 	var ownerBefore string = ""
 	switch args[0].(type) {
@@ -205,15 +205,15 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var mainPubkey string = args[7].(string)
 	mainPubkey = strings.Replace(mainPubkey, "\"", "", -1)
 	mainPubkey = strings.Trim(mainPubkey, " ")
-	logs.Error("======Param:=========")
-	logs.Error(ownerBefore)
-	logs.Error(recipientsStr)
-	logs.Error(money_amount)
-	logs.Error(contractStr)
-	logs.Error(contractId)
-	logs.Error(taskId)
-	logs.Error(taskIndex)
-	logs.Error(mainPubkey)
+	uniledgerlog.Error("======Param:=========")
+	uniledgerlog.Error(ownerBefore)
+	uniledgerlog.Error(recipientsStr)
+	uniledgerlog.Error(money_amount)
+	uniledgerlog.Error(contractStr)
+	uniledgerlog.Error(contractId)
+	uniledgerlog.Error(taskId)
+	uniledgerlog.Error(taskIndex)
+	uniledgerlog.Error(mainPubkey)
 	var contractHashId string = ""
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
@@ -223,21 +223,21 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		do freeze
 	*/
 	mykey := config.Config.Keypair.PublicKey
-	logs.Info("==MinPubkey: ", mainPubkey)
-	logs.Info("==mykey: ", mykey)
-	logs.Info("==equals: ", mainPubkey == mykey)
+	uniledgerlog.Info("==MinPubkey: ", mainPubkey)
+	uniledgerlog.Info("==mykey: ", mykey)
+	uniledgerlog.Info("==equals: ", mainPubkey == mykey)
 	//check main pubkey
 	if mainPubkey == mykey {
 		//if mainNode, do freeze;
-		logs.Info("mainPubkey ")
+		uniledgerlog.Info("mainPubkey ")
 		var reciForFre [][2]interface{} = [][2]interface{}{
 			[2]interface{}{ownerBefore, amount},
 		}
-		logs.Info("contractStr: ", contractStr)
+		uniledgerlog.Info("contractStr: ", contractStr)
 		outputStr, v_err = transaction.ExecuteFreeze("FREEZE", ownerBefore, reciForFre, metadataStr, relationStr, contractStr)
 
 		//if v_err != nil {
-		//	logs.Error(v_err)
+		//	uniledgerlog.Error(v_err)
 		//	v_result.SetCode(400)
 		//	v_result.SetMessage(v_err.Error())
 		//	return v_result, v_err
@@ -245,19 +245,19 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		//wait for the freeze asset write into the unichain
 		time.Sleep(time.Second * 3)
 	} else {
-		logs.Info("not mainPubkey ")
+		uniledgerlog.Info("not mainPubkey ")
 		// not mainNode, wait for the main node write the freeze-asset into the unchain
 		time.Sleep(time.Second * 5)
 	}
 	/*
 		do transfer
 	*/
-	logs.Info("for ")
+	uniledgerlog.Info("for ")
 	for i := 0; i <= 3; i++ {
 		//transfer asset
 		outputStr, v_err = transaction.ExecuteTransfer("TRANSFER", ownerBefore, recipients, metadataStr, relationStr, contractStr)
 		if v_err != nil && i == 3 {
-			logs.Error(v_err)
+			uniledgerlog.Error(v_err)
 			v_result.SetCode(400)
 			v_result.SetMessage(v_err.Error())
 			return v_result, v_err
@@ -497,7 +497,7 @@ func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error
 	v_result.SetCode(200)
 	v_result.SetMessage("process success!")
 	v_result.SetData(conStr)
-	logs.Info(conStr)
+	uniledgerlog.Info(conStr)
 	return v_result, v_err
 }
 

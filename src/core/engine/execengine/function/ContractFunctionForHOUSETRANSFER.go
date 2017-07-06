@@ -1,7 +1,7 @@
 package function
 
 import (
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 )
 
@@ -26,7 +26,7 @@ import (
 func FuncQueryHouse(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result] 查询到房产。")
+	uniledgerlog.Warn("Business Operate.[Result] 查询到房产。")
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -39,7 +39,7 @@ func FuncQueryHouse(args ...interface{}) (common.OperateResult, error) {
 func FuncExitForNoHouse(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result] 未查询到合适房产，合约退出。")
+	uniledgerlog.Warn("Business Operate.[Result] 未查询到合适房产，合约退出。")
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -55,7 +55,7 @@ func FuncUserBalance(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 	var user_balance float32 = 100000000.0
-	logs.Warn("Business Operate.[Result]查询用户账户余额为", user_balance)
+	uniledgerlog.Warn("Business Operate.[Result]查询用户账户余额为", user_balance)
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -71,7 +71,7 @@ func FuncUserBalance(args ...interface{}) (common.OperateResult, error) {
 func FuncTransferHouseFees(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]购房款转账成功", args[0], "转账给", args[1], "人民币", args[2], "元")
+	uniledgerlog.Warn("Business Operate.[Result]购房款转账成功", args[0], "转账给", args[1], "人民币", args[2], "元")
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -84,7 +84,7 @@ func FuncTransferHouseFees(args ...interface{}) (common.OperateResult, error) {
 func FuncNoticeRecharge(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]账户余额不足，请充钱.")
+	uniledgerlog.Warn("Business Operate.[Result]账户余额不足，请充钱.")
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -98,7 +98,7 @@ func FuncNoticeRecharge(args ...interface{}) (common.OperateResult, error) {
 func FuncQueryHouseFeesResult(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]查询购房款转账结果.")
+	uniledgerlog.Warn("Business Operate.[Result]查询购房款转账结果.")
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -112,7 +112,7 @@ func FuncQueryHouseFeesResult(args ...interface{}) (common.OperateResult, error)
 func FuncExitForTransferFail(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]购房款多次转账失败, 合约退出.")
+	uniledgerlog.Warn("Business Operate.[Result]购房款多次转账失败, 合约退出.")
 	//构建返回值
 	v_result = common.OperateResult{}
 	v_result.SetCode(200)
@@ -130,7 +130,7 @@ func FuncExitForTransferFail(args ...interface{}) (common.OperateResult, error) 
 func FuncTransferHouse(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]房产转移成功", args[0], "转移资产给", args[1], "房屋", args[2], "套.")
+	uniledgerlog.Warn("Business Operate.[Result]房产转移成功", args[0], "转移资产给", args[1], "房屋", args[2], "套.")
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -144,7 +144,7 @@ func FuncTransferHouse(args ...interface{}) (common.OperateResult, error) {
 func FuncQueryHouseResult(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]查询房产转移结果.")
+	uniledgerlog.Warn("Business Operate.[Result]查询房产转移结果.")
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -158,7 +158,7 @@ func FuncQueryHouseResult(args ...interface{}) (common.OperateResult, error) {
 func FuncExitForHouseTransferSuccess(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]房产转移成功, 购房款支付成功, 合约执行完成.")
+	uniledgerlog.Warn("Business Operate.[Result]房产转移成功, 购房款支付成功, 合约执行完成.")
 
 	//构建返回值
 	v_result = common.OperateResult{}
@@ -173,7 +173,7 @@ func FuncExitForHouseTransferSuccess(args ...interface{}) (common.OperateResult,
 func FuncExitForHouseTransferFail(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
-	logs.Warn("Business Operate.[Result]房产转移失败, 交付房款退回.")
+	uniledgerlog.Warn("Business Operate.[Result]房产转移失败, 交付房款退回.")
 
 	//构建返回值
 	v_result = common.OperateResult{}

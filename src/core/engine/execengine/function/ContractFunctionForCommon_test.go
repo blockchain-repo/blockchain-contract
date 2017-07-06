@@ -1,7 +1,7 @@
 package function
 
 import (
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"strconv"
 	"strings"
 	"testing"

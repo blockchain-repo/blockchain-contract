@@ -2,8 +2,8 @@ package expression
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
 	"strconv"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -68,7 +68,7 @@ func (la *LogicArgument) Serialize() (string, error) {
 	if s_model, err := json.Marshal(la); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract Expression fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract Expression fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -78,7 +78,7 @@ func (la *LogicArgument) InitLogicArgument() error {
 	var err error = nil
 	err = la.InitFunction()
 	if err != nil {
-		logs.Error("InitLogicArgument fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitLogicArgument fail[" + err.Error() + "]")
 		return err
 	}
 	la.SetCtype(constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Condition])
@@ -92,12 +92,12 @@ func (la *LogicArgument) GetLogicValue() int {
 	la.Eval()
 	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return 0
 	}
 	n, ok := loggicvalue_property.GetValue().(int)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return 0
 	}
 	return n
@@ -106,18 +106,18 @@ func (la *LogicArgument) GetLogicValue() int {
 //====属性Set方法
 func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 	if p_int == nil {
-		logs.Warning("[Param]p_int is nil，Check it!")
+		uniledgerlog.Warn("[Param]p_int is nil，Check it!")
 		return
 	}
 	ok := false
 	la.LogicValue, ok = p_int.(int)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return
 	}
 	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return
 	}
 	loggicvalue_property.SetValue(la.LogicValue)
@@ -127,23 +127,23 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 func (la *LogicArgument) Eval() int {
 	expression_property, ok := la.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return 0
 	}
 	v_expression, ok := expression_property.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return 0
 	}
 	r_flag, r_err := la.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_expression)
 	if r_err != nil {
-		logs.Warning("LogicArgument.Eval fail[" + r_err.Error() + "]")
+		uniledgerlog.Warn("LogicArgument.Eval fail[" + r_err.Error() + "]")
 		return la.LogicValue
 	}
 	var v_value int = 0
 	b, ok := r_flag.(bool)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return 0
 	}
 	if b {

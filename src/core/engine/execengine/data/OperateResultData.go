@@ -6,7 +6,7 @@ import (
 	"unicontract/src/core/engine/execengine/property"
 
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 type OperateResultData struct {
@@ -23,7 +23,7 @@ func (nd OperateResultData) GetName() string {
 	if nd.PropertyTable[_Parent] != nil {
 		parent_property, ok := nd.PropertyTable[_Parent].(property.PropertyT)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return ""
 		}
 		if parent_property.GetValue() != nil {
@@ -41,7 +41,7 @@ func (nd OperateResultData) GetName() string {
 func (td OperateResultData) GetValue() interface{} {
 	value_property, ok := td.PropertyTable[_Value].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return nil
 	}
 	if value_property.GetValue() != nil {
@@ -50,7 +50,7 @@ func (td OperateResultData) GetValue() interface{} {
 		v_contract := td.GeneralComponent.GetContract()
 		str, ok := td.GetDefaultValue().(string)
 		if !ok {
-			logs.Error("assert error")
+			uniledgerlog.Error("assert error")
 			return ""
 		}
 		v_default := v_contract.ProcessString(str)
@@ -70,12 +70,12 @@ func (gc OperateResultData) GetCtype() string {
 	}
 	ctype_property, ok := gc.PropertyTable["_Ctype"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	str, ok := ctype_property.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return ""
 	}
 	return str
@@ -95,7 +95,7 @@ func (td *OperateResultData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(td); err == nil {
 		return string(s_model), err
 	} else {
-		logs.Error("Contract OperateResultData Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Contract OperateResultData Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -105,7 +105,7 @@ func (td *OperateResultData) InitOperateResultData() error {
 	var err error = nil
 	err = td.InitGeneralData()
 	if err != nil {
-		logs.Error("InitOperateResultData fail[" + err.Error() + "]")
+		uniledgerlog.Error("InitOperateResultData fail[" + err.Error() + "]")
 		return err
 	}
 	td.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResultData])
