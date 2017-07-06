@@ -12,20 +12,20 @@ import (
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/model"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func txHeadFilter(arg interface{}) interface{} {
-	logs.Info(" txElection step2 : head filter")
+	uniledgerlog.Info(" txElection step2 : head filter")
 	bs, err := json.Marshal(arg)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil
 	}
 	conout := model.ContractOutput{}
 	err = json.Unmarshal(bs, &conout)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil
 	}
 	//main node filter
@@ -36,7 +36,7 @@ func txHeadFilter(arg interface{}) interface{} {
 	}
 	myNodeKey := config.Config.Keypair.PublicKey
 	if mainNodeKey != myNodeKey {
-		logs.Info("I am not the mainnode of the C-output %s", conout.Id)
+		uniledgerlog.Info("I am not the mainnode of the C-output %s", conout.Id)
 		return nil
 	}
 	return conout
@@ -44,7 +44,7 @@ func txHeadFilter(arg interface{}) interface{} {
 
 func txValidate(arg interface{}) interface{} {
 
-	logs.Info(" txElection step3 : Validate", arg)
+	uniledgerlog.Info(" txElection step3 : Validate", arg)
 	contractOutput_validate_time := monitor.Monitor.NewTiming()
 
 	coModel := arg.(model.ContractOutput)
@@ -55,39 +55,39 @@ func txValidate(arg interface{}) interface{} {
 	}
 	if !coModel.ValidateHash() {
 		//invalid hash
-		logs.Error(errors.New("invalid hash"))
+		uniledgerlog.Error(errors.New("invalid hash"))
 		return nil
 	}
 	if coModel.Transaction.Operation == "CONTRACT" {
 		//TODO ValidateVote  no-need-tood
 		//if !coModel.ValidateVote(){
-		//	logs.Error(errors.New("invalid vote"))
+		//	uniledgerlog.Error(errors.New("invalid vote"))
 		//	continue
 		//}
 	}
-	//logs.Debug("Validate Hash")
+	//uniledgerlog.Debug("Validate Hash")
 	if !coModel.ValidateContractOutput() {
 		//invalid signature
-		logs.Error(errors.New("invalid signature"))
+		uniledgerlog.Error(errors.New("invalid signature"))
 		return nil
 	}
-	//logs.Debug("Validate sign")
+	//uniledgerlog.Debug("Validate sign")
 	contractOutput_validate_time.Send("contractOutput_validate")
 	return coModel
 }
 
 func txQueryEists(arg interface{}) interface{} {
-	logs.Info("txElection step4 : query eists:", arg)
+	uniledgerlog.Info("txElection step4 : query eists:", arg)
 	coModel := arg.(model.ContractOutput)
 	//check whether already exist
 	id := coModel.Id
 	result, err := chain.GetContractTx(`{"tx_id":"` + id + `"}`)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return coModel
 	} else {
 		if result.Code != 200 {
-			logs.Error(errors.New("request send failed"))
+			uniledgerlog.Error(errors.New("request send failed"))
 			return coModel
 		}
 	}
@@ -101,7 +101,7 @@ func txQueryEists(arg interface{}) interface{} {
 	return coModel
 }
 func txSend(arg interface{}) interface{} {
-	logs.Info("txElection step5 : send contractoutput")
+	uniledgerlog.Info("txElection step5 : send contractoutput")
 	//write the contract to the taskschedule
 	coModel := arg.(model.ContractOutput)
 	contractOwner := coModel.Transaction.ContractModel.ContractBody.ContractOwners
@@ -118,26 +118,26 @@ func txSend(arg interface{}) interface{} {
 		err := engineCommon.InsertTaskSchedules(taskSchedule)
 		taskSchedule_write_time.Send("taskSchedule_write")
 		if err != nil {
-			logs.Error("err is \" %s \"\n", err.Error())
+			uniledgerlog.Error("err is \" %s \"\n", err.Error())
 		}
 	}
 	//write the contractoutput to unichain.
 	result, err := chain.CreateContractTx(common.StructSerialize(coModel))
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		SaveOutputErrorData(_TableNameSendFailingRecords, coModel)
 		//count, err := rethinkdb.GetSendFailingRecordsCount()
 		//if err != nil {
-		//	logs.Error(err.Error())
+		//	uniledgerlog.Error(err.Error())
 		//}
 		return nil
 	}
 	if result.Code != 200 {
-		logs.Error(errors.New("request send failed"))
+		uniledgerlog.Error(errors.New("request send failed"))
 		SaveOutputErrorData(_TableNameSendFailingRecords, coModel)
 		//count, err := rethinkdb.GetSendFailingRecordsCount()
 		//if err != nil {
-		//	logs.Error(err.Error())
+		//	uniledgerlog.Error(err.Error())
 		//}
 	}
 	return coModel

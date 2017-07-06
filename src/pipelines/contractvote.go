@@ -10,19 +10,19 @@ import (
 	r "unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func cvValidateContract(arg interface{}) interface{} {
 	bs, err := json.Marshal(arg)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil
 	}
 	mod := model.ContractModel{}
 	err = json.Unmarshal(bs, &mod)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil
 	}
 	v := model.Vote{}
@@ -36,7 +36,7 @@ func cvValidateContract(arg interface{}) interface{} {
 	}
 	contract_validate_time.Send("contract_validate")
 	v.VoteBody.VoteFor = mod.Id
-	logs.Debug("-------cvValidateContract:", common.Serialize(v))
+	uniledgerlog.Debug("-------cvValidateContract:", common.Serialize(v))
 	return v
 }
 
@@ -48,7 +48,7 @@ func cvVote(arg interface{}) interface{} {
 	v.VoteBody.VoteType = "Contract"
 	v.Id = v.GenerateId()
 	v.Signature = v.SignVote()
-	logs.Debug("-------cvVote:", common.Serialize(v))
+	uniledgerlog.Debug("-------cvVote:", common.Serialize(v))
 	return v
 
 }
@@ -57,7 +57,7 @@ func cvWriteVote(arg interface{}) interface{} {
 	v := arg.(model.Vote)
 	vote_write_time := monitor.Monitor.NewTiming()
 	res := r.Insert("Unicontract", "Votes", v.ToString())
-	logs.Debug("-------cvWriteVote:", common.Serialize(res))
+	uniledgerlog.Debug("-------cvWriteVote:", common.Serialize(res))
 	vote_write_time.Send("vote_write")
 	return v
 }

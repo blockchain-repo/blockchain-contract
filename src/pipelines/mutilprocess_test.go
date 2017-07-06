@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func TestFor(t *testing.T) {
@@ -25,14 +25,14 @@ func sum(nums ...interface{}) {
 	//fmt.Print(nums, " ")
 
 	//for{
-	//	logs.Info("1")
+	//	uniledgerlog.Info("1")
 	//}
 
 	//s := []int{1, 2, 3}
 	//s1 := s[:1]
-	//logs.Info(s1)
+	//uniledgerlog.Info(s1)
 	//s2 := s[1:]
-	//logs.Info(s2)
+	//uniledgerlog.Info(s2)
 
 	//total := 0
 	//for _, num := range nums {
@@ -45,11 +45,11 @@ func sum(nums ...interface{}) {
 	//rear:=append([]string{},ss[index:]...)
 	//ss=append(ss[0:0],"inserted")
 	//ss=append(ss,rear...)
-	//logs.Info(ss)
+	//uniledgerlog.Info(ss)
 
 	var ss []string = []string{"1", "2", "3", "4", "5", "6", "7", "8"}
 
 	var s = []string{"!!"}
 	ss = append(s, ss...)
-	logs.Info(ss)
+	uniledgerlog.Info(ss)
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 type Node struct {
@@ -24,10 +24,10 @@ func (n *Node) start() {
 
 func (n *Node) runForever() {
 	for {
-		//logs.Info(n.name, ",in run forever")
+		//uniledgerlog.Info(n.name, ",in run forever")
 		err := n.run()
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 			return
 		}
 	}
@@ -45,7 +45,7 @@ func (n *Node) run() error {
 	case x, ok := <-n.input:
 		//从ch中读到数据
 		if !ok {
-			logs.Error(errors.New("read data from inputchannel error"))
+			uniledgerlog.Error(errors.New("read data from inputchannel error"))
 			return nil
 		}
 		//TODO  not good enough, how to support multi params and returns
@@ -56,7 +56,7 @@ func (n *Node) run() error {
 		n.output <- out
 	case <-timeout:
 		//一直没有从ch中读取到数据，但从timeout中读取到数据
-		//logs.Info("read data timeout")
+		//uniledgerlog.Info("read data timeout")
 		return nil
 	}
 	return nil

@@ -7,7 +7,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/config"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/chain"
 )
 
@@ -16,45 +16,45 @@ func init() {
 }
 
 func pip3(arg interface{}) interface{} {
-	logs.Info("P3 param:", arg)
+	uniledgerlog.Info("P3 param:", arg)
 	s := common.Serialize(arg)
-	logs.Info("P3 return:===", s)
+	uniledgerlog.Info("P3 return:===", s)
 	return s
 }
 
 func pip4(arg interface{}) interface{} {
-	logs.Info("P4 param:===", arg)
+	uniledgerlog.Info("P4 param:===", arg)
 	s := "return pip4"
 	time.Sleep(time.Second * 5)
-	logs.Info("P4 return:===", s)
+	uniledgerlog.Info("P4 return:===", s)
 	return s
 }
 
 func TestStart(t *testing.T) {
 	startTxElection()
 	time.Sleep(time.Second * 2)
-	logs.Info("down")
+	uniledgerlog.Info("down")
 }
 
 func TestChannel(t *testing.T) {
 	chan1 := make(chan interface{}, 10)
 	chan2 := make(chan interface{}, 10)
 	//chan1 <-"1"
-	//logs.Info(<-chan2)
+	//uniledgerlog.Info(<-chan2)
 
-	logs.Info("%v", chan1)
-	logs.Info("%v", chan2)
+	uniledgerlog.Info("%v", chan1)
+	uniledgerlog.Info("%v", chan2)
 	chan2 <- "2"
 	chan1 <- "1"
 	chan1 = chan2
 
-	logs.Info(&chan1)
-	logs.Info(&chan2)
+	uniledgerlog.Info(&chan1)
+	uniledgerlog.Info(&chan2)
 
-	logs.Info(<-chan1)
-	logs.Info(<-chan1)
-	logs.Info(<-chan2)
-	logs.Info(<-chan2)
+	uniledgerlog.Info(<-chan1)
+	uniledgerlog.Info(<-chan1)
+	uniledgerlog.Info(<-chan2)
+	uniledgerlog.Info(<-chan2)
 }
 
 func TestTail(t *testing.T) {
@@ -65,20 +65,20 @@ func TestTail(t *testing.T) {
 
 	txNodeSlice[0].name = "change"
 	head := txNodeSlice[0]
-	logs.Info(txNodeSlice[0].name)
-	logs.Info(head.name)
+	uniledgerlog.Info(txNodeSlice[0].name)
+	uniledgerlog.Info(head.name)
 
 	tail := txNodeSlice[1:]
 	tail[0].name = "change"
-	logs.Info(txNodeSlice[1].name)
+	uniledgerlog.Info(txNodeSlice[1].name)
 
 	//for _, node := range txNodeSlice {
-	//	logs.Info("pip in range:", node.name)
+	//	uniledgerlog.Info("pip in range:", node.name)
 	//	//go node.start()
 	//	node.name = "change"
 	//}
-	logs.Info(txNodeSlice[0].name)
-	logs.Info(txNodeSlice[1].name)
+	uniledgerlog.Info(txNodeSlice[0].name)
+	uniledgerlog.Info(txNodeSlice[1].name)
 }
 
 func TestNode(t *testing.T) {
@@ -99,13 +99,13 @@ func TestNode(t *testing.T) {
 	nodes_all[0].name = "change1"
 	nodes_all[1].name = "change2"
 	nodes_all[2].name = "change3"
-	logs.Info(nodes_all[0].name, "----", node1.name)
+	uniledgerlog.Info(nodes_all[0].name, "----", node1.name)
 }
 
 func TestTxQueryEists(t *testing.T) {
 	tx_id := "1235be2235f4514bc24c26c43e2d93d59ced6ab5470f4fafc9187d43469cfc66"
 	jsonBody := `{"tx_id":"` + tx_id + `"}`
 	result, _ := chain.GetContractTx(jsonBody)
-	logs.Info(result)
-	logs.Info(len(result.Data.([]interface{})))
+	uniledgerlog.Info(result)
+	uniledgerlog.Info(len(result.Data.([]interface{})))
 }
