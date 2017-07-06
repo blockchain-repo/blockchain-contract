@@ -2,12 +2,11 @@ package execengine
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"strconv"
-
-	"github.com/astaxie/beego/logs"
 	"strings"
+
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -55,101 +54,104 @@ func NewContractExecuter() *ContractExecuter {
 //说明：
 //   反序列化回来的都是map类型， property_table中都是实际的struct
 func (ce *ContractExecuter) Load(p_str_json string) error {
-	var err error = nil
-	var r_buf bytes.Buffer = bytes.Buffer{}
+	var err error
+	var r_buf bytes.Buffer
 	r_buf.WriteString("Contract Executeor:Load.")
 	if p_str_json == "" {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Param contract_json is nil;")
-		err = errors.New("Param contract_json is nil;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:Param Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Param Error!")
 	}
 	//p_str_json为完整的合约交易(Output结构体)
 	//0 识别Contract结构体和Relation结构体:
 	var map_output_first interface{} = common.Deserialize(p_str_json)
 	if map_output_first == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:json str deserialize fail;")
-		err = errors.New("ContractOutput json str deserialize fail;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:Deserialize Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Deserialize Error!")
 	}
 	map_output_second, ok := map_output_first.(map[string]interface{})
 	if !ok {
-		logs.Error("assert error")
-		return fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Assert Error!")
 	}
 	if map_output_second == nil || len(map_output_second) == 0 {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:json str deserialize fail;")
-		err = errors.New("ContractOutput map process fail;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:[ContractOutput]Null Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("[ContractOutput]Null Error!")
 	}
 	if map_output_second["transaction"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:json str deserialize fail;")
-		err = errors.New("Transaction map process fail;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:[Transaction]Null Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("[Transaction]Null Error!")
 	}
 	map_transaction, ok := map_output_second["transaction"].(map[string]interface{})
 	if !ok {
-		logs.Error("assert error")
-		return fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Assert Error!")
 	}
 	if map_transaction["Contract"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:json str deserialize fail;")
-		err = errors.New("Contract map process fail;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:[Contract]Null Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("[Contract]Null Error!")
 	}
 	map_contract, ok := map_transaction["Contract"].(map[string]interface{})
 	if !ok {
-		logs.Error("assert error")
-		return fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Assert Error!")
 	}
 	if map_transaction["Relation"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:json str deserialize fail;")
-		err = errors.New("Relation map process fail;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:[Relation]Null Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("[Relation]Null Error!")
 	}
 	map_relation, ok := map_transaction["Relation"].(map[string]interface{})
 	if !ok {
-		logs.Error("assert error")
-		return fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Assert Error!")
 	}
 	var str_json_contract string = common.Serialize(map_contract)
 	if str_json_contract == "" {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:json str deserialize fail;")
-		err = errors.New("Contract json str process fail;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Error]:Serialize Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Serialize Error!")
 	}
 	//l 反序列化
 	ret_contract, err := ce.contract_executer.Deserialize(str_json_contract)
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Error in Load(Deserialize)," + err.Error())
-		logs.Error(r_buf.String())
+		r_buf.WriteString("[Error]:Deserialize Error ," + err.Error())
+		uniledgerlog.Error(r_buf.String())
 		return err
 	}
 	ce.contract_executer, ok = ret_contract.(*contract.CognitiveContract)
 	if !ok {
-		logs.Error("assert error")
-		return fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Assert Error!")
 	}
 	//2 Init初始化, 填充contract property_table
 	err = ce.contract_executer.InitCognitiveContract()
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Error in Load(InitCognitiveContract)," + err.Error())
-		logs.Error(r_buf.String())
+		r_buf.WriteString("[Error]:Error in Load(InitCognitiveContract) ," + err.Error())
+		uniledgerlog.Error(r_buf.String())
 		return err
 	}
 	r_buf.WriteString("[CName]:" + ce.contract_executer.GetCname() + "; ")
@@ -161,51 +163,54 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		err = loadTask(ce.contract_executer, p_component)
 		if err != nil {
 			r_buf.WriteString("[Result]:Load Fail;")
-			r_buf.WriteString("[Error]:Error in Load(loadTask)," + err.Error())
-			logs.Error(r_buf.String())
+			r_buf.WriteString("[Error]:Error in Load(loadTask) ," + err.Error())
+			uniledgerlog.Error(r_buf.String())
 			return err
 		}
 	}
 	ce.contract_executer.AddComponent(ce.contract_executer)
 	//4 Check合约是否可以执行，并更新合约状态
 	if !ce.contract_executer.CanExecute() {
-		err = errors.New("Contract can not execute;")
-		r_buf.WriteString("[Result]: Load Fail;")
-		r_buf.WriteString("[Error]: Contract can not execute;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Other Error - Contract can not execute!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Other Error - Contract can not execute!")
 	}
 	if !ce.contract_executer.UpdateContractState("") {
-		err = errors.New("Update ContractState Error;")
-		r_buf.WriteString("[Result]: Load Fail;")
-		r_buf.WriteString("[Error]: Update ContractState Error;")
-		logs.Error(r_buf.String())
-		return err
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Other Error - Update ContractState Error!")
+		uniledgerlog.Error(r_buf.String())
+		return fmt.Errorf("Other Error - Update ContractState Error!")
 	}
 	err = ce.contract_executer.SetOrgTaskInfo(map_relation)
 	if err != nil {
-		r_buf.WriteString("[Result]: Load Fail;")
-		r_buf.WriteString("[Error]: Update ContractState Error: " + err.Error() + ";")
-		logs.Error(r_buf.String())
+		r_buf.WriteString("[Result]:Load Fail;")
+		r_buf.WriteString("[Error]:Error in Load(SetOrgTaskInfo) ," + err.Error())
+		uniledgerlog.Error(r_buf.String())
 		return err
 	}
 
 	r_buf.WriteString("[Result]:Load Success!")
-	logs.Info(r_buf.String())
+	uniledgerlog.Info(r_buf.String())
 	return err
 }
 
 //合约运行生命周期：合约预处理
 func (ce *ContractExecuter) Prepare() {
+	var r_buf bytes.Buffer
 	//读取产品库函数配置
 	ExecuteEngineConf, ok := engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
 	if !ok {
-		logs.Error("assert error")
+		r_buf.WriteString("[Result]:Prepare Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
 		return
 	}
 	product_func_str, ok := ExecuteEngineConf["function_source"].(string)
 	if !ok {
-		logs.Error("assert error")
+		r_buf.WriteString("[Result]:Prepare Fail;")
+		r_buf.WriteString("[Error]:Assert Error!")
+		uniledgerlog.Error(r_buf.String())
 		return
 	}
 	//TODO 加载特定产品函数库
@@ -234,12 +239,13 @@ func (ce *ContractExecuter) Prepare() {
 //合约运行生命周期：合约启动
 func (ce *ContractExecuter) Start() (int8, error) {
 	var r_ret int8 = -1
-	var r_err error = nil
-	var r_buf bytes.Buffer = bytes.Buffer{}
+	var r_err error
+	var r_buf bytes.Buffer
 	if ce.contract_executer == nil {
-		logs.Error("Contract Start fail, Param[p_contract] is null!")
-		r_err = errors.New("Param[p_contract] is null!")
-		return r_ret, r_err
+		r_buf.WriteString("[Result]:Start Fail;")
+		r_buf.WriteString("[Error]:[p_contract]Null Error!")
+		uniledgerlog.Error("[p_contract]Null Error!!")
+		return r_ret, fmt.Errorf("[p_contract]Null Error!!")
 	}
 	r_buf.WriteString("Contract Executeor:Run.")
 	r_buf.WriteString("[CName]:" + ce.contract_executer.GetCname() + "; ")
@@ -247,25 +253,25 @@ func (ce *ContractExecuter) Start() (int8, error) {
 	r_buf.WriteString("[Result]:")
 	//注意： 此处为整个合约的执行结果，只标记合约退出的状态
 	//    1. ret=0 ： 合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行
-	//    2. ret=-1： 合约执行过程中，某任务执行失败，        暂时退出，等待下轮扫描再次加载执行
+	//    2. ret=-1： 合约执行过程中，某任务执行失败，       暂时退出，等待下轮扫描再次加载执行
 	//    3. ret=1 ： 合约执行完成
 	r_ret, r_err = ce.contract_executer.UpdateTasksState()
 	if r_ret == 0 {
 		r_buf.WriteString("合约任务未达到执行条件,等待再次扫描执行;")
 		if r_err != nil {
-			r_buf.WriteString("[Error]:" + r_err.Error())
+			r_buf.WriteString("[Result]:Start Fail;")
+			r_buf.WriteString("[Error]:Error in Start(UpdateTasksState) ," + r_err.Error())
 		}
-		logs.Warning(r_buf.String())
 	} else if r_ret == -1 {
 		r_buf.WriteString("合约任务执行失败,等待再次扫描执行;")
 		if r_err != nil {
-			r_buf.WriteString("[Error]:" + r_err.Error())
+			r_buf.WriteString("[Result]:Start Fail;")
+			r_buf.WriteString("[Error]:Error in Start(UpdateTasksState) ," + r_err.Error())
 		}
-		logs.Warning(r_buf.String())
 	} else {
 		r_buf.WriteString("合约任务执行完成;")
-		logs.Info(r_buf.String())
 	}
+	uniledgerlog.Info(r_buf.String())
 	return r_ret, r_err
 }
 
@@ -283,15 +289,15 @@ func (ce *ContractExecuter) Test() {
 //Return: string -> json str
 //        error  -> op error
 func (ce *ContractExecuter) ExportToJson() (string, error) {
-	var r_str_json string = ""
-	var err error = nil
-	var r_buf bytes.Buffer = bytes.Buffer{}
+	var r_str_json string
+	var err error
+	r_buf := bytes.Buffer{}
 	r_buf.WriteString("Contract Executeor:ExportToJson.")
 	if ce.contract_executer == nil {
 		r_buf.WriteString("[Result]:Export Fail;")
 		r_buf.WriteString("[Error]:Param[p_contrat] is null")
-		logs.Warning(r_buf.String())
-		err = errors.New("Param[p_contrat] is null!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Param[p_contrat] is null!")
 		return r_str_json, err
 	}
 	r_buf.WriteString("[CName]:" + ce.contract_executer.GetCname() + "; ")
@@ -301,11 +307,11 @@ func (ce *ContractExecuter) ExportToJson() (string, error) {
 	if err != nil {
 		r_buf.WriteString("[Result]:Export Fail;")
 		r_buf.WriteString("[Error]:" + err.Error())
-		logs.Warning(r_buf.String())
+		uniledgerlog.Warn(r_buf.String())
 		return r_str_json, err
 	}
 	r_buf.WriteString("[Result]:Export Success;")
-	logs.Info(r_buf.String())
+	uniledgerlog.Info(r_buf.String())
 	return r_str_json, err
 }
 
@@ -313,14 +319,15 @@ func (ce *ContractExecuter) ExportToJson() (string, error) {
 //Return: string -> text file path
 //        error  -> op error
 func (ce *ContractExecuter) ExportToText() (string, error) {
-	var r_bytes bytes.Buffer = bytes.Buffer{}
-	var err error = nil
-	var r_buf bytes.Buffer = bytes.Buffer{}
+	var err error
+	r_bytes := bytes.Buffer{}
+	r_buf := bytes.Buffer{}
 	r_buf.WriteString("Contract Executeor:ExportToText.")
 	if ce.contract_executer == nil {
 		r_buf.WriteString("[Result]:Export Fail;")
-		logs.Warning(r_buf.String())
-		err = errors.New("Param[p_contrat] is null!")
+		r_buf.WriteString("Param[p_contrat] is null!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Param[p_contrat] is null!")
 		return r_bytes.String(), err
 	}
 	r_buf.WriteString("[CName]:" + ce.contract_executer.GetCname() + "; ")
@@ -328,68 +335,101 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 	//1 解析json串，映射成text文本
 	contractId, ok := ce.contract_executer.PropertyTable["_ContractId"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	c_id, ok := contractId.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	r_bytes.WriteString(contractId.GetName() + ":" + c_id + "\n")
 
 	contractOwner, ok := ce.contract_executer.PropertyTable["_ContractOwners"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	_, ok = contractOwner.GetValue().([]string)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	contractCreateTime, ok := ce.contract_executer.PropertyTable["_CreateTime"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	str, ok := contractCreateTime.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	r_bytes.WriteString(contractCreateTime.GetName() + ":" + str + "\n")
 	contractStartTime, ok := ce.contract_executer.PropertyTable["_StartTime"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
+		uniledgerlog.Error("assert error")
 		return "", fmt.Errorf("assert error")
 	}
 	str, ok = contractStartTime.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	r_bytes.WriteString(contractStartTime.GetName() + ":" + str + "\n")
 	contractEndTime, ok := ce.contract_executer.PropertyTable["_EndTime"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	str, ok = contractEndTime.GetValue().(string)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	r_bytes.WriteString(contractEndTime.GetName() + ":" + str + "\n")
 	contractAssets, ok := ce.contract_executer.PropertyTable["_ContractAssets"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	arr_contractAsset, ok := contractAssets.GetValue().([]contract.ContractAsset)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	r_bytes.WriteString(contractAssets.GetName() + ":" + "\n")
 	for _, p_asset := range arr_contractAsset {
@@ -398,8 +438,11 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 		r_bytes.WriteString("    _AssetUnit" + ":" + p_asset.GetUnit() + "\n")
 		f, ok := p_asset.GetAmount().(float64)
 		if !ok {
-			logs.Error("assert error")
-			return "", fmt.Errorf("assert error")
+			r_buf.WriteString("[Result]:Export Fail;")
+			r_buf.WriteString("Assert Error!")
+			uniledgerlog.Warn(r_buf.String())
+			err = fmt.Errorf("Assert Error!")
+			return r_bytes.String(), err
 		}
 		r_bytes.WriteString("    _AssetAmount" + ":" + strconv.FormatFloat(f, 'f', 10, 64) + "\n")
 		for m_key, m_value := range p_asset.GetMetaData() {
@@ -414,8 +457,11 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 				if v_component_type == constdef.ComponentType[constdef.Component_Task] {
 					ttask, ok := v_value.(inf.ITask)
 					if !ok {
-						logs.Error("assert error")
-						return "", fmt.Errorf("assert error")
+						r_buf.WriteString("[Result]:Export Fail;")
+						r_buf.WriteString("Assert Error!")
+						uniledgerlog.Warn(r_buf.String())
+						err = fmt.Errorf("Assert Error!")
+						return r_bytes.String(), err
 					}
 					r_bytes.WriteString(v_key + ":" + ttask.GetDescription() + "\n")
 				}
@@ -425,13 +471,19 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 
 	contractSignature, ok := ce.contract_executer.PropertyTable["_ContractSignatures"].(property.PropertyT)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	arr_signatures, ok := contractSignature.GetValue().([]contract.ContractSignature)
 	if !ok {
-		logs.Error("assert error")
-		return "", fmt.Errorf("assert error")
+		r_buf.WriteString("[Result]:Export Fail;")
+		r_buf.WriteString("Assert Error!")
+		uniledgerlog.Warn(r_buf.String())
+		err = fmt.Errorf("Assert Error!")
+		return r_bytes.String(), err
 	}
 	r_bytes.WriteString(contractSignature.GetName() + ":" + "\n")
 	for _, p_signature := range arr_signatures {
@@ -440,7 +492,7 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 		r_bytes.WriteString("    _SignTimestamp" + ":" + p_signature.GetSignTimestamp() + "\n")
 	}
 	r_buf.WriteString("[Result]:Export Success;")
-	logs.Info(r_buf.String())
+	uniledgerlog.Info(r_buf.String())
 	return r_bytes.String(), err
 }
 

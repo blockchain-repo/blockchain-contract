@@ -2,7 +2,6 @@ package engine
 
 import (
 	"fmt"
-	beegoLog "github.com/astaxie/beego/logs"
 	"os"
 	"testing"
 	"unicontract/src/common/yaml"
@@ -11,7 +10,7 @@ import (
 func TestUCVMconfigure(t *testing.T) {
 	strConfigPath := "./" + _CONFIG_FILE_NAME
 	if err := yaml.Read(strConfigPath, &UCVMConf); err != nil {
-		beegoLog.Error(err)
+		t.Error(err)
 		os.Exit(-1)
 	}
 	fmt.Println(UCVMConf)
