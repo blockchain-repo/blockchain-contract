@@ -7,7 +7,7 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 const (
@@ -67,10 +67,10 @@ func SaveOutputErrorData(tableName string, coModel model.ContractOutput) bool {
 
 func Init() {
 	//TODO log
-	logs.Info("ContractVote Pipeline Start")
+	uniledgerlog.Info("ContractVote Pipeline Start")
 	go startContractVote()
-	logs.Info("ContractElection Pipeline Start")
+	uniledgerlog.Info("ContractElection Pipeline Start")
 	go startContractElection()
-	logs.Info("txElection Pipeline Start")
+	uniledgerlog.Info("txElection Pipeline Start")
 	go startTxElection()
 }

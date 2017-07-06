@@ -154,11 +154,6 @@ func NewLogger(channelLens ...int64) *BeeLogger {
 	return bl
 }
 
-func init() {
-	SetLogFuncCall(true)
-	SetLogFuncCallDepth(3)
-}
-
 // Async set the log to asynchronous and start the goroutine
 func (bl *BeeLogger) Async(msgLen ...int64) *BeeLogger {
 	bl.lock.Lock()
@@ -279,17 +274,8 @@ func (bl *BeeLogger) writeMsg(logLevel int, msg string, v ...interface{}) error 
 			file = "???"
 			line = 0
 		}
-
-		//_, filename := path.Split(file)
-		//msg = "[" + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
-		dir, filename := path.Split(file)
-		unicontractKeyWord := "unicontract"
-		unicontractPos := strings.Index(dir, unicontractKeyWord)
-		if unicontractPos > 0 {
-			msg = "[" + dir[unicontractPos:] + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
-		} else {
-			msg = "[" + dir + filename + ":" + strconv.FormatInt(int64(line), 10) + "] " + msg
-		}
+		_, filename := path.Split(file)
+		msg = "[" + filename + ":" + strconv.Itoa(line) + "] " + msg
 	}
 
 	//set level info in front of filename info
@@ -506,9 +492,9 @@ func (bl *BeeLogger) flush() {
 }
 
 // beeLogger references the used application logger.
-var beeLogger *BeeLogger = NewLogger()
+var beeLogger = NewLogger()
 
-// GetLogger returns the default BeeLogger
+// GetBeeLogger returns the default BeeLogger
 func GetBeeLogger() *BeeLogger {
 	return beeLogger
 }
@@ -548,6 +534,7 @@ func Reset() {
 	beeLogger.Reset()
 }
 
+// Async set the beelogger with Async mode and hold msglen messages
 func Async(msgLen ...int64) *BeeLogger {
 	return beeLogger.Async(msgLen...)
 }
@@ -575,11 +562,7 @@ func SetLogFuncCallDepth(d int) {
 
 // SetLogger sets a new logger.
 func SetLogger(adapter string, config ...string) error {
-	err := beeLogger.SetLogger(adapter, config...)
-	if err != nil {
-		return err
-	}
-	return nil
+	return beeLogger.SetLogger(adapter, config...)
 }
 
 // Emergency logs a message at emergency level.

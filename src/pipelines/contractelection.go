@@ -10,12 +10,9 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
-
-import (
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
@@ -72,7 +69,7 @@ func startContractElection() {
 		if out, ok := <-gchOutput; ok {
 			f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
 			if err != nil {
-				beegoLog.Error(err.Error())
+				uniledgerlog.Error(err.Error())
 			}
 			f.Write([]byte(out))
 		} else {
@@ -83,40 +80,40 @@ func startContractElection() {
 
 //---------------------------------------------------------------------------
 func ceChangefeed() {
-	beegoLog.Debug("1.进入ceChangefeed")
+	uniledgerlog.Debug("1.进入ceChangefeed")
 	var value interface{}
 	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
 	for res.Next(&value) {
-		beegoLog.Debug("1.1 ceChangefeed get new_val")
-		mValue,ok := value.(map[string]interface{})
-		if !ok{
-			beegoLog.Error("assert error")
+		uniledgerlog.Debug("1.1 ceChangefeed get new_val")
+		mValue, ok := value.(map[string]interface{})
+		if !ok {
+			uniledgerlog.Error("assert error")
 			break
 		}
 		// 提取new_val的值
 		new_val := mValue["new_val"]
 		if new_val == nil {
-			beegoLog.Error("is null")
+			uniledgerlog.Error("is null")
 			continue
 		}
 
 		slVote, err := json.Marshal(new_val)
 		if err != nil {
-			beegoLog.Error(err.Error())
+			uniledgerlog.Error(err.Error())
 			continue
 		}
 
-		beegoLog.Debug("1.2 ceChangefeed --->")
+		uniledgerlog.Debug("1.2 ceChangefeed --->")
 		gchInput <- string(slVote)
 	}
-	beegoLog.Error("--------------------------------------------------------")
-	beegoLog.Error("changfeed exit")
-	beegoLog.Error("--------------------------------------------------------")
+	uniledgerlog.Error("--------------------------------------------------------")
+	uniledgerlog.Error("changfeed exit")
+	uniledgerlog.Error("--------------------------------------------------------")
 }
 
 //---------------------------------------------------------------------------
 func ceHeadFilter() error {
-	beegoLog.Debug("2.进入ceHeadFilter")
+	uniledgerlog.Debug("2.进入ceHeadFilter")
 	defer close(gchOutput)
 	for {
 		// 读取new_val的值
@@ -130,30 +127,30 @@ func ceHeadFilter() error {
 		vote := model.Vote{}
 		err := json.Unmarshal([]byte(readData), &vote)
 		if err != nil {
-			beegoLog.Error(err.Error())
+			uniledgerlog.Error(err.Error())
 			continue
 		}
 
 		// 验证是否为头节点
-		beegoLog.Debug("2.2 get publickey and verify")
-		beegoLog.Debug("2.2.1 get publickey")
+		uniledgerlog.Debug("2.2 get publickey and verify")
+		uniledgerlog.Debug("2.2.1 get publickey")
 		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContract(vote.VoteBody.VoteFor)
 		if err == nil {
-			beegoLog.Debug("2.2.2 verify head node")
+			uniledgerlog.Debug("2.2.2 verify head node")
 			if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
 				// 将contract更新为正在共识阶段
 				rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
 					common.GenTimestamp(), 1)
-				beegoLog.Debug("2.2.3 verify vote")
+				uniledgerlog.Debug("2.2.3 verify vote")
 				vote_validate_time := monitor.Monitor.NewTiming()
 				pContractOutput, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
 				vote_validate_time.Send("vote_validate")
 				if err != nil {
 					if !pass {
-						beegoLog.Error(err.Error())
+						uniledgerlog.Error(err.Error())
 					} else {
 						// vote not enough
-						beegoLog.Info(err.Error())
+						uniledgerlog.Info(err.Error())
 					}
 					continue
 				}
@@ -163,11 +160,11 @@ func ceHeadFilter() error {
 					common.GenTimestamp(), 2)
 
 				if pass { // 合约合法
-					beegoLog.Debug("2.3 ceHeadFilter --->")
+					uniledgerlog.Debug("2.3 ceHeadFilter --->")
 					ceQueryEists(*pContractOutput)
 					contract_election_time.Send("contract_election")
 				} else { // 合约不合法
-					beegoLog.Debug("2.3 contract invalid and insert consensusFailure")
+					uniledgerlog.Debug("2.3 contract invalid and insert consensusFailure")
 					var consensusFailure model.ConsensusFailure
 					consensusFailure.Id = common.GenerateUUID()
 					consensusFailure.ConsensusType = _CONSENSUS_TYPE
@@ -177,23 +174,23 @@ func ceHeadFilter() error {
 
 					slConsensusFailure, err := json.Marshal(consensusFailure)
 					if err != nil {
-						beegoLog.Error(err.Error())
+						uniledgerlog.Error(err.Error())
 						continue
 					}
 					if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
-						beegoLog.Error(err.Error())
+						uniledgerlog.Error(err.Error())
 					}
 					//consensus_failure_count, err := rethinkdb.GetConsensusFailuresCount()
 					//if err != nil {
-					//	beegoLog.Error(err.Error())
+					//	uniledgerlog.Error(err.Error())
 					//	continue
 					//}
 				}
 			} else {
-				beegoLog.Info("I am not head node.")
+				uniledgerlog.Info("I am not head node.")
 			}
 		} else {
-			beegoLog.Error(err.Error())
+			uniledgerlog.Error(err.Error())
 		}
 	}
 	return nil
@@ -201,26 +198,26 @@ func ceHeadFilter() error {
 
 //---------------------------------------------------------------------------
 func ceQueryEists(contractOutput model.ContractOutput) {
-	beegoLog.Debug("3.进入ceQueryEists")
+	uniledgerlog.Debug("3.进入ceQueryEists")
 
-	beegoLog.Debug("3.2 query contractoutput table")
+	uniledgerlog.Debug("3.2 query contractoutput table")
 	output, err := rethinkdb.GetContractOutputById(contractOutput.Id)
 	if err != nil {
-		beegoLog.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return
 	}
 
 	slContractOutput, _ := json.Marshal(contractOutput)
 
 	if len(output) == 0 {
-		beegoLog.Debug("3.3 insert contractoutput table")
+		uniledgerlog.Debug("3.3 insert contractoutput table")
 		contractOutput_write_time := monitor.Monitor.NewTiming()
 		rethinkdb.InsertContractOutput(string(slContractOutput))
 		contractOutput_write_time.Send("contractOutput_write")
 	} else {
-		beegoLog.Debug("3.3 contractoutput exist")
+		uniledgerlog.Debug("3.3 contractoutput exist")
 	}
-	beegoLog.Debug("3.4 ceQueryEists ---> /dev/null")
+	uniledgerlog.Debug("3.4 ceQueryEists ---> /dev/null")
 	gchOutput <- string(slContractOutput)
 }
 
@@ -255,7 +252,7 @@ func _verifyVotes(contractId string) (*model.ContractOutput, bool, error) {
 		return nil, false, fmt.Errorf("no vote")
 	}
 
-	beegoLog.Debug("2.2.3.1 verify vote signature")
+	uniledgerlog.Debug("2.2.3.1 verify vote signature")
 	eligible_votes := make(map[string]model.Vote)
 	for _, tmpVote := range slVote {
 		if tmpVote.VerifyVoteSignature() {
@@ -265,12 +262,12 @@ func _verifyVotes(contractId string) (*model.ContractOutput, bool, error) {
 		}
 	}
 
-	beegoLog.Debug("2.2.3.2 count votes")
+	uniledgerlog.Debug("2.2.3.2 count votes")
 	if len(eligible_votes)*2 < gnPublicKeysNum { // vote没有达到节点数的一半时
 		return nil, true, fmt.Errorf("vote not enough")
 	}
 
-	beegoLog.Debug("2.2.3.3 valid votes")
+	uniledgerlog.Debug("2.2.3.3 valid votes")
 	nValid := _verifyValid(eligible_votes)
 
 	if nValid == 0 {
@@ -362,7 +359,7 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 	contractOutput.Transaction.Fulfillments = []*model.Fulfillment{}
 	contractOutput.Transaction.Asset = &model.Asset{}
 
-	beegoLog.Debug("contractOutput : %+v", common.StructSerialize(contractOutput))
+	uniledgerlog.Debug("contractOutput : %+v", common.StructSerialize(contractOutput))
 	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
 
 	//fulfillment.Fulfillment = _FULFILLMENT

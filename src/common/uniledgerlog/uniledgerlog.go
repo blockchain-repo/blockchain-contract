@@ -11,6 +11,11 @@ import (
 	"github.com/astaxie/beego/logs"
 )
 
+import (
+	"unicontract/src/common"
+	"unicontract/src/common/basic"
+)
+
 const (
 	LevelError = iota
 	LevelWarn
@@ -26,7 +31,29 @@ var mapLevelKeys = map[int]string{
 }
 
 func Init() {
-	// 待补充
+	// TODO
+	logs.SetLogFuncCall(true)
+	logs.EnableFuncCallDepth(true)
+	logs.SetLogFuncCallDepth(3)
+
+	myBeegoLogAdapterMultiFile := &basic.MyBeegoLogAdapterMultiFile{}
+	myBeegoLogAdapterMultiFile.FileName = "../log/unicontract.log"
+	myBeegoLogAdapterMultiFile.Level = 7
+	myBeegoLogAdapterMultiFile.MaxDays = 10
+	myBeegoLogAdapterMultiFile.MaxLines = 0
+	myBeegoLogAdapterMultiFile.MaxSize = 0
+	myBeegoLogAdapterMultiFile.Rotate = true
+	myBeegoLogAdapterMultiFile.Daily = true
+	myBeegoLogAdapterMultiFile.Separate = []string{"emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"}
+
+	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
+	log_config_str := common.Serialize(log_config)
+
+	// order 顺序必须按照
+	// 1. logs.SetLevel(level)
+	// 2. logs.SetLogger(logs.AdapterMultiFile, log_config_str)
+	logs.SetLevel(logs.LevelDebug)
+	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
 }
 
 func _FormatLog(f interface{}, v ...interface{}) string {
@@ -54,8 +81,8 @@ func _FormatLog(f interface{}, v ...interface{}) string {
 }
 
 func _WriteLog(key int, format interface{}, v ...interface{}) {
-	defer logs.SetLogFuncCall(true)
-	logs.SetLogFuncCall(false)
+	//defer logs.SetLogFuncCall(true)
+	//logs.SetLogFuncCall(false)
 	pc, file, line, _ := runtime.Caller(2)
 	func_ := runtime.FuncForPC(pc)
 	var f func(f interface{}, v ...interface{})
