@@ -670,6 +670,18 @@ func InsertContractOutput(contractOutput string) bool {
 	return false
 }
 
+func UpdateContractOutVote(id string, vote map[string]interface{}, index int) bool {
+	session := ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_CONTRACT_OUTPUTS).Get(id).Update(map[string]interface{}{"transaction": map[string]interface{}{"Relation": map[string]interface{}{"Votes": r.Row.Field("transaction").Field("Relation").Field("Votes").ChangeAt(index, vote)}}}).RunWrite(session)
+	if err != nil {
+		uniledgerlog.Error(err.Error())
+	}
+	if res.Replaced >= 1 {
+		return true
+	}
+	return false
+}
+
 func GetContractOutputById(id string) (string, error) {
 	if id == "" {
 		return "", errors.New("id blank")

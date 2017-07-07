@@ -20,8 +20,8 @@ func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr s
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 	ownerbefore := append([]string{}, tx_signers)
 	output, _ := Create(ownerbefore, recipients, &metadata, asset, relation, contract)
-	output = NodeSign(output)
-	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	output, vote, index := NodeSign(output)
+	b := MergeContractOutput(common.StructSerialize(output), output.Id, vote, index)
 	uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
@@ -38,8 +38,8 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 	}
 	uniledgerlog.Info(err)
 	uniledgerlog.Info(output)
-	output = NodeSign(output)
-	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	output, vote, index := NodeSign(output)
+	b := MergeContractOutput(common.StructSerialize(output), output.Id, vote, index)
 	uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
@@ -61,9 +61,9 @@ func ExecuteTransferComplete(contractOutPut string, taskStatus string) (outputSt
 	UpdateTaskStauts(&contractModel, taskId, taskStatus)
 
 	contractModel.Id = contractModel.GenerateId()
-	contractModel = NodeSign(contractModel)
+	contractModel, vote, index := NodeSign(contractModel)
 
-	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
+	b := MergeContractOutput(common.StructSerialize(contractModel), contractModel.Id, vote, index)
 	uniledgerlog.Info(b)
 	return common.StructSerialize(contractModel), err
 }
@@ -79,8 +79,8 @@ func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]inter
 	if err != nil {
 		return "", err
 	}
-	output = NodeSign(output)
-	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
+	output, vote, index := NodeSign(output)
+	b := MergeContractOutput(common.StructSerialize(output), output.Id, vote, index)
 	uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
@@ -100,9 +100,9 @@ func ExecuteInterimComplete(contractOutPut string, taskStatus string, contractSt
 	UpdateTaskStauts(&contractModel, taskId, taskStatus)
 
 	contractModel.Id = contractModel.GenerateId()
-	contractModel = NodeSign(contractModel)
+	contractModel, vote, index := NodeSign(contractModel)
 
-	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
+	b := MergeContractOutput(common.StructSerialize(contractModel), contractModel.Id, vote, index)
 	uniledgerlog.Info(b)
 	if !b {
 		err = fmt.Errorf("ExecuteInterimComplete fail!")
@@ -167,6 +167,20 @@ func GetInfoByUser(pubkey string) map[string]interface{} {
 }
 
 //
+func MergeContractOutput(contractModelStr string, id string, vote *model.Vote, index int) bool {
+	b := rethinkdb.InsertContractOutput(contractModelStr)
+	if !b {
+		voteMap, err := common.StructToMap(vote)
+		if err != nil {
+			return false
+		}
+		b = rethinkdb.UpdateContractOutVote(id, voteMap, index)
+		if !b {
+			uniledgerlog.Error("Merge ContractOut Vote fail!")
+		}
+	}
+	return true
+}
 
 //
 func GetInterestCount(pubkey string) float64 {

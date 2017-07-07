@@ -15,6 +15,7 @@ import (
 	"reflect"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"unicontract/src/common/uniledgerlog"
 )
 
@@ -1171,4 +1172,12 @@ func Test_GetInfoByUser(t *testing.T) {
 func Test_GetLastInterest(t *testing.T) {
 	res, _ := GetLastInterest("key...")
 	uniledgerlog.Info(res)
+}
+
+func TestUpdateContractOutVote(t *testing.T) {
+	vote := model.Vote{Id: "123456789"}
+	voteMap, _ := common.StructToMap(vote)
+	//5c3e37d71557e57fa7e3946fa5fc76b1ffacd35cf16e240ba74b14b14fa2ee89
+	b := UpdateContractOutVote("5c3e37d71557e57fa7e3946fa5fc76b1ffacd35cf16e240ba74b14b14fa2ee89", voteMap, 1)
+	uniledgerlog.Info(b)
 }

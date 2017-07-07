@@ -321,7 +321,7 @@ func GetContractFromUnichain(contractId string) (model.ContractModel, error) {
 	return contractStruct, nil
 }
 
-func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
+func NodeSign(contractOutput model.ContractOutput) (model.ContractOutput, *model.Vote, int) {
 	vote := &model.Vote{}
 	vote.Id = common.GenerateUUID()
 	vote.NodePubkey = config.Config.Keypair.PublicKey
@@ -334,14 +334,16 @@ func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
 	vote.Signature = common.Sign(config.Config.Keypair.PrivateKey, contractOutput.Id)
 	voters := contractOutput.Transaction.Relation.Voters
 	votes := make([]*model.Vote, len(voters))
+	location := 0
 	for index, key := range voters {
 		uniledgerlog.Info("index::", index)
 		if key == config.Config.Keypair.PublicKey {
 			votes[index] = vote
+			location = index
 		}
 	}
 	contractOutput.Transaction.Relation.Votes = votes
-	return contractOutput
+	return contractOutput, vote, location
 }
 
 func IsOutputInUnichain(contractHashId string) (bool, error) {
