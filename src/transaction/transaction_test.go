@@ -2,7 +2,7 @@ package transaction
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"testing"
 	"unicontract/src/common"
 	"unicontract/src/config"
@@ -82,7 +82,7 @@ func Test_createTx(t *testing.T) {
 
 	output, _ := Create(tx_signers, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
-	logs.Info(common.StructSerialize(output))
+	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
@@ -115,7 +115,7 @@ func TestInterim(t *testing.T) {
 
 	output, _ := Interim(&metadata, relation, contract)
 	output = NodeSign(output)
-	logs.Info(common.StructSerialize(output))
+	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
@@ -136,7 +136,7 @@ func Test_FreezeTx(t *testing.T) {
 
 	output, err := Transfer("FREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
-		logs.Info(err)
+		uniledgerlog.Info(err)
 		return
 	}
 	output = NodeSign(output)
@@ -159,11 +159,11 @@ func TestTransfer(t *testing.T) {
 
 	output, err := Transfer("TRANSFER", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
-		logs.Info(err)
+		uniledgerlog.Info(err)
 		return
 	}
 	output = NodeSign(output)
-	logs.Info(common.StructSerialize(output))
+	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
@@ -181,11 +181,11 @@ func TestUnfreeze(t *testing.T) {
 
 	output, err := Transfer("UNFREEZE", ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
-		logs.Info(err)
+		uniledgerlog.Info(err)
 		return
 	}
 	output = NodeSign(output)
-	logs.Info(common.StructSerialize(output))
+	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
@@ -194,29 +194,29 @@ func Test_GetUnspent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
 	inps, bal := GetUnfreezeUnspent("EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W")
-	logs.Info(inps)
-	logs.Info(bal)
+	uniledgerlog.Info(inps)
+	uniledgerlog.Info(bal)
 }
 
 func Test_GetFreezeSpent(t *testing.T) {
 	config.Init()
 	//pubkey := config.Config.Keypair.PublicKey
 	inps, bal, flag := GetFrozenUnspent("EcWbt741xS8ytvKWEqCPtDu29sgJ1iHubHyoVvuAgc8W", "feca0672-4ad7-4d9a-ad57-83d48db2269b", "task_id", 1)
-	logs.Info(inps)
-	logs.Info(bal)
-	logs.Info(flag)
+	uniledgerlog.Info(inps)
+	uniledgerlog.Info(bal)
+	uniledgerlog.Info(flag)
 }
 
 func Test_GetContractFromUnichain(t *testing.T) {
 	contract, err := GetContractFromUnichain("feca0672-4ad7-4d9a-ad57-8db2269b")
 
-	logs.Info(err)
-	logs.Info(common.StructSerialize(contract))
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(common.StructSerialize(contract))
 }
 
 func TestIsOutputInUnichain(t *testing.T) {
 	contractHahsId := "2"
 	res, err := IsOutputInUnichain(contractHahsId)
-	logs.Info(res)
-	logs.Info(err)
+	uniledgerlog.Info(res)
+	uniledgerlog.Info(err)
 }

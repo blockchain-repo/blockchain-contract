@@ -6,7 +6,7 @@ import (
 	"unicontract/src/common/monitor"
 	"unicontract/src/core/db/rethinkdb"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func init() {
@@ -16,46 +16,46 @@ func init() {
 func sendContractStatsToMonitor() {
 	timer := time.Tick(20 * time.Second)
 	for now := range timer {
-		logs.Info(now)
+		uniledgerlog.Info(now)
 		Contracts_number, err := rethinkdb.GetContractsCount()
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		Contract_Create, err := rethinkdb.GetContractStatsCount("Contract_Create")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		Contract_Signature, err := rethinkdb.GetContractStatsCount("Contract_Signature")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		Contract_In_Process, err := rethinkdb.GetContractStatsCount("Contract_In_Process")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		Contract_Discarded, err := rethinkdb.GetContractStatsCount("Contract_Discarded")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		Contract_Completed, err := rethinkdb.GetContractStatsCount("Contract_Completed")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		task_send_flag_success, err := rethinkdb.GetTaskSendFlagCount(1)
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		task_send_flag_fail, err := rethinkdb.GetTaskSendFlagCount(0)
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		task_failed_Count, err := rethinkdb.GetTaskScheduleCount("FailedCount")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 		task_wait_Count, err := rethinkdb.GetTaskScheduleCount("WaitCount")
 		if err != nil {
-			logs.Error(err)
+			uniledgerlog.Error(err)
 		}
 
 		monitor.Monitor.Gauge("Contracts_number", common.StringToInt(Contracts_number))

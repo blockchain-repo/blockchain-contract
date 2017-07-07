@@ -14,22 +14,22 @@ func init() {
 func TestBoo(t *testing.T) {
 	var b bool = true
 	var s string = strconv.FormatBool(b)
-	logs.Info(b)
-	logs.Info(s)
+	uniledgerlog.Info(b)
+	uniledgerlog.Info(s)
 }
 
 func TestSplit(t *testing.T) {
 	s := strings.Split("a#100&b#200", "&")
-	logs.Info(s, len(s))
+	uniledgerlog.Info(s, len(s))
 	var re [][2]interface{} = [][2]interface{}{}
 	for i := 0; i < len(s); i++ {
 		ss := strings.Split(s[i], "#")
 		ownAfter := ss[0]
 		amount, _ := strconv.ParseFloat(ss[1], 64)
 		re = append(re, [2]interface{}{ownAfter, amount})
-		logs.Info(ss)
+		uniledgerlog.Info(ss)
 	}
-	logs.Info(re)
+	uniledgerlog.Info(re)
 }
 
 func TestFuncCreateAsset(t *testing.T) {
@@ -49,8 +49,8 @@ func TestFuncCreateAsset(t *testing.T) {
 	var taskIndex int = 1
 
 	ou, err := FuncCreateAsset(ownerBefore, recipients, contractStr, contractHashId, contractId, taskId, taskIndex)
-	logs.Info(err)
-	logs.Info(ou.Data)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(ou.Data)
 }
 
 func TestFuncTransferAsset(t *testing.T) {
@@ -71,8 +71,8 @@ func TestFuncTransferAsset(t *testing.T) {
 	//var metadataStr string = ""
 
 	out, err := FuncTransferAsset(ownerBefore, recipients, contractStr, contractHashId, contractId, taskId, taskIndex, mainPubkey)
-	logs.Info(err)
-	logs.Info(out.Data)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(out.Data)
 }
 
 func TestFuncTransferAssetComplete(t *testing.T) {
@@ -94,15 +94,15 @@ func TestFuncTransferAssetComplete(t *testing.T) {
 
 	out, err := FuncTransferAsset(ownerBefore, recipients, contractStr, contractHashId, contractId, taskId, taskIndex, mainPubkey)
 	if err != nil {
-		logs.Info("err-", err)
+		uniledgerlog.Info("err-", err)
 		return
 	}
 	outputStr := out.Data.(string)
 	//var contractOutPut string = args[0].(string)
 	var taskStatus string = "down"
 	out, err = FuncTransferAssetComplete(outputStr, taskStatus)
-	logs.Info(err)
-	logs.Info(out.Data)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(out.Data)
 }
 
 func TestFuncInterim(t *testing.T) {
@@ -114,8 +114,8 @@ func TestFuncInterim(t *testing.T) {
 	var taskId string = "task_id"
 	var taskIndex int = 1
 	out, err := FuncInterim(contractStr, contractHashId, contractId, taskId, taskIndex)
-	logs.Info(err)
-	logs.Info(out)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(out)
 }
 
 func TestFuncInterimComplete(t *testing.T) {
@@ -128,15 +128,15 @@ func TestFuncInterimComplete(t *testing.T) {
 	var taskIndex int = 1
 	out, err := FuncInterim(contractStr, contractHashId, contractId, taskId, taskIndex)
 	if err != nil {
-		logs.Info("err-", err)
+		uniledgerlog.Info("err-", err)
 		return
 	}
 	outputStr := out.Data.(string)
 	//var contractOutPut string = args[0].(string)
 	var taskStatus string = "down"
 	out, err = FuncTransferAssetComplete(outputStr, taskStatus)
-	logs.Info(err)
-	logs.Info(out.Data)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(out.Data)
 }
 
 func TestFuncUnfreezeAsset(t *testing.T) {
@@ -154,24 +154,24 @@ func TestFuncUnfreezeAsset(t *testing.T) {
 	//var metadataStr string = ""
 	out, err := FuncUnfreezeAsset(ownerBefore, recipients, contractStr, contractHashId, contractId, taskId, taskIndex)
 
-	logs.Info(out)
-	logs.Info(err)
+	uniledgerlog.Info(out)
+	uniledgerlog.Info(err)
 
 }
 
 func TestFuncGetContracOutputtById(t *testing.T) {
 	conId := "feca0672-4ad7-4d9a-ad57-83d48db2269b"
 	res, _ := FuncGetContracOutputtById(conId)
-	logs.Info(res.Data)
+	uniledgerlog.Info(res.Data)
 }
 
 func TestFuncIsConPutInUnichian(t *testing.T) {
 	conhashId := "63841426ea1c501745d56ce47a4e7b93bf85841d54f2c77102ce488ac0ce8b51"
 	res, _ := FuncIsConPutInUnichian(conhashId)
-	logs.Info(res.Code)
-	logs.Info(res.Data)
+	uniledgerlog.Info(res.Code)
+	uniledgerlog.Info(res.Data)
 }
 
 func TestFuncGetNowDateTimestamp(t *testing.T) {
-	logs.Info(FuncGetNowDateTimestamp())
+	uniledgerlog.Info(FuncGetNowDateTimestamp())
 }

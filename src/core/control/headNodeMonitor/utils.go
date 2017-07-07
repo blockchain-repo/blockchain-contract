@@ -2,12 +2,12 @@
 package headNodeMonitor
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 //---------------------------------------------------------------------------
 func Start() {
-	beegoLog.Info("HeadNodeMonitor start")
+	uniledgerlog.Info("HeadNodeMonitor start")
 	gwgHeadNodeMonitor.Add(1)
 	go _HeadNodeMonitor()
 

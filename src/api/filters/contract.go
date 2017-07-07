@@ -2,7 +2,7 @@ package filters
 
 import (
 	"github.com/astaxie/beego/context"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/common"
 )
 
@@ -22,10 +22,10 @@ func ContractFilter(ctx *context.Context) {
 		result["msg"] = "error Headers"
 		result["status"] = 404
 		responseWithStatusCode(ctx, 404, common.StructSerialize(result))
-		logs.Error("ContractFilter contentType or requestDataType is empty!")
+		uniledgerlog.Error("ContractFilter contentType or requestDataType is empty!")
 
 	} else if contentType == "application/json" {
-		//logs.Debug("RequestDataType is json!")
+		//uniledgerlog.Debug("RequestDataType is json!")
 	} else if contentType == "application/octet-stream" {
 		//input := ctx.Input.RequestBody
 		//
@@ -33,19 +33,19 @@ func ContractFilter(ctx *context.Context) {
 		//err2 := proto.Unmarshal(input, contract)
 		////err2 := json.Unmarshal(input, input2)
 		//if err2 != nil {
-		//	logs.Error("marshaling error2: ", err2)
+		//	uniledgerlog.Error("marshaling error2: ", err2)
 		//}
 		//fmt.Println("oring contract(application/octet-stream): \n", contract)
 		//
 		//fmt.Println(contract.Id)
 
 	} else if contentType == "application/x-protobuf" {
-		//logs.Debug("RequestDataType is proto!")
+		//uniledgerlog.Debug("RequestDataType is proto!")
 		//input := ctx.Input.RequestBody
 		//contract := &protos.ContractProto{}
 		//err2 := proto.Unmarshal(input, contract)
 		//if err2 != nil {
-		//	logs.Error("marshaling error2: ", err2)
+		//	uniledgerlog.Error("marshaling error2: ", err2)
 		//}
 		//fmt.Println("oring contract(application/x-protobuf): \n", contract)
 		//fmt.Println(contract.Id)

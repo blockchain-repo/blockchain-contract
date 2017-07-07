@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/protos"
@@ -17,9 +17,9 @@ type ContractModel struct {
 func (c *ContractModel) Validate() bool {
 	// 1. validate contract.id
 	idValid := c.Contract.Id == c.GenerateId() // Hash contractBody
-	logs.Warn("valid id is: " + c.GenerateId())
+	uniledgerlog.Warn("valid id is: " + c.GenerateId())
 	if !idValid {
-		logs.Error("Validate idValid false")
+		uniledgerlog.Error("Validate idValid false")
 		return false
 	}
 
@@ -42,7 +42,7 @@ func (c *ContractModel) Sign(private_key string) string {
 	contractBodyCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneBytes, &temp)
 	if err != nil {
-		logs.Error("Unmarshal error ", err)
+		uniledgerlog.Error("Unmarshal error ", err)
 	}
 	temp.ContractSignatures = nil
 	contractBodySerialized := common.StructSerialize(temp)
@@ -64,7 +64,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 	contractBodyCloneCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneCloneBytes, &temp)
 	if err != nil {
-		logs.Error("[module-model]IsSignatureValid error ", err)
+		uniledgerlog.Error("[module-model]IsSignatureValid error ", err)
 	}
 	temp.ContractSignatures = nil
 	contractBody_serialized := common.StructSerialize(temp)
@@ -73,12 +73,12 @@ func (c *ContractModel) IsSignatureValid() bool {
 	// 合约 owners 不能存在重复的
 	len_contractOwners := len(contractOwners)
 	if len_contractOwners == 0 {
-		logs.Error("IsSignatureValid len_contractOwners 长度不能为0")
+		uniledgerlog.Error("IsSignatureValid len_contractOwners 长度不能为0")
 		return false
 	}
 	contractOwnersSet := common.StrArrayToHashSet(c.ContractBody.ContractOwners)
 	if len_contractOwners != contractOwnersSet.Len() {
-		logs.Error("IsSignatureValid contractOwners 存在重复项")
+		uniledgerlog.Error("IsSignatureValid contractOwners 存在重复项")
 		return false
 	}
 	contractSignatures := c.ContractBody.ContractSignatures
@@ -86,23 +86,23 @@ func (c *ContractModel) IsSignatureValid() bool {
 
 		ownerPubkey := contractSignature.OwnerPubkey
 		if !contractOwnersSet.Has(ownerPubkey) {
-			logs.Error("IsSignatureValid contractOwner ", ownerPubkey, " 不存在于", contractOwners)
+			uniledgerlog.Error("IsSignatureValid contractOwner ", ownerPubkey, " 不存在于", contractOwners)
 			return false
 		}
 		if contractSignature.SignTimestamp == "" {
-			logs.Error("IsSignatureValid SignTimestamp is blank")
+			uniledgerlog.Error("IsSignatureValid SignTimestamp is blank")
 			return false
 		}
 		signature := contractSignature.Signature
 		if signature == "" {
-			logs.Error("IsSignatureValid signature is blank")
+			uniledgerlog.Error("IsSignatureValid signature is blank")
 			return false
 		}
 		// contract signature verify
 		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
-		logs.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
+		uniledgerlog.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
 		if !verifyFlag {
-			logs.Error("IsSignatureValid contract signature verify fail")
+			uniledgerlog.Error("IsSignatureValid contract signature verify fail")
 			return false
 		}
 	}
@@ -117,7 +117,7 @@ func (c *ContractModel) ToString() string {
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
 	contractBodySerialized := common.StructSerialize(c.Contract.ContractBody)
-	logs.Warn("contractBodySerialized:\n", contractBodySerialized)
+	uniledgerlog.Warn("contractBodySerialized:\n", contractBodySerialized)
 	return common.HashData(contractBodySerialized)
 }
 
@@ -128,12 +128,12 @@ func (c *ContractModel) validateContractHead() bool {
 	pub_keysSet := common.StrArrayToHashSet(pub_keys)
 	contractHead := c.Contract.ContractHead
 	if contractHead.MainPubkey == "" {
-		logs.Error("contract main_pubkey blank")
+		uniledgerlog.Error("contract main_pubkey blank")
 		return false
 	}
 
 	if !pub_keysSet.Has(contractHead.MainPubkey) {
-		logs.Warn("main_pubkey ", contractHead.MainPubkey, " not in pubkeys")
+		uniledgerlog.Warn("main_pubkey ", contractHead.MainPubkey, " not in pubkeys")
 		return false
 	}
 	return true
@@ -154,7 +154,7 @@ func FromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 	// 2. to contract
 	contract := contractModel.Contract
 	if err != nil {
-		logs.Error("error fromContractModelStrToContract", err)
+		uniledgerlog.Error("error fromContractModelStrToContract", err)
 		return contract, err
 	}
 
@@ -172,7 +172,7 @@ func FromContractModelToContract(contractModel ContractModel) protos.Contract {
 	contractModelCloneBytes, _ := json.Marshal(contractModelClone)
 	err := json.Unmarshal(contractModelCloneBytes, &temp)
 	if err != nil {
-		logs.Error("[module-model]FromContractModelToContract error ", err)
+		uniledgerlog.Error("[module-model]FromContractModelToContract error ", err)
 	}
 	contract := contractModel.Contract
 	return contract

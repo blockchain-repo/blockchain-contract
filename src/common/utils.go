@@ -12,7 +12,7 @@ import (
 	"time"
 	"unicontract/src/common/basic"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"github.com/google/uuid"
 )
 
@@ -72,7 +72,7 @@ func StructToMap(obj interface{}) (map[string]interface{}, error) {
 	var mapObj map[string]interface{}
 	objBytes, err := json.Marshal(obj)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return mapObj, err
 	}
 	json.Unmarshal(objBytes, &mapObj)
@@ -83,7 +83,7 @@ func MapToStruct(mapObj map[string]interface{}) (interface{}, error) {
 	var obj interface{}
 	mapObjBytes, err := json.Marshal(mapObj)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return obj, err
 	}
 	json.Unmarshal(mapObjBytes, &obj)
@@ -102,7 +102,7 @@ Structs keys are marshalled in the order defined in the struct
 func StructSerialize(obj interface{}, escapeHTML ...bool) string {
 	objMap, err := StructToMap(obj)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return ""
 	}
 	if len(escapeHTML) >= 1 {
@@ -115,7 +115,7 @@ func StructSerialize(obj interface{}, escapeHTML ...bool) string {
 func StructSerializePretty(obj interface{}, escapeHTML ...bool) string {
 	objMap, err := StructToMap(obj)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return ""
 	}
 	if len(escapeHTML) >= 1 {
@@ -136,7 +136,7 @@ func Serialize(obj interface{}, escapeHTML ...bool) string {
 	enc.SetEscapeHTML(setEscapeHTML)
 	err := enc.Encode(obj)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return ""
 	}
 	return strings.TrimSpace(buf.String())
@@ -156,7 +156,7 @@ func SerializePretty(obj interface{}, escapeHTML ...bool) string {
 	enc.SetIndent("", "\t")
 	err := enc.Encode(obj)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return ""
 	}
 	return strings.TrimSpace(buf.String())
@@ -167,7 +167,7 @@ func Deserialize(jsonStr string) interface{} {
 	var dat interface{}
 	err := json.Unmarshal([]byte(jsonStr), &dat)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return dat
 }
@@ -182,7 +182,7 @@ func TypeToString(name interface{}) string {
 
 	value, ok := name.(string)
 	if !ok {
-		logs.Error("Type conversion error")
+		uniledgerlog.Error("Type conversion error")
 	}
 	return value
 }
@@ -197,7 +197,7 @@ func TypeToInt(name interface{}) int {
 
 	value, ok := name.(int)
 	if !ok {
-		logs.Error("Type conversion error")
+		uniledgerlog.Error("Type conversion error")
 	}
 	return value
 }
@@ -212,7 +212,7 @@ func TypeToFloat32(name interface{}) float32 {
 
 	value, ok := name.(float32)
 	if !ok {
-		logs.Error("Type conversion error")
+		uniledgerlog.Error("Type conversion error")
 	}
 	return value
 }
@@ -227,7 +227,7 @@ func TypeToFloat64(name interface{}) float64 {
 
 	value, ok := name.(float64)
 	if !ok {
-		logs.Error("Type conversion error")
+		uniledgerlog.Error("Type conversion error")
 	}
 	return value
 }
@@ -242,7 +242,7 @@ func TypeToMap(name interface{}) map[interface{}]interface{} {
 
 	value, ok := name.(map[interface{}]interface{})
 	if !ok {
-		logs.Error("Type conversion error")
+		uniledgerlog.Error("Type conversion error")
 	}
 	return value
 }
@@ -257,7 +257,7 @@ func StringToInt(str string) int {
 
 	number, err := strconv.Atoi(str)
 	if err != nil {
-		logs.Error(err)
+		uniledgerlog.Error(err)
 	}
 	return number
 }

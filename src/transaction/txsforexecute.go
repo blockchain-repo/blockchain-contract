@@ -9,7 +9,7 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"time"
 )
 
@@ -22,7 +22,7 @@ func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr s
 	output, _ := Create(ownerbefore, recipients, &metadata, asset, relation, contract)
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
-	logs.Info(b)
+	uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
 
@@ -30,17 +30,17 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 	metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	asset := GetAsset(ownerbefore)
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
-	logs.Info("==after: ", contract)
+	uniledgerlog.Info("==after: ", contract)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
 		return "", err
 	}
-	logs.Info(err)
-	logs.Info(output)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(output)
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
-	logs.Info(b)
+	uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
 
@@ -64,7 +64,7 @@ func ExecuteTransferComplete(contractOutPut string, taskStatus string) (outputSt
 	contractModel = NodeSign(contractModel)
 
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
-	logs.Info(b)
+	uniledgerlog.Info(b)
 	return common.StructSerialize(contractModel), err
 }
 
@@ -74,14 +74,14 @@ func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]inter
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
-	logs.Info(err)
-	logs.Info(output)
+	uniledgerlog.Info(err)
+	uniledgerlog.Info(output)
 	if err != nil {
 		return "", err
 	}
 	output = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
-	logs.Info(b)
+	uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
 
@@ -103,7 +103,7 @@ func ExecuteInterimComplete(contractOutPut string, taskStatus string, contractSt
 	contractModel = NodeSign(contractModel)
 
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(contractModel))
-	logs.Info(b)
+	uniledgerlog.Info(b)
 	if !b {
 		err = fmt.Errorf("ExecuteInterimComplete fail!")
 	}
@@ -113,7 +113,7 @@ func ExecuteInterimComplete(contractOutPut string, taskStatus string, contractSt
 func GenerateRelation(contractHashId string, contractId string, taskId string, taskIndex int) string {
 	voters := config.GetAllPublicKey()
 	sort.Strings(voters)
-	logs.Info(voters)
+	uniledgerlog.Info(voters)
 	relation := model.Relation{
 		ContractId:     contractId,
 		ContractHashId: contractHashId,
@@ -162,7 +162,7 @@ func GetPurchaseAmount(pubkey string) float64 {
 
 func GetInfoByUser(pubkey string) map[string]interface{} {
 	res, _ := rethinkdb.GetInfoByUser(pubkey)
-	logs.Info(res)
+	uniledgerlog.Info(res)
 	return res
 }
 
@@ -187,7 +187,7 @@ func GetInterestCount(pubkey string) float64 {
 		countInterest = countInterest + tmp
 		countYeild = countYeild + tmp
 	}
-	logs.Info(countInterest + countYeild + firstPurchaseAmount)
+	uniledgerlog.Info(countInterest + countYeild + firstPurchaseAmount)
 
 	return countInterest + countYeild + firstPurchaseAmount
 }
@@ -206,9 +206,9 @@ func SaveEarnings(pubkey string, isRaise bool, rate float64, firstPurchaseAmount
 	res["purchaseAmount"] = purchaseAmount
 	res["yeild"] = yeild
 
-	logs.Info(res)
+	uniledgerlog.Info(res)
 	str := common.Serialize(res)
-	logs.Info(str)
+	uniledgerlog.Info(str)
 	result := rethinkdb.InsertInterestCount(str)
 
 	return result

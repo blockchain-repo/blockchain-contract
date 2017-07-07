@@ -1,7 +1,7 @@
 package rethinkdb
 
 import (
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
@@ -14,7 +14,7 @@ func Reconfig(shards int,replicas int) *r.Cursor {
 	session := Connect()
 	resp, err := r.DB(dbname).Reconfigure(opts).Run(session)
 	if err != nil {
-		logs.Error("Error reconfig database: %s", err)
+		uniledgerlog.Error("Error reconfig database: %s", err)
 	}
 	return resp
 }

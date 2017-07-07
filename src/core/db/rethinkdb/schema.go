@@ -3,7 +3,7 @@ package rethinkdb
 import (
 	"fmt"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 
 	r "gopkg.in/gorethink/gorethink.v3"
 )
@@ -52,7 +52,7 @@ func CreateTable(db string, name string) {
 	session := ConnectDB(db)
 	respo, err := r.TableCreate(name).RunWrite(session)
 	if err != nil {
-		logs.Error("Error creating table: %s", err)
+		uniledgerlog.Error("Error creating table: %s", err)
 	}
 
 	fmt.Printf("%d table created\n", respo.TablesCreated)
@@ -62,7 +62,7 @@ func CreateDatabase(name string) {
 	session := Connect()
 	resp, err := r.DBCreate(name).RunWrite(session)
 	if err != nil {
-		logs.Error("Error creating database: %s", err)
+		uniledgerlog.Error("Error creating database: %s", err)
 	}
 
 	fmt.Printf("%d DB created\n", resp.DBsCreated)
@@ -73,7 +73,7 @@ func DropDatabase() {
 	session := Connect()
 	resp, err := r.DBDrop(dbname).RunWrite(session)
 	if err != nil {
-		logs.Error("Error dropping database: %s", err)
+		uniledgerlog.Error("Error dropping database: %s", err)
 	}
 
 	fmt.Printf("%d DB dropped, %d tables dropped\n", resp.DBsDropped, resp.TablesDropped)

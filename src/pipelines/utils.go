@@ -48,7 +48,7 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 
 func SaveOutputErrorData(tableName string, coModel model.ContractOutput) bool {
 
-	//logs.Info("in SaveOutputErrorData--dataid : ", common.Serialize(coModel.Id))
+	//uniledgerlog.Info("in SaveOutputErrorData--dataid : ", common.Serialize(coModel.Id))
 	dataId := coModel.Id
 
 	res := rethinkdb.Get(rethinkdb.DBNAME, tableName, dataId)
@@ -60,7 +60,7 @@ func SaveOutputErrorData(tableName string, coModel model.ContractOutput) bool {
 	//insert
 	failTime := time.Now().String()
 	dataJson := `{"id":"` + dataId + `","tableName":"` + _TableContractOutputs + `","failTime":"` + failTime + `","sendTime":"","sendCount":"1","status":"unsend"}`
-	//logs.Info(dataJson)
+	//uniledgerlog.Info(dataJson)
 	rethinkdb.Insert(rethinkdb.DBNAME, tableName, dataJson)
 	return true
 }

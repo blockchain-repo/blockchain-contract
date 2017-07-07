@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"strings"
 	"testing"
 	"unicontract/src/common"
@@ -168,7 +168,7 @@ func GenerateOutputTest() string {
 	vote4.VoteBody.VoteFor = transaction.ContractModel.Id
 	vote4.VoteBody.VoteType = "CONTRACT"
 	//note:contractoutput(contract) node signature : use the vote data
-	//logs.Info("voteSign: ",common.Serialize(vote4.VoteBody))
+	//uniledgerlog.Info("voteSign: ",common.Serialize(vote4.VoteBody))
 	vote4.Signature = vote4.SignVote()
 	vote5 := &Vote{}
 	vote5.Id = common.GenerateUUID()
@@ -311,9 +311,9 @@ func TestHash(t *testing.T) {
 	_ = enc.Encode(ddd)
 
 	ser := strings.TrimSpace(buf.String())
-	logs.Info(ser)
+	uniledgerlog.Info(ser)
 	hash := common.HashData(ser)
-	logs.Info(hash)
+	uniledgerlog.Info(hash)
 }
 
 //c2219c1a23b637f9a1dac5cbea7625b2de8b100a6e65e5a92f555b7ab8e37424

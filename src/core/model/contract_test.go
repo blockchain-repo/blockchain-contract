@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"testing"
@@ -27,7 +27,7 @@ func fromContractModelStrToContract(contractModelStr string) (protos.Contract, e
 	// 2. to contract
 	contract := contractModel.Contract
 	if err != nil {
-		logs.Error("error fromContractModelStrToContract", err)
+		uniledgerlog.Error("error fromContractModelStrToContract", err)
 		return contract, err
 	}
 

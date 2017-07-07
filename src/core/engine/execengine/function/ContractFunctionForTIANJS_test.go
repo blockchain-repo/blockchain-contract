@@ -12,7 +12,7 @@ func TestFuncGetNowDate(t *testing.T) {
 	//now := time.Now() //2017-06-17 15:19:30.930240121 +0800 CST
 	/*
 		now, _ := time.Parse(format, time.Now().Format(format)) //2017-06-17 15:19:58 +0000 UTC
-		logs.Info(now)
+		uniledgerlog.Info(now)
 		a, _ := time.Parse(format, "2017-06-17 11:00:00")
 		b, _ := time.Parse(format, "2017-06-17 16:00:00")
 		fmt.Println(now.Weekday())
@@ -36,23 +36,23 @@ func TestFuncGetNowDate(t *testing.T) {
 	//now, _ := time.Parse(format, time.Now().Format(format))
 	d, _ := time.ParseDuration("-24h")
 	var dateCheck time.Time = now.Add(d)
-	logs.Info(dateCheck)
+	uniledgerlog.Info(dateCheck)
 	var week = dateCheck.Weekday()
-	logs.Info(week)
+	uniledgerlog.Info(week)
 	var sunday time.Weekday = 0
 	var sturday time.Weekday = 6
 	if sunday == week {
-		logs.Info(sunday)
+		uniledgerlog.Info(sunday)
 		d, _ := time.ParseDuration("-48h")
 		dateCheck = dateCheck.Add(d)
 	}
 	if sturday == week {
-		logs.Info(sturday)
+		uniledgerlog.Info(sturday)
 		d, _ := time.ParseDuration("-24h")
 		dateCheck = dateCheck.Add(d)
 	}
 	var isIn bool = dateCheck.After(start) && dateCheck.Before(end)
-	logs.Info(dateCheck, isIn)
+	uniledgerlog.Info(dateCheck, isIn)
 }
 
 func TestRand(t *testing.T) {
@@ -60,7 +60,7 @@ func TestRand(t *testing.T) {
 	//var realrate = rand.Float64() * rate
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	realrate := (r.Float64() + 0.6) * rate
-	logs.Info(realrate)
+	uniledgerlog.Info(realrate)
 }
 
 //0.6046602879796196

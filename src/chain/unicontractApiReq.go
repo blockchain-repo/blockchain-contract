@@ -4,10 +4,7 @@ import (
 	"errors"
 	"unicontract/src/common"
 	"unicontract/src/common/requestHandler"
-)
-
-import (
-	beegoLog "github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 /**
@@ -17,7 +14,7 @@ import (
  */
 func CreateContract(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking CreateContract Api")
+	uniledgerlog.Debug(" begin invoking CreateContract Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "CreateContract"
 
@@ -25,7 +22,7 @@ func CreateContract(jsonBody interface{}) (*requestHandler.ResponseResult, error
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -41,7 +38,7 @@ func CreateContract(jsonBody interface{}) (*requestHandler.ResponseResult, error
  */
 func CreateContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking CreateContractTx Api")
+	uniledgerlog.Debug(" begin invoking CreateContractTx Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "CreateContractTx"
 
@@ -49,7 +46,7 @@ func CreateContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, err
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -65,7 +62,7 @@ func CreateContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, err
  */
 func GetContract(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking GetContract Api")
+	uniledgerlog.Debug(" begin invoking GetContract Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "GetContract"
 
@@ -73,7 +70,7 @@ func GetContract(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -89,7 +86,7 @@ func GetContract(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
  */
 func GetContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking GetContractTx Api")
+	uniledgerlog.Debug(" begin invoking GetContractTx Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "GetContractTx"
 
@@ -97,7 +94,7 @@ func GetContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error)
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -113,7 +110,7 @@ func GetContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error)
  */
 func GetContractRecord(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking GetContractRecord Api")
+	uniledgerlog.Debug(" begin invoking GetContractRecord Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "GetContractRecord"
 
@@ -121,7 +118,7 @@ func GetContractRecord(jsonBody interface{}) (*requestHandler.ResponseResult, er
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -137,7 +134,7 @@ func GetContractRecord(jsonBody interface{}) (*requestHandler.ResponseResult, er
  */
 func FreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking FreezeAsset Api")
+	uniledgerlog.Debug(" begin invoking FreezeAsset Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "FreezeAsset"
 
@@ -145,7 +142,7 @@ func FreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -161,7 +158,7 @@ func FreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
  */
 func UnfreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking UnfreezeAsset Api")
+	uniledgerlog.Debug(" begin invoking UnfreezeAsset Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "UnfreezeAsset"
 
@@ -169,7 +166,7 @@ func UnfreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error)
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -185,7 +182,7 @@ func UnfreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error)
  */
 func FrozenAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking FrozenAsset Api")
+	uniledgerlog.Debug(" begin invoking FrozenAsset Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "FrozenAsset"
 
@@ -193,7 +190,7 @@ func FrozenAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -203,7 +200,7 @@ func FrozenAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 }
 
 func GetTxByConHashId(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
-	beegoLog.Debug(" begin invoking GetTxByConHashId Api")
+	uniledgerlog.Debug(" begin invoking GetTxByConHashId Api")
 	yamlName := "unicontractApiConf.yaml"
 	apiName := "GetTxByConHashId"
 
@@ -211,7 +208,7 @@ func GetTxByConHashId(jsonBody interface{}) (*requestHandler.ResponseResult, err
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})

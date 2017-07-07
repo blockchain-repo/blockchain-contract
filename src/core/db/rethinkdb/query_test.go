@@ -15,7 +15,7 @@ import (
 	"reflect"
 
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func init() {
@@ -771,9 +771,9 @@ func Test_DeleteTaskSchedules(t *testing.T) {
 func Test_GetTaskScheduleCount(t *testing.T) {
 	count, err := GetTaskScheduleCount("WaitCount")
 	if err != nil {
-		logs.Error(err)
+		uniledgerlog.Error(err)
 	}
-	logs.Error(count)
+	uniledgerlog.Error(count)
 	t.Logf("deleteNum is %d\n", count)
 	t.Logf("err is %+v\n", err)
 }
@@ -1165,10 +1165,10 @@ func Test_InsertInterestCount(t *testing.T) {
 
 func Test_GetInfoByUser(t *testing.T) {
 	res, _ := GetInfoByUser("key...")
-	logs.Info(res)
+	uniledgerlog.Info(res)
 }
 
 func Test_GetLastInterest(t *testing.T) {
 	res, _ := GetLastInterest("key...")
-	logs.Info(res)
+	uniledgerlog.Info(res)
 }

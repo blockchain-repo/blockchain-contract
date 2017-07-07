@@ -6,10 +6,7 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
-
-import (
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/common/yaml"
 )
 
@@ -28,7 +25,7 @@ func Init() {
 	strConfigOSPath := os.Getenv(_CONFIG_FILE_ENV)
 	strConfigPath := strConfigOSPath + string(os.PathSeparator) + _CONFIG_FILE_NAME
 	if err := yaml.Read(strConfigPath, &Conf); err != nil {
-		beegoLog.Error(err)
+		uniledgerlog.Error(err)
 		os.Exit(-1)
 	}
 }

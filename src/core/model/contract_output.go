@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/common"
 	"unicontract/src/config"
 )
@@ -55,10 +55,10 @@ func (c *ContractOutput) GenerateId() string {
 	transactionCloneBytes, _ := json.Marshal(contractOutput)
 	err := json.Unmarshal(transactionCloneBytes, &temp)
 	if err != nil {
-		logs.Error("Unmarshal error ", err)
+		uniledgerlog.Error("Unmarshal error ", err)
 		return ""
 	}
-	//logs.Info(common.Serialize(temp))
+	//uniledgerlog.Info(common.Serialize(temp))
 	//operation := c.Transaction.Operation
 	temp.Id = ""
 	temp.Transaction.Relation.Votes = nil
@@ -66,7 +66,7 @@ func (c *ContractOutput) GenerateId() string {
 	temp.Transaction.Timestamp = ""
 	temp.RemoveSignature()
 	serializeStr := common.StructSerialize(temp)
-	logs.Info("before-sign--", serializeStr)
+	uniledgerlog.Info("before-sign--", serializeStr)
 	return common.HashData(serializeStr)
 }
 
@@ -167,7 +167,7 @@ func (c *ContractOutput) ValidateContractOutput() bool {
 		} else {
 			signData = vote.VoteBody.VoteFor
 		}
-		//logs.Info("signData:",signData)
+		//uniledgerlog.Info("signData:",signData)
 		if common.Verify(nodePubkey, signData, nodeVoteSignature) {
 			validSignCount++
 		}

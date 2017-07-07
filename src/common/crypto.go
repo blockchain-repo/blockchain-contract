@@ -8,7 +8,7 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 	"golang.org/x/crypto/ed25519"
 	"golang.org/x/crypto/sha3"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func HashData(val string) string {
@@ -25,7 +25,7 @@ func HashData(val string) string {
 func GenerateKeyPair() (string, string) {
 	publicKeyBytes, privateKeyBytes, err := ed25519.GenerateKey(nil)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	publicKeyBase58 := base58.Encode(publicKeyBytes)
 	privateKeyBase58 := base58.Encode(privateKeyBytes[0:32])
@@ -36,7 +36,7 @@ func GetPubByPriv(priv string) string {
 	privByte := base58.Decode(priv)
 	publicKeyBytes, _, err := ed25519.GenerateKey(bytes.NewReader(privByte))
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	publicKeyBase58 := base58.Encode(publicKeyBytes)
 	return publicKeyBase58

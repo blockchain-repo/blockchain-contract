@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"testing"
 	"unicontract/src/common"
 )
@@ -14,5 +14,5 @@ func TestGenerateRelation(t *testing.T) {
 	taskExecuteIdx := 4
 
 	r.GenerateRelation(contracHashId, contractid, taskid, taskExecuteIdx)
-	logs.Info(common.StructSerialize(r))
+	uniledgerlog.Info(common.StructSerialize(r))
 }

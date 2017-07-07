@@ -1,7 +1,7 @@
 package rethinkdb
 
 import (
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 
 	r "gopkg.in/gorethink/gorethink.v3"
 	"unicontract/src/config"
@@ -23,7 +23,7 @@ func Connect() *r.Session { // FIXME: GetSession?
 	})
 
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return session
 }
@@ -45,7 +45,7 @@ func ConnectDB(dbname string) *r.Session { // FIXME: GetSession?
 	})
 
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return session
 }

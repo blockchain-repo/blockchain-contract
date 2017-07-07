@@ -10,8 +10,8 @@ import (
 	"unicontract/src/config"
 	"unicontract/src/core/model"
 
-	"github.com/astaxie/beego/logs"
 	"strings"
+	"unicontract/src/common/uniledgerlog"
 )
 
 const (
@@ -72,7 +72,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 	var inputs = []*model.Fulfillment{}
 	var balance float64 = 0
 	var spentFlag float64 = -1 //0:no asset was frozen;  1:the asset was frozen; 2:the frozen asset had transfer
-	logs.Info(operation)
+	uniledgerlog.Info(operation)
 	if operation == _FREEZE {
 		isFeeze = true
 		inputs, balance, spentFlag = GetFrozenUnspent(ownerbefore, contractId, taskId, taskExecuteIdx)
@@ -156,7 +156,7 @@ func Transfer(operation string, ownerbefore string, recipients [][2]interface{},
 
 	contractOutput := model.ContractOutput{}
 	contractOutput.GenerateConOutput(operation, asset, inputs, outputs, metadata, timestamp, version, relation, contract)
-	//logs.Info("down---",common.StructSerialize(contractOutput))
+	//uniledgerlog.Info("down---",common.StructSerialize(contractOutput))
 	return contractOutput, nil
 }
 
@@ -185,18 +185,18 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal float64) 
 	param := "unspent=true&public_key=" + pubkey
 	result, err := chain.GetUnspentTxs(param)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil, 0
 	}
 	inputs := []*model.Fulfillment{}
 	var balance float64
 	// TODO 断言写法要改
 	for index, unspend := range result.Data.([]interface{}) {
-		//logs.Info("unspend-map====",unspend)
+		//uniledgerlog.Info("unspend-map====",unspend)
 		unspenStruct := model.UnSpentOutput{}
 		mapObjBytes, _ := json.Marshal(unspend)
 		json.Unmarshal(mapObjBytes, &unspenStruct)
-		//logs.Info("unspend====", common.StructSerialize(unspenStruct))
+		//uniledgerlog.Info("unspend====", common.StructSerialize(unspenStruct))
 		//generate input
 		inoutLink := model.ContractOutputLink{
 			Cid:  unspenStruct.Cid,
@@ -211,10 +211,10 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal float64) 
 		}
 		inputs = append(inputs, &input)
 		balance += unspenStruct.Amount
-		logs.Info("input====", common.StructSerialize(input))
+		uniledgerlog.Info("input====", common.StructSerialize(input))
 	}
 	if result.Code != 200 {
-		logs.Error(errors.New("request send failed"))
+		uniledgerlog.Error(errors.New("request send failed"))
 		return nil, 0
 	}
 	return inputs, balance
@@ -249,30 +249,30 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 
 	taskNumStr := strconv.Itoa(taskNum)
 	param := "unspent=true&public_key=" + pubkey + "&contract_id=" + contractId + "&task_id=" + taskId + "&task_num=" + taskNumStr
-	logs.Info(param)
+	uniledgerlog.Info(param)
 	result, err := chain.GetFreezeUnspentTxs(param)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil, 0, -1
 	}
 	if result.Code != 200 {
-		logs.Error(errors.New("request send failed"))
+		uniledgerlog.Error(errors.New("request send failed"))
 		return nil, 0, -1
 	}
 
 	inputs := []*model.Fulfillment{}
 	var balance float64
-	logs.Info(result.Data)
+	uniledgerlog.Info(result.Data)
 	// TODO 断言写法要改
 	flag = result.Data.([]interface{})[0].(float64)
 	unspendSlice := result.Data.([]interface{})[1].([]interface{})
 	for index, unspend := range unspendSlice {
 		//to map
-		//logs.Info("unspend-map====",unspend)
+		//uniledgerlog.Info("unspend-map====",unspend)
 		var unspentStruct model.UnSpentOutput
 		mapObjBytes, _ := json.Marshal(unspend)
 		json.Unmarshal(mapObjBytes, &unspentStruct)
-		//logs.Info("unspend-stu====", common.StructSerialize(unspentStruct))
+		//uniledgerlog.Info("unspend-stu====", common.StructSerialize(unspentStruct))
 		//generate input
 		inoutLink := model.ContractOutputLink{
 			Cid:  unspentStruct.Cid,
@@ -287,11 +287,11 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 		}
 		inputs = append(inputs, &input)
 		balance += unspentStruct.Amount
-		logs.Info("input====", common.StructSerialize(input))
+		uniledgerlog.Info("input====", common.StructSerialize(input))
 	}
-	//logs.Info(inputs)
-	logs.Info(balance)
-	logs.Info(flag)
+	//uniledgerlog.Info(inputs)
+	uniledgerlog.Info(balance)
+	uniledgerlog.Info(flag)
 	return inputs, balance, flag
 }
 
@@ -299,7 +299,7 @@ func GetContractFromUnichain(contractId string) (model.ContractModel, error) {
 	param := `{"contract_id":"` + contractId + `"}`
 	result, err := chain.GetContractById(param)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return model.ContractModel{}, err
 	}
 	var contractStruct model.ContractModel
@@ -316,7 +316,7 @@ func GetContractFromUnichain(contractId string) (model.ContractModel, error) {
 		contractStruct = model.ContractModel{}
 		contractBytes, _ := json.Marshal(contract)
 		json.Unmarshal(contractBytes, &contractStruct)
-		//logs.Info("index=", index, "----contract=", common.StructSerialize(contractStruct))
+		//uniledgerlog.Info("index=", index, "----contract=", common.StructSerialize(contractStruct))
 	}
 	return contractStruct, nil
 }
@@ -335,7 +335,7 @@ func NodeSign(contractOutput model.ContractOutput) model.ContractOutput {
 	voters := contractOutput.Transaction.Relation.Voters
 	votes := make([]*model.Vote, len(voters))
 	for index, key := range voters {
-		logs.Info("index::", index)
+		uniledgerlog.Info("index::", index)
 		if key == config.Config.Keypair.PublicKey {
 			votes[index] = vote
 		}
@@ -349,26 +349,26 @@ func IsOutputInUnichain(contractHashId string) (bool, error) {
 	param := `{"contract_hash_id":"` + contractHashId + `"}`
 	result, err := chain.GetTxByConHashId(param)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return false, err
 	}
-	logs.Info(result.Data)
+	uniledgerlog.Info(result.Data)
 	//output, ok := result.Data.([]interface{})
 	output, ok := result.Data.(interface{})
 	if !ok {
 		err = errors.New("type error")
-		logs.Error(err)
+		uniledgerlog.Error(err)
 		return false, err
 	}
 
 	sloutput, ok := output.([]interface{})
 	if !ok {
 		err = errors.New("output.([]interface{}) error")
-		logs.Error(err)
+		uniledgerlog.Error(err)
 		return false, err
 	}
 
-	logs.Info(len(sloutput))
+	uniledgerlog.Info(len(sloutput))
 	if len(sloutput) > 0 {
 		return true, nil
 	}

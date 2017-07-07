@@ -1,6 +1,8 @@
 package uniledgerlog
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"path/filepath"
 	"runtime"
@@ -12,7 +14,6 @@ import (
 )
 
 import (
-	"unicontract/src/common"
 	"unicontract/src/common/basic"
 )
 
@@ -30,11 +31,26 @@ var mapLevelKeys = map[int]string{
 	LevelDebug: "DEBUG",
 }
 
+func _Serialize(obj interface{}, escapeHTML ...bool) string {
+	setEscapeHTML := false
+	if len(escapeHTML) >= 1 {
+		setEscapeHTML = escapeHTML[0]
+	}
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	// disabled the HTMLEscape for &, <, and > to \u0026, \u003c, and \u003e in json string
+	enc.SetEscapeHTML(setEscapeHTML)
+	err := enc.Encode(obj)
+	if err != nil {
+		logs.Error(err.Error())
+		return ""
+	}
+	return strings.TrimSpace(buf.String())
+	//return strings.Replace(strings.TrimSpace(buf.String()), "\n", "", -1)
+}
+
 func Init() {
-	// TODO
-	logs.SetLogFuncCall(true)
-	logs.EnableFuncCallDepth(true)
-	logs.SetLogFuncCallDepth(3)
+	logs.SetLogFuncCall(false)
 
 	myBeegoLogAdapterMultiFile := &basic.MyBeegoLogAdapterMultiFile{}
 	myBeegoLogAdapterMultiFile.FileName = "../log/unicontract.log"
@@ -47,7 +63,7 @@ func Init() {
 	myBeegoLogAdapterMultiFile.Separate = []string{"emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"}
 
 	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
-	log_config_str := common.Serialize(log_config)
+	log_config_str := _Serialize(log_config)
 
 	// order 顺序必须按照
 	// 1. logs.SetLevel(level)

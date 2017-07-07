@@ -2,7 +2,7 @@ package transaction
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	"sort"
 	"testing"
 )
@@ -16,8 +16,8 @@ func TestSort(t *testing.T) {
 	var silce = []string{"a", "c", "b", "A", "C", "B", "1", "3", "2"}
 	sort.Strings(silce)
 	//sliceSort := sort.StringSlice(silce)
-	logs.Info(silce)
-	//logs.Info(sliceSort)
+	uniledgerlog.Info(silce)
+	//uniledgerlog.Info(sliceSort)
 }
 
 func TestTransferAssetComplete(t *testing.T) {
@@ -29,7 +29,7 @@ func Test_GetInterestCount(t *testing.T) {
 }
 
 func Test_GetPurchaseAmount(t *testing.T) {
-	logs.Info(GetPurchaseAmount("key..."))
+	uniledgerlog.Info(GetPurchaseAmount("key..."))
 }
 
 func Test_SaveEarnings(t *testing.T) {

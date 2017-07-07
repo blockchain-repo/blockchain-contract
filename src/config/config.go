@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 
 	"unicontract/src/common"
 	"unicontract/src/common/crypto"
@@ -42,7 +42,7 @@ func init() {
 	//读取配置文件
 	unicontractStr, err = crypto.AesDecryptFromFile(fileName)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 }
 
@@ -56,7 +56,7 @@ func Init() {
 	var unicontractConfig UnicontractConfig
 	err := json.Unmarshal(unicontractStr, &unicontractConfig)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	Config = unicontractConfig
 }
@@ -70,7 +70,7 @@ func ReadUnicontractConfig() string {
 	//获取当前用户目录
 	//user, err := user.Current()
 	//if err != nil {
-	//	logs.Error(err.Error())
+	//	uniledgerlog.Error(err.Error())
 	//}
 	//fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
 
@@ -80,11 +80,11 @@ func ReadUnicontractConfig() string {
 	unicontractFile, err := os.Open(fileName)
 	defer unicontractFile.Close()
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	unicontractStr, err := ioutil.ReadAll(unicontractFile)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return string(unicontractStr)
 }
@@ -99,7 +99,7 @@ func WriteConToFile() {
 	//获取当前用户目录
 	//user, err := user.Current()
 	//if err != nil {
-	//	logs.Error(err.Error())
+	//	uniledgerlog.Error(err.Error())
 	//}
 	//fileName := user.HomeDir + "/unicontract/docker_images/.unicontract"
 
@@ -116,7 +116,7 @@ func WriteConToFile() {
 		inputReader.Read(p)
 
 		if p[0] != []byte("y")[0] {
-			logs.Debug("Give Up override unicontract!", fileInfo)
+			uniledgerlog.Debug("Give Up override unicontract!", fileInfo)
 			return
 		}
 	}
@@ -135,7 +135,7 @@ func _CreatUnictractConf(fileName string) {
 	defer unictractConf.Close()
 
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	var unicontractConfig UnicontractConfig
 
@@ -149,9 +149,9 @@ func _CreatUnictractConf(fileName string) {
 	unictractStr := common.Serialize(unicontractConfig)
 	n, err := unictractConf.Write([]byte(unictractStr))
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	} else {
-		logs.Debug("crate unictractConfong File success", n)
+		uniledgerlog.Debug("crate unictractConfong File success", n)
 	}
 }
 

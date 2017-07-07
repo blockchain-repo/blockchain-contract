@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/astaxie/beego/logs"
+	"unicontract/src/common/uniledgerlog"
 	r "gopkg.in/gorethink/gorethink.v3"
 	"strconv"
 	"time"
@@ -15,7 +15,7 @@ func Get(db string, name string, id string) *r.Cursor {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Get(id).Run(session)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return res
 }
@@ -24,7 +24,7 @@ func Insert(db string, name string, jsonstr string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Insert(r.JSON(jsonstr)).RunWrite(session)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return res
 }
@@ -33,7 +33,7 @@ func Update(db string, name string, id string, jsonstr string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Get(id).Update(r.JSON(jsonstr)).RunWrite(session)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return res
 }
@@ -42,7 +42,7 @@ func Delete(db string, name string, id string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Get(id).Delete().RunWrite(session)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	return res
 }
@@ -204,7 +204,7 @@ func GetOneContractByMapCondition(conditions map[string]interface{}) (string, er
 	}
 	//status, ok := conditions["status"].(string)
 	contractState, _ := conditions["status"].(string)
-	logs.Warn(contractState)
+	uniledgerlog.Warn(contractState)
 	if contractState == "" {
 		contractState = "Contract_Signature"
 	}
@@ -342,7 +342,7 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 	if err != nil {
 		return "", err
 	}
-	logs.Warn(blo)
+	uniledgerlog.Warn(blo)
 	return common.Serialize(blo), nil
 }
 
@@ -763,7 +763,7 @@ func GetContractTasksByContractId(contractId string) (string, error) {
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return "", err
 	}
 	return common.Serialize(blo), nil
@@ -820,7 +820,7 @@ func GetConsensusFailuresByConsensusId(consensusId string) (string, error) {
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return "", err
 	}
 	return common.Serialize(blo), nil
@@ -839,7 +839,7 @@ func GetConsensusFailuresCount() (int, error) {
 	var blo int
 	err = count.One(&blo)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return -1, err
 	}
 	return blo, nil
@@ -852,12 +852,12 @@ func GetAllRecords(db string, name string) ([]string, error) {
 	session := ConnectDB(db)
 	ids, err := r.Table(name).Field("id").Run(session)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 	}
 	var idlist []string
 	err = ids.All(&idlist)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return nil, errors.New(err.Error())
 	}
 	return idlist, nil
@@ -876,7 +876,7 @@ func GetSendFailingRecordsCount() (int, error) {
 	var blo int
 	err = count.One(&blo)
 	if err != nil {
-		logs.Error(err.Error())
+		uniledgerlog.Error(err.Error())
 		return -1, err
 	}
 	return blo, nil
@@ -1731,7 +1731,7 @@ func GetInfoByUser(pubkey string) (map[string]interface{}, error) {
 	var err error
 	res, _ = r.Table(TABLE_EARNINGS).Filter(r.Row.Field("pubkey").Eq(pubkey)).Max(r.Row.Field("timestamp")).Run(session)
 
-	logs.Info(res)
+	uniledgerlog.Info(res)
 	var blo map[string]interface{}
 	err = res.One(&blo)
 	if err != nil {
@@ -1746,7 +1746,7 @@ func GetLastInterest(pubkey string) ([]map[string]interface{}, error) {
 	var err error
 	res, _ = r.Table(TABLE_EARNINGS).Filter(r.Row.Field("pubkey").Eq(pubkey)).Run(session)
 
-	logs.Info(res)
+	uniledgerlog.Info(res)
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {

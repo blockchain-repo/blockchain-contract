@@ -100,18 +100,18 @@ func NewMyBeegoLogAdapterMultiFile(myBeego *MyBeegoLogAdapterMultiFile) *MyBeego
 	}
 	// create filepath if not exist!
 	var sepator string
-	if os.IsPathSeparator('\\') {  //前边的判断是否是系统的分隔符
+	if os.IsPathSeparator('\\') { //前边的判断是否是系统的分隔符
 		sepator = "\\"
 	} else {
 		sepator = "/"
 	}
 	log_dir := path.Dir(filename)
 	_, err := os.Stat(log_dir)
-	if err != nil{
-		err := os.Mkdir(log_dir + sepator , os.ModePerm)
+	if err != nil {
+		err := os.Mkdir(log_dir+sepator, os.ModePerm)
 		if err != nil {
 			logs.Error("create log dir error!", err)
-		}else{
+		} else {
 			logs.Info("API log dir", log_dir, " create success!")
 		}
 

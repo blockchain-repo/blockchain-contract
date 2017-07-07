@@ -893,13 +893,13 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//注意：限制只可有一个Output交易产出
 		// TODO 待处理，避免一般操作任务，重复执行
 		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_expression_function_A）
-		uniledgerlog.Error("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
+		uniledgerlog.Info("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
 		for v_key, _ := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
 			//1 函数识别 & 执行
 			str_name := v_expr_object.GetName()
 			str_function := v_expr_object.GetExpressionStr()
-			uniledgerlog.Error("==Function==" + str_function)
+			uniledgerlog.Info("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
 			reg := regexp.MustCompile("FuncTransferAsset\\(")
 			v_str := reg.FindString(str_function)
@@ -935,7 +935,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString(gt.GetContract().GetMainPubkey())
 				func_buf.WriteString("\")")
 				str_function = func_buf.String()
-				uniledgerlog.Error("==after process Function==" + str_function)
+				uniledgerlog.Info("==after process Function==" + str_function)
 			}
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
@@ -952,7 +952,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				_, ok := v_result_object.GetOutput().(string)
 				if ok {
 					gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
-					uniledgerlog.Error("====after transfer asset==" + v_result_object.GetOutput().(string))
+					uniledgerlog.Info("====after transfer asset==" + v_result_object.GetOutput().(string))
 				}
 			}
 			//3 执行结果判断

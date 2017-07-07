@@ -1,13 +1,10 @@
 package chain
 
 import (
-	"unicontract/src/common/requestHandler"
-	"unicontract/src/common"
 	"errors"
-)
-
-import (
-	beegoLog "github.com/astaxie/beego/logs"
+	"unicontract/src/common"
+	"unicontract/src/common/requestHandler"
+	"unicontract/src/common/uniledgerlog"
 )
 
 /**
@@ -15,9 +12,9 @@ import (
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking CreateByPayload Api")
+	uniledgerlog.Debug(" begin invoking CreateByPayload Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "CreateByPayload"
 
@@ -25,7 +22,7 @@ func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult,error
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -39,9 +36,9 @@ func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult,error
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryByID Api")
+	uniledgerlog.Debug(" begin invoking QueryByID Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryByID"
 
@@ -49,7 +46,7 @@ func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -63,9 +60,9 @@ func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsTotal() (*requestHandler.ResponseResult,error){
+func QueryTxsTotal() (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryTxsTotal Api")
+	uniledgerlog.Debug(" begin invoking QueryTxsTotal Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsTotal"
 
@@ -86,9 +83,9 @@ func QueryTxsTotal() (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryTxsByRange Api")
+	uniledgerlog.Debug(" begin invoking QueryTxsByRange Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsByRange"
 
@@ -96,7 +93,7 @@ func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -110,9 +107,9 @@ func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryGroupByBlock() (*requestHandler.ResponseResult,error){
+func QueryGroupByBlock() (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryGroupByBlock Api")
+	uniledgerlog.Debug(" begin invoking QueryGroupByBlock Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryGroupByBlock"
 
@@ -133,9 +130,9 @@ func QueryGroupByBlock() (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryBlockByID Api")
+	uniledgerlog.Debug(" begin invoking QueryBlockByID Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryBlockByID"
 
@@ -143,7 +140,7 @@ func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult,error)
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -157,9 +154,9 @@ func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult,error)
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryTxsByID Api")
+	uniledgerlog.Debug(" begin invoking QueryTxsByID Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsByID"
 
@@ -167,7 +164,7 @@ func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -181,9 +178,9 @@ func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryTxsCountByID Api")
+	uniledgerlog.Debug(" begin invoking QueryTxsCountByID Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryTxsCountByID"
 
@@ -191,7 +188,7 @@ func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult,err
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -205,9 +202,9 @@ func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult,err
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryBlockCount() (*requestHandler.ResponseResult,error){
+func QueryBlockCount() (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryBlockCount Api")
+	uniledgerlog.Debug(" begin invoking QueryBlockCount Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryBlockCount"
 
@@ -228,9 +225,9 @@ func QueryBlockCount() (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryBlocksByRange Api")
+	uniledgerlog.Debug(" begin invoking QueryBlocksByRange Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryBlocksByRange"
 
@@ -238,7 +235,7 @@ func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -252,9 +249,9 @@ func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryInvalidBlockTotal() (*requestHandler.ResponseResult,error){
+func QueryInvalidBlockTotal() (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryInvalidBlockTotal Api")
+	uniledgerlog.Debug(" begin invoking QueryInvalidBlockTotal Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryInvalidBlockTotal"
 
@@ -275,9 +272,9 @@ func QueryInvalidBlockTotal() (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking QueryInvalidBlockByRange Api")
+	uniledgerlog.Debug(" begin invoking QueryInvalidBlockByRange Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "QueryInvalidBlockByRange"
 
@@ -285,7 +282,7 @@ func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseRes
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -299,9 +296,9 @@ func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseRes
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func PublickeySet() (*requestHandler.ResponseResult,error){
+func PublickeySet() (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking PublickeySet Api")
+	uniledgerlog.Debug(" begin invoking PublickeySet Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "PublickeySet"
 
@@ -322,9 +319,9 @@ func PublickeySet() (*requestHandler.ResponseResult,error){
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking TxCreateAvgTimeByRange Api")
+	uniledgerlog.Debug(" begin invoking TxCreateAvgTimeByRange Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "TxCreateAvgTimeByRange"
 
@@ -332,7 +329,7 @@ func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResul
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -346,9 +343,9 @@ func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResul
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking BlockCreateAvgTimeByRange Api")
+	uniledgerlog.Debug(" begin invoking BlockCreateAvgTimeByRange Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "BlockCreateAvgTimeByRange"
 
@@ -356,7 +353,7 @@ func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseRe
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -370,9 +367,9 @@ func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseRe
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking VoteTimeByBlockID Api")
+	uniledgerlog.Debug(" begin invoking VoteTimeByBlockID Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "VoteTimeByBlockID"
 
@@ -380,7 +377,7 @@ func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult,err
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -394,9 +391,9 @@ func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult,err
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,error){
+func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 
-	beegoLog.Debug(" begin invoking VoteAvgTimeByRange Api")
+	uniledgerlog.Debug(" begin invoking VoteAvgTimeByRange Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "VoteAvgTimeByRange"
 
@@ -404,7 +401,7 @@ func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -413,16 +410,15 @@ func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult,er
 	//return requestHandler.GetRequestResult(yamlName,apiName,jsonBody)
 }
 
-
-func GetUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,error){
-	beegoLog.Debug(" begin invoking GetUnspentTxs Api")
+func GetUnspentTxs(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
+	uniledgerlog.Debug(" begin invoking GetUnspentTxs Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "GetUnspentTxs"
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -430,16 +426,15 @@ func GetUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,error){
 	return res, err
 }
 
-
-func GetFreezeUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,error){
-	beegoLog.Debug(" begin invoking GetFreezeUnspentTxs Api")
+func GetFreezeUnspentTxs(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
+	uniledgerlog.Debug(" begin invoking GetFreezeUnspentTxs Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "GetFreezeUnspentTxs"
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -447,54 +442,18 @@ func GetFreezeUnspentTxs(jsonBody interface{})(*requestHandler.ResponseResult,er
 	return res, err
 }
 
-
-func GetContractById(jsonBody interface{})(*requestHandler.ResponseResult,error){
-	beegoLog.Debug(" begin invoking GetContractById Api")
+func GetContractById(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
+	uniledgerlog.Debug(" begin invoking GetContractById Api")
 	yamlName := "unichainApiConf.yaml"
 	apiName := "GetContractById"
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
 		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
-		beegoLog.Debug("request finish....")
+		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
 
 	return res, err
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

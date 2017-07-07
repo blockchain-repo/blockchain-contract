@@ -17,10 +17,7 @@ import (
 )
 
 import (
-	beegoLog "github.com/astaxie/beego/logs"
-)
-
-import (
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 )
@@ -29,29 +26,29 @@ import (
 func _HeadNodeMonitor() {
 	for {
 		ticker := time.NewTicker(time.Hour * (time.Duration)(headNodeMonitorConf["scan_time"].(int)))
-		beegoLog.Debug("wait for scan contract table to monitor head node ...")
+		uniledgerlog.Debug("wait for scan contract table to monitor head node ...")
 		select {
 		case <-ticker.C:
-			beegoLog.Debug("query no consensus contract")
+			uniledgerlog.Debug("query no consensus contract")
 			timePoint := time.Now().
 				Add(-time.Hour*(time.Duration)(headNodeMonitorConf["interval_time"].(int))).
 				UnixNano() / 1000000
 			strNoConsensusContract, err :=
 				rethinkdb.GetNoConsensusContracts(fmt.Sprintf("%d", timePoint), 0)
 			if err != nil {
-				beegoLog.Error(err)
+				uniledgerlog.Error(err)
 				continue
 			}
 
 			if len(strNoConsensusContract) == 0 {
-				beegoLog.Debug("no consensus contract")
+				uniledgerlog.Debug("no consensus contract")
 				continue
 			}
 
 			var slContracts []model.ContractModel
 			json.Unmarshal([]byte(strNoConsensusContract), &slContracts)
 
-			beegoLog.Debug("delete old contract and insert new contract")
+			uniledgerlog.Debug("delete old contract and insert new contract")
 			for index, value := range slContracts {
 				// 生成新的头节点
 				index_new := _GenerateAnotherHeadNodeKey(value.ContractHead.GetMainPubkey())
@@ -60,23 +57,23 @@ func _HeadNodeMonitor() {
 				// 删除老的contract对应的vote，如果删除出现问题，无关紧要，无需continue
 				err := _DeleteOldVotes(value.Id)
 				if err != nil {
-					beegoLog.Error(err)
+					uniledgerlog.Error(err)
 				}
 
 				// 删除老的contract
 				if !rethinkdb.DeleteContract(value.Id) {
-					beegoLog.Error(err)
+					uniledgerlog.Error(err)
 					continue
 				}
 
 				// 插入新的contract
 				slData, err := json.Marshal(slContracts[index])
 				if err != nil {
-					beegoLog.Error(err)
+					uniledgerlog.Error(err)
 					continue
 				}
 				if !rethinkdb.InsertContract(string(slData)) {
-					beegoLog.Error(err)
+					uniledgerlog.Error(err)
 				}
 			}
 		}
@@ -119,7 +116,7 @@ func _DeleteOldVotes(strContractId string) error {
 		return err
 	}
 
-	beegoLog.Info("delete [ %d ] votes for old contract", deleteNum)
+	uniledgerlog.Info("delete [ %d ] votes for old contract", deleteNum)
 
 	return nil
 }
