@@ -10,6 +10,7 @@ import (
 )
 
 import (
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 )
 
@@ -53,17 +54,19 @@ func Init() {
 	logs.SetLogFuncCall(false)
 
 	myBeegoLogAdapterMultiFile := &basic.MyBeegoLogAdapterMultiFile{}
-	myBeegoLogAdapterMultiFile.FileName = "../log/unicontract.log"
-	myBeegoLogAdapterMultiFile.Level = 7
-	myBeegoLogAdapterMultiFile.MaxDays = 10
-	myBeegoLogAdapterMultiFile.MaxLines = 0
-	myBeegoLogAdapterMultiFile.MaxSize = 0
-	myBeegoLogAdapterMultiFile.Rotate = true
-	myBeegoLogAdapterMultiFile.Daily = true
-	myBeegoLogAdapterMultiFile.Separate = []string{"emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"}
+	myBeegoLogAdapterMultiFile.FileName = beego.AppConfig.String("LogName")
+	myBeegoLogAdapterMultiFile.Level, _ = beego.AppConfig.Int("LogLevel")
+	logMaxDays, _ := beego.AppConfig.Int("LogMaxDays")
+	myBeegoLogAdapterMultiFile.MaxDays = int16(logMaxDays)
+	myBeegoLogAdapterMultiFile.MaxLines, _ = beego.AppConfig.Int64("LogMaxLines")
+	myBeegoLogAdapterMultiFile.MaxSize, _ = beego.AppConfig.Int64("LogMaxSize")
+	myBeegoLogAdapterMultiFile.Rotate, _ = beego.AppConfig.Bool("LogRotate")
+	myBeegoLogAdapterMultiFile.Daily, _ = beego.AppConfig.Bool("LogDaily")
+	myBeegoLogAdapterMultiFile.Separate = beego.AppConfig.Strings("LogSeparate")
 
 	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
 	log_config_str := _Serialize(log_config)
+	fmt.Println(log_config_str)
 
 	// order 顺序必须按照
 	// 1. logs.SetLevel(level)

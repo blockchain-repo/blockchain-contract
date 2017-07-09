@@ -159,7 +159,7 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 
 	//3 Components填充 component_table 和 property_table
 	for p_idx, p_component := range ce.contract_executer.GetContractComponents() {
-		fmt.Println("component[", p_idx, "]: ", p_component)
+		uniledgerlog.Debug("component[", p_idx, "]: ", p_component)
 		err = loadTask(ce.contract_executer, p_component)
 		if err != nil {
 			r_buf.WriteString("[Result]:Load Fail;")
