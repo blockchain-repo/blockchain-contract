@@ -55,7 +55,7 @@ func Init() {
 
 	myBeegoLogAdapterMultiFile := &basic.MyBeegoLogAdapterMultiFile{}
 	myBeegoLogAdapterMultiFile.FileName = beego.AppConfig.String("LogName")
-	myBeegoLogAdapterMultiFile.Level, _ = beego.AppConfig.Int("LogLevel")
+	myBeegoLogAdapterMultiFile.Level, _ = beego.AppConfig.Int("LogSaveLevel")
 	logMaxDays, _ := beego.AppConfig.Int("LogMaxDays")
 	myBeegoLogAdapterMultiFile.MaxDays = int16(logMaxDays)
 	myBeegoLogAdapterMultiFile.MaxLines, _ = beego.AppConfig.Int64("LogMaxLines")
@@ -66,12 +66,13 @@ func Init() {
 
 	log_config := basic.NewMyBeegoLogAdapterMultiFile(myBeegoLogAdapterMultiFile)
 	log_config_str := _Serialize(log_config)
-	fmt.Println(log_config_str)
+	//fmt.Println(log_config_str)
 
 	// order 顺序必须按照
 	// 1. logs.SetLevel(level)
 	// 2. logs.SetLogger(logs.AdapterMultiFile, log_config_str)
-	logs.SetLevel(logs.LevelDebug)
+	logLevel, _ := beego.AppConfig.Int("LogLevel")
+	logs.SetLevel(logLevel)
 	logs.SetLogger(logs.AdapterMultiFile, log_config_str)
 }
 

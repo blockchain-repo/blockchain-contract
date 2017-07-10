@@ -326,6 +326,9 @@ func Test_IsExprVariable(t *testing.T) {
 		"aaaa._222",
 		"aaaa._222_",
 		"aaaa.__",
+		"aaaa._",
+		"aaaa.222",
+		"contract_transfer.ContractBody.ContractOwners.0",
 	}
 	for index, value := range slTestRightStr {
 		if !v_express_parse.IsExprVariable(value) {
@@ -338,8 +341,6 @@ func Test_IsExprVariable(t *testing.T) {
 		"__.",
 		"3333",
 		"3333.",
-		"aaaa._",
-		"aaaa.222",
 	}
 	for index, value := range slTestErrorStr {
 		if v_express_parse.IsExprVariable(value) {

@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 // logs.AdapterFile
@@ -99,16 +100,10 @@ func NewMyBeegoLogAdapterMultiFile(myBeego *MyBeegoLogAdapterMultiFile) *MyBeego
 		filename = myBeego.FileName
 	}
 	// create filepath if not exist!
-	var sepator string
-	if os.IsPathSeparator('\\') { //前边的判断是否是系统的分隔符
-		sepator = "\\"
-	} else {
-		sepator = "/"
-	}
 	log_dir := path.Dir(filename)
 	_, err := os.Stat(log_dir)
 	if err != nil {
-		err := os.Mkdir(log_dir+sepator, os.ModePerm)
+		err := os.Mkdir(log_dir+string(filepath.Separator), os.ModePerm)
 		if err != nil {
 			logs.Error("create log dir error!", err)
 		} else {
