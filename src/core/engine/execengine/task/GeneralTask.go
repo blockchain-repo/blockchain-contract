@@ -1260,6 +1260,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 		if strings.Contains(v_key, p_name) {
 			v_data = p_dataList[v_key]
 			v_data.SetValue(p_result.GetData())
+			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_data.GetName(), v_data)
 		}
 	}
 	switch gt.GetCtype() {
