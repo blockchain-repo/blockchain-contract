@@ -359,7 +359,7 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 	contractOutput.Transaction.Fulfillments = []*model.Fulfillment{}
 	contractOutput.Transaction.Asset = &model.Asset{}
 
-	uniledgerlog.Debug("contractOutput : %+v", common.StructSerialize(contractOutput))
+	//uniledgerlog.Debug("contractOutput : %+v", common.StructSerialize(contractOutput))
 	contractOutput.Id = common.HashData(common.StructSerialize(contractOutput))
 
 	//fulfillment.Fulfillment = _FULFILLMENT

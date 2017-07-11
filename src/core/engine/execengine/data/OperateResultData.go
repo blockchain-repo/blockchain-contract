@@ -1,12 +1,12 @@
 package data
 
 import (
+	"encoding/json"
+	"fmt"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
-
-	"encoding/json"
-	"unicontract/src/common/uniledgerlog"
 )
 
 type OperateResultData struct {
@@ -23,7 +23,7 @@ func (nd OperateResultData) GetName() string {
 	if nd.PropertyTable[_Parent] != nil {
 		parent_property, ok := nd.PropertyTable[_Parent].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return ""
 		}
 		if parent_property.GetValue() != nil {
@@ -41,7 +41,7 @@ func (nd OperateResultData) GetName() string {
 func (td OperateResultData) GetValue() interface{} {
 	value_property, ok := td.PropertyTable[_Value].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
 	if value_property.GetValue() != nil {
@@ -50,7 +50,7 @@ func (td OperateResultData) GetValue() interface{} {
 		v_contract := td.GeneralComponent.GetContract()
 		str, ok := td.GetDefaultValue().(string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return ""
 		}
 		v_default := v_contract.ProcessString(str)
@@ -70,12 +70,12 @@ func (gc OperateResultData) GetCtype() string {
 	}
 	ctype_property, ok := gc.PropertyTable["_Ctype"].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	str, ok := ctype_property.GetValue().(string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	return str

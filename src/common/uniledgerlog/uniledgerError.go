@@ -16,6 +16,7 @@ const (
 	DESERIALIZE_ERROR
 	NULL_ERROR
 	OTHER_ERROR
+	DEBUG_NO_ERROR
 )
 
 func (this ErrorType) String() string {
@@ -40,6 +41,8 @@ func (this ErrorType) String() string {
 		return "Null_Error"
 	case OTHER_ERROR:
 		return "Other_Error"
+	case DEBUG_NO_ERROR:
+		return "Debug_No_Error"
 	default:
 		return "Unknow_Error"
 	}

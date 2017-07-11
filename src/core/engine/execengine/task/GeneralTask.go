@@ -91,12 +91,12 @@ func (gt *GeneralTask) GetState() string {
 	}
 	state_property, ok := gt.PropertyTable[_State].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	str, ok := state_property.GetValue().(string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	return str
@@ -115,12 +115,12 @@ func (gt *GeneralTask) GetNextTasks() []string {
 	}
 	nexttask_property, ok := gt.PropertyTable[_NextTasks].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
 	sl, ok := nexttask_property.GetValue().([]string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
 	return sl
@@ -182,7 +182,7 @@ func (gt *GeneralTask) GetTaskId() string {
 	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
 	str, ok := taskid_property.GetValue().(string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	return str

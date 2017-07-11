@@ -118,7 +118,7 @@ func (nd *IntData) GetDataRangeInt() [2]int {
 func (nd *IntData) GetValueInt() interface{} {
 	value_property, ok := nd.PropertyTable[_ValueInt].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
 	if value_property.GetValue() != nil {
@@ -131,7 +131,7 @@ func (nd *IntData) GetValueInt() interface{} {
 func (nd *IntData) GetDefaultValueInt() interface{} {
 	value_property, ok := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
 	if value_property.GetValue() != nil {
@@ -146,12 +146,12 @@ func (nd *IntData) SetValueInt(p_ValueInt interface{}) {
 		ok := false
 		nd.ValueInt, ok = p_ValueInt.(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		value_property, ok := nd.PropertyTable[_ValueInt].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		value_property.SetValue(p_ValueInt)
@@ -164,12 +164,12 @@ func (nd *IntData) SetDefaultValueInt(p_DefaultValueInt interface{}) {
 		ok := false
 		nd.DefaultValueInt, ok = p_DefaultValueInt.(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		defaultvalue_property, ok := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		defaultvalue_property.SetValue(p_DefaultValueInt)
@@ -183,7 +183,7 @@ func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 		nd.DataRangeInt = data_range
 		datarangeint_property, ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return fmt.Errorf("assert error")
 		}
 		datarangeint_property.SetValue(data_range)
@@ -194,7 +194,7 @@ func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 			nd.DataRangeInt = f_range
 			datarangeint_property, ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
 			if !ok {
-				uniledgerlog.Error("assert error")
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 				return fmt.Errorf("assert error")
 			}
 			datarangeint_property.SetValue(data_range)
@@ -228,7 +228,7 @@ func (nd *IntData) CheckRange(check_data int) bool {
 func (nd *IntData) Add(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -239,7 +239,7 @@ func (nd *IntData) Add(p_data interface{}) (int, error) {
 		ok := false
 		f_rightdata, ok = v_data.GetValue().(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0, fmt.Errorf("assert error")
 		}
 	case int:
@@ -253,7 +253,7 @@ func (nd *IntData) Add(p_data interface{}) (int, error) {
 func (nd *IntData) RAdd(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -264,7 +264,7 @@ func (nd *IntData) RAdd(p_data interface{}) (int, error) {
 		ok := false
 		f_rightdata, ok = v_data.GetValue().(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0, fmt.Errorf("assert error")
 		}
 	case int:
@@ -278,7 +278,7 @@ func (nd *IntData) RAdd(p_data interface{}) (int, error) {
 func (nd *IntData) Sub(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -289,7 +289,7 @@ func (nd *IntData) Sub(p_data interface{}) (int, error) {
 		ok := false
 		f_rightdata, ok = v_data.GetValue().(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0, fmt.Errorf("assert error")
 		}
 	case int:
@@ -303,7 +303,7 @@ func (nd *IntData) Sub(p_data interface{}) (int, error) {
 func (nd *IntData) RSub(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -314,7 +314,7 @@ func (nd *IntData) RSub(p_data interface{}) (int, error) {
 		ok := false
 		f_rightdata, ok = v_data.GetValue().(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0, fmt.Errorf("assert error")
 		}
 	case int:
@@ -328,7 +328,7 @@ func (nd *IntData) RSub(p_data interface{}) (int, error) {
 func (nd *IntData) Mul(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -339,7 +339,7 @@ func (nd *IntData) Mul(p_data interface{}) (int, error) {
 		ok := false
 		f_rightdata, ok = v_data.GetValue().(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0, fmt.Errorf("assert error")
 		}
 	case int:
@@ -369,7 +369,7 @@ func (nd *IntData) RMul(p_data interface{}) (int, error) {
 func (nd *IntData) Div(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -392,7 +392,7 @@ func (nd *IntData) Div(p_data interface{}) (int, error) {
 func (nd *IntData) RDiv(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -415,7 +415,7 @@ func (nd *IntData) RDiv(p_data interface{}) (int, error) {
 func (nd *IntData) Mod(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int
@@ -426,7 +426,7 @@ func (nd *IntData) Mod(p_data interface{}) (int, error) {
 		ok := false
 		f_rightdata, ok = v_data.GetValue().(int)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0, fmt.Errorf("assert error")
 		}
 	case int:
@@ -440,7 +440,7 @@ func (nd *IntData) Mod(p_data interface{}) (int, error) {
 func (nd *IntData) RMod(p_data interface{}) (int, error) {
 	f_leftdata, ok := nd.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0, fmt.Errorf("assert error")
 	}
 	var f_rightdata int

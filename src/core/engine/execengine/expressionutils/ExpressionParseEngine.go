@@ -169,7 +169,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 		}
 		str, ok := v_common_result.GetData().(string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return v_return, fmt.Errorf("assert error")
 		}
 		v_return, v_err = strconv.ParseBool(str)
@@ -548,7 +548,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 	}
 	b, ok := v_result.(bool)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return false, fmt.Errorf("assert error")
 	}
 	return b, v_err
@@ -678,82 +678,82 @@ func (ep *ExpressionParseEngine) ReflectComponent(p_component interface{}, p_var
 	if ep.IsNameContract(p_variable) {
 		parse_component, ok = p_component.(inf.ICognitiveContract)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameTaskEnquiry(p_variable) {
 		parse_component, ok = p_component.(*task.Enquiry)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameTaskAction(p_variable) {
 		parse_component, ok = p_component.(*task.Action)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameTaskDecision(p_variable) {
 		parse_component, ok = p_component.(*task.Decision)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameTaskPlan(p_variable) {
 		parse_component, ok = p_component.(*task.Plan)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataInt(p_variable) {
 		parse_component, ok = p_component.(*data.IntData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataUint(p_variable) {
 		parse_component, ok = p_component.(*data.UintData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataFloat(p_variable) {
 		parse_component, ok = p_component.(*data.FloatData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataText(p_variable) {
 		parse_component, ok = p_component.(*data.TextData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataDate(p_variable) {
 		parse_component, ok = p_component.(*data.DateData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataArray(p_variable) {
 		parse_component, ok = p_component.(*data.ArrayData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataMatrix(p_variable) {
 		parse_component, ok = p_component.(*data.MatrixData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataCompound(p_variable) {
 		parse_component, ok = p_component.(*data.CompoundData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameDataOperateResult(p_variable) {
 		parse_component, ok = p_component.(*data.OperateResultData)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameExprFunc(p_variable) {
 		parse_component, ok = p_component.(*expression.Function)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	} else if ep.IsNameExprArgu(p_variable) {
 		parse_component, ok = p_component.(*expression.LogicArgument)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		}
 	}
 	return parse_component

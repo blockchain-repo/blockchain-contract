@@ -386,7 +386,7 @@ func (ce *ContractExecuter) ExportToText() (string, error) {
 	r_bytes.WriteString(contractCreateTime.GetName() + ":" + str + "\n")
 	contractStartTime, ok := ce.contract_executer.PropertyTable["_StartTime"].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return "", fmt.Errorf("assert error")
 	}
 	str, ok = contractStartTime.GetValue().(string)

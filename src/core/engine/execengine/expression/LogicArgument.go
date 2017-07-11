@@ -2,6 +2,7 @@ package expression
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
@@ -92,12 +93,12 @@ func (la *LogicArgument) GetLogicValue() int {
 	la.Eval()
 	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 	n, ok := loggicvalue_property.GetValue().(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 	return n
@@ -112,12 +113,12 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 	ok := false
 	la.LogicValue, ok = p_int.(int)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	loggicvalue_property.SetValue(la.LogicValue)
@@ -127,12 +128,12 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 func (la *LogicArgument) Eval() int {
 	expression_property, ok := la.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 	v_expression, ok := expression_property.GetValue().(string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 	r_flag, r_err := la.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_expression)
@@ -143,7 +144,7 @@ func (la *LogicArgument) Eval() int {
 	var v_value int = 0
 	b, ok := r_flag.(bool)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 	if b {

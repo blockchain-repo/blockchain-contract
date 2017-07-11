@@ -80,7 +80,7 @@ func _TaskExecute() {
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
-		uniledgerlog.Debug(string(slContractData))
+		//uniledgerlog.Debug(string(slContractData))
 
 		uniledgerlog.Debug("contract execute")
 		go _Execute(string(slContractData), strContractTask.ContractId, strContractTask.ContractHashId)

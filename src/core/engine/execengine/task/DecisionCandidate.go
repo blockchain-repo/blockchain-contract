@@ -90,7 +90,7 @@ func (dc *DecisionCandidate) AddText(p_strarr []string) {
 	if p_strarr != nil {
 		text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		if text_property.GetValue() == nil {
@@ -98,7 +98,7 @@ func (dc *DecisionCandidate) AddText(p_strarr []string) {
 		}
 		map_text, ok := text_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		for _, v_Text := range p_strarr {
@@ -112,13 +112,13 @@ func (dc *DecisionCandidate) AddText(p_strarr []string) {
 func (dc *DecisionCandidate) ShowText() {
 	text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	if text_property.GetValue() != nil {
 		map_text, ok := text_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		for _, v_Text := range map_text {
@@ -131,7 +131,7 @@ func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 	if p_Support != "" {
 		supports_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		if supports_property.GetValue() == nil {
@@ -139,7 +139,7 @@ func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 		}
 		map_supports, ok := supports_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		map_supports[p_Support] = p_Support
@@ -152,7 +152,7 @@ func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 	if p_against != "" {
 		against_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		if against_property.GetValue() == nil {
@@ -160,7 +160,7 @@ func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 		}
 		map_againsts, ok := against_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return
 		}
 		map_againsts[p_against] = p_against
@@ -173,7 +173,7 @@ func (dc *DecisionCandidate) ResetSupport() {
 	dc.Support = 0
 	support_property, ok := dc.PropertyTable[_Support].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	support_property.SetValue(0)
@@ -193,13 +193,13 @@ func (dc *DecisionCandidate) Eval() int {
 	var err error = nil
 	supports_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 	if supports_property.GetValue() != nil {
 		m, ok := supports_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0
 		}
 		for _, v_Support := range m {
@@ -210,7 +210,7 @@ func (dc *DecisionCandidate) Eval() int {
 			}
 			b, ok := Support_bool.(bool)
 			if !ok {
-				uniledgerlog.Error("assert error")
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 				return 0
 			}
 			if b {
@@ -220,14 +220,14 @@ func (dc *DecisionCandidate) Eval() int {
 	}
 	against_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return 0
 	}
 
 	if against_property.GetValue() != nil {
 		m, ok := against_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error("assert error")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return 0
 		}
 		for _, v_against := range m {
@@ -238,7 +238,7 @@ func (dc *DecisionCandidate) Eval() int {
 			}
 			b, ok := against_bool.(bool)
 			if !ok {
-				uniledgerlog.Error("assert error")
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 				return 0
 			}
 			if b {

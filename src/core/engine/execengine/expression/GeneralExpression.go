@@ -3,6 +3,7 @@ package expression
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
@@ -44,12 +45,12 @@ func (ge GeneralExpression) GetCtype() string {
 	}
 	ctype_property, ok := ge.PropertyTable["_Ctype"].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	str, ok := ctype_property.GetValue().(string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	return str
@@ -59,12 +60,12 @@ func (ge GeneralExpression) SetExpressionResult(p_expresult interface{}) {
 	ok := false
 	ge.ExpressionResult, ok = p_expresult.(common.OperateResult)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	result_property.SetValue(p_expresult)
@@ -146,12 +147,12 @@ func (ge *GeneralExpression) InitExpression() error {
 func (ge *GeneralExpression) GetExpressionStr() string {
 	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	str, ok := express_property.GetValue().(string)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	return str
@@ -161,12 +162,12 @@ func (ge *GeneralExpression) GetExpressionResult() common.OperateResult {
 	var result common.OperateResult
 	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return result
 	}
 	result, ok = result_property.GetValue().(common.OperateResult)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 	}
 	return result
 }
@@ -176,7 +177,7 @@ func (ge *GeneralExpression) SetExpressionStr(p_expression string) {
 	ge.ExpressionStr = p_expression
 	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error("assert error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return
 	}
 	express_property.SetValue(p_expression)

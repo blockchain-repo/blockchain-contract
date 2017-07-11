@@ -36,7 +36,7 @@ func cvValidateContract(arg interface{}) interface{} {
 	}
 	contract_validate_time.Send("contract_validate")
 	v.VoteBody.VoteFor = mod.Id
-	uniledgerlog.Debug("-------cvValidateContract:", common.Serialize(v))
+	//uniledgerlog.Debug("-------cvValidateContract:", common.Serialize(v))
 	return v
 }
 
@@ -48,7 +48,7 @@ func cvVote(arg interface{}) interface{} {
 	v.VoteBody.VoteType = "Contract"
 	v.Id = v.GenerateId()
 	v.Signature = v.SignVote()
-	uniledgerlog.Debug("-------cvVote:", common.Serialize(v))
+	//uniledgerlog.Debug("-------cvVote:", common.Serialize(v))
 	return v
 
 }
