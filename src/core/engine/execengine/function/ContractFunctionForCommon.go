@@ -134,7 +134,7 @@ func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {
 	7: mainPubkey(string): the node pubkey which will freeze asset
 */
 func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
-	uniledgerlog.Error("======In FuncTransferAsset==========")
+	uniledgerlog.Info("======In FuncTransferAsset==========")
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 
@@ -143,7 +143,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 		v_err = errors.New("param num error")
 		return v_result, v_err
 	}
-	uniledgerlog.Error("======after param check FuncTransferAsset==========")
+	uniledgerlog.Info("======after param check FuncTransferAsset==========")
 	//user provide
 	var ownerBefore string = ""
 	switch args[0].(type) {
@@ -205,15 +205,15 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 	var mainPubkey string = args[7].(string)
 	mainPubkey = strings.Replace(mainPubkey, "\"", "", -1)
 	mainPubkey = strings.Trim(mainPubkey, " ")
-	uniledgerlog.Error("======Param:=========")
-	uniledgerlog.Error(ownerBefore)
-	uniledgerlog.Error(recipientsStr)
-	uniledgerlog.Error(money_amount)
-	uniledgerlog.Error(contractStr)
-	uniledgerlog.Error(contractId)
-	uniledgerlog.Error(taskId)
-	uniledgerlog.Error(taskIndex)
-	uniledgerlog.Error(mainPubkey)
+	uniledgerlog.Info("======Param:=========")
+	uniledgerlog.Info(ownerBefore)
+	uniledgerlog.Info(recipientsStr)
+	uniledgerlog.Info(money_amount)
+	uniledgerlog.Info(contractStr)
+	uniledgerlog.Info(contractId)
+	uniledgerlog.Info(taskId)
+	uniledgerlog.Info(taskIndex)
+	uniledgerlog.Info(mainPubkey)
 	var contractHashId string = ""
 	var metadataStr string = ""
 	var relationStr string = transaction.GenerateRelation(contractHashId, contractId, taskId, taskIndex)
