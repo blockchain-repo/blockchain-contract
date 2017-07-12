@@ -204,7 +204,7 @@ func GetOneContractByMapCondition(conditions map[string]interface{}) (string, er
 	}
 	//status, ok := conditions["status"].(string)
 	contractState, _ := conditions["status"].(string)
-	uniledgerlog.Warn(contractState)
+	//uniledgerlog.Warn(contractState)
 	if contractState == "" {
 		contractState = "Contract_Signature"
 	}
@@ -342,7 +342,7 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 	if err != nil {
 		return "", err
 	}
-	uniledgerlog.Warn(blo)
+	//uniledgerlog.Warn(blo)
 	return common.Serialize(blo), nil
 }
 
@@ -1743,7 +1743,7 @@ func GetInfoByUser(pubkey string) (map[string]interface{}, error) {
 	var err error
 	res, _ = r.Table(TABLE_EARNINGS).Filter(r.Row.Field("pubkey").Eq(pubkey)).Max(r.Row.Field("timestamp")).Run(session)
 
-	uniledgerlog.Info(res)
+	//uniledgerlog.Info(res)
 	var blo map[string]interface{}
 	err = res.One(&blo)
 	if err != nil {
@@ -1758,7 +1758,7 @@ func GetLastInterest(pubkey string) ([]map[string]interface{}, error) {
 	var err error
 	res, _ = r.Table(TABLE_EARNINGS).Filter(r.Row.Field("pubkey").Eq(pubkey)).Run(session)
 
-	uniledgerlog.Info(res)
+	//uniledgerlog.Info(res)
 	var blo []map[string]interface{}
 	err = res.All(&blo)
 	if err != nil {

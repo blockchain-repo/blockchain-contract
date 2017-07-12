@@ -26,11 +26,11 @@ func GenRelationByExecStr(r string) (rela model.Relation, err error) {
 }
 
 func GenContractByExecStr(c string) (con model.ContractModel, err error) {
-	uniledgerlog.Info("===c1: " + c)
+	//uniledgerlog.Info("===c1: " + c)
 	//c = strings.Trim(c, "\"")
-	uniledgerlog.Info("===c2: " + c)
+	//uniledgerlog.Info("===c2: " + c)
 	contract := model.ContractModel{}
 	err = json.Unmarshal([]byte(c), &contract)
-	uniledgerlog.Info("===contract: ", []byte(c))
+	//uniledgerlog.Info("===contract: ", []byte(c))
 	return contract, err
 }

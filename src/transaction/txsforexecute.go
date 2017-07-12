@@ -22,7 +22,7 @@ func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr s
 	output, _ := Create(ownerbefore, recipients, &metadata, asset, relation, contract)
 	output, vote, index := NodeSign(output)
 	b := MergeContractOutput(common.StructSerialize(output), output.Id, vote, index)
-	uniledgerlog.Info(b)
+	//uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }
 
@@ -30,13 +30,13 @@ func ExecuteFreeze(operation string, ownerbefore string, recipients [][2]interfa
 	metadataStr string, relationStr string, contractStr string) (outputStr string, err error) {
 	asset := GetAsset(ownerbefore)
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
-	uniledgerlog.Info("==after: ", contract)
+	//uniledgerlog.Info("==after: ", contract)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
 	if err != nil {
 		return "", err
 	}
-	uniledgerlog.Info(err)
+	//uniledgerlog.Info(err)
 	uniledgerlog.Info(output)
 	output, vote, index := NodeSign(output)
 	b := MergeContractOutput(common.StructSerialize(output), output.Id, vote, index)
@@ -74,7 +74,7 @@ func ExecuteUnfreeze(operation string, ownerbefore string, recipients [][2]inter
 	metadata, relation, contract, err := GenModelByExecStr(metadataStr, relationStr, contractStr)
 
 	output, err := Transfer(operation, ownerbefore, recipients, &metadata, asset, relation, contract)
-	uniledgerlog.Info(err)
+	//uniledgerlog.Info(err)
 	uniledgerlog.Info(output)
 	if err != nil {
 		return "", err

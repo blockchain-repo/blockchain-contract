@@ -211,7 +211,7 @@ func GetUnfreezeUnspent(pubkey string) (inps []*model.Fulfillment, bal float64) 
 		}
 		inputs = append(inputs, &input)
 		balance += unspenStruct.Amount
-		uniledgerlog.Info("input====", common.StructSerialize(input))
+		uniledgerlog.Debug("input====", common.StructSerialize(input))
 	}
 	if result.Code != 200 {
 		uniledgerlog.Error(errors.New("request send failed"))
@@ -249,7 +249,7 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 
 	taskNumStr := strconv.Itoa(taskNum)
 	param := "unspent=true&public_key=" + pubkey + "&contract_id=" + contractId + "&task_id=" + taskId + "&task_num=" + taskNumStr
-	uniledgerlog.Info(param)
+	uniledgerlog.Debug(param)
 	result, err := chain.GetFreezeUnspentTxs(param)
 	if err != nil {
 		uniledgerlog.Error(err.Error())
@@ -262,7 +262,7 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 
 	inputs := []*model.Fulfillment{}
 	var balance float64
-	uniledgerlog.Info(result.Data)
+	uniledgerlog.Debug(result.Data)
 	// TODO 断言写法要改
 	flag = result.Data.([]interface{})[0].(float64)
 	unspendSlice := result.Data.([]interface{})[1].([]interface{})
@@ -287,11 +287,11 @@ func GetFrozenUnspent(pubkey string, contractId string, taskId string, taskNum i
 		}
 		inputs = append(inputs, &input)
 		balance += unspentStruct.Amount
-		uniledgerlog.Info("input====", common.StructSerialize(input))
+		uniledgerlog.Debug("input====", common.StructSerialize(input))
 	}
 	//uniledgerlog.Info(inputs)
-	uniledgerlog.Info(balance)
-	uniledgerlog.Info(flag)
+	//uniledgerlog.Info(balance)
+	//uniledgerlog.Info(flag)
 	return inputs, balance, flag
 }
 
@@ -336,7 +336,7 @@ func NodeSign(contractOutput model.ContractOutput) (model.ContractOutput, *model
 	votes := make([]*model.Vote, len(voters))
 	location := 0
 	for index, key := range voters {
-		uniledgerlog.Info("index::", index)
+		//uniledgerlog.Info("index::", index)
 		if key == config.Config.Keypair.PublicKey {
 			votes[index] = vote
 			location = index
@@ -354,7 +354,7 @@ func IsOutputInUnichain(contractHashId string) (bool, error) {
 		uniledgerlog.Error(err.Error())
 		return false, err
 	}
-	uniledgerlog.Info(result.Data)
+	//uniledgerlog.Info(result.Data)
 	//output, ok := result.Data.([]interface{})
 	output, ok := result.Data.(interface{})
 	if !ok {
@@ -370,7 +370,7 @@ func IsOutputInUnichain(contractHashId string) (bool, error) {
 		return false, err
 	}
 
-	uniledgerlog.Info(len(sloutput))
+	//uniledgerlog.Info(len(sloutput))
 	if len(sloutput) > 0 {
 		return true, nil
 	}
