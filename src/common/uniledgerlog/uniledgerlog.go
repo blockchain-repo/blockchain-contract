@@ -101,8 +101,6 @@ func _FormatLog(f interface{}, v ...interface{}) string {
 }
 
 func _WriteLog(key int, format interface{}, v ...interface{}) {
-	//defer logs.SetLogFuncCall(true)
-	//logs.SetLogFuncCall(false)
 	pc, file, line, _ := runtime.Caller(2)
 	func_ := runtime.FuncForPC(pc)
 	var f func(f interface{}, v ...interface{})
@@ -118,7 +116,7 @@ func _WriteLog(key int, format interface{}, v ...interface{}) {
 	}
 	slStr := strings.Split(func_.Name(), ".")
 	f("[%s] [%s : %d (%s)] %s", mapLevelKeys[key],
-		slStr[0]+string(filepath.Separator)+filepath.Base(file), line, slStr[1], _FormatLog(format, v...))
+		slStr[0]+string(filepath.Separator)+filepath.Base(file), line, slStr[len(slStr)-1], _FormatLog(format, v...))
 }
 
 func Error(f interface{}, v ...interface{}) {
