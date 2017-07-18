@@ -9,8 +9,8 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/model"
 
-	"unicontract/src/common/uniledgerlog"
 	"time"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr string,
@@ -22,6 +22,7 @@ func ExecuteCreate(tx_signers string, recipients [][2]interface{}, metadataStr s
 	output, _ := Create(ownerbefore, recipients, &metadata, asset, relation, contract)
 	output, vote, index := NodeSign(output)
 	b := MergeContractOutput(common.StructSerialize(output), output.Id, vote, index)
+	_ = b
 	//uniledgerlog.Info(b)
 	return common.StructSerialize(common.Serialize(output)), err
 }

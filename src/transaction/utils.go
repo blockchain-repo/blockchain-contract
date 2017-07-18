@@ -2,7 +2,6 @@ package transaction
 
 import (
 	"encoding/json"
-	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/model"
 )
 
