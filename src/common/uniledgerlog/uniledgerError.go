@@ -8,7 +8,7 @@ type ErrorType int
 const (
 	API_ERROR        ErrorType = iota
 	DB_ERROR                   // DB operate error
-	CONNECTION_ERROR           // connect to chain error
+	CONNECTION_ERROR           // connect to server error
 	ASSET_ERROR
 	PARAM_ERROR
 	ASSERT_ERROR
