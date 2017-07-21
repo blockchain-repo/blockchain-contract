@@ -6,6 +6,7 @@ import (
 )
 
 import (
+	"github.com/astaxie/beego"
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -19,13 +20,10 @@ import (
 )
 
 //---------------------------------------------------------------------------
-const (
-	address = "localhost:50051"
-)
-
-//---------------------------------------------------------------------------
 func FunctionRun(requestID, funcName, funcParams string) (common.OperateResult, error) {
 	var result common.OperateResult
+	address := beego.AppConfig.String("GRPCServer") + ":" + beego.AppConfig.String("GRPCPort")
+	log.Debug(fmt.Sprintf("[%s][%s]", log.DEBUG_NO_ERROR, "GRPC server is "+address))
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Error(fmt.Sprintf("[%s][%s]", log.CONNECTION_ERROR, err.Error()))
