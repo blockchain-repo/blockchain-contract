@@ -872,18 +872,32 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 		v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 		return v_result, v_err
 	}
+
 	//正则匹配函数名
 	name_reg := regexp.MustCompile(`\s*([^\(]+)`)
 	func_name := strings.TrimSpace(name_reg.FindString(p_function))
 	uniledgerlog.Info("=======func_name:", func_name)
+
 	//正则匹配函数的参数变量
 	param_reg := regexp.MustCompile(`\((.*)\)`)
 	func_param_str := strings.Trim(param_reg.FindString(p_function), "(|)")
 	uniledgerlog.Info("=======func_params:", func_param_str)
+
 	//函数调用
-	//func_run := reflect.ValueOf(ep.FunctionEngine.ContractFunctions[func_name])
-	//var func_params []reflect.Value = nil
-	func_params := make(map[string]interface{})
+	var func_run reflect.Value
+	var func_params []reflect.Value
+	var func_params_ map[string]interface{}
+	count := 1
+	if gRPCClient.On {
+		func_params_ = make(map[string]interface{})
+		_ = func_run
+		_ = func_params
+	} else {
+		func_run = reflect.ValueOf(ep.FunctionEngine.ContractFunctions[func_name])
+		_ = count
+		_ = func_params_
+	}
+
 	if func_param_str != "" {
 		//分割匹配的函数参数列表
 		//TODO 大参数解析（比如json串解析）
@@ -902,17 +916,24 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 		} else {
 			func_param_array = strings.Split(func_param_str, ",")
 		}
-		//func_params = make([]reflect.Value, len(func_param_array))
-		count := 1
-		for /*index*/ _, v_args := range func_param_array {
+
+		if !gRPCClient.On {
+			func_params = make([]reflect.Value, len(func_param_array))
+		}
+		for index, v_args := range func_param_array {
 			isConstant := func(v string) bool {
 				return ep.IsExprNum(v) || ep.IsExprBool(v) || ep.IsExprFloat(v) || ep.IsExprString(v)
 			}(v_args)
 
 			//识别字符串，获取参数的值
 			if isConstant {
-				//func_params[index] = reflect.ValueOf(v_args)
-				func_params[fmt.Sprintf("Param%02d", count)] = v_args
+				if gRPCClient.On {
+					func_params_[fmt.Sprintf("Param%02d", count)] = v_args
+					count++
+					_ = index
+				} else {
+					func_params[index] = reflect.ValueOf(v_args)
+				}
 			} else {
 				v_arg_value, err := ep.EvaluateExpressionVariable(v_args)
 				if err != nil {
@@ -923,29 +944,36 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 					v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 					return v_result, v_err
 				}
-				//func_params[index] = reflect.ValueOf(v_arg_value)
-				func_params[fmt.Sprintf("Param%02d", count)] = v_arg_value
+
+				if gRPCClient.On {
+					func_params_[fmt.Sprintf("Param%02d", count)] = v_arg_value
+					count++
+					_ = index
+				} else {
+					func_params[index] = reflect.ValueOf(v_arg_value)
+				}
 			}
-			count++
 		}
 	}
-	//func_result_arr := func_run.Call(func_params)
-	//r_buf.WriteString("[Result]: RunFunction(" + p_function + ") success;")
-	//uniledgerlog.Info(r_buf.String())
-	//
-	//retResult, ok1 := func_result_arr[0].Interface().(common.OperateResult)
-	//if !ok1 {
-	//	retResult = common.OperateResult{}
-	//}
-	//retErr, ok2 := func_result_arr[1].Interface().(error)
-	//if !ok2 {
-	//	retErr = nil
-	//}
-	//uniledgerlog.Info(retResult, retErr)
-	//return retResult, retErr
 
-	slData, v_err := json.Marshal(func_params)
+	if gRPCClient.On {
+		slData, v_err := json.Marshal(func_params_)
+		v_result, v_err = gRPCClient.FunctionRun(common0.GenerateUUID(), func_name, string(slData))
+		return v_result, v_err
+	} else {
+		func_result_arr := func_run.Call(func_params)
+		r_buf.WriteString("[Result]: RunFunction(" + p_function + ") success;")
+		uniledgerlog.Info(r_buf.String())
 
-	v_result, v_err = gRPCClient.FunctionRun(common0.GenerateUUID(), func_name, string(slData))
-	return v_result, v_err
+		retResult, ok1 := func_result_arr[0].Interface().(common.OperateResult)
+		if !ok1 {
+			retResult = common.OperateResult{}
+		}
+		retErr, ok2 := func_result_arr[1].Interface().(error)
+		if !ok2 {
+			retErr = nil
+		}
+		uniledgerlog.Info(retResult, retErr)
+		return retResult, retErr
+	}
 }

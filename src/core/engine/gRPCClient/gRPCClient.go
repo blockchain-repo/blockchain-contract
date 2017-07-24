@@ -3,10 +3,10 @@ package gRPCClient
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 )
 
 import (
-	"github.com/astaxie/beego"
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -14,15 +14,32 @@ import (
 
 import (
 	log "unicontract/src/common/uniledgerlog"
+	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common"
 	pb "unicontract/src/core/engine/gRPCClient/gRPCProto"
 	"unicontract/src/core/engine/gRPCClient/paramProto"
 )
 
 //---------------------------------------------------------------------------
+var (
+	On     bool
+	server string
+	port   string
+)
+
+//---------------------------------------------------------------------------
+func Init() {
+	GRPCConf := engine.UCVMConf["GRPC"].(map[interface{}]interface{})
+	server = GRPCConf["GRPCServer"].(string)
+	tmp := GRPCConf["GRPCPort"].(int)
+	port = strconv.Itoa(tmp)
+	On = GRPCConf["GRPCon"].(bool)
+}
+
+//---------------------------------------------------------------------------
 func FunctionRun(requestID, funcName, funcParams string) (common.OperateResult, error) {
 	var result common.OperateResult
-	address := beego.AppConfig.String("GRPCServer") + ":" + beego.AppConfig.String("GRPCPort")
+	address := server + ":" + port
 	log.Debug(fmt.Sprintf("[%s][%s]", log.DEBUG_NO_ERROR, "GRPC server is "+address))
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {

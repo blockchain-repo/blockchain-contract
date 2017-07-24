@@ -16,3 +16,9 @@ ExecuteEngine:
   function_source: DEMO_SRC,AUTOSELLER_SRC,ENERGYTRADING_SRC,GUANGXIBIANMAO_SRC,HOUSETRANSFER_SRC,RENTPAYMENT_SRC,TIANJS_SRC,TRANSFER_SRC
   task_complete_sleep_count: 5    # UCVM 任务执行中，completed => discard
   task_complete_sleep_time: 5     # UCVM 任务执行中，completed => discard
+
+##GRPC server相关设置
+GRPC:
+  GRPCon: false
+  GRPCServer: localhost
+  GRPCPort: 50051
