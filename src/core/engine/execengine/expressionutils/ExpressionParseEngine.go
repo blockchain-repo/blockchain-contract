@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -958,7 +959,8 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 
 	if gRPCClient.On {
 		slData, v_err := json.Marshal(func_params_)
-		v_result, v_err = gRPCClient.FunctionRun(common0.GenerateUUID(), func_name, string(slData))
+		hostname, _ := os.Hostname()
+		v_result, v_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(), func_name, string(slData))
 		return v_result, v_err
 	} else {
 		func_result_arr := func_run.Call(func_params)
