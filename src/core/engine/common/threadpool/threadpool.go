@@ -1,5 +1,5 @@
 // threadpool
-package scanengine
+package threadpool
 
 type ThreadPool struct {
 	funcNumber     int

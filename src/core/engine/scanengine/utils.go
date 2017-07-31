@@ -8,6 +8,7 @@ import (
 
 import (
 	"unicontract/src/common/uniledgerlog"
+	"unicontract/src/core/engine/common/threadpool"
 )
 
 //---------------------------------------------------------------------------
@@ -28,7 +29,7 @@ func Start() {
 
 	uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "execute multi-thread start"))
 	threadNum, _ := scanEngineConf["execute_thread_num"].(int)
-	gPool := new(ThreadPool)
+	gPool := new(threadpool.ThreadPool)
 	defer gPool.Stop()
 	gPool.Init(threadNum)
 	for i := 0; i < threadNum; i++ {
