@@ -3,13 +3,13 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"unicontract/src/common/uniledgerlog"
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"testing"
 	"unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/protos"
+	"unicontract/src/core/protos/api"
 )
 
 // API receive and transfer it to contractModel

@@ -9,7 +9,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
-	"unicontract/src/core/protos"
+	"unicontract/src/core/protos/api"
 
 	"encoding/json"
 	"github.com/golang/protobuf/proto"

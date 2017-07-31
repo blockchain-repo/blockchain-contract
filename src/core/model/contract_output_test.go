@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"unicontract/src/common/uniledgerlog"
 	"strings"
 	"testing"
 	"unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
-	"unicontract/src/core/protos"
+	"unicontract/src/core/protos/api"
 )
 
 func init() {

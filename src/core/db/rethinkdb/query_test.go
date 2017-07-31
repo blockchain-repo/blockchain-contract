@@ -10,12 +10,11 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
-	"unicontract/src/core/protos"
+	"unicontract/src/core/protos/api"
 
 	"reflect"
 
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
 	"unicontract/src/common/uniledgerlog"
 )
 

@@ -8,15 +8,15 @@ import (
 	"time"
 
 	"github.com/astaxie/beego"
-	"unicontract/src/common/uniledgerlog"
 	"github.com/golang/protobuf/proto"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/model"
-	"unicontract/src/core/protos"
+	"unicontract/src/core/protos/api"
 )
 
 // Operations about Contract
