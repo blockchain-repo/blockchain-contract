@@ -18,17 +18,19 @@ const (
 )
 
 var (
-	gchTaskQueue    chan model.TaskSchedule
-	gwgTaskExe      sync.WaitGroup
-	gnPublicKeysNum int
-	gslPublicKeys   []string
-	scanEngineConf  map[interface{}]interface{}
+	gchTaskQueue      chan model.TaskSchedule
+	gchExecParamQueue chan executeParam
+	gwgTaskExe        sync.WaitGroup
+	gnPublicKeysNum   int
+	gslPublicKeys     []string
+	scanEngineConf    map[interface{}]interface{}
 )
 
 //---------------------------------------------------------------------------
 func Init() {
 	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
 	gchTaskQueue = make(chan model.TaskSchedule, scanEngineConf["task_queue_len"].(int))
+	gchExecParamQueue = make(chan executeParam, scanEngineConf["task_queue_len"].(int))
 	gslPublicKeys = config.GetAllPublicKey()
 	gnPublicKeysNum = len(gslPublicKeys)
 }

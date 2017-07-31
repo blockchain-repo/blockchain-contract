@@ -24,6 +24,13 @@ import (
 )
 
 //---------------------------------------------------------------------------
+type executeParam struct {
+	strData           string
+	strContractID     string
+	strContractHashID string
+}
+
+//---------------------------------------------------------------------------
 func _TaskExecute() {
 	for {
 		uniledgerlog.Debug("wait for ContractTask ...")
@@ -83,45 +90,57 @@ func _TaskExecute() {
 		//uniledgerlog.Debug(string(slContractData))
 
 		uniledgerlog.Debug("contract execute")
-		go _Execute(string(slContractData), strContractTask.ContractId, strContractTask.ContractHashId)
+		param := executeParam{
+			strData:           string(slContractData),
+			strContractID:     strContractTask.ContractId,
+			strContractHashID: strContractTask.ContractHashId,
+		}
+		gchExecParamQueue <- param
 	}
 
 	gwgTaskExe.Done()
 }
 
 //---------------------------------------------------------------------------
-func _Execute(strData, strContractID, strContractHashID string) {
-	contractExecuter := execengine.NewContractExecuter()
-	//strData为完整的Output结构体
-	task_load_time := monitor.Monitor.NewTiming()
-	err := contractExecuter.Load(strData)
-	task_load_time.Send("task_load")
-	if err != nil {
-		uniledgerlog.Error(err)
-		_UpdateToFailed(strContractID, strContractHashID)
-		return
-	}
-	//执行引擎初始化环境
-	contractExecuter.Prepare()
-	//执行机启动合约执行
-	task_execute_time := monitor.Monitor.NewTiming()
-	ret, err := contractExecuter.Start()
-	task_execute_time.Send("task_execute")
-	if err != nil {
-		uniledgerlog.Error(err)
-		_UpdateToFailed(strContractID, strContractHashID)
-		return
-	}
-	if ret == 0 {
-		uniledgerlog.Warn("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
-	} else if ret == -1 {
-		uniledgerlog.Warn("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
-	} else if ret == 1 {
-		uniledgerlog.Info("合约任务执行完成")
-	}
-	//执行机销毁合约
-	contractExecuter.Destory()
+func _Execute() error {
+	for {
+		param, ok := <-gchExecParamQueue
+		if !ok {
+			break
+		}
 
+		contractExecuter := execengine.NewContractExecuter()
+		//strData为完整的Output结构体
+		task_load_time := monitor.Monitor.NewTiming()
+		err := contractExecuter.Load(param.strData)
+		task_load_time.Send("task_load")
+		if err != nil {
+			uniledgerlog.Error(err)
+			_UpdateToFailed(param.strContractID, param.strContractHashID)
+			continue
+		}
+		//执行引擎初始化环境
+		contractExecuter.Prepare()
+		//执行机启动合约执行
+		task_execute_time := monitor.Monitor.NewTiming()
+		ret, err := contractExecuter.Start()
+		task_execute_time.Send("task_execute")
+		if err != nil {
+			uniledgerlog.Error(err)
+			_UpdateToFailed(param.strContractID, param.strContractHashID)
+			continue
+		}
+		if ret == 0 {
+			uniledgerlog.Warn("合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行")
+		} else if ret == -1 {
+			uniledgerlog.Warn("合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行")
+		} else if ret == 1 {
+			uniledgerlog.Info("合约任务执行完成")
+		}
+		//执行机销毁合约
+		contractExecuter.Destory()
+	}
+	return nil
 }
 
 //---------------------------------------------------------------------------

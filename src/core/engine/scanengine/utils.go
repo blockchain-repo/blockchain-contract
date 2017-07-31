@@ -25,6 +25,18 @@ func Start() {
 	gwgTaskExe.Add(1)
 	go _ScanFailedTask(1)
 
+	uniledgerlog.Info("execute multi-thread start")
+	threadNum, _ := scanEngineConf["execute_thread_num"].(int)
+	gPool := new(ThreadPool)
+	defer gPool.Stop()
+	gPool.Init(threadNum)
+	for i := 0; i < threadNum; i++ {
+		gPool.AddTask(func() error {
+			return _Execute()
+		})
+	}
+	go gPool.Start()
+
 	uniledgerlog.Info("TaskExecute start")
 	gwgTaskExe.Add(1)
 	go _TaskExecute()

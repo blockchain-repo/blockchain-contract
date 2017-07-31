@@ -9,6 +9,7 @@ ScanEngine:
   wait_count_threshold: 50                               # 等待次数阈值
   record_w_file_path: "../data/waitCountBeyond.txt"           # 记录等待次数超出阈值的记录的文件
   clean_data_on: 1                                       # 是否进行数据清理,1 开关打开，进行清理  0 开关关闭，不进行清理
+  execute_thread_num: 10
 
 ##执行引擎配置项
 ExecuteEngine:
