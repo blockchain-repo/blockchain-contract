@@ -13,6 +13,7 @@ package scanengine
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -28,33 +29,32 @@ import (
 func _ScanTaskSchedule() {
 	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
 	for _ = range ticker.C {
-		uniledgerlog.Debug("query no send data")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query no send data"))
 		strNodePubkey := config.Config.Keypair.PublicKey
 		retStr, err := engineCommon.GetMonitorNoSendData(strNodePubkey,
 			scanEngineConf["failed_count_threshold"].(int))
 		if err != nil {
-			uniledgerlog.Error(err.Error())
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			continue
 		}
 
 		if len(retStr) == 0 {
-			uniledgerlog.Debug("all send")
+			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "all send"))
 			continue
 		}
 
-		uniledgerlog.Debug("get no send tasks")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get no send tasks"))
 		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
-		uniledgerlog.Debug("handle task")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))
 		for _, value := range slTasks {
-			uniledgerlog.Debug("contract [%v] enter queue", value)
 			gchTaskQueue <- value
 			//wsp@monitor
 			monitor.Monitor.Count("task_running", 1)
 			err = engineCommon.UpdateMonitorSend(value.Id)
 			if err != nil {
-				uniledgerlog.Error(err.Error())
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			}
 		}
 	}

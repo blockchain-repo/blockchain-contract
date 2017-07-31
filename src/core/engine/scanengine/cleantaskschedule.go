@@ -12,6 +12,7 @@ package scanengine
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -27,34 +28,34 @@ import (
 func _CleanTaskSchedule() {
 	ticker := time.NewTicker(time.Minute * (time.Duration)(scanEngineConf["clean_time"].(int)))
 	for _ = range ticker.C {
-		uniledgerlog.Debug("query all success task")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query all success task"))
 		strSuccessTask, err :=
 			rethinkdb.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
 		if err != nil {
-			uniledgerlog.Error(err)
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			continue
 		}
 
 		if len(strSuccessTask) == 0 {
-			uniledgerlog.Debug("success task is null")
+			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "success task is null"))
 			continue
 		}
 
 		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(strSuccessTask), &slTasks)
 
-		uniledgerlog.Debug("success task filter")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "success task filter"))
 		slID := _TaskFilter(slTasks)
 
 		if len(slID) == 0 {
-			uniledgerlog.Debug("_TaskFilter return is null")
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "_TaskFilter return is null"))
 			continue
 		}
 
-		uniledgerlog.Debug("success task delete")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "success task delete"))
 		deleteNum, err := rethinkdb.DeleteTaskSchedules(slID)
 		if deleteNum != len(slID) {
-			uniledgerlog.Error(err)
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 		}
 	}
 	gwgTaskExe.Done()
@@ -71,7 +72,7 @@ func _TaskFilter(slTasks []model.TaskSchedule) []interface{} {
 	for index, value := range slTasks {
 		nTimePoint, err := strconv.Atoi(value.LastExecuteTime)
 		if err != nil {
-			uniledgerlog.Error(err)
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			continue
 		}
 		if int64(nTimePoint) < cleanTimePoint {

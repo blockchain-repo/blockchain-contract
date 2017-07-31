@@ -37,31 +37,31 @@ func _ScanFailedTask(flag int) {
 
 	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
 	for _ = range ticker.C {
-		uniledgerlog.Debug("query " + strLogFlag + " data")
+		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query "+strLogFlag+" data"))
 		strNodePubkey := config.Config.Keypair.PublicKey
 		retStr, err := engineCommon.GetMonitorNoSuccessData(strNodePubkey,
 			scanEngineConf[strThresholdName].(int), flag)
 		if err != nil {
-			uniledgerlog.Error(err.Error())
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			continue
 		}
 
 		if len(retStr) == 0 {
-			uniledgerlog.Debug("no " + strLogFlag + " data")
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "no "+strLogFlag+" data"))
 			continue
 		}
 
-		uniledgerlog.Debug("get " + strLogFlag + " tasks")
+		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get "+strLogFlag+" tasks"))
 		var slTasks []model.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
-		uniledgerlog.Debug("get task id slice")
+		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get task id slice"))
 		slID := _GetTaskID(slTasks)
 
-		uniledgerlog.Debug("handle task")
+		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))
 		engineCommon.UpdateMonitorSendBatch(slID)
 
-		uniledgerlog.Debug("record task")
+		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "record task"))
 		_Record(flag, slID)
 
 		//task fail count send to monitor,modify value
@@ -96,10 +96,10 @@ func _Record(flag int, slID []interface{}) {
 
 	writeCount, err := _WriteFile(strRecordFile, strID)
 	if err != nil {
-		uniledgerlog.Error(err)
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, err.Error()))
 	}
 	if writeCount != len(strID) {
-		uniledgerlog.Error("write count is error")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "write count is error"))
 	}
 }
 

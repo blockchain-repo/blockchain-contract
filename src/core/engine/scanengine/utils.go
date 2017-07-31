@@ -2,6 +2,7 @@
 package scanengine
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -12,20 +13,20 @@ import (
 //---------------------------------------------------------------------------
 func Start() {
 	if scanEngineConf["clean_data_on"].(int) == 1 {
-		uniledgerlog.Info("CleanTaskSchedule start")
+		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "CleanTaskSchedule start"))
 		gwgTaskExe.Add(1)
 		go _CleanTaskSchedule()
 	}
 
-	uniledgerlog.Info("ScanFailedTask start")
+	uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "ScanFailedTask start"))
 	gwgTaskExe.Add(1)
 	go _ScanFailedTask(0)
 
-	uniledgerlog.Info("ScanWaitTask start")
+	uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "ScanWaitTask start"))
 	gwgTaskExe.Add(1)
 	go _ScanFailedTask(1)
 
-	uniledgerlog.Info("execute multi-thread start")
+	uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "execute multi-thread start"))
 	threadNum, _ := scanEngineConf["execute_thread_num"].(int)
 	gPool := new(ThreadPool)
 	defer gPool.Stop()
@@ -37,11 +38,11 @@ func Start() {
 	}
 	go gPool.Start()
 
-	uniledgerlog.Info("TaskExecute start")
+	uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "TaskExecute start"))
 	gwgTaskExe.Add(1)
 	go _TaskExecute()
 
-	uniledgerlog.Info("ScanTaskSchedule start")
+	uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "ScanTaskSchedule start"))
 	gwgTaskExe.Add(1)
 	go _ScanTaskSchedule()
 
