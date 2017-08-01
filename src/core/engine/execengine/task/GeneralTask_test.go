@@ -1,7 +1,6 @@
 package task
 
 import (
-	"fmt"
 	"testing"
 	"unicontract/src/core/engine/execengine/constdef"
 )

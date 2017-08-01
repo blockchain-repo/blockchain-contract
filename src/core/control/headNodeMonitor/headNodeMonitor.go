@@ -51,7 +51,7 @@ func _HeadNodeMonitor() {
 			uniledgerlog.Debug("delete old contract and insert new contract")
 			for index, value := range slContracts {
 				// 生成新的头节点
-				index_new := _GenerateAnotherHeadNodeKey(value.ContractHead.GetMainPubkey())
+				index_new := _GenerateAnotherHeadNodeKey(value.ContractHead.MainPubkey)
 				slContracts[index].ContractHead.MainPubkey = gslPublicKeys[index_new]
 
 				// 删除老的contract对应的vote，如果删除出现问题，无关紧要，无需continue

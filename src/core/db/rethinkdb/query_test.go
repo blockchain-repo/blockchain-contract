@@ -9,7 +9,6 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
-	"unicontract/src/core/protos"
 
 	"reflect"
 
@@ -58,9 +57,9 @@ func Test_InsertContractStruct(t *testing.T) {
 
 	private_key := "C6WdHVbHAErN7KLoWs9VCBESbAXQG6PxRtKktWzoKytR"
 	// modify and set value for reference obj with &
-	contract := &contractModel.Contract
-	contractHead := &protos.ContractHead{}
-	contractBody := &protos.ContractBody{}
+	//contract := &contractModel.Contract
+	contractHead := &model.ContractHead{}
+	contractBody := &model.ContractBody{}
 
 	contractHead.MainPubkey = config.Config.Keypair.PublicKey
 	contractHead.Version = 1
@@ -82,7 +81,7 @@ func Test_InsertContractStruct(t *testing.T) {
 	contractModel.ContractBody.ContractState = "Contract_Signature"
 
 	fmt.Println("private_key is : ", private_key)
-	fmt.Println("contract is : ", common.Serialize(contract))
+	fmt.Println("contract is : ", common.Serialize(contractModel))
 	fmt.Println("signatureContract is : ", signatureContract)
 
 	contractModel.Id = contractModel.GenerateId()
@@ -380,8 +379,8 @@ func Test_InsertContractOutput(t *testing.T) {
 	//create new obj
 	contract := model.ContractModel{}
 	// modify and set value for reference obj with &
-	contractHead := &protos.ContractHead{}
-	contractBody := &protos.ContractBody{}
+	contractHead := &model.ContractHead{}
+	contractBody := &model.ContractBody{}
 	contractHead.MainPubkey = "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3"
 	contractHead.Version = 1
 	contractBody.Cname = "star"

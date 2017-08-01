@@ -109,7 +109,7 @@ func WriteConToFile() {
 	//判断文件是否存在
 	fileInfo, err := os.Stat(fileName)
 	if err == nil { //文件存在
-		fmt.Println("unicontractCOnf exist,Do you want to override it?")
+		fmt.Println("unicontractConf exist,Do you want to override it?")
 		fmt.Println(" please input y(es) or n(o) ")
 		inputReader := bufio.NewReader(os.Stdin)
 		p := make([]byte, 10)
