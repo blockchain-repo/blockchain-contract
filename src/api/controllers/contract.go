@@ -16,7 +16,7 @@ import (
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/model"
-	"unicontract/src/core/protos/api"
+	"unicontract/src/core/protos"
 )
 
 // Operations about Contract
@@ -123,28 +123,6 @@ func (c *ContractController) responseWithCode(status int, data string) {
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
 
-// API receive and transfer it to contractModel
-func fromContractToContractModel(contract *protos.Contract) model.ContractModel {
-	var contractModel model.ContractModel
-	contractModel.Contract = *contract
-	return contractModel
-}
-
-// go rethink get contractModel string and transfer it to contract
-func fromContractModelStrToContract(contractModelStr string) (protos.Contract, error) {
-	// 1. to contractModel
-	var contractModel model.ContractModel
-	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
-	// 2. to contract
-	contract := contractModel.Contract
-	if err != nil {
-		uniledgerlog.Error("error fromContractModelStrToContract", err)
-		return contract, err
-	}
-
-	return contract, nil
-}
-
 // special for contractArray to proto[]
 func fromContractModelArrayStrToContracts(contractModelStr string) (protos.ContractList, error) {
 	// 1. to contractModel
@@ -159,7 +137,8 @@ func fromContractModelArrayStrToContracts(contractModelStr string) (protos.Contr
 	}
 	contracts = make([]*protos.Contract, len(contractModel))
 	for i := 0; i < len(contractModel); i++ {
-		contracts[i] = &contractModel[i].Contract
+		//contracts[i] = &contractModel[i].Contract
+		contracts[i], err = model.FromContractModelToContractProto(contractModel[i])
 	}
 	contractList.Contracts = contracts
 	uniledgerlog.Info("query contract len is ", len(contractModel))
@@ -169,8 +148,8 @@ func fromContractModelArrayStrToContracts(contractModelStr string) (protos.Contr
 // special for contractArray to proto[] only for queryLog
 func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos.ContractList, error) {
 	// 1. to contractModel
-	var contractModel []model.ContractModel
-	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
+	var contractModels []model.ContractModel
+	err := json.Unmarshal([]byte(contractModelStr), &contractModels)
 	// 2. to contract
 	var contractList protos.ContractList
 	var contracts []*protos.Contract
@@ -178,30 +157,12 @@ func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos
 		uniledgerlog.Error("error fromContractModelArrayStrToContracts", err)
 		return contractList, err
 	}
-	contracts = make([]*protos.Contract, len(contractModel))
-	for i := 0; i < len(contractModel); i++ {
-		tempContract := &contractModel[i].Contract
-		contracts[i] = &protos.Contract{
-			Id: tempContract.Id,
-			ContractHead: &protos.ContractHead{
-				OperateTime: tempContract.ContractHead.OperateTime,
-			},
-			ContractBody: &protos.ContractBody{
-				Caption:            tempContract.ContractBody.Caption,
-				Cname:              tempContract.ContractBody.Cname,
-				ContractId:         tempContract.ContractBody.ContractId,
-				ContractOwners:     tempContract.ContractBody.ContractOwners,
-				ContractSignatures: tempContract.ContractBody.ContractSignatures,
-				ContractState:      tempContract.ContractBody.ContractState,
-				Description:        tempContract.ContractBody.Description,
-				StartTime:          tempContract.ContractBody.StartTime,
-				EndTime:            tempContract.ContractBody.EndTime,
-				Creator:            tempContract.ContractBody.Creator,
-			},
-		}
+	contracts = make([]*protos.Contract, len(contractModels))
+	for i := 0; i < len(contractModels); i++ {
+		contracts[i], err = model.FromContractModelToContractProto(contractModels[i])
 	}
 	contractList.Contracts = contracts
-	uniledgerlog.Info("query contract len is ", len(contractModel))
+	uniledgerlog.Info("query contract len is ", len(contractModels))
 	return contractList, nil
 }
 
@@ -228,7 +189,7 @@ func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr s
 			return contractExecuteLogList, err
 		}
 		tempContractComponents := tempContractBody.ContractComponents
-		var tempContractComponent protos.ContractComponent
+		var tempContractComponent model.ContractComponent
 		for j := 0; j < len(tempContractComponents); j++ {
 			if tempContractComponents[j].TaskId == taskId {
 				tempContractComponent = *tempContractComponents[j]
@@ -269,7 +230,7 @@ func (c *ContractController) AuthSignature() {
 		return
 	}
 
-	contractModel := fromContractToContractModel(contract)
+	contractModel, err := model.FromContractProtoToContractModel(*contract)
 	signatureValid := contractModel.IsSignatureValid()
 	if !signatureValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "合约签名验证失败")
@@ -291,15 +252,17 @@ func (c *ContractController) Create() {
 		monitor.Monitor.Count("request_fail", 1)
 		return
 	}
-
-	contractModel := fromContractToContractModel(contract)
+	//uniledgerlog.Warn("contract:\n", contract)
+	contractModel, err := model.FromContractProtoToContractModel(*contract)
+	//contractModel := fromContractToContractModel(contract)
 	uniledgerlog.Warn("contractModel:\n", contractModel)
-	contractModel.ContractHead = &protos.ContractHead{
+	contractModel.ContractHead = &model.ContractHead{
 		Version: 1,
 	}
 	//TODO 额外验证 合约基本字段、owners、component为空
 	contractHead := contractModel.ContractHead
 	contractBody := contractModel.ContractBody
+	uniledgerlog.Warn("contractBody:\n", contractBody)
 	if contractHead == nil || contractBody == nil {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过, Head or Body is blank!")
 		uniledgerlog.Debug("API[Create] token is", token)
@@ -315,7 +278,7 @@ func (c *ContractController) Create() {
 		return
 	}
 	contract_write_time := monitor.Monitor.NewTiming()
-	ok := core.WriteContract(contractModel)
+	ok := core.WriteContract(*contractModel)
 	if !ok {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Create] insert contract fail!")
 		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[Create] insert contract fail!")
@@ -340,14 +303,15 @@ func (c *ContractController) Signature() {
 		return
 	}
 
-	contractModel := fromContractToContractModel(contract)
+	contractModel, err := model.FromContractProtoToContractModel(*contract)
+	//contractModel := fromContractToContractModel(contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
 		uniledgerlog.Debug("API[Signature] token is", token)
 		return
 	}
-	ok := core.WriteContract(contractModel)
+	ok := core.WriteContract(*contractModel)
 	if !ok {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Signature] insert contract fail!")
 		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[Signature] insert contract fail!")
@@ -504,13 +468,13 @@ func (c *ContractController) Query() {
 		return
 	}
 
-	contractProto, err := fromContractModelStrToContract(contractModelStr)
+	contractProto, err := model.FromContractModelStrToContractProto(contractModelStr)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
-	contractProtoBytes, err := proto.Marshal(&contractProto)
+	contractProtoBytes, err := proto.Marshal(contractProto)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(proto.Marshal) ")
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
@@ -654,7 +618,7 @@ func (c *ContractController) Update() {
 		return
 	}
 
-	contractModel := fromContractToContractModel(contract)
+	contractModel, err := model.FromContractProtoToContractModel(*contract)
 	contractValid := contractModel.Validate()
 	if !contractValid {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract Validate error")
@@ -715,7 +679,8 @@ func (c *ContractController) PressTest() {
 	//todo 1. replace createTime, Signatures, owner, start and end time!
 
 	//uniledgerlog.Warn("Input contractDeserialize:\n", common.StructSerialize(contract))
-	contractModel := fromContractToContractModel(contract)
+	//contractModel := fromContractToContractModel(contract)
+	contractModel, err := model.FromContractProtoToContractModel(*contract)
 	/*-------------------------- this for press test generate Id start---------------------*/
 	// add random string
 	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_" + token
@@ -728,7 +693,7 @@ func (c *ContractController) PressTest() {
 
 	// lost head lead to nil pointer
 	if contractModel.ContractHead == nil {
-		contractModel.ContractHead = &protos.ContractHead{
+		contractModel.ContractHead = &model.ContractHead{
 			Version: 1,
 		}
 	}
@@ -749,11 +714,11 @@ func (c *ContractController) PressTest() {
 	contractOwners := ownersPubkeys
 	contractModel.ContractBody.ContractOwners = contractOwners
 	// 生成 签名
-	contractSignatures := make([]*protos.ContractSignature, contractSignaturesLen)
+	contractSignatures := make([]*model.ContractSignature, contractSignaturesLen)
 	for i := 0; i < contractSignaturesLen; i++ {
 		ownerPubkey := ownersPubkeys[i]
 		privateKey := owners[ownerPubkey]
-		contractSignatures[i] = &protos.ContractSignature{
+		contractSignatures[i] = &model.ContractSignature{
 			OwnerPubkey:   ownerPubkey,
 			Signature:     contractModel.Sign(privateKey),
 			SignTimestamp: common.GenTimestamp(),
@@ -772,7 +737,7 @@ func (c *ContractController) PressTest() {
 		uniledgerlog.Debug("API[PressTest] token is", token)
 		return
 	}
-	ok := core.WriteContract(contractModel)
+	ok := core.WriteContract(*contractModel)
 	if !ok {
 		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[PressTest] insert contract fail!")
 		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[PressTest] insert contract fail!")

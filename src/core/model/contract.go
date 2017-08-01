@@ -5,7 +5,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/protos/api"
+	"unicontract/src/core/protos"
 )
 
 type ContractSignature struct {
@@ -307,7 +307,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 		}
 		// contract signature verify
 		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
-		uniledgerlog.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
+		//uniledgerlog.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
 		if !verifyFlag {
 			uniledgerlog.Error("IsSignatureValid contract signature verify fail")
 			return false
@@ -324,7 +324,7 @@ func (c *ContractModel) ToString() string {
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
 	contractBodySerialized := common.StructSerialize(c.ContractBody)
-	uniledgerlog.Warn("contractBodySerialized:\n", contractBodySerialized)
+	//uniledgerlog.Warn("contractBodySerialized:\n", contractBodySerialized)
 	return common.HashData(contractBodySerialized)
 }
 
@@ -345,42 +345,3 @@ func (c *ContractModel) validateContractHead() bool {
 	}
 	return true
 }
-
-//transfer contract(proto) to contractModel
-//func FromContractToContractModel(contract protos.Contract) ContractModel {
-//	var contractModel ContractModel
-//	//contractModel = contract
-//	return contractModel
-//}
-
-// transfer contractModel string to contract(proto)
-//func FromContractModelStrToContract(contractModelStr string) (protos.Contract, error) {
-//	// 1. to contractModel
-//	var contractModel ContractModel
-//	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
-//	// 2. to contract
-//	contract := contractModel.Contract
-//	if err != nil {
-//		uniledgerlog.Error("error fromContractModelStrToContract", err)
-//		return contract, err
-//	}
-//
-//	return contract, nil
-//}
-
-//// transfer contractModel to contract(proto)
-//func FromContractModelToContract(contractModel ContractModel) protos.Contract {
-//	/*-------------module deep copy start --------------*/
-//	var contractModelClone = contractModel
-//
-//	// new obj
-//	var temp protos.Contract
-//
-//	contractModelCloneBytes, _ := json.Marshal(contractModelClone)
-//	err := json.Unmarshal(contractModelCloneBytes, &temp)
-//	if err != nil {
-//		uniledgerlog.Error("[module-model]FromContractModelToContract error ", err)
-//	}
-//	contract := contractModel.Contract
-//	return contract
-//}

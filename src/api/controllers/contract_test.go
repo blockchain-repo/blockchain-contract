@@ -9,7 +9,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/config"
 	"unicontract/src/core/model"
-	"unicontract/src/core/protos/api"
+	"unicontract/src/core/protos"
 
 	"encoding/json"
 	"github.com/golang/protobuf/proto"
@@ -113,7 +113,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	assignTime, err := common.GenSpecialTimestamp("2017-06-01 00:00:00")
 	operateTime, err := common.GenSpecialTimestamp("2017-06-01 00:00:00")
 	mainPubkey := config.Config.Keypair.PublicKey
-	contractHead := &protos.ContractHead{mainPubkey, 1,
+	contractHead := &model.ContractHead{mainPubkey, 1,
 		assignTime, operateTime, 0}
 	// random choose the creator
 	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen)]
@@ -133,7 +133,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	// random contractOwners 随机生成的合约拥有者数组
 	contractOwners := ownersPubkeys
 	createTime := common.GenTimestamp()
-	contractBody := &protos.ContractBody{
+	contractBody := &model.ContractBody{
 		ContractId:  "UUID-1234-5678-90 demo",
 		Cname:       "test create contract",
 		Ctype:       "CREATE",
@@ -151,7 +151,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 		EndTime:            endTime,
 		ContractOwners:     contractOwners,
 		ContractSignatures: nil,
-		ContractAssets: []*protos.ContractAsset{
+		ContractAssets: []*model.ContractAsset{
 			{
 				AssetId:     "xxxxxxxxxxx",
 				Name:        "asset_money",
@@ -165,9 +165,9 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 				},
 			},
 		},
-		ContractComponents: []*protos.ContractComponent{
+		ContractComponents: []*model.ContractComponent{
 			{
-				DataList: []*protos.ComponentData{
+				DataList: []*model.ComponentData{
 					{
 						Cname:             "232",
 						DefaultValueFloat: float64(33),
@@ -189,11 +189,11 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	// 生成 签名
 	realContractSignaturesLen := 2
 	//realContractSignaturesLen := contractSignaturesLen
-	contractSignatures := make([]*protos.ContractSignature, realContractSignaturesLen)
+	contractSignatures := make([]*model.ContractSignature, realContractSignaturesLen)
 	for i := 0; i < realContractSignaturesLen; i++ {
 		ownerPubkey := ownersPubkeys[i]
 		privateKey := owners[ownerPubkey]
-		contractSignatures[i] = &protos.ContractSignature{
+		contractSignatures[i] = &model.ContractSignature{
 			OwnerPubkey:   ownerPubkey,
 			Signature:     contractModel.Sign(privateKey),
 			SignTimestamp: common.GenTimestamp(),
@@ -239,8 +239,8 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	if err != nil {
 		return nil, err
 	}
-	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
-	requestBody, err := proto.Marshal(&protoContract)
+	protoContract, _ := model.FromContractModelStrToContractProto(serializeContractModel)
+	requestBody, err := proto.Marshal(protoContract)
 	if err != nil {
 		fmt.Println(requestBody, err)
 		return nil, err
@@ -248,9 +248,10 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	return requestBody, nil
 }
 
-var default_url = "http://36.110.71.170:66/v1/contract/"
+//var default_url = "http://36.110.71.170:66/v1/contract/"
 
-//var default_url = "http://192.168.1.14:8088/v1/contract/"
+var default_url = "http://192.168.1.14:8088/v1/contract/"
+
 //var default_url = "http://36.110.71.170:66/v1/contract/"
 //var default_url = "http://localhost:8088/v1/contract/"
 
@@ -316,10 +317,10 @@ func Test_CreatContract(t *testing.T) {
 
 func Test_CreatContractWithLocalJson(t *testing.T) {
 	url := default_url + "create"
-	jsonContract, err := ioutil.ReadFile("./produce_contract.json")
+	jsonContract, err := ioutil.ReadFile("./ok_contract.json")
 
 	//fmt.Print(string(jsonContract))
-	fmt.Println(common.HashData(string(jsonContract)))
+	fmt.Println("jsonData hash", common.HashData(string(jsonContract)))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -334,7 +335,7 @@ func Test_CreatContractWithLocalJson(t *testing.T) {
 	fmt.Println(contractModel.GenerateId())
 	fmt.Println(common.HashData(common.StructSerialize(contractModel.ContractBody)))
 	serializeContractModel := common.StructSerialize(contractModel)
-	//fmt.Println("produce the contractModel", serializeContractModel)
+	fmt.Println("produce the contractModel", serializeContractModel)
 	//fmt.Println("produce the contractModel", common.SerializePretty(contractModel))
 	//requestBody, err := generateProtoContract(false, extraAttr)
 	if err != nil {
@@ -342,8 +343,8 @@ func Test_CreatContractWithLocalJson(t *testing.T) {
 		return
 	}
 
-	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
-	requestBody, err := proto.Marshal(&protoContract)
+	protoContract, _ := model.FromContractModelStrToContractProto(serializeContractModel)
+	requestBody, err := proto.Marshal(protoContract)
 	if err != nil {
 		fmt.Println(requestBody, err)
 		return
@@ -408,7 +409,7 @@ func Test_Query(t *testing.T) {
 	url := default_url + "query"
 
 	contract := protos.Contract{ // proto-buf
-		Id: "64520eba60bde72f71b4646d6cc0872715e4717234ca6031c621d247e5c4553c",
+		Id: "11e535c639e82d3e7b36a0bdd57f12f6bd1c0d61336f80acca13d0a28e3a5b45",
 	}
 
 	requestBody, err := proto.Marshal(&contract)

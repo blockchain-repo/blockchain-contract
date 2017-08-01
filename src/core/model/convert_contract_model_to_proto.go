@@ -1,141 +1,147 @@
-package utils
+package model
 
 import (
+	"encoding/json"
 	"unicontract/src/common/uniledgerlog"
-	"unicontract/src/core/model"
-	"unicontract/src/core/protos/api"
+	"unicontract/src/core/protos"
 )
 
-//transfer contract(proto) to contractModel
-func FromProtoContractToContractModel(contract protos.Contract) model.ContractModel {
-	uniledgerlog.Info("convert the protocol data to model <contract>")
-	uniledgerlog.Info("deal start")
-	uniledgerlog.Info("deal end")
-	var contractModel model.ContractModel
+// transfer contractModel string to contract(proto)
+func FromContractModelStrToContractProto(contractModelStr string) (*protos.Contract, error) {
+	// 1. to contractModel
+	var contractModel ContractModel
+	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
+	if err != nil {
+		uniledgerlog.Error("error Unmarshal contractModelStr", err)
+		return nil, err
+	}
+	// 2. to contract
+	contract, err := FromContractModelToContractProto(contractModel)
+	if err != nil {
+		uniledgerlog.Error("error FromContractModelStrToContractProto", err)
+		return contract, err
+	}
 
+	return contract, nil
+}
+
+//transfer contractModel to ContractProto
+func FromContractModelToContractProto(contract ContractModel) (*protos.Contract, error) {
+
+	contractProto := &protos.Contract{}
 	// contract ID
-	contractModel.Id = contract.Id
+	contractProto.Id = contract.Id
 
 	// contractHead
-	proto_contractHead := contract.ContractHead
-	if proto_contractHead != nil {
-		contractModel.ContractHead = &model.ContractHead{
-			MainPubkey:      proto_contractHead.MainPubkey,
-			Version:         proto_contractHead.Version,
-			AssignTime:      proto_contractHead.AssignTime,
-			OperateTime:     proto_contractHead.AssignTime,
-			ConsensusResult: proto_contractHead.ConsensusResult,
+	model_contractHead := contract.ContractHead
+	if model_contractHead != nil {
+		contractProto.ContractHead = &protos.ContractHead{
+			MainPubkey:      model_contractHead.MainPubkey,
+			Version:         model_contractHead.Version,
+			AssignTime:      model_contractHead.AssignTime,
+			OperateTime:     model_contractHead.AssignTime,
+			ConsensusResult: model_contractHead.ConsensusResult,
 		}
 	}
 
 	/************************ contractBody start ***************************/
-	proto_contractBody := contract.ContractBody
-	if proto_contractBody == nil {
-		return contractModel
+	model_contractBody := contract.ContractBody
+	if model_contractBody == nil {
+		return contractProto, nil
 	}
 
 	// contractBody.contractAssests
-	proto_contractAssets := contract.ContractBody.ContractAssets
-	var contractAssets []*model.ContractAsset
-	if proto_contractAssets == nil {
+	model_contractAssets := contract.ContractBody.ContractAssets
+
+	contractAssets := make([]*protos.ContractAsset, len(model_contractAssets))
+	if model_contractAssets == nil {
 		contractAssets = nil
 	} else {
-		for i := 0; i < len(proto_contractAssets); i++ {
-			contractAssets[i] = &model.ContractAsset{
-				AssetId:     proto_contractAssets[i].AssetId,
-				Name:        proto_contractAssets[i].Name,
-				Caption:     proto_contractAssets[i].Caption,
-				Description: proto_contractAssets[i].Description,
-				Unit:        proto_contractAssets[i].Unit,
-				Amount:      proto_contractAssets[i].Amount,
-				MetaData:    proto_contractAssets[i].MetaData,
+		for i := 0; i < len(model_contractAssets); i++ {
+			contractAssets[i] = &protos.ContractAsset{
+				AssetId:     model_contractAssets[i].AssetId,
+				Name:        model_contractAssets[i].Name,
+				Caption:     model_contractAssets[i].Caption,
+				Description: model_contractAssets[i].Description,
+				Unit:        model_contractAssets[i].Unit,
+				Amount:      model_contractAssets[i].Amount,
+				MetaData:    model_contractAssets[i].MetaData,
 			}
 		}
 	}
 
 	// contractBody.ContractSignatures
-	proto_contractSignatures := contract.ContractBody.ContractSignatures
-	var contractSignatures []*model.ContractSignature
-	if proto_contractSignatures == nil {
+	model_contractSignatures := contract.ContractBody.ContractSignatures
+	contractSignatures := make([]*protos.ContractSignature, len(model_contractSignatures))
+	if model_contractSignatures == nil {
 		contractSignatures = nil
 	} else {
-		for i := 0; i < len(proto_contractSignatures); i++ {
-			contractSignatures[i] = &model.ContractSignature{
-				OwnerPubkey:   proto_contractSignatures[i].OwnerPubkey,
-				Signature:     proto_contractSignatures[i].Signature,
-				SignTimestamp: proto_contractSignatures[i].SignTimestamp,
+		for i := 0; i < len(model_contractSignatures); i++ {
+			contractSignatures[i] = &protos.ContractSignature{
+				OwnerPubkey:   model_contractSignatures[i].OwnerPubkey,
+				Signature:     model_contractSignatures[i].Signature,
+				SignTimestamp: model_contractSignatures[i].SignTimestamp,
 			}
 		}
 	}
 
 	/************************ contractBody.ContractComponents start ***************************/
-	contractComponents := contractComponentConvertToModel(contract.ContractBody.ContractComponents)
+	contractComponents := contractComponentConvertToProto(contract.ContractBody.ContractComponents)
 	//******** contractBody.ContractComponents end ***************************/
 
 	//contractBody
-	contractModel.ContractBody = &model.ContractBody{
-		ContractId:         proto_contractBody.ContractId,
-		Cname:              proto_contractBody.Cname,
-		Ctype:              proto_contractBody.Ctype,
-		Caption:            proto_contractBody.Caption,
-		Description:        proto_contractBody.Description,
-		ContractState:      proto_contractBody.ContractState,
-		Creator:            proto_contractBody.Creator,
-		CreateTime:         proto_contractBody.CreateTime,
-		StartTime:          proto_contractBody.StartTime,
-		EndTime:            proto_contractBody.EndTime,
-		ContractOwners:     proto_contractBody.ContractOwners,
+	contractProto.ContractBody = &protos.ContractBody{
+		ContractId:         model_contractBody.ContractId,
+		Cname:              model_contractBody.Cname,
+		Ctype:              model_contractBody.Ctype,
+		Caption:            model_contractBody.Caption,
+		Description:        model_contractBody.Description,
+		ContractState:      model_contractBody.ContractState,
+		Creator:            model_contractBody.Creator,
+		CreateTime:         model_contractBody.CreateTime,
+		StartTime:          model_contractBody.StartTime,
+		EndTime:            model_contractBody.EndTime,
+		ContractOwners:     model_contractBody.ContractOwners,
 		ContractAssets:     contractAssets,
 		ContractSignatures: contractSignatures,
 		ContractComponents: contractComponents,
-		MetaAttribute:      proto_contractBody.MetaAttribute,
-		NextTasks:          proto_contractBody.NextTasks,
+		MetaAttribute:      model_contractBody.MetaAttribute,
+		NextTasks:          model_contractBody.NextTasks,
 	}
 	/************************ contractBody end ***************************/
 
-	return contractModel
+	return contractProto, nil
 }
 
-func contractComponentConvertToModel(components []*protos.ContractComponent) []*model.ContractComponent {
+func contractComponentConvertToProto(components []*ContractComponent) []*protos.ContractComponent {
 	/************************ contractBody.ContractComponents start ***************************/
-	var contractComponents []*model.ContractComponent
+	contractComponents := make([]*protos.ContractComponent, len(components))
 	if components == nil {
 		contractComponents = nil
 	} else {
 		for i := 0; i < len(components); i++ {
 
 			/************************ contractBody.ContractComponent.ComponentsExpression start ***************************/
-			preConditions := componentExpressionConvertToModel(components[i].PreCondition)
-			completeConditions := componentExpressionConvertToModel(components[i].CompleteCondition)
-			discardConditions := componentExpressionConvertToModel(components[i].DiscardCondition)
-			dataValueSetterExpressionList := componentExpressionConvertToModel(components[i].DataValueSetterExpressionList)
+			preConditions := componentExpressionConvertToProto(components[i].PreCondition)
+			completeConditions := componentExpressionConvertToProto(components[i].CompleteCondition)
+			discardConditions := componentExpressionConvertToProto(components[i].DiscardCondition)
+			dataValueSetterExpressionList := componentExpressionConvertToProto(components[i].DataValueSetterExpressionList)
 			/************************ contractBody.ContractComponent.ComponentsExpression end ***************************/
 
 			/************************ contractBody.ContractComponent.ComponentData start ***************************/
-			componentDataList := componentDatasConvertToModel(components[i].DataList)
+			componentDataList := componentDataConvertToProto(components[i].DataList)
 			/************************ contractBody.ContractComponent.ComponentData end ***************************/
 
 			/************************ contractBody.ContractComponent start ***************************/
-			candidateList := contractComponentSubConvertToModel(components[i].CandidateList)
-			decisionResult := contractComponentSubConvertToModel(components[i].DecisionResult)
+			candidateList := contractComponentSubConvertToProto(components[i].CandidateList)
+			decisionResult := contractComponentSubConvertToProto(components[i].DecisionResult)
 			/************************ contractBody.ContractComponent end ***************************/
 
 			/************************ contractBody.ContractComponent.SelectBranchExpression start ***************************/
-			proto_selectBranchExpressions := components[i].SelectBranches
-			var selectBranchExpressions []*model.SelectBranchExpression
-			if proto_selectBranchExpressions == nil {
-				selectBranchExpressions = nil
-			} else {
-				for j := 0; j < len(proto_selectBranchExpressions); j++ {
-					selectBranchExpressions[j] = &model.SelectBranchExpression{
-						BranchExpressionStr:   proto_selectBranchExpressions[j].BranchExpressionStr,
-						BranchExpressionValue: proto_selectBranchExpressions[j].BranchExpressionValue,
-					}
-				}
-			}
+			selectBranchExpressions := componentSelectBranchesConvertToProto(components[i].SelectBranches)
 			/************************ contractBody.ContractComponent.SelectBranchExpression end ***************************/
 
-			contractComponents[i] = &model.ContractComponent{
+			contractComponents[i] = &protos.ContractComponent{
 				Cname:                         components[i].Cname,
 				Ctype:                         components[i].Ctype,
 				Caption:                       components[i].Caption,
@@ -165,41 +171,30 @@ func contractComponentConvertToModel(components []*protos.ContractComponent) []*
 	return contractComponents
 }
 
-func contractComponentSubConvertToModel(componentSubs []*protos.ContractComponentSub) []*model.ContractComponentSub {
+func contractComponentSubConvertToProto(componentSubs []*ContractComponentSub) []*protos.ContractComponentSub {
 	/************************ contractBody.ContractComponents start ***************************/
-	var contractComponents []*model.ContractComponentSub
+	contractComponents := make([]*protos.ContractComponentSub, len(componentSubs))
 	if componentSubs == nil {
 		contractComponents = nil
 	} else {
 		for i := 0; i < len(componentSubs); i++ {
 
 			/************************ contractBody.ContractComponentSub.ComponentsExpression start ***************************/
-			preConditions := componentExpressionConvertToModel(componentSubs[i].PreCondition)
-			completeConditions := componentExpressionConvertToModel(componentSubs[i].CompleteCondition)
-			discardConditions := componentExpressionConvertToModel(componentSubs[i].DiscardCondition)
-			dataValueSetterExpressionList := componentExpressionConvertToModel(componentSubs[i].DataValueSetterExpressionList)
+			preConditions := componentExpressionConvertToProto(componentSubs[i].PreCondition)
+			completeConditions := componentExpressionConvertToProto(componentSubs[i].CompleteCondition)
+			discardConditions := componentExpressionConvertToProto(componentSubs[i].DiscardCondition)
+			dataValueSetterExpressionList := componentExpressionConvertToProto(componentSubs[i].DataValueSetterExpressionList)
 			/************************ contractBody.ContractComponentSub.ComponentsExpression end ***************************/
 
 			/************************ contractBody.ContractComponentSub.ComponentData start ***************************/
-			componentDataList := componentDatasConvertToModel(componentSubs[i].DataList)
+			componentDataList := componentDataConvertToProto(componentSubs[i].DataList)
 			/************************ contractBody.ContractComponentSub.ComponentData end ***************************/
 
 			/************************ contractBody.ContractComponentSub.SelectBranchExpression start ***************************/
-			proto_selectBranchExpressions := componentSubs[i].SelectBranches
-			var selectBranchExpressions []*model.SelectBranchExpression
-			if proto_selectBranchExpressions == nil {
-				selectBranchExpressions = nil
-			} else {
-				for j := 0; j < len(proto_selectBranchExpressions); j++ {
-					selectBranchExpressions[j] = &model.SelectBranchExpression{
-						BranchExpressionStr:   proto_selectBranchExpressions[j].BranchExpressionStr,
-						BranchExpressionValue: proto_selectBranchExpressions[j].BranchExpressionValue,
-					}
-				}
-			}
+			selectBranchExpressions := componentSelectBranchesConvertToProto(componentSubs[i].SelectBranches)
 			/************************ contractBody.ContractComponentSub.SelectBranchExpression end ***************************/
 
-			contractComponents[i] = &model.ContractComponentSub{
+			contractComponents[i] = &protos.ContractComponentSub{
 				Cname:                         componentSubs[i].Cname,
 				Ctype:                         componentSubs[i].Ctype,
 				Caption:                       componentSubs[i].Caption,
@@ -226,29 +221,44 @@ func contractComponentSubConvertToModel(componentSubs []*protos.ContractComponen
 	return contractComponents
 }
 
-// convert the proto componentExpression to model.ComponentsExpression
-func componentExpressionConvertToModel(expression []*protos.ComponentsExpression) []*model.ComponentsExpression {
-	var componentExpressions []*model.ComponentsExpression
+func componentSelectBranchesConvertToProto(selectBranches []*SelectBranchExpression) []*protos.SelectBranchExpression {
+	selectBranchExpressions := make([]*protos.SelectBranchExpression, len(selectBranches))
+	if selectBranches == nil {
+		selectBranchExpressions = nil
+	} else {
+		for j := 0; j < len(selectBranches); j++ {
+			selectBranchExpressions[j] = &protos.SelectBranchExpression{
+				BranchExpressionStr:   selectBranches[j].BranchExpressionStr,
+				BranchExpressionValue: selectBranches[j].BranchExpressionValue,
+			}
+		}
+	}
+	return selectBranchExpressions
+}
+
+// convert the model.ComponentsExpression to proto componentExpression
+func componentExpressionConvertToProto(expression []*ComponentsExpression) []*protos.ComponentsExpression {
+	componentExpressions := make([]*protos.ComponentsExpression, len(expression))
 	if expression == nil {
 		componentExpressions = nil
 	} else {
 		for j := 0; j < len(expression); j++ {
 			/************************ contractBody ExpressionResult start ***************************/
-			preExpressionResult := expression[j].ExpressionResult
-			var expressionResult *model.ExpressionResult
-			if preExpressionResult == nil {
+			model_preExpressionResult := expression[j].ExpressionResult
+			var expressionResult *protos.ExpressionResult
+			if model_preExpressionResult == nil {
 				expressionResult = nil
 			} else {
-				expressionResult = &model.ExpressionResult{
-					Message: preExpressionResult.Message,
-					Code:    preExpressionResult.Code,
-					Data:    preExpressionResult.Data,
-					OutPut:  preExpressionResult.OutPut,
+				expressionResult = &protos.ExpressionResult{
+					Message: model_preExpressionResult.Message,
+					Code:    model_preExpressionResult.Code,
+					Data:    model_preExpressionResult.Data,
+					OutPut:  model_preExpressionResult.OutPut,
 				}
 			}
 			/************************ contractBody ExpressionResult end ***************************/
 
-			componentExpressions[j] = &model.ComponentsExpression{
+			componentExpressions[j] = &protos.ComponentsExpression{
 				Cname:            expression[j].Cname,
 				Ctype:            expression[j].Ctype,
 				Caption:          expression[j].Caption,
@@ -263,12 +273,12 @@ func componentExpressionConvertToModel(expression []*protos.ComponentsExpression
 	return componentExpressions
 }
 
-func componentDataSubsConvertToModel(data *protos.ComponentDataSub) *model.ComponentDataSub {
-	var componentDataSubs *model.ComponentDataSub
+func componentDataSubsConvertToProto(data *ComponentDataSub) *protos.ComponentDataSub {
+	var componentDataSubs *protos.ComponentDataSub
 	if data == nil {
 		componentDataSubs = nil
 	} else {
-		componentDataSubs = &model.ComponentDataSub{
+		componentDataSubs = &protos.ComponentDataSub{
 			Cname:              data.Cname,
 			Ctype:              data.Ctype,
 			Caption:            data.Caption,
@@ -296,15 +306,14 @@ func componentDataSubsConvertToModel(data *protos.ComponentDataSub) *model.Compo
 	return componentDataSubs
 }
 
-func componentDatasConvertToModel(datas []*protos.ComponentData) []*model.ComponentData {
-	var componentDatas []*model.ComponentData
+func componentDataConvertToProto(datas []*ComponentData) []*protos.ComponentData {
+	componentData := make([]*protos.ComponentData, len(datas))
 	if datas == nil {
-		componentDatas = nil
+		componentData = nil
 	} else {
 		for i := 0; i < len(datas); i++ {
-
-			parent := componentDataSubsConvertToModel(datas[i].Parent)
-			componentDatas[i] = &model.ComponentData{
+			parent := componentDataSubsConvertToProto(datas[i].Parent)
+			componentData[i] = &protos.ComponentData{
 				Cname:              datas[i].Cname,
 				Ctype:              datas[i].Ctype,
 				Caption:            datas[i].Caption,
@@ -333,20 +342,5 @@ func componentDatasConvertToModel(datas []*protos.ComponentData) []*model.Compon
 			}
 		}
 	}
-	return componentDatas
-}
-
-func arrayConvert(elements []interface{}) []interface{} {
-	var result []interface{}
-	switch v := elements.(type) {
-	case []string:
-		result = append(result, v)
-	case []int32:
-		result = append(result, v)
-	case int64:
-		result = append(result, v)
-	default:
-		result = elements
-	}
-	return result
+	return componentData
 }

@@ -10,7 +10,6 @@ import (
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/db/rethinkdb"
-	"unicontract/src/core/protos/api"
 )
 
 func init() {
@@ -58,9 +57,9 @@ func GenerateOutputTest() string {
 	//transaction.Timestamp = ""
 
 	//--------------------contract-------------------------
-	contractAsset := []*protos.ContractAsset{}
-	contractComponent := []*protos.ContractComponent{}
-	contractHead := &protos.ContractHead{config.Config.Keypair.PublicKey, 1,
+	contractAsset := []*ContractAsset{}
+	contractComponent := []*ContractComponent{}
+	contractHead := &ContractHead{config.Config.Keypair.PublicKey, 1,
 		common.GenTimestamp(), common.GenTimestamp(), 0}
 
 	contractOwners := []string{
@@ -68,7 +67,7 @@ func GenerateOutputTest() string {
 		"4tBAt7QjZE8Eub58UFNVg6DSAcH3uY4rftZJZb5ngPMy",
 		"9cEcV6CywjZSed8AC2zUFUYC94KXbn4Fe7DnqBQgYpwQ",
 	}
-	contractBody := &protos.ContractBody{
+	contractBody := &ContractBody{
 		ContractId:         "feca0672-4ad7-4d9a-ad57-83d48db2269b",
 		Cname:              "test contract output",
 		Ctype:              "CREATE",
@@ -88,7 +87,7 @@ func GenerateOutputTest() string {
 	transaction.ContractModel.ContractHead = nil
 	transaction.ContractModel.ContractBody = contractBody
 
-	contractSignatures := []*protos.ContractSignature{
+	contractSignatures := []*ContractSignature{
 		{
 			OwnerPubkey:   "BtS4rHnMvhJELuP5PKKrdjN7Mp1rqerx6iuEz3diW443",
 			Signature:     transaction.ContractModel.Sign("hg6uXBjkcpn6kmeBthETonH66c26GyAcasGdBMaYTbC"),

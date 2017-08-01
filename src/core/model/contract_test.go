@@ -7,32 +7,8 @@ import (
 	"io/ioutil"
 	"testing"
 	"unicontract/src/common"
-	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/protos/api"
 )
-
-// API receive and transfer it to contractModel
-func fromContractToContractModel(contract protos.Contract) ContractModel {
-	var contractModel ContractModel
-	contractModel.Contract = contract
-	return contractModel
-}
-
-// go rethink get contractModel string and transfer it to contract
-func fromContractModelStrToContract(contractModelStr string) (protos.Contract, error) {
-	// 1. to contractModel
-	var contractModel ContractModel
-	err := json.Unmarshal([]byte(contractModelStr), &contractModel)
-	// 2. to contract
-	contract := contractModel.Contract
-	if err != nil {
-		uniledgerlog.Error("error fromContractModelStrToContract", err)
-		return contract, err
-	}
-
-	return contract, nil
-}
 
 func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) (string, error) {
 	contractOwnersLen := 1
@@ -71,7 +47,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 
 	//模拟用户发送的数据, mainpubkey 传入API 后,根据配置生成,此处请勿设置
 	mainPubkey := config.Config.Keypair.PublicKey
-	contractHead := &protos.ContractHead{mainPubkey, 1, common.GenTimestamp(), common.GenTimestamp(), 1}
+	contractHead := &ContractHead{mainPubkey, 1, common.GenTimestamp(), common.GenTimestamp(), 1}
 
 	// random choose the creator
 	randomCreator := ownersPubkeys[common.RandInt(0, contractOwnersLen)]
@@ -91,7 +67,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	// random contractOwners 随机生成的合约拥有者数组
 	contractOwners := ownersPubkeys
 
-	contractBody := &protos.ContractBody{
+	contractBody := &ContractBody{
 		ContractId:         "UUID-1234-5678-90",
 		Cname:              "test create contract ",
 		Ctype:              "CREATE",
@@ -112,11 +88,11 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractModel.ContractBody = contractBody
 
 	// 生成 签名
-	contractSignatures := make([]*protos.ContractSignature, contractSignaturesLen)
+	contractSignatures := make([]*ContractSignature, contractSignaturesLen)
 	for i := 0; i < contractSignaturesLen; i++ {
 		ownerPubkey := ownersPubkeys[i]
 		privateKey := owners[ownerPubkey]
-		contractSignatures[i] = &protos.ContractSignature{
+		contractSignatures[i] = &ContractSignature{
 			OwnerPubkey:   ownerPubkey,
 			Signature:     contractModel.Sign(privateKey),
 			SignTimestamp: common.GenTimestamp(),
@@ -161,8 +137,8 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 	if err != nil {
 		return nil, err
 	}
-	protoContract, _ := fromContractModelStrToContract(serializeContractModel)
-	requestBody, err := proto.Marshal(&protoContract)
+	protoContract, _ := FromContractModelStrToContractProto(serializeContractModel)
+	requestBody, err := proto.Marshal(protoContract)
 	if err != nil {
 		fmt.Println(requestBody, err)
 		return nil, err
@@ -193,8 +169,8 @@ func Test_Sign(t *testing.T) {
 func Test_IsSignatureValid(t *testing.T) {
 	//create new obj
 	contractModel := &ContractModel{}
-	contractHead := &protos.ContractHead{}
-	contractBody := &protos.ContractBody{}
+	contractHead := &ContractHead{}
+	contractBody := &ContractBody{}
 
 	private_key := "Cnodz1gyhaNoFcPCr72G9brFrGFfNJQUPFchGXyL11Pt"
 	//private_key := "GEXZrZShFsHKZB94mpRmaDBBtjWCDz6TgK17R9DXUwex"
@@ -206,7 +182,7 @@ func Test_IsSignatureValid(t *testing.T) {
 		"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 		"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 	}
-	contractSignatures := []*protos.ContractSignature{
+	contractSignatures := []*ContractSignature{
 		{
 			OwnerPubkey:   "qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 			Signature:     "65D27HW4uXYvkekGssAQB93D92onMyU1NVnCJnE1PgRKz2uFSPZ6aQvid4qZvkxys7G4r2Mf2KFn5BSQyEBhWs34",
@@ -243,8 +219,8 @@ func Test_IsSignatureValid(t *testing.T) {
 func Test_Validate(t *testing.T) {
 	//create new obj
 	contractModel := ContractModel{}
-	contractHead := &protos.ContractHead{}
-	contractBody := &protos.ContractBody{}
+	contractHead := &ContractHead{}
+	contractBody := &ContractBody{}
 
 	private_key := "GEXZrZShFsHKZB94mpRmaDBBtjWCDz6TgK17R9DXUwex"
 	//private_key := "Cnodz1gyhaNoFcPCr72G9brFrGFfNJQUPFchGXyL11Pt"
@@ -258,7 +234,7 @@ func Test_Validate(t *testing.T) {
 		"J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 		//"qC5zpgJBqUdqi3Gd6ENfGzc5ZM9wrmqmiPX37M9gjq3",
 	}
-	contractSignatures := []*protos.ContractSignature{
+	contractSignatures := []*ContractSignature{
 		{
 			OwnerPubkey:   "J2rSKoCuoZE1MKkXGAvETp757ZuARveRvJYAzJxqEjoo",
 			Signature:     "4JmRZ2A1Dqf4sGQVS7Jo6nNdR17XxdYddSC3fE4bv6ov48J9CCSMSKmx9AUtkaqJLpsLEGepzjpTbZrXCpbohVeU",
