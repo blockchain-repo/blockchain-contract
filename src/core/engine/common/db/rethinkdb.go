@@ -28,7 +28,7 @@ type Rethinkdb struct {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) Connect() (interface{}, error) /* *r.Session */ {
+func (rethink Rethinkdb) Connect() (*r.Session, error) {
 	/*
 		conf := config.ReadConfig(config.DevelopmentEnv)
 		session, err := r.Connect(r.ConnectOpts{
@@ -50,16 +50,7 @@ func (rethink Rethinkdb) Connect() (interface{}, error) /* *r.Session */ {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) ConnectDB(args ...interface{}) (interface{}, error) /* *r.Session */ {
-	if len(args) != 1 {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.PARAM_ERROR, "param num is error"))
-	}
-
-	dbname, ok := args[0].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 0 param type is error"))
-	}
-
+func (rethink Rethinkdb) ConnectDB(dbname string) (*r.Session, error) {
 	/*
 		   conf := config.ReadConfig(config.DevelopmentEnv)
 		   session, err := r.Connect(r.ConnectOpts{
@@ -99,11 +90,11 @@ func (rethink Rethinkdb) CreateDatabase(name string) error {
 	if err != nil {
 		return err
 	}
-	resp, err := r.DBCreate(name).RunWrite(session.(*r.Session))
+	resp, err := r.DBCreate(name).RunWrite(session)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%d DB created\n", resp.DBsCreated)
+	uniledgerlog.Info("%d DB created\n", resp.DBsCreated)
 	return nil
 }
 
@@ -113,11 +104,11 @@ func (rethink Rethinkdb) CreateTable(db string, name string) error {
 	if err != nil {
 		return err
 	}
-	resp, err := r.TableCreate(name).RunWrite(session.(*r.Session))
+	resp, err := r.TableCreate(name).RunWrite(session)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%d table created\n", resp.TablesCreated)
+	uniledgerlog.Info("%d table created\n", resp.TablesCreated)
 	return nil
 }
 
@@ -128,143 +119,62 @@ func (rethink Rethinkdb) DropDatabase() error {
 	if err != nil {
 		return err
 	}
-	resp, err := r.DBDrop(dbname).RunWrite(session.(*r.Session))
+	resp, err := r.DBDrop(dbname).RunWrite(session)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%d DB dropped, %d tables dropped\n", resp.DBsDropped, resp.TablesDropped)
+	uniledgerlog.Info("%d DB dropped, %d tables dropped\n", resp.DBsDropped, resp.TablesDropped)
 	return nil
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) Insert(args ...interface{}) (interface{}, error) /* r.WriteResponse */ {
-	if len(args) != 3 {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.PARAM_ERROR, "param num is error"))
-	}
-
-	dbname, ok := args[0].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 0 param type is error"))
-	}
-
-	tablename, ok := args[1].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 1 param type is error"))
-	}
-
-	json, ok := args[2].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 2 param type is error"))
-	}
-
+func (rethink Rethinkdb) _Insert(dbname, tablename, json string) (r.WriteResponse, error) {
 	session, err := rethink.ConnectDB(dbname)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return r.WriteResponse{}, err
 	}
-	res, err := r.Table(tablename).Insert(r.JSON(json)).RunWrite(session.(*r.Session))
+	res, err := r.Table(tablename).Insert(r.JSON(json)).RunWrite(session)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return r.WriteResponse{}, err
 	}
 	return res, nil
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) Delete(args ...interface{}) (interface{}, error) /* r.WriteResponse */ {
-	if len(args) != 3 {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.PARAM_ERROR, "param num is error"))
-	}
-
-	dbname, ok := args[0].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 0 param type is error"))
-	}
-
-	tablename, ok := args[1].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 1 param type is error"))
-	}
-
-	id, ok := args[2].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 2 param type is error"))
-	}
-
+func (rethink Rethinkdb) _Delete(dbname, tablename, id string) (r.WriteResponse, error) {
 	session, err := rethink.ConnectDB(dbname)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return r.WriteResponse{}, err
 	}
-	res, err := r.Table(tablename).Get(id).Delete().RunWrite(session.(*r.Session))
+	res, err := r.Table(tablename).Get(id).Delete().RunWrite(session)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return r.WriteResponse{}, err
 	}
 	return res, nil
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) Update(args ...interface{}) (interface{}, error) /* r.WriteResponse */ {
-	if len(args) != 4 {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.PARAM_ERROR, "param num is error"))
-	}
-
-	dbname, ok := args[0].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 0 param type is error"))
-	}
-
-	tablename, ok := args[1].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 1 param type is error"))
-	}
-
-	id, ok := args[2].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 2 param type is error"))
-	}
-
-	json, ok := args[3].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 3 param type is error"))
-	}
-
+func (rethink Rethinkdb) _Update(dbname, tablename, id, json string) (r.WriteResponse, error) {
 	session, err := rethink.ConnectDB(dbname)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return r.WriteResponse{}, err
 	}
-	res, err := r.Table(tablename).Get(id).Update(r.JSON(json)).RunWrite(session.(*r.Session))
+	res, err := r.Table(tablename).Get(id).Update(r.JSON(json)).RunWrite(session)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return r.WriteResponse{}, err
 	}
 	return res, nil
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) Query(args ...interface{}) (interface{}, error) /* *r.Cursor */ {
-	if len(args) != 3 {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.PARAM_ERROR, "param num is error"))
-	}
-
-	dbname, ok := args[0].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 0 param type is error"))
-	}
-
-	tablename, ok := args[1].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 1 param type is error"))
-	}
-
-	id, ok := args[2].(string)
-	if !ok {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "index 2 param type is error"))
-	}
-
+func (rethink Rethinkdb) _Query(dbname, tablename, id string) (*r.Cursor, error) {
 	session, err := rethink.ConnectDB(dbname)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return nil, err
 	}
-	res, err := r.Table(tablename).Get(id).Run(session.(*r.Session))
+	res, err := r.Table(tablename).Get(id).Run(session)
 	if err != nil {
-		return nil, fmt.Errorf(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return nil, err
 	}
 	return res, nil
 }
@@ -272,11 +182,11 @@ func (rethink Rethinkdb) Query(args ...interface{}) (interface{}, error) /* *r.C
 //---------------------------------------------------------------------------
 // 插入一个nodepublickey的task方法
 func (rethink Rethinkdb) InsertTaskSchedule(strTaskSchedule string) error {
-	res, err := rethink.Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
+	res, err := rethink._Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
 	if err != nil {
 		return err
 	}
-	if res.(r.WriteResponse).Inserted >= 1 {
+	if res.Inserted >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("insert failed")
@@ -290,7 +200,7 @@ func (rethink Rethinkdb) InsertTaskSchedules(slTaskSchedule []interface{}) (int,
 	if err != nil {
 		return 0, err
 	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).Insert(slTaskSchedule).RunWrite(session.(*r.Session))
+	res, err := r.Table(TABLE_TASK_SCHEDULE).Insert(slTaskSchedule).RunWrite(session)
 	return res.Inserted, err
 }
 
@@ -305,7 +215,7 @@ func (rethink Rethinkdb) GetID(strNodePubkey, strContractID string, strContractH
 		Filter(r.Row.Field("ContractHashId").Eq(strContractHashId)).
 		Filter(r.Row.Field("ContractId").Eq(strContractID)).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Run(session.(*r.Session))
+		Run(session)
 	if err != nil {
 		return "", err
 	}
@@ -337,7 +247,7 @@ func (rethink Rethinkdb) GetValidTime(strID string) (string, string, error) {
 	}
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("id").Eq(strID)).
-		Run(session.(*r.Session))
+		Run(session)
 	if err != nil {
 		return "", "", err
 	}
@@ -382,7 +292,7 @@ func (rethink Rethinkdb) SetTaskScheduleFlagBatch(slID []interface{}, alreadySen
 		return err
 	}
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		GetAll(slID...).Update(r.JSON(strJSON)).RunWrite(session.(*r.Session))
+		GetAll(slID...).Update(r.JSON(strJSON)).RunWrite(session)
 	if err != nil {
 		return err
 	}
@@ -400,17 +310,17 @@ func (rethink Rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) err
 	if alreadySend {
 		sendflag = 1
 	} else {
-		res, err := rethink.Query(DBNAME, TABLE_TASK_SCHEDULE, strID)
+		res, err := rethink._Query(DBNAME, TABLE_TASK_SCHEDULE, strID)
 		if err != nil {
 			return err
 		}
 
-		if res.(*r.Cursor).IsNil() {
+		if res.IsNil() {
 			return fmt.Errorf("null")
 		}
 
 		var task map[string]interface{}
-		err = res.(*r.Cursor).One(&task)
+		err = res.One(&task)
 		if err != nil {
 			return err
 		}
@@ -429,11 +339,11 @@ func (rethink Rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) err
 	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
 		sendflag, common.GenTimestamp())
 
-	res, err := rethink.Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if err != nil {
 		return err
 	}
-	if res.(r.WriteResponse).Replaced|res.(r.WriteResponse).Unchanged >= 1 {
+	if res.Replaced|res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -446,11 +356,11 @@ func (rethink Rethinkdb) SetTaskScheduleOverFlag(strID string) error {
 	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
 		1, common.GenTimestamp())
 
-	res, err := rethink.Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if err != nil {
 		return err
 	}
-	if res.(r.WriteResponse).Replaced|res.(r.WriteResponse).Unchanged >= 1 {
+	if res.Replaced|res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -463,11 +373,11 @@ func (rethink Rethinkdb) SetTaskState(strID, strTaskId, strState string, nTaskEx
 	strJSON := fmt.Sprintf("{\"TaskId\":\"%s\",\"TaskState\":\"%s\",\"TaskExecuteIndex\":%d}",
 		strTaskId, strState, nTaskExecuteIndex)
 
-	res, err := rethink.Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if err != nil {
 		return err
 	}
-	if res.(r.WriteResponse).Replaced|res.(r.WriteResponse).Unchanged >= 1 {
+	if res.Replaced|res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -493,7 +403,7 @@ func (rethink Rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Get(strID).
 		Update(map[string]interface{}{strFSW: r.Row.Field(strFSW).Add(1)}).
-		RunWrite(session.(*r.Session))
+		RunWrite(session)
 
 	if err != nil {
 		return err
@@ -507,8 +417,8 @@ func (rethink Rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 
 	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
 
-	res1, err := rethink.Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res1.(r.WriteResponse).Replaced|res1.(r.WriteResponse).Unchanged >= 1 {
+	res1, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	if res1.Replaced|res1.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -529,7 +439,7 @@ func (rethink Rethinkdb) GetTaskSchedulesNoSend(strNodePubkey string, nThreshold
 		Filter(r.Row.Field("EndTime").Ge(now)).
 		Filter(r.Row.Field("FailedCount").Lt(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
-		Run(session.(*r.Session))
+		Run(session)
 	if err != nil {
 		return "", err
 	}
@@ -564,7 +474,7 @@ func (rethink Rethinkdb) GetTaskSchedulesNoSuccess(strNodePubkey string, nThresh
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
 		Filter(r.Row.Field(strCount).Ge(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
-		Run(session.(*r.Session))
+		Run(session)
 	if err != nil {
 		return "", err
 	}
@@ -595,7 +505,7 @@ func (rethink Rethinkdb) GetTaskSchedulesSuccess(strNodePubkey string) (string, 
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("SuccessCount").Ge(1)).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Run(session.(*r.Session))
+		Run(session)
 	if err != nil {
 		return "", err
 	}
@@ -620,7 +530,7 @@ func (rethink Rethinkdb) DeleteTaskSchedules(slID []interface{}) (int, error) {
 		return 0, err
 	}
 	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		GetAll(slID...).Delete().RunWrite(session.(*r.Session))
+		GetAll(slID...).Delete().RunWrite(session)
 	return res.Deleted, err
 }
 

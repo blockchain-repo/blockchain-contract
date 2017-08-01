@@ -1,18 +1,10 @@
 package db
 
 type Datebase interface {
-	Connect() (interface{}, error)
-	ConnectDB(args ...interface{}) (interface{}, error)
-
 	InitDatabase() error
 	CreateDatabase(name string) error
 	CreateTable(db string, name string) error
 	DropDatabase() error
-
-	Insert(args ...interface{}) (interface{}, error)
-	Delete(args ...interface{}) (interface{}, error)
-	Update(args ...interface{}) (interface{}, error)
-	Query(args ...interface{}) (interface{}, error)
 
 	InsertTaskSchedule(strTaskSchedule string) error
 	InsertTaskSchedules(slTaskSchedule []interface{}) (int, error)
