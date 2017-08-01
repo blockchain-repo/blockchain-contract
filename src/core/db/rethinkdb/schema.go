@@ -17,7 +17,6 @@ const (
 	TABLE_CONSENSUS_FAILURES   = "ConsensusFailures"
 	TABLE_CONTRACT_OUTPUTS     = "ContractOutputs"
 	TABLE_SEND_FAILING_RECORDS = "SendFailingRecords"
-	TABLE_TASK_SCHEDULE        = "TaskSchedule"
 
 	//-------------------------------------------------------
 	// 智能微网demo所需要数据表
@@ -38,7 +37,6 @@ var Tables = []string{TABLE_CONTRACTS,
 	TABLE_CONSENSUS_FAILURES,
 	TABLE_CONTRACT_OUTPUTS,
 	TABLE_SEND_FAILING_RECORDS,
-	TABLE_TASK_SCHEDULE,
 	TABLE_ENERGYTRADINGDEMO_ROLE,
 	TABLE_ENERGYTRADINGDEMO_ENERGY,
 	TABLE_ENERGYTRADINGDEMO_TRANSACTION,

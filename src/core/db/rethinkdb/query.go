@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"unicontract/src/common/uniledgerlog"
 	r "gopkg.in/gorethink/gorethink.v3"
 	"strconv"
 	"time"
 	"unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func Get(db string, name string, id string) *r.Cursor {
@@ -896,323 +896,11 @@ func GetSendFailingRecordsCount() (int, error) {
 
 /*----------------------------- SendFailingRecords end---------------------------------------*/
 
-/*TaskSchedule start-------------------------------------------------------*/
-// 插入一个nodepublickey的task方法
-func InsertTaskSchedule(strTaskSchedule string) error {
-	res := Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
-	if res.Inserted >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("insert failed")
-	}
-}
-
-//---------------------------------------------------------------------------
-// 插入task方法
-func InsertTaskSchedules(slTaskSchedule []interface{}) (int, error) {
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).Insert(slTaskSchedule).RunWrite(session)
-	return res.Inserted, err
-}
-
-//---------------------------------------------------------------------------
-// 根据nodePubkey和contractID获得表内ID
-func GetID(strNodePubkey, strContractID string, strContractHashId string) (string, error) {
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("ContractHashId").Eq(strContractHashId)).
-		Filter(r.Row.Field("ContractId").Eq(strContractID)).
-		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Run(session)
-	if err != nil {
-		return "", err
-	}
-
-	if res.IsNil() {
-		return "", nil
-	}
-
-	var tasks map[string]interface{}
-	err = res.One(&tasks)
-	if err != nil {
-		return "", err
-	}
-
-	id, ok := tasks["id"].(string)
-	if !ok {
-		return "", fmt.Errorf("assert error")
-	}
-
-	return id, nil
-}
-
-//---------------------------------------------------------------------------
-// 根据ID获取starttime和endtime
-func GetValidTime(strID string) (string, string, error) {
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("id").Eq(strID)).
-		Run(session)
-	if err != nil {
-		return "", "", err
-	}
-
-	if res.IsNil() {
-		return "", "", nil
-	}
-
-	var tasks map[string]interface{}
-	err = res.One(&tasks)
-	if err != nil {
-		return "", "", err
-	}
-
-	startTime, ok := tasks["StartTime"].(string)
-	if !ok {
-		return "", "", fmt.Errorf("assert error")
-	}
-
-	endTime, ok := tasks["EndTime"].(string)
-	if !ok {
-		return "", "", fmt.Errorf("assert error")
-	}
-
-	return startTime, endTime, nil
-}
-
-//---------------------------------------------------------------------------
-// 批量设置SendFlag字段，发送为1,未发送为0
-func SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error {
-	var strJSON string
-	if alreadySend {
-		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-			1, 1, common.GenTimestamp())
-	} else {
-		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-			0, common.GenTimestamp())
-	}
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		GetAll(slID...).Update(r.JSON(strJSON)).RunWrite(session)
-	if err != nil {
-		return err
-	}
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
-}
-
-//---------------------------------------------------------------------------
-// 设置SendFlag字段，发送为1,未发送为0
-func SetTaskScheduleFlag(strID string, alreadySend bool) error {
-	var sendflag int
-	if alreadySend {
-		sendflag = 1
-	} else {
-		res := Get(DBNAME, TABLE_TASK_SCHEDULE, strID)
-		if res.IsNil() {
-			return fmt.Errorf("null")
-		}
-
-		var task map[string]interface{}
-		err := res.One(&task)
-		if err != nil {
-			return err
-		}
-
-		overFlag, ok := task["OverFlag"].(float64)
-		if !ok {
-			return fmt.Errorf("assert error")
-		}
-		if overFlag != 1 {
-			sendflag = 0
-		} else {
-			return nil
-		}
-	}
-
-	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-		sendflag, common.GenTimestamp())
-
-	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
-}
-
-//---------------------------------------------------------------------------
-// 设置OverFlag字段为1
-func SetTaskScheduleOverFlag(strID string) error {
-	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-		1, common.GenTimestamp())
-
-	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
-}
-
-//---------------------------------------------------------------------------
-// 设置TaskId,TaskState和TaskExecuteIndex字段的值
-func SetTaskState(strID, strTaskId, strState string, nTaskExecuteIndex int) error {
-	strJSON := fmt.Sprintf("{\"TaskId\":\"%s\",\"TaskState\":\"%s\",\"TaskExecuteIndex\":%d}",
-		strTaskId, strState, nTaskExecuteIndex)
-
-	res := Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
-}
-
-//---------------------------------------------------------------------------
-// 设置FailedCount\SuccessCount\WaitCount字段加一
-func SetTaskScheduleCount(strID string, flag int) error {
-	var strFSW string
-	if flag == 0 {
-		strFSW = "SuccessCount"
-	} else if flag == 1 {
-		strFSW = "FailedCount"
-	} else {
-		strFSW = "WaitCount"
-	}
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Get(strID).
-		Update(map[string]interface{}{strFSW: r.Row.Field(strFSW).Add(1)}).
-		RunWrite(session)
-
-	if err != nil {
-		return err
-	}
-
-	if res.Replaced|res.Unchanged >= 1 {
-
-	} else {
-		return fmt.Errorf("update failed")
-	}
-
-	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
-
-	res = Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res.Replaced|res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
-}
-
-//---------------------------------------------------------------------------
-// 获取所有未发送的任务，用于放在待执行队列中
-func GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error) {
-	now := common.GenTimestamp()
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Filter(r.Row.Field("StartTime").Le(now)).
-		Filter(r.Row.Field("EndTime").Ge(now)).
-		Filter(r.Row.Field("FailedCount").Lt(nThreshold)).
-		Filter(r.Row.Field("SendFlag").Eq(0)).
-		Run(session)
-	if err != nil {
-		return "", err
-	}
-
-	if res.IsNil() {
-		return "", nil
-	}
-
-	var tasks []map[string]interface{}
-	err = res.All(&tasks)
-	if err != nil {
-		return "", err
-	}
-	return common.Serialize(tasks), nil
-}
-
-//---------------------------------------------------------------------------
-// 获取所有失败次数(等待次数)超过阈值的task
-func GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error) {
-	var strCount string
-	if flag == 0 {
-		strCount = "FailedCount"
-	} else if flag == 1 {
-		strCount = "WaitCount"
-	}
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Filter(r.Row.Field(strCount).Ge(nThreshold)).
-		Filter(r.Row.Field("SendFlag").Eq(0)).
-		Run(session)
-	if err != nil {
-		return "", err
-	}
-
-	if res.IsNil() {
-		return "", nil
-	}
-
-	var tasks []map[string]interface{}
-	err = res.All(&tasks)
-	if err != nil {
-		return "", err
-	}
-	return common.Serialize(tasks), nil
-}
-
-//---------------------------------------------------------------------------
-// 获取已经执行成功后的任务，用于清理数据
-func GetTaskSchedulesSuccess(strNodePubkey string) (string, error) {
-	if len(strNodePubkey) == 0 {
-		return "", fmt.Errorf("pubkey is null")
-	}
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("SuccessCount").Ge(1)).
-		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Run(session)
-	if err != nil {
-		return "", err
-	}
-
-	if res.IsNil() {
-		return "", nil
-	}
-
-	var tasks []map[string]interface{}
-	err = res.All(&tasks)
-	if err != nil {
-		return "", err
-	}
-	return common.Serialize(tasks), nil
-}
-
-//---------------------------------------------------------------------------
-// 删除一系列id的任务
-func DeleteTaskSchedules(slID []interface{}) (int, error) {
-	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		GetAll(slID...).Delete().RunWrite(session)
-	return res.Deleted, err
-}
-
 //---------------------------------------------------------------------------
 func GetTaskScheduleCount(stat string) (string, error) {
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+	res, err := r.Table("TaskSchedule").
 		Filter(r.Row.Field(stat).Ge(50)).
 		Count().Run(session)
 	if err != nil {
@@ -1233,7 +921,7 @@ func GetTaskScheduleCount(stat string) (string, error) {
 func GetTaskSendFlagCount(stat int) (string, error) {
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+	res, err := r.Table("TaskSchedule").
 		Filter(r.Row.Field("SendFlag").Eq(stat)).
 		Count().Run(session)
 	if err != nil {
@@ -1251,7 +939,7 @@ func GetTaskSendFlagCount(stat int) (string, error) {
 	return blo, nil
 }
 
-/*TaskSchedule end---------------------------------------------------------*/
+//---------------------------------------------------------------------------
 
 /*智能微网demo start---------------------------------------------------------*/
 func _Insert(strDBName, strTableName, strJson string) error {

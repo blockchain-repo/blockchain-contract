@@ -10,6 +10,7 @@ import (
 	"unicontract/src/common/monitor"
 	"unicontract/src/config"
 	engineCommon "unicontract/src/core/engine/common"
+	"unicontract/src/core/engine/common/db"
 	"unicontract/src/core/model"
 
 	"unicontract/src/common/uniledgerlog"
@@ -108,7 +109,7 @@ func txSend(arg interface{}) interface{} {
 	contractSign := coModel.Transaction.ContractModel.ContractBody.ContractSignatures
 	contractState := coModel.Transaction.ContractModel.ContractBody.ContractState
 	if ("Contract_Signature" == contractState) && (len(contractSign) == len(contractOwner)) {
-		var taskSchedule model.TaskSchedule
+		var taskSchedule db.TaskSchedule
 		taskSchedule.ContractHashId = coModel.Transaction.ContractModel.Id
 		taskSchedule.ContractId = coModel.Transaction.ContractModel.ContractBody.ContractId
 		taskSchedule.StartTime = coModel.Transaction.ContractModel.ContractBody.StartTime

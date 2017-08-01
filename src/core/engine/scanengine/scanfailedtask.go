@@ -21,7 +21,7 @@ import (
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	engineCommon "unicontract/src/core/engine/common"
-	"unicontract/src/core/model"
+	"unicontract/src/core/engine/common/db"
 )
 
 //---------------------------------------------------------------------------
@@ -52,7 +52,7 @@ func _ScanFailedTask(flag int) {
 		}
 
 		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get "+strLogFlag+" tasks"))
-		var slTasks []model.TaskSchedule
+		var slTasks []db.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
 		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get task id slice"))
@@ -72,7 +72,7 @@ func _ScanFailedTask(flag int) {
 }
 
 //---------------------------------------------------------------------------
-func _GetTaskID(slTasks []model.TaskSchedule) []interface{} {
+func _GetTaskID(slTasks []db.TaskSchedule) []interface{} {
 	var slID []interface{}
 	for index, _ := range slTasks {
 		slID = append(slID, slTasks[index].Id)

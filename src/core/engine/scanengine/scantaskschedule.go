@@ -22,7 +22,7 @@ import (
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	engineCommon "unicontract/src/core/engine/common"
-	"unicontract/src/core/model"
+	"unicontract/src/core/engine/common/db"
 )
 
 //---------------------------------------------------------------------------
@@ -44,7 +44,7 @@ func _ScanTaskSchedule() {
 		}
 
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get no send tasks"))
-		var slTasks []model.TaskSchedule
+		var slTasks []db.TaskSchedule
 		json.Unmarshal([]byte(retStr), &slTasks)
 
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))

@@ -19,9 +19,31 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/db/rethinkdb"
-	"unicontract/src/core/model"
+	"unicontract/src/core/engine"
+	"unicontract/src/core/engine/common/db"
 )
+
+var scanEngineConf map[interface{}]interface{}
+var DBInf db.Datebase
+
+//---------------------------------------------------------------------------
+func Init() {
+	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
+	dbname, _ := scanEngineConf["db"].(string)
+	if dbname == "rethinkdb" {
+		DBInf = db.Rethinkdb{}
+	}
+}
+
+//---------------------------------------------------------------------------
+func InitDatabase() {
+	DBInf.InitDatabase()
+}
+
+//---------------------------------------------------------------------------
+func DropDatabase() {
+	DBInf.DropDatabase()
+}
 
 //---------------------------------------------------------------------------
 // 查询没有发送的task
@@ -30,7 +52,7 @@ func GetMonitorNoSendData(strNodePubkey string, nThreshold int) (string, error) 
 		return "", fmt.Errorf("pubkey is null")
 	}
 
-	return rethinkdb.GetTaskSchedulesNoSend(strNodePubkey, nThreshold)
+	return DBInf.GetTaskSchedulesNoSend(strNodePubkey, nThreshold)
 }
 
 //---------------------------------------------------------------------------
@@ -40,7 +62,7 @@ func GetMonitorNoSuccessData(strNodePubkey string, nThreshold int, flag int) (st
 		return "", fmt.Errorf("pubkey is null")
 	}
 
-	return rethinkdb.GetTaskSchedulesNoSuccess(strNodePubkey, nThreshold, flag)
+	return DBInf.GetTaskSchedulesNoSuccess(strNodePubkey, nThreshold, flag)
 }
 
 //---------------------------------------------------------------------------
@@ -49,7 +71,7 @@ func UpdateMonitorSendBatch(slID []interface{}) error {
 	if len(slID) == 0 {
 		return fmt.Errorf("id slice is null")
 	}
-	return rethinkdb.SetTaskScheduleFlagBatch(slID, true)
+	return DBInf.SetTaskScheduleFlagBatch(slID, true)
 }
 
 //---------------------------------------------------------------------------
@@ -58,7 +80,7 @@ func UpdateMonitorSend(strID string) error {
 	if len(strID) == 0 {
 		return fmt.Errorf("id is null")
 	}
-	return rethinkdb.SetTaskScheduleFlag(strID, true)
+	return DBInf.SetTaskScheduleFlag(strID, true)
 }
 
 //---------------------------------------------------------------------------
@@ -86,7 +108,7 @@ func UpdateMonitorFail(strContractID string,
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+	strID, err := DBInf.GetID(strNodePubkey, strContractID,
 		strContractHashID)
 	if err != nil {
 		return err
@@ -96,16 +118,16 @@ func UpdateMonitorFail(strContractID string,
 		return fmt.Errorf("not find")
 	}
 
-	err = rethinkdb.SetTaskScheduleFlag(strID, false)
+	err = DBInf.SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		return err
 	}
 
-	err = rethinkdb.SetTaskScheduleCount(strID, 1)
+	err = DBInf.SetTaskScheduleCount(strID, 1)
 	if err != nil {
 		return err
 	}
-	return rethinkdb.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
+	return DBInf.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
 }
 
 //---------------------------------------------------------------------------
@@ -133,7 +155,7 @@ func UpdateMonitorWait(strContractID string,
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+	strID, err := DBInf.GetID(strNodePubkey, strContractID,
 		strContractHashID)
 	if err != nil {
 		return err
@@ -143,16 +165,16 @@ func UpdateMonitorWait(strContractID string,
 		return fmt.Errorf("not find")
 	}
 
-	err = rethinkdb.SetTaskScheduleFlag(strID, false)
+	err = DBInf.SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		return err
 	}
 
-	err = rethinkdb.SetTaskScheduleCount(strID, 2)
+	err = DBInf.SetTaskScheduleCount(strID, 2)
 	if err != nil {
 		return err
 	}
-	return rethinkdb.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
+	return DBInf.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
 }
 
 //---------------------------------------------------------------------------
@@ -198,7 +220,7 @@ func UpdateMonitorSucc(strContractID string,
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID, strContractHashIdOld)
+	strID, err := DBInf.GetID(strNodePubkey, strContractID, strContractHashIdOld)
 	if err != nil {
 		return err
 	}
@@ -207,27 +229,27 @@ func UpdateMonitorSucc(strContractID string,
 		return fmt.Errorf("old contract id not find")
 	}
 
-	err = rethinkdb.SetTaskScheduleFlag(strID, true)
+	err = DBInf.SetTaskScheduleFlag(strID, true)
 	if err != nil {
 		return err
 	}
 
-	err = rethinkdb.SetTaskScheduleCount(strID, 0)
+	err = DBInf.SetTaskScheduleCount(strID, 0)
 	if err != nil {
 		return err
 	}
 
-	err = rethinkdb.SetTaskState(strID, strTaskIdOld, strTaskStateOld, nTaskExecuteIndexOld)
+	err = DBInf.SetTaskState(strID, strTaskIdOld, strTaskStateOld, nTaskExecuteIndexOld)
 	if err != nil {
 		return err
 	}
 
-	err = rethinkdb.SetTaskScheduleOverFlag(strID)
+	err = DBInf.SetTaskScheduleOverFlag(strID)
 	if err != nil {
 		return err
 	}
 
-	startTime, endTime, err := rethinkdb.GetValidTime(strID)
+	startTime, endTime, err := DBInf.GetValidTime(strID)
 	if err != nil {
 		return err
 	}
@@ -236,7 +258,7 @@ func UpdateMonitorSucc(strContractID string,
 		return fmt.Errorf("old contract valid time not find")
 	}
 
-	var taskSchedule model.TaskSchedule
+	var taskSchedule db.TaskSchedule
 	taskSchedule.SendFlag = nFlag
 	taskSchedule.Id = common.GenerateUUID()
 	taskSchedule.ContractId = strContractID
@@ -248,7 +270,7 @@ func UpdateMonitorSucc(strContractID string,
 	taskSchedule.StartTime = startTime
 	taskSchedule.EndTime = endTime
 	slJson, _ := json.Marshal(taskSchedule)
-	return rethinkdb.InsertTaskSchedule(string(slJson))
+	return DBInf.InsertTaskSchedule(string(slJson))
 }
 
 //---------------------------------------------------------------------------
@@ -261,7 +283,7 @@ func UpdateMonitorDeal(strContractID string, strContractHashID string) error {
 		return fmt.Errorf("param is null")
 	}
 
-	strID, err := rethinkdb.GetID(strNodePubkey, strContractID,
+	strID, err := DBInf.GetID(strNodePubkey, strContractID,
 		strContractHashID)
 	if err != nil {
 		return err
@@ -271,17 +293,17 @@ func UpdateMonitorDeal(strContractID string, strContractHashID string) error {
 		return fmt.Errorf("not find")
 	}
 
-	return rethinkdb.SetTaskScheduleOverFlag(strID)
+	return DBInf.SetTaskScheduleOverFlag(strID)
 }
 
 //---------------------------------------------------------------------------
 // 只供头节点调用，根据公钥环为每个节点插入待执行任务
-func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
+func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 	var err error
 	var slMapTaskSchedule []interface{}
 	allPublicKeys := config.GetAllPublicKey()
 	for index, _ := range allPublicKeys {
-		var taskSchedule model.TaskSchedule
+		var taskSchedule db.TaskSchedule
 		taskSchedule.Id = common.GenerateUUID()
 		taskSchedule.ContractHashId = taskScheduleBase.ContractHashId
 		taskSchedule.ContractId = taskScheduleBase.ContractId
@@ -295,7 +317,7 @@ func InsertTaskSchedules(taskScheduleBase model.TaskSchedule) error {
 		slMapTaskSchedule = append(slMapTaskSchedule, mapObj)
 	}
 
-	nInsertCount, err := rethinkdb.InsertTaskSchedules(slMapTaskSchedule)
+	nInsertCount, err := DBInf.InsertTaskSchedules(slMapTaskSchedule)
 	uniledgerlog.Debug("insert taskScheduled count is %d, err is %v", nInsertCount, err)
 	return err
 }

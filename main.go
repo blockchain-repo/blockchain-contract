@@ -11,6 +11,7 @@ import (
 	"unicontract/src/core/control/headNodeMonitor"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine"
+	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/gRPCClient"
 	"unicontract/src/core/engine/scanengine"
 	"unicontract/src/pipelines"
@@ -60,6 +61,7 @@ func runStart() {
 	uniledgerlog.Info("pipelines Init")
 	engine.Init()
 	uniledgerlog.Info("engine Init")
+	engineCommon.Init()
 	gRPCClient.Init()
 	uniledgerlog.Info("GRPC params Init")
 	scanengine.Init()
@@ -80,6 +82,10 @@ func runInitDB() {
 	config.Init()
 	uniledgerlog.Info("Database Init")
 	rethinkdb.InitDatabase()
+
+	engine.Init()
+	engineCommon.Init()
+	engineCommon.InitDatabase()
 }
 
 func runDropDB() {

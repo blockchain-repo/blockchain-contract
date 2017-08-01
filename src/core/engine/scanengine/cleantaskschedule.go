@@ -20,8 +20,8 @@ import (
 import (
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/db/rethinkdb"
-	"unicontract/src/core/model"
+	"unicontract/src/core/engine/common"
+	"unicontract/src/core/engine/common/db"
 )
 
 //---------------------------------------------------------------------------
@@ -30,7 +30,7 @@ func _CleanTaskSchedule() {
 	for _ = range ticker.C {
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query all success task"))
 		strSuccessTask, err :=
-			rethinkdb.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
+			common.DBInf.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
 		if err != nil {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			continue
@@ -41,7 +41,7 @@ func _CleanTaskSchedule() {
 			continue
 		}
 
-		var slTasks []model.TaskSchedule
+		var slTasks []db.TaskSchedule
 		json.Unmarshal([]byte(strSuccessTask), &slTasks)
 
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "success task filter"))
@@ -53,7 +53,7 @@ func _CleanTaskSchedule() {
 		}
 
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "success task delete"))
-		deleteNum, err := rethinkdb.DeleteTaskSchedules(slID)
+		deleteNum, err := common.DBInf.DeleteTaskSchedules(slID)
 		if deleteNum != len(slID) {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 		}
@@ -62,7 +62,7 @@ func _CleanTaskSchedule() {
 }
 
 //---------------------------------------------------------------------------
-func _TaskFilter(slTasks []model.TaskSchedule) []interface{} {
+func _TaskFilter(slTasks []db.TaskSchedule) []interface{} {
 	var slID []interface{}
 
 	// 过滤时间点

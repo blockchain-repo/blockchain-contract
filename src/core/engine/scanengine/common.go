@@ -8,7 +8,7 @@ import (
 import (
 	"unicontract/src/config"
 	"unicontract/src/core/engine"
-	"unicontract/src/core/model"
+	"unicontract/src/core/engine/common/db"
 )
 
 //---------------------------------------------------------------------------
@@ -18,7 +18,7 @@ const (
 )
 
 var (
-	gchTaskQueue      chan model.TaskSchedule
+	gchTaskQueue      chan db.TaskSchedule
 	gchExecParamQueue chan executeParam
 	gwgTaskExe        sync.WaitGroup
 	gnPublicKeysNum   int
@@ -29,7 +29,7 @@ var (
 //---------------------------------------------------------------------------
 func Init() {
 	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
-	gchTaskQueue = make(chan model.TaskSchedule, scanEngineConf["task_queue_len"].(int))
+	gchTaskQueue = make(chan db.TaskSchedule, scanEngineConf["task_queue_len"].(int))
 	gchExecParamQueue = make(chan executeParam, scanEngineConf["task_queue_len"].(int))
 	gslPublicKeys = config.GetAllPublicKey()
 	gnPublicKeysNum = len(gslPublicKeys)

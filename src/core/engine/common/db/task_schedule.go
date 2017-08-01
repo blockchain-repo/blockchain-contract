@@ -1,5 +1,5 @@
 // task_schedule
-package model
+package db
 
 // table [TaskSchedule]
 type TaskSchedule struct {
