@@ -19,4 +19,7 @@ type Datebase interface {
 	GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error)
 	GetTaskSchedulesSuccess(strNodePubkey string) (string, error)
 	DeleteTaskSchedules(slID []interface{}) (int, error)
+
+	GetTaskScheduleCount(stat string) (string, error)
+	GetTaskSendFlagCount(stat int) (string, error)
 }

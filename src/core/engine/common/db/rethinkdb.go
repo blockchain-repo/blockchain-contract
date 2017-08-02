@@ -535,3 +535,45 @@ func (rethink Rethinkdb) DeleteTaskSchedules(slID []interface{}) (int, error) {
 }
 
 //---------------------------------------------------------------------------
+func (rethink Rethinkdb) GetTaskScheduleCount(stat string) (string, error) {
+	session, _ := rethink.ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field(stat).Ge(50)).
+		Count().Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return blo, nil
+}
+
+//---------------------------------------------------------------------------
+func (rethink Rethinkdb) GetTaskSendFlagCount(stat int) (string, error) {
+	session, _ := rethink.ConnectDB(DBNAME)
+	res, err := r.Table(TABLE_TASK_SCHEDULE).
+		Filter(r.Row.Field("SendFlag").Eq(stat)).
+		Count().Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+
+	var blo string
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return blo, nil
+}
+
+//---------------------------------------------------------------------------

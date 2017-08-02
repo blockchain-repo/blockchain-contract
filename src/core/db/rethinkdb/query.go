@@ -896,51 +896,6 @@ func GetSendFailingRecordsCount() (int, error) {
 
 /*----------------------------- SendFailingRecords end---------------------------------------*/
 
-//---------------------------------------------------------------------------
-func GetTaskScheduleCount(stat string) (string, error) {
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table("TaskSchedule").
-		Filter(r.Row.Field(stat).Ge(50)).
-		Count().Run(session)
-	if err != nil {
-		return "", err
-	}
-	if res.IsNil() {
-		return "", nil
-	}
-
-	var blo string
-	err = res.One(&blo)
-	if err != nil {
-		return "", err
-	}
-	return blo, nil
-}
-
-func GetTaskSendFlagCount(stat int) (string, error) {
-
-	session := ConnectDB(DBNAME)
-	res, err := r.Table("TaskSchedule").
-		Filter(r.Row.Field("SendFlag").Eq(stat)).
-		Count().Run(session)
-	if err != nil {
-		return "", err
-	}
-	if res.IsNil() {
-		return "", nil
-	}
-
-	var blo string
-	err = res.One(&blo)
-	if err != nil {
-		return "", err
-	}
-	return blo, nil
-}
-
-//---------------------------------------------------------------------------
-
 /*智能微网demo start---------------------------------------------------------*/
 func _Insert(strDBName, strTableName, strJson string) error {
 	if len(strJson) == 0 {

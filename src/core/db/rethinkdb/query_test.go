@@ -554,16 +554,6 @@ func Test_GetContractTasksByContractId(t *testing.T) {
 
 /*----------------------------- contractTask end---------------------------------------*/
 
-func Test_GetTaskScheduleCount(t *testing.T) {
-	count, err := GetTaskScheduleCount("WaitCount")
-	if err != nil {
-		uniledgerlog.Error(err)
-	}
-	uniledgerlog.Error(count)
-	t.Logf("deleteNum is %d\n", count)
-	t.Logf("err is %+v\n", err)
-}
-
 func TestSession(t *testing.T) {
 	session := ConnectDB(DBNAME)
 

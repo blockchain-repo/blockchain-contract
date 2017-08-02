@@ -5,12 +5,14 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/core/db/rethinkdb"
+	engineCommmon "unicontract/src/core/engine/common"
 
 	"unicontract/src/common/uniledgerlog"
 )
 
-func init() {
+func Init() {
 	go sendContractStatsToMonitor()
+	go sendFailingDataTimer()
 }
 
 func sendContractStatsToMonitor() {
@@ -41,19 +43,19 @@ func sendContractStatsToMonitor() {
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_send_flag_success, err := rethinkdb.GetTaskSendFlagCount(1)
+		task_send_flag_success, err := engineCommmon.DBInf.GetTaskSendFlagCount(1)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_send_flag_fail, err := rethinkdb.GetTaskSendFlagCount(0)
+		task_send_flag_fail, err := engineCommmon.DBInf.GetTaskSendFlagCount(0)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_failed_Count, err := rethinkdb.GetTaskScheduleCount("FailedCount")
+		task_failed_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("FailedCount")
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_wait_Count, err := rethinkdb.GetTaskScheduleCount("WaitCount")
+		task_wait_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("WaitCount")
 		if err != nil {
 			uniledgerlog.Error(err)
 		}

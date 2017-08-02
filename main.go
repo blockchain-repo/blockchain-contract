@@ -4,7 +4,7 @@ import (
 	"os"
 	"strconv"
 	_ "unicontract/src/api/routers"
-	_ "unicontract/src/common/quartz"
+	"unicontract/src/common/quartz"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/control"
@@ -59,12 +59,15 @@ func runStart() {
 	uniledgerlog.Info("config Init")
 	pipelines.Init()
 	uniledgerlog.Info("pipelines Init")
-	engine.Init()
+	engine.Init() // 1
 	uniledgerlog.Info("engine Init")
-	engineCommon.Init()
-	gRPCClient.Init()
+	engineCommon.Init() // 2
+	uniledgerlog.Info("scan engine db Init")
+	quartz.Init() // 3
+	uniledgerlog.Info("quartz Init")
+	gRPCClient.Init() // 4
 	uniledgerlog.Info("GRPC params Init")
-	scanengine.Init()
+	scanengine.Init() // 5      TODO: 1 2 3 的顺序一定不能错，而且 2 3 4 5 一定要在 1 后面
 	uniledgerlog.Info("scanengine Init")
 	go scanengine.Start()
 	uniledgerlog.Info("UCVM ScanEngine Start")

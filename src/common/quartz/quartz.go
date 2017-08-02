@@ -19,10 +19,6 @@ const (
 	_TableSendFailingRecords = "SendFailingRecords"
 )
 
-func init() {
-	go sendFailingDataTimer()
-}
-
 func sendFailingDataTimer() {
 	timer := time.Tick(1 * time.Hour)
 	for now := range timer {

@@ -236,3 +236,13 @@ func Test_DeleteTaskSchedules(t *testing.T) {
 	t.Logf("deleteNum is %d\n", deleteNum)
 	t.Logf("err is %+v\n", err)
 }
+
+func Test_GetTaskScheduleCount(t *testing.T) {
+	count, err := inf.GetTaskScheduleCount("WaitCount")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Error(count)
+	t.Logf("deleteNum is %d\n", count)
+	t.Logf("err is %+v\n", err)
+}
