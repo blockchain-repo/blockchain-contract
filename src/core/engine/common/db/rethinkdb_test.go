@@ -14,16 +14,7 @@ var inf Datebase
 
 func init() {
 	config.Init()
-	inf = Rethinkdb{}
-}
-
-func Test_test(t *testing.T) {
-	var db_inf Datebase
-	db_inf = Rethinkdb{}
-	db_inf.Insert()
-	db_inf.Delete()
-	db_inf.Update()
-	db_inf.Query()
+	inf = GetInstance()
 }
 
 func Test_InsertTaskSchedule(t *testing.T) {

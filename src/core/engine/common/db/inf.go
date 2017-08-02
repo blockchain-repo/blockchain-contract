@@ -2,9 +2,9 @@ package db
 
 type Datebase interface {
 	InitDatabase() error
-	CreateDatabase(name string) error
-	CreateTable(db string, name string) error
-	DropDatabase() error
+	CreateDatabase(dbName string) error
+	CreateTable(dbName string, tableName string) error
+	DropDatabase(dbName string) error
 
 	InsertTaskSchedule(strTaskSchedule string) error
 	InsertTaskSchedules(slTaskSchedule []interface{}) (int, error)

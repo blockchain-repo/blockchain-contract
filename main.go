@@ -86,9 +86,9 @@ func runInitDB() {
 	uniledgerlog.Info("Database Init")
 	rethinkdb.InitDatabase()
 
-	engine.Init()
-	engineCommon.Init()
-	engineCommon.InitDatabase()
+	engine.Init()               // 1
+	engineCommon.Init()         // 2
+	engineCommon.InitDatabase() // 3      TODO:初始化扫描引擎数据库，一定要按照 1 2 3 的顺序调用
 }
 
 func runDropDB() {
@@ -96,6 +96,7 @@ func runDropDB() {
 	uniledgerlog.Info("Database Dropped")
 	rethinkdb.DropDatabase()
 }
+
 func runReconfigDB(shards int, replicas int) {
 	config.Init()
 	uniledgerlog.Info("Database Reconfigured")

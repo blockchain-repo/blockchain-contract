@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"sync"
 )
 
 import (
@@ -14,21 +15,37 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
+//---------------------------------------------------------------------------
+type rethinkdb struct {
+	session *r.Session
+}
+
+//---------------------------------------------------------------------------
 const (
-	DBNAME              = "Unicontract"
+	DATABASEB_NAME      = "Unicontract"
 	TABLE_TASK_SCHEDULE = "TaskSchedule"
 )
 
-var Tables = []string{
-	TABLE_TASK_SCHEDULE,
+var (
+	rethinkInstance *rethinkdb
+	once            sync.Once
+
+	Tables = []string{
+		TABLE_TASK_SCHEDULE,
+	}
+)
+
+//---------------------------------------------------------------------------
+func GetInstance() *rethinkdb {
+	once.Do(func() {
+		rethinkInstance = &rethinkdb{session: nil}
+		rethinkInstance.session, _ = rethinkInstance.connect()
+	})
+	return rethinkInstance
 }
 
 //---------------------------------------------------------------------------
-type Rethinkdb struct {
-}
-
-//---------------------------------------------------------------------------
-func (rethink Rethinkdb) Connect() (*r.Session, error) {
+func (rethink *rethinkdb) connect() (*r.Session, error) {
 	/*
 		conf := config.ReadConfig(config.DevelopmentEnv)
 		session, err := r.Connect(r.ConnectOpts{
@@ -50,47 +67,19 @@ func (rethink Rethinkdb) Connect() (*r.Session, error) {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) ConnectDB(dbname string) (*r.Session, error) {
-	/*
-		   conf := config.ReadConfig(config.DevelopmentEnv)
-		   session, err := r.Connect(r.ConnectOpts{
-				   Address:    conf.DatabaseUrl,
-				   Database:   conf.DatabaseName,
-				   InitialCap: conf.DatabaseInitialCap,
-				   MaxOpen:    conf.DatabaseMaxOpen,
-		   })
-	*/
-	ip := config.Config.LocalIp
-	session, err := r.Connect(r.ConnectOpts{
-		Address:  ip + ":28015",
-		Database: dbname,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-	return session, nil
-}
-
-//---------------------------------------------------------------------------
-func (rethink Rethinkdb) InitDatabase() error {
-	dbname := DBNAME
-	rethink.CreateDatabase(dbname)
+func (rethink *rethinkdb) InitDatabase() error {
+	rethink.CreateDatabase(DATABASEB_NAME)
 
 	for _, v := range Tables {
-		rethink.CreateTable(dbname, v)
+		rethink.CreateTable(DATABASEB_NAME, v)
 	}
 
 	return nil
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) CreateDatabase(name string) error {
-	session, err := rethink.Connect()
-	if err != nil {
-		return err
-	}
-	resp, err := r.DBCreate(name).RunWrite(session)
+func (rethink *rethinkdb) CreateDatabase(dbName string) error {
+	resp, err := r.DBCreate(dbName).RunWrite(rethink.session)
 	if err != nil {
 		return err
 	}
@@ -99,12 +88,8 @@ func (rethink Rethinkdb) CreateDatabase(name string) error {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) CreateTable(db string, name string) error {
-	session, err := rethink.ConnectDB(db)
-	if err != nil {
-		return err
-	}
-	resp, err := r.TableCreate(name).RunWrite(session)
+func (rethink *rethinkdb) CreateTable(dbName string, tableName string) error {
+	resp, err := r.DB(dbName).TableCreate(tableName).RunWrite(rethink.session)
 	if err != nil {
 		return err
 	}
@@ -113,13 +98,8 @@ func (rethink Rethinkdb) CreateTable(db string, name string) error {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) DropDatabase() error {
-	dbname := DBNAME
-	session, err := rethink.Connect()
-	if err != nil {
-		return err
-	}
-	resp, err := r.DBDrop(dbname).RunWrite(session)
+func (rethink *rethinkdb) DropDatabase(dbName string) error {
+	resp, err := r.DBDrop(dbName).RunWrite(rethink.session)
 	if err != nil {
 		return err
 	}
@@ -128,12 +108,8 @@ func (rethink Rethinkdb) DropDatabase() error {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) _Insert(dbname, tablename, json string) (r.WriteResponse, error) {
-	session, err := rethink.ConnectDB(dbname)
-	if err != nil {
-		return r.WriteResponse{}, err
-	}
-	res, err := r.Table(tablename).Insert(r.JSON(json)).RunWrite(session)
+func (rethink *rethinkdb) _Insert(dbName, tableName, json string) (r.WriteResponse, error) {
+	res, err := r.DB(dbName).Table(tableName).Insert(r.JSON(json)).RunWrite(rethink.session)
 	if err != nil {
 		return r.WriteResponse{}, err
 	}
@@ -141,12 +117,8 @@ func (rethink Rethinkdb) _Insert(dbname, tablename, json string) (r.WriteRespons
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) _Delete(dbname, tablename, id string) (r.WriteResponse, error) {
-	session, err := rethink.ConnectDB(dbname)
-	if err != nil {
-		return r.WriteResponse{}, err
-	}
-	res, err := r.Table(tablename).Get(id).Delete().RunWrite(session)
+func (rethink *rethinkdb) _Delete(dbName, tableName, id string) (r.WriteResponse, error) {
+	res, err := r.DB(dbName).Table(tableName).Get(id).Delete().RunWrite(rethink.session)
 	if err != nil {
 		return r.WriteResponse{}, err
 	}
@@ -154,12 +126,8 @@ func (rethink Rethinkdb) _Delete(dbname, tablename, id string) (r.WriteResponse,
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) _Update(dbname, tablename, id, json string) (r.WriteResponse, error) {
-	session, err := rethink.ConnectDB(dbname)
-	if err != nil {
-		return r.WriteResponse{}, err
-	}
-	res, err := r.Table(tablename).Get(id).Update(r.JSON(json)).RunWrite(session)
+func (rethink *rethinkdb) _Update(dbName, tableName, id, json string) (r.WriteResponse, error) {
+	res, err := r.DB(dbName).Table(tableName).Get(id).Update(r.JSON(json)).RunWrite(rethink.session)
 	if err != nil {
 		return r.WriteResponse{}, err
 	}
@@ -167,12 +135,8 @@ func (rethink Rethinkdb) _Update(dbname, tablename, id, json string) (r.WriteRes
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) _Query(dbname, tablename, id string) (*r.Cursor, error) {
-	session, err := rethink.ConnectDB(dbname)
-	if err != nil {
-		return nil, err
-	}
-	res, err := r.Table(tablename).Get(id).Run(session)
+func (rethink *rethinkdb) _Query(dbName, tableName, id string) (*r.Cursor, error) {
+	res, err := r.DB(dbName).Table(tableName).Get(id).Run(rethink.session)
 	if err != nil {
 		return nil, err
 	}
@@ -181,8 +145,8 @@ func (rethink Rethinkdb) _Query(dbname, tablename, id string) (*r.Cursor, error)
 
 //---------------------------------------------------------------------------
 // 插入一个nodepublickey的task方法
-func (rethink Rethinkdb) InsertTaskSchedule(strTaskSchedule string) error {
-	res, err := rethink._Insert(DBNAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
+func (rethink *rethinkdb) InsertTaskSchedule(strTaskSchedule string) error {
+	res, err := rethink._Insert(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
 	if err != nil {
 		return err
 	}
@@ -195,27 +159,20 @@ func (rethink Rethinkdb) InsertTaskSchedule(strTaskSchedule string) error {
 
 //---------------------------------------------------------------------------
 // 插入task方法
-func (rethink Rethinkdb) InsertTaskSchedules(slTaskSchedule []interface{}) (int, error) {
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return 0, err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).Insert(slTaskSchedule).RunWrite(session)
+func (rethink *rethinkdb) InsertTaskSchedules(slTaskSchedule []interface{}) (int, error) {
+	res, err := r.DB(DATABASEB_NAME).Table(TABLE_TASK_SCHEDULE).Insert(slTaskSchedule).RunWrite(rethink.session)
 	return res.Inserted, err
 }
 
 //---------------------------------------------------------------------------
 // 根据nodePubkey和contractID获得表内ID
-func (rethink Rethinkdb) GetID(strNodePubkey, strContractID string, strContractHashId string) (string, error) {
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return "", err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+func (rethink *rethinkdb) GetID(strNodePubkey, strContractID, strContractHashId string) (string, error) {
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("ContractHashId").Eq(strContractHashId)).
 		Filter(r.Row.Field("ContractId").Eq(strContractID)).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Run(session)
+		Run(rethink.session)
 	if err != nil {
 		return "", err
 	}
@@ -240,14 +197,11 @@ func (rethink Rethinkdb) GetID(strNodePubkey, strContractID string, strContractH
 
 //---------------------------------------------------------------------------
 // 根据ID获取starttime和endtime
-func (rethink Rethinkdb) GetValidTime(strID string) (string, string, error) {
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return "", "", err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+func (rethink *rethinkdb) GetValidTime(strID string) (string, string, error) {
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("id").Eq(strID)).
-		Run(session)
+		Run(rethink.session)
 	if err != nil {
 		return "", "", err
 	}
@@ -277,7 +231,7 @@ func (rethink Rethinkdb) GetValidTime(strID string) (string, string, error) {
 
 //---------------------------------------------------------------------------
 // 批量设置SendFlag字段，发送为1,未发送为0
-func (rethink Rethinkdb) SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error {
+func (rethink *rethinkdb) SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error {
 	var strJSON string
 	if alreadySend {
 		strJSON = fmt.Sprintf("{\"SendFlag\":%d,\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
@@ -287,12 +241,11 @@ func (rethink Rethinkdb) SetTaskScheduleFlagBatch(slID []interface{}, alreadySen
 			0, common.GenTimestamp())
 	}
 
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		GetAll(slID...).Update(r.JSON(strJSON)).RunWrite(session)
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
+		GetAll(slID...).
+		Update(r.JSON(strJSON)).
+		RunWrite(rethink.session)
 	if err != nil {
 		return err
 	}
@@ -305,12 +258,12 @@ func (rethink Rethinkdb) SetTaskScheduleFlagBatch(slID []interface{}, alreadySen
 
 //---------------------------------------------------------------------------
 // 设置SendFlag字段，发送为1,未发送为0
-func (rethink Rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) error {
+func (rethink *rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) error {
 	var sendflag int
 	if alreadySend {
 		sendflag = 1
 	} else {
-		res, err := rethink._Query(DBNAME, TABLE_TASK_SCHEDULE, strID)
+		res, err := rethink._Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
 		if err != nil {
 			return err
 		}
@@ -339,7 +292,7 @@ func (rethink Rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) err
 	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
 		sendflag, common.GenTimestamp())
 
-	res, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if err != nil {
 		return err
 	}
@@ -352,11 +305,11 @@ func (rethink Rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) err
 
 //---------------------------------------------------------------------------
 // 设置OverFlag字段为1
-func (rethink Rethinkdb) SetTaskScheduleOverFlag(strID string) error {
+func (rethink *rethinkdb) SetTaskScheduleOverFlag(strID string) error {
 	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
 		1, common.GenTimestamp())
 
-	res, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if err != nil {
 		return err
 	}
@@ -369,11 +322,11 @@ func (rethink Rethinkdb) SetTaskScheduleOverFlag(strID string) error {
 
 //---------------------------------------------------------------------------
 // 设置TaskId,TaskState和TaskExecuteIndex字段的值
-func (rethink Rethinkdb) SetTaskState(strID, strTaskId, strState string, nTaskExecuteIndex int) error {
+func (rethink *rethinkdb) SetTaskState(strID, strTaskId, strState string, nTaskExecuteIndex int) error {
 	strJSON := fmt.Sprintf("{\"TaskId\":\"%s\",\"TaskState\":\"%s\",\"TaskExecuteIndex\":%d}",
 		strTaskId, strState, nTaskExecuteIndex)
 
-	res, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if err != nil {
 		return err
 	}
@@ -386,7 +339,7 @@ func (rethink Rethinkdb) SetTaskState(strID, strTaskId, strState string, nTaskEx
 
 //---------------------------------------------------------------------------
 // 设置FailedCount\SuccessCount\WaitCount字段加一
-func (rethink Rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
+func (rethink *rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 	var strFSW string
 	if flag == 0 {
 		strFSW = "SuccessCount"
@@ -396,14 +349,11 @@ func (rethink Rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 		strFSW = "WaitCount"
 	}
 
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Get(strID).
 		Update(map[string]interface{}{strFSW: r.Row.Field(strFSW).Add(1)}).
-		RunWrite(session)
+		RunWrite(rethink.session)
 
 	if err != nil {
 		return err
@@ -417,7 +367,7 @@ func (rethink Rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 
 	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
 
-	res1, err := rethink._Update(DBNAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	res1, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
 	if res1.Replaced|res1.Unchanged >= 1 {
 		return nil
 	} else {
@@ -427,19 +377,16 @@ func (rethink Rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 
 //---------------------------------------------------------------------------
 // 获取所有未发送的任务，用于放在待执行队列中
-func (rethink Rethinkdb) GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error) {
+func (rethink *rethinkdb) GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error) {
 	now := common.GenTimestamp()
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return "", err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
 		Filter(r.Row.Field("StartTime").Le(now)).
 		Filter(r.Row.Field("EndTime").Ge(now)).
 		Filter(r.Row.Field("FailedCount").Lt(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
-		Run(session)
+		Run(rethink.session)
 	if err != nil {
 		return "", err
 	}
@@ -458,7 +405,7 @@ func (rethink Rethinkdb) GetTaskSchedulesNoSend(strNodePubkey string, nThreshold
 
 //---------------------------------------------------------------------------
 // 获取所有失败次数(等待次数)超过阈值的task
-func (rethink Rethinkdb) GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error) {
+func (rethink *rethinkdb) GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error) {
 	var strCount string
 	if flag == 0 {
 		strCount = "FailedCount"
@@ -466,15 +413,12 @@ func (rethink Rethinkdb) GetTaskSchedulesNoSuccess(strNodePubkey string, nThresh
 		strCount = "WaitCount"
 	}
 
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return "", err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
 		Filter(r.Row.Field(strCount).Ge(nThreshold)).
 		Filter(r.Row.Field("SendFlag").Eq(0)).
-		Run(session)
+		Run(rethink.session)
 	if err != nil {
 		return "", err
 	}
@@ -493,19 +437,16 @@ func (rethink Rethinkdb) GetTaskSchedulesNoSuccess(strNodePubkey string, nThresh
 
 //---------------------------------------------------------------------------
 // 获取已经执行成功后的任务，用于清理数据
-func (rethink Rethinkdb) GetTaskSchedulesSuccess(strNodePubkey string) (string, error) {
+func (rethink *rethinkdb) GetTaskSchedulesSuccess(strNodePubkey string) (string, error) {
 	if len(strNodePubkey) == 0 {
 		return "", fmt.Errorf("pubkey is null")
 	}
 
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return "", err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("SuccessCount").Ge(1)).
 		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
-		Run(session)
+		Run(rethink.session)
 	if err != nil {
 		return "", err
 	}
@@ -524,22 +465,22 @@ func (rethink Rethinkdb) GetTaskSchedulesSuccess(strNodePubkey string) (string, 
 
 //---------------------------------------------------------------------------
 // 删除一系列id的任务
-func (rethink Rethinkdb) DeleteTaskSchedules(slID []interface{}) (int, error) {
-	session, err := rethink.ConnectDB(DBNAME)
-	if err != nil {
-		return 0, err
-	}
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
-		GetAll(slID...).Delete().RunWrite(session)
+func (rethink *rethinkdb) DeleteTaskSchedules(slID []interface{}) (int, error) {
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
+		GetAll(slID...).
+		Delete().
+		RunWrite(rethink.session)
 	return res.Deleted, err
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) GetTaskScheduleCount(stat string) (string, error) {
-	session, _ := rethink.ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+func (rethink *rethinkdb) GetTaskScheduleCount(stat string) (string, error) {
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field(stat).Ge(50)).
-		Count().Run(session)
+		Count().
+		Run(rethink.session)
 	if err != nil {
 		return "", err
 	}
@@ -556,11 +497,12 @@ func (rethink Rethinkdb) GetTaskScheduleCount(stat string) (string, error) {
 }
 
 //---------------------------------------------------------------------------
-func (rethink Rethinkdb) GetTaskSendFlagCount(stat int) (string, error) {
-	session, _ := rethink.ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_TASK_SCHEDULE).
+func (rethink *rethinkdb) GetTaskSendFlagCount(stat int) (string, error) {
+	res, err := r.DB(DATABASEB_NAME).
+		Table(TABLE_TASK_SCHEDULE).
 		Filter(r.Row.Field("SendFlag").Eq(stat)).
-		Count().Run(session)
+		Count().
+		Run(rethink.session)
 	if err != nil {
 		return "", err
 	}

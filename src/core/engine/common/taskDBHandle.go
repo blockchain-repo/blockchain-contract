@@ -31,7 +31,7 @@ func Init() {
 	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
 	dbname, _ := scanEngineConf["db"].(string)
 	if dbname == "rethinkdb" {
-		DBInf = db.Rethinkdb{}
+		DBInf = db.GetInstance()
 	}
 }
 
@@ -42,7 +42,7 @@ func InitDatabase() {
 
 //---------------------------------------------------------------------------
 func DropDatabase() {
-	DBInf.DropDatabase()
+	DBInf.DropDatabase(db.DATABASEB_NAME)
 }
 
 //---------------------------------------------------------------------------
