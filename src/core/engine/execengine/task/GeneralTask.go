@@ -1165,7 +1165,14 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	case -1:
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
 		//    调用扫描引擎接口： UpdateMonitorFail(contractID_old)
-		r_err = common.UpdateMonitorFail(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
+		var failStruct common.UpdateMonitorFailStruct
+		failStruct.FstrContractID = v_contract.GetContractId()
+		failStruct.FstrContractHashID = v_contract.GetId()
+		failStruct.FstrTaskId = gt.GetTaskId()
+		failStruct.FstrTaskState = gt.GetState()
+		failStruct.FnTaskExecuteIndex = gt.GetTaskExecuteIdx()
+		slFailData, _ := json.Marshal(failStruct)
+		r_err = common.UpdateMonitorFail(string(slFailData))
 		uniledgerlog.Error("-----------------------------------------------")
 		uniledgerlog.Error("ContractId:" + v_contract.GetContractId())
 		uniledgerlog.Error("Id:" + v_contract.GetId())
@@ -1187,7 +1194,14 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		//    case2: State=Complete 更新 contractID1 的flag=1,successNum+1, timestamp; 添加 contractID2 的记录 flag=0
 		//    调用扫描引擎接口： UpdateMonitorWait(contractID_old)
 		if gt.GetState() == constdef.TaskState[constdef.TaskState_Dormant] || gt.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
-			r_err = common.UpdateMonitorWait(v_contract.GetContractId(), v_contract.GetId(), gt.GetTaskId(), gt.GetState(), gt.GetTaskExecuteIdx())
+			var waitStruct common.UpdateMonitorWaitStruct
+			waitStruct.WstrContractID = v_contract.GetContractId()
+			waitStruct.WstrContractHashID = v_contract.GetId()
+			waitStruct.WstrTaskId = gt.GetTaskId()
+			waitStruct.WstrTaskState = gt.GetState()
+			waitStruct.WnTaskExecuteIndex = gt.GetTaskExecuteIdx()
+			slWaitData, _ := json.Marshal(waitStruct)
+			r_err = common.UpdateMonitorWait(string(slWaitData))
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -1198,18 +1212,19 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			}
 		} else if gt.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
 			r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
-			r_err = common.UpdateMonitorSucc(
-				v_contract.GetContractId(),
-				v_contract.GetId(),
-				gt.GetState(),
-				v_contract.GetOrgTaskId(),
-				v_contract.GetOrgTaskExecuteIdx(),
-				v_contract.GetOutputId(),
-				v_contract.GetOutputTaskId(),
-				gt.GetState(),
-				v_contract.GetOutputTaskExecuteIdx(),
-				0,
-			)
+			var succStruct common.UpdateMonitorSuccStruct
+			succStruct.SstrContractID = v_contract.GetContractId()
+			succStruct.SstrContractHashIdOld = v_contract.GetId()
+			succStruct.SstrTaskStateOld = gt.GetState()
+			succStruct.SstrTaskIdOld = v_contract.GetOrgTaskId()
+			succStruct.SnTaskExecuteIndexOld = v_contract.GetOrgTaskExecuteIdx()
+			succStruct.SstrContractHashIDNew = v_contract.GetOutputId()
+			succStruct.SstrTaskIdNew = v_contract.GetOutputTaskId()
+			succStruct.SstrTaskStateNew = gt.GetState()
+			succStruct.SnTaskExecuteIndexNew = v_contract.GetOutputTaskExecuteIdx()
+			succStruct.SnFlag = 0
+			slSuccData, _ := json.Marshal(succStruct)
+			r_err = common.UpdateMonitorSucc(string(slSuccData))
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -1223,18 +1238,19 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		//执行成功：1 更新contractID1 的flag=1, succNum+1, timestamp, 2.将contractID2插入到扫描监控表中 flag=1
 		//    调用扫描引擎接口： UpdateMonitorSucc(contractID_old, contractID_new)
 		r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
-		r_err = common.UpdateMonitorSucc(
-			v_contract.GetContractId(),
-			v_contract.GetId(),
-			gt.GetState(),
-			v_contract.GetOrgTaskId(),
-			v_contract.GetOrgTaskExecuteIdx(),
-			v_contract.GetOutputId(),
-			v_contract.GetOutputTaskId(),
-			gt.GetState(),
-			v_contract.GetOutputTaskExecuteIdx(),
-			0,
-		)
+		var succStruct common.UpdateMonitorSuccStruct
+		succStruct.SstrContractID = v_contract.GetContractId()
+		succStruct.SstrContractHashIdOld = v_contract.GetId()
+		succStruct.SstrTaskStateOld = gt.GetState()
+		succStruct.SstrTaskIdOld = v_contract.GetOrgTaskId()
+		succStruct.SnTaskExecuteIndexOld = v_contract.GetOrgTaskExecuteIdx()
+		succStruct.SstrContractHashIDNew = v_contract.GetOutputId()
+		succStruct.SstrTaskIdNew = v_contract.GetOutputTaskId()
+		succStruct.SstrTaskStateNew = gt.GetState()
+		succStruct.SnTaskExecuteIndexNew = v_contract.GetOutputTaskExecuteIdx()
+		succStruct.SnFlag = 0
+		slSuccData, _ := json.Marshal(succStruct)
+		r_err = common.UpdateMonitorSucc(string(slSuccData))
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")

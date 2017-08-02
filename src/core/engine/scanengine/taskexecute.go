@@ -145,7 +145,14 @@ func _Execute() error {
 
 //---------------------------------------------------------------------------
 func _UpdateToWait(strContractID, strContractHashID string) {
-	err := engineCommon.UpdateMonitorWait(strContractID, strContractHashID, "0", "", 1)
+	var waitStruct engineCommon.UpdateMonitorWaitStruct
+	waitStruct.WstrContractID = strContractID
+	waitStruct.WstrContractHashID = strContractHashID
+	waitStruct.WstrTaskId = "0"
+	waitStruct.WstrTaskState = ""
+	waitStruct.WnTaskExecuteIndex = 1
+	slWaitData, _ := json.Marshal(waitStruct)
+	err := engineCommon.UpdateMonitorWait(string(slWaitData))
 	if err != nil {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 	}
@@ -153,7 +160,14 @@ func _UpdateToWait(strContractID, strContractHashID string) {
 
 //---------------------------------------------------------------------------
 func _UpdateToFailed(strContractID, strContractHashID string) {
-	err := engineCommon.UpdateMonitorFail(strContractID, strContractHashID, "0", "", 1)
+	var failStruct engineCommon.UpdateMonitorFailStruct
+	failStruct.FstrContractID = strContractID
+	failStruct.FstrContractHashID = strContractHashID
+	failStruct.FstrTaskId = "0"
+	failStruct.FstrTaskState = ""
+	failStruct.FnTaskExecuteIndex = 1
+	slFailData, _ := json.Marshal(failStruct)
+	err := engineCommon.UpdateMonitorFail(string(slFailData))
 	if err != nil {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 	}

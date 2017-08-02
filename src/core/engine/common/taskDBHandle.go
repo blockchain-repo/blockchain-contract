@@ -23,6 +23,39 @@ import (
 	"unicontract/src/core/engine/common/db"
 )
 
+//---------------------------------------------------------------------------
+// FailStruct
+type UpdateMonitorFailStruct struct {
+	FstrContractID     string
+	FstrContractHashID string
+	FstrTaskId         string
+	FstrTaskState      string
+	FnTaskExecuteIndex int
+}
+
+// WaitStruct
+type UpdateMonitorWaitStruct struct {
+	WstrContractID     string
+	WstrContractHashID string
+	WstrTaskId         string
+	WstrTaskState      string
+	WnTaskExecuteIndex int
+}
+
+// SuccStruct
+type UpdateMonitorSuccStruct struct {
+	SstrContractID        string
+	SstrContractHashIdOld string
+	SstrTaskStateOld      string
+	SstrTaskIdOld         string
+	SnTaskExecuteIndexOld int
+	SstrContractHashIDNew string
+	SstrTaskIdNew         string
+	SstrTaskStateNew      string
+	SnTaskExecuteIndexNew int
+	SnFlag                int
+}
+
 var scanEngineConf map[interface{}]interface{}
 var DBInf db.Datebase
 
@@ -86,30 +119,39 @@ func UpdateMonitorSend(strID string) error {
 //---------------------------------------------------------------------------
 // 执行失败：1.更新strContractID & strContractHashOldID的SendFlag = 0,
 // FailedCount + 1, LastExecuteTime, strTaskId, TaskState, nTaskExecuteIndex
-func UpdateMonitorFail(strContractID string,
-	strContractHashID string,
-	strTaskId string,
-	strTaskState string,
-	nTaskExecuteIndex int) error {
+// information 是 UpdateMonitorFailStruct 的json序列化字符串
+func UpdateMonitorFail(information string) error {
 	var errMsg string
+
+	if len(information) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	var failStruct UpdateMonitorFailStruct
+	err := json.Unmarshal([]byte(information), &failStruct)
+	if err != nil {
+		return err
+	}
+
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
-		len(strContractID) == 0 ||
-		len(strContractHashID) == 0 {
+		len(failStruct.FstrContractID) == 0 ||
+		len(failStruct.FstrContractHashID) == 0 {
 		if len(strNodePubkey) == 0 {
 			errMsg = "[strNodePubkey is null]"
 		}
-		if len(strContractID) == 0 {
+		if len(failStruct.FstrContractID) == 0 {
 			errMsg = "[strContractID is null]"
 		}
-		if len(strContractHashID) == 0 {
+		if len(failStruct.FstrContractHashID) == 0 {
 			errMsg = "[strContractHashID is null]"
 		}
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey, strContractID,
-		strContractHashID)
+	strID, err := DBInf.GetID(strNodePubkey,
+		failStruct.FstrContractID,
+		failStruct.FstrContractHashID)
 	if err != nil {
 		return err
 	}
@@ -127,36 +169,48 @@ func UpdateMonitorFail(strContractID string,
 	if err != nil {
 		return err
 	}
-	return DBInf.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
+	return DBInf.SetTaskState(strID,
+		failStruct.FstrTaskId,
+		failStruct.FstrTaskState,
+		failStruct.FnTaskExecuteIndex)
 }
 
 //---------------------------------------------------------------------------
 // 执行条件不满足：1.更新strContractID & strContractHashOldID的SendFlag = 0,
 // WaitCount + 1,LastExecuteTime, strTaskId, TaskState, nTaskExecuteIndex
-func UpdateMonitorWait(strContractID string,
-	strContractHashID string,
-	strTaskId string,
-	strTaskState string,
-	nTaskExecuteIndex int) error {
+// information 是 UpdateMonitorWaitStruct 的json序列化字符串
+func UpdateMonitorWait(information string) error {
 	var errMsg string
+
+	if len(information) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	var waitStruct UpdateMonitorWaitStruct
+	err := json.Unmarshal([]byte(information), &waitStruct)
+	if err != nil {
+		return err
+	}
+
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
-		len(strContractID) == 0 ||
-		len(strContractHashID) == 0 {
+		len(waitStruct.WstrContractID) == 0 ||
+		len(waitStruct.WstrContractHashID) == 0 {
 		if len(strNodePubkey) == 0 {
 			errMsg = "[strNodePubkey is null]"
 		}
-		if len(strContractID) == 0 {
+		if len(waitStruct.WstrContractID) == 0 {
 			errMsg = "[strContractID is null]"
 		}
-		if len(strContractHashID) == 0 {
+		if len(waitStruct.WstrContractHashID) == 0 {
 			errMsg = "[strContractHashID is null]"
 		}
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey, strContractID,
-		strContractHashID)
+	strID, err := DBInf.GetID(strNodePubkey,
+		waitStruct.WstrContractID,
+		waitStruct.WstrContractHashID)
 	if err != nil {
 		return err
 	}
@@ -174,53 +228,61 @@ func UpdateMonitorWait(strContractID string,
 	if err != nil {
 		return err
 	}
-	return DBInf.SetTaskState(strID, strTaskId, strTaskState, nTaskExecuteIndex)
+	return DBInf.SetTaskState(strID,
+		waitStruct.WstrTaskId,
+		waitStruct.WstrTaskState,
+		waitStruct.WnTaskExecuteIndex)
 }
 
 //---------------------------------------------------------------------------
 // 执行成功：1.更新strContractID & strContractHashOldID的的SendFlag=1,
 //          SuccessCount + 1, LastExecuteTime, strTaskStateOld, TaskState, nTaskExecuteIndexOld
-//        2.将strContractID & strContractHashNewID插入到扫描监控表中
-func UpdateMonitorSucc(strContractID string,
-	strContractHashIdOld string,
-	strTaskStateOld string,
-	strTaskIdOld string,
-	nTaskExecuteIndexOld int,
-	strContractHashIDNew string,
-	strTaskIdNew string,
-	strTaskStateNew string,
-	nTaskExecuteIndexNew int,
-	nFlag int) error {
+//         2.将strContractID & strContractHashNewID插入到扫描监控表中
+// information 是 UpdateMonitorSuccStruct 的json序列化字符串
+func UpdateMonitorSucc(information string) error {
 	var errMsg string
+
+	if len(information) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	var succStruct UpdateMonitorSuccStruct
+	err := json.Unmarshal([]byte(information), &succStruct)
+	if err != nil {
+		return err
+	}
+
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
-		len(strContractID) == 0 ||
-		len(strContractHashIdOld) == 0 ||
-		len(strContractHashIDNew) == 0 ||
-		len(strTaskIdNew) == 0 ||
-		len(strTaskStateNew) == 0 {
+		len(succStruct.SstrContractID) == 0 ||
+		len(succStruct.SstrContractHashIdOld) == 0 ||
+		len(succStruct.SstrContractHashIDNew) == 0 ||
+		len(succStruct.SstrTaskIdNew) == 0 ||
+		len(succStruct.SstrTaskStateNew) == 0 {
 		if len(strNodePubkey) == 0 {
 			errMsg = "[strNodePubkey is null]"
 		}
-		if len(strContractID) == 0 {
+		if len(succStruct.SstrContractID) == 0 {
 			errMsg = "[strContractID is null]"
 		}
-		if len(strContractHashIdOld) == 0 {
+		if len(succStruct.SstrContractHashIdOld) == 0 {
 			errMsg = "[strContractHashIdOld is null]"
 		}
-		if len(strContractHashIDNew) == 0 {
+		if len(succStruct.SstrContractHashIDNew) == 0 {
 			errMsg = "[strContractHashIDNew is null]"
 		}
-		if len(strTaskIdNew) == 0 {
+		if len(succStruct.SstrTaskIdNew) == 0 {
 			errMsg = "[strTaskIdNew is null]"
 		}
-		if len(strTaskStateNew) == 0 {
+		if len(succStruct.SstrTaskStateNew) == 0 {
 			errMsg = "[strTaskStateNew is null]"
 		}
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey, strContractID, strContractHashIdOld)
+	strID, err := DBInf.GetID(strNodePubkey,
+		succStruct.SstrContractID,
+		succStruct.SstrContractHashIdOld)
 	if err != nil {
 		return err
 	}
@@ -239,7 +301,10 @@ func UpdateMonitorSucc(strContractID string,
 		return err
 	}
 
-	err = DBInf.SetTaskState(strID, strTaskIdOld, strTaskStateOld, nTaskExecuteIndexOld)
+	err = DBInf.SetTaskState(strID,
+		succStruct.SstrTaskIdOld,
+		succStruct.SstrTaskStateOld,
+		succStruct.SnTaskExecuteIndexOld)
 	if err != nil {
 		return err
 	}
@@ -259,13 +324,13 @@ func UpdateMonitorSucc(strContractID string,
 	}
 
 	var taskSchedule db.TaskSchedule
-	taskSchedule.SendFlag = nFlag
+	taskSchedule.SendFlag = succStruct.SnFlag
 	taskSchedule.Id = common.GenerateUUID()
-	taskSchedule.ContractId = strContractID
-	taskSchedule.ContractHashId = strContractHashIDNew
-	taskSchedule.TaskId = strTaskIdNew
-	taskSchedule.TaskExecuteIndex = nTaskExecuteIndexNew
-	taskSchedule.TaskState = strTaskStateNew
+	taskSchedule.ContractId = succStruct.SstrContractID
+	taskSchedule.ContractHashId = succStruct.SstrContractHashIDNew
+	taskSchedule.TaskId = succStruct.SstrTaskIdNew
+	taskSchedule.TaskExecuteIndex = succStruct.SnTaskExecuteIndexNew
+	taskSchedule.TaskState = succStruct.SstrTaskStateNew
 	taskSchedule.NodePubkey = strNodePubkey
 	taskSchedule.StartTime = startTime
 	taskSchedule.EndTime = endTime
