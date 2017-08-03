@@ -9,6 +9,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/golang/protobuf/proto"
+	http_status "unicontract/src/api"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/common/uniledgerlog"
@@ -24,25 +25,8 @@ type ContractController struct {
 	beego.Controller
 }
 
-const (
-	HTTP_STATUS_CODE_OK             = 200 //200 - 客户端请求已成功
-	HTTP_STATUS_CODE_BadRequest     = 400 //400 - 请求出现语法错误
-	HTTP_STATUS_CODE_Unauthorized   = 401 //401 - 访问被拒绝
-	HTTP_STATUS_CODE_Forbidden      = 403 //403 - 禁止访问 资源不可用
-	HTTP_STATUS_CODE_NotFound       = 404 //404 - 无法找到指定位置的资源
-	HTTP_STATUS_CODE_NotAcceptable  = 406 //406 - 指定的资源已经找到，但它的MIME类型和客户在Accpet头中所指定的不兼容
-	HTTP_STATUS_CODE_RequestTimeout = 408 //408 - 在服务器许可的等待时间内，客户一直没有发出任何请求。客户可以在以后重复同一请求。
-)
-
-func (c *ContractController) parseProtoRequestBody() (token string, contract *protos.Contract, err error, status int) {
+func (c *ContractController) parseProtoRequestBody() (contract *protos.Contract, err error, status int) {
 	contentType := c.Ctx.Input.Header("Content-Type")
-	token = c.Ctx.Input.Header("token")
-	if token == "" {
-		err = fmt.Errorf("token is blank!")
-		status = HTTP_STATUS_CODE_BadRequest
-		return
-	}
-
 	requestBody := c.Ctx.Input.RequestBody
 	contract = &protos.Contract{}
 	// return err init
@@ -51,7 +35,7 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 		if err != nil {
 			uniledgerlog.Error("contract parseRequestBody unmarshal err ", err)
 			err = fmt.Errorf("contract parseRequestBody unmarshal err ")
-			status = HTTP_STATUS_CODE_BadRequest
+			status = http_status.HTTP_STATUS_CODE_BadRequest
 			return
 		}
 		//todo temp
@@ -61,7 +45,7 @@ func (c *ContractController) parseProtoRequestBody() (token string, contract *pr
 		//	status = HTTP_STATUS_CODE_BadRequest
 		//	return
 		//}
-		fmt.Sprintf("[API] match |%s [token =%s, Content-Type =%s]", token, c.Ctx.Request.RequestURI,
+		fmt.Sprintf("[http_status] match |%s [token =%s, Content-Type =%s]", c.Ctx.Request.RequestURI,
 			contentType)
 		uniledgerlog.Info(fmt.Sprintf("[API] match|%-32s \t[token = %s, Content-Type = %s]", c.Ctx.Request.RequestURI,
 			c.Ctx.Request.Method, contentType))
@@ -83,7 +67,7 @@ func (c *ContractController) responseJsonBody(data string, ok bool, msg string) 
 		uniledgerlog.Error("responseJsonBodyCode ", err.Error())
 	}
 	//c.Ctx.ResponseWriter.Header().Set("Content-Type", "application/x-protobuf")
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	//c.Ctx.ResponseWriter.Write([]byte(body))
 	c.Ctx.ResponseWriter.Write(body)
 	//c.ServeJSON()
@@ -146,25 +130,25 @@ func fromContractModelArrayStrToContracts(contractModelStr string) (protos.Contr
 }
 
 // special for contractArray to proto[] only for queryLog
-func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos.ContractList, error) {
-	// 1. to contractModel
-	var contractModels []model.ContractModel
-	err := json.Unmarshal([]byte(contractModelStr), &contractModels)
-	// 2. to contract
-	var contractList protos.ContractList
-	var contracts []*protos.Contract
-	if err != nil {
-		uniledgerlog.Error("error fromContractModelArrayStrToContracts", err)
-		return contractList, err
-	}
-	contracts = make([]*protos.Contract, len(contractModels))
-	for i := 0; i < len(contractModels); i++ {
-		contracts[i], err = model.FromContractModelToContractProto(contractModels[i])
-	}
-	contractList.Contracts = contracts
-	uniledgerlog.Info("query contract len is ", len(contractModels))
-	return contractList, nil
-}
+//func fromContractModelArrayStrToContractsForLog(contractModelStr string) (protos.ContractList, error) {
+//	// 1. to contractModel
+//	var contractModels []model.ContractModel
+//	err := json.Unmarshal([]byte(contractModelStr), &contractModels)
+//	// 2. to contract
+//	var contractList protos.ContractList
+//	var contracts []*protos.Contract
+//	if err != nil {
+//		uniledgerlog.Error("error fromContractModelArrayStrToContracts", err)
+//		return contractList, err
+//	}
+//	contracts = make([]*protos.Contract, len(contractModels))
+//	for i := 0; i < len(contractModels); i++ {
+//		contracts[i], err = model.FromContractModelToContractProto(contractModels[i])
+//	}
+//	contractList.Contracts = contracts
+//	uniledgerlog.Info("query contract len is ", len(contractModels))
+//	return contractList, nil
+//}
 
 // special for contractOutputs Array to proto[] only for queryLog
 func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr string) (protos.ContractExecuteLogList, error) {
@@ -217,14 +201,9 @@ func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr s
 	return contractExecuteLogList, nil
 }
 
-// @Title AuthSignature
-// @Description AuthSignature for contract
-// @Param	body		body 	models.Contract	true		"body for contract content"
-// @Success 200 {} models.Contract.Head.Id
-// @Failure 403 body is empty
-// @router /authSignature [post]
+// AuthSignature [GET]
 func (c *ContractController) AuthSignature() {
-	_, contract, err, status := c.parseProtoRequestBody()
+	contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
 		c.responseJsonBodyCode(status, "", false, err.Error())
 		return
@@ -233,20 +212,15 @@ func (c *ContractController) AuthSignature() {
 	contractModel, err := model.FromContractProtoToContractModel(*contract)
 	signatureValid := contractModel.IsSignatureValid()
 	if !signatureValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "合约签名验证失败")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "合约签名验证失败")
 		return
 	}
-	c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "验证签名 success")
+	c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "验证签名 success")
 }
 
-// @Title CreateContract
-// @Description create contract
-// @Param	body		body 	models.Contract	true		"body for contract content"
-// @Success 200 {int} models.Contract.Head.Id
-// @Failure 403 body is empty
-// @router /create [post]
+// Create [POST]
 func (c *ContractController) Create() {
-	token, contract, err, status := c.parseProtoRequestBody()
+	contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
 		c.responseJsonBodyCode(status, "", false, err.Error())
 		monitor.Monitor.Count("request_fail", 1)
@@ -264,23 +238,21 @@ func (c *ContractController) Create() {
 	contractBody := contractModel.ContractBody
 	uniledgerlog.Warn("contractBody:\n", contractBody)
 	if contractHead == nil || contractBody == nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过, Head or Body is blank!")
-		uniledgerlog.Debug("API[Create] token is", token)
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过, Head or Body is blank!")
 		monitor.Monitor.Count("request_fail", 1)
 		return
 	}
 
 	contractValid := contractModel.Validate()
 	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过!")
-		uniledgerlog.Debug("API[Create] token is", token)
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "contract 验证不通过!")
 		monitor.Monitor.Count("request_fail", 1)
 		return
 	}
 	contract_write_time := monitor.Monitor.NewTiming()
 	ok := core.WriteContract(*contractModel)
 	if !ok {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Create] insert contract fail!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "API[Create] insert contract fail!")
 		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[Create] insert contract fail!")
 		monitor.Monitor.Count("request_fail", 1)
 		return
@@ -290,35 +262,28 @@ func (c *ContractController) Create() {
 
 }
 
-// @Title Signature
-// @Description signature the contract
-// @Param	body		body 	interface{}	true		"body for contract id"
-// @Success 200 {object} models.Contract
-// @Failure 403 body is empty
-// @router /signature [post]
-func (c *ContractController) Signature() {
-	token, contract, err, status := c.parseProtoRequestBody()
-	if err != nil {
-		c.responseJsonBodyCode(status, "", false, err.Error())
-		return
-	}
-
-	contractModel, err := model.FromContractProtoToContractModel(*contract)
-	//contractModel := fromContractToContractModel(contract)
-	contractValid := contractModel.Validate()
-	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
-		uniledgerlog.Debug("API[Signature] token is", token)
-		return
-	}
-	ok := core.WriteContract(*contractModel)
-	if !ok {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[Signature] insert contract fail!")
-		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[Signature] insert contract fail!")
-		return
-	}
-	c.responseJsonBody(contract.Id, true, "API[Signature] insert contract Id "+contractModel.Id+"]")
-}
+//func (c *ContractController) Signature() {
+//	contract, err, status := c.parseProtoRequestBody()
+//	if err != nil {
+//		c.responseJsonBodyCode(status, "", false, err.Error())
+//		return
+//	}
+//
+//	contractModel, err := model.FromContractProtoToContractModel(*contract)
+//	//contractModel := fromContractToContractModel(contract)
+//	contractValid := contractModel.Validate()
+//	if !contractValid {
+//		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+//		return
+//	}
+//	ok := core.WriteContract(*contractModel)
+//	if !ok {
+//		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "API[Signature] insert contract fail!")
+//		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[Signature] insert contract fail!")
+//		return
+//	}
+//	c.responseJsonBody(contract.Id, true, "API[Signature] insert contract Id "+contractModel.Id+"]")
+//}
 
 // @Title Terminate
 // @Description terminate the contract
@@ -326,23 +291,23 @@ func (c *ContractController) Signature() {
 // @Success 200 {string} terminate success!
 // @Failure 403 body is empty
 // @router /terminate [post]
-func (c *ContractController) Terminate() {
-	_, contract, err, status := c.parseProtoRequestBody()
-	if err != nil {
-		c.responseJsonBodyCode(status, "", false, err.Error())
-		return
-	}
-
-	if contract.Id == "" {
-		uniledgerlog.Debug("API[Terminate]合约(Id=" + contract.Id + ")不存在: ")
-		c.responseJsonBody("", false, "合约终止失败!")
-		return
-	}
-
-	uniledgerlog.Warn(c.Ctx.Request.RequestURI, "API[Signature]缺少终止合约方法!", "合约Id:", contract.Id)
-	c.responseJsonBody(contract.Id, false, "API[Terminate]合约终止失败!")
-	//c.responseJsonBody(contract.Id, true, "合约终止成功!")
-}
+//func (c *ContractController) Terminate() {
+//	contract, err, status := c.parseProtoRequestBody()
+//	if err != nil {
+//		c.responseJsonBodyCode(status, "", false, err.Error())
+//		return
+//	}
+//
+//	if contract.Id == "" {
+//		uniledgerlog.Debug("API[Terminate]合约(Id=" + contract.Id + ")不存在: ")
+//		c.responseJsonBody("", false, "合约终止失败!")
+//		return
+//	}
+//
+//	uniledgerlog.Warn(c.Ctx.Request.RequestURI, "API[Signature]缺少终止合约方法!", "合约Id:", contract.Id)
+//	c.responseJsonBody(contract.Id, false, "API[Terminate]合约终止失败!")
+//	//c.responseJsonBody(contract.Id, true, "合约终止成功!")
+//}
 
 // query the contract content with the contractId and oners
 func (c *ContractController) QueryContractContent() {
@@ -360,24 +325,24 @@ func (c *ContractController) QueryContractContent() {
 	uniledgerlog.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractId=%s]",
 		c.Ctx.Request.RequestURI, token, owner, contractId))
 	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 	if contractId == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 	contractModelStr, err := rethinkdb.GetContractContentByMapCondition(requestParamMap)
 	//uniledgerlog.Warn("QueryContractContent:\n", contractModelStr)
 	if err != nil {
 		uniledgerlog.Error("API[QueryContractContent]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryContractContent]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryContractContent]合约查询错误!")
 		return
 	}
 
 	if contractModelStr == "" {
 		uniledgerlog.Warn("API[QueryContractContent]合约(Id=" + contractId + ")不存在: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryContractContent]合约(Id="+contractId+")不存在: ")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryContractContent]合约(Id="+contractId+")不存在: ")
 		return
 	}
 
@@ -401,23 +366,23 @@ func (c *ContractController) QueryPublishContract() {
 	uniledgerlog.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s]",
 		c.Ctx.Request.RequestURI, token, owner, contractState, contractId))
 	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 	if contractId == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 	contractModelStr, err := rethinkdb.GetPublishContractByMapCondition(requestParamMap)
 	if err != nil {
 		uniledgerlog.Error("API[QueryPublishContract]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryPublishContract]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryPublishContract]合约查询错误!")
 		return
 	}
 
 	if contractModelStr == "" {
 		uniledgerlog.Warn("API[QueryPublishContract]合约(Id=" + contractId + ")不存在: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryPublishContract]合约(Id="+contractId+")不存在: ")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryPublishContract]合约(Id="+contractId+")不存在: ")
 		return
 	}
 
@@ -436,7 +401,6 @@ func (c *ContractController) Query() {
 	requestBody := c.Ctx.Input.RequestBody
 	json.Unmarshal(requestBody, &requestParamMap)
 
-	token := c.Ctx.Request.Header.Get("token")
 	/*------------------- requestParams start ------------------*/
 	contractState, _ := requestParamMap["status"].(string)
 	contractId, _ := requestParamMap["contractId"].(string)
@@ -446,38 +410,35 @@ func (c *ContractController) Query() {
 	//uniledgerlog.Warn("Header: ", c.Ctx.Request.Header)
 
 	uniledgerlog.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s]",
-		c.Ctx.Request.RequestURI, token, owner, contractState, contractId))
-	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
-		return
-	}
+		c.Ctx.Request.RequestURI, owner, contractState, contractId))
+
 	if contractId == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 	contractModelStr, err := rethinkdb.GetOneContractByMapCondition(requestParamMap)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
 		return
 	}
 
 	if contractModelStr == "" {
 		uniledgerlog.Warn("API[Query]合约(Id=" + contractId + ")不存在: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
 		return
 	}
 
 	contractProto, err := model.FromContractModelStrToContractProto(contractModelStr)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractProtoBytes, err := proto.Marshal(contractProto)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(proto.Marshal) ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractProtoStr := string(contractProtoBytes)
@@ -513,33 +474,33 @@ func (c *ContractController) QueryAll() {
 	uniledgerlog.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s, contractName=%s]",
 		c.Ctx.Request.RequestURI, token, owner, contractState, contractId, contractName))
 	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 
 	contractModelStr, err := rethinkdb.GetContractsByMapCondition(requestParamMap)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id="+contractId+")查询错误: ", err)
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
 		return
 	}
 
 	if contractModelStr == "" {
 		uniledgerlog.Warn("API[Query]合约(Id=" + contractId + ")不存在: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[Query]合约(Id="+contractId+")不存在: ")
 		return
 	}
 
 	contractListProto, err := fromContractModelArrayStrToContracts(contractModelStr)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractListProtoBytes, err := proto.Marshal(&contractListProto)
 	if err != nil {
 		uniledgerlog.Error("API[QueryALl]合约, 转换失败(proto.Marshal) ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractProtoStr := string(contractListProtoBytes)
@@ -569,7 +530,7 @@ func (c *ContractController) QueryLog() {
 	uniledgerlog.Warn(fmt.Sprintf("[API] match |%s [token =%s, owner =%s, contractState=%s, contractId=%s, contractName=%s]",
 		c.Ctx.Request.RequestURI, token, owner, contractState, contractId, contractName))
 	if token == "" {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 
@@ -577,13 +538,13 @@ func (c *ContractController) QueryLog() {
 
 	if err != nil {
 		uniledgerlog.Error("API[QueryLog]合约log(Id="+contractId+")查询错误: ", err)
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryLog]查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryLog]查询错误!")
 		return
 	}
 
 	if contractOutputsModelStr == "" {
 		uniledgerlog.Warn("API[QueryLog]合约log(Id=" + contractId + ")不存在: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryLog](Id="+contractId+")不存在: ")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryLog](Id="+contractId+")不存在: ")
 		return
 	}
 	//todo 需要过滤字段,只提取需要的字段!
@@ -591,13 +552,13 @@ func (c *ContractController) QueryLog() {
 	uniledgerlog.Warn(contractExecuteLogListProto)
 	if err != nil {
 		uniledgerlog.Error("API[QueryLog]合约(Id=" + contractId + "), 转换失败(fromContractOutputsModelArrayStrToContractsForLog)")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractExecuteLogListProtoBytes, err := proto.Marshal(&contractExecuteLogListProto)
 	if err != nil {
 		uniledgerlog.Error("API[QueryLog]合约, 转换失败(proto.Marshal) ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 	contractExecuteLogListProtoStr := string(contractExecuteLogListProtoBytes)
@@ -611,24 +572,24 @@ func (c *ContractController) QueryLog() {
 // @Success 200 {object} models.Contract
 // @Failure 403 cid is empty
 // @router /update [post]
-func (c *ContractController) Update() {
-	_, contract, err, status := c.parseProtoRequestBody()
-	if err != nil {
-		c.responseJsonBodyCode(status, "", false, err.Error())
-		return
-	}
-
-	contractModel, err := model.FromContractProtoToContractModel(*contract)
-	contractValid := contractModel.Validate()
-	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract Validate error")
-		return
-	}
-	//TODO track contract 缺少测试合约方法
-	//ok := rethinkdb.InsertContract(common.StructSerialize(contractModel))
-	uniledgerlog.Warn(c.Ctx.Request.RequestURI, "API[Update] 缺少测试合约方法!")
-	c.responseJsonBody(contract.Id, false, "API[Update] 缺少合约更新方法!")
-}
+//func (c *ContractController) Update() {
+//	contract, err, status := c.parseProtoRequestBody()
+//	if err != nil {
+//		c.responseJsonBodyCode(status, "", false, err.Error())
+//		return
+//	}
+//
+//	contractModel, err := model.FromContractProtoToContractModel(*contract)
+//	contractValid := contractModel.Validate()
+//	if !contractValid {
+//		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "contract Validate error")
+//		return
+//	}
+//	//TODO track contract 缺少测试合约方法
+//	//ok := rethinkdb.InsertContract(common.StructSerialize(contractModel))
+//	uniledgerlog.Warn(c.Ctx.Request.RequestURI, "API[Update] 缺少测试合约方法!")
+//	c.responseJsonBody(contract.Id, false, "API[Update] 缺少合约更新方法!")
+//}
 
 // @Title Test
 // @Description test the contract
@@ -636,17 +597,17 @@ func (c *ContractController) Update() {
 // @Success 200 {string} test success!
 // @Failure 403 cid is empty
 // @router /test [post]
-func (c *ContractController) Test() {
-	_, _, err, status := c.parseProtoRequestBody()
-	if err != nil {
-		c.responseJsonBodyCode(status, "", false, err.Error())
-		return
-	}
-
-	//TODO track contract 缺少测试合约方法
-	uniledgerlog.Warn(c.Ctx.Request.RequestURI, "API[Test] 缺少测试合约方法!")
-	c.responseJsonBody(string(time.Now().Unix()), false, "API[Test] 缺少测试合约方法!")
-}
+//func (c *ContractController) Test() {
+//	_, err, status := c.parseProtoRequestBody()
+//	if err != nil {
+//		c.responseJsonBodyCode(status, "", false, err.Error())
+//		return
+//	}
+//
+//	//TODO track contract 缺少测试合约方法
+//	uniledgerlog.Warn(c.Ctx.Request.RequestURI, "API[Test] 缺少测试合约方法!")
+//	c.responseJsonBody(string(time.Now().Unix()), false, "API[Test] 缺少测试合约方法!")
+//}
 
 // for press test [pressTest]
 func (c *ContractController) PressTest() {
@@ -658,7 +619,7 @@ func (c *ContractController) PressTest() {
 	/*------------------- requestParams start ------------------*/
 	startTime, _ := requestParamMap["start"].(string)
 	endTime, _ := requestParamMap["end"].(string)
-	token, contract, err, status := c.parseProtoRequestBody()
+	contract, err, status := c.parseProtoRequestBody()
 	if startTime == "" {
 		startTime = common.GenTimestamp()
 	}
@@ -733,13 +694,13 @@ func (c *ContractController) PressTest() {
 	// no verify id again!
 	contractValid := contractModel.IsSignatureValid()
 	if !contractValid {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "contract 非法")
 		uniledgerlog.Debug("API[PressTest] token is", token)
 		return
 	}
 	ok := core.WriteContract(*contractModel)
 	if !ok {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_BadRequest, "", false, "API[PressTest] insert contract fail!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_BadRequest, "", false, "API[PressTest] insert contract fail!")
 		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[PressTest] insert contract fail!")
 		return
 	}
@@ -756,28 +717,28 @@ func (c *ContractController) QueryOutput() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	if len(token) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 
 	contractId, ok := requestParamMap["contractId"].(string)
 	if !ok {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
 		return
 	}
 	if len(contractId) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 
 	output, err := rethinkdb.QueryOutput(contractId)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[Query]合约查询错误!")
 		return
 	}
 
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(output))))
 
 }
@@ -789,28 +750,28 @@ func (c *ContractController) QueryOutputNum() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	if len(token) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 
 	contractId, ok := requestParamMap["contractId"].(string)
 	if !ok {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
 		return
 	}
 	if len(contractId) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 
 	count, err := rethinkdb.QueryOutputNum(contractId)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryOutputNum]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryOutputNum]合约查询错误!")
 		return
 	}
 
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`{"count":%d}`, count)))))
 }
 
@@ -821,24 +782,24 @@ func (c *ContractController) QueryOutputDuration() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	if len(token) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 
 	contractId, ok := requestParamMap["contractId"].(string)
 	if !ok {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId type is error!")
 		return
 	}
 	if len(contractId) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "contractId is blank!")
 		return
 	}
 
 	startTime, err := rethinkdb.QueryContractStartTime(contractId)
 	if err != nil {
 		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, "API[QueryOutputDuration]合约查询错误!")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, "API[QueryOutputDuration]合约查询错误!")
 		return
 	}
 
@@ -849,7 +810,7 @@ func (c *ContractController) QueryOutputDuration() {
 
 	hours := ((now - start) / 1000) / 3600
 
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`{"duration":%d}`, hours)))))
 }
 
@@ -860,13 +821,13 @@ func (c *ContractController) QueryAccountBalance() {
 
 	result, err := function.FuncQueryAccountBalance()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 
 	data, _ := result.GetData().(string)
 
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(data))))
 }
 
@@ -877,13 +838,13 @@ func (c *ContractController) QueryAmmeterBalance() {
 
 	result, err := function.FuncQueryAmmeterBalance()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 
 	data, _ := result.GetData().(string)
 
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(data))))
 }
 
@@ -894,17 +855,17 @@ func (c *ContractController) QueryRecords() {
 
 	token := c.Ctx.Request.Header.Get("token")
 	if len(token) == 0 {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_Forbidden, "", false, "服务器拒绝请求")
 		return
 	}
 
 	str, err := rethinkdb.GetTransactionRecords()
 	if err != nil {
-		c.responseJsonBodyCode(HTTP_STATUS_CODE_OK, "", false, err.Error())
+		c.responseJsonBodyCode(http_status.HTTP_STATUS_CODE_OK, "", false, err.Error())
 		return
 	}
 
-	c.Ctx.ResponseWriter.WriteHeader(HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(http_status.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(str))))
 }
 

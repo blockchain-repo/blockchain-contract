@@ -22,29 +22,32 @@ func init() {
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true}))
 
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.ContractFilter, false)
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
-	ns := beego.NewNamespace("/v1",
+	// auth request app_id and app_key, return token
+	beego.InsertFilter("/v1/unicontract/auth", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, false)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
+	ns := beego.NewNamespace("/v1/unicontract",
 		beego.NSNamespace("/contract",
-			beego.NSRouter("/authSignature", &controllers.ContractController{}, "post:AuthSignature"),
+			beego.NSRouter("/authSignature", &controllers.ContractController{}, "get:AuthSignature"),
 			beego.NSRouter("/create", &controllers.ContractController{}, "post:Create"),
-			beego.NSRouter("/signature", &controllers.ContractController{}, "post:Signature"),
-			beego.NSRouter("/terminate", &controllers.ContractController{}, "post:Terminate"),
-			beego.NSRouter("/queryPublishContract", &controllers.ContractController{}, "post:QueryPublishContract"),
-			beego.NSRouter("/queryContractContent", &controllers.ContractController{}, "post:QueryContractContent"),
-			beego.NSRouter("/query", &controllers.ContractController{}, "post:Query"),
-			beego.NSRouter("/queryAll", &controllers.ContractController{}, "post:QueryAll"),
-			beego.NSRouter("/queryLog", &controllers.ContractController{}, "post:QueryLog"),
-			beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
-			beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),
+			//beego.NSRouter("/signature", &controllers.ContractController{}, "post:Signature"),
+			//beego.NSRouter("/terminate", &controllers.ContractController{}, "post:Terminate"),
+			beego.NSRouter("/queryPublishContract", &controllers.ContractController{}, "get:QueryPublishContract"),
+			beego.NSRouter("/queryContractContent", &controllers.ContractController{}, "get:QueryContractContent"),
+			beego.NSRouter("/query", &controllers.ContractController{}, "get:Query"),
+			beego.NSRouter("/queryAll", &controllers.ContractController{}, "get:QueryAll"),
+			beego.NSRouter("/queryLog", &controllers.ContractController{}, "get:QueryLog"),
+			//beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
+			//beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),
 			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),
 			//demo使用---------------------------------------------------------------------------------------------------
-			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "post:QueryOutput"),
-			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "post:QueryOutputNum"),
-			beego.NSRouter("/queryOutputDuration", &controllers.ContractController{}, "post:QueryOutputDuration"),
-			beego.NSRouter("/queryAccountBalance", &controllers.ContractController{}, "post:QueryAccountBalance"),
-			beego.NSRouter("/queryAmmeterBalance", &controllers.ContractController{}, "post:QueryAmmeterBalance"),
-			beego.NSRouter("/queryRecords", &controllers.ContractController{}, "post:QueryRecords"),
+			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "get:QueryOutput"),
+			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "get:QueryOutputNum"),
+			beego.NSRouter("/queryOutputDuration", &controllers.ContractController{}, "get:QueryOutputDuration"),
+			beego.NSRouter("/queryAccountBalance", &controllers.ContractController{}, "get:QueryAccountBalance"),
+			beego.NSRouter("/queryAmmeterBalance", &controllers.ContractController{}, "get:QueryAmmeterBalance"),
+			beego.NSRouter("/queryRecords", &controllers.ContractController{}, "get:QueryRecords"),
 			//demo使用---------------------------------------------------------------------------------------------------
 		),
 	)
