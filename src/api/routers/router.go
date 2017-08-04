@@ -25,7 +25,7 @@ func init() {
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// auth request app_id and app_key, return token
 	beego.InsertFilter("/v1/unicontract/auth", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, false)
+	//beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, false)
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
 	ns := beego.NewNamespace("/v1/unicontract",
 		beego.NSNamespace("/contract",

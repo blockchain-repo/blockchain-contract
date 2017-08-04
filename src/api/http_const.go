@@ -1,7 +1,7 @@
 package api
 
 const (
-	HTTP_STATUS_CODE_OK             = 111000200 //200 - 客户端请求已成功
+	HTTP_STATUS_CODE_OK             = 0         //200 - 客户端请求已成功
 	HTTP_STATUS_CODE_BadRequest     = 111000400 //400 - 请求出现语法错误
 	HTTP_STATUS_CODE_Unauthorized   = 111000401 //401 - 访问被拒绝
 	HTTP_STATUS_CODE_Forbidden      = 111000403 //403 - 禁止访问 资源不可用
