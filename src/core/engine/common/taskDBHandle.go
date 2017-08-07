@@ -388,3 +388,10 @@ func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 }
 
 //---------------------------------------------------------------------------
+func GetTaskState(strContractID, strContractHashId string) (db.RunState, error) {
+	failedThreshold, _ := scanEngineConf["failed_count_threshold"].(int)
+	waitThreshold, _ := scanEngineConf["wait_count_threshold"].(int)
+	return DBInf.GetTaskScheduleState(strContractID, strContractHashId, failedThreshold, waitThreshold)
+}
+
+//---------------------------------------------------------------------------

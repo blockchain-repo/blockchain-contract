@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strconv"
 	"sync"
 )
 
@@ -516,6 +517,90 @@ func (rethink *rethinkdb) GetTaskSendFlagCount(stat int) (string, error) {
 		return "", err
 	}
 	return blo, nil
+}
+
+//---------------------------------------------------------------------------
+func (rethink *rethinkdb) GetTaskScheduleState(strContractID, strContractHashId string, failedThreshold, waitThreshold int) (RunState, error) {
+	var state RunState
+	var err error
+	strPublicKey := config.Config.Keypair.PublicKey
+	if len(strPublicKey) != 0 {
+		// 根据contractid和hashid查询对应的id
+		strID, err := rethink.GetID(strPublicKey, strContractID, strContractHashId)
+		if err == nil {
+			// 根据id查询出那条记录
+			res, err := rethink._Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
+			if err == nil {
+				if res.IsNil() {
+					err = fmt.Errorf("query is null")
+				} else {
+					var task map[string]interface{}
+					err = res.One(&task)
+					if err == nil {
+						overFlag, _ := task["OverFlag"].(float64)
+						sendFlag, _ := task["SendFlag"].(float64)
+						startTime, _ := task["StartTime"].(string)
+						endTime, _ := task["EndTime"].(string)
+						successCount, _ := task["SuccessCount"].(float64)
+						failedCount, _ := task["FailedCount"].(float64)
+						waitCount, _ := task["WaitCount"].(float64)
+
+						switch {
+						case overFlag == 0 && testTime(startTime, endTime) == 0 && sendFlag == 1:
+							state = WAIT_FOR_RUN
+							break
+						case overFlag == 0 && testTime(startTime, endTime) == 0:
+							state = NORMAL
+							break
+						case overFlag == 1 && successCount == 1:
+							state = ALREADY_RUN_SUCCESS
+							break
+						case overFlag == 0 && testTime(startTime, endTime) == -1:
+							state = NO_ARRIVAL_TIME
+							break
+						case overFlag == 0 && testTime(startTime, endTime) == 1:
+							state = OVER_TIME
+							break
+						case overFlag == 1 && failedCount > float64(failedThreshold):
+							state = FAILED_TIMES_BEYOND
+							break
+						case overFlag == 1 && waitCount > float64(waitThreshold):
+							state = WAIT_TIMES_BEYOND
+							break
+						default:
+							state = NORMAL
+							break
+						}
+					}
+				}
+			}
+		}
+	} else {
+		err = fmt.Errorf("strPublicKey is not exist")
+	}
+	return state, err
+}
+
+func testTime(start, end string) int {
+	var state int
+	startTimeStamp, _ := strconv.Atoi(start)
+	endTimeStamp, _ := strconv.Atoi(end)
+	nowTimeStamp, _ := strconv.Atoi(common.GenTimestamp())
+
+	switch {
+	case nowTimeStamp < startTimeStamp:
+		state = -1
+		break
+	case nowTimeStamp < startTimeStamp && nowTimeStamp > endTimeStamp:
+		state = 0
+		break
+	case nowTimeStamp > endTimeStamp:
+		state = 1
+		break
+	default:
+		state = 0
+	}
+	return state
 }
 
 //---------------------------------------------------------------------------

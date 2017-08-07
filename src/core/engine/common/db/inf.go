@@ -1,5 +1,38 @@
 package db
 
+type RunState int
+
+const (
+	NORMAL RunState = iota
+	ALREADY_RUN_SUCCESS
+	NO_ARRIVAL_TIME
+	OVER_TIME
+	FAILED_TIMES_BEYOND
+	WAIT_TIMES_BEYOND
+	WAIT_FOR_RUN
+)
+
+func (this RunState) String() string {
+	switch this {
+	case NORMAL:
+		return "normal"
+	case ALREADY_RUN_SUCCESS:
+		return "already run success"
+	case NO_ARRIVAL_TIME:
+		return "no arrival run time"
+	case OVER_TIME:
+		return "over run time"
+	case FAILED_TIMES_BEYOND:
+		return "failed times beyond"
+	case WAIT_TIMES_BEYOND:
+		return "wait times beyond"
+	case WAIT_FOR_RUN:
+		return "waiting for run"
+	default:
+		return "Unknow"
+	}
+}
+
 type Datebase interface {
 	InitDatabase() error
 	CreateDatabase(dbName string) error
@@ -20,6 +53,7 @@ type Datebase interface {
 	GetTaskSchedulesSuccess(strNodePubkey string) (string, error)
 	DeleteTaskSchedules(slID []interface{}) (int, error)
 
+	GetTaskScheduleState(strContractID, strContractHashId string, failedThreshold, waitThreshold int) (RunState, error)
 	GetTaskScheduleCount(stat string) (string, error)
 	GetTaskSendFlagCount(stat int) (string, error)
 }
