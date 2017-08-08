@@ -1,218 +1,210 @@
 package filters
 
 import (
-	"crypto"
-	"encoding/hex"
-	"fmt"
 	"github.com/astaxie/beego/context"
-	"github.com/btcsuite/btcutil/base58"
-	"hash"
 	//"strconv"
 	//"time"
-	http_status "unicontract/src/api"
+	"encoding/json"
+	"strconv"
+	"time"
+	api "unicontract/src/api"
 	"unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
-	"unicontract/src/core/db/redis"
 )
 
-func responseWithStatusCode(ctx *context.Context, status int, output string) {
-	//ctx.Output.SetStatus(status) // invalid setStatus
-	ctx.ResponseWriter.WriteHeader(status)
-	ctx.ResponseWriter.Write([]byte(output))
+type response struct {
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
-const (
-	// 30 minutes
-	token_timeout    = 60 * 30
-	rate_limit_time  = 2
-	rate_limit_count = 100
-)
-
-func checkExistAppUser(store_secure_id string) (exist bool) {
-	// get from db , exist records return token ,generate
-	// now temp return generate token!
-	return true
-}
-
-func hashData(val string) string {
-	var hash hash.Hash
-	var x string = ""
-	hash = crypto.SHA3_256.New()
-	if hash != nil {
-		hash.Write([]byte(val))
-		x = hex.EncodeToString(hash.Sum(nil))
+func responseWithStatusCode(ctx *context.Context, status int, output interface{}) {
+	result := response{Code: status, Msg: "", Data: output}
+	resultByte, err := json.Marshal(result)
+	if err != nil {
+		uniledgerlog.Error("responseWithStatusCode", err.Error())
 	}
-	return x
-}
-
-func md5Encode(val string) string {
-	var hash hash.Hash
-	var x string = ""
-	hash = crypto.MD5.New()
-	if hash != nil {
-		hash.Write([]byte(val))
-		x = hex.EncodeToString(hash.Sum(nil))
-	}
-	return x
-}
-
-func generateToken(str string) string {
-	md5Str := md5Encode(str)
-	return base58.Encode([]byte(md5Str))
-}
-
-func generateSecureStoreKey(app_id, app_key string) string {
-	return hashData(app_id + "-" + app_key)
-}
-
-func getToken() string {
-	//token := "ffffffffffffffffffffffffffffffffffffffffffffffff"
-	default_app_id := "0123456789"
-	default_app_key := "uni-ledger.com"
-	secure_token_key := generateSecureStoreKey(default_app_id, default_app_key)
-	conn, _ := redis.GetConn()
-	exist := redis.ExistKey(conn, secure_token_key)
-	if exist {
-		token, _ := redis.GetString(conn, secure_token_key)
-		redis.SetExpire(conn, secure_token_key, token_timeout)
-		uniledgerlog.Info("APIAuthorizationFilter get token!", token)
-		return token
-	} else {
-		// default_app_id-unix_timestamp
-		token := generateToken(generateSecureStoreKey(default_app_id, common.GenTimestamp()))
-		redis.SetVal(conn, secure_token_key, token)
-		redis.SetExpire(conn, secure_token_key, token_timeout)
-
-		// token aid/userid
-		redis.SetVal(conn, token, default_app_id)
-		redis.SetExpire(conn, token, rate_limit_time)
-
-		uniledgerlog.Info("APIAuthorizationFilter generateToken token!", token)
-		return token
-	}
+	ctx.ResponseWriter.Write(resultByte)
+	return
 }
 
 //var ContentTypes = []string{"application/json", "application/x-protobuf"}
 
-// get token use app_id and app_key from redis
-func APIAuthorizationFilter(ctx *context.Context) {
-	app_id := ctx.Input.Query("app_id")
-	app_key := ctx.Input.Query("app_key")
-	//
-	exist := checkExistAppUser(generateSecureStoreKey(app_id, app_key))
-	if exist {
-		token := getToken()
-		uniledgerlog.Info("APIAuthorizationFilter exist user!", token)
-		responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_OK, token)
-	} else {
-		uniledgerlog.Error("APIAuthorizationFilter not exist user!")
-		// not exist, generateToken and put redis
-		responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_Forbidden, "not exist user!")
-		return
-	}
-
-}
-
-// 请求参数验证
+// todo filter the error Content-Type
+// APIContentTypeFilter step 1
 func APIContentTypeFilter(ctx *context.Context) {
+	cost_start := time.Now()
+
 	contentType := ctx.Input.Header("Content-Type")
 
 	if contentType == "" {
 		result := make(map[string]interface{})
 		result["msg"] = "error Headers"
-		result["status"] = http_status.HTTP_STATUS_CODE_BadRequest
-		uniledgerlog.Error("APIContentTypeFilter contentType or requestDataType is empty!")
-		responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_BadRequest, common.StructSerialize(result))
+		result["status"] = api.RESPONSE_STATUS_BadRequest
+		uniledgerlog.Error("APIContentTypeFilter contentType is empty!")
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, common.StructSerialize(result))
+		defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_BadRequest)()
 		return
 
 	} else if contentType == "application/json" || contentType == "application/x-protobuf" {
 		//uniledgerlog.Debug("RequestDataType is json!")
 	} else {
 		uniledgerlog.Error("APIContentTypeFilter contentType error!")
-		responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_BadRequest, "APIContentTypeFilter contentType error!")
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, "APIContentTypeFilter contentType error!")
+		defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_BadRequest)()
 		return
 	}
+
 }
 
-func rateLimit(token string) (rateOK bool) {
-	//ctx.Request.Host
-	conn, err := redis.GetConn()
-	if err != nil {
-		uniledgerlog.Error(err)
+// todo get the token with app_id and app_key; if not exist, response 111000403.
+// APIAuthorizationFilter step 2 授权,请求token
+// accesskey need store in redis for next step verify accessKey
+func APIAuthorizationFilter(ctx *context.Context) {
+	cost_start := time.Now()
+	app_id := ctx.Input.Query("app_id")
+	app_key := ctx.Input.Query("app_key")
+
+	/******************* test data, each has the static  *******************/
+	if app_id == "" {
+		app_id = "0123456789"
 	}
-	if !redis.ExistKey(conn, token) {
-		uniledgerlog.Error("token is not exist, will generate!")
-		//return false
+	if app_key == "" {
+		app_key = "uni-ledger.com"
 	}
-	times, err := redis.GetInt(conn, token)
-	if times == 0 {
-		redis.Incr(conn, token)
-		redis.SetExpire(conn, token, rate_limit_time)
+	/******************* test data *******************/
+
+	exist := api.CheckExistAppUser(api.GenerateAccessKey(app_id, app_key))
+	//if exist {
+	//	accessKey := api.GenerateAccessKey(app_id, app_key)
+	//	token := api.GetToken(accessKey)
+	//	uniledgerlog.Info("APIAuthorizationFilter exist user!", token)
+	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, token)
+	//} else {
+	//	uniledgerlog.Error("APIAuthorizationFilter not exist user!")
+	//	// not exist, generateToken and put redis
+	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_Forbidden, "not exist user!")
+	//	defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_Forbidden)()
+	//	return
+	//}
+	if exist {
+		access_key := api.GenerateAccessKey(app_id, app_key)
+		uniledgerlog.Info("APIAuthorizationFilter exist user!", access_key)
+		//todo
+		_ = api.StoreAccessKey(app_id, access_key)
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, access_key)
 	} else {
-		if times < rate_limit_count {
-			redis.Incr(conn, token)
-		} else {
-			ttl, err := redis.TTL(conn, token)
-			if err != nil {
-				uniledgerlog.Error(err)
-			}
-			fmt.Sprintf("%s,[%ds,%d],left %d", "用户访问频率超限", rate_limit_time, rate_limit_count, ttl)
-			uniledgerlog.Error(fmt.Sprintf("%s,[%ds,%d],left %d", "用户访问频率超限", rate_limit_time, rate_limit_count, ttl))
-			return false
-		}
+		uniledgerlog.Error("APIAuthorizationFilter not exist user!")
+		// not exist, generateToken and put redis
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, "not exist user!")
+		defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_Forbidden)()
+		return
 	}
-	ttl, err := redis.TTL(conn, token)
-	result := fmt.Sprintf("%s,[%ds,%d],剩余 %d, 重置时间%d", "用户访问频率", rate_limit_time, rate_limit_count, rate_limit_count-times, ttl)
-	uniledgerlog.Info(result)
-	return true
 }
 
-//签名身份验证
+func APIGetTokenFilter(ctx *context.Context) {
+	cost_start := time.Now()
+	access_key := ctx.Input.Query("accessKey")
+	app_id := ctx.Input.Query("app_id")
+	if app_id == "" {
+		app_id = "0123456789"
+	}
+	if access_key != "" {
+		token, ok := api.GetToken(app_id, access_key)
+		if ok {
+			uniledgerlog.Info("APIGetTokenFilter exist accessKey!", token)
+			responseWithStatusCode(ctx, api.RESPONSE_STATUS_OK, token)
+
+		} else {
+			uniledgerlog.Info("APIGetTokenFilter not exist accessKey!", token)
+			responseWithStatusCode(ctx, api.RESPONSE_STATUS_BadRequest, token)
+		}
+	} else {
+		uniledgerlog.Error("APIGetTokenFilter accessKey error!")
+		// not exist, generateToken and put redis
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, "accessKey error!")
+		defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_Forbidden)()
+		return
+	}
+
+}
+
+// APIAuthorizationFilter step 3 API 参数及权限认证
 func APIAuthFilter(ctx *context.Context) {
-	// 5s
-	// test 60*60*10 10hours
-	//timeout := int64(60 * 60 * 10)
-	//t := time.Now()
-	//nanos := t.UnixNano()
-	////ms len=13
-	//current_unix_timestamp := nanos / 1000000
-	//timestamp := ctx.Input.Query("timestamp")
-	//if len(timestamp) != 13 {
-	//	uniledgerlog.Error("APIAuthFilter timestamp error!")
-	//	responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter timestamp error!")
-	//	return
-	//}
-
+	// 1. verify the parameters is miss, timestamp, token,sign
 	token := ctx.Input.Query("token")
-	if len(token) != 44 {
-		uniledgerlog.Error("APIAuthFilter token error!", token)
-		responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter token error!"+string(token))
+	timestamp := ctx.Input.Query("timestamp")
+	sign := ctx.Input.Query("sign")
+
+	if token == "" || timestamp == "" || sign == "" {
+		uniledgerlog.Error("APIAuthFilter parameters miss!")
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters miss!")
 		return
 	}
-	if !rateLimit(token) {
-		responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_Forbidden, "APIAuthFilter token error!"+string(token))
+	if len(token) != api.API_TOKEN_LEN {
+		uniledgerlog.Error("APIAuthFilter parameters token error!")
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters token error!")
+		return
+	}
+	if len(timestamp) != api.API_TIMESTAMP_LEN {
+		uniledgerlog.Error("APIAuthFilter parameters timestamp error!")
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters timestamp error!")
 		return
 	}
 
-	//timestamp_int64, err := strconv.ParseInt(timestamp, 10, 64)
-	//if err != nil {
-	//	uniledgerlog.Error("APIAuthFilter error!", err)
-	//	return
-	//}
-	//timecost := (current_unix_timestamp - timestamp_int64) / 1000
-	//uniledgerlog.Info("time info", current_unix_timestamp, timestamp_int64, timecost)
-	//if timecost < 0 || timecost > timeout {
-	//	uniledgerlog.Error("APIAuthFilter timestamp invalid!", timecost)
-	//	responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter timestamp invalid!"+string(timecost)+"s")
+	//if len(sign) != api.API_SIGN_LEN {
+	//	uniledgerlog.Error("APIAuthFilter parameters sign error!")
+	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters sign error!")
 	//	return
 	//}
 
-	// sign verify
-	//sign := ctx.Input.Query("sign")
-	//if len(sign) == 0 {
-	//	uniledgerlog.Error("APIAuthFilter token error!", token)
-	//	responseWithStatusCode(ctx, http_status.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter sign error!"+string(token))
+	//if len(token) != api.API_TOKEN_LEN || len(timestamp) != api.API_TIMESTAMP_LEN || len(sign) != api.API_SIGN_LEN {
+	//	uniledgerlog.Error("APIAuthFilter parameters error!")
+	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters error!")
 	//	return
 	//}
 
+	// 2. verify the timestamp
+	nanos := time.Now().UnixNano()
+	//ms len=13
+	current_unix_timestamp := nanos / 1000000
+
+	timestamp_int64, err := strconv.ParseInt(timestamp, 10, 64)
+	if err != nil {
+		uniledgerlog.Error("APIAuthFilter error!", err)
+		return
+	}
+	cost := (current_unix_timestamp - timestamp_int64) / 1000
+	uniledgerlog.Info("time info", current_unix_timestamp, timestamp_int64, cost)
+	if cost < 0 || cost > api.API_TIMEOUT {
+		uniledgerlog.Error("APIAuthFilter timestamp invalid!", cost)
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter timestamp invalid!"+strconv.FormatInt(cost, 10)+"s")
+		return
+	}
+
+	// 3. verify the token
+	if !api.ExistKey(token) {
+		uniledgerlog.Error("APIAuthFilter token not exist!")
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter token not exist! "+strconv.FormatInt(cost, 10)+" s")
+		return
+	}
+	// 4. verify the sign
+	if !api.VerifySign(token, timestamp, sign) {
+		uniledgerlog.Error("APIAuthFilter sign error!", cost)
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter sign error!"+strconv.FormatInt(cost, 10)+"s")
+		return
+	}
+}
+
+// APIRateLimitFilter step 4 API Ratelimit 验证
+func APIRateLimitFilter(ctx *context.Context) {
+	//cost_start := time.Now()
+	token := ctx.Input.Query("token")
+	if !api.RateLimit(token) {
+		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_TOO_MANY_REQUESTS, "APIRateLimitFilter error!"+string(token))
+		//defer api.TimeCost(cost_start, ctx, api.HTTP_STATUS_CODE_TOO_MANY_REQUESTS)()
+		return
+	}
+	// last filter, will reset the token valid time
+	api.UpdateToken(token)
 }

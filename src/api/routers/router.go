@@ -22,24 +22,22 @@ func init() {
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true}))
 
+	// filter shouldn`t use the api log!
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// auth request app_id and app_key, return token
-	beego.InsertFilter("/v1/unicontract/auth", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
-	//beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, false)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, true)
+	beego.InsertFilter("/v1/unicontract/auth/getAccessKey", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
+	beego.InsertFilter("/v1/unicontract/auth/getToken", beego.BeforeRouter, filters.APIGetTokenFilter, true)
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
 	ns := beego.NewNamespace("/v1/unicontract",
 		beego.NSNamespace("/contract",
-			beego.NSRouter("/authSignature", &controllers.ContractController{}, "get:AuthSignature"),
 			beego.NSRouter("/create", &controllers.ContractController{}, "post:Create"),
-			//beego.NSRouter("/signature", &controllers.ContractController{}, "post:Signature"),
-			//beego.NSRouter("/terminate", &controllers.ContractController{}, "post:Terminate"),
 			beego.NSRouter("/queryPublishContract", &controllers.ContractController{}, "get:QueryPublishContract"),
 			beego.NSRouter("/queryContractContent", &controllers.ContractController{}, "get:QueryContractContent"),
 			beego.NSRouter("/query", &controllers.ContractController{}, "get:Query"),
 			beego.NSRouter("/queryAll", &controllers.ContractController{}, "get:QueryAll"),
 			beego.NSRouter("/queryLog", &controllers.ContractController{}, "get:QueryLog"),
-			//beego.NSRouter("/update", &controllers.ContractController{}, "post:Update"),
-			//beego.NSRouter("/test", &controllers.ContractController{}, "post:Test"),
 			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),
 			//demo使用---------------------------------------------------------------------------------------------------
 			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "get:QueryOutput"),
