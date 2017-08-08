@@ -3,10 +3,9 @@ package pipelines
 import (
 	"encoding/json"
 	"fmt"
-	"log"
-	"os"
 	"runtime"
 	"sort"
+	"sync"
 )
 
 import (
@@ -20,14 +19,10 @@ import (
 
 //---------------------------------------------------------------------------
 const (
-	_HTTP_OK          = 200
 	_VERSION          = 2
 	_OPERATION        = "CONTRACT"
 	_CONSENSUS_TYPE   = "contract"
 	_CONSENSUS_REASON = "contract illegal"
-	_THREAD_NUM       = 10
-	_INPUT_LEN        = 20
-	_OUTPUT_LEN       = 20
 	_FULFILLMENT      = "cf:4:RtTtCxNf1Bq7MFeIToEosMAa3v_jKtZUtqiWAXyFz1ejPMv-t7vT6DANcrYvKFHAsZblmZ1Xk03HQdJbGiMyb5CmQqGPHwlgKusNu9N_IDtPn7y16veJ1RBrUP-up4YD"
 )
 
@@ -35,190 +30,160 @@ var (
 	gslPublicKeys   []string
 	gnPublicKeysNum int
 	gstrPublicKey   string
-
-	gPool     *ThreadPool
-	gchInput  chan string
-	gchOutput chan string
 )
 
 //---------------------------------------------------------------------------
-func startContractElection() {
-	defer gPool.Stop()
-	defer close(gchInput)
+func getCEChangefeed() *ChangeFeed {
+	change := &ChangeFeed{
+		db:        rethinkdb.DBNAME,
+		table:     rethinkdb.TABLE_VOTES,
+		operation: INSERT | UPDATE,
+	}
+	go change.runForever()
+	return change
+}
 
+//---------------------------------------------------------------------------
+func createCEPip() (cePip Pipeline) {
+	ceNodeSlice := make([]*Node, 0)
+	ceNodeSlice = append(ceNodeSlice, &Node{target: ceHeadFilter, routineNum: 1, name: "ceHeadFilter"})
+	ceNodeSlice = append(ceNodeSlice, &Node{target: ceQueryExists, routineNum: 1, name: "ceQueryExists"})
+	cePip = Pipeline{
+		nodes: ceNodeSlice,
+	}
+	return cePip
+}
+
+//---------------------------------------------------------------------------
+func startContractElection() {
 	gslPublicKeys = config.GetAllPublicKey()
 	sort.Strings(gslPublicKeys)
 	gnPublicKeysNum = len(gslPublicKeys)
 	gstrPublicKey = config.Config.Keypair.PublicKey
 
-	gchInput = make(chan string, _INPUT_LEN)
-	gchOutput = make(chan string, _OUTPUT_LEN)
+	cePip := createCEPip()
+	ceChangefeed := getCEChangefeed()
+	cePip.setup(&ceChangefeed.node)
+	cePip.start()
 
-	gPool = new(ThreadPool)
-	gPool.Init(_THREAD_NUM)
-	for i := 0; i < _THREAD_NUM; i++ {
-		gPool.AddTask(func() error {
-			return ceHeadFilter()
-		})
+	waitRoutine := sync.WaitGroup{}
+	waitRoutine.Add(1)
+	waitRoutine.Wait()
+}
+
+//---------------------------------------------------------------------------
+func ceHeadFilter(arg interface{}) interface{} {
+	uniledgerlog.Debug("1.changefeed -> ceHeadFilter")
+
+	// 读取new_val的值
+	contract_election_time := monitor.Monitor.NewTiming()
+	slVote, err := json.Marshal(arg)
+	if err != nil {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.SERIALIZE_ERROR, err.Error()))
+		return nil
 	}
-	go gPool.Start()
 
-	go ceChangefeed()
+	// 将new_val转化为vote
+	vote := model.Vote{}
+	err = json.Unmarshal(slVote, &vote)
+	if err != nil {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.DESERIALIZE_ERROR, err.Error()))
+		return nil
+	}
 
-	for {
-		if out, ok := <-gchOutput; ok {
-			f, err := os.OpenFile("/dev/null", os.O_RDWR, 0)
+	// 验证是否为头节点
+	uniledgerlog.Debug("1.2 get publickey and verify")
+	uniledgerlog.Debug("1.2.1 get publickey")
+	mainPubkey, err := rethinkdb.GetContractMainPubkeyByContract(vote.VoteBody.VoteFor)
+	if err == nil {
+		uniledgerlog.Debug("1.2.2 verify head node")
+		if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
+			// 将contract更新为正在共识阶段
+			rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
+				common.GenTimestamp(), 1)
+			uniledgerlog.Debug("1.2.3 verify vote")
+			vote_validate_time := monitor.Monitor.NewTiming()
+			pContractOutput, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
+			vote_validate_time.Send("vote_validate")
 			if err != nil {
-				uniledgerlog.Error(err.Error())
+				if !pass {
+					uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+				} else {
+					// vote not enough
+					uniledgerlog.Info(err.Error())
+				}
+				return nil
 			}
-			f.Write([]byte(out))
-		} else {
-			break
-		}
-	}
-}
 
-//---------------------------------------------------------------------------
-func ceChangefeed() {
-	uniledgerlog.Debug("1.进入ceChangefeed")
-	var value interface{}
-	res := rethinkdb.Changefeed(rethinkdb.DBNAME, rethinkdb.TABLE_VOTES)
-	for res.Next(&value) {
-		uniledgerlog.Debug("1.1 ceChangefeed get new_val")
-		mValue, ok := value.(map[string]interface{})
-		if !ok {
-			uniledgerlog.Error("assert error")
-			break
-		}
-		// 提取new_val的值
-		new_val := mValue["new_val"]
-		if new_val == nil {
-			uniledgerlog.Error("is null")
-			continue
-		}
+			// 将contract更新为共识结束
+			rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
+				common.GenTimestamp(), 2)
 
-		slVote, err := json.Marshal(new_val)
-		if err != nil {
-			uniledgerlog.Error(err.Error())
-			continue
-		}
+			if pass { // 合约合法
+				uniledgerlog.Debug("1.3 ceHeadFilter --->")
+				ceQueryExists(*pContractOutput)
+				contract_election_time.Send("contract_election")
+			} else { // 合约不合法
+				uniledgerlog.Debug("1.3 contract invalid and insert consensusFailure")
+				var consensusFailure model.ConsensusFailure
+				consensusFailure.Id = common.GenerateUUID()
+				consensusFailure.ConsensusType = _CONSENSUS_TYPE
+				consensusFailure.ConsensusId = vote.VoteBody.VoteFor
+				consensusFailure.ConsensusReason = _CONSENSUS_REASON
+				consensusFailure.Timestamp = common.GenTimestamp()
 
-		uniledgerlog.Debug("1.2 ceChangefeed --->")
-		gchInput <- string(slVote)
-	}
-	uniledgerlog.Error("--------------------------------------------------------")
-	uniledgerlog.Error("changfeed exit")
-	uniledgerlog.Error("--------------------------------------------------------")
-}
-
-//---------------------------------------------------------------------------
-func ceHeadFilter() error {
-	uniledgerlog.Debug("2.进入ceHeadFilter")
-	defer close(gchOutput)
-	for {
-		// 读取new_val的值
-		contract_election_time := monitor.Monitor.NewTiming()
-		readData, ok := <-gchInput
-		if !ok {
-			break
-		}
-
-		// 将new_val转化为vote
-		vote := model.Vote{}
-		err := json.Unmarshal([]byte(readData), &vote)
-		if err != nil {
-			uniledgerlog.Error(err.Error())
-			continue
-		}
-
-		// 验证是否为头节点
-		uniledgerlog.Debug("2.2 get publickey and verify")
-		uniledgerlog.Debug("2.2.1 get publickey")
-		mainPubkey, err := rethinkdb.GetContractMainPubkeyByContract(vote.VoteBody.VoteFor)
-		if err == nil {
-			uniledgerlog.Debug("2.2.2 verify head node")
-			if isHead, _ := _verifyHeadNode(mainPubkey); isHead {
-				// 将contract更新为正在共识阶段
-				rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
-					common.GenTimestamp(), 1)
-				uniledgerlog.Debug("2.2.3 verify vote")
-				vote_validate_time := monitor.Monitor.NewTiming()
-				pContractOutput, pass, err := _verifyVotes(vote.VoteBody.VoteFor)
-				vote_validate_time.Send("vote_validate")
+				slConsensusFailure, err := json.Marshal(consensusFailure)
 				if err != nil {
-					if !pass {
-						uniledgerlog.Error(err.Error())
-					} else {
-						// vote not enough
-						uniledgerlog.Info(err.Error())
-					}
-					continue
+					uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.SERIALIZE_ERROR, err.Error()))
+					return nil
 				}
-
-				// 将contract更新为共识结束
-				rethinkdb.SetContractConsensusResultById(vote.VoteBody.VoteFor,
-					common.GenTimestamp(), 2)
-
-				if pass { // 合约合法
-					uniledgerlog.Debug("2.3 ceHeadFilter --->")
-					ceQueryEists(*pContractOutput)
-					contract_election_time.Send("contract_election")
-				} else { // 合约不合法
-					uniledgerlog.Debug("2.3 contract invalid and insert consensusFailure")
-					var consensusFailure model.ConsensusFailure
-					consensusFailure.Id = common.GenerateUUID()
-					consensusFailure.ConsensusType = _CONSENSUS_TYPE
-					consensusFailure.ConsensusId = vote.VoteBody.VoteFor
-					consensusFailure.ConsensusReason = _CONSENSUS_REASON
-					consensusFailure.Timestamp = common.GenTimestamp()
-
-					slConsensusFailure, err := json.Marshal(consensusFailure)
-					if err != nil {
-						uniledgerlog.Error(err.Error())
-						continue
-					}
-					if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
-						uniledgerlog.Error(err.Error())
-					}
-					//consensus_failure_count, err := rethinkdb.GetConsensusFailuresCount()
-					//if err != nil {
-					//	uniledgerlog.Error(err.Error())
-					//	continue
-					//}
+				if !rethinkdb.InsertConsensusFailure(string(slConsensusFailure)) {
+					uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, "rethinkdb.InsertConsensusFailure error"))
 				}
-			} else {
-				uniledgerlog.Info("I am not head node.")
+				//consensus_failure_count, err := rethinkdb.GetConsensusFailuresCount()
+				//if err != nil {
+				//	uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+				//	continue
+				//}
 			}
 		} else {
-			uniledgerlog.Error(err.Error())
+			uniledgerlog.Info("I am not head node.")
 		}
+	} else {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 	}
+
 	return nil
 }
 
 //---------------------------------------------------------------------------
-func ceQueryEists(contractOutput model.ContractOutput) {
-	uniledgerlog.Debug("3.进入ceQueryEists")
+func ceQueryExists(arg interface{}) interface{} {
+	uniledgerlog.Debug("2.ceHeadFilter -> ceQueryExists")
 
-	uniledgerlog.Debug("3.2 query contractoutput table")
+	uniledgerlog.Debug("2.2 query contractoutput table")
+	contractOutput, ok := arg.(model.ContractOutput)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "ceQueryExists assert error"))
+		return ""
+	}
 	output, err := rethinkdb.GetContractOutputById(contractOutput.Id)
 	if err != nil {
-		uniledgerlog.Error(err.Error())
-		return
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+		return ""
 	}
 
 	slContractOutput, _ := json.Marshal(contractOutput)
 
 	if len(output) == 0 {
-		uniledgerlog.Debug("3.3 insert contractoutput table")
+		uniledgerlog.Debug("2.3 insert contractoutput table")
 		contractOutput_write_time := monitor.Monitor.NewTiming()
 		rethinkdb.InsertContractOutput(string(slContractOutput))
 		contractOutput_write_time.Send("contractOutput_write")
 	} else {
-		uniledgerlog.Debug("3.3 contractoutput exist")
+		uniledgerlog.Debug("2.3 contractoutput exist")
 	}
-	uniledgerlog.Debug("3.4 ceQueryEists ---> /dev/null")
-	gchOutput <- string(slContractOutput)
+	uniledgerlog.Debug("2.4 ceQueryExists ---> /dev/null")
+	return ""
 }
 
 //---------------------------------------------------------------------------
@@ -384,14 +349,14 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 //---------------------------------------------------------------------------
 func PanicRecoverAndOutputStack(outputStack bool) {
 	if err := recover(); err != nil {
-		log.Println("===========================================")
-		log.Printf("Panic !!!!, err is %+v", err)
+		fmt.Println("===========================================")
+		fmt.Printf("Panic !!!!, err is %+v", err)
 		if outputStack {
 			var slStack [4096]byte
 			nReadNum := runtime.Stack(slStack[:], true)
-			log.Printf(string(slStack[:nReadNum]))
+			fmt.Printf(string(slStack[:nReadNum]))
 		}
-		log.Println("===========================================")
+		fmt.Println("===========================================")
 	}
 }
 
