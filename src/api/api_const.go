@@ -51,6 +51,6 @@ const (
 	// {token}_rate
 	rate_token_key = "_rate"
 	// 2s
-	rate_limit_duration = 10
-	rate_limit_count    = 100
+	rate_limit_duration = 3
+	rate_limit_count    = 10
 )

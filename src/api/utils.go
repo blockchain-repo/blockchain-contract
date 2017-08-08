@@ -156,13 +156,13 @@ func RateLimit(token string) (ok bool) {
 			if err != nil {
 				uniledgerlog.Error(err)
 			}
-			rate_limit_log := fmt.Sprintf("%s,[%ds,%d],left %d", "用户访问频率超限", rate_limit_duration, rate_limit_count, ttl)
+			rate_limit_log := fmt.Sprintf("%s,[%ds,%d], 剩余重置时间 %ds", "用户访问频率超限", rate_limit_duration, rate_limit_count, ttl)
 			uniledgerlog.Debug(rate_limit_log)
 			return false
 		}
 	}
 	ttl, err := redis.TTL(conn, token_rate_key)
-	result := fmt.Sprintf("%s,[%ds,%d],剩余 %d 次, 剩余重置时间%ds", "用户访问频率", rate_limit_duration, rate_limit_count, rate_limit_count-times, ttl)
+	result := fmt.Sprintf("%s,[%ds,%d], 剩余 %d 次, 剩余重置时间%ds", "用户访问频率", rate_limit_duration, rate_limit_count, rate_limit_count-times-1, ttl)
 	uniledgerlog.Debug(result)
 	return true
 }
