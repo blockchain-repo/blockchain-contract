@@ -43,19 +43,19 @@ func sendContractStatsToMonitor() {
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_send_flag_success, err := engineCommmon.DBInf.GetTaskSendFlagCount(1)
+		task_send_flag_success, err := engineCommmon.GetTaskSendFlagCount(1)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_send_flag_fail, err := engineCommmon.DBInf.GetTaskSendFlagCount(0)
+		task_send_flag_fail, err := engineCommmon.GetTaskSendFlagCount(0)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_failed_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("FailedCount", 50)
+		task_failed_Count, err := engineCommmon.GetTaskScheduleCount("FailedCount", 50)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_wait_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("WaitCount", 50)
+		task_wait_Count, err := engineCommmon.GetTaskScheduleCount("WaitCount", 50)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}

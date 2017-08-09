@@ -29,8 +29,7 @@ func _CleanTaskSchedule() {
 	ticker := time.NewTicker(time.Minute * (time.Duration)(scanEngineConf["clean_time"].(int)))
 	for _ = range ticker.C {
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query all success task"))
-		strSuccessTask, err :=
-			common.DBInf.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
+		strSuccessTask, err := common.GetTaskSchedulesSuccess(config.Config.Keypair.PublicKey)
 		if err != nil {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 			continue
@@ -53,7 +52,7 @@ func _CleanTaskSchedule() {
 		}
 
 		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "success task delete"))
-		deleteNum, err := common.DBInf.DeleteTaskSchedules(slID)
+		deleteNum, err := common.DeleteTaskSchedules(slID)
 		if deleteNum != len(slID) {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
 		}

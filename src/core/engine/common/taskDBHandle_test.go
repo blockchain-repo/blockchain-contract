@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"unicontract/src/common"
 	"unicontract/src/config"
-	"unicontract/src/core/model"
+	"unicontract/src/core/engine/common/db"
 )
 
 func init() {
@@ -27,7 +27,7 @@ func Test_GetMonitorNoSendData(t *testing.T) {
 		t.Log("no send data")
 	}
 
-	var slTasks []model.TaskSchedule
+	var slTasks []db.TaskSchedule
 	json.Unmarshal([]byte(str), &slTasks)
 	t.Logf("slTask count is %d, %+v\n", len(slTasks), slTasks)
 }
@@ -43,7 +43,7 @@ func Test_GetMonitorNoSuccessData(t *testing.T) {
 		t.Log("no send data")
 	}
 
-	var slTasks []model.TaskSchedule
+	var slTasks []db.TaskSchedule
 	json.Unmarshal([]byte(str), &slTasks)
 	t.Logf("slTask count is %d, %+v\n", len(slTasks), slTasks)
 }
@@ -70,12 +70,14 @@ func Test_UpdateMonitorSend(t *testing.T) {
 }
 
 func Test_UpdateMonitorFail(t *testing.T) {
-	strContractID := "9d3be6de-4fb1-4bd0-867b-b83e18f80203"
-	strContractHashID := "54f21b37-601d-42c8-93f5-f3acf41c19c4"
-	strTaskId := "asdfasdfasdfasfasdf"
-	strTaskState := "asdfasdfasdf"
-	nTaskExecuteIndex := 56785
-	err := UpdateMonitorFail(strContractID, strContractHashID, strTaskId, strTaskState, nTaskExecuteIndex)
+	var failStruct UpdateMonitorFailStruct
+	failStruct.FstrContractID = "9d3be6de-4fb1-4bd0-867b-b83e18f80203"
+	failStruct.FstrContractHashID = "54f21b37-601d-42c8-93f5-f3acf41c19c4"
+	failStruct.FstrTaskId = "asdfasdfasdfasfasdf"
+	failStruct.FstrTaskState = "asdfasdfasdf"
+	failStruct.FnTaskExecuteIndex = 56785
+	slFailData, _ := json.Marshal(failStruct)
+	err := UpdateMonitorFail(string(slFailData))
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -84,12 +86,14 @@ func Test_UpdateMonitorFail(t *testing.T) {
 }
 
 func Test_UpdateMonitorWait(t *testing.T) {
-	strContractID := "9d3be6de-4fb1-4bd0-867b-b83e18f80203"
-	strContractHashID := "54f21b37-601d-42c8-93f5-f3acf41c19c4"
-	strTaskId := "1234123412341234"
-	strTaskState := "asdfasdfasdf"
-	nTaskExecuteIndex := 2222
-	err := UpdateMonitorWait(strContractID, strContractHashID, strTaskId, strTaskState, nTaskExecuteIndex)
+	var waitStruct UpdateMonitorWaitStruct
+	waitStruct.WstrContractID = "9d3be6de-4fb1-4bd0-867b-b83e18f80203"
+	waitStruct.WstrContractHashID = "54f21b37-601d-42c8-93f5-f3acf41c19c4"
+	waitStruct.WstrTaskId = "1234123412341234"
+	waitStruct.WstrTaskState = "asdfasdfasdf"
+	waitStruct.WnTaskExecuteIndex = 2222
+	slWaitData, _ := json.Marshal(waitStruct)
+	err := UpdateMonitorWait(string(slWaitData))
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -98,17 +102,19 @@ func Test_UpdateMonitorWait(t *testing.T) {
 }
 
 func Test_UpdateMonitorSucc(t *testing.T) {
-	strContractID := "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
-	strContractHashOldID := "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
-	strTaskId := "999999"
-	strTaskStateOld := "old"
-	intTaskExecuteIdx := 22
-	strContractHashIDNew := common.GenerateUUID()
-	strTaskIdNew := "1000000"
-	strTaskStateNew := "new"
-	intTaskExecuteIdxNew := 23
-	err := UpdateMonitorSucc(strContractID, strContractHashOldID, strTaskStateOld, strTaskId, intTaskExecuteIdx,
-		strContractHashIDNew, strTaskIdNew, strTaskStateNew, intTaskExecuteIdxNew, 0)
+	var succStruct UpdateMonitorSuccStruct
+	succStruct.SstrContractID = "72bdda0a-f8e6-4fa5-89e5-f93a5b470159"
+	succStruct.SstrContractHashIdOld = "1da2972e-a40d-45f7-a4ec-c19c3a9f7a02"
+	succStruct.SstrTaskStateOld = "old"
+	succStruct.SstrTaskIdOld = "999999"
+	succStruct.SnTaskExecuteIndexOld = 22
+	succStruct.SstrContractHashIDNew = common.GenerateUUID()
+	succStruct.SstrTaskIdNew = "1000000"
+	succStruct.SstrTaskStateNew = "new"
+	succStruct.SnTaskExecuteIndexNew = 23
+	succStruct.SnFlag = 0
+	slSuccData, _ := json.Marshal(succStruct)
+	err := UpdateMonitorSucc(string(slSuccData))
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
 	} else {
@@ -117,7 +123,7 @@ func Test_UpdateMonitorSucc(t *testing.T) {
 }
 
 func Test_InsertTaskSchedules(t *testing.T) {
-	var taskSchedule model.TaskSchedule
+	var taskSchedule db.TaskSchedule
 	taskSchedule.ContractId = common.GenerateUUID()
 	taskSchedule.ContractHashId = common.GenerateUUID()
 	taskSchedule.StartTime = common.GenTimestamp()
@@ -134,4 +140,14 @@ func Test_UpdateMonitorDeal(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func Test_GetTaskScheduleCount(t *testing.T) {
+	count, err := GetTaskScheduleCount("WaitCount", 50)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(count)
+	t.Logf("deleteNum is %s\n", count)
+	t.Logf("err is %+v\n", err)
 }

@@ -40,25 +40,19 @@ type Datebase interface {
 	DropDatabase(dbName string) error
 
 	Insert(dbName, tableName, json string) (bool, error)
+	InsertBatch(dbName, tableName string, slTaskSchedule []interface{}) (int, error)
 	Delete(dbName, tableName, id string) (bool, error)
+	DeleteBatch(dbName, tableName string, slID []interface{}) (int, error)
 	Update(dbName, tableName, id, json string) (bool, error)
+	UpdateBatch(dbName, tableName, json string, slID []interface{}) (bool, error)
+	UpdateToAdd(strDBName, strTableName, strID, strField string, num int) (bool, error)
 	Query(dbName, tableName, id string) (map[string]interface{}, error)
 
-	InsertTaskSchedule(strTaskSchedule string) error
-	InsertTaskSchedules(slTaskSchedule []interface{}) (int, error)
-	GetID(strNodePubkey, strContractID string, strContractHashId string) (string, error)
-	GetValidTime(strID string) (string, string, error)
-	SetTaskScheduleFlag(strID string, alreadySend bool) error
-	SetTaskScheduleFlagBatch(slID []interface{}, alreadySend bool) error
-	SetTaskScheduleOverFlag(strID string) error
-	SetTaskState(strID, strTaskId, strState string, nTaskExecuteIndex int) error
-	SetTaskScheduleCount(strID string, flag int) error
-	GetTaskSchedulesNoSend(strNodePubkey string, nThreshold int) (string, error)
-	GetTaskSchedulesNoSuccess(strNodePubkey string, nThreshold int, flag int) (string, error)
-	GetTaskSchedulesSuccess(strNodePubkey string) (string, error)
-	DeleteTaskSchedules(slID []interface{}) (int, error)
+	QueryByIdAndHashId(strDBName, strTableName, strNodePubkey, strContractID, strContractHashId string) (map[string]interface{}, error)
+	GetTaskSchedulesNoSend(strDBName, strTableName, strNowTime, strNodePubkey string, nThreshold int) ([]map[string]interface{}, error)
+	GetTaskSchedulesNoSuccess(strDBName, strTableName, strCount, strNodePubkey string, nThreshold int, flag int) ([]map[string]interface{}, error)
+	GetTaskSchedulesSuccess(strDBName, strTableName, strNodePubkey string) ([]map[string]interface{}, error)
 
-	GetTaskScheduleState(strContractID, strContractHashId string, failedThreshold, waitThreshold int) (RunState, error)
-	GetTaskScheduleCount(stat string, num int) (string, error)
-	GetTaskSendFlagCount(stat int) (string, error)
+	GetTaskScheduleCount(strDBName, strTableName, stat string, num int) (string, error)
+	GetTaskSendFlagCount(strDBName, strTableName string, stat int) (string, error)
 }

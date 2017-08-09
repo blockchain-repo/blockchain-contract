@@ -19,7 +19,6 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common/db"
 )
 
@@ -56,28 +55,6 @@ type UpdateMonitorSuccStruct struct {
 	SnFlag                int
 }
 
-var scanEngineConf map[interface{}]interface{}
-var DBInf db.Datebase
-
-//---------------------------------------------------------------------------
-func Init() {
-	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
-	dbname, _ := scanEngineConf["db"].(string)
-	if dbname == "rethinkdb" {
-		DBInf = db.GetInstance()
-	}
-}
-
-//---------------------------------------------------------------------------
-func InitDatabase() {
-	DBInf.InitDatabase()
-}
-
-//---------------------------------------------------------------------------
-func DropDatabase() {
-	DBInf.DropDatabase(db.DATABASEB_NAME)
-}
-
 //---------------------------------------------------------------------------
 // 查询没有发送的task
 func GetMonitorNoSendData(strNodePubkey string, nThreshold int) (string, error) {
@@ -85,7 +62,7 @@ func GetMonitorNoSendData(strNodePubkey string, nThreshold int) (string, error) 
 		return "", fmt.Errorf("pubkey is null")
 	}
 
-	return DBInf.GetTaskSchedulesNoSend(strNodePubkey, nThreshold)
+	return GetTaskSchedulesNoSend(strNodePubkey, nThreshold)
 }
 
 //---------------------------------------------------------------------------
@@ -95,7 +72,7 @@ func GetMonitorNoSuccessData(strNodePubkey string, nThreshold int, flag int) (st
 		return "", fmt.Errorf("pubkey is null")
 	}
 
-	return DBInf.GetTaskSchedulesNoSuccess(strNodePubkey, nThreshold, flag)
+	return GetTaskSchedulesNoSuccess(strNodePubkey, nThreshold, flag)
 }
 
 //---------------------------------------------------------------------------
@@ -104,7 +81,7 @@ func UpdateMonitorSendBatch(slID []interface{}) error {
 	if len(slID) == 0 {
 		return fmt.Errorf("id slice is null")
 	}
-	return DBInf.SetTaskScheduleFlagBatch(slID, true)
+	return SetTaskScheduleFlagBatch(slID, true)
 }
 
 //---------------------------------------------------------------------------
@@ -113,7 +90,7 @@ func UpdateMonitorSend(strID string) error {
 	if len(strID) == 0 {
 		return fmt.Errorf("id is null")
 	}
-	return DBInf.SetTaskScheduleFlag(strID, true)
+	return SetTaskScheduleFlag(strID, true)
 }
 
 //---------------------------------------------------------------------------
@@ -149,7 +126,7 @@ func UpdateMonitorFail(information string) error {
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey,
+	strID, err := GetID(strNodePubkey,
 		failStruct.FstrContractID,
 		failStruct.FstrContractHashID)
 	if err != nil {
@@ -160,16 +137,16 @@ func UpdateMonitorFail(information string) error {
 		return fmt.Errorf("not find")
 	}
 
-	err = DBInf.SetTaskScheduleFlag(strID, false)
+	err = SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		return err
 	}
 
-	err = DBInf.SetTaskScheduleCount(strID, 1)
+	err = SetTaskScheduleCount(strID, 1)
 	if err != nil {
 		return err
 	}
-	return DBInf.SetTaskState(strID,
+	return SetTaskState(strID,
 		failStruct.FstrTaskId,
 		failStruct.FstrTaskState,
 		failStruct.FnTaskExecuteIndex)
@@ -208,7 +185,7 @@ func UpdateMonitorWait(information string) error {
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey,
+	strID, err := GetID(strNodePubkey,
 		waitStruct.WstrContractID,
 		waitStruct.WstrContractHashID)
 	if err != nil {
@@ -219,16 +196,16 @@ func UpdateMonitorWait(information string) error {
 		return fmt.Errorf("not find")
 	}
 
-	err = DBInf.SetTaskScheduleFlag(strID, false)
+	err = SetTaskScheduleFlag(strID, false)
 	if err != nil {
 		return err
 	}
 
-	err = DBInf.SetTaskScheduleCount(strID, 2)
+	err = SetTaskScheduleCount(strID, 2)
 	if err != nil {
 		return err
 	}
-	return DBInf.SetTaskState(strID,
+	return SetTaskState(strID,
 		waitStruct.WstrTaskId,
 		waitStruct.WstrTaskState,
 		waitStruct.WnTaskExecuteIndex)
@@ -280,7 +257,7 @@ func UpdateMonitorSucc(information string) error {
 		return fmt.Errorf("param is null, %s", errMsg)
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey,
+	strID, err := GetID(strNodePubkey,
 		succStruct.SstrContractID,
 		succStruct.SstrContractHashIdOld)
 	if err != nil {
@@ -291,17 +268,17 @@ func UpdateMonitorSucc(information string) error {
 		return fmt.Errorf("old contract id not find")
 	}
 
-	err = DBInf.SetTaskScheduleFlag(strID, true)
+	err = SetTaskScheduleFlag(strID, true)
 	if err != nil {
 		return err
 	}
 
-	err = DBInf.SetTaskScheduleCount(strID, 0)
+	err = SetTaskScheduleCount(strID, 0)
 	if err != nil {
 		return err
 	}
 
-	err = DBInf.SetTaskState(strID,
+	err = SetTaskState(strID,
 		succStruct.SstrTaskIdOld,
 		succStruct.SstrTaskStateOld,
 		succStruct.SnTaskExecuteIndexOld)
@@ -309,12 +286,12 @@ func UpdateMonitorSucc(information string) error {
 		return err
 	}
 
-	err = DBInf.SetTaskScheduleOverFlag(strID)
+	err = SetTaskScheduleOverFlag(strID)
 	if err != nil {
 		return err
 	}
 
-	startTime, endTime, err := DBInf.GetValidTime(strID)
+	startTime, endTime, err := GetValidTime(strID)
 	if err != nil {
 		return err
 	}
@@ -335,7 +312,7 @@ func UpdateMonitorSucc(information string) error {
 	taskSchedule.StartTime = startTime
 	taskSchedule.EndTime = endTime
 	slJson, _ := json.Marshal(taskSchedule)
-	return DBInf.InsertTaskSchedule(string(slJson))
+	return InsertTaskSchedule(string(slJson))
 }
 
 //---------------------------------------------------------------------------
@@ -348,8 +325,7 @@ func UpdateMonitorDeal(strContractID string, strContractHashID string) error {
 		return fmt.Errorf("param is null")
 	}
 
-	strID, err := DBInf.GetID(strNodePubkey, strContractID,
-		strContractHashID)
+	strID, err := GetID(strNodePubkey, strContractID, strContractHashID)
 	if err != nil {
 		return err
 	}
@@ -358,7 +334,7 @@ func UpdateMonitorDeal(strContractID string, strContractHashID string) error {
 		return fmt.Errorf("not find")
 	}
 
-	return DBInf.SetTaskScheduleOverFlag(strID)
+	return SetTaskScheduleOverFlag(strID)
 }
 
 //---------------------------------------------------------------------------
@@ -382,7 +358,7 @@ func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 		slMapTaskSchedule = append(slMapTaskSchedule, mapObj)
 	}
 
-	nInsertCount, err := DBInf.InsertTaskSchedules(slMapTaskSchedule)
+	nInsertCount, err := InsertTaskSchedules_(slMapTaskSchedule)
 	uniledgerlog.Debug("insert taskScheduled count is %d, err is %v", nInsertCount, err)
 	return err
 }
@@ -391,7 +367,17 @@ func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 func GetTaskState(strContractID, strContractHashId string) (db.RunState, error) {
 	failedThreshold, _ := scanEngineConf["failed_count_threshold"].(int)
 	waitThreshold, _ := scanEngineConf["wait_count_threshold"].(int)
-	return DBInf.GetTaskScheduleState(strContractID, strContractHashId, failedThreshold, waitThreshold)
+	return GetTaskScheduleState(strContractID, strContractHashId, failedThreshold, waitThreshold)
+}
+
+//---------------------------------------------------------------------------
+func GetTaskSendFlagCount(stat int) (string, error) {
+	return DBInf.GetTaskSendFlagCount(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, stat)
+}
+
+//---------------------------------------------------------------------------
+func GetTaskScheduleCount(stat string, num int) (string, error) {
+	return DBInf.GetTaskScheduleCount(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, stat, num)
 }
 
 //---------------------------------------------------------------------------
