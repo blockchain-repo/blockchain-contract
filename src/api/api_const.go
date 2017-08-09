@@ -31,26 +31,3 @@ const (
 	RESPONSE_STATUS_RequestTimeout    = 111000408 //408 - 在服务器许可的等待时间内，客户一直没有发出任何请求。客户可以在以后重复同一请求。
 	RESPONSE_STATUS_TOO_MANY_REQUESTS = 111000429 // 429 - 你需要限制客户端请求某个服务数量时，该状态码就很有用，也就是请求速度限制。
 )
-
-const (
-	// 10 hours
-	API_TIMEOUT       = int64(60 * 60 * 10)
-	API_SIGN_LEN      = int(32)
-	API_TOKEN_LEN     = int(44)
-	API_TIMESTAMP_LEN = int(13)
-)
-
-// ratelimit token
-const (
-	// 60s temp store for apply the token
-	access_key_timeout = 60
-	// confuse the access_key, as  app_id{access_key_blur}access_key
-	access_key_blur = "uniledger"
-	// 30 minutes
-	token_timeout = 60 * 30
-	// {token}_rate
-	rate_token_key = "_rate"
-	// 2s
-	rate_limit_duration = 3
-	rate_limit_count    = 10
-)

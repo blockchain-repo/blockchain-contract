@@ -1,10 +1,9 @@
 package filters
 
 import (
-	"github.com/astaxie/beego/context"
-	//"strconv"
-	//"time"
 	"encoding/json"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	"strconv"
 	"time"
 	api "unicontract/src/api"
@@ -12,10 +11,20 @@ import (
 	"unicontract/src/common/uniledgerlog"
 )
 
+var (
+	API_TIMEOUT       = int64(60)
+	API_TOKEN_LEN     = 44
+	API_TIMESTAMP_LEN = 13
+)
+
 type response struct {
 	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
+}
+
+func init() {
+	API_TIMEOUT = beego.AppConfig.DefaultInt64("api_timeout", API_TIMEOUT)
 }
 
 func responseWithStatusCode(ctx *context.Context, status int, output interface{}) {
@@ -75,18 +84,7 @@ func APIAuthorizationFilter(ctx *context.Context) {
 	/******************* test data *******************/
 
 	exist := api.CheckExistAppUser(api.GenerateAccessKey(app_id, app_key))
-	//if exist {
-	//	accessKey := api.GenerateAccessKey(app_id, app_key)
-	//	token := api.GetToken(accessKey)
-	//	uniledgerlog.Info("APIAuthorizationFilter exist user!", token)
-	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_OK, token)
-	//} else {
-	//	uniledgerlog.Error("APIAuthorizationFilter not exist user!")
-	//	// not exist, generateToken and put redis
-	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_Forbidden, "not exist user!")
-	//	defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_Forbidden)()
-	//	return
-	//}
+
 	if exist {
 		access_key := api.GenerateAccessKey(app_id, app_key)
 		uniledgerlog.Info("APIAuthorizationFilter exist user!", access_key)
@@ -141,24 +139,24 @@ func APIAuthFilter(ctx *context.Context) {
 		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters miss!")
 		return
 	}
-	if len(token) != api.API_TOKEN_LEN {
+	if len(token) != API_TOKEN_LEN {
 		uniledgerlog.Error("APIAuthFilter parameters token error!")
 		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters token error!")
 		return
 	}
-	if len(timestamp) != api.API_TIMESTAMP_LEN {
+	if len(timestamp) != API_TIMESTAMP_LEN {
 		uniledgerlog.Error("APIAuthFilter parameters timestamp error!")
 		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters timestamp error!")
 		return
 	}
 
-	//if len(sign) != api.API_SIGN_LEN {
+	//if len(sign) != API_SIGN_LEN {
 	//	uniledgerlog.Error("APIAuthFilter parameters sign error!")
 	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters sign error!")
 	//	return
 	//}
 
-	//if len(token) != api.API_TOKEN_LEN || len(timestamp) != api.API_TIMESTAMP_LEN || len(sign) != api.API_SIGN_LEN {
+	//if len(token) != API_TOKEN_LEN || len(timestamp) != API_TIMESTAMP_LEN || len(sign) != API_SIGN_LEN {
 	//	uniledgerlog.Error("APIAuthFilter parameters error!")
 	//	responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter parameters error!")
 	//	return
@@ -175,8 +173,8 @@ func APIAuthFilter(ctx *context.Context) {
 		return
 	}
 	cost := (current_unix_timestamp - timestamp_int64) / 1000
-	uniledgerlog.Info("time info", current_unix_timestamp, timestamp_int64, cost)
-	if cost < 0 || cost > api.API_TIMEOUT {
+	uniledgerlog.Debug("time info", current_unix_timestamp, timestamp_int64, cost)
+	if cost < 0 || cost > API_TIMEOUT {
 		uniledgerlog.Error("APIAuthFilter timestamp invalid!", cost)
 		responseWithStatusCode(ctx, api.HTTP_STATUS_CODE_BadRequest, "APIAuthFilter timestamp invalid!"+strconv.FormatInt(cost, 10)+"s")
 		return
