@@ -373,6 +373,75 @@ func GetContractsLogByCondition(contractId string, owner string, contractState s
 	return common.Serialize(blo), nil
 }
 
+// GetContractsLogPaginationByCondition 分页查询执行日志，暂时作为demo
+func GetContractsLogPaginationByCondition(contractId string, owner string, contractState string, page int, pageSize int) (int, string, error) {
+	if contractId == "" {
+		return 0, "", errors.New("contractId blank")
+	}
+	contractState = "Contract_In_Process"
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	var err error
+	var total int
+
+	if owner != "" {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Count().Run(session)
+		if err != nil {
+			return 0, "", err
+		}
+		if err != nil {
+			return 0, "", err
+		}
+		err = res.One(&total)
+		if err != nil {
+			return 0, "", err
+		}
+
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Run(session)
+
+	} else {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Count().Run(session)
+		if err != nil {
+			return 0, "", err
+		}
+		if err != nil {
+			return 0, "", err
+		}
+		err = res.One(&total)
+		if err != nil {
+			return 0, "", err
+		}
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Run(session)
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return 0, "", err
+	}
+	return total, common.Serialize(blo), nil
+}
+
 //根据 contract.id 获取合约处理主节点
 func GetContractMainPubkeyByContract(id string) (string, error) {
 	session := ConnectDB(DBNAME)

@@ -9,6 +9,8 @@ It is generated from these files:
 	contract_execute_logs.proto
 	contract_list.proto
 	contract.proto
+	response_contract.proto
+	response_contracts.proto
 	response_pagination.proto
 	response.proto
 
@@ -28,8 +30,10 @@ It has these top-level messages:
 	ContractBody
 	ContractHead
 	Contract
-	ResponsePagination
-	Pagination
+	ResponseContract
+	ResponseContracts
+	ResponseContractPagination
+	ContractPagination
 	Response
 */
 package protos

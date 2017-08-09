@@ -57,17 +57,6 @@ func TimeCost(start time.Time, ctx *context.Context, responseCode int32) func() 
 	}
 }
 
-// todo test
-func getAppConfig() (app_id string, app_key string) {
-	app_id = "0123456789"
-	app_key = "uni-ledger.com"
-	return
-}
-
-func GetAccessKey(app_id string, app_key string) string {
-	return GenerateAccessKey(app_id, app_key)
-}
-
 //todo temp deal for accessKey
 // GenerateAccessKey 用于获取token
 func GenerateAccessKey(app_id string, app_key string) string {
@@ -104,7 +93,6 @@ func StoreAccessKey(app_id string, access_key string) bool {
 
 func ExistKey(token string) bool {
 	return redis.ExistKey(token)
-
 }
 
 func VerifySign(token string, timestamp string, sign string) bool {
@@ -163,7 +151,7 @@ func RateLimit(token string) (ok bool) {
 				uniledgerlog.Error(err)
 			}
 			rate_limit_log := fmt.Sprintf("%s,[%ds,%d], 剩余重置时间 %ds", "用户访问频率超限", rate_limit_duration, rate_limit_count, ttl)
-			uniledgerlog.Debug(rate_limit_log)
+			uniledgerlog.Warn(rate_limit_log)
 			return false
 		}
 	}
