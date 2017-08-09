@@ -33,6 +33,7 @@ func responseWithStatusCode(ctx *context.Context, status int, output interface{}
 	if err != nil {
 		uniledgerlog.Error("responseWithStatusCode", err.Error())
 	}
+	ctx.ResponseWriter.WriteHeader(status)
 	ctx.ResponseWriter.Write(resultByte)
 	return
 }
