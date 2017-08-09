@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/astaxie/beego"
 	"os"
 	"strconv"
+	_ "unicontract/src/api"
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common/quartz"
 	"unicontract/src/common/uniledgerlog"
@@ -15,8 +17,6 @@ import (
 	"unicontract/src/core/engine/gRPCClient"
 	"unicontract/src/core/engine/scanengine"
 	"unicontract/src/pipelines"
-
-	"github.com/astaxie/beego"
 )
 
 func main() {

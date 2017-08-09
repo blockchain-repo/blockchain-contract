@@ -117,13 +117,11 @@ func GetContractsByContractId(contractId string) (string, error) {
 }
 
 //根据传入条件查询 contract content 合约 仅取出一条 , ContractState = Contract_Create or Contract_Signature
-func GetContractContentByMapCondition(conditions map[string]interface{}) (string, error) {
-	contractId, _ := conditions["contractId"].(string)
+func GetContractContentByCondition(contractId string, owner string) (string, error) {
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
 	// company owner
-	owner, _ := conditions["owner"].(string)
 	if owner == "" {
 		return "", errors.New("owner blank")
 	}
@@ -155,17 +153,15 @@ func GetContractContentByMapCondition(conditions map[string]interface{}) (string
 }
 
 //根据传入条件查询 publish contract 合约 仅取出一条 , ContractState = Contract_Create
-func GetPublishContractByMapCondition(conditions map[string]interface{}) (string, error) {
-	contractId, _ := conditions["contractId"].(string)
+func GetPublishContractByCondition(contractId string, owner string, contractState string) (string, error) {
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
 	// company owner
-	owner, _ := conditions["owner"].(string)
 	if owner == "" {
 		return "", errors.New("owner blank")
 	}
-	contractState := "Contract_Create"
+	contractState = "Contract_Create"
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 	var err error
@@ -193,18 +189,15 @@ func GetPublishContractByMapCondition(conditions map[string]interface{}) (string
 }
 
 //根据传入条件查询 execute 合约 仅取出一条 , ContractState = Contract_Signature
-func GetOneContractByMapCondition(conditions map[string]interface{}) (string, error) {
-	contractId, _ := conditions["contractId"].(string)
+func GetOneContractByCondition(contractId string, owner string, contractState string) (string, error) {
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
-	owner, _ := conditions["owner"].(string)
+
 	if owner == "" {
 		return "", errors.New("owner blank")
 	}
-	//status, ok := conditions["status"].(string)
-	contractState, _ := conditions["status"].(string)
-	//uniledgerlog.Warn(contractState)
+
 	if contractState == "" {
 		contractState = "Contract_Signature"
 	}
@@ -247,16 +240,10 @@ func GetOneContractByMapCondition(conditions map[string]interface{}) (string, er
 }
 
 // 根据传入条件查询 execute 合约, ContractState = Contract_Signature
-func GetContractsByMapCondition(conditions map[string]interface{}) (string, error) {
-	contractId, _ := conditions["contractId"].(string)
-	owner, _ := conditions["owner"].(string)
+func GetContractsByCondition(contractId string, owner string, contractState string) (string, error) {
 	if owner == "" {
 		return "", errors.New("owner blank")
 	}
-	contractState, _ := conditions["status"].(string)
-	//if contractState == "" {
-	//	contractState = "Contract_Signature"
-	//}
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 	var err error
@@ -347,17 +334,11 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 }
 
 // 根据传入条件查询合约
-func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, error) {
-	contractId, _ := conditions["contractId"].(string)
-	owner, _ := conditions["owner"].(string)
-	//owner = ""
-	//if owner == "" {
-	//	return "", errors.New("owner blank")
-	//}
+func GetContractsLogByCondition(contractId string, owner string, contractState string) (string, error) {
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
-	contractState := "Contract_In_Process"
+	contractState = "Contract_In_Process"
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 	var err error
@@ -390,6 +371,75 @@ func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, e
 		return "", err
 	}
 	return common.Serialize(blo), nil
+}
+
+// GetContractsLogPaginationByCondition 分页查询执行日志，暂时作为demo
+func GetContractsLogPaginationByCondition(contractId string, owner string, contractState string, page int, pageSize int) (int, string, error) {
+	if contractId == "" {
+		return 0, "", errors.New("contractId blank")
+	}
+	contractState = "Contract_In_Process"
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	var err error
+	var total int
+
+	if owner != "" {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Count().Run(session)
+		if err != nil {
+			return 0, "", err
+		}
+		if err != nil {
+			return 0, "", err
+		}
+		err = res.One(&total)
+		if err != nil {
+			return 0, "", err
+		}
+
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Run(session)
+
+	} else {
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Count().Run(session)
+		if err != nil {
+			return 0, "", err
+		}
+		if err != nil {
+			return 0, "", err
+		}
+		err = res.One(&total)
+		if err != nil {
+			return 0, "", err
+		}
+		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Run(session)
+	}
+
+	var blo []map[string]interface{}
+	err = res.All(&blo)
+	if err != nil {
+		return 0, "", err
+	}
+	return total, common.Serialize(blo), nil
 }
 
 //根据 contract.id 获取合约处理主节点
