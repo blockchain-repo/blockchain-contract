@@ -51,11 +51,11 @@ func sendContractStatsToMonitor() {
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_failed_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("FailedCount")
+		task_failed_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("FailedCount", 50)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}
-		task_wait_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("WaitCount")
+		task_wait_Count, err := engineCommmon.DBInf.GetTaskScheduleCount("WaitCount", 50)
 		if err != nil {
 			uniledgerlog.Error(err)
 		}

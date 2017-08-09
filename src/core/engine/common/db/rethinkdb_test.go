@@ -90,7 +90,7 @@ func Test_GetID(t *testing.T) {
 }
 
 func Test_GetValidTime(t *testing.T) {
-	strID := "40b9943a-dffc-443c-94ff-b5a550837325"
+	strID := "7d5e1a52-96d5-4866-ae1f-f752e3e27d75"
 	startTime, endTime, err := inf.GetValidTime(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())
@@ -229,7 +229,7 @@ func Test_DeleteTaskSchedules(t *testing.T) {
 }
 
 func Test_GetTaskScheduleCount(t *testing.T) {
-	count, err := inf.GetTaskScheduleCount("WaitCount")
+	count, err := inf.GetTaskScheduleCount("WaitCount", 50)
 	if err != nil {
 		t.Error(err)
 	}

@@ -59,6 +59,6 @@ type Datebase interface {
 	DeleteTaskSchedules(slID []interface{}) (int, error)
 
 	GetTaskScheduleState(strContractID, strContractHashId string, failedThreshold, waitThreshold int) (RunState, error)
-	GetTaskScheduleCount(stat string) (string, error)
+	GetTaskScheduleCount(stat string, num int) (string, error)
 	GetTaskSendFlagCount(stat int) (string, error)
 }

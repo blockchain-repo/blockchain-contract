@@ -212,30 +212,17 @@ func (rethink *rethinkdb) GetID(strNodePubkey, strContractID, strContractHashId 
 //---------------------------------------------------------------------------
 // 根据ID获取starttime和endtime
 func (rethink *rethinkdb) GetValidTime(strID string) (string, string, error) {
-	res, err := r.DB(DATABASEB_NAME).
-		Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field("id").Eq(strID)).
-		Run(rethink.session)
+	task, err := rethink.Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
 	if err != nil {
 		return "", "", err
 	}
 
-	if res.IsNil() {
-		return "", "", nil
-	}
-
-	var tasks map[string]interface{}
-	err = res.One(&tasks)
-	if err != nil {
-		return "", "", err
-	}
-
-	startTime, ok := tasks["StartTime"].(string)
+	startTime, ok := task["StartTime"].(string)
 	if !ok {
 		return "", "", fmt.Errorf("assert error")
 	}
 
-	endTime, ok := tasks["EndTime"].(string)
+	endTime, ok := task["EndTime"].(string)
 	if !ok {
 		return "", "", fmt.Errorf("assert error")
 	}
@@ -342,7 +329,7 @@ func (rethink *rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 		return err
 	}
 
-	if res.Replaced|res.Unchanged >= 1 {
+	if res.Replaced >= 1 || res.Unchanged >= 1 {
 
 	} else {
 		return fmt.Errorf("update failed")
@@ -454,10 +441,10 @@ func (rethink *rethinkdb) DeleteTaskSchedules(slID []interface{}) (int, error) {
 }
 
 //---------------------------------------------------------------------------
-func (rethink *rethinkdb) GetTaskScheduleCount(stat string) (string, error) {
+func (rethink *rethinkdb) GetTaskScheduleCount(stat string, num int) (string, error) {
 	res, err := r.DB(DATABASEB_NAME).
 		Table(TABLE_TASK_SCHEDULE).
-		Filter(r.Row.Field(stat).Ge(50)).
+		Filter(r.Row.Field(stat).Ge(num)).
 		Count().
 		Run(rethink.session)
 	if err != nil {
