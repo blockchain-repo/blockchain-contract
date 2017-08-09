@@ -39,6 +39,11 @@ type Datebase interface {
 	CreateTable(dbName string, tableName string) error
 	DropDatabase(dbName string) error
 
+	Insert(dbName, tableName, json string) (bool, error)
+	Delete(dbName, tableName, id string) (bool, error)
+	Update(dbName, tableName, id, json string) (bool, error)
+	Query(dbName, tableName, id string) (map[string]interface{}, error)
+
 	InsertTaskSchedule(strTaskSchedule string) error
 	InsertTaskSchedules(slTaskSchedule []interface{}) (int, error)
 	GetID(strNodePubkey, strContractID string, strContractHashId string) (string, error)

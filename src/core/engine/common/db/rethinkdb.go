@@ -109,53 +109,66 @@ func (rethink *rethinkdb) DropDatabase(dbName string) error {
 }
 
 //---------------------------------------------------------------------------
-func (rethink *rethinkdb) _Insert(dbName, tableName, json string) (r.WriteResponse, error) {
+func (rethink *rethinkdb) Insert(dbName, tableName, json string) (bool, error) {
 	res, err := r.DB(dbName).Table(tableName).Insert(r.JSON(json)).RunWrite(rethink.session)
 	if err != nil {
-		return r.WriteResponse{}, err
+		return false, err
 	}
-	return res, nil
+	if res.Inserted >= 1 {
+		return true, err
+	} else {
+		return false, fmt.Errorf("insert failed")
+	}
 }
 
 //---------------------------------------------------------------------------
-func (rethink *rethinkdb) _Delete(dbName, tableName, id string) (r.WriteResponse, error) {
+func (rethink *rethinkdb) Delete(dbName, tableName, id string) (bool, error) {
 	res, err := r.DB(dbName).Table(tableName).Get(id).Delete().RunWrite(rethink.session)
 	if err != nil {
-		return r.WriteResponse{}, err
+		return false, err
 	}
-	return res, nil
+	if res.Deleted >= 1 {
+		return true, err
+	} else {
+		return false, fmt.Errorf("delete failed")
+	}
 }
 
 //---------------------------------------------------------------------------
-func (rethink *rethinkdb) _Update(dbName, tableName, id, json string) (r.WriteResponse, error) {
+func (rethink *rethinkdb) Update(dbName, tableName, id, json string) (bool, error) {
 	res, err := r.DB(dbName).Table(tableName).Get(id).Update(r.JSON(json)).RunWrite(rethink.session)
 	if err != nil {
-		return r.WriteResponse{}, err
+		return false, err
 	}
-	return res, nil
+	if res.Replaced >= 1 || res.Unchanged >= 1 {
+		return true, err
+	} else {
+		return false, fmt.Errorf("update failed")
+	}
 }
 
 //---------------------------------------------------------------------------
-func (rethink *rethinkdb) _Query(dbName, tableName, id string) (*r.Cursor, error) {
+func (rethink *rethinkdb) Query(dbName, tableName, id string) (map[string]interface{}, error) {
 	res, err := r.DB(dbName).Table(tableName).Get(id).Run(rethink.session)
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	if res.IsNil() {
+		return nil, fmt.Errorf("query result is null")
+	}
+	var task map[string]interface{}
+	err = res.One(&task)
+	if err != nil {
+		return nil, err
+	}
+	return task, err
 }
 
 //---------------------------------------------------------------------------
 // 插入一个nodepublickey的task方法
 func (rethink *rethinkdb) InsertTaskSchedule(strTaskSchedule string) error {
-	res, err := rethink._Insert(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
-	if err != nil {
-		return err
-	}
-	if res.Inserted >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("insert failed")
-	}
+	_, err := rethink.Insert(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strTaskSchedule)
+	return err
 }
 
 //---------------------------------------------------------------------------
@@ -264,17 +277,7 @@ func (rethink *rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) er
 	if alreadySend {
 		sendflag = 1
 	} else {
-		res, err := rethink._Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
-		if err != nil {
-			return err
-		}
-
-		if res.IsNil() {
-			return fmt.Errorf("null")
-		}
-
-		var task map[string]interface{}
-		err = res.One(&task)
+		task, err := rethink.Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
 		if err != nil {
 			return err
 		}
@@ -293,15 +296,8 @@ func (rethink *rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) er
 	strJSON := fmt.Sprintf("{\"SendFlag\":%d,\"LastExecuteTime\":\"%s\"}",
 		sendflag, common.GenTimestamp())
 
-	res, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if err != nil {
-		return err
-	}
-	if res.Replaced >= 1 || res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
+	_, err := rethink.Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	return err
 }
 
 //---------------------------------------------------------------------------
@@ -310,15 +306,8 @@ func (rethink *rethinkdb) SetTaskScheduleOverFlag(strID string) error {
 	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
 		1, common.GenTimestamp())
 
-	res, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if err != nil {
-		return err
-	}
-	if res.Replaced >= 1 || res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
+	_, err := rethink.Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	return err
 }
 
 //---------------------------------------------------------------------------
@@ -327,15 +316,8 @@ func (rethink *rethinkdb) SetTaskState(strID, strTaskId, strState string, nTaskE
 	strJSON := fmt.Sprintf("{\"TaskId\":\"%s\",\"TaskState\":\"%s\",\"TaskExecuteIndex\":%d}",
 		strTaskId, strState, nTaskExecuteIndex)
 
-	res, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if err != nil {
-		return err
-	}
-	if res.Replaced >= 1 || res.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
+	_, err := rethink.Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	return err
 }
 
 //---------------------------------------------------------------------------
@@ -368,12 +350,8 @@ func (rethink *rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 
 	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
 
-	res1, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res1.Replaced >= 1 || res1.Unchanged >= 1 {
-		return nil
-	} else {
-		return fmt.Errorf("update failed")
-	}
+	_, err = rethink.Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
+	return err
 }
 
 //---------------------------------------------------------------------------
@@ -529,49 +507,41 @@ func (rethink *rethinkdb) GetTaskScheduleState(strContractID, strContractHashId 
 		strID, err := rethink.GetID(strPublicKey, strContractID, strContractHashId)
 		if err == nil {
 			// 根据id查询出那条记录
-			res, err := rethink._Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
+			task, err := rethink.Query(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID)
 			if err == nil {
-				if res.IsNil() {
-					err = fmt.Errorf("query is null")
-				} else {
-					var task map[string]interface{}
-					err = res.One(&task)
-					if err == nil {
-						overFlag, _ := task["OverFlag"].(float64)
-						sendFlag, _ := task["SendFlag"].(float64)
-						startTime, _ := task["StartTime"].(string)
-						endTime, _ := task["EndTime"].(string)
-						successCount, _ := task["SuccessCount"].(float64)
-						failedCount, _ := task["FailedCount"].(float64)
-						waitCount, _ := task["WaitCount"].(float64)
+				overFlag, _ := task["OverFlag"].(float64)
+				sendFlag, _ := task["SendFlag"].(float64)
+				startTime, _ := task["StartTime"].(string)
+				endTime, _ := task["EndTime"].(string)
+				successCount, _ := task["SuccessCount"].(float64)
+				failedCount, _ := task["FailedCount"].(float64)
+				waitCount, _ := task["WaitCount"].(float64)
 
-						switch {
-						case overFlag == 0 && testTime(startTime, endTime) == 0 && sendFlag == 1:
-							state = WAIT_FOR_RUN
-							break
-						case overFlag == 0 && testTime(startTime, endTime) == 0:
-							state = NORMAL
-							break
-						case overFlag == 1 && successCount == 1:
-							state = ALREADY_RUN_SUCCESS
-							break
-						case overFlag == 0 && testTime(startTime, endTime) == -1:
-							state = NO_ARRIVAL_TIME
-							break
-						case overFlag == 0 && testTime(startTime, endTime) == 1:
-							state = OVER_TIME
-							break
-						case overFlag == 1 && failedCount > float64(failedThreshold):
-							state = FAILED_TIMES_BEYOND
-							break
-						case overFlag == 1 && waitCount > float64(waitThreshold):
-							state = WAIT_TIMES_BEYOND
-							break
-						default:
-							state = NORMAL
-							break
-						}
-					}
+				switch {
+				case overFlag == 0 && testTime(startTime, endTime) == 0 && sendFlag == 1:
+					state = WAIT_FOR_RUN
+					break
+				case overFlag == 0 && testTime(startTime, endTime) == 0:
+					state = NORMAL
+					break
+				case overFlag == 1 && successCount == 1:
+					state = ALREADY_RUN_SUCCESS
+					break
+				case overFlag == 0 && testTime(startTime, endTime) == -1:
+					state = NO_ARRIVAL_TIME
+					break
+				case overFlag == 0 && testTime(startTime, endTime) == 1:
+					state = OVER_TIME
+					break
+				case overFlag == 1 && failedCount > float64(failedThreshold):
+					state = FAILED_TIMES_BEYOND
+					break
+				case overFlag == 1 && waitCount > float64(waitThreshold):
+					state = WAIT_TIMES_BEYOND
+					break
+				default:
+					state = NORMAL
+					break
 				}
 			}
 		}
