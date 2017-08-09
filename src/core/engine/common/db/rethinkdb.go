@@ -297,7 +297,7 @@ func (rethink *rethinkdb) SetTaskScheduleFlag(strID string, alreadySend bool) er
 	if err != nil {
 		return err
 	}
-	if res.Replaced|res.Unchanged >= 1 {
+	if res.Replaced >= 1 || res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -314,7 +314,7 @@ func (rethink *rethinkdb) SetTaskScheduleOverFlag(strID string) error {
 	if err != nil {
 		return err
 	}
-	if res.Replaced|res.Unchanged >= 1 {
+	if res.Replaced >= 1 || res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -331,7 +331,7 @@ func (rethink *rethinkdb) SetTaskState(strID, strTaskId, strState string, nTaskE
 	if err != nil {
 		return err
 	}
-	if res.Replaced|res.Unchanged >= 1 {
+	if res.Replaced >= 1 || res.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
@@ -369,7 +369,7 @@ func (rethink *rethinkdb) SetTaskScheduleCount(strID string, flag int) error {
 	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
 
 	res1, err := rethink._Update(DATABASEB_NAME, TABLE_TASK_SCHEDULE, strID, strJSON)
-	if res1.Replaced|res1.Unchanged >= 1 {
+	if res1.Replaced >= 1 || res1.Unchanged >= 1 {
 		return nil
 	} else {
 		return fmt.Errorf("update failed")
