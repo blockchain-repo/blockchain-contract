@@ -105,7 +105,7 @@ func TestNode(t *testing.T) {
 func TestTxQueryEists(t *testing.T) {
 	tx_id := "1235be2235f4514bc24c26c43e2d93d59ced6ab5470f4fafc9187d43469cfc66"
 	jsonBody := `{"tx_id":"` + tx_id + `"}`
-	result, _ := chain.GetContractTx(jsonBody)
+	result, _ := chain.GetContractTx(jsonBody,"")
 	uniledgerlog.Info(result)
 	uniledgerlog.Info(len(result.Data.([]interface{})))
 }

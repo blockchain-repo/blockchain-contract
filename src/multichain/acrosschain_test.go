@@ -14,5 +14,5 @@ func Test_operateMultiChainWithNoTrans(t *testing.T) {
 	chainList = append(chainList, chainMap2)
 	chainList = append(chainList, chainMap3)
 
-	operateMultiChainWithNoTrans(chainList)
+	requestMultiChain(chainList)
 }

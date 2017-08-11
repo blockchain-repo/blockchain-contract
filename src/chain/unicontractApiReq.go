@@ -21,7 +21,7 @@ func CreateContract(jsonBody interface{}) (*requestHandler.ResponseResult, error
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -36,7 +36,7 @@ func CreateContract(jsonBody interface{}) (*requestHandler.ResponseResult, error
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func CreateContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
+func CreateContractTx(jsonBody interface{}, chainType string) (*requestHandler.ResponseResult, error) {
 
 	uniledgerlog.Debug(" begin invoking CreateContractTx Api")
 	yamlName := "unicontractApiConf.yaml"
@@ -45,7 +45,7 @@ func CreateContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, err
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, chainType)
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -69,7 +69,7 @@ func GetContract(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -84,7 +84,7 @@ func GetContract(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
  * param   : jsonBody interface{}
  * return : requestHandler.ResponseResult struct
  */
-func GetContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
+func GetContractTx(jsonBody interface{}, chainType string) (*requestHandler.ResponseResult, error) {
 
 	uniledgerlog.Debug(" begin invoking GetContractTx Api")
 	yamlName := "unicontractApiConf.yaml"
@@ -93,7 +93,7 @@ func GetContractTx(jsonBody interface{}) (*requestHandler.ResponseResult, error)
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, chainType)
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -117,7 +117,7 @@ func GetContractRecord(jsonBody interface{}) (*requestHandler.ResponseResult, er
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -141,7 +141,7 @@ func FreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -165,7 +165,7 @@ func UnfreezeAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error)
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -189,7 +189,7 @@ func FrozenAsset(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -207,7 +207,7 @@ func GetTxByConHashId(jsonBody interface{}) (*requestHandler.ResponseResult, err
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")

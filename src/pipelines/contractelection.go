@@ -20,6 +20,7 @@ import (
 //---------------------------------------------------------------------------
 const (
 	_VERSION          = 2
+	_CHAINTYPE        = "CONTRACT"
 	_OPERATION        = "CONTRACT"
 	_CONSENSUS_TYPE   = "contract"
 	_CONSENSUS_REASON = "contract illegal"
@@ -291,6 +292,7 @@ func _produceContractOutput(contractId string, slVote []model.Vote) (model.Contr
 	var contractOutput model.ContractOutput
 
 	contractOutput.Version = _VERSION
+	contractOutput.Chaintype = _CHAINTYPE
 	contractOutput.Transaction.Operation = _OPERATION
 
 	strContract, err := rethinkdb.GetContractById(contractId)

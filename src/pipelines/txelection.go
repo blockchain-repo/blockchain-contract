@@ -80,9 +80,10 @@ func txValidate(arg interface{}) interface{} {
 func txQueryEists(arg interface{}) interface{} {
 	uniledgerlog.Info("txElection step4 : query eists:", arg)
 	coModel := arg.(model.ContractOutput)
+	chainType := coModel.Chaintype
 	//check whether already exist
 	id := coModel.Id
-	result, err := chain.GetContractTx(`{"tx_id":"` + id + `"}`)
+	result, err := chain.GetContractTx(`{"tx_id":"`+id+`"}`, chainType)
 	if err != nil {
 		uniledgerlog.Error(err.Error())
 		return coModel
@@ -122,8 +123,10 @@ func txSend(arg interface{}) interface{} {
 			uniledgerlog.Error("err is \" %s \"\n", err.Error())
 		}
 	}
+	//var chainType = ""
 	//write the contractoutput to unichain.
-	result, err := chain.CreateContractTx(common.StructSerialize(coModel))
+	chainType := coModel.Chaintype
+	result, err := chain.CreateContractTx(common.StructSerialize(coModel), chainType)
 	if err != nil {
 		uniledgerlog.Error(err.Error())
 		SaveOutputErrorData(_TableNameSendFailingRecords, coModel)

@@ -72,5 +72,5 @@ func Init() {
 	uniledgerlog.Info("ContractElection Pipeline Start")
 	go startContractElection()
 	uniledgerlog.Info("txElection Pipeline Start")
-	go startTxElection()
+	startTxElection()
 }

@@ -21,7 +21,7 @@ func CreateByPayload(jsonBody interface{}) (*requestHandler.ResponseResult, erro
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -45,7 +45,7 @@ func QueryByID(jsonBody interface{}) (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -69,7 +69,7 @@ func QueryTxsTotal() (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+		res = requestHandler.GetRequestResult(yamlName, apiName, "", "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -92,7 +92,7 @@ func QueryTxsByRange(jsonBody interface{}) (*requestHandler.ResponseResult, erro
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -116,7 +116,7 @@ func QueryGroupByBlock() (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+		res = requestHandler.GetRequestResult(yamlName, apiName, "", "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -139,7 +139,7 @@ func QueryBlockByID(jsonBody interface{}) (*requestHandler.ResponseResult, error
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -163,7 +163,7 @@ func QueryTxsByID(jsonBody interface{}) (*requestHandler.ResponseResult, error) 
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -187,7 +187,7 @@ func QueryTxsCountByID(jsonBody interface{}) (*requestHandler.ResponseResult, er
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -211,7 +211,7 @@ func QueryBlockCount() (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+		res = requestHandler.GetRequestResult(yamlName, apiName, "", "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -234,7 +234,7 @@ func QueryBlocksByRange(jsonBody interface{}) (*requestHandler.ResponseResult, e
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -258,7 +258,7 @@ func QueryInvalidBlockTotal() (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+		res = requestHandler.GetRequestResult(yamlName, apiName, "", "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -281,7 +281,7 @@ func QueryInvalidBlockByRange(jsonBody interface{}) (*requestHandler.ResponseRes
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -305,7 +305,7 @@ func PublickeySet() (*requestHandler.ResponseResult, error) {
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, "")
+		res = requestHandler.GetRequestResult(yamlName, apiName, "", "")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
 	})
@@ -328,7 +328,7 @@ func TxCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResul
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -352,7 +352,7 @@ func BlockCreateAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseRe
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -376,7 +376,7 @@ func VoteTimeByBlockID(jsonBody interface{}) (*requestHandler.ResponseResult, er
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -400,7 +400,7 @@ func VoteAvgTimeByRange(jsonBody interface{}) (*requestHandler.ResponseResult, e
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -417,7 +417,7 @@ func GetUnspentTxs(jsonBody interface{}) (*requestHandler.ResponseResult, error)
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -433,7 +433,7 @@ func GetFreezeUnspentTxs(jsonBody interface{}) (*requestHandler.ResponseResult, 
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")
@@ -449,7 +449,7 @@ func GetContractById(jsonBody interface{}) (*requestHandler.ResponseResult, erro
 	var res *requestHandler.ResponseResult
 	var err error
 	common.Try(func() {
-		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody)
+		res = requestHandler.GetRequestResult(yamlName, apiName, jsonBody, "")
 		uniledgerlog.Debug("request finish....")
 	}, func(e interface{}) {
 		err = errors.New("connect reflused")

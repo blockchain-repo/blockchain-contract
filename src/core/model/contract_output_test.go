@@ -18,6 +18,7 @@ func init() {
 func GenerateOutputTest() string {
 
 	contractOutput := ContractOutput{}
+	contractOutput.Chaintype = "house"
 	contractOutput.Version = 2
 
 	transaction := Transaction{}

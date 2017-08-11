@@ -2,8 +2,8 @@ package model
 
 import (
 	"encoding/json"
-	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 )
 
@@ -36,7 +36,8 @@ type Transaction struct {
 type ContractOutput struct {
 	Id          string      `json:"id,omitempty"` //ContractOutput.Id
 	Transaction Transaction `json:"transaction"`  //ContractOutput.Transaction
-	Version     int         `json:"version"`      //ContractOutput.Version
+	Chaintype   string      `json:"chaintype"`
+	Version     int         `json:"version"` //ContractOutput.Version
 }
 
 func (c *ContractOutput) ToString() string {
