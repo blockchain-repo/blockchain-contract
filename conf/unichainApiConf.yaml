@@ -176,6 +176,10 @@ GetFreezeUnspentTxs:
   path: "/uniledger/v1/condition/getFreezeUnspentTx"
 
 
+GetFreezeUnspentTxsById:
+  method: "get"
+  path: "/uniledger/v1/condition/getFreezeByTransId"
+
 GetContractById:
   method: "post"
   path: "/uniledger/v1/contract/getContract"
