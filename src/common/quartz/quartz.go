@@ -27,7 +27,7 @@ func sendFailingDataTimer() {
 		for _, value := range idList {
 			str := rethinkdb.Get(_DBName, _TableContractOutputs, value)
 
-			result, err := chain.CreateContractTx(common.Serialize(str))
+			result, err := chain.CreateContractTx(common.Serialize(str), "")
 			if err != nil {
 				uniledgerlog.Error(err.Error())
 				continue
