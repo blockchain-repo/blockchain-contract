@@ -25,7 +25,7 @@ func init() {
 	// filter shouldn`t use the api log!
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// auth request app_id and app_key, return token
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIHttpFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIHttpBasicFilter, true)
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.APITimestampFilter, true)
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIParametersFilter, true)
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.APISignFilter, true)

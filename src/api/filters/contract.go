@@ -62,13 +62,38 @@ func responseWithStatusCode(ctx *context.Context, status int, msg string) {
 	return
 }
 
+func apiBasicParameterVerify(ctx *context.Context) {
+	timestamp := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TIMESTAMP)
+	sign := ctx.Input.Query(api.REQUEST_FIELD_AUTH_SIGN)
+	token := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TOKEN)
+	if len(timestamp) != API_TIMESTAMP_LEN {
+		resultMsg := fmt.Sprintf("%s timestamp length error!", "Filter[apiBasicParameterVerify]")
+		uniledgerlog.Error(resultMsg)
+		responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg)
+		return
+	}
+
+	if len(sign) != API_SIGN_LEN {
+		resultMsg := fmt.Sprintf("%s sign length error!", "Filter[apiBasicParameterVerify]")
+		uniledgerlog.Error(resultMsg)
+		responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_SIGN, resultMsg)
+		return
+	}
+	if len(token) != API_TOKEN_LEN {
+		resultMsg := fmt.Sprintf("%s token length error!", "Filter[apiBasicParameterVerify]")
+		uniledgerlog.Error(resultMsg)
+		responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_TOKEN, resultMsg)
+		return
+	}
+}
+
 //var ContentTypes = []string{"application/json", "application/x-protobuf"}
-func APIHttpFilter(ctx *context.Context) {
+func APIHttpBasicFilter(ctx *context.Context) {
 	//cost_start := time.Now()
 
 	contentType := ctx.Input.Header("Content-Type")
 	if contentType == "" {
-		resultMsg := fmt.Sprintf("%s 请求头 Content-Type 为空!", "Filter[APIContentTypeFilter]")
+		resultMsg := fmt.Sprintf("%s 请求头 Content-Type 为空!", "Filter[APIHttpFilter]")
 		uniledgerlog.Error(resultMsg)
 		responseWithStatusCode(ctx, api.RESPONSE_STATUS_CONTENT_TYPE_ERROR, resultMsg)
 		//defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_CONTENT_TYPE_ERROR, resultMsg)()
@@ -77,24 +102,25 @@ func APIHttpFilter(ctx *context.Context) {
 	} else if contentType == "application/json" || contentType == "application/x-protobuf" {
 		//uniledgerlog.Debug("RequestDataType is json!")
 	} else {
-		resultMsg := fmt.Sprintf("%s 请求头 Content-Type 值错误!", "Filter[APIContentTypeFilter]")
+		resultMsg := fmt.Sprintf("%s 请求头 Content-Type 值错误!", "Filter[APIHttpFilter]")
 		uniledgerlog.Error(resultMsg)
 		responseWithStatusCode(ctx, api.RESPONSE_STATUS_UNSUPPORT_MEDIATYPE, resultMsg)
 		//defer api.TimeCost(cost_start, ctx, api.RESPONSE_STATUS_CONTENT_TYPE_ERROR, resultMsg)()
 		return
 	}
+	apiBasicParameterVerify(ctx)
 }
 
 //todo  step 3
 func APITimestampFilter(ctx *context.Context) {
 	// 1. verify the timestamp format
-	timestamp := ctx.Input.Query("timestamp")
-	if len(timestamp) != API_TIMESTAMP_LEN {
-		resultMsg := fmt.Sprintf("%s timestamp length error!", "Filter[APITimestampFilter]")
-		uniledgerlog.Error(resultMsg)
-		responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg)
-		return
-	}
+	timestamp := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TIMESTAMP)
+	//if len(timestamp) != API_TIMESTAMP_LEN {
+	//	resultMsg := fmt.Sprintf("%s timestamp length error!", "Filter[APITimestampFilter]")
+	//	uniledgerlog.Error(resultMsg)
+	//	responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg)
+	//	return
+	//}
 	timestamp_int64, err := strconv.ParseInt(timestamp, 10, 64)
 	if err != nil {
 		resultMsg := fmt.Sprintf("%s timestamp format error!", "Filter[APITimestampFilter]")
@@ -135,12 +161,12 @@ func APIParametersFilter(ctx *context.Context) {
 }
 
 func generateSign(val string) string {
-	var hash hash.Hash
+	var hashObj hash.Hash
 	var x string
-	hash = md5.New()
-	if hash != nil {
-		hash.Write([]byte(val))
-		x = hex.EncodeToString(hash.Sum(nil))
+	hashObj = md5.New()
+	if hashObj != nil {
+		hashObj.Write([]byte(val))
+		x = hex.EncodeToString(hashObj.Sum(nil))
 	}
 	return x
 }
@@ -170,7 +196,6 @@ func APISignFilter(ctx *context.Context) {
 		responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_SIGN, resultMsg)
 		return
 	}
-
 }
 
 // todo get the token with app_id and app_key; if not exist, response 111000403.
