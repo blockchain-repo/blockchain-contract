@@ -35,7 +35,7 @@ func (c *ContractController) parseProtoRequestBody() (contract *protos.Contract,
 		if err != nil {
 			uniledgerlog.Error("contract parseRequestBody unmarshal err ", err)
 			err = fmt.Errorf("contract parseRequestBody unmarshal err ")
-			status = api.RESPONSE_STATUS_BadRequest
+			status = api.RESPONSE_STATUS_INTERNAL_ERROR
 			return
 		}
 		//todo temp
@@ -57,7 +57,7 @@ func (c *ContractController) responseProto(status int32, msg string, data string
 	if err != nil {
 		uniledgerlog.Error("responseProto ", err.Error())
 	}
-	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(api.RESPONSE_STATUS_OK)
 	c.Ctx.ResponseWriter.Write(output)
 }
 
@@ -70,7 +70,7 @@ func (c *ContractController) responseJson(status int32, msg string, data string)
 	if err != nil {
 		uniledgerlog.Error("responseJson ", err.Error())
 	}
-	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(api.RESPONSE_STATUS_OK)
 	c.Ctx.ResponseWriter.Write(output)
 }
 
@@ -83,7 +83,7 @@ func (c *ContractController) responseContract(status int32, msg string, data *pr
 	if err != nil {
 		uniledgerlog.Error("responseContract ", err.Error())
 	}
-	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(api.RESPONSE_STATUS_OK)
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
 
@@ -96,7 +96,7 @@ func (c *ContractController) responseContracts(status int32, msg string, data []
 	if err != nil {
 		uniledgerlog.Error("responseContracts ", err.Error())
 	}
-	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(api.RESPONSE_STATUS_OK)
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
 
@@ -110,7 +110,7 @@ func (c *ContractController) responseContractPagination(status int32, msg string
 	if err != nil {
 		uniledgerlog.Error("responseContractPagination ", err.Error())
 	}
-	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
+	c.Ctx.ResponseWriter.WriteHeader(api.RESPONSE_STATUS_OK)
 	c.Ctx.ResponseWriter.Write([]byte(body))
 }
 
@@ -216,12 +216,13 @@ func fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr s
 // Create [POST]
 func (c *ContractController) Create() {
 	cost_start := time.Now()
+	resultMsg := fmt.Sprintf("%s 查询创建成功!", "API[Create]")
 
 	contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
 		c.responseProto(status, err.Error(), "")
 		monitor.Monitor.Count("request_fail", 1)
-		defer api.TimeCost(cost_start, c.Ctx, status)()
+		defer api.TimeCost(cost_start, c.Ctx, status, err.Error())()
 		return
 	}
 	contractModel, err := model.FromContractProtoToContractModel(*contract)
@@ -234,75 +235,80 @@ func (c *ContractController) Create() {
 	contractBody := contractModel.ContractBody
 	uniledgerlog.Debug("contractBody:\n", contractBody)
 	if contractHead == nil || contractBody == nil {
-		c.responseProto(api.RESPONSE_STATUS_BadRequest, "contract 验证不通过, Head or Body is blank!", "")
+		resultMsg = fmt.Sprintf("%s %s ", "API[Create]", "contract 验证不通过, Head or Body is blank!")
+		c.responseProto(api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg, "")
 		monitor.Monitor.Count("request_fail", 1)
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg)()
 		return
 	}
 
 	contractValid := contractModel.Validate()
 	if !contractValid {
-		c.responseProto(api.RESPONSE_STATUS_BadRequest, "contract 验证不通过!", "")
+		resultMsg = fmt.Sprintf("%s %s ", "API[Create]", "contract 验证不通过!")
+		c.responseProto(api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg, "")
 		monitor.Monitor.Count("request_fail", 1)
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg)()
 		return
 	}
 	contract_write_time := monitor.Monitor.NewTiming()
 	ok := core.WriteContract(*contractModel)
 	if !ok {
-		c.responseProto(api.RESPONSE_STATUS_BadRequest, "API[Create] insert contract fail!", "")
-		uniledgerlog.Debug(c.Ctx.Request.RequestURI, "API[Create] insert contract fail!")
+		resultMsg = fmt.Sprintf("%s 合约写入失败(WriteContract) ", "API[Create]")
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		uniledgerlog.Error(resultMsg)
 		monitor.Monitor.Count("request_fail", 1)
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
+
 	contract_write_time.Send("contract_write")
-	c.responseProto(api.RESPONSE_STATUS_OK, "API[Create] insert contract Id "+contractModel.Id+"]", contract.Id)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contract.Id)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 
 }
 
-// QueryContractContent QueryAll
+// QueryContractContent
 func (c *ContractController) QueryContractContent() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-	contractId, _ := requestParamMap["contractId"].(string)
-	owner, _ := requestParamMap["owner"].(string)
-
-	//contractId := c.GetString("contractId")
-	//owner := c.GetString("owner")
-	/*------------------- requestParams end ------------------*/
-
-	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractId=%s]",
-		c.Ctx.Request.RequestURI, owner, contractId))
-
-	if contractId == "" {
-		c.responseProto(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
+	resultMsg := fmt.Sprintf("%s 查询合约成功!", "API[QueryContractContent]")
+	// verify the must length
+	if len(contractId) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryContractContent]", "contractId")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
+	if len(owner) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryContractContent]", "owner")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
+
+	/*------------------- requestParams end ------------------*/
 	contractModelStr, err := rethinkdb.GetContractContentByCondition(contractId, owner)
-	//uniledgerlog.Warn("QueryContractContent:\n", contractModelStr)
 	if err != nil {
-		uniledgerlog.Error("API[QueryContractContent]合约(Id=" + contractId + ")查询错误: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryContractContent]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryContractContent]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	if contractModelStr == "" {
-		uniledgerlog.Error("API[QueryContractContent]合约(Id=" + contractId + ")不存在: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryContractContent]合约(Id="+contractId+")不存在: ", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[QueryContractContent]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
-	c.responseProto(api.RESPONSE_STATUS_OK, "API[QueryContractContent]查询合约成功!", contractModelStr)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractModelStr)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // QueryPublishContract GET
@@ -310,44 +316,49 @@ func (c *ContractController) QueryPublishContract() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-	contractState := "Contract_Create"
-	contractId, _ := requestParamMap["contractId"].(string)
-	owner, _ := requestParamMap["owner"].(string)
-
-	//contractId := c.GetString("contractId")
-	//owner := c.GetString("owner")
-	//// TODO
-	//contractState := c.GetString("contractState", "Contract_Create")
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
+	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE, "Contract_Create")
+	resultMsg := fmt.Sprintf("%s 查询合约成功!", "API[QueryPublishContract]")
 	/*------------------- requestParams end ------------------*/
-
-	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s]",
-		c.Ctx.Request.RequestURI, owner, contractState, contractId))
-	if contractId == "" {
-		uniledgerlog.Error("API[QueryPublishContract] contractId is blank!")
-		c.responseProto(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+	if len(contractId) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryPublishContract]", "contractId")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
+	if len(owner) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryPublishContract]", "owner")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
+	if !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryPublishContract]", "contractState")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
+
 	contractModelStr, err := rethinkdb.GetPublishContractByCondition(contractId, owner, contractState)
 	if err != nil {
-		uniledgerlog.Error("API[QueryPublishContract]合约(Id=" + contractId + ")查询错误: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryPublishContract]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryPublishContract]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	if contractModelStr == "" {
-		uniledgerlog.Error("API[QueryPublishContract]合约(Id=" + contractId + ")不存在: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryPublishContract]合约(Id="+contractId+")不存在: ", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[QueryPublishContract]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
-	c.responseProto(api.RESPONSE_STATUS_OK, "API[QueryPublishContract]查询合约成功!", contractModelStr)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractModelStr)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // Query GET
@@ -355,120 +366,132 @@ func (c *ContractController) Query() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-	contractState, _ := requestParamMap["status"].(string)
-	contractId, _ := requestParamMap["contractId"].(string)
-	owner, _ := requestParamMap["owner"].(string)
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
+	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
+	resultMsg := fmt.Sprintf("%s 查询合约成功!", "API[Query]")
 
-	//contractId := c.GetString("contractId")
-	//owner := c.GetString("owner")
-	//// TODO
-	//contractState := c.GetString("status", "")
 	/*------------------- requestParams end ------------------*/
-
-	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s]",
-		c.Ctx.Request.RequestURI, owner, contractState, contractId))
-
-	if contractId == "" {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		//c.responseProto(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+	if len(contractId) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "contractId")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
+	if len(owner) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "owner")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
+	if !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "contractState")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
+
 	contractModelStr, err := rethinkdb.GetOneContractByCondition(contractId, owner, contractState)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[Query]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[Query]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	if contractModelStr == "" {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")不存在: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[Query]合约(Id="+contractId+")不存在: ", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[Query]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
 	contractProto, err := model.FromContractModelStrToContractProto(contractModelStr)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
-		c.responseProto(api.RESPONSE_STATUS_CONVERT_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONVERT_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(model.FromContractModelStrToContractProto)! ", "API[Query]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
 	contractProtoBytes, err := proto.Marshal(contractProto)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(proto.Marshal) ")
-		c.responseProto(api.RESPONSE_STATUS_CONVERT_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONVERT_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[Query]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_PROTO_ERROR, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PROTO_ERROR, resultMsg+err.Error())()
 		return
 	}
 	contractProtoStr := string(contractProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, "API[Query]查询合约成功!", contractProtoStr)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractProtoStr)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
-// QueryRecords QueryAll
+//QueryAll QueryRecords
 func (c *ContractController) QueryAll() {
 	cost_start := time.Now()
 	/*------------------- requestParams start ------------------*/
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-	contractState, _ := requestParamMap["status"].(string)
-	owner, _ := requestParamMap["owner"].(string)
-
-	contractId, _ := requestParamMap["contractId"].(string)
-	//if !ok {
-	//	uniledgerlog.Error("contractId type error")
-	//}
-	contractName, _ := requestParamMap["contractName"].(string)
-
-	//contractId := c.GetString("contractId")
-	//owner := c.GetString("owner")
-	//// TODO contractName
-	//contractState := c.GetString("status", "")
-	//contractName := c.GetString("contractName", "")
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
+	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
+	//contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
+	//_=contractName
 	/*------------------- requestParams end ------------------*/
 
-	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s, contractName=%s]",
-		c.Ctx.Request.RequestURI, owner, contractState, contractId, contractName))
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryAll]")
+	if len(owner) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryAll]", "owner")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
+	if len(contractState) != 0 && !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryAll]", "contractState")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
 
 	contractModelStr, err := rethinkdb.GetContractsByCondition(contractId, owner, contractState)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id="+contractId+")查询错误: ", err)
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[Query]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryAll]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	if contractModelStr == "" {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")不存在: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[Query]合约(Id="+contractId+")不存在: ", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[QueryAll]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
 	contractListProto, err := fromContractModelArrayStrToContracts(contractModelStr)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + "), 转换失败(fromContractModelStrToContract)")
-		c.responseProto(api.RESPONSE_STATUS_CONVERT_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONVERT_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(fromContractModelArrayStrToContracts)! ", "API[QueryAll]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
+
 	contractListProtoBytes, err := proto.Marshal(&contractListProto)
 	if err != nil {
-		uniledgerlog.Error("API[QueryALl]合约, 转换失败(proto.Marshal) ")
-		c.responseProto(api.RESPONSE_STATUS_CONVERT_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONVERT_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[QueryAll]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_PROTO_ERROR, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PROTO_ERROR, resultMsg+err.Error())()
 		return
 	}
+
 	contractProtoStr := string(contractListProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, "API[Query]查询合约成功!", contractProtoStr)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractProtoStr)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // QueryRecords QueryLog
@@ -476,61 +499,62 @@ func (c *ContractController) QueryLog() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-	contractState, _ := requestParamMap["status"].(string)
-	owner, _ := requestParamMap["owner"].(string)
-	contractId, ok := requestParamMap["contractId"].(string)
-	if !ok {
-		uniledgerlog.Error("contractId type error")
-	}
-	contractName, _ := requestParamMap["contractName"].(string)
-
-	//contractId := c.GetString("contractId")
-	//owner := c.GetString("owner")
-	//// TODO
-	//contractState := c.GetString("status", "")
-	//contractName := c.GetString("contractName", "")
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
+	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE, "Contract_In_Process")
+	//contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
+	//_=contractName
 	/*------------------- requestParams end ------------------*/
+	//uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s, contractName=%s]",
+	//	c.Ctx.Request.RequestURI, owner, contractState, contractId, contractName))
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryLog]")
 
-	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s, contractName=%s]",
-		c.Ctx.Request.RequestURI, owner, contractState, contractId, contractName))
+	if len(contractId) == 0 {
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryLog]", "contractId")
+		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+		return
+	}
 
 	contractOutputsModelStr, err := rethinkdb.GetContractsLogByCondition(contractId, owner, contractState)
-
 	if err != nil {
-		uniledgerlog.Error("API[QueryLog]合约log(Id="+contractId+")查询错误: ", err)
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryLog]查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryLog]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
+		return
+	}
+	if contractOutputsModelStr == "" {
+		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[QueryLog]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
-	if contractOutputsModelStr == "" {
-		uniledgerlog.Error("API[QueryLog]合约log(Id=" + contractId + ")不存在: ")
-		c.responseProto(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryLog](Id="+contractId+")不存在: ", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
-		return
-	}
 	//todo 需要过滤字段,只提取需要的字段!
 	contractExecuteLogListProto, err := fromContractOutputsModelArrayStrToContractsForLog(contractOutputsModelStr)
-	uniledgerlog.Warn(contractExecuteLogListProto)
+	//uniledgerlog.Warn(contractExecuteLogListProto)
 	if err != nil {
-		uniledgerlog.Error("API[QueryLog]合约(Id=" + contractId + "), 转换失败(fromContractOutputsModelArrayStrToContractsForLog)")
-		c.responseProto(api.RESPONSE_STATUS_CONVERT_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONVERT_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(fromContractOutputsModelArrayStrToContractsForLog)! ", "API[QueryLog]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
+
 	contractExecuteLogListProtoBytes, err := proto.Marshal(&contractExecuteLogListProto)
 	if err != nil {
-		uniledgerlog.Error("API[QueryLog]合约, 转换失败(proto.Marshal) ")
-		c.responseProto(api.RESPONSE_STATUS_CONVERT_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONVERT_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[QueryLog]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_PROTO_ERROR, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PROTO_ERROR, resultMsg+err.Error())()
 		return
 	}
+
 	contractExecuteLogListProtoStr := string(contractExecuteLogListProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, "API[QueryLog]查询成功!", contractExecuteLogListProtoStr)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractExecuteLogListProtoStr)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // PressTest POST
@@ -538,20 +562,50 @@ func (c *ContractController) PressTest() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
+	startTime := c.GetString(api.REQUEST_FIELD_CONTRACT_STARTTIME)
+	endTime := c.GetString(api.REQUEST_FIELD_CONTRACT_ENDTIME)
+	resultMsg := fmt.Sprintf("%s 操作成功!", "API[PressTest]")
 
-	token := c.Ctx.Request.Header.Get("token")
-	/*------------------- requestParams start ------------------*/
-	startTime, _ := requestParamMap["start"].(string)
-	endTime, _ := requestParamMap["end"].(string)
+	if len(startTime) != 0 {
+		_, err := strconv.ParseInt(startTime, 10, 64)
+		if err != nil {
+			resultMsg = fmt.Sprintf("%s %s 格式错误!", "API[PressTest]", "startTime")
+			c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_TYPE, resultMsg, "")
+			defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_TYPE, resultMsg)()
+			return
+		}
+	}
+	if len(endTime) != 0 {
+		_, err := strconv.ParseInt(endTime, 10, 64)
+		if err != nil {
+			resultMsg = fmt.Sprintf("%s %s 格式错误!", "API[PressTest]", "endTime")
+			c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_TYPE, resultMsg, "")
+			defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_TYPE, resultMsg)()
+			return
+		}
+	}
 
-	//token := c.GetString("token")
-	//startTime := c.GetString("start")
-	//endTime := c.GetString("end")
+	if len(startTime) != 0 && len(endTime) != 0 {
+		startTimeInt64, _ := strconv.ParseInt(startTime, 10, 64)
+		endTimeInt64, _ := strconv.ParseInt(endTime, 10, 64)
+		timeStart := time.Unix(startTimeInt64/1000, 0)
+		timeEnd := time.Unix(endTimeInt64/1000, 0)
+		if timeEnd.Before(timeStart) {
+			resultMsg = fmt.Sprintf("%s %s endTime  需要大于 startTime !", "API[PressTest]", "endTime")
+			c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+			defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+			return
+		}
+	}
 
 	contract, err, status := c.parseProtoRequestBody()
+	if err != nil {
+		resultMsg = fmt.Sprintf("%s 解析失败(parseProtoRequestBody) ", "API[PressTest]")
+		c.responseJson(status, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, status, resultMsg+err.Error())()
+		return
+	}
+
 	if startTime == "" {
 		startTime = common.GenTimestamp()
 	}
@@ -564,12 +618,6 @@ func (c *ContractController) PressTest() {
 	contract.ContractBody.Caption = contractCaptionTemp
 	contract.ContractBody.ContractState = "Contract_Signature"
 
-	if err != nil {
-		c.responseJson(status, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, status)()
-		return
-	}
-
 	//todo 1. replace createTime, Signatures, owner, start and end time!
 
 	//uniledgerlog.Warn("Input contractDeserialize:\n", common.StructSerialize(contract))
@@ -577,7 +625,7 @@ func (c *ContractController) PressTest() {
 	contractModel, err := model.FromContractProtoToContractModel(*contract)
 	/*-------------------------- this for press test generate Id start---------------------*/
 	// add random string
-	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_" + token
+	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_"
 	contractModel.ContractBody.Caption = randomString
 	contractModel.ContractBody.Description = randomString
 
@@ -627,21 +675,23 @@ func (c *ContractController) PressTest() {
 	// no verify id again!
 	contractValid := contractModel.IsSignatureValid()
 	if !contractValid {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contract 非法", "")
-		uniledgerlog.Error("API[PressTest] token is", token)
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		resultMsg = fmt.Sprintf("%s 签名验证失败(IsSignatureValid) ", "API[PressTest]")
+		c.responseJson(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, "")
+		uniledgerlog.Error(resultMsg)
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg)()
 		return
 	}
 	ok := core.WriteContract(*contractModel)
 	if !ok {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "API[PressTest] insert contract fail!", "")
-		uniledgerlog.Error(c.Ctx.Request.RequestURI, "API[PressTest] insert contract fail!")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		resultMsg = fmt.Sprintf("%s 合约写入失败(WriteContract) ", "API[PressTest]")
+		c.responseJson(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		uniledgerlog.Error(resultMsg)
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
-	uniledgerlog.Debug("API[PressTest] InsertContract success!")
-	c.responseJson(api.RESPONSE_STATUS_OK, "API[PressTest] insert contract Id "+contractModel.Id+"]", contract.Id)
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	uniledgerlog.Debug(resultMsg)
+	c.responseJson(api.RESPONSE_STATUS_OK, resultMsg, contract.Id)
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 
 }
 
@@ -649,94 +699,78 @@ func (c *ContractController) PressTest() {
 // QueryOutput GET
 func (c *ContractController) QueryOutput() {
 	cost_start := time.Now()
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
 
-	contractId, ok := requestParamMap["contractId"].(string)
-	if !ok {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "", "contractId type is error!")
-		return
-	}
-	//contractId := c.GetString("contractId")
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryOutput]")
+
 	if len(contractId) == 0 {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryOutput]", "contractId")
+		c.responseJson(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
 
 	output, err := rethinkdb.QueryOutput(contractId)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJson(api.RESPONSE_STATUS_QUERY_ERROR, "API[Query]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryOutput]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(output))))
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 
 }
 
 // QueryOutputNum GET
 func (c *ContractController) QueryOutputNum() {
 	cost_start := time.Now()
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryOutputNum]")
 
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-
-	//contractId := c.GetString("contractId")
-	contractId, ok := requestParamMap["contractId"].(string)
-	if !ok {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "", "contractId type is error!")
-		return
-	}
 	if len(contractId) == 0 {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryOutputNum]", "contractId")
+		c.responseJson(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
 
 	count, err := rethinkdb.QueryOutputNum(contractId)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJson(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryOutputNum]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryOutputNum]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`{"count":%d}`, count)))))
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // QueryOutputDuration GET
 func (c *ContractController) QueryOutputDuration() {
 	cost_start := time.Now()
-	var requestParamMap map[string]interface{}
-	requestBody := c.Ctx.Input.RequestBody
-	json.Unmarshal(requestBody, &requestParamMap)
-	contractId, ok := requestParamMap["contractId"].(string)
-	if !ok {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "", "contractId type is error!")
-		return
-	}
-
-	//contractId := c.GetString("contractId")
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryOutputDuration]")
 
 	if len(contractId) == 0 {
-		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
+		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryOutputDuration]", "contractId")
+		c.responseJson(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
 
 	startTime, err := rethinkdb.QueryContractStartTime(contractId)
 	if err != nil {
-		uniledgerlog.Error("API[Query]合约(Id=" + contractId + ")查询错误: ")
-		c.responseJson(api.RESPONSE_STATUS_QUERY_ERROR, "API[QueryOutputDuration]合约查询错误!", "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryOutputDuration]", contractId)
+		uniledgerlog.Error(resultMsg)
+		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
@@ -749,17 +783,19 @@ func (c *ContractController) QueryOutputDuration() {
 
 	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`{"duration":%d}`, hours)))))
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // QueryAccountBalance GET
 func (c *ContractController) QueryAccountBalance() {
 	cost_start := time.Now()
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryAccountBalance]")
 
 	result, err := function.FuncQueryAccountBalance()
 	if err != nil {
-		c.responseJson(api.RESPONSE_STATUS_OK, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+		resultMsg = fmt.Sprintf("%s查询错误! ", "API[QueryOutputDuration]")
+		c.responseJson(api.RESPONSE_STATUS_DB_ERROR_OP, err.Error(), "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
@@ -767,17 +803,19 @@ func (c *ContractController) QueryAccountBalance() {
 
 	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(data))))
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // QueryAmmeterBalance GET
 func (c *ContractController) QueryAmmeterBalance() {
 	cost_start := time.Now()
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryAmmeterBalance]")
 
 	result, err := function.FuncQueryAmmeterBalance()
 	if err != nil {
-		c.responseJson(api.RESPONSE_STATUS_OK, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+		resultMsg = fmt.Sprintf("%s查询错误! ", "API[QueryOutputDuration] ")
+		c.responseJson(api.RESPONSE_STATUS_DB_ERROR_OP, err.Error(), "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
 
@@ -785,23 +823,25 @@ func (c *ContractController) QueryAmmeterBalance() {
 
 	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(data))))
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 // QueryRecords GET
 func (c *ContractController) QueryRecords() {
 	cost_start := time.Now()
+	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryRecords]")
 
 	str, err := rethinkdb.GetTransactionRecords()
 	if err != nil {
-		c.responseJson(api.RESPONSE_STATUS_QUERY_ERROR, err.Error(), "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_QUERY_ERROR)()
+		resultMsg = fmt.Sprintf("%s查询错误! ", "API[QueryRecords] ")
+		c.responseJson(api.RESPONSE_STATUS_DB_ERROR_OP, err.Error(), "")
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 
 	c.Ctx.ResponseWriter.WriteHeader(api.HTTP_STATUS_CODE_OK)
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(str))))
-	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK)()
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
 //demo使用---------------------------------------------------------------------------------------------------------------
