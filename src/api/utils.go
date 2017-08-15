@@ -132,7 +132,13 @@ func UpdateToken(token string) bool {
 	return true
 }
 
-func RateLimit(token string) (ok bool) {
+func UpdateTokenWithExpire(token string, expire int) bool {
+	redis.SetVal(token, time.Nanosecond.String())
+	redis.SetExpire(token, expire)
+	return true
+}
+
+func RateLimit(token string) (ok bool, msg string) {
 	token_rate_key := token + rate_limit_key_suffix
 	if !redis.ExistKey(token_rate_key) {
 		uniledgerlog.Warn("token_rate is expired, will reset!")
@@ -152,13 +158,13 @@ func RateLimit(token string) (ok bool) {
 			}
 			rate_limit_log := fmt.Sprintf("%s,[%ds,%d], 剩余重置时间 %ds", "用户访问频率超限", rate_limit_duration, rate_limit_count, ttl)
 			uniledgerlog.Warn(rate_limit_log)
-			return false
+			return false, rate_limit_log
 		}
 	}
 	ttl, _ := redis.TTL(token_rate_key)
-	result := fmt.Sprintf("%s,[%ds,%d], 剩余 %d 次, 剩余重置时间%ds", "用户访问频率", rate_limit_duration, rate_limit_count, rate_limit_count-times-1, ttl)
-	uniledgerlog.Debug(result)
-	return true
+	rate_limit_log := fmt.Sprintf("%s,[%ds,%d], 剩余 %d 次, 剩余重置时间%ds", "用户访问频率", rate_limit_duration, rate_limit_count, rate_limit_count-times-1, ttl)
+
+	return true, rate_limit_log
 }
 
 func hashData(val string) string {

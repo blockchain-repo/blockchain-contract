@@ -2,6 +2,7 @@ package api
 
 // contract relation
 const (
+	REQUEST_FIELD_AUTH_APPID         = "appId"
 	REQUEST_FIELD_AUTH_TOKEN         = "token"
 	REQUEST_FIELD_AUTH_TIMESTAMP     = "timestamp"
 	REQUEST_FIELD_AUTH_SIGN          = "sign"
@@ -15,6 +16,7 @@ const (
 
 var ALLOW_REQUEST_PARAMETERS_ALL = map[string]bool{
 	/*************** FOR API AUTH ************/
+	"appId":     true,
 	"token":     true,
 	"timestamp": true,
 	"sign":      true,
@@ -45,6 +47,7 @@ var ALLOW_REQUEST_PARAMETERS_MODEL = map[string]bool{
 
 // FOR API FILTER
 var ALLOW_REQUEST_PARAMETERS_BASIC = map[string]bool{
+	"appId":     true,
 	"token":     true,
 	"timestamp": true,
 	"sign":      true,
@@ -57,4 +60,8 @@ var REQUEST_CONTRACT_STATE_MAP = map[string]bool{
 	"Contract_In_Process": true,
 	"Contract_Completed":  true,
 	"Contract_Discarded":  true,
+}
+
+var TOKEN_MAP = map[string]string{
+	"tokenKey": "accessKey",
 }

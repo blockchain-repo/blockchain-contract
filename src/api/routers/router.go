@@ -22,26 +22,19 @@ func init() {
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true}))
 
-	// filter shouldn`t use the api log!
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
-	// auth request app_id and app_key, return token
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIHttpBasicFilter, true)
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APITimestampFilter, true)
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIParametersFilter, true)
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APISignFilter, true)
+	auth_verify := beego.AppConfig.DefaultBool("auth_verify", false)
+	auth_verify_rate_limit := beego.AppConfig.DefaultBool("auth_verify_rate_limit", true)
 
-	// if true, add the api filter
-	//api_auth := beego.AppConfig.DefaultBool("api_auth", true)
-	//// if true, add the api rate limit filter
-	//api_rate_limit := beego.AppConfig.DefaultBool("api_rate_limit", true)
-	//if api_auth {
-	//	beego.InsertFilter("/v1/unicontract/auth/getAccessKey", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
-	//	beego.InsertFilter("/v1/unicontract/auth/getToken", beego.BeforeRouter, filters.APIGetTokenFilter, true)
-	//	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
-	//	if api_rate_limit {
-	//		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
-	//	}
-	//}
+	// filter shouldn`t use the api log!
+	if auth_verify {
+		beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
+		// auth request app_id and app_key, return token
+		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIBasicFilter, true)
+		if auth_verify_rate_limit {
+			beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
+		}
+
+	}
 
 	//todo 1. auth_verify=true
 	//false will ignore all the filters

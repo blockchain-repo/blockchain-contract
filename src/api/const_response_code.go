@@ -14,6 +14,7 @@ const (
 	RESPONSE_STATUS_INVALID_TIMESTAMP          = 201005 // 请求参数 timestamp 非法
 	RESPONSE_STATUS_INVALID_TOKEN              = 201006 // 请求参数 token 非法
 	RESPONSE_STATUS_INVALID_SIGN               = 201007 // 请求参数 sign 非法
+	RESPONSE_STATUS_INVALID_APPID              = 201008 // 请求参数 appId 非法
 
 	// controller PARAMETER_ERROR 101~199
 	RESPONSE_STATUS_PARAMETER_ERROR_COUNT    = 201101 // 请求参数个数错误
