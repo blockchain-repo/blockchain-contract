@@ -25,20 +25,35 @@ func init() {
 	// filter shouldn`t use the api log!
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// auth request app_id and app_key, return token
-	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIHttpFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APITimestampFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIParametersFilter, true)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.APISignFilter, true)
 
 	// if true, add the api filter
-	api_auth := beego.AppConfig.DefaultBool("api_auth", true)
-	// if true, add the api rate limit filter
-	api_rate_limit := beego.AppConfig.DefaultBool("api_rate_limit", true)
-	if api_auth {
-		beego.InsertFilter("/v1/unicontract/auth/getAccessKey", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
-		beego.InsertFilter("/v1/unicontract/auth/getToken", beego.BeforeRouter, filters.APIGetTokenFilter, true)
-		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
-		if api_rate_limit {
-			beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
-		}
-	}
+	//api_auth := beego.AppConfig.DefaultBool("api_auth", true)
+	//// if true, add the api rate limit filter
+	//api_rate_limit := beego.AppConfig.DefaultBool("api_rate_limit", true)
+	//if api_auth {
+	//	beego.InsertFilter("/v1/unicontract/auth/getAccessKey", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
+	//	beego.InsertFilter("/v1/unicontract/auth/getToken", beego.BeforeRouter, filters.APIGetTokenFilter, true)
+	//	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
+	//	if api_rate_limit {
+	//		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
+	//	}
+	//}
+
+	//todo 1. auth_verify=true
+	//false will ignore all the filters
+	//todo 2. basic http method, content-type and others verify! auth_verify_http=true
+	//default only verify the content-type
+	//todo 3. basic filter timestamp filter 请求时间戳过滤功能, auth_verify_timestamp=true
+	//todo 4. filter parameters, verify the input parameters if all in api.ALLOW_REQUEST_PARAMETERS_ALL, auth_verify_parameters=false
+	//sort fields must in api.ALLOW_REQUEST_PARAMETERS_MODEL
+	//todo 5. verify the basic parameter sign(except sign, encrypt-> sign只针对 parameters进行加密， 请求参数字典序进行hash) auth_verify_sign=false
+	//maybe cost time
+	//todo 6. verify the token parameter from redis, auth_verify_token=false
+	//todo 7. rate Limit verify, depend the step 6! auth_verify_rate_limit=false
 
 	ns := beego.NewNamespace("/v1/unicontract",
 		beego.NSNamespace("/contract",

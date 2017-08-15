@@ -49,10 +49,10 @@ func init() {
 }
 
 // TimeCost need cost_start := time.Now() and insert it before return
-func TimeCost(start time.Time, ctx *context.Context, responseCode int32) func() {
+func TimeCost(start time.Time, ctx *context.Context, responseCode int32, msg string) func() {
 	return func() {
-		result := fmt.Sprintf("API_INFO[method=%s code=%d from=%s to=%s cost=%.3fms]", ctx.Request.Method, responseCode, ctx.Request.RemoteAddr, ctx.Request.Host,
-			float32(time.Since(start).Nanoseconds())/1000000)
+		result := fmt.Sprintf("API_INFO[method=%s code=%d from=%s to=%s cost=%.3fms msg=%s]", ctx.Request.Method, responseCode, ctx.Request.RemoteAddr, ctx.Request.Host,
+			float32(time.Since(start).Nanoseconds())/1000000, msg)
 		uniledgerlog.Info("%s", result)
 	}
 }
