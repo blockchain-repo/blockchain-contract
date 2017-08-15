@@ -267,8 +267,14 @@ func (c *ContractController) QueryContractContent() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	contractId := c.GetString("contractId")
-	owner := c.GetString("owner")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+	contractId, _ := requestParamMap["contractId"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+
+	//contractId := c.GetString("contractId")
+	//owner := c.GetString("owner")
 	/*------------------- requestParams end ------------------*/
 
 	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractId=%s]",
@@ -304,10 +310,17 @@ func (c *ContractController) QueryPublishContract() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	contractId := c.GetString("contractId")
-	owner := c.GetString("owner")
-	// TODO
-	contractState := c.GetString("contractState", "Contract_Create")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+	contractState := "Contract_Create"
+	contractId, _ := requestParamMap["contractId"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+
+	//contractId := c.GetString("contractId")
+	//owner := c.GetString("owner")
+	//// TODO
+	//contractState := c.GetString("contractState", "Contract_Create")
 	/*------------------- requestParams end ------------------*/
 
 	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s]",
@@ -342,10 +355,17 @@ func (c *ContractController) Query() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	contractId := c.GetString("contractId")
-	owner := c.GetString("owner")
-	// TODO
-	contractState := c.GetString("status", "")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+	contractState, _ := requestParamMap["status"].(string)
+	contractId, _ := requestParamMap["contractId"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+
+	//contractId := c.GetString("contractId")
+	//owner := c.GetString("owner")
+	//// TODO
+	//contractState := c.GetString("status", "")
 	/*------------------- requestParams end ------------------*/
 
 	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s]",
@@ -395,11 +415,23 @@ func (c *ContractController) Query() {
 func (c *ContractController) QueryAll() {
 	cost_start := time.Now()
 	/*------------------- requestParams start ------------------*/
-	contractId := c.GetString("contractId")
-	owner := c.GetString("owner")
-	// TODO contractName
-	contractState := c.GetString("status", "")
-	contractName := c.GetString("contractName", "")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+	contractState, _ := requestParamMap["status"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+
+	contractId, _ := requestParamMap["contractId"].(string)
+	//if !ok {
+	//	uniledgerlog.Error("contractId type error")
+	//}
+	contractName, _ := requestParamMap["contractName"].(string)
+
+	//contractId := c.GetString("contractId")
+	//owner := c.GetString("owner")
+	//// TODO contractName
+	//contractState := c.GetString("status", "")
+	//contractName := c.GetString("contractName", "")
 	/*------------------- requestParams end ------------------*/
 
 	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s, contractName=%s]",
@@ -443,16 +475,23 @@ func (c *ContractController) QueryAll() {
 func (c *ContractController) QueryLog() {
 	cost_start := time.Now()
 
+	/*------------------- requestParams start ------------------*/
 	var requestParamMap map[string]interface{}
 	requestBody := c.Ctx.Input.RequestBody
 	json.Unmarshal(requestBody, &requestParamMap)
+	contractState, _ := requestParamMap["status"].(string)
+	owner, _ := requestParamMap["owner"].(string)
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		uniledgerlog.Error("contractId type error")
+	}
+	contractName, _ := requestParamMap["contractName"].(string)
 
-	/*------------------- requestParams start ------------------*/
-	contractId := c.GetString("contractId")
-	owner := c.GetString("owner")
-	// TODO
-	contractState := c.GetString("status", "")
-	contractName := c.GetString("contractName", "")
+	//contractId := c.GetString("contractId")
+	//owner := c.GetString("owner")
+	//// TODO
+	//contractState := c.GetString("status", "")
+	//contractName := c.GetString("contractName", "")
 	/*------------------- requestParams end ------------------*/
 
 	uniledgerlog.Debug(fmt.Sprintf("[API] match |%s [owner =%s, contractState=%s, contractId=%s, contractName=%s]",
@@ -499,9 +538,18 @@ func (c *ContractController) PressTest() {
 	cost_start := time.Now()
 
 	/*------------------- requestParams start ------------------*/
-	token := c.GetString("token")
-	startTime := c.GetString("start")
-	endTime := c.GetString("end")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	token := c.Ctx.Request.Header.Get("token")
+	/*------------------- requestParams start ------------------*/
+	startTime, _ := requestParamMap["start"].(string)
+	endTime, _ := requestParamMap["end"].(string)
+
+	//token := c.GetString("token")
+	//startTime := c.GetString("start")
+	//endTime := c.GetString("end")
 
 	contract, err, status := c.parseProtoRequestBody()
 	if startTime == "" {
@@ -601,8 +649,16 @@ func (c *ContractController) PressTest() {
 // QueryOutput GET
 func (c *ContractController) QueryOutput() {
 	cost_start := time.Now()
-	contractId := c.GetString("contractId")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
 
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		c.responseJson(api.RESPONSE_STATUS_BadRequest, "", "contractId type is error!")
+		return
+	}
+	//contractId := c.GetString("contractId")
 	if len(contractId) == 0 {
 		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
@@ -626,8 +682,17 @@ func (c *ContractController) QueryOutput() {
 // QueryOutputNum GET
 func (c *ContractController) QueryOutputNum() {
 	cost_start := time.Now()
-	contractId := c.GetString("contractId")
 
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+
+	//contractId := c.GetString("contractId")
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		c.responseJson(api.RESPONSE_STATUS_BadRequest, "", "contractId type is error!")
+		return
+	}
 	if len(contractId) == 0 {
 		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_BadRequest)()
@@ -650,7 +715,16 @@ func (c *ContractController) QueryOutputNum() {
 // QueryOutputDuration GET
 func (c *ContractController) QueryOutputDuration() {
 	cost_start := time.Now()
-	contractId := c.GetString("contractId")
+	var requestParamMap map[string]interface{}
+	requestBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(requestBody, &requestParamMap)
+	contractId, ok := requestParamMap["contractId"].(string)
+	if !ok {
+		c.responseJson(api.RESPONSE_STATUS_BadRequest, "", "contractId type is error!")
+		return
+	}
+
+	//contractId := c.GetString("contractId")
 
 	if len(contractId) == 0 {
 		c.responseJson(api.RESPONSE_STATUS_BadRequest, "contractId is blank!", "")
