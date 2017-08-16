@@ -285,7 +285,7 @@ func Test_AuthSignature(t *testing.T) {
 		return
 	}
 	//接受返回数据
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	proto.Unmarshal(response, &responseData)
 	fmt.Println(common.StructSerializePretty(responseData))
 }
@@ -309,7 +309,7 @@ func Test_CreatContract(t *testing.T) {
 		requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 		response, err := httpRequest("POST", url, requestBody, requestHead)
 		//接受返回数据
-		var responseData protos.ResponseData
+		var responseData protos.Response
 		proto.Unmarshal(response, &responseData)
 		fmt.Println(common.StructSerializePretty(responseData))
 	}
@@ -354,7 +354,7 @@ func Test_CreatContractWithLocalJson(t *testing.T) {
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 	response, err := httpRequest("POST", url, requestBody, requestHead)
 	//接受返回数据
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	proto.Unmarshal(response, &responseData)
 	fmt.Println(common.StructSerializePretty(responseData))
 }
@@ -377,7 +377,7 @@ func Test_Signature(t *testing.T) {
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 	response, err := httpRequest("POST", url, requestBody, requestHead)
 	//接受返回数据
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	proto.Unmarshal(response, &responseData)
 	fmt.Println(common.StructSerializePretty(responseData))
 }
@@ -400,7 +400,7 @@ func Test_Terminate(t *testing.T) {
 	requestHead["Content-Type"] = APPLICATION_X_PROTOBUF
 	response, err := httpRequest("POST", url, requestBody, requestHead)
 	//接受返回数据
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	proto.Unmarshal(response, &responseData)
 	fmt.Println(common.StructSerializePretty(responseData))
 }
@@ -426,7 +426,7 @@ func Test_Query(t *testing.T) {
 	}
 
 	/*---------------------- response 接受的响应数据-----------------------*/
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	err = proto.Unmarshal(response, &responseData)
 	if err != nil {
 		fmt.Println("proto.Unmarshal protos.ResponseData error")
@@ -434,11 +434,11 @@ func Test_Query(t *testing.T) {
 	}
 	fmt.Println("responseData content is: \n", common.StructSerializePretty(responseData))
 
-	ok := responseData.Ok
+	ok := responseData.Code
 	_ = ok
 	msg := responseData.Msg
 	_ = msg
-	data := responseData.Data
+	data := responseData.Result
 
 	/*----------------- contract Unmarshal 数据库真实数据----------------------*/
 	// 返回的数据是 字节数组->字符串 ,所以需要 字符串->字节数组
@@ -479,7 +479,7 @@ func Test_Track(t *testing.T) {
 		fmt.Println("error ", err.Error())
 	}
 	/*---------------------- response 接受的响应数据-----------------------*/
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	err = proto.Unmarshal(response, &responseData)
 	if err != nil {
 		fmt.Println("proto.Unmarshal protos.ResponseData error")
@@ -487,11 +487,11 @@ func Test_Track(t *testing.T) {
 	}
 	fmt.Println("responseData content is: \n", common.StructSerializePretty(responseData))
 
-	ok := responseData.Ok
+	ok := responseData.Code
 	_ = ok
 	msg := responseData.Msg
 	_ = msg
-	data := responseData.Data
+	data := responseData.Result
 	fmt.Println(data)
 }
 
@@ -517,7 +517,7 @@ func Test_Update(t *testing.T) {
 		return
 	}
 	//接受返回数据
-	var responseData protos.ResponseData
+	var responseData protos.Response
 	proto.Unmarshal(response, &responseData)
 	fmt.Println(common.StructSerializePretty(responseData))
 }

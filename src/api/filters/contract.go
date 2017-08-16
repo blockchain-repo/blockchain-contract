@@ -19,7 +19,8 @@ import (
 
 var (
 	API_TIMEOUT       = int64(60)
-	API_TOKEN_LEN     = 44
+	API_APPID_LEN     = 32
+	API_TOKEN_LEN     = 32
 	API_SIGN_LEN      = 32
 	API_TIMESTAMP_LEN = 13
 )
@@ -30,7 +31,7 @@ var (
 	AUTH_VERIFY_HEADER             = true
 	AUTH_VERIFY_TIMESTAMP          = true
 	AUTH_VERIFY_BASIC_PARAMETERS   = false
-	AUTH_VERIFY_ALLOWED_PARAMETERS = false
+	AUTH_VERIFY_ALLOWED_PARAMETERS = true
 	AUTH_VERIFY_SIGN               = false
 	AUTH_VERIFY_TOKEN              = false
 	AUTH_VERIFY_RATE_LIMIT         = false
@@ -61,6 +62,17 @@ func responseWithStatusCode(ctx *context.Context, status int, msg string) {
 	if err != nil {
 		uniledgerlog.Error("responseWithStatusCode", err.Error())
 	}
+	ctx.ResponseWriter.Write(resultByte)
+	return
+}
+
+func responseWithHTTPStatusCode(ctx *context.Context, status int, msg string, responseCode int) {
+	result := response{Code: status, Msg: "", Result: msg}
+	resultByte, err := json.Marshal(result)
+	if err != nil {
+		uniledgerlog.Error("responseWithHTTPStatusCode", err.Error())
+	}
+	ctx.ResponseWriter.WriteHeader(responseCode)
 	ctx.ResponseWriter.Write(resultByte)
 	return
 }
@@ -104,9 +116,9 @@ func verifyTimestamp(timestamp string, api_timeout int64, api_timestamp_len int)
 }
 
 func verifyBasicParameters(appId string, timestamp string, token string, sign string) (int, string) {
-	if len(appId) != 0 {
+	if len(appId) != API_APPID_LEN {
 		resultMsg := fmt.Sprintf("%s appId length error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg
+		return api.RESPONSE_STATUS_INVALID_APPID, resultMsg
 	}
 
 	if len(timestamp) != API_TIMESTAMP_LEN {
@@ -190,24 +202,23 @@ func APIBasicFilter(ctx *context.Context) {
 		}
 
 	}
-	// 3. verify the basic required parameters: timestamp, token, sign
-	token := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TOKEN)
-	sign := ctx.Input.Query(api.REQUEST_FIELD_AUTH_SIGN)
-	appId := ctx.Input.Query(api.REQUEST_FIELD_AUTH_APPID)
-	if AUTH_VERIFY_BASIC_PARAMETERS {
-		statusCode, resultMsg = verifyBasicParameters(appId, timestamp, token, sign)
+	// 4. verify all the request parameters are allowed
+	ctx.Request.ParseForm()
+	parameters := ctx.Request.Form
+	if AUTH_VERIFY_ALLOWED_PARAMETERS {
+		statusCode, resultMsg = verifyAllowRequestParameters(parameters)
 		if statusCode != api.RESPONSE_STATUS_OK {
 			uniledgerlog.Error(resultMsg)
 			responseWithStatusCode(ctx, statusCode, resultMsg)
 			return
 		}
 	}
-
-	// 4. verify all the request parameters are allowed
-	ctx.Request.ParseForm()
-	parameters := ctx.Request.Form
-	if AUTH_VERIFY_ALLOWED_PARAMETERS {
-		statusCode, resultMsg = verifyAllowRequestParameters(parameters)
+	// 3. verify the basic required parameters: timestamp, token, sign, appId
+	token := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TOKEN)
+	sign := ctx.Input.Query(api.REQUEST_FIELD_AUTH_SIGN)
+	appId := ctx.Input.Query(api.REQUEST_FIELD_AUTH_APPID)
+	if AUTH_VERIFY_BASIC_PARAMETERS {
+		statusCode, resultMsg = verifyBasicParameters(appId, timestamp, token, sign)
 		if statusCode != api.RESPONSE_STATUS_OK {
 			uniledgerlog.Error(resultMsg)
 			responseWithStatusCode(ctx, statusCode, resultMsg)
@@ -227,7 +238,7 @@ func APIBasicFilter(ctx *context.Context) {
 	// 6. verify the token exist
 	if AUTH_VERIFY_TOKEN {
 		tokenKey := appId + "_" + token
-		if verifyTheToken(token, appId, api.TOKEN_MAP[tokenKey]) {
+		if verifyTheToken(token, appId) {
 			_ = api.UpdateToken(tokenKey)
 		} else {
 			resultMsg := fmt.Sprintf("%s token(%s)错误!", "Filter[APIBasicFilter]", sign)
@@ -238,10 +249,19 @@ func APIBasicFilter(ctx *context.Context) {
 	}
 }
 
-func verifyTheToken(token string, appId string, accessKey string) bool {
-	//tokens[token_appId] = accessKey(server store)
-	// token = appId + generateTimestamp + randomString+ endDate
-	return true
+func verifyTheToken(token string, appId string) bool {
+	return api.VerifyToken(token, appId)
+}
+
+func rateLimitVerify(tokenKey string) (ok bool, msg string, httpResponseCode int) {
+	_ = api.UpdateToken(tokenKey)
+	ok, resultMsg := api.RateLimit(tokenKey)
+	if !ok {
+		return ok, resultMsg, 429
+	} else {
+		return ok, resultMsg, 200
+	}
+
 }
 
 func APIRateLimitFilter(ctx *context.Context) {
@@ -250,19 +270,25 @@ func APIRateLimitFilter(ctx *context.Context) {
 	tokenKey := appId + "_" + token
 	exist := api.ExistKey(tokenKey)
 	if exist {
-		_ = api.UpdateToken(tokenKey)
-		ok, resultMsg := api.RateLimit(tokenKey)
+		ok, resultMsg, httpResponseCode := rateLimitVerify(tokenKey)
 		if ok {
 			uniledgerlog.Debug(resultMsg)
 		} else {
 			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, api.RESPONSE_STATUS_APP_REQUESTS_OUT_OF_RATE_LIMIT, resultMsg)
+			responseWithHTTPStatusCode(ctx, api.RESPONSE_STATUS_APP_REQUESTS_OUT_OF_RATE_LIMIT, resultMsg, httpResponseCode)
 			return
 		}
 	} else {
-		isValid := verifyTheToken(token, appId, api.TOKEN_MAP[tokenKey])
+		isValid := verifyTheToken(token, appId)
 		if isValid {
-			api.UpdateToken(tokenKey)
+			ok, resultMsg, httpResponseCode := rateLimitVerify(tokenKey)
+			if ok {
+				uniledgerlog.Debug(resultMsg)
+			} else {
+				uniledgerlog.Error(resultMsg)
+				responseWithHTTPStatusCode(ctx, api.RESPONSE_STATUS_APP_REQUESTS_OUT_OF_RATE_LIMIT, resultMsg, httpResponseCode)
+				return
+			}
 		}
 	}
 }

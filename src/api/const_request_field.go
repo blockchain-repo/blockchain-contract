@@ -61,7 +61,3 @@ var REQUEST_CONTRACT_STATE_MAP = map[string]bool{
 	"Contract_Completed":  true,
 	"Contract_Discarded":  true,
 }
-
-var TOKEN_MAP = map[string]string{
-	"tokenKey": "accessKey",
-}

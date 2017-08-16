@@ -327,7 +327,7 @@ func (c *ContractController) QueryPublishContract() {
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
-	if !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
+	if len(contractState) != 0 && !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
 		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryPublishContract]", "contractState")
 		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
@@ -378,7 +378,7 @@ func (c *ContractController) Query() {
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
-	if !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
+	if len(contractState) != 0 && !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
 		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "contractState")
 		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
@@ -559,7 +559,6 @@ func (c *ContractController) PressTest() {
 	startTime := c.GetString(api.REQUEST_FIELD_CONTRACT_STARTTIME)
 	endTime := c.GetString(api.REQUEST_FIELD_CONTRACT_ENDTIME)
 	resultMsg := fmt.Sprintf("%s 操作成功!", "API[PressTest]")
-
 	if len(startTime) != 0 {
 		_, err := strconv.ParseInt(startTime, 10, 64)
 		if err != nil {
@@ -599,6 +598,9 @@ func (c *ContractController) PressTest() {
 		defer api.TimeCost(cost_start, c.Ctx, status, resultMsg+err.Error())()
 		return
 	}
+	if contract == nil {
+		uniledgerlog.Warn("23423")
+	}
 
 	if startTime == "" {
 		startTime = common.GenTimestamp()
@@ -611,12 +613,14 @@ func (c *ContractController) PressTest() {
 	contract.ContractBody.ContractId = contractIdTemp
 	contract.ContractBody.Caption = contractCaptionTemp
 	contract.ContractBody.ContractState = "Contract_Signature"
+	uniledgerlog.Warn(endTime)
 
 	//todo 1. replace createTime, Signatures, owner, start and end time!
 
 	//uniledgerlog.Warn("Input contractDeserialize:\n", common.StructSerialize(contract))
 	//contractModel := fromContractToContractModel(contract)
 	contractModel, err := model.FromContractProtoToContractModel(*contract)
+	uniledgerlog.Warn(contractModel)
 	/*-------------------------- this for press test generate Id start---------------------*/
 	// add random string
 	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_"

@@ -24,14 +24,16 @@ func init() {
 	redis_password := beego.AppConfig.String("redis.password")
 	// create redis pool
 	redis_client = &redis.Pool{
-		MaxIdle:     beego.AppConfig.DefaultInt("redis.maxidle", 2),
-		MaxActive:   beego.AppConfig.DefaultInt("redis.maxactive", 4),
-		IdleTimeout: 30 * time.Second,
+		MaxIdle:     beego.AppConfig.DefaultInt("redis.maxidle", 3),
+		MaxActive:   beego.AppConfig.DefaultInt("redis.maxactive", 5),
+		IdleTimeout: 180 * time.Second,
+		Wait:        true,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", redis_address, redis.DialPassword(redis_password))
 			if err != nil {
 				uniledgerlog.Error("redis 初始化错误，请检测服务器是否安装了redis及其配置参数\n"+
-					"api的token及ratelimit验证使用了redis，可以通过设置app.conf中的api_auth = false来禁止这些功能以跳过此错误", err)
+					"api的token及ratelimit验证使用了redis，可以通过设置app.conf中的 auth_verify = false 或者 "+
+					"auth_verify_token=false 且 auth_verify_rate_limit=false 来禁止这些功能以跳过此错误", err)
 				os.Exit(0)
 				return nil, err
 			}
@@ -128,4 +130,23 @@ func ExistKey(key string) bool {
 		uniledgerlog.Error(err)
 	}
 	return exist_key
+}
+
+func SetValWithExpire(key string, val string, expire int) (interface{}, error) {
+	conn := GetConn()
+	defer conn.Close()
+	conn.Do("MULTI")
+	conn.Do("SET", key, val)
+	conn.Do("EXPIRE", key, expire)
+	return conn.Do("EXEC")
+	//return conn.Do("SET", key, val, "EX", expire)
+}
+
+func IncWithExpire(key string, expire int) (interface{}, error) {
+	conn := GetConn()
+	defer conn.Close()
+	conn.Do("MULTI")
+	conn.Do("INCR", key)
+	conn.Do("EXPIRE", key, expire)
+	return conn.Do("EXEC")
 }

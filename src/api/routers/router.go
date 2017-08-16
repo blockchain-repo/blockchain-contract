@@ -22,12 +22,12 @@ func init() {
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true}))
 
-	auth_verify := beego.AppConfig.DefaultBool("auth_verify", false)
+	auth_verify := beego.AppConfig.DefaultBool("auth_verify", true)
 	auth_verify_rate_limit := beego.AppConfig.DefaultBool("auth_verify_rate_limit", true)
 
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// filter shouldn`t use the api log!
 	if auth_verify {
-		beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 		// auth request app_id and app_key, return token
 		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIBasicFilter, true)
 		if auth_verify_rate_limit {
