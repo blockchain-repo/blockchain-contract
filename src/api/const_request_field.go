@@ -12,6 +12,8 @@ const (
 	REQUEST_FIELD_CONTRACT_NAME      = "contractName"
 	REQUEST_FIELD_CONTRACT_STARTTIME = "startTime"
 	REQUEST_FIELD_CONTRACT_ENDTIME   = "endTime"
+	REQUEST_FIELD_PAGE               = "page"
+	REQUEST_FIELD_PAGE_SIZE          = "pageSize"
 )
 
 var ALLOW_REQUEST_PARAMETERS_ALL = map[string]bool{
