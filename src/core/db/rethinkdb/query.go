@@ -239,7 +239,7 @@ func GetOneContractByCondition(contractId string, owner string, contractState st
 	return common.Serialize(blo), nil
 }
 
-func GetContractsPaginationByCondition(contractId string, owner string, contractState string, page int32, pageSize int32) (totalRecords int32, result string, err error) {
+func GetContractsPaginationByCondition(contractId string, owner string, contractState string, pageNumStart int32, pageNumEnd int32) (totalRecords int32, result string, err error) {
 	//if owner == "" {
 	//	return "", errors.New("owner blank")
 	//}
@@ -250,7 +250,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else if contractId == "" && contractState == "" && owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -258,7 +258,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else if contractId == "" && contractState != "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -266,7 +266,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else if contractId != "" && contractState == "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -274,7 +274,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else if contractId == "" && contractState != "" && owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -283,7 +283,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else if contractId != "" && contractState == "" && owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -292,7 +292,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else if contractId != "" && contractState != "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -301,7 +301,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	} else {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -311,7 +311,7 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Count().
+			Count().
 			Run(session)
 	}
 
@@ -327,14 +327,14 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 		return 0, "", err
 	}
 
-	pageNoStart := (page-1)*pageSize + 1
-	pageNoEnd := pageNoStart + pageSize
 	if contractId == "" && contractState == "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
-			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
-			Max(r.Row.Field("transaction").Field("timestamp")).
-			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			//Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			//Max(r.Row.Field("transaction").Field("timestamp")).
+			//Ungroup().Field("reduction").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else if contractId == "" && contractState == "" && owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -342,7 +342,8 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else if contractId == "" && contractState != "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -350,7 +351,8 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else if contractId != "" && contractState == "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -358,7 +360,9 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else if contractId == "" && contractState != "" && owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -367,7 +371,8 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else if contractId != "" && contractState == "" && owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -376,7 +381,8 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else if contractId != "" && contractState != "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -385,7 +391,8 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	} else {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -395,7 +402,8 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").Slice(pageNoStart, pageNoEnd).
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	}
 
@@ -410,7 +418,6 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 	if err != nil {
 		return 0, "", err
 	}
-	uniledgerlog.Warn(len(blo))
 	return totalRecords, common.Serialize(blo), nil
 }
 
@@ -548,7 +555,7 @@ func GetContractsLogByCondition(contractId string, owner string, contractState s
 }
 
 // GetContractsLogPaginationByCondition 分页查询执行日志，暂时作为demo
-func GetContractsLogPaginationByCondition(contractId string, owner string, contractState string, page int32, pageSize int32) (totalRecords int32, result string, err error) {
+func GetContractsLogPaginationByCondition(contractId string, owner string, contractState string, pageNumStart int32, pageNumEnd int32) (totalRecords int32, result string, err error) {
 	if contractId == "" {
 		return 0, "", errors.New("contractId blank")
 	}
@@ -562,13 +569,13 @@ func GetContractsLogPaginationByCondition(contractId string, owner string, contr
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Count().Run(session)
+			Count().Run(session)
 	} else {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
 			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Count().Run(session)
+			Count().Run(session)
 	}
 	if err != nil {
 		return 0, "", err
@@ -580,8 +587,6 @@ func GetContractsLogPaginationByCondition(contractId string, owner string, contr
 	if err != nil {
 		return 0, "", err
 	}
-	pageNoStart := (page-1)*pageSize + 1
-	pageNoEnd := pageNoStart + pageSize
 
 	if owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
@@ -589,13 +594,17 @@ func GetContractsLogPaginationByCondition(contractId string, owner string, contr
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Slice(pageNoStart, pageNoEnd).Run(session)
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Slice(pageNumStart, pageNumEnd).
+			Run(session)
 	} else {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
 			//Filter(r.Row.Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
-			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Slice(pageNoStart, pageNoEnd).Run(session)
+			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
+			Slice(pageNumStart, pageNumEnd).
+			Run(session)
 	}
 	var blo []map[string]interface{}
 	err = res.All(&blo)

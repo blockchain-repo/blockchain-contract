@@ -13,6 +13,7 @@ import (
 
 	"encoding/json"
 	"github.com/golang/protobuf/proto"
+	"time"
 	"unicontract/src/core/engine/execengine/constdef"
 )
 
@@ -110,8 +111,8 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractModel := model.ContractModel{}
 
 	//模拟用户发送的数据, mainpubkey 传入API 后,根据配置生成,此处请勿设置
-	assignTime, err := common.GenSpecialTimestamp("2017-06-01 00:00:00")
-	operateTime, err := common.GenSpecialTimestamp("2017-06-01 00:00:00")
+	assignTime, err := common.GenSpecialTimestamp("2017-08-17 00:00:00")
+	operateTime, err := common.GenSpecialTimestamp("2017-08-29 00:00:00")
 	mainPubkey := config.Config.Keypair.PublicKey
 	contractHead := &model.ContractHead{mainPubkey, 1,
 		assignTime, operateTime, 0}
@@ -120,7 +121,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	//contractAsset := []*protos.ContractAsset{}
 	//contractComponent:=[]*protos.ContractComponent{}
 
-	startTime, err := common.GenSpecialTimestamp("2017-05-29 00:00:00")
+	startTime, err := common.GenSpecialTimestamp("2017-08-17 00:00:00")
 	if err != nil {
 		fmt.Println(err)
 		return "", err
@@ -134,7 +135,7 @@ func generatContractModel(produceValid bool, optArgs ...map[string]interface{}) 
 	contractOwners := ownersPubkeys
 	createTime := common.GenTimestamp()
 	contractBody := &model.ContractBody{
-		ContractId:  "UUID-1234-5678-90 demo",
+		ContractId:  "UUID-1234-5678-90 demo " + time.Now().String(),
 		Cname:       "test create contract",
 		Ctype:       "CREATE",
 		Caption:     "futurever",
@@ -250,7 +251,7 @@ func generateProtoContract(produceValid bool, optArgs ...map[string]interface{})
 
 //var default_url = "http://36.110.71.170:66/v1/contract/"
 
-var default_url = "http://192.168.1.14:8088/v1/contract/"
+var default_url = "http://192.168.1.14:8088/v1/unicontract/contract/"
 
 //var default_url = "http://36.110.71.170:66/v1/contract/"
 //var default_url = "http://localhost:8088/v1/contract/"
@@ -291,9 +292,11 @@ func Test_AuthSignature(t *testing.T) {
 }
 
 func Test_CreatContract(t *testing.T) {
-	for i := 1; i <= 20; i++ {
+	for i := 1; i <= 1; i++ {
 
-		url := default_url + "create"
+		url := default_url + "create" +
+			"?appId=15b12db830bb402258d616e7e8c80830&timestamp=1502932657111&token=66B227778E75D76FDB02DEABB474551C&sign=F205999C230B39773B19AB89D57FD701"
+
 		produceValid := true
 		extraAttr := make(map[string]interface{})
 		extraAttr["contractOwnersLen"] = 2
@@ -316,7 +319,8 @@ func Test_CreatContract(t *testing.T) {
 }
 
 func Test_CreatContractWithLocalJson(t *testing.T) {
-	url := default_url + "create"
+	url := default_url + "create" +
+		"?appId=15b12db830bb402258d616e7e8c80830&timestamp=1502932657111&token=66B227778E75D76FDB02DEABB474551C&sign=F205999C230B39773B19AB89D57FD701"
 	jsonContract, err := ioutil.ReadFile("./ok_contract.json")
 
 	//fmt.Print(string(jsonContract))

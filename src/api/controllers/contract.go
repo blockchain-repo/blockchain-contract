@@ -131,17 +131,18 @@ func fromContractModelArrayStrToPaginationContracts(contractModelStr string, pag
 		uniledgerlog.Error("error fromContractModelArrayStrToPaginationContracts", err)
 		return pagination, err
 	}
-	contracts = make([]*protos.Contract, total)
-	for i := 0; i < int(total); i++ {
+	lenResult := len(contractModel)
+	contracts = make([]*protos.Contract, lenResult)
+	for i := 0; i < int(lenResult); i++ {
 		contracts[i], err = model.FromContractModelToContractProto(contractModel[i])
 	}
-
 	pagination.Data = contracts
 	pagination.Page = page
 	pagination.PageSize = pageSize
 	pagination.Total = total
-
 	uniledgerlog.Debug("query PaginationContract len is ", len(contractModel))
+	data_test, _ := json.Marshal(pagination)
+	uniledgerlog.Debug(string(data_test))
 	return pagination, nil
 }
 
@@ -159,8 +160,9 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 		uniledgerlog.Error("error fromContractOutputsModelArrayStrToContractsForLog", err)
 		return pagination, err
 	}
-	contractExecuteLogs = make([]*protos.ContractExecuteLog, len(contractOutput))
-	for i := 0; i < len(contractOutput); i++ {
+	lenResult := len(contractOutput)
+	contractExecuteLogs = make([]*protos.ContractExecuteLog, lenResult)
+	for i := 0; i < lenResult; i++ {
 		tempTransaction := contractOutput[i].Transaction
 		tempRelation := tempTransaction.Relation
 		tempContractBody := tempTransaction.ContractModel.ContractBody
@@ -197,7 +199,10 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 	pagination.Page = page
 	pagination.PageSize = pageSize
 	pagination.Total = total
+
 	uniledgerlog.Debug("query PaginationContractExecuteLog len is ", len(contractExecuteLogs))
+	data_test, _ := json.Marshal(pagination)
+	uniledgerlog.Warn(string(data_test))
 	return pagination, nil
 }
 
@@ -426,17 +431,20 @@ func (c *ContractController) QueryAll() {
 	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
 	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
 	page, err := c.GetInt32(api.REQUEST_FIELD_PAGE, 1)
-	if err != nil {
+	if err != nil || page <= 0 {
 		resultMsg := fmt.Sprintf("%s page(%v) error!", "API[QueryAll]", page)
 		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	}
 	pageSize, err := c.GetInt32(api.REQUEST_FIELD_PAGE_SIZE, 5)
-	if err != nil {
+	if err != nil || pageSize <= 0 {
 		resultMsg := fmt.Sprintf("%s pageSize(%v) error!", "API[QueryAll]", pageSize)
 		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	}
+	pageNumStart := (page - 1) * pageSize
+	pageNumEnd := pageNumStart + pageSize
+
 	//contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
 	//_=contractName
 	/*------------------- requestParams end ------------------*/
@@ -454,7 +462,7 @@ func (c *ContractController) QueryAll() {
 		return
 	}
 
-	totalRecords, contractModelStr, err := rethinkdb.GetContractsPaginationByCondition(contractId, owner, contractState, page, pageSize)
+	totalRecords, contractModelStr, err := rethinkdb.GetContractsPaginationByCondition(contractId, owner, contractState, pageNumStart, pageNumEnd)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryAll]", contractId)
 		uniledgerlog.Error(resultMsg)
@@ -470,9 +478,8 @@ func (c *ContractController) QueryAll() {
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
-
 	//contractListProto, err := fromContractModelArrayStrToContracts(contractModelStr)
-	contractPaginationProto, err := fromContractModelArrayStrToPaginationContracts(contractModelStr, page, pageSize, totalRecords)
+	paginationContractProto, err := fromContractModelArrayStrToPaginationContracts(contractModelStr, page, pageSize, totalRecords)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(fromContractModelArrayStrToContracts)! ", "API[QueryAll]", contractId)
 		uniledgerlog.Error(resultMsg)
@@ -480,8 +487,7 @@ func (c *ContractController) QueryAll() {
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
-
-	contractPaginationProtoBytes, err := proto.Marshal(&contractPaginationProto)
+	contractPaginationProtoBytes, err := proto.Marshal(&paginationContractProto)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[QueryAll]", contractId)
 		uniledgerlog.Error(resultMsg)
@@ -504,17 +510,19 @@ func (c *ContractController) QueryLog() {
 	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
 	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE, "Contract_In_Process")
 	page, err := c.GetInt32(api.REQUEST_FIELD_PAGE, 1)
-	if err != nil {
+	if err != nil || page <= 0 {
 		resultMsg := fmt.Sprintf("%s page(%v) error!", "API[QueryLog]", page)
 		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	}
 	pageSize, err := c.GetInt32(api.REQUEST_FIELD_PAGE_SIZE, 5)
-	if err != nil {
+	if err != nil || pageSize <= 0 {
 		resultMsg := fmt.Sprintf("%s pageSize(%v) error!", "API[QueryLog]", pageSize)
 		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	}
+	pageNumStart := (page - 1) * pageSize
+	pageNumEnd := pageNumStart + pageSize
 	//contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
 	//_=contractName
 	/*------------------- requestParams end ------------------*/
@@ -529,7 +537,7 @@ func (c *ContractController) QueryLog() {
 		return
 	}
 
-	totalRecords, contractOutputsModelStr, err := rethinkdb.GetContractsLogPaginationByCondition(contractId, owner, contractState, page, pageSize)
+	totalRecords, contractOutputsModelStr, err := rethinkdb.GetContractsLogPaginationByCondition(contractId, owner, contractState, pageNumStart, pageNumEnd)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryLog]", contractId)
 		uniledgerlog.Error(resultMsg)
@@ -546,7 +554,7 @@ func (c *ContractController) QueryLog() {
 	}
 
 	//todo 需要过滤字段,只提取需要的字段!
-	contractPaginationCExecuteLogProto, err := fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOutputsModelStr, page, pageSize, totalRecords)
+	contractPaginationExecuteLogProto, err := fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOutputsModelStr, page, pageSize, totalRecords)
 	//uniledgerlog.Warn(contractPaginationCExecuteLogProto)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(fromContractOutputsModelArrayStrToContractsForLog)! ", "API[QueryLog]", contractId)
@@ -556,7 +564,7 @@ func (c *ContractController) QueryLog() {
 		return
 	}
 
-	contractPaginationCExecuteLogProtoProtoBytes, err := proto.Marshal(&contractPaginationCExecuteLogProto)
+	contractPaginationExecuteLogProtoProtoBytes, err := proto.Marshal(&contractPaginationExecuteLogProto)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[QueryLog]", contractId)
 		uniledgerlog.Error(resultMsg)
@@ -565,8 +573,8 @@ func (c *ContractController) QueryLog() {
 		return
 	}
 
-	contractPaginationCExecuteLogProtoStr := string(contractPaginationCExecuteLogProtoProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractPaginationCExecuteLogProtoStr)
+	contractPaginationExecuteLogProtoStr := string(contractPaginationExecuteLogProtoProtoBytes)
+	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractPaginationExecuteLogProtoStr)
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 

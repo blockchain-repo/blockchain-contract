@@ -26,7 +26,7 @@ var ALLOW_REQUEST_PARAMETERS_ALL = map[string]bool{
 	//"format":   true, //sort=field1,field2,
 	"sort":     true,
 	"page":     true,
-	"pagesize": true,
+	"pageSize": true,
 	/*************** FOR API MODEL QUERY ***********/
 	"contractId":    true,
 	"contractOwner": true,
