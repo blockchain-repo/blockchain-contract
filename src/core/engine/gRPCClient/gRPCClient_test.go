@@ -29,6 +29,13 @@ func Test_FunctionRun(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	funcType, err := QueryFuncType("FuncAdd")
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Logf("%+v", funcType)
+	}
+
 	result, err := FunctionRun("123", "FuncAdd", string(slData))
 	if err != nil {
 		t.Error(err)

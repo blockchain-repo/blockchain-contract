@@ -21,6 +21,7 @@ import (
 	"unicontract/src/common/uniledgerlog"
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine"
+	"unicontract/src/core/engine/gRPCClient"
 )
 
 //---------------------------------------------------------------------------
@@ -120,7 +121,9 @@ func _Execute() error {
 			continue
 		}
 		//执行引擎初始化环境
-		contractExecuter.Prepare()
+		if !gRPCClient.On {
+			contractExecuter.Prepare()
+		}
 		//执行机启动合约执行
 		task_execute_time := monitor.Monitor.NewTiming()
 		ret, err := contractExecuter.Start()

@@ -6,24 +6,27 @@ package task
 //		运行态 =》描述态： 在反序列化中进行转化
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
+
+	common0 "unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
 	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/data"
 	"unicontract/src/core/engine/execengine/expression"
 	"unicontract/src/core/engine/execengine/function"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
-
-	"encoding/json"
-	"fmt"
-	"regexp"
-	"strconv"
-	"strings"
-	"unicontract/src/common/uniledgerlog"
-	"unicontract/src/core/engine/execengine/data"
+	"unicontract/src/core/engine/gRPCClient"
 )
 
 type GeneralTask struct {
@@ -901,7 +904,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 			str_function := v_expr_object.GetExpressionStr()
 			uniledgerlog.Info("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
-			reg := regexp.MustCompile("FuncTransferAsset\\(")
+			reg := regexp.MustCompile("FuncTransferAsset\\(") // TODO : 修改，这里不能写死函数名称，要通过gRPC
 			v_str := reg.FindString(str_function)
 			v_beginwith_flag := false
 			if "" != v_str {
@@ -1024,7 +1027,24 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				uniledgerlog.Error(r_buf.String())
 				return r_ret, r_err
 			}
-			tmp_output, r_err = function.FuncInterim(str_json_contract, gt.GetContract().GetContractId(), gt.GetTaskId(), gt.GetTaskExecuteIdx())
+			if !gRPCClient.On {
+				tmp_output, r_err = function.FuncInterim(str_json_contract,
+					gt.GetContract().GetContractId(),
+					gt.GetTaskId(),
+					gt.GetTaskExecuteIdx())
+			} else {
+				var func_params map[string]interface{}
+				func_params = make(map[string]interface{})
+				func_params["Param01"] = str_json_contract
+				func_params["Param02"] = gt.GetContract().GetContractId()
+				func_params["Param03"] = gt.GetTaskId()
+				func_params["Param04"] = gt.GetTaskExecuteIdx()
+
+				slData, _ := json.Marshal(func_params)
+				hostname, _ := os.Hostname()
+				tmp_output, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
+					"FuncInterim", string(slData))
+			}
 			if r_err != nil {
 				r_ret = -1
 				r_buf.WriteString("[Result]: Generate OutputStruct fail, FuncInterim generage output error;")
@@ -1048,9 +1068,37 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		//4 OutputStruct插入到Output表中
 		var v_result common.OperateResult = common.OperateResult{}
 		if output_null_flag {
-			v_result, r_err = function.FuncInterimComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed], gt.GetContract().GetContractState())
+			if !gRPCClient.On {
+				v_result, r_err = function.FuncInterimComplete(gt.GetContract().GetOutputStruct(),
+					constdef.TaskState[constdef.TaskState_Completed],
+					gt.GetContract().GetContractState())
+			} else {
+				var func_params map[string]interface{}
+				func_params = make(map[string]interface{})
+				func_params["Param01"] = gt.GetContract().GetOutputStruct()
+				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
+				func_params["Param03"] = gt.GetContract().GetContractState()
+
+				slData, _ := json.Marshal(func_params)
+				hostname, _ := os.Hostname()
+				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
+					"FuncInterimComplete", string(slData))
+			}
 		} else {
-			v_result, r_err = function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(), constdef.TaskState[constdef.TaskState_Completed])
+			if !gRPCClient.On {
+				v_result, r_err = function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(),
+					constdef.TaskState[constdef.TaskState_Completed])
+			} else {
+				var func_params map[string]interface{}
+				func_params = make(map[string]interface{})
+				func_params["Param01"] = gt.GetContract().GetOutputStruct()
+				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
+
+				slData, _ := json.Marshal(func_params)
+				hostname, _ := os.Hostname()
+				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
+					"FuncTransferAssetComplete", string(slData))
+			}
 		}
 		//执行结果判断
 		if r_err != nil || v_result.GetCode() != 200 {

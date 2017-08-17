@@ -37,6 +37,27 @@ func Init() {
 }
 
 //---------------------------------------------------------------------------
+func QueryFuncType(funcName string) (int32, error) {
+	address := server + ":" + port
+	log.Debug(fmt.Sprintf("[%s][%s]", log.DEBUG_NO_ERROR, "GRPC server is "+address))
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		log.Error(fmt.Sprintf("[%s][%s]", log.CONNECTION_ERROR, err.Error()))
+		return 0, err
+	}
+	defer conn.Close()
+	c := pb.NewFunctionClient(conn)
+
+	ret, err := c.QueryFuncType(context.Background(),
+		&pb.QueryRequest{FunctionName: funcName})
+	if err != nil {
+		log.Error(fmt.Sprintf("[%s][%s]", log.OTHER_ERROR, err.Error()))
+		return 0, err
+	}
+	return ret.Result, err
+}
+
+//---------------------------------------------------------------------------
 func FunctionRun(requestID, funcName, funcParams string) (common.OperateResult, error) {
 	var result common.OperateResult
 	address := server + ":" + port

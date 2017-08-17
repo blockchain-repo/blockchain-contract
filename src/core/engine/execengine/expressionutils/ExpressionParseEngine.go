@@ -903,7 +903,22 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 		//分割匹配的函数参数列表
 		//TODO 大参数解析（比如json串解析）
 		var func_param_array []string = make([]string, 8)
-		if func_name == "FuncTransferAsset" {
+		var flag bool
+		var funcType int32
+		if !gRPCClient.On {
+			if func_name == "FuncTransferAsset" {
+				flag = true
+			}
+		} else {
+			funcType, v_err = gRPCClient.QueryFuncType(func_name)
+			if v_err != nil {
+				return v_result, v_err
+			}
+			if funcType == 2 {
+				flag = true
+			}
+		}
+		if flag {
 			first_param_array := strings.Split(func_param_str, "@")
 			first_idx := 0
 			for t_idx, t_param := range strings.Split(first_param_array[0], ",") {

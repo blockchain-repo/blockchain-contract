@@ -11,6 +11,8 @@ It is generated from these files:
 It has these top-level messages:
 	ExecRequest
 	ExecReply
+	QueryRequest
+	QueryReply
 */
 package gRPCProto
 
@@ -66,9 +68,43 @@ func (m *ExecReply) GetResult() string {
 	return ""
 }
 
+type QueryRequest struct {
+	FunctionName string `protobuf:"bytes,1,opt,name=functionName" json:"functionName,omitempty"`
+}
+
+func (m *QueryRequest) Reset()                    { *m = QueryRequest{} }
+func (m *QueryRequest) String() string            { return proto.CompactTextString(m) }
+func (*QueryRequest) ProtoMessage()               {}
+func (*QueryRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+
+func (m *QueryRequest) GetFunctionName() string {
+	if m != nil {
+		return m.FunctionName
+	}
+	return ""
+}
+
+type QueryReply struct {
+	Result int32 `protobuf:"varint,1,opt,name=result" json:"result,omitempty"`
+}
+
+func (m *QueryReply) Reset()                    { *m = QueryReply{} }
+func (m *QueryReply) String() string            { return proto.CompactTextString(m) }
+func (*QueryReply) ProtoMessage()               {}
+func (*QueryReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+
+func (m *QueryReply) GetResult() int32 {
+	if m != nil {
+		return m.Result
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*ExecRequest)(nil), "gRPCProto.ExecRequest")
 	proto.RegisterType((*ExecReply)(nil), "gRPCProto.ExecReply")
+	proto.RegisterType((*QueryRequest)(nil), "gRPCProto.QueryRequest")
+	proto.RegisterType((*QueryReply)(nil), "gRPCProto.QueryReply")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -83,6 +119,7 @@ const _ = grpc.SupportPackageIsVersion4
 
 type FunctionClient interface {
 	ExecuteFunc(ctx context.Context, in *ExecRequest, opts ...grpc.CallOption) (*ExecReply, error)
+	QueryFuncType(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryReply, error)
 }
 
 type functionClient struct {
@@ -102,10 +139,20 @@ func (c *functionClient) ExecuteFunc(ctx context.Context, in *ExecRequest, opts 
 	return out, nil
 }
 
+func (c *functionClient) QueryFuncType(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryReply, error) {
+	out := new(QueryReply)
+	err := grpc.Invoke(ctx, "/gRPCProto.Function/QueryFuncType", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Function service
 
 type FunctionServer interface {
 	ExecuteFunc(context.Context, *ExecRequest) (*ExecReply, error)
+	QueryFuncType(context.Context, *QueryRequest) (*QueryReply, error)
 }
 
 func RegisterFunctionServer(s *grpc.Server, srv FunctionServer) {
@@ -130,6 +177,24 @@ func _Function_ExecuteFunc_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Function_QueryFuncType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FunctionServer).QueryFuncType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gRPCProto.Function/QueryFuncType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FunctionServer).QueryFuncType(ctx, req.(*QueryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Function_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "gRPCProto.Function",
 	HandlerType: (*FunctionServer)(nil),
@@ -137,6 +202,10 @@ var _Function_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ExecuteFunc",
 			Handler:    _Function_ExecuteFunc_Handler,
+		},
+		{
+			MethodName: "QueryFuncType",
+			Handler:    _Function_QueryFuncType_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -146,15 +215,19 @@ var _Function_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("gRPCServerProto.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 149 bytes of a gzipped FileDescriptorProto
+	// 211 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4d, 0x0f, 0x0a, 0x70,
 	0x0e, 0x4e, 0x2d, 0x2a, 0x4b, 0x2d, 0x0a, 0x28, 0xca, 0x2f, 0xc9, 0xd7, 0x2b, 0x00, 0x91, 0x42,
 	0x9c, 0x20, 0x61, 0xb0, 0x80, 0x92, 0x2a, 0x17, 0xb7, 0x6b, 0x45, 0x6a, 0x72, 0x50, 0x6a, 0x61,
 	0x69, 0x6a, 0x71, 0x89, 0x90, 0x18, 0x17, 0x5b, 0x41, 0x62, 0x51, 0x62, 0x6e, 0xb1, 0x04, 0xa3,
 	0x02, 0xa3, 0x06, 0x67, 0x10, 0x94, 0xa7, 0xa4, 0xcc, 0xc5, 0x09, 0x51, 0x56, 0x90, 0x53, 0x09,
-	0x52, 0x54, 0x94, 0x5a, 0x5c, 0x9a, 0x53, 0x02, 0x53, 0x04, 0xe1, 0x19, 0x79, 0x72, 0x71, 0xb8,
-	0x95, 0xe6, 0x25, 0x97, 0x64, 0xe6, 0xe7, 0x09, 0xd9, 0x42, 0xcc, 0x2d, 0x2d, 0x49, 0x05, 0x09,
-	0x09, 0x89, 0xe9, 0xc1, 0xad, 0xd4, 0x43, 0xb2, 0x4f, 0x4a, 0x04, 0x43, 0xbc, 0x20, 0xa7, 0x52,
-	0x89, 0x21, 0x89, 0x0d, 0xec, 0x50, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0xb1, 0x79, 0x3d,
-	0x20, 0xc1, 0x00, 0x00, 0x00,
+	0x52, 0x54, 0x94, 0x5a, 0x5c, 0x9a, 0x53, 0x02, 0x53, 0x04, 0xe1, 0x29, 0x19, 0x71, 0xf1, 0x04,
+	0x96, 0xa6, 0x16, 0x55, 0xc2, 0x0c, 0x53, 0xe2, 0xe2, 0x49, 0x2b, 0xcd, 0x4b, 0x2e, 0xc9, 0xcc,
+	0xcf, 0xf3, 0x4b, 0xcc, 0x4d, 0x85, 0xaa, 0x46, 0x11, 0x53, 0x52, 0xe1, 0xe2, 0x82, 0xea, 0xc1,
+	0x34, 0x99, 0x15, 0x66, 0xb2, 0x51, 0x0f, 0x23, 0x17, 0x87, 0x1b, 0x54, 0x9b, 0x90, 0x2d, 0xc4,
+	0xc9, 0xa5, 0x25, 0xa9, 0x20, 0x21, 0x21, 0x31, 0x3d, 0xb8, 0x6f, 0xf4, 0x90, 0xbc, 0x22, 0x25,
+	0x82, 0x21, 0x5e, 0x90, 0x53, 0xa9, 0xc4, 0x20, 0xe4, 0xc8, 0xc5, 0x0b, 0xb6, 0x11, 0xa4, 0x39,
+	0xa4, 0xb2, 0x20, 0x55, 0x48, 0x1c, 0x49, 0x21, 0xb2, 0xfb, 0xa5, 0x44, 0x31, 0x25, 0xc0, 0x46,
+	0x24, 0xb1, 0x81, 0x83, 0xd1, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x1f, 0x3a, 0xbe, 0x53, 0x5f,
+	0x01, 0x00, 0x00,
 }
