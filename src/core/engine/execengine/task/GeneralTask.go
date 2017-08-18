@@ -904,13 +904,31 @@ func (gt *GeneralTask) Start() (int8, error) {
 			str_function := v_expr_object.GetExpressionStr()
 			uniledgerlog.Info("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
-			reg := regexp.MustCompile("FuncTransferAsset\\(") // TODO : 修改，这里不能写死函数名称，要通过gRPC
-			v_str := reg.FindString(str_function)
-			v_beginwith_flag := false
-			if "" != v_str {
-				v_beginwith_flag = true
+			var v_beginwith_flag bool
+			if !gRPCClient.On {
+				reg := regexp.MustCompile("FuncTransferAsset\\(")
+				v_str := reg.FindString(str_function)
+				if "" != v_str {
+					v_beginwith_flag = true
+				} else {
+					v_beginwith_flag = false
+				}
 			} else {
-				v_beginwith_flag = false
+				slString := strings.Split(str_function, `(`)
+				funcType, r_err := gRPCClient.QueryFuncType(slString[0])
+				if r_err != nil {
+					r_ret = -1
+					r_buf.WriteString("[Result]: gRPC QueryFuncType failed;")
+					r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+					r_buf.WriteString("Start fail....")
+					uniledgerlog.Error(r_buf.String())
+					return r_ret, r_err
+				}
+				if funcType == 2 {
+					v_beginwith_flag = true
+				} else {
+					v_beginwith_flag = false
+				}
 			}
 			if v_beginwith_flag {
 				str_json_contract, r_err := gt.GetContract().Serialize()
@@ -923,7 +941,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 					return r_ret, r_err
 				}
 				uniledgerlog.Info("===before transfer asset=====" + str_json_contract)
-				var func_buf bytes.Buffer = bytes.Buffer{}
+				var func_buf bytes.Buffer = bytes.Buffer{} // TODO 更改顺序 wangyp
 				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
 				func_buf.WriteString(strings.Trim(str_function, ")"))
 				func_buf.WriteString("@\"")
@@ -952,10 +970,24 @@ func (gt *GeneralTask) Start() (int8, error) {
 			fmt.Println("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
-				_, ok := v_result_object.GetOutput().(string)
-				if ok {
-					gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
-					uniledgerlog.Info("====after transfer asset==" + v_result_object.GetOutput().(string))
+				if !gRPCClient.On {
+					_, ok := v_result_object.GetOutput().(string)
+					if ok {
+						gt.GetContract().SetOutputStruct(v_result_object.GetOutput().(string))
+						uniledgerlog.Info("====after transfer asset==" + v_result_object.GetOutput().(string))
+					}
+				} else {
+					output, ok := v_result_object.GetOutput().([][]interface{})
+					if ok {
+						slData, r_err := json.Marshal(output)
+						if r_err != nil {
+							r_ret = -1
+							uniledgerlog.Error(r_err)
+							return r_ret, r_err
+						}
+						gt.GetContract().SetOutputStruct(string(slData))
+						uniledgerlog.Info("====after transfer asset==" + string(slData))
+					}
 				}
 			}
 			//3 执行结果判断
@@ -1062,8 +1094,22 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				uniledgerlog.Error(r_buf.String())
 				return r_ret, r_err
 			}
-			gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
-			uniledgerlog.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
+			if !gRPCClient.On {
+				gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
+				uniledgerlog.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
+			} else {
+				output, ok := tmp_output.GetOutput().([][]interface{})
+				if ok {
+					slData, r_err := json.Marshal(output)
+					if r_err != nil {
+						r_ret = -1
+						uniledgerlog.Error(r_err)
+						return r_ret, r_err
+					}
+					gt.GetContract().SetOutputStruct(string(slData))
+					uniledgerlog.Info("====after transfer asset==" + string(slData))
+				}
+			}
 		}
 		//4 OutputStruct插入到Output表中
 		var v_result common.OperateResult = common.OperateResult{}
@@ -1075,7 +1121,9 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			} else {
 				var func_params map[string]interface{}
 				func_params = make(map[string]interface{})
-				func_params["Param01"] = gt.GetContract().GetOutputStruct()
+				var interf [][]interface{}
+				_ = json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &interf)
+				func_params["Param01"] = interf
 				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
 				func_params["Param03"] = gt.GetContract().GetContractState()
 
@@ -1091,13 +1139,24 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			} else {
 				var func_params map[string]interface{}
 				func_params = make(map[string]interface{})
-				func_params["Param01"] = gt.GetContract().GetOutputStruct()
+				var interf [][]interface{}
+				_ = json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &interf)
+				func_params["Param01"] = interf
 				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
 
 				slData, _ := json.Marshal(func_params)
 				hostname, _ := os.Hostname()
 				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
 					"FuncTransferAssetComplete", string(slData))
+
+				// 再次 getdata 赋值
+				for v_key, _ := range gt.GetDataValueSetterExpressionList() {
+					v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
+					//1 函数识别 & 执行
+					str_name := v_expr_object.GetName()
+
+					gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
+				}
 			}
 		}
 		//执行结果判断
@@ -1110,8 +1169,13 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			return r_ret, r_err
 		}
 		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
-		gt.GetContract().SetOutputStruct(v_result.GetData().(string))
-		uniledgerlog.Error("====after complete operate==" + v_result.GetData().(string))
+		if !gRPCClient.On {
+			gt.GetContract().SetOutputStruct(v_result.GetData().(string))
+			uniledgerlog.Info("====after complete operate==" + v_result.GetData().(string))
+		} else {
+			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
+			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
+		}
 
 		var map_output_first interface{} = common.Deserialize(gt.GetContract().GetOutputStruct())
 		if map_output_first == nil {
