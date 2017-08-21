@@ -29,7 +29,7 @@ type CognitiveContract struct {
 
 	PropertyTable map[string]interface{} `json:"-"`
 	//type: map[string][]property.PropertyT
-	//      Unknown, Data, Task, Expression
+	//      Unknown, Contract, Data, Task, Expression
 	ComponentTable        *table.ComponentTable                  `json:"-"`
 	ExpressionParseEngine *expressionutils.ExpressionParseEngine `json:"-"`
 	FunctionParseEngine   *function.FunctionParseEngine          `json:"-"`
@@ -66,7 +66,7 @@ type CognitiveContractBody struct {
 	ContractOwners     []string            `json:"ContractOwners"`
 	ContractAssets     []ContractAsset     `json:"ContractAssets"`
 	ContractSignatures []ContractSignature `json:"ContractSignatures"`
-	ContractComponents []interface{}       `json:"ContractComponents"` //type: Unknown, Data, Task, Expression
+	ContractComponents []interface{}       `json:"ContractComponents"` //type: Unknown, Contract, Data, Task, Expression
 	NextTasks          []string            `json:"NextTasks"`
 	//合约自定义属性（根据实际业务场景增加）
 	MetaAttribute map[string]string `json:"MetaAttribute"`
@@ -163,6 +163,7 @@ func (cc *CognitiveContract) GetPropertyItem(p_name string) interface{} {
 	return nil
 }
 
+//将合约本身添加到ComponentTable中
 func (cc *CognitiveContract) AddComponent(p_component inf.IComponent) {
 	if p_component != nil {
 		var v_contract inf.ICognitiveContract = inf.ICognitiveContract(cc)
@@ -185,6 +186,10 @@ func (cc CognitiveContract) EvaluateExpression(p_exprtype string, p_expression s
 //暂时不考虑：待补充
 func (cc CognitiveContract) ProcessString(p_str string) string {
 	//TODO
+	//字符串表达式中<% %>代表引用变量值
+	//1. 提取字符串中 <% %> 变量个数
+	//2. 依次求提取变量表达式的值
+	//3. 替换字符串中 <% %> 为真实值
 	return p_str
 }
 
@@ -220,6 +225,7 @@ func (gc *CognitiveContract) GetId() string {
 	}
 	id_property, ok := gc.PropertyTable[_Id].(property.PropertyT)
 	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return ""
 	}
 	str, ok := id_property.GetValue().(string)
@@ -339,8 +345,7 @@ func (cc CognitiveContract) SetOrgId(p_OrgId string) {
 	cc.OrgId = p_OrgId
 	OrgId_property, ok := cc.PropertyTable[_OrgId].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		OrgId_property = *property.NewPropertyT(_OrgId)
 	}
 	OrgId_property.SetValue(p_OrgId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -351,8 +356,7 @@ func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
 	cc.OrgTaskId = p_OrgTaskId
 	OrgTaskId_property, ok := cc.PropertyTable[_OrgTaskId].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		OrgTaskId_property = *property.NewPropertyT(_OrgTaskId)
 	}
 	OrgTaskId_property.SetValue(p_OrgTaskId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -364,8 +368,7 @@ func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
 	cc.OrgTaskExecuteIdx = p_OrgTaskExecuteIdx
 	OrgTaskExecuteIdx_property, ok := cc.PropertyTable[_OrgTaskExecuteIdx].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		OrgTaskExecuteIdx_property = *property.NewPropertyT(_OrgTaskExecuteIdx)
 	}
 	OrgTaskExecuteIdx_property.SetValue(p_OrgTaskExecuteIdx)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -376,8 +379,7 @@ func (cc CognitiveContract) SetOutputId(p_outputId string) {
 	cc.OutputId = p_outputId
 	outputid_property, ok := cc.PropertyTable[_OutputId].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		outputid_property = *property.NewPropertyT(_OutputId)
 	}
 	outputid_property.SetValue(p_outputId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -388,8 +390,7 @@ func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
 	cc.OutputTaskId = p_OutputTaskId
 	OutputTaskId_property, ok := cc.PropertyTable[_OutputTaskId].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		OutputTaskId_property = *property.NewPropertyT(_OutputTaskId)
 	}
 	OutputTaskId_property.SetValue(p_OutputTaskId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -401,8 +402,7 @@ func (cc CognitiveContract) SetOutputTaskExecuteIdx(p_OutputTaskExecuteIdx int) 
 	cc.OutputTaskExecuteIdx = p_OutputTaskExecuteIdx
 	OutputTaskExecuteIdx_property, ok := cc.PropertyTable[_OutputTaskExecuteIdx].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		OutputTaskExecuteIdx_property = *property.NewPropertyT(_OutputTaskExecuteIdx)
 	}
 	OutputTaskExecuteIdx_property.SetValue(p_OutputTaskExecuteIdx)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -414,8 +414,7 @@ func (cc CognitiveContract) SetOutputStruct(p_OutputStruct string) {
 	cc.OutputStruct = p_OutputStruct
 	OutputStruct_property, ok := cc.PropertyTable[_OutputStruct].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		OutputStruct_property = *property.NewPropertyT(_OutputStruct)
 	}
 	OutputStruct_property.SetValue(p_OutputStruct)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -444,8 +443,7 @@ func (cc CognitiveContract) SetMainPubkey(p_mainPubkey string) {
 	cc.ContractHead.MainPubkey = p_mainPubkey
 	mainpubkey_property, ok := cc.PropertyTable[_MainPubkey].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		mainpubkey_property = *property.NewPropertyT(_MainPubkey)
 	}
 	mainpubkey_property.SetValue(p_mainPubkey)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
@@ -1616,7 +1614,7 @@ func (cc *CognitiveContract) UpdateContractComponents(p_task_component interface
 		if v_component == nil {
 			continue
 		}
-		//序列回来的component是map结构
+		//序列化回来的component是map结构
 		map_component, ok := v_component.(map[string]interface{})
 		if !ok {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))

@@ -107,7 +107,10 @@ func (gt *GeneralTask) GetState() string {
 
 func (gt *GeneralTask) SetState(p_state string) {
 	gt.State = p_state
-	state_property := gt.PropertyTable[_State].(property.PropertyT)
+	state_property, ok := gt.PropertyTable[_State].(property.PropertyT)
+	if !ok {
+		state_property = *property.NewPropertyT(_State)
+	}
 	state_property.SetValue(p_state)
 	gt.PropertyTable[_State] = state_property
 }
@@ -182,7 +185,11 @@ func (gt *GeneralTask) GetTaskId() string {
 	if gt.PropertyTable[_TaskId] == nil {
 		return ""
 	}
-	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
+	taskid_property, ok := gt.PropertyTable[_TaskId].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
 	str, ok := taskid_property.GetValue().(string)
 	if !ok {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
@@ -192,14 +199,26 @@ func (gt *GeneralTask) GetTaskId() string {
 }
 
 func (gt *GeneralTask) GetTaskExecuteIdx() int {
-	taskexecuteidx_property := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
-	return taskexecuteidx_property.GetValue().(int)
+	taskexecuteidx_property, ok := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return -1
+	}
+	taskexecuteidx_int, ok := taskexecuteidx_property.GetValue().(int)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return -1
+	}
+	return taskexecuteidx_int
 }
 
 func (gt *GeneralTask) SetTaskId(str_taskId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	gt.TaskId = str_taskId
-	taskid_property := gt.PropertyTable[_TaskId].(property.PropertyT)
+	taskid_property, ok := gt.PropertyTable[_TaskId].(property.PropertyT)
+	if !ok {
+		taskid_property = *property.NewPropertyT(_TaskId)
+	}
 	taskid_property.SetValue(str_taskId)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	gt.PropertyTable[_TaskId] = taskid_property
@@ -208,7 +227,10 @@ func (gt *GeneralTask) SetTaskId(str_taskId string) {
 func (gt *GeneralTask) SetTaskExecuteIdx(int_idx int) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	gt.TaskExecuteIdx = int_idx
-	taskexecuteidx_property := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
+	taskexecuteidx_property, ok := gt.PropertyTable[_TaskExecuteIdx].(property.PropertyT)
+	if !ok {
+		taskexecuteidx_property = *property.NewPropertyT(_TaskExecuteIdx)
+	}
 	taskexecuteidx_property.SetValue(int_idx)
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	gt.PropertyTable[_TaskExecuteIdx] = taskexecuteidx_property
@@ -321,7 +343,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 }
 
 //===============运行态=====================
-//Init中实现描述态 数组格式 到 map结构的转化
+//Init中实现描述态反序列化后得到的Map[string]map结构到 Map[string]Component对象的转化
 func (gt *GeneralTask) InitGeneralTask() error {
 	var err error = nil
 	err = gt.InitGeneralComponent()
@@ -341,7 +363,6 @@ func (gt *GeneralTask) InitGeneralTask() error {
 	}
 	map_precondition := make(map[string]inf.IExpression, 0)
 	for _, p_precondition := range gt.PreCondition {
-		//TODO 转化
 		if p_precondition != nil {
 			switch p_precondition.(type) {
 			case inf.IExpression:
@@ -353,7 +374,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_precondition, _ := json.Marshal(p_precondition)
 				err = json.Unmarshal(tmp_byte_precondition, &tmp_precondition)
 				if err != nil {
-					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask(PreCondition) fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_precondition.InitLogicArgument()
@@ -379,7 +400,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_completecondition, _ := json.Marshal(p_completecondition)
 				err = json.Unmarshal(tmp_byte_completecondition, &tmp_completecondition)
 				if err != nil {
-					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask(CompleteCondition) fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_completecondition.InitLogicArgument()
@@ -405,7 +426,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_discardcondition, _ := json.Marshal(p_discardcondition)
 				err = json.Unmarshal(tmp_byte_discardcondition, &tmp_discardcondition)
 				if err != nil {
-					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask(DiscardCondition) fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_discardcondition.InitLogicArgument()
@@ -439,7 +460,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitIntData()
@@ -449,7 +470,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitUintData()
@@ -459,7 +480,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitFloatData()
@@ -469,7 +490,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitTextData()
@@ -479,17 +500,27 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitDateData()
 					map_datalist[tmp_data.GetName()] = tmp_data
-				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResultData]:
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Bool]:
+					tmp_data := data.NewBoolData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitBoolData()
+					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResult]:
 					tmp_data := data.NewOperateResultData()
 					tmp_byte_data, _ := json.Marshal(p_data)
 					err = json.Unmarshal(tmp_byte_data, &tmp_data)
 					if err != nil {
-						uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
 						return err
 					}
 					tmp_data.InitOperateResultData()
@@ -516,7 +547,7 @@ func (gt *GeneralTask) InitGeneralTask() error {
 				tmp_byte_express, _ := json.Marshal(p_express)
 				err = json.Unmarshal(tmp_byte_express, &tmp_express)
 				if err != nil {
-					uniledgerlog.Error("InitGeneralTask fail[" + err.Error() + "]")
+					uniledgerlog.Error("InitGeneralTask(DataValueSetterExpressionList) fail[" + err.Error() + "]")
 					return err
 				}
 				tmp_express.InitFunction()
@@ -543,39 +574,102 @@ func (gt *GeneralTask) GetPreCondition() map[string]inf.IExpression {
 	if gt.PropertyTable[_PreCondition] == nil {
 		return nil
 	}
-	precondition_property := gt.PropertyTable[_PreCondition].(property.PropertyT)
-	return precondition_property.GetValue().(map[string]inf.IExpression)
+	precondition_property, ok := gt.PropertyTable[_PreCondition].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	precondition_value, ok := precondition_property.GetValue().(map[string]inf.IExpression)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return precondition_value
 }
 
 func (gt *GeneralTask) GetCompleteCondition() map[string]inf.IExpression {
 	if gt.PropertyTable[_CompleteCondition] == nil {
 		return nil
 	}
-	completecondition_property := gt.PropertyTable[_CompleteCondition].(property.PropertyT)
-	return completecondition_property.GetValue().(map[string]inf.IExpression)
+	completecondition_property, ok := gt.PropertyTable[_CompleteCondition].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	completecondition_value, ok := completecondition_property.GetValue().(map[string]inf.IExpression)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return completecondition_value
 }
 
 func (gt *GeneralTask) GetDiscardCondition() map[string]inf.IExpression {
 	if gt.PropertyTable[_DiscardCondition] == nil {
 		return nil
 	}
-	Discardcondition_property := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
-	return Discardcondition_property.GetValue().(map[string]inf.IExpression)
+	discardcondition_property, ok := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	discardcondition_value, ok := discardcondition_property.GetValue().(map[string]inf.IExpression)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return discardcondition_value
 }
 
 func (gt *GeneralTask) GetDataList() map[string]inf.IData {
-	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
-	return datalist_property.GetValue().(map[string]inf.IData)
+	if gt.PropertyTable[_DataList] == nil {
+		return nil
+	}
+	datalist_property, ok := gt.PropertyTable[_DataList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	datalist_value, ok := datalist_property.GetValue().(map[string]inf.IData)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return datalist_value
 }
 
 func (gt *GeneralTask) GetDataValueSetterExpressionList() map[string]inf.IExpression {
-	dataexpress_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
-	return dataexpress_property.GetValue().(map[string]inf.IExpression)
+	if gt.PropertyTable[_DataValueSetterExpressionList] == nil {
+		return nil
+	}
+	dataexpress_property, ok := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	dataexpress_value, ok := dataexpress_property.GetValue().(map[string]inf.IExpression)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return dataexpress_value
 }
 
 func (gt *GeneralTask) GetSelectBranches() []common.SelectBranchExpression {
-	selectbranch_property := gt.PropertyTable[_SelectBranches].(property.PropertyT)
-	return selectbranch_property.GetValue().([]common.SelectBranchExpression)
+	if gt.PropertyTable[_SelectBranches] == nil {
+		return nil
+	}
+	selectbranch_property, ok := gt.PropertyTable[_SelectBranches].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	selectbranch_value, ok := selectbranch_property.GetValue().([]common.SelectBranchExpression)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return selectbranch_value
 }
 
 //====属性动态初始化
@@ -584,7 +678,10 @@ func (gt *GeneralTask) ReSet() {
 }
 
 func (gt *GeneralTask) AddNextTasks(task string) {
-	nexttask_property := gt.PropertyTable[_NextTasks].(property.PropertyT)
+	nexttask_property, ok := gt.PropertyTable[_NextTasks].(property.PropertyT)
+	if !ok {
+		nexttask_property = *property.NewPropertyT(_NextTasks)
+	}
 	if nexttask_property.GetValue() == nil {
 		nexttask_property.SetValue(make([]string, 0))
 	}
@@ -597,36 +694,45 @@ func (gt *GeneralTask) AddNextTasks(task string) {
 }
 
 func (gt *GeneralTask) AddPreCondition(p_name string, p_condition string) {
-	precondition_property := gt.PropertyTable[_PreCondition].(property.PropertyT)
+	precondition_property, ok := gt.PropertyTable[_PreCondition].(property.PropertyT)
+	if !ok {
+		precondition_property = *property.NewPropertyT(_PreCondition)
+	}
 	if precondition_property.GetValue() == nil {
 		precondition_property.SetValue(make(map[string]inf.IExpression, 0))
 	}
 	map_precondition := precondition_property.GetValue().(map[string]inf.IExpression)
-	map_precondition[p_name] = expression.NewGeneralExpression(p_condition)
+	map_precondition[p_name] = expression.NewGeneralExpression(p_name, p_condition)
 
 	precondition_property.SetValue(map_precondition)
 	gt.PropertyTable[_PreCondition] = precondition_property
 }
 
 func (gt *GeneralTask) AddCompleteCondition(p_name string, p_condition string) {
-	completecondition_property := gt.PropertyTable[_CompleteCondition].(property.PropertyT)
+	completecondition_property, ok := gt.PropertyTable[_CompleteCondition].(property.PropertyT)
+	if !ok {
+		completecondition_property = *property.NewPropertyT(_CompleteCondition)
+	}
 	if completecondition_property.GetValue() == nil {
 		completecondition_property.SetValue(make(map[string]inf.IExpression, 0))
 	}
 	map_completecondition := completecondition_property.GetValue().(map[string]inf.IExpression)
-	map_completecondition[p_name] = expression.NewGeneralExpression(p_condition)
+	map_completecondition[p_name] = expression.NewGeneralExpression(p_name, p_condition)
 
 	completecondition_property.SetValue(map_completecondition)
 	gt.PropertyTable[_CompleteCondition] = completecondition_property
 }
 
 func (gt *GeneralTask) AddDiscardCondition(p_name string, p_condition string) {
-	Discardcondition_property := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
+	Discardcondition_property, ok := gt.PropertyTable[_DiscardCondition].(property.PropertyT)
+	if !ok {
+		Discardcondition_property = *property.NewPropertyT(_DiscardCondition)
+	}
 	if Discardcondition_property.GetValue() == nil {
 		Discardcondition_property.SetValue(make([]inf.IExpression, 0))
 	}
 	map_Discardcondition := Discardcondition_property.GetValue().(map[string]inf.IExpression)
-	map_Discardcondition[p_name] = expression.NewGeneralExpression(p_condition)
+	map_Discardcondition[p_name] = expression.NewGeneralExpression(p_name, p_condition)
 
 	Discardcondition_property.SetValue(map_Discardcondition)
 	gt.PropertyTable[_DiscardCondition] = Discardcondition_property
@@ -638,27 +744,27 @@ func (gt *GeneralTask) AddDataSetterExpressionAndData(p_name string, p_dataSette
 }
 
 func (gt *GeneralTask) AddDataSetterExpression(p_name string, p_dataSetterExpresstionStr string) {
-	if gt.PropertyTable[_DataValueSetterExpressionList] == nil {
-		return
+	dataexpressionlist_property, ok := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	if !ok {
+		dataexpressionlist_property = *property.NewPropertyT(_DataValueSetterExpressionList)
 	}
-	dataexpressionlist_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
 	if dataexpressionlist_property.GetValue() == nil {
 		map_dataexpressionlist := make(map[string]inf.IExpression, 0)
 		dataexpressionlist_property.SetValue(map_dataexpressionlist)
 	}
 	if p_dataSetterExpresstionStr != "" {
 		map_dataexpresslist := dataexpressionlist_property.GetValue().(map[string]inf.IExpression)
-		map_dataexpresslist[p_name] = expression.NewGeneralExpression(p_dataSetterExpresstionStr)
+		map_dataexpresslist[p_name] = expression.NewGeneralExpression(p_name, p_dataSetterExpresstionStr)
 		dataexpressionlist_property.SetValue(map_dataexpresslist)
 		gt.PropertyTable[_DataValueSetterExpressionList] = dataexpressionlist_property
 	}
 }
 
 func (gt *GeneralTask) AddData(p_data inf.IData) {
-	if gt.PropertyTable[_DataList] == nil {
-		return
+	datalist_property, ok := gt.PropertyTable[_DataList].(property.PropertyT)
+	if !ok {
+		datalist_property = *property.NewPropertyT(_DataList)
 	}
-	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
 	if datalist_property.GetValue() == nil {
 		map_datalist := make(map[string]inf.IData, 0)
 		datalist_property.SetValue(map_datalist)
@@ -678,7 +784,10 @@ func (gt *GeneralTask) RemoveDataSetterExpression(p_expressionname string) {
 	if gt.PropertyTable[_DataValueSetterExpressionList] == nil {
 		return
 	}
-	dataExpression_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	dataExpression_property, ok := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	if !ok {
+		dataExpression_property = *property.NewPropertyT(_DataValueSetterExpressionList)
+	}
 	if dataExpression_property.GetValue() != nil {
 		map_dataExpression := dataExpression_property.GetValue().(map[string]inf.IExpression)
 		delete(map_dataExpression, p_expressionname)
@@ -692,7 +801,10 @@ func (gt *GeneralTask) RemoveData(p_name string) {
 	if gt.PropertyTable[_DataList] == nil {
 		return
 	}
-	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
+	datalist_property, ok := gt.PropertyTable[_DataList].(property.PropertyT)
+	if !ok {
+		datalist_property = *property.NewPropertyT(_DataList)
+	}
 	if datalist_property.GetValue() != nil {
 		map_datalist := datalist_property.GetValue().(map[string]inf.IData)
 		delete(map_datalist, p_name)
@@ -705,17 +817,27 @@ func (gt *GeneralTask) RemoveData(p_name string) {
 //====属性Set方法
 func (gt *GeneralTask) SetSelectBranches(p_selectbranchs []common.SelectBranchExpression) {
 	gt.SelectBranches = p_selectbranchs
-	selectbranch_property := gt.PropertyTable[_SelectBranches].(property.PropertyT)
+	selectbranch_property, ok := gt.PropertyTable[_SelectBranches].(property.PropertyT)
+	if !ok {
+		selectbranch_property = *property.NewPropertyT(_SelectBranches)
+	}
 	selectbranch_property.SetValue(p_selectbranchs)
 	gt.PropertyTable[_SelectBranches] = selectbranch_property
 }
 
-//TODO: 缺少Compounddata考虑
 func (gt *GeneralTask) GetData(p_name string) (interface{}, error) {
 	var err error = nil
-	datalist_property := gt.PropertyTable[_DataList].(property.PropertyT)
+	datalist_property, ok := gt.PropertyTable[_DataList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil, err
+	}
 	if datalist_property.GetValue() != nil {
-		var data_map map[string]inf.IData = datalist_property.GetValue().(map[string]inf.IData)
+		data_map, ok := datalist_property.GetValue().(map[string]inf.IData)
+		if !ok {
+			err = errors.New("Find data[" + p_name + "] Error!")
+			return nil, err
+		}
 		r_data, ok := data_map[p_name]
 		if !ok {
 			err = errors.New("Find data[" + p_name + "] Error!")
@@ -729,9 +851,17 @@ func (gt *GeneralTask) GetData(p_name string) (interface{}, error) {
 
 func (gt *GeneralTask) GetDataExpression(p_name string) (interface{}, error) {
 	var err error = nil
-	dataexpressionlist_property := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	dataexpressionlist_property, ok := gt.PropertyTable[_DataValueSetterExpressionList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil, err
+	}
 	if dataexpressionlist_property.GetValue() != nil {
-		var dataexpression_map map[string]inf.IExpression = dataexpressionlist_property.GetValue().(map[string]inf.IExpression)
+		dataexpression_map, ok := dataexpressionlist_property.GetValue().(map[string]inf.IExpression)
+		if !ok {
+			err = errors.New("Find dataExpression[" + p_name + "] Error!")
+			return nil, err
+		}
 		r_data, ok := dataexpression_map[p_name]
 		if !ok {
 			err = errors.New("Find dataExpression[" + p_name + "] Error!")
@@ -745,7 +875,7 @@ func (gt *GeneralTask) GetDataExpression(p_name string) (interface{}, error) {
 
 //====运行条件判断
 func (gt *GeneralTask) testCompleteCondition() bool {
-	var r_flag bool = false
+	var r_flag bool = true
 	if len(gt.GetCompleteCondition()) == 0 {
 		r_flag = true
 	}
@@ -783,7 +913,9 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 			r_flag = false
 			break
 		}
-		r_flag = v_bool.(bool)
+	}
+	if r_flag == false {
+		return r_flag
 	}
 	//默认的合约终止条件（当前合约步骤入链查询判定）
 	v_contract := gt.GetContract()
@@ -801,7 +933,7 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 }
 
 func (gt *GeneralTask) testPreCondition() bool {
-	var r_flag bool = false
+	var r_flag bool = true
 	if len(gt.GetPreCondition()) == 0 {
 		r_flag = true
 	}
@@ -817,7 +949,6 @@ func (gt *GeneralTask) testPreCondition() bool {
 			r_flag = false
 			break
 		}
-		r_flag = v_bool.(bool)
 	}
 	return r_flag
 }
@@ -860,25 +991,25 @@ func (gt *GeneralTask) PreProcess() error {
 //用于执行回滚操作，回滚后将任务状态改为dormant
 func (gt *GeneralTask) Dormant() (int8, error) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
-	r_buf.WriteString("Contract Runing:Dormant State.")
+	r_buf.WriteString("Task Process Runing:InProcess or Complete State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
 	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	if gt.IsInProgress() || gt.IsCompleted() {
-		uniledgerlog.Info("Task[", gt.GetName(), "] State[Start to Dormant]....")
-		uniledgerlog.Info(r_buf.String(), " InProgress|Completed to Dormant....")
+		uniledgerlog.Info(r_buf.String(), " InProcess|Completed to Dormant....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Dormant])
-		//TODO 回滚需求清空中间变量的值
+		gt.CleanValueInProcess()
 	}
 	return r_ret, r_err
 }
 
 func (gt *GeneralTask) Start() (int8, error) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
-	r_buf.WriteString("Contract Runing:Dormant State.")
+	r_buf.WriteString("Task Process Runing:Dormant State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
+	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
 	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
@@ -894,15 +1025,15 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//var data_array []interface{} = gt.DataList
 		//循环遍历函数表达式列表，执行函数
 		//注意：限制只可有一个Output交易产出
-		// TODO 待处理，避免一般操作任务，重复执行
-		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_expression_function_A）
-		uniledgerlog.Info("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
+		//TODO 待处理，避免一般操作任务，重复执行
+		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_int_expression_function_A）
+		uniledgerlog.Debug("=======DataSetterExpressionList() size=====", len(gt.GetDataValueSetterExpressionList()))
 		for v_key, _ := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
 			//1 函数识别 & 执行
 			str_name := v_expr_object.GetName()
 			str_function := v_expr_object.GetExpressionStr()
-			uniledgerlog.Info("==Function==" + str_function)
+			uniledgerlog.Debug("==Function==" + str_function)
 			str_function = strings.TrimSpace(str_function)
 			var v_beginwith_flag bool
 			if !gRPCClient.On {
@@ -956,7 +1087,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString(gt.GetContract().GetMainPubkey())
 				func_buf.WriteString("\")")
 				str_function = func_buf.String()
-				uniledgerlog.Info("==after process Function==" + str_function)
+				uniledgerlog.Debug("==after process Function==" + str_function)
 			}
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
@@ -967,7 +1098,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 			v_expr_object.SetExpressionResult(v_result_object)
 			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_expr_object)
 			now_json, _ := gt.GetContract().Serialize()
-			fmt.Println("========after update component=====", now_json)
+			uniledgerlog.Debug("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
 				if !gRPCClient.On {
@@ -1019,28 +1150,19 @@ func (gt *GeneralTask) Start() (int8, error) {
 		return r_ret, r_err
 	}
 	//执行完动作后需要等待执行完成
-	var v_exit_flag int8 = 0
-	for v_exit_flag == 0 {
-		r_ret, r_err = gt.Complete()
-		if r_ret == 0 {
-			continue
-		} else {
-			break
-		}
-	}
+	r_ret, r_err = gt.Complete()
 	return r_ret, r_err
 }
 
 func (gt *GeneralTask) Complete() (int8, error) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
-	r_buf.WriteString("Contract Runing:Inprogress State.")
+	r_buf.WriteString("Task Process Runing:Inprogress State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
 	uniledgerlog.Info(r_buf.String(), "Complete begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
-	// CompleteCondition 需要包含单节点任务执行结果条件
 	//   任务执行成功，继续往下执行
 	//   任务执行失败，该任务需要重新执行
 	if gt.IsInProgress() && gt.testCompleteCondition() {
@@ -1183,7 +1305,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_err = errors.New("Contract Output Deserialize fail!")
 			r_buf.WriteString("[Result]: CompleteCondition not true;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			uniledgerlog.Warn(r_buf.String(), "Complete exit....")
+			uniledgerlog.Error(r_buf.String(), "Complete exit....")
 			return r_ret, r_err
 		}
 		var map_output_second map[string]interface{} = map_output_first.(map[string]interface{})
@@ -1192,7 +1314,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_err = errors.New("Contract Output Struct Get fail!")
 			r_buf.WriteString("[Result]: CompleteCondition not true;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			uniledgerlog.Warn(r_buf.String(), "Complete exit....")
+			uniledgerlog.Error(r_buf.String(), "Complete exit....")
 			return r_ret, r_err
 		}
 		var map_transaction map[string]interface{} = map_output_second["transaction"].(map[string]interface{})
@@ -1201,14 +1323,13 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			r_err = errors.New("Contract HashId Get fail!")
 			r_buf.WriteString("[Result]: CompleteCondition not true;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			uniledgerlog.Warn(r_buf.String(), "Complete exit....")
+			uniledgerlog.Error(r_buf.String(), "Complete exit....")
 			return r_ret, r_err
 		}
 		var map_contract map[string]interface{} = map_transaction["Contract"].(map[string]interface{})
 		gt.GetContract().SetOutputId(map_contract["id"].(string))
 		gt.GetContract().SetOutputTaskId(gt.GetTaskId())
 		gt.GetContract().SetOutputTaskExecuteIdx(gt.GetTaskExecuteIdx())
-		//uniledgerlog.Error("gt.GetContract():", gt.GetContract())
 		uniledgerlog.Error("gt.GetContract().GetOutputId():", gt.GetContract().GetOutputId())
 		uniledgerlog.Info(r_buf.String(), " Inprocess to Complete....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Completed])
@@ -1244,7 +1365,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 
 func (gt *GeneralTask) Discard() (int8, error) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
-	r_buf.WriteString("Contract Runing:Complete State.")
+	r_buf.WriteString("Task Process Runing:Complete State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")

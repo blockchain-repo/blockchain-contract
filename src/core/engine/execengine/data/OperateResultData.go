@@ -108,7 +108,7 @@ func (td *OperateResultData) InitOperateResultData() error {
 		uniledgerlog.Error("InitOperateResultData fail[" + err.Error() + "]")
 		return err
 	}
-	td.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResultData])
+	td.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResult])
 
 	td.SetHardConvType("OperateResultData")
 	return err

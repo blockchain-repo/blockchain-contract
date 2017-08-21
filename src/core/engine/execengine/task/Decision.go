@@ -2,6 +2,7 @@ package task
 
 import (
 	"bytes"
+	"fmt"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -11,13 +12,11 @@ import (
 
 type Decision struct {
 	Enquiry
-	CandidateList  []DecisionCandidate `json:"CandidateList"`
-	DecisionResult []DecisionCandidate `json:"DecisionResult"` //作废，无用字段，决策结果都在CandidateList中体现；每个决策候选集，一个决策结果
+	CandidateList []DecisionCandidate `json:"CandidateList"` //决策结果都在CandidateList中体现；每个决策候选集，一个决策结果
 }
 
 const (
-	_CandidateList  = "_CandidateList"
-	_DecisionResult = "_DecisionResult"
+	_CandidateList = "_CandidateList"
 )
 
 func NewDecision() *Decision {
@@ -79,7 +78,7 @@ func (d Decision) SetTaskExecuteIdx(int_idx int) {
 
 func (d Decision) CleanValueInProcess() {
 	d.Enquiry.CleanValueInProcess()
-	d.ResetDecisionResult()
+	d.ResetCandidate()
 }
 
 func (d Decision) UpdateStaticState() (interface{}, error) {
@@ -122,35 +121,43 @@ func (d *Decision) InitDecision() error {
 		map_candidatelist[p_cand.GetName()] = p_cand
 	}
 	common.AddProperty(d, d.PropertyTable, _CandidateList, map_candidatelist)
-	//decisionresult arrar to map
-	if d.DecisionResult == nil {
-		d.DecisionResult = make([]DecisionCandidate, 0)
-	}
-	map_decisionResult := make(map[string]DecisionCandidate, 0)
-	for _, p_result := range d.DecisionResult {
-		map_decisionResult[p_result.GetName()] = p_result
-	}
-	common.AddProperty(d, d.PropertyTable, _DecisionResult, map_decisionResult)
 	return err
 }
 
 //====属性Get方法
 //TODO： map本身是无序的，不需排序
 func (d *Decision) GetCandidateList() map[string]DecisionCandidate {
-	candlist_property := d.PropertyTable[_CandidateList].(property.PropertyT)
-	return candlist_property.GetValue().(map[string]DecisionCandidate)
-}
-
-func (d *Decision) GetDecisionResult() map[string]DecisionCandidate {
-	resultlist_property := d.PropertyTable[_DecisionResult].(property.PropertyT)
-	return resultlist_property.GetValue().(map[string]DecisionCandidate)
+	candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	candlist_value, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return candlist_value
 }
 
 func (d *Decision) GetCandidate(p_name string) DecisionCandidate {
-	candlist_property := d.PropertyTable[_CandidateList].(property.PropertyT)
+	candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return DecisionCandidate{}
+	}
 	if candlist_property.GetValue() != nil {
-		map_candlist := candlist_property.GetValue().(map[string]DecisionCandidate)
-		return map_candlist[p_name]
+		candlist_map, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return DecisionCandidate{}
+		}
+		candlist_value, ok := candlist_map[p_name]
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.NULL_ERROR, ""))
+			return DecisionCandidate{}
+		}
+		return candlist_value
 	}
 	return DecisionCandidate{}
 }
@@ -158,15 +165,25 @@ func (d *Decision) GetCandidate(p_name string) DecisionCandidate {
 //====动态添加方法
 func (d *Decision) AddCandidate(p_candidate interface{}) {
 	if p_candidate != nil {
-		candlist_property := d.PropertyTable[_CandidateList].(property.PropertyT)
+		candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
+		if !ok {
+			candlist_property = *property.NewPropertyT(_CandidateList)
+		}
 		if candlist_property.GetValue() == nil {
 			candlist_property.SetValue(make(map[string]DecisionCandidate, 0))
 		}
-		v_candidate := p_candidate.(DecisionCandidate)
+		v_candidate, ok := p_candidate.(DecisionCandidate)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
 		if d.GetContract() != nil {
 			v_candidate.SetContract(d.GetContract())
 		}
-		map_candlist := candlist_property.GetValue().(map[string]DecisionCandidate)
+		map_candlist, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+		if !ok {
+			map_candlist = make(map[string]DecisionCandidate, 0)
+		}
 		map_candlist[v_candidate.GetCname()] = v_candidate
 		candlist_property.SetValue(map_candlist)
 		d.PropertyTable[_CandidateList] = candlist_property
@@ -175,10 +192,22 @@ func (d *Decision) AddCandidate(p_candidate interface{}) {
 
 func (d *Decision) RemoveCandidate(p_candidate interface{}) {
 	if p_candidate != nil {
-		candlist_property := d.PropertyTable[_CandidateList].(property.PropertyT)
+		candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
 		if candlist_property.GetValue() != nil {
-			v_candidate := p_candidate.(DecisionCandidate)
-			map_candlist := candlist_property.GetValue().(map[string]DecisionCandidate)
+			v_candidate, ok := p_candidate.(DecisionCandidate)
+			if !ok {
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+				return
+			}
+			map_candlist, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+			if !ok {
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+				return
+			}
 			delete(map_candlist, v_candidate.GetCname())
 			candlist_property.SetValue(map_candlist)
 			d.PropertyTable[_CandidateList] = candlist_property
@@ -186,69 +215,58 @@ func (d *Decision) RemoveCandidate(p_candidate interface{}) {
 	}
 }
 
-func (d *Decision) evaluateCandidate() {
-	candlist_property := d.PropertyTable[_CandidateList].(property.PropertyT)
+func (d *Decision) evaluateCandidate() error {
+	var err error = nil
+	candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return err
+	}
 	if candlist_property.GetValue() != nil {
-		for _, v_value := range candlist_property.GetValue().(map[string]DecisionCandidate) {
+		candlist_map, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return err
+		}
+		for _, v_value := range candlist_map {
 			v_value.SetContract(d.GetContract())
-			if v_value.Eval() > 0 {
-				d.AddDecisionResult(v_value)
+			v_value.ResetDecisionCandidate()
+			err := v_value.Eval()
+			if err != nil {
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.EXECUTE_ERROR, ""))
+				return err
 			}
 		}
 	}
+	return err
 }
 
-func (d *Decision) ResetDecisionResult() {
-	resultlist_property := d.PropertyTable[_DecisionResult].(property.PropertyT)
+func (d *Decision) ResetCandidate() {
+	resultlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return
+	}
 	if resultlist_property.GetValue() != nil {
 		resultlist_property.SetValue(make(map[string]DecisionCandidate, 0))
 	}
-	d.PropertyTable[_DecisionResult] = resultlist_property
-}
-
-func (d *Decision) AddDecisionResult(p_cand DecisionCandidate) {
-	resultlist_property := d.PropertyTable[_DecisionResult].(property.PropertyT)
-	if resultlist_property.GetValue() == nil {
-		resultlist_property.SetValue(make(map[string]DecisionCandidate, 0))
-	}
-	map_resultlist := resultlist_property.GetValue().(map[string]DecisionCandidate)
-	map_resultlist[p_cand.GetCname()] = p_cand
-	resultlist_property.SetValue(map_resultlist)
-	d.PropertyTable[_DecisionResult] = resultlist_property
-}
-
-func (d *Decision) RemoveDecisionResult(p_cand []DecisionCandidate) {
-	resultlist_property := d.PropertyTable[_DecisionResult].(property.PropertyT)
-	if p_cand != nil {
-		map_resultlist := resultlist_property.GetValue().(map[string]DecisionCandidate)
-		for _, v_cand := range p_cand {
-			delete(map_resultlist, v_cand.GetCname())
-		}
-		resultlist_property.SetValue(map_resultlist)
-		d.PropertyTable[_DecisionResult] = resultlist_property
-	}
+	d.PropertyTable[_CandidateList] = resultlist_property
 }
 
 //针对决策单独进行Start操作
 func (gt *Decision) Start() (int8, error) {
 	var r_buf bytes.Buffer = bytes.Buffer{}
-	r_buf.WriteString("Contract Runing:Dormant State.")
+	r_buf.WriteString("Task Process Runing:Dormant State.")
 	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
+	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
 	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
 	if gt.IsDormant() && gt.testPreCondition() {
-		var exec_flag bool = true
-
-		var v_idx int8 = 0
-		for _, v_candidate := range gt.GetCandidateList() {
-			v_candidate.ResetSupport()
-			v_candidate.Eval()
-			v_idx = v_idx + 1
-		}
+		err := gt.evaluateCandidate()
 		//执行失败，返回 -1
-		if !exec_flag {
+		if err != nil {
 			r_ret = -1
 			r_buf.WriteString("[Result]: Task execute fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
@@ -266,14 +284,7 @@ func (gt *Decision) Start() (int8, error) {
 		return r_ret, r_err
 	}
 	//执行完动作后需要等待执行完成
-	var v_exit_flag int8 = 0
-	for v_exit_flag == 0 {
-		r_ret, r_err = gt.Complete()
-		if r_ret == 0 {
-			continue
-		} else {
-			break
-		}
-	}
+	r_ret, r_err = gt.Complete()
+
 	return r_ret, r_err
 }

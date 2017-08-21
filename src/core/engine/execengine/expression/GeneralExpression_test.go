@@ -5,13 +5,12 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 )
 
-func TestInitGeneralExpression(t *testing.T){
-	g_expression := NewGeneralExpression("1==1")
+func TestInitGeneralExpression(t *testing.T) {
+	g_expression := NewGeneralExpression("Expression", "1==1")
 	err := g_expression.InitExpression()
 	if err != nil {
 		t.Error("InitExpression Error!")
 	}
-	g_expression.SetCname("Expression")
 	g_expression.SetCaption("Expression")
 	g_expression.SetDescription("Expression Test")
 	g_expression.SetExpressionStr("a > b")

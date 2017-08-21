@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
@@ -72,7 +73,7 @@ func (td *TextData) Serialize() (string, error) {
 	if s_model, err := json.Marshal(td); err == nil {
 		return string(s_model), err
 	} else {
-		uniledgerlog.Error("Contract Text Data fail[" + err.Error() + "]")
+		uniledgerlog.Error("Text Data fail[" + err.Error() + "]")
 		return "", err
 	}
 }
@@ -122,8 +123,16 @@ func (td *TextData) SetValueString(p_ValueString interface{}) {
 
 func (td *TextData) SetDefaultValueString(p_DefaultValueString interface{}) {
 	if p_DefaultValueString != nil {
-		td.DefaultValueString = p_DefaultValueString.(string)
-		defaultvalue_property := td.PropertyTable[_DefaultValueString].(property.PropertyT)
+		default_value, ok := p_DefaultValueString.(string)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
+		td.DefaultValueString = default_value
+		defaultvalue_property, ok := td.PropertyTable[_DefaultValueString].(property.PropertyT)
+		if !ok {
+			defaultvalue_property = *property.NewPropertyT(_DefaultValueString)
+		}
 		defaultvalue_property.SetValue(p_DefaultValueString)
 		td.PropertyTable[_DefaultValueString] = defaultvalue_property
 	}

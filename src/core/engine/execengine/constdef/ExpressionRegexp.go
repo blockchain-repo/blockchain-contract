@@ -29,10 +29,11 @@ const (
 	Regexp_Name_Data_Float
 	Regexp_Name_Data_Text
 	Regexp_Name_Data_Date
+	Regexp_Name_Data_Bool
+	Regexp_Name_Data_OperateResult
 	Regexp_Name_Data_Array
 	Regexp_Name_Data_Matrix
 	Regexp_Name_Data_Compound
-	Regexp_Name_Data_OperateResult
 	Regexp_Name_Expr_Func
 	Regexp_Name_Expr_Argu
 )
@@ -66,10 +67,11 @@ var ExpressionRegexp = map[int]string{
 	Regexp_Name_Data_Float:         "data_float_",
 	Regexp_Name_Data_Text:          "data_text_",
 	Regexp_Name_Data_Date:          "data_date_",
+	Regexp_Name_Data_Bool:          "data_bool_",
+	Regexp_Name_Data_OperateResult: "data_operateresult_",
 	Regexp_Name_Data_Array:         "data_array_",
 	Regexp_Name_Data_Matrix:        "data_matrix_",
 	Regexp_Name_Data_Compound:      "data_compound_",
-	Regexp_Name_Data_OperateResult: "data_operateresult_",
 	Regexp_Name_Expr_Func:          "expression_function_",
 	Regexp_Name_Expr_Argu:          "expression_condition_",
 }

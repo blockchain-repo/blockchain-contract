@@ -33,9 +33,8 @@ func CreateGeneralTaskObject() *task.GeneralTask {
 }
 
 func CreateGeneralExpressionObject() *expression.GeneralExpression {
-	t_expression := expression.NewGeneralExpression("Test Geneeral expression")
+	t_expression := expression.NewGeneralExpression("TestGeneralExpression", "Test Geneeral expression")
 	t_expression.InitExpression()
-	t_expression.SetCname("TestGeneralExpression")
 	t_expression.SetCaption("expression")
 	t_expression.SetDescription("test general expression")
 
@@ -58,7 +57,7 @@ func TestGetComponentType(t *testing.T) {
 	if v_type != constdef.ComponentType[constdef.Component_Task] {
 		t.Error("Type is not Task!")
 	}
-	var inf_expression inf.IExpression = expression.NewGeneralExpression("")
+	var inf_expression inf.IExpression = expression.NewGeneralExpression("", "")
 	v_type, _ = v_comp_table.getComponentType(inf_expression)
 	if v_type != constdef.ComponentType[constdef.Component_Expression] {
 		t.Error("Type is not Expression!")

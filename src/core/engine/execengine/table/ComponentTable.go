@@ -8,6 +8,7 @@ import (
 	"unicontract/src/core/engine/execengine/data"
 	"unicontract/src/core/engine/execengine/expression"
 	"unicontract/src/core/engine/execengine/inf"
+	"unicontract/src/core/engine/execengine/task"
 )
 
 type ComponentTable struct {
@@ -36,7 +37,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 		return r_type, r_name
 	}
 	switch p_component.(type) {
-	case *inf.IData:
+	case *inf.IData, inf.IData, *data.IntData, *data.UintData, *data.FloatData, *data.BoolData, *data.TextData, *data.DateData, *data.OperateResultData, *data.ArrayData, *data.CompoundData, *data.MatrixData:
 		r_type = constdef.ComponentType[constdef.Component_Data]
 		ddata, ok := p_component.(inf.IData)
 		if !ok {
@@ -44,23 +45,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 			return "", ""
 		}
 		r_name = ddata.GetName()
-	case inf.IData:
-		r_type = constdef.ComponentType[constdef.Component_Data]
-		ddata, ok := p_component.(inf.IData)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = ddata.GetName()
-	case *data.DateData:
-		r_type = constdef.ComponentType[constdef.Component_Data]
-		ddata, ok := p_component.(inf.IData)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = ddata.GetName()
-	case *inf.ITask:
+	case *inf.ITask, inf.ITask, *task.Enquiry, *task.Action, *task.Decision, *task.Plan:
 		r_type = constdef.ComponentType[constdef.Component_Task]
 		ttask, ok := p_component.(inf.ITask)
 		if !ok {
@@ -68,15 +53,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 			return "", ""
 		}
 		r_name = ttask.GetName()
-	case inf.ITask:
-		r_type = constdef.ComponentType[constdef.Component_Task]
-		ttask, ok := p_component.(inf.ITask)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = ttask.GetName()
-	case *inf.IExpression:
+	case *inf.IExpression, inf.IExpression, *expression.LogicArgument, *expression.Function:
 		r_type = constdef.ComponentType[constdef.Component_Expression]
 		eexp, ok := p_component.(inf.IExpression)
 		if !ok {
@@ -84,39 +61,7 @@ func (ct *ComponentTable) getComponentType(p_component interface{}) (string, str
 			return "", ""
 		}
 		r_name = eexp.GetName()
-	case *expression.LogicArgument:
-		r_type = constdef.ComponentType[constdef.Component_Expression]
-		eexp, ok := p_component.(inf.IExpression)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = eexp.GetName()
-	case *expression.Function:
-		r_type = constdef.ComponentType[constdef.Component_Expression]
-		eexp, ok := p_component.(inf.IExpression)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = eexp.GetName()
-	case inf.IExpression:
-		r_type = constdef.ComponentType[constdef.Component_Expression]
-		eexp, ok := p_component.(inf.IExpression)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = eexp.GetName()
-	case inf.ICognitiveContract:
-		r_type = constdef.ComponentType[constdef.Component_Contract]
-		eexp, ok := p_component.(inf.ICognitiveContract)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return "", ""
-		}
-		r_name = eexp.GetName()
-	case *inf.ICognitiveContract:
+	case inf.ICognitiveContract, *inf.ICognitiveContract:
 		r_type = constdef.ComponentType[constdef.Component_Contract]
 		eexp, ok := p_component.(inf.ICognitiveContract)
 		if !ok {
