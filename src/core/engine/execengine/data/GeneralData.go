@@ -112,23 +112,23 @@ func (gd *GeneralData) ToString() interface{} {
 
 //序列化： 需要将运行态结构 序列化到 描述态中
 func (gd *GeneralData) RunningToStatic() {
-	cname_property, ok := gd.PropertyTable["Cname"].(property.PropertyT)
+	cname_property, ok := gd.PropertyTable["_Cname"].(property.PropertyT)
 	if ok {
 		gd.Cname, _ = cname_property.GetValue().(string)
 	}
-	ctype_property, ok := gd.PropertyTable["Ctype"].(property.PropertyT)
+	ctype_property, ok := gd.PropertyTable["_Ctype"].(property.PropertyT)
 	if ok {
 		gd.Ctype, _ = ctype_property.GetValue().(string)
 	}
-	caption_property, ok := gd.PropertyTable["Caption"].(property.PropertyT)
+	caption_property, ok := gd.PropertyTable["_Caption"].(property.PropertyT)
 	if ok {
 		gd.Caption, _ = caption_property.GetValue().(string)
 	}
-	description_property, ok := gd.PropertyTable["Description"].(property.PropertyT)
+	description_property, ok := gd.PropertyTable["_Description"].(property.PropertyT)
 	if ok {
 		gd.Description, _ = description_property.GetValue().(string)
 	}
-	metaAttribute_property, ok := gd.PropertyTable["MetaAttribute"].(property.PropertyT)
+	metaAttribute_property, ok := gd.PropertyTable["_MetaAttribute"].(property.PropertyT)
 	if ok {
 		gd.MetaAttribute, _ = metaAttribute_property.GetValue().(map[string]string)
 	}
@@ -345,57 +345,125 @@ func (gd *GeneralData) CheckRange(p_Value interface{}) bool {
 
 //====属性Get方法
 func (gd *GeneralData) GetDefaultValue() interface{} {
-	defaultvalue_property := gd.PropertyTable[_DefaultValue].(property.PropertyT)
-	return defaultvalue_property.GetValue()
+	defaultvalue_property, ok := gd.PropertyTable[_DefaultValue].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	defaultvalue_value := defaultvalue_property.GetValue()
+	return defaultvalue_value
 }
 
 func (gd *GeneralData) GetUnit() string {
-	unit_property := gd.PropertyTable[_Unit].(property.PropertyT)
-	return unit_property.GetValue().(string)
+	unit_property, ok := gd.PropertyTable[_Unit].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	unit_value, ok := unit_property.GetValue().(string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	return unit_value
 }
 func (gd *GeneralData) GetModifyDate() string {
-	modifydate_property := gd.PropertyTable[_ModifyDate].(property.PropertyT)
-	return modifydate_property.GetValue().(string)
+	modifydate_property, ok := gd.PropertyTable[_ModifyDate].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	modifydate_value, ok := modifydate_property.GetValue().(string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	return modifydate_value
 }
 
 func (gd *GeneralData) GetHardConvType() string {
-	hardconvtype_property := gd.PropertyTable[_HardConvType].(property.PropertyT)
-	return hardconvtype_property.GetValue().(string)
+	hardconvtype_property, ok := gd.PropertyTable[_HardConvType].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	hardconvtype_value, ok := hardconvtype_property.GetValue().(string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	return hardconvtype_value
 }
 
 func (gd *GeneralData) GetCategory() []string {
-	category_property := gd.PropertyTable[_Category].(property.PropertyT)
-	return category_property.GetValue().([]string)
+	category_property, ok := gd.PropertyTable[_Category].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	category_value, ok := category_property.GetValue().([]string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return category_value
 }
 
 func (gd *GeneralData) GetParent() interface{} {
-	parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
-	return parent_property.GetValue().(inf.IData)
+	parent_property, ok := gd.PropertyTable[_Parent].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	parent_value, ok := parent_property.GetValue().(inf.IData)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return parent_value
 }
 
 func (gd *GeneralData) GetMandatory() bool {
-	mandatory_property := gd.PropertyTable[_Mandatory].(property.PropertyT)
-	return mandatory_property.GetValue().(bool)
+	mandatory_property, ok := gd.PropertyTable[_Mandatory].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return false
+	}
+	mandatory_value, ok := mandatory_property.GetValue().(bool)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return false
+	}
+	return mandatory_value
 }
 
 //====属性Set方法
 func (gd *GeneralData) SetDefaultValue(p_DefaultValue interface{}) {
 	gd.DefaultValue = p_DefaultValue
-	defaultvalue_property := gd.PropertyTable[_DefaultValue].(property.PropertyT)
+	defaultvalue_property, ok := gd.PropertyTable[_DefaultValue].(property.PropertyT)
+	if !ok {
+		defaultvalue_property = *property.NewPropertyT(_DefaultValue)
+	}
 	defaultvalue_property.SetValue(p_DefaultValue)
 	gd.PropertyTable[_DefaultValue] = defaultvalue_property
 }
 
 func (gd *GeneralData) SetUnit(p_Unit string) {
 	gd.Unit = p_Unit
-	unit_property := gd.PropertyTable[_Unit].(property.PropertyT)
+	unit_property, ok := gd.PropertyTable[_Unit].(property.PropertyT)
+	if !ok {
+		unit_property = *property.NewPropertyT(_Unit)
+	}
 	unit_property.SetValue(p_Unit)
 	gd.PropertyTable[_Unit] = unit_property
 }
 
 func (gd *GeneralData) SetHardConvType(p_convtype string) {
 	gd.HardConvType = p_convtype
-	hardconvtype_property := gd.PropertyTable[_HardConvType].(property.PropertyT)
+	hardconvtype_property, ok := gd.PropertyTable[_HardConvType].(property.PropertyT)
+	if !ok {
+		hardconvtype_property = *property.NewPropertyT(_HardConvType)
+	}
 	hardconvtype_property.SetValue(p_convtype)
 	gd.PropertyTable[_HardConvType] = hardconvtype_property
 }
@@ -405,21 +473,30 @@ func (gd *GeneralData) SetModifyDate(p_date string) {
 		p_date = common.GenDate()
 	}
 	gd.ModifyDate = p_date
-	modifydate_property := gd.PropertyTable[_ModifyDate].(property.PropertyT)
+	modifydate_property, ok := gd.PropertyTable[_ModifyDate].(property.PropertyT)
+	if !ok {
+		modifydate_property = *property.NewPropertyT(_ModifyDate)
+	}
 	modifydate_property.SetValue(p_date)
 	gd.PropertyTable[_ModifyDate] = modifydate_property
 }
 
 func (gd *GeneralData) SetParent(p_Parent interface{}) {
 	gd.Parent = p_Parent
-	parent_property := gd.PropertyTable[_Parent].(property.PropertyT)
+	parent_property, ok := gd.PropertyTable[_Parent].(property.PropertyT)
+	if !ok {
+		parent_property = *property.NewPropertyT(_Parent)
+	}
 	parent_property.SetValue(p_Parent)
 	gd.PropertyTable[_Parent] = parent_property
 }
 
 func (gd *GeneralData) SetMandatory(p_Mandatory bool) {
 	gd.Mandatory = p_Mandatory
-	mandatory_property := gd.PropertyTable[_Mandatory].(property.PropertyT)
+	mandatory_property, ok := gd.PropertyTable[_Mandatory].(property.PropertyT)
+	if !ok {
+		mandatory_property = *property.NewPropertyT(_Mandatory)
+	}
 	mandatory_property.SetValue(p_Mandatory)
 	gd.PropertyTable[_Mandatory] = p_Mandatory
 }

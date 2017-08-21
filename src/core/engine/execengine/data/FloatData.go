@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"strconv"
 	"unicontract/src/common/uniledgerlog"
@@ -110,11 +111,24 @@ func (fd *FloatData) InitFloatData() error {
 
 //====属性Get方法
 func (fd *FloatData) GetDataRangeFloat() [2]float64 {
-	datarange_property := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
-	return datarange_property.GetValue().([2]float64)
+	datarange_property, ok := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return [2]float64{0, 0}
+	}
+	datarange_value, ok := datarange_property.GetValue().([2]float64)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return [2]float64{0, 0}
+	}
+	return datarange_value
 }
 func (fd *FloatData) GetValueFloat() interface{} {
-	value_property := fd.PropertyTable[_ValueFloat].(property.PropertyT)
+	value_property, ok := fd.PropertyTable[_ValueFloat].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	} else {
@@ -123,7 +137,11 @@ func (fd *FloatData) GetValueFloat() interface{} {
 	}
 }
 func (fd *FloatData) GetDefaultValueFloat() interface{} {
-	value_property := fd.PropertyTable[_DefaultValueFloat].(property.PropertyT)
+	value_property, ok := fd.PropertyTable[_DefaultValueFloat].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	}
@@ -136,14 +154,20 @@ func (fd *FloatData) SetDataRangeFloat(data_range [2]float64) error {
 	if data_range[0] == 0 && data_range[1] == 0 {
 		var data_range = [2]float64{-math.MaxFloat64, math.MaxFloat64}
 		fd.DataRangeFloat = data_range
-		datarange_property := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
+		datarange_property, ok := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
+		if !ok {
+			datarange_property = *property.NewPropertyT(_DataRangeFloat)
+		}
 		datarange_property.SetValue(data_range)
 		fd.PropertyTable[_DataRangeFloat] = datarange_property
 	} else {
 		var f_range [2]float64 = data_range
 		if f_range[0] <= f_range[1] {
 			fd.DataRangeFloat = f_range
-			datarange_property := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
+			datarange_property, ok := fd.PropertyTable[_DataRangeFloat].(property.PropertyT)
+			if !ok {
+				datarange_property = *property.NewPropertyT(_DataRangeFloat)
+			}
 			datarange_property.SetValue(data_range)
 			fd.PropertyTable[_DataRangeFloat] = datarange_property
 		} else {
@@ -157,8 +181,16 @@ func (fd *FloatData) SetDataRangeFloat(data_range [2]float64) error {
 }
 func (fd *FloatData) SetValueFloat(p_ValueFloat interface{}) {
 	if p_ValueFloat != nil {
-		fd.ValueFloat = p_ValueFloat.(float64)
-		value_property := fd.PropertyTable[_ValueFloat].(property.PropertyT)
+		p_value, ok := p_ValueFloat.(float64)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
+		fd.ValueFloat = p_value
+		value_property, ok := fd.PropertyTable[_ValueFloat].(property.PropertyT)
+		if !ok {
+			value_property = *property.NewPropertyT(_ValueFloat)
+		}
 		value_property.SetValue(p_ValueFloat)
 		fd.PropertyTable[_ValueFloat] = value_property
 	}
@@ -166,8 +198,16 @@ func (fd *FloatData) SetValueFloat(p_ValueFloat interface{}) {
 
 func (fd *FloatData) SetDefaultValueFloat(p_DefaultValueFloat interface{}) {
 	if p_DefaultValueFloat != nil {
-		fd.DefaultValueFloat = p_DefaultValueFloat.(float64)
-		defaultvalue_property := fd.PropertyTable[_DefaultValueFloat].(property.PropertyT)
+		p_defaultvalue, ok := p_DefaultValueFloat.(float64)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
+		fd.DefaultValueFloat = p_defaultvalue
+		defaultvalue_property, ok := fd.PropertyTable[_DefaultValueFloat].(property.PropertyT)
+		if !ok {
+			defaultvalue_property = *property.NewPropertyT(_DefaultValueFloat)
+		}
 		defaultvalue_property.SetValue(p_DefaultValueFloat)
 		fd.PropertyTable[_DefaultValueFloat] = defaultvalue_property
 	}

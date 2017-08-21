@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
@@ -97,14 +98,26 @@ func (dd *DateData) InitDateData() error {
 
 //====属性Get方法
 func (dd *DateData) GetFormat() string {
-	format_property := dd.PropertyTable[_Format].(property.PropertyT)
-	return format_property.GetValue().(string)
+	format_property, ok := dd.PropertyTable[_Format].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	format_value, ok := format_property.GetValue().(string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	return format_value
 }
 
 //====属性Set方法
 func (dd *DateData) SetFormat(p_formate string) {
 	dd.Format = p_formate
-	format_property := dd.PropertyTable[_Format].(property.PropertyT)
+	format_property, ok := dd.PropertyTable[_Format].(property.PropertyT)
+	if !ok {
+		format_property = *property.NewPropertyT(_Format)
+	}
 	format_property.SetValue(p_formate)
 	dd.PropertyTable[_Format] = format_property
 }
@@ -112,14 +125,19 @@ func (dd *DateData) SetFormat(p_formate string) {
 //=====运算
 // param: p_date 对应为format格式的字符串，ex 2017-04-14 16:30:30 400
 func (dd *DateData) strToDate(p_date string) (time.Time, error) {
-	format_property := dd.PropertyTable[_Format].(property.PropertyT)
+	var v_time time.Time
 	var err error = nil
 	if p_date == "" {
 		err = errors.New("Param is null!")
 		return time.Time{}, err
 	}
-	var v_time time.Time
-	v_time, err = time.Parse(format_property.GetValue().(string), p_date)
+	format_property, ok := dd.PropertyTable[_Format].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return v_time, err
+	}
+	format_value, ok := format_property.GetValue().(string)
+	v_time, err = time.Parse(format_value, p_date)
 	return v_time, err
 }
 
@@ -137,7 +155,12 @@ func (dd *DateData) GetValueInt() (int64, error) {
 
 //param Value: format string
 func (dd *DateData) GetValueFormat() string {
-	return dd.GetValue().(string)
+	v_value, ok := dd.GetValue().(string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	return v_value
 }
 
 func (dd *DateData) Add(p_day int) (time.Time, error) {

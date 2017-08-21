@@ -118,8 +118,7 @@ func (la *LogicArgument) SetLogicValue(p_int interface{}) {
 	}
 	loggicvalue_property, ok := la.PropertyTable[_LogicValue].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		loggicvalue_property = *property.NewPropertyT(_LogicValue)
 	}
 	loggicvalue_property.SetValue(la.LogicValue)
 	la.PropertyTable[_LogicValue] = loggicvalue_property

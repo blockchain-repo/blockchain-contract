@@ -50,8 +50,17 @@ func (ud UintData) GetCtype() string {
 	if ud.PropertyTable["_Ctype"] == nil {
 		return ""
 	}
-	ctype_property := ud.PropertyTable["_Ctype"].(property.PropertyT)
-	return ctype_property.GetValue().(string)
+	ctype_property, ok := ud.PropertyTable["_Ctype"].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	ctype_value, ok := ctype_property.GetValue().(string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return ""
+	}
+	return ctype_value
 }
 func (ud UintData) SetValue(p_Value interface{}) {
 	ud.SetValueUint(p_Value)
@@ -114,11 +123,25 @@ func (ud *UintData) InitUintData() error {
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 func (ud *UintData) GetDataRangeUint() [2]uint {
-	datarange_property := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
-	return datarange_property.GetValue().([2]uint)
+	var v_range [2]uint = [2]uint{0, 0}
+	datarange_property, ok := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return v_range
+	}
+	datarange_value, ok := datarange_property.GetValue().([2]uint)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return v_range
+	}
+	return datarange_value
 }
 func (ud *UintData) GetValueUint() interface{} {
-	value_property := ud.PropertyTable[_ValueUint].(property.PropertyT)
+	value_property, ok := ud.PropertyTable[_ValueUint].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	} else {
@@ -127,7 +150,11 @@ func (ud *UintData) GetValueUint() interface{} {
 	}
 }
 func (ud *UintData) GetDefaultValueUint() interface{} {
-	value_property := ud.PropertyTable[_DefaultValueUint].(property.PropertyT)
+	value_property, ok := ud.PropertyTable[_DefaultValueUint].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
 	if value_property.GetValue() != nil {
 		return value_property.GetValue()
 	}
@@ -139,7 +166,10 @@ func (ud *UintData) SetDataRangeUint(data_range [2]uint) error {
 	if data_range[0] == 0 && data_range[1] == 0 {
 		var data_range = [2]uint{0, 2147483647}
 		ud.DataRangeUint = data_range
-		datarange_property := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+		datarange_property, ok := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+		if !ok {
+			datarange_property = *property.NewPropertyT(_DataRangeUint)
+		}
 		datarange_property.SetValue(data_range)
 		ud.PropertyTable[_DataRangeUint] = datarange_property
 	} else {
@@ -148,7 +178,10 @@ func (ud *UintData) SetDataRangeUint(data_range [2]uint) error {
 			err = errors.New("range must > 0")
 		} else if f_range[0] <= f_range[1] {
 			ud.DataRangeUint = f_range
-			datarange_property := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+			datarange_property, ok := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
+			if !ok {
+				datarange_property = *property.NewPropertyT(_DataRangeUint)
+			}
 			datarange_property.SetValue(data_range)
 			ud.PropertyTable[_DataRangeUint] = datarange_property
 		} else {
@@ -162,8 +195,16 @@ func (ud *UintData) SetDataRangeUint(data_range [2]uint) error {
 }
 func (ud *UintData) SetValueUint(p_ValueUint interface{}) {
 	if p_ValueUint != nil {
-		ud.ValueUint = p_ValueUint.(uint)
-		value_property := ud.PropertyTable[_ValueUint].(property.PropertyT)
+		uint_value, ok := p_ValueUint.(uint)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
+		ud.ValueUint = uint_value
+		value_property, ok := ud.PropertyTable[_ValueUint].(property.PropertyT)
+		if !ok {
+			value_property = *property.NewPropertyT(_ValueUint)
+		}
 		value_property.SetValue(p_ValueUint)
 		ud.PropertyTable[_ValueUint] = value_property
 	}
@@ -171,8 +212,16 @@ func (ud *UintData) SetValueUint(p_ValueUint interface{}) {
 
 func (ud *UintData) SetDefaultValueUint(p_DefaultValueUint interface{}) {
 	if p_DefaultValueUint != nil {
-		ud.DefaultValueUint = p_DefaultValueUint.(uint)
-		defaultvalue_property := ud.PropertyTable[_DefaultValueUint].(property.PropertyT)
+		unit_value, ok := p_DefaultValueUint.(uint)
+		if !ok {
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			return
+		}
+		ud.DefaultValueUint = unit_value
+		defaultvalue_property, ok := ud.PropertyTable[_DefaultValueUint].(property.PropertyT)
+		if !ok {
+			defaultvalue_property = *property.NewPropertyT(_DefaultValueUint)
+		}
 		defaultvalue_property.SetValue(p_DefaultValueUint)
 		ud.PropertyTable[_DefaultValueUint] = defaultvalue_property
 	}

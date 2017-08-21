@@ -111,9 +111,17 @@ func (nd *IntData) InitIntData() error {
 
 //====属性Get方法
 func (nd *IntData) GetDataRangeInt() [2]int {
-	// TODO assert
-	dataRangeInt_property := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
-	return dataRangeInt_property.GetValue().([2]int)
+	dataRangeInt_property, ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return [2]int{0, 0}
+	}
+	dataRangeInt_value, ok := dataRangeInt_property.GetValue().([2]int)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return [2]int{0, 0}
+	}
+	return dataRangeInt_value
 }
 func (nd *IntData) GetValueInt() interface{} {
 	value_property, ok := nd.PropertyTable[_ValueInt].(property.PropertyT)
@@ -151,8 +159,7 @@ func (nd *IntData) SetValueInt(p_ValueInt interface{}) {
 		}
 		value_property, ok := nd.PropertyTable[_ValueInt].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			value_property = *property.NewPropertyT(_ValueInt)
 		}
 		value_property.SetValue(p_ValueInt)
 		nd.PropertyTable[_ValueInt] = value_property
@@ -169,8 +176,7 @@ func (nd *IntData) SetDefaultValueInt(p_DefaultValueInt interface{}) {
 		}
 		defaultvalue_property, ok := nd.PropertyTable[_DefaultValueInt].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			defaultvalue_property = *property.NewPropertyT(_DefaultValueInt)
 		}
 		defaultvalue_property.SetValue(p_DefaultValueInt)
 		nd.PropertyTable[_DefaultValueInt] = defaultvalue_property
@@ -183,8 +189,7 @@ func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 		nd.DataRangeInt = data_range
 		datarangeint_property, ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return fmt.Errorf("assert error")
+			datarangeint_property = *property.NewPropertyT(_DataRangeInt)
 		}
 		datarangeint_property.SetValue(data_range)
 		nd.PropertyTable[_DataRangeInt] = datarangeint_property
@@ -194,8 +199,7 @@ func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 			nd.DataRangeInt = f_range
 			datarangeint_property, ok := nd.PropertyTable[_DataRangeInt].(property.PropertyT)
 			if !ok {
-				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-				return fmt.Errorf("assert error")
+				datarangeint_property = *property.NewPropertyT(_DataRangeInt)
 			}
 			datarangeint_property.SetValue(data_range)
 			nd.PropertyTable[_DataRangeInt] = datarangeint_property

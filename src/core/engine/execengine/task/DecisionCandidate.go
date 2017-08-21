@@ -9,19 +9,28 @@ import (
 	"unicontract/src/core/engine/execengine/property"
 )
 
+//决策组件使用规则：
+//   Text中存放所有待判定的条件，决策计算过程中，遍历Text条件
+//         成立的条件填充到SupportArguments中，并计数SupportNum+1
+//       不成立的条件填充到AgainstArguments中，并计数AgainstNum+1
+//   最终SupportNum 和 AgainstNum比较得出决策结果 Decision
 type DecisionCandidate struct {
 	Enquiry
+	Text             []string `json:"Text"`
 	SupportArguments []string `json:"SupportArguments"`
 	AgainstArguments []string `json:"AgainstArguments"`
-	Support          int      `json:"Support"`
-	Text             []string `json:"Text"`
+	SupportNum       int      `json:"SupportNum"`
+	AgainstNum       int      `json:"AgainstNum"`
+	Result           int      `json:"Result"`
 }
 
 const (
+	_Text             = "_Text"
 	_SupportArguments = "_SupportArguments"
 	_AgainstArguments = "_AgainstArguments"
-	_Support          = "_Support"
-	_Text             = "_Text"
+	_SupportNum       = "_SupportNum"
+	_AgainstNum       = "_AgainstNum"
+	_Result           = "_Result"
 )
 
 func NewDecisionCandidate() *DecisionCandidate {
@@ -40,7 +49,7 @@ func (dc DecisionCandidate) GetContract() inf.ICognitiveContract {
 
 func (dc DecisionCandidate) CleanValueInProcess() {
 	dc.Enquiry.CleanValueInProcess()
-	dc.ResetSupport()
+	dc.ResetDecisionCandidate()
 }
 
 //===============描述态=====================
@@ -54,6 +63,15 @@ func (dc *DecisionCandidate) InitDecisionCandidate() error {
 		return err
 	}
 	dc.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_DecisionCandidate])
+	//text
+	if dc.Text == nil {
+		dc.Text = make([]string, 0)
+	}
+	map_Text := make(map[string]string, 0)
+	for _, p_text := range dc.Text {
+		map_Text[p_text] = p_text
+	}
+	common.AddProperty(dc, dc.PropertyTable, _Text, map_Text)
 	//supportArguments
 	if dc.SupportArguments == nil {
 		dc.SupportArguments = make([]string, 0)
@@ -72,34 +90,165 @@ func (dc *DecisionCandidate) InitDecisionCandidate() error {
 		map_againstArgument[p_against] = p_against
 	}
 	common.AddProperty(dc, dc.PropertyTable, _AgainstArguments, map_againstArgument)
-	//support
-	common.AddProperty(dc, dc.PropertyTable, _Support, 0)
-	//text
-	if dc.Text == nil {
-		dc.Text = make([]string, 0)
-	}
-	map_Text := make(map[string]string, 0)
-	for _, p_text := range dc.Text {
-		map_Text[p_text] = p_text
-	}
-	common.AddProperty(dc, dc.PropertyTable, _Text, map_Text)
+	//SupportNum
+	common.AddProperty(dc, dc.PropertyTable, _SupportNum, dc.SupportNum)
+	//AgainstNum
+	common.AddProperty(dc, dc.PropertyTable, _AgainstNum, dc.AgainstNum)
+	//Decision
+	common.AddProperty(dc, dc.PropertyTable, _Result, dc.Result)
 	return err
 }
 
+//==========Getter方法
+func (dc *DecisionCandidate) GetSupportArguments() []string {
+	if dc.PropertyTable[_SupportArguments] == nil {
+		return nil
+	}
+	supportargument_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	supportargument_value, ok := supportargument_property.GetValue().([]string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return supportargument_value
+}
+
+func (dc *DecisionCandidate) GetAgainstArguments() []string {
+	if dc.PropertyTable[_AgainstArguments] == nil {
+		return nil
+	}
+	againstargument_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	againstargument_value, ok := againstargument_property.GetValue().([]string)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return againstargument_value
+}
+
+func (dc *DecisionCandidate) GetSupportNum() int {
+	if dc.PropertyTable[_SupportNum] == nil {
+		return 0
+	}
+	supportnum_property, ok := dc.PropertyTable[_SupportNum].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return 0
+	}
+	supportnum_value, ok := supportnum_property.GetValue().(int)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return 0
+	}
+	return supportnum_value
+}
+
+func (dc *DecisionCandidate) GetAgainstNum() int {
+	if dc.PropertyTable[_AgainstNum] == nil {
+		return 0
+	}
+	againstnum_property, ok := dc.PropertyTable[_AgainstNum].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return 0
+	}
+	againstnum_value, ok := againstnum_property.GetValue().(int)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return 0
+	}
+	return againstnum_value
+}
+
+func (dc *DecisionCandidate) GetResult() int {
+	if dc.PropertyTable[_Result] == nil {
+		return 0
+	}
+	decision_property, ok := dc.PropertyTable[_Result].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return 0
+	}
+	decision_value, ok := decision_property.GetValue().(int)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return 0
+	}
+	return decision_value
+}
+
+//==========Setter方法
+func (dc *DecisionCandidate) SetSupportArguments(arr_supportarguments []string) {
+	dc.SupportArguments = arr_supportarguments
+	supportargument_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+	if !ok {
+		supportargument_property = *property.NewPropertyT(_SupportArguments)
+	}
+	supportargument_property.SetValue(arr_supportarguments)
+	dc.PropertyTable[_SupportArguments] = supportargument_property
+}
+
+func (dc *DecisionCandidate) SetAgainstArguments(arr_againstarguments []string) {
+	dc.AgainstArguments = arr_againstarguments
+	againstargument_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
+	if !ok {
+		againstargument_property = *property.NewPropertyT(_AgainstArguments)
+	}
+	againstargument_property.SetValue(arr_againstarguments)
+	dc.PropertyTable[_AgainstArguments] = againstargument_property
+}
+
+func (dc *DecisionCandidate) SetSupportNum(int_supportnum int) {
+	dc.SupportNum = int_supportnum
+	supportnum_property, ok := dc.PropertyTable[_SupportNum].(property.PropertyT)
+	if !ok {
+		supportnum_property = *property.NewPropertyT(_SupportNum)
+	}
+	supportnum_property.SetValue(int_supportnum)
+	dc.PropertyTable[_SupportNum] = supportnum_property
+}
+
+func (dc *DecisionCandidate) SetAgainstNum(int_againstnum int) {
+	dc.AgainstNum = int_againstnum
+	againstnum_property, ok := dc.PropertyTable[_AgainstNum].(property.PropertyT)
+	if !ok {
+		againstnum_property = *property.NewPropertyT(_AgainstNum)
+	}
+	againstnum_property.SetValue(int_againstnum)
+	dc.PropertyTable[_AgainstNum] = againstnum_property
+}
+
+func (dc *DecisionCandidate) SetResult(int_decision int) {
+	dc.Result = int_decision
+	decision_property, ok := dc.PropertyTable[_Result].(property.PropertyT)
+	if !ok {
+		decision_property = *property.NewPropertyT(_Result)
+	}
+	decision_property.SetValue(int_decision)
+	dc.PropertyTable[_Result] = decision_property
+}
+
+//==========Add 方法
 func (dc *DecisionCandidate) AddText(p_strarr []string) {
 	if p_strarr != nil {
 		text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			text_property = *property.NewPropertyT(_Text)
 		}
 		if text_property.GetValue() == nil {
 			text_property.SetValue(make([]string, 0))
 		}
 		map_text, ok := text_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			map_text = make(map[string]string, 0)
 		}
 		for _, v_Text := range p_strarr {
 			map_text[v_Text] = v_Text
@@ -127,20 +276,26 @@ func (dc *DecisionCandidate) ShowText() {
 	}
 }
 
+func (dc *DecisionCandidate) ResetDecisionCandidate() {
+	dc.SetSupportArguments(make([]string, 0))
+	dc.SetAgainstArguments(make([]string, 0))
+	dc.SetSupportNum(0)
+	dc.SetAgainstNum(0)
+	dc.SetResult(0)
+}
+
 func (dc *DecisionCandidate) AddSupportArgument(p_Support string) {
 	if p_Support != "" {
 		supports_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			supports_property = *property.NewPropertyT(_SupportArguments)
 		}
 		if supports_property.GetValue() == nil {
 			supports_property.SetValue(make(map[string]string, 0))
 		}
 		map_supports, ok := supports_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			map_supports = make(map[string]string, 0)
 		}
 		map_supports[p_Support] = p_Support
 		supports_property.SetValue(map_supports)
@@ -152,100 +307,63 @@ func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 	if p_against != "" {
 		against_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			against_property = *property.NewPropertyT(_AgainstArguments)
 		}
 		if against_property.GetValue() == nil {
 			against_property.SetValue(make(map[string]string, 0))
 		}
 		map_againsts, ok := against_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return
+			map_againsts = make(map[string]string, 0)
 		}
 		map_againsts[p_against] = p_against
 		against_property.SetValue(map_againsts)
-		dc.PropertyTable[_SupportArguments] = against_property
+		dc.PropertyTable[_AgainstArguments] = against_property
 	}
 }
 
-func (dc *DecisionCandidate) ResetSupport() {
-	dc.Support = 0
-	support_property, ok := dc.PropertyTable[_Support].(property.PropertyT)
-	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
-	}
-	support_property.SetValue(0)
-	dc.PropertyTable[_Support] = support_property
-}
-
-func (dc *DecisionCandidate) GetSupport() int {
-	dc.Eval()
-	return dc.Support
-}
-
-func (dc *DecisionCandidate) Eval() int {
-	var Support_sum int = 0
+func (dc *DecisionCandidate) Eval() error {
+	var support_sum int = 0
 	var against_sum int = 0
-	var Support_bool interface{}
-	var against_bool interface{}
 	var err error = nil
-	supports_property, ok := dc.PropertyTable[_SupportArguments].(property.PropertyT)
+	text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
 	if !ok {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return 0
+		err = fmt.Errorf("Text Assert Error!")
+		return err
 	}
-	if supports_property.GetValue() != nil {
-		m, ok := supports_property.GetValue().(map[string]string)
+	if text_property.GetValue() != nil {
+		text_map, ok := text_property.GetValue().(map[string]string)
 		if !ok {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return 0
+			err = fmt.Errorf("Text's Value Assert Error!")
+			return err
 		}
-		for _, v_Support := range m {
+		for _, v_expression := range text_map {
 			v_contract := dc.GetContract()
-			Support_bool, err = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_Support)
+			v_result, err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_expression)
 			if err != nil {
 				uniledgerlog.Warn("DecisionCandidate.Eval fail[" + err.Error() + "]")
+				return err
 			}
-			b, ok := Support_bool.(bool)
+			v_bool_result, ok := v_result.(bool)
 			if !ok {
 				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-				return 0
+				err = fmt.Errorf("DecisionCandidate Result Assert Error!")
+				return err
 			}
-			if b {
-				Support_sum += 1
+			if v_bool_result {
+				support_sum = support_sum + 1
+				dc.AddSupportArgument(v_expression)
+			} else {
+				against_sum = against_sum + 1
+				dc.AddAgainstArgument(v_expression)
 			}
 		}
-	}
-	against_property, ok := dc.PropertyTable[_AgainstArguments].(property.PropertyT)
-	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return 0
-	}
+		dc.SetSupportNum(support_sum)
+		dc.SetAgainstNum(against_sum)
 
-	if against_property.GetValue() != nil {
-		m, ok := against_property.GetValue().(map[string]string)
-		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-			return 0
-		}
-		for _, v_against := range m {
-			v_contract := dc.GetContract()
-			against_bool, err = v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_against)
-			if err != nil {
-				uniledgerlog.Warn("DecisionCandidate.Eval fail[" + err.Error() + "]")
-			}
-			b, ok := against_bool.(bool)
-			if !ok {
-				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-				return 0
-			}
-			if b {
-				against_sum += 1
-			}
-		}
+		dc.SetResult(support_sum - against_sum)
 	}
-	dc.Support = Support_sum - against_sum
-	return dc.Support
+	return err
 }

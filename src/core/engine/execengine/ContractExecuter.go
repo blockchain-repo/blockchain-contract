@@ -68,9 +68,9 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	var map_output_first interface{} = common.Deserialize(p_str_json)
 	if map_output_first == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Deserialize Error!")
+		r_buf.WriteString("[Error]:Contract Map Deserialize Error!")
 		uniledgerlog.Error(r_buf.String())
-		return fmt.Errorf("Deserialize Error!")
+		return fmt.Errorf("Contract Map Deserialize Error!")
 	}
 	map_output_second, ok := map_output_first.(map[string]interface{})
 	if !ok {
@@ -94,9 +94,9 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	map_transaction, ok := map_output_second["transaction"].(map[string]interface{})
 	if !ok {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Assert Error!")
+		r_buf.WriteString("[Error]:Transaction Assert Error!")
 		uniledgerlog.Error(r_buf.String())
-		return fmt.Errorf("Assert Error!")
+		return fmt.Errorf("Transaction Assert Error!")
 	}
 	if map_transaction["Contract"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
@@ -107,9 +107,9 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	map_contract, ok := map_transaction["Contract"].(map[string]interface{})
 	if !ok {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Assert Error!")
+		r_buf.WriteString("[Error]:Contract Assert Error!")
 		uniledgerlog.Error(r_buf.String())
-		return fmt.Errorf("Assert Error!")
+		return fmt.Errorf("Contract Assert Error!")
 	}
 	if map_transaction["Relation"] == nil {
 		r_buf.WriteString("[Result]:Load Fail;")
@@ -120,9 +120,9 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	map_relation, ok := map_transaction["Relation"].(map[string]interface{})
 	if !ok {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Assert Error!")
+		r_buf.WriteString("[Error]:Relation Assert Error!")
 		uniledgerlog.Error(r_buf.String())
-		return fmt.Errorf("Assert Error!")
+		return fmt.Errorf("Relation Assert Error!")
 	}
 	var str_json_contract string = common.Serialize(map_contract)
 	if str_json_contract == "" {
@@ -135,16 +135,16 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	ret_contract, err := ce.contract_executer.Deserialize(str_json_contract)
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Deserialize Error ," + err.Error())
+		r_buf.WriteString("[Error]:Contract Struct Deserialize Error ," + err.Error())
 		uniledgerlog.Error(r_buf.String())
 		return err
 	}
 	ce.contract_executer, ok = ret_contract.(*contract.CognitiveContract)
 	if !ok {
 		r_buf.WriteString("[Result]:Load Fail;")
-		r_buf.WriteString("[Error]:Assert Error!")
+		r_buf.WriteString("[Error]:Contract Struct Assert Error!")
 		uniledgerlog.Error(r_buf.String())
-		return fmt.Errorf("Assert Error!")
+		return fmt.Errorf("Contract Struct Assert Error!")
 	}
 	//2 Init初始化, 填充contract property_table
 	err = ce.contract_executer.InitCognitiveContract()
@@ -158,6 +158,8 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	r_buf.WriteString("[ContractId]:" + ce.contract_executer.GetContractId() + "; ")
 
 	//3 Components填充 component_table 和 property_table
+	//component_table: contract_component, task_component, data_component, expression_component
+	//property_table: contract_property, task_property, data_property, expression_property
 	for p_idx, p_component := range ce.contract_executer.GetContractComponents() {
 		uniledgerlog.Debug("component[", p_idx, "]: ", p_component)
 		err = loadTask(ce.contract_executer, p_component)
@@ -503,5 +505,3 @@ func (ce *ContractExecuter) Destory() {
 		ce.contract_executer = nil
 	}
 }
-
-//------------------------------------------------------------------------------

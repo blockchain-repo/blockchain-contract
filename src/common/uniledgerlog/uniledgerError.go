@@ -18,6 +18,7 @@ const (
 	OTHER_ERROR
 	DEBUG_NO_ERROR
 	NO_ERROR
+	EXECUTE_ERROR
 )
 
 func (this ErrorType) String() string {
@@ -46,6 +47,8 @@ func (this ErrorType) String() string {
 		return "Debug_No_Error"
 	case NO_ERROR:
 		return "No_Error"
+	case EXECUTE_ERROR:
+		return "Execute_Error"
 	default:
 		return "Unknow_Error"
 	}

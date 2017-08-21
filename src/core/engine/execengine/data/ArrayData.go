@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
@@ -75,7 +76,13 @@ func (ad *ArrayData) InitArrayData() error {
 }
 
 func (ad *ArrayData) AppendValue(p_data interface{}) (bool, error) {
-	value_property := ad.PropertyTable[_Value].(property.PropertyT)
+	if p_data == nil {
+		return false, nil
+	}
+	value_property, ok := ad.PropertyTable[_Value].(property.PropertyT)
+	if !ok {
+		value_property = *property.NewPropertyT(_Value)
+	}
 	var err error = nil
 	var a_flag bool = true
 	if value_property.GetValue() == nil {
@@ -93,7 +100,11 @@ func (ad *ArrayData) AppendValue(p_data interface{}) (bool, error) {
 }
 
 func (ad *ArrayData) RemoveValue(idx int) (bool, error) {
-	value_property := ad.PropertyTable[_Value].(property.PropertyT)
+	value_property, ok := ad.PropertyTable[_Value].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return false, nil
+	}
 	var err error = nil
 	var a_flag bool = true
 	if value_property.GetValue() == nil {

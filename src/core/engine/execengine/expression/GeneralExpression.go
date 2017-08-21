@@ -23,8 +23,9 @@ const (
 	_ExpressionResult = "_ExpressionResult"
 )
 
-func NewGeneralExpression(str_expression string) *GeneralExpression {
+func NewGeneralExpression(str_name string, str_expression string) *GeneralExpression {
 	v_expression := &GeneralExpression{}
+	v_expression.Cname = str_name
 	v_expression.ExpressionStr = str_expression
 	return v_expression
 }
@@ -65,8 +66,7 @@ func (ge GeneralExpression) SetExpressionResult(p_expresult interface{}) {
 	}
 	result_property, ok := ge.PropertyTable[_ExpressionResult].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		result_property = *property.NewPropertyT(_ExpressionResult)
 	}
 	result_property.SetValue(p_expresult)
 	ge.PropertyTable[_ExpressionResult] = result_property
@@ -83,23 +83,23 @@ func (ge *GeneralExpression) ToString() string {
 
 //序列化： 需要将运行态结构 序列化到 描述态中
 func (ge *GeneralExpression) RunningToStatic() {
-	cname_property, ok := ge.PropertyTable["Cname"].(property.PropertyT)
+	cname_property, ok := ge.PropertyTable["_Cname"].(property.PropertyT)
 	if ok {
 		ge.Cname, _ = cname_property.GetValue().(string)
 	}
-	ctype_property, ok := ge.PropertyTable["Ctype"].(property.PropertyT)
+	ctype_property, ok := ge.PropertyTable["_Ctype"].(property.PropertyT)
 	if ok {
 		ge.Ctype, _ = ctype_property.GetValue().(string)
 	}
-	caption_property, ok := ge.PropertyTable["Caption"].(property.PropertyT)
+	caption_property, ok := ge.PropertyTable["_Caption"].(property.PropertyT)
 	if ok {
 		ge.Caption, _ = caption_property.GetValue().(string)
 	}
-	description_property, ok := ge.PropertyTable["Description"].(property.PropertyT)
+	description_property, ok := ge.PropertyTable["_Description"].(property.PropertyT)
 	if ok {
 		ge.Description, _ = description_property.GetValue().(string)
 	}
-	metaAttribute_property, ok := ge.PropertyTable["MetaAttribute"].(property.PropertyT)
+	metaAttribute_property, ok := ge.PropertyTable["_MetaAttribute"].(property.PropertyT)
 	if ok {
 		ge.MetaAttribute, _ = metaAttribute_property.GetValue().(map[string]string)
 	}
@@ -177,8 +177,7 @@ func (ge *GeneralExpression) SetExpressionStr(p_expression string) {
 	ge.ExpressionStr = p_expression
 	express_property, ok := ge.PropertyTable[_ExpressionStr].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return
+		express_property = *property.NewPropertyT(_ExpressionStr)
 	}
 	express_property.SetValue(p_expression)
 	ge.PropertyTable[_ExpressionStr] = express_property
