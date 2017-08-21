@@ -947,6 +947,10 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString("@\"")
 				func_buf.WriteString(str_json_contract)
 				func_buf.WriteString("\"@\"")
+				if gRPCClient.On {
+					func_buf.WriteString("\"contractHashId\"")
+					func_buf.WriteString("\", \"")
+				}
 				func_buf.WriteString(gt.GetContract().GetContractId())
 				func_buf.WriteString("\", \"")
 				func_buf.WriteString(gt.GetTaskId())
@@ -1147,7 +1151,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				slData, _ := json.Marshal(func_params)
 				hostname, _ := os.Hostname()
 				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
-					"FuncTransferAssetComplete", string(slData))
+					"FuncAllTransferComplete", string(slData))
 
 				// 再次 getdata 赋值
 				for v_key, _ := range gt.GetDataValueSetterExpressionList() {

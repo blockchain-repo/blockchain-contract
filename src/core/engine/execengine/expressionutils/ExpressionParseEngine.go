@@ -902,7 +902,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	if func_param_str != "" {
 		//分割匹配的函数参数列表
 		//TODO 大参数解析（比如json串解析）
-		var func_param_array []string = make([]string, 8)
+		var func_param_array []string
 		var flag bool
 		var funcType int32
 		if !gRPCClient.On {
@@ -919,15 +919,35 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 			}
 		}
 		if flag {
-			first_param_array := strings.Split(func_param_str, "@")
-			first_idx := 0
-			for t_idx, t_param := range strings.Split(first_param_array[0], ",") {
-				func_param_array[first_idx+t_idx] = t_param
-			}
-			func_param_array[3] = first_param_array[1]
-			second_idx := 4
-			for v_idx, v_param := range strings.Split(first_param_array[2], ",") {
-				func_param_array[second_idx+v_idx] = v_param
+			if !gRPCClient.On {
+				func_param_array = make([]string, 8)
+				first_param_array := strings.Split(func_param_str, "@")
+				first_idx := 0
+				for t_idx, t_param := range strings.Split(first_param_array[0], ",") {
+					func_param_array[first_idx+t_idx] = t_param
+				}
+				func_param_array[3] = first_param_array[1]
+				second_idx := 4
+				for v_idx, v_param := range strings.Split(first_param_array[2], ",") {
+					func_param_array[second_idx+v_idx] = v_param
+				}
+			} else {
+				var func_param_tmp []string
+				first_param_array := strings.Split(func_param_str, "@")
+				for _, t_param := range strings.Split(first_param_array[0], ",") {
+					func_param_tmp = append(func_param_tmp, t_param)
+				}
+				func_param_tmp = append(func_param_tmp, first_param_array[1])
+				for _, v_param := range strings.Split(first_param_array[2], ",") {
+					func_param_tmp = append(func_param_tmp, v_param)
+				}
+
+				var func_param_array []string
+				num := len(func_param_tmp) - 6
+				func_param_array = func_param_tmp[num:]
+				for index := 0; index < num; index++ {
+					func_param_array = append(func_param_array, func_param_tmp[index])
+				}
 			}
 		} else {
 			func_param_array = strings.Split(func_param_str, ",")
