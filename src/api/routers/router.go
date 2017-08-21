@@ -28,19 +28,19 @@ func init() {
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIContentTypeFilter, true)
 
 	// if true, add the api filter
-	api_auth := beego.AppConfig.DefaultBool("api_auth", true)
+	api_auth := beego.AppConfig.DefaultBool("api_auth", false)
 	// if true, add the api rate limit filter
-	api_rate_limit := beego.AppConfig.DefaultBool("api_rate_limit", true)
+	api_rate_limit := beego.AppConfig.DefaultBool("api_rate_limit", false)
 	if api_auth {
-		beego.InsertFilter("/v1/unicontract/auth/getAccessKey", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
-		beego.InsertFilter("/v1/unicontract/auth/getToken", beego.BeforeRouter, filters.APIGetTokenFilter, true)
+		beego.InsertFilter("/v1/auth/getAccessKey", beego.BeforeRouter, filters.APIAuthorizationFilter, true)
+		beego.InsertFilter("/v1/auth/getToken", beego.BeforeRouter, filters.APIGetTokenFilter, true)
 		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIAuthFilter, true)
 		if api_rate_limit {
 			beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
 		}
 	}
 
-	ns := beego.NewNamespace("/v1/unicontract",
+	ns := beego.NewNamespace("/v1",
 		beego.NSNamespace("/contract",
 			beego.NSRouter("/create", &controllers.ContractController{}, "post:Create"),
 			beego.NSRouter("/queryPublishContract", &controllers.ContractController{}, "get:QueryPublishContract"),
