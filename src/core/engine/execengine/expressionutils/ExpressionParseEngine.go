@@ -942,7 +942,6 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 					func_param_tmp = append(func_param_tmp, v_param)
 				}
 
-				var func_param_array []string
 				num := len(func_param_tmp) - 6
 				func_param_array = func_param_tmp[num:]
 				for index := 0; index < num; index++ {
