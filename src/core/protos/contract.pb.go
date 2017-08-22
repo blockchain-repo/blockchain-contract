@@ -23,7 +23,7 @@ type ContractSignature struct {
 func (m *ContractSignature) Reset()                    { *m = ContractSignature{} }
 func (m *ContractSignature) String() string            { return proto.CompactTextString(m) }
 func (*ContractSignature) ProtoMessage()               {}
-func (*ContractSignature) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
+func (*ContractSignature) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
 
 func (m *ContractSignature) GetOwnerPubkey() string {
 	if m != nil {
@@ -59,7 +59,7 @@ type ContractAsset struct {
 func (m *ContractAsset) Reset()                    { *m = ContractAsset{} }
 func (m *ContractAsset) String() string            { return proto.CompactTextString(m) }
 func (*ContractAsset) ProtoMessage()               {}
-func (*ContractAsset) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{1} }
+func (*ContractAsset) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 func (m *ContractAsset) GetAssetId() string {
 	if m != nil {
@@ -120,7 +120,7 @@ type ExpressionResult struct {
 func (m *ExpressionResult) Reset()                    { *m = ExpressionResult{} }
 func (m *ExpressionResult) String() string            { return proto.CompactTextString(m) }
 func (*ExpressionResult) ProtoMessage()               {}
-func (*ExpressionResult) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{2} }
+func (*ExpressionResult) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
 
 func (m *ExpressionResult) GetMessage() string {
 	if m != nil {
@@ -164,7 +164,7 @@ type ComponentsExpression struct {
 func (m *ComponentsExpression) Reset()                    { *m = ComponentsExpression{} }
 func (m *ComponentsExpression) String() string            { return proto.CompactTextString(m) }
 func (*ComponentsExpression) ProtoMessage()               {}
-func (*ComponentsExpression) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{3} }
+func (*ComponentsExpression) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{3} }
 
 func (m *ComponentsExpression) GetCname() string {
 	if m != nil {
@@ -261,7 +261,7 @@ type ComponentDataSub struct {
 func (m *ComponentDataSub) Reset()                    { *m = ComponentDataSub{} }
 func (m *ComponentDataSub) String() string            { return proto.CompactTextString(m) }
 func (*ComponentDataSub) ProtoMessage()               {}
-func (*ComponentDataSub) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{4} }
+func (*ComponentDataSub) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{4} }
 
 func (m *ComponentDataSub) GetCname() string {
 	if m != nil {
@@ -460,7 +460,7 @@ type ComponentData struct {
 func (m *ComponentData) Reset()                    { *m = ComponentData{} }
 func (m *ComponentData) String() string            { return proto.CompactTextString(m) }
 func (*ComponentData) ProtoMessage()               {}
-func (*ComponentData) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{5} }
+func (*ComponentData) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{5} }
 
 func (m *ComponentData) GetCname() string {
 	if m != nil {
@@ -645,7 +645,7 @@ type SelectBranchExpression struct {
 func (m *SelectBranchExpression) Reset()                    { *m = SelectBranchExpression{} }
 func (m *SelectBranchExpression) String() string            { return proto.CompactTextString(m) }
 func (*SelectBranchExpression) ProtoMessage()               {}
-func (*SelectBranchExpression) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{6} }
+func (*SelectBranchExpression) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{6} }
 
 func (m *SelectBranchExpression) GetBranchExpressionStr() string {
 	if m != nil {
@@ -688,7 +688,7 @@ type ContractComponentSub struct {
 func (m *ContractComponentSub) Reset()                    { *m = ContractComponentSub{} }
 func (m *ContractComponentSub) String() string            { return proto.CompactTextString(m) }
 func (*ContractComponentSub) ProtoMessage()               {}
-func (*ContractComponentSub) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{7} }
+func (*ContractComponentSub) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{7} }
 
 func (m *ContractComponentSub) GetCname() string {
 	if m != nil {
@@ -853,7 +853,7 @@ type ContractComponent struct {
 func (m *ContractComponent) Reset()                    { *m = ContractComponent{} }
 func (m *ContractComponent) String() string            { return proto.CompactTextString(m) }
 func (*ContractComponent) ProtoMessage()               {}
-func (*ContractComponent) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{8} }
+func (*ContractComponent) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{8} }
 
 func (m *ContractComponent) GetCname() string {
 	if m != nil {
@@ -1033,7 +1033,7 @@ type ContractBody struct {
 func (m *ContractBody) Reset()                    { *m = ContractBody{} }
 func (m *ContractBody) String() string            { return proto.CompactTextString(m) }
 func (*ContractBody) ProtoMessage()               {}
-func (*ContractBody) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{9} }
+func (*ContractBody) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{9} }
 
 func (m *ContractBody) GetContractId() string {
 	if m != nil {
@@ -1162,7 +1162,7 @@ type ContractHead struct {
 func (m *ContractHead) Reset()                    { *m = ContractHead{} }
 func (m *ContractHead) String() string            { return proto.CompactTextString(m) }
 func (*ContractHead) ProtoMessage()               {}
-func (*ContractHead) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{10} }
+func (*ContractHead) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{10} }
 
 func (m *ContractHead) GetMainPubkey() string {
 	if m != nil {
@@ -1208,7 +1208,7 @@ type Contract struct {
 func (m *Contract) Reset()                    { *m = Contract{} }
 func (m *Contract) String() string            { return proto.CompactTextString(m) }
 func (*Contract) ProtoMessage()               {}
-func (*Contract) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{11} }
+func (*Contract) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{11} }
 
 func (m *Contract) GetId() string {
 	if m != nil {
@@ -1246,9 +1246,9 @@ func init() {
 	proto.RegisterType((*Contract)(nil), "protos.Contract")
 }
 
-func init() { proto.RegisterFile("contract.proto", fileDescriptor2) }
+func init() { proto.RegisterFile("contract.proto", fileDescriptor1) }
 
-var fileDescriptor2 = []byte{
+var fileDescriptor1 = []byte{
 	// 1438 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x58, 0xc1, 0x6e, 0x1b, 0x37,
 	0x10, 0x85, 0xa4, 0x48, 0x96, 0x28, 0x4b, 0x56, 0x18, 0xdb, 0xdd, 0x18, 0x69, 0x20, 0xa8, 0x49,
