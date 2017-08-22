@@ -4,7 +4,6 @@ import (
 	"github.com/astaxie/beego"
 	"os"
 	"strconv"
-	_ "unicontract/src/api"
 	_ "unicontract/src/api/routers"
 	"unicontract/src/common/quartz"
 	"unicontract/src/common/uniledgerlog"
