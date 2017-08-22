@@ -22,8 +22,8 @@ func init() {
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true}))
 
-	auth_verify := beego.AppConfig.DefaultBool("auth_verify", true)
-	auth_verify_rate_limit := beego.AppConfig.DefaultBool("auth_verify_rate_limit", true)
+	auth_verify := beego.AppConfig.DefaultBool("auth_verify", false)
+	auth_verify_rate_limit := beego.AppConfig.DefaultBool("auth_verify_rate_limit", false)
 
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// filter shouldn`t use the api log!
@@ -51,19 +51,19 @@ func init() {
 	ns := beego.NewNamespace("/v1/unicontract",
 		beego.NSNamespace("/contract",
 			beego.NSRouter("/create", &controllers.ContractController{}, "post:Create"),
-			beego.NSRouter("/queryPublishContract", &controllers.ContractController{}, "get:QueryPublishContract"),
-			beego.NSRouter("/queryContractContent", &controllers.ContractController{}, "get:QueryContractContent"),
-			beego.NSRouter("/query", &controllers.ContractController{}, "get:Query"),
-			beego.NSRouter("/queryAll", &controllers.ContractController{}, "get:QueryAll"),
-			beego.NSRouter("/queryLog", &controllers.ContractController{}, "get:QueryLog"),
+			beego.NSRouter("/queryPublishContract", &controllers.ContractController{}, "post:QueryPublishContract"),
+			beego.NSRouter("/queryContractContent", &controllers.ContractController{}, "post:QueryContractContent"),
+			beego.NSRouter("/query", &controllers.ContractController{}, "post:Query"),
+			beego.NSRouter("/queryAll", &controllers.ContractController{}, "post:QueryAll"),
+			beego.NSRouter("/queryLog", &controllers.ContractController{}, "post:QueryLog"),
 			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),
 			//demo使用---------------------------------------------------------------------------------------------------
-			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "get:QueryOutput"),
-			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "get:QueryOutputNum"),
-			beego.NSRouter("/queryOutputDuration", &controllers.ContractController{}, "get:QueryOutputDuration"),
-			beego.NSRouter("/queryAccountBalance", &controllers.ContractController{}, "get:QueryAccountBalance"),
-			beego.NSRouter("/queryAmmeterBalance", &controllers.ContractController{}, "get:QueryAmmeterBalance"),
-			beego.NSRouter("/queryRecords", &controllers.ContractController{}, "get:QueryRecords"),
+			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "post:QueryOutput"),
+			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "post:QueryOutputNum"),
+			beego.NSRouter("/queryOutputDuration", &controllers.ContractController{}, "post:QueryOutputDuration"),
+			beego.NSRouter("/queryAccountBalance", &controllers.ContractController{}, "post:QueryAccountBalance"),
+			beego.NSRouter("/queryAmmeterBalance", &controllers.ContractController{}, "post:QueryAmmeterBalance"),
+			beego.NSRouter("/queryRecords", &controllers.ContractController{}, "post:QueryRecords"),
 			//demo使用---------------------------------------------------------------------------------------------------
 		),
 	)

@@ -28,6 +28,7 @@ func (c *ContractController) parseProtoRequestBody() (contract *protos.Contract,
 	contentType := c.Ctx.Input.Header("Content-Type")
 	requestBody := c.Ctx.Input.RequestBody
 	contract = &protos.Contract{}
+	uniledgerlog.Debug("parseProtoRequestBody:\n", contract)
 	// return err init
 	if contentType == "application/x-protobuf" {
 		err = proto.Unmarshal(requestBody, contract)
@@ -210,7 +211,7 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 func (c *ContractController) Create() {
 	cost_start := time.Now()
 	resultMsg := fmt.Sprintf("%s 查询创建成功!", "API[Create]")
-
+	uniledgerlog.Debug("Create contractModel:\n", cost_start)
 	contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
 		c.responseProto(status, err.Error(), "")
