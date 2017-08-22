@@ -1194,9 +1194,11 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				var func_params map[string]interface{}
 				func_params = make(map[string]interface{})
 				func_params["Param01"] = str_json_contract
-				func_params["Param02"] = gt.GetContract().GetContractId()
-				func_params["Param03"] = gt.GetTaskId()
-				func_params["Param04"] = gt.GetTaskExecuteIdx()
+				func_params["Param02"] = ""
+				func_params["Param03"] = gt.GetContract().GetContractId()
+				func_params["Param04"] = gt.GetTaskId()
+				func_params["Param05"] = gt.GetTaskExecuteIdx()
+				func_params["Param06"] = ""
 
 				slData, _ := json.Marshal(func_params)
 				hostname, _ := os.Hostname()
