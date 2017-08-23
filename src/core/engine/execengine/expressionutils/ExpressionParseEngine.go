@@ -937,6 +937,8 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 				for _, t_param := range strings.Split(first_param_array[0], ",") {
 					func_param_tmp = append(func_param_tmp, t_param)
 				}
+				first_param_array[1] = strings.Replace(first_param_array[1], "\\\"", "\"", -1)
+				first_param_array[1] = strings.Replace(first_param_array[1], "\\\\", "\\", -1)
 				func_param_tmp = append(func_param_tmp, first_param_array[1])
 				for _, v_param := range strings.Split(first_param_array[2], ",") {
 					func_param_tmp = append(func_param_tmp, v_param)
