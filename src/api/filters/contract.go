@@ -1,294 +1,53 @@
 package filters
 
 import (
-	//"bytes"
-	"crypto/md5"
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
-	"hash"
-	"net/url"
-	"strconv"
-	"strings"
-	"time"
-	api "unicontract/src/api"
 	"unicontract/src/common/uniledgerlog"
+	"unicontract/src/common"
 )
 
-var (
-	API_TIMEOUT       = int64(60)
-	API_APPID_LEN     = 32
-	API_TOKEN_LEN     = 32
-	API_SIGN_LEN      = 32
-	API_TIMESTAMP_LEN = 13
-)
-
-// api auth verify
-var (
-	AUTH_VERIFY                    = true
-	AUTH_VERIFY_HEADER             = true
-	AUTH_VERIFY_TIMESTAMP          = true
-	AUTH_VERIFY_BASIC_PARAMETERS   = false
-	AUTH_VERIFY_ALLOWED_PARAMETERS = true
-	AUTH_VERIFY_SIGN               = false
-	AUTH_VERIFY_TOKEN              = false
-	AUTH_VERIFY_RATE_LIMIT         = false
-)
-
-type response struct {
-	Code   int         `json:"code"`
-	Msg    string      `json:"msg"`
-	Result interface{} `json:"data"`
+func responseWithStatusCode(ctx *context.Context, status int, output string) {
+	//ctx.Output.SetStatus(status) // invalid setStatus
+	ctx.ResponseWriter.WriteHeader(status)
+	ctx.ResponseWriter.Write([]byte(output))
 }
 
-func init() {
-	API_TIMEOUT = beego.AppConfig.DefaultInt64("api_timeout", API_TIMEOUT)
+//签名身份验证
+func ContractFilter(ctx *context.Context) {
+	contentType := ctx.Input.Header("Content-Type")
 
-	AUTH_VERIFY = beego.AppConfig.DefaultBool("auth_verify", AUTH_VERIFY)
-	AUTH_VERIFY_HEADER = beego.AppConfig.DefaultBool("auth_verify_header", AUTH_VERIFY_HEADER)
-	AUTH_VERIFY_TIMESTAMP = beego.AppConfig.DefaultBool("auth_verify_timestamp", AUTH_VERIFY_TIMESTAMP)
-	AUTH_VERIFY_BASIC_PARAMETERS = beego.AppConfig.DefaultBool("auth_verify_basic_parameters", AUTH_VERIFY_BASIC_PARAMETERS)
-	AUTH_VERIFY_ALLOWED_PARAMETERS = beego.AppConfig.DefaultBool("auth_verify_all_parameters", AUTH_VERIFY_ALLOWED_PARAMETERS)
-	AUTH_VERIFY_SIGN = beego.AppConfig.DefaultBool("auth_verify_sign", AUTH_VERIFY_SIGN)
-	AUTH_VERIFY_TOKEN = beego.AppConfig.DefaultBool("auth_verify_token", AUTH_VERIFY_TOKEN)
-	AUTH_VERIFY_RATE_LIMIT = beego.AppConfig.DefaultBool("auth_verify_rate_limit", AUTH_VERIFY_RATE_LIMIT)
-}
-
-func responseWithStatusCode(ctx *context.Context, status int, msg string) {
-	result := response{Code: status, Msg: "", Result: msg}
-	resultByte, err := json.Marshal(result)
-	if err != nil {
-		uniledgerlog.Error("responseWithStatusCode", err.Error())
-	}
-	ctx.ResponseWriter.Write(resultByte)
-	return
-}
-
-func responseWithHTTPStatusCode(ctx *context.Context, status int, msg string, responseCode int) {
-	result := response{Code: status, Msg: "", Result: msg}
-	resultByte, err := json.Marshal(result)
-	if err != nil {
-		uniledgerlog.Error("responseWithHTTPStatusCode", err.Error())
-	}
-	ctx.ResponseWriter.WriteHeader(responseCode)
-	ctx.ResponseWriter.Write(resultByte)
-	return
-}
-
-func verifyContentType(contentType string) (int, string) {
+	//if contentType == "" || requestDataType == "" {
 	if contentType == "" {
-		resultMsg := fmt.Sprintf("%s 请求头 Content-Type 为空!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_CONTENT_TYPE_ERROR, resultMsg
+		result := make(map[string]interface{})
+		result["msg"] = "error Headers"
+		result["status"] = 404
+		responseWithStatusCode(ctx, 404, common.StructSerialize(result))
+		uniledgerlog.Error("ContractFilter contentType or requestDataType is empty!")
 
-	} else if contentType == "application/json" || contentType == "application/x-protobuf" {
-		return api.RESPONSE_STATUS_OK, ""
-	} else {
-		resultMsg := fmt.Sprintf("%s 请求头 Content-Type 值错误!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_UNSUPPORT_MEDIATYPE, resultMsg
-	}
-}
+	} else if contentType == "application/json" {
+		//uniledgerlog.Debug("RequestDataType is json!")
+	} else if contentType == "application/octet-stream" {
+		//input := ctx.Input.RequestBody
+		//
+		//contract := &protos.ContractProto{}
+		//err2 := proto.Unmarshal(input, contract)
+		////err2 := json.Unmarshal(input, input2)
+		//if err2 != nil {
+		//	uniledgerlog.Error("marshaling error2: ", err2)
+		//}
+		//fmt.Println("oring contract(application/octet-stream): \n", contract)
+		//
+		//fmt.Println(contract.Id)
 
-func verifyTimestamp(timestamp string, api_timeout int64, api_timestamp_len int) (int, string) {
-	// 1. verify the timestamp format
-	if len(timestamp) != api_timestamp_len {
-		resultMsg := fmt.Sprintf("%s timestamp length error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg
-	}
-	timestamp_int64, err := strconv.ParseInt(timestamp, 10, 64)
-	if err != nil {
-		resultMsg := fmt.Sprintf("%s timestamp format error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg
-	}
-	// 2. verify the timeout
-	nanos := time.Now().UnixNano()
-	//ms len=13
-	current_unix_timestamp := nanos / 1000000
-	cost := (current_unix_timestamp - timestamp_int64) / 1000
-	uniledgerlog.Debug("time info", current_unix_timestamp, timestamp_int64, cost)
-	if cost < 0 || cost > api_timeout {
-		resultMsg := fmt.Sprintf("%s timestamp value error!", "Filter[APIBasicFilter]")
-		uniledgerlog.Debug(resultMsg, cost)
-		return api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg
-	}
-	return 0, ""
-}
-
-func verifyBasicParameters(appId string, timestamp string, token string, sign string) (int, string) {
-	if len(appId) != API_APPID_LEN {
-		resultMsg := fmt.Sprintf("%s appId length error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_APPID, resultMsg
-	}
-
-	if len(timestamp) != API_TIMESTAMP_LEN {
-		resultMsg := fmt.Sprintf("%s timestamp length error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg
-	}
-
-	if len(sign) != API_SIGN_LEN {
-		resultMsg := fmt.Sprintf("%s sign length error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_SIGN, resultMsg
-	}
-	if len(token) != API_TOKEN_LEN {
-		resultMsg := fmt.Sprintf("%s token length error!", "Filter[APIBasicFilter]")
-		return api.RESPONSE_STATUS_INVALID_TOKEN, resultMsg
-	}
-	return 0, ""
-}
-
-func verifyAllowRequestParameters(parameters url.Values) (int, string) {
-	// params
-	if len(parameters) > 0 {
-		for k, _ := range parameters {
-			if !api.ALLOW_REQUEST_PARAMETERS_ALL[k] {
-				resultMsg := fmt.Sprintf("%s keyword %s is not allowed here!", "Filter[APIBasicFilter]", k)
-				return api.RESPONSE_STATUS_INVALID_PARAMETER, resultMsg
-			}
-		}
-	}
-	return 0, ""
-}
-
-func generateSign(val string) string {
-	var hashObj hash.Hash
-	var x string
-	hashObj = md5.New()
-	if hashObj != nil {
-		hashObj.Write([]byte(val))
-		x = hex.EncodeToString(hashObj.Sum(nil))
-	}
-	return x
-}
-
-func verifySign(parameters url.Values, sign string) (int, string) {
-	// get real sign
-	parameters.Del(api.REQUEST_FIELD_AUTH_SIGN)
-	realSign := parameters.Encode()
-	realSign = strings.ToUpper(generateSign(realSign))
-	if sign != realSign {
-		resultMsg := fmt.Sprintf("%s sign(%s)错误!", "Filter[APISignFilter]", sign)
-		uniledgerlog.Debug(resultMsg, "input is "+sign+", real is "+realSign)
-		return api.RESPONSE_STATUS_INVALID_SIGN, resultMsg
-	}
-	return 0, ""
-}
-
-// verify the content-type, sign, timestamp and token
-func APIBasicFilter(ctx *context.Context) {
-	statusCode, resultMsg := 0, ""
-
-	// 1. verify the content-type
-	if AUTH_VERIFY_HEADER {
-		contentType := ctx.Input.Header("Content-Type")
-		//todo
-		statusCode, resultMsg = verifyContentType(contentType)
-		if statusCode != api.RESPONSE_STATUS_OK {
-			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, statusCode, resultMsg)
-			return
-		}
-
-	}
-	// 2. verify the timestamp
-	timestamp := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TIMESTAMP)
-
-	if AUTH_VERIFY_TIMESTAMP {
-		statusCode, resultMsg = verifyTimestamp(timestamp, API_TIMEOUT, API_TIMESTAMP_LEN)
-		if statusCode != api.RESPONSE_STATUS_OK {
-			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, statusCode, resultMsg)
-			return
-		}
-
-	}
-	// 4. verify all the request parameters are allowed
-	ctx.Request.ParseForm()
-	parameters := ctx.Request.Form
-	if AUTH_VERIFY_ALLOWED_PARAMETERS {
-		statusCode, resultMsg = verifyAllowRequestParameters(parameters)
-		if statusCode != api.RESPONSE_STATUS_OK {
-			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, statusCode, resultMsg)
-			return
-		}
-	}
-	// 3. verify the basic required parameters: timestamp, token, sign, appId
-	token := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TOKEN)
-	sign := ctx.Input.Query(api.REQUEST_FIELD_AUTH_SIGN)
-	appId := ctx.Input.Query(api.REQUEST_FIELD_AUTH_APPID)
-	if AUTH_VERIFY_BASIC_PARAMETERS {
-		statusCode, resultMsg = verifyBasicParameters(appId, timestamp, token, sign)
-		if statusCode != api.RESPONSE_STATUS_OK {
-			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, statusCode, resultMsg)
-			return
-		}
-	}
-
-	// 5. verify the sign
-	if AUTH_VERIFY_SIGN {
-		statusCode, resultMsg = verifySign(parameters, sign)
-		if statusCode != api.RESPONSE_STATUS_OK {
-			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, statusCode, resultMsg)
-			return
-		}
-	}
-	// 6. verify the token exist
-	if AUTH_VERIFY_TOKEN {
-		tokenKey := appId + "_" + token
-		if verifyTheToken(token, appId) {
-			_ = api.UpdateToken(tokenKey)
-		} else {
-			resultMsg := fmt.Sprintf("%s token(%s)错误!", "Filter[APIBasicFilter]", sign)
-			uniledgerlog.Error(resultMsg)
-			responseWithStatusCode(ctx, api.RESPONSE_STATUS_INVALID_TOKEN, resultMsg)
-			return
-		}
-	}
-}
-
-func verifyTheToken(token string, appId string) bool {
-	return api.VerifyToken(token, appId)
-}
-
-func rateLimitVerify(tokenKey string) (ok bool, msg string, httpResponseCode int) {
-	_ = api.UpdateToken(tokenKey)
-	ok, resultMsg := api.RateLimit(tokenKey)
-	if !ok {
-		return ok, resultMsg, 429
-	} else {
-		return ok, resultMsg, 200
-	}
-
-}
-
-func APIRateLimitFilter(ctx *context.Context) {
-	appId := ctx.Input.Query(api.REQUEST_FIELD_AUTH_APPID)
-	token := ctx.Input.Query(api.REQUEST_FIELD_AUTH_TOKEN)
-	tokenKey := appId + "_" + token
-	exist := api.ExistKey(tokenKey)
-	if exist {
-		ok, resultMsg, httpResponseCode := rateLimitVerify(tokenKey)
-		if ok {
-			uniledgerlog.Debug(resultMsg)
-		} else {
-			uniledgerlog.Error(resultMsg)
-			responseWithHTTPStatusCode(ctx, api.RESPONSE_STATUS_APP_REQUESTS_OUT_OF_RATE_LIMIT, resultMsg, httpResponseCode)
-			return
-		}
-	} else {
-		isValid := verifyTheToken(token, appId)
-		if isValid {
-			ok, resultMsg, httpResponseCode := rateLimitVerify(tokenKey)
-			if ok {
-				uniledgerlog.Debug(resultMsg)
-			} else {
-				uniledgerlog.Error(resultMsg)
-				responseWithHTTPStatusCode(ctx, api.RESPONSE_STATUS_APP_REQUESTS_OUT_OF_RATE_LIMIT, resultMsg, httpResponseCode)
-				return
-			}
-		}
+	} else if contentType == "application/x-protobuf" {
+		//uniledgerlog.Debug("RequestDataType is proto!")
+		//input := ctx.Input.RequestBody
+		//contract := &protos.ContractProto{}
+		//err2 := proto.Unmarshal(input, contract)
+		//if err2 != nil {
+		//	uniledgerlog.Error("marshaling error2: ", err2)
+		//}
+		//fmt.Println("oring contract(application/x-protobuf): \n", contract)
+		//fmt.Println(contract.Id)
 	}
 }
