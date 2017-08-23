@@ -962,6 +962,9 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 
 			//识别字符串，获取参数的值
 			if isConstant {
+				v_args = strings.TrimLeft(v_args, "\\\"")
+				v_args = strings.TrimRight(v_args, "\\\"")
+				//v_args = v_args.re
 				if gRPCClient.On {
 					func_params_[fmt.Sprintf("Param%02d", count)] = v_args
 					count++

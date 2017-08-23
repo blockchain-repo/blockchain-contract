@@ -1073,6 +1073,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				}
 				uniledgerlog.Info("===before transfer asset=====" + str_json_contract)
 				var func_buf bytes.Buffer = bytes.Buffer{} // TODO 更改顺序 wangyp
+				str_json_contract = strings.Replace(str_json_contract, "\\", "\\\\", -1)
 				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
 				func_buf.WriteString(strings.Trim(str_function, ")"))
 				func_buf.WriteString("@\"")
