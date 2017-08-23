@@ -1072,7 +1072,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 					return r_ret, r_err
 				}
 				uniledgerlog.Info("===before transfer asset=====" + str_json_contract)
-				var func_buf bytes.Buffer = bytes.Buffer{} // TODO 更改顺序 wangyp
+				var func_buf bytes.Buffer = bytes.Buffer{}
 				str_json_contract = strings.Replace(str_json_contract, "\\", "\\\\", -1)
 				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
 				func_buf.WriteString(strings.Trim(str_function, ")"))
@@ -1080,7 +1080,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString(str_json_contract)
 				func_buf.WriteString("\"@\"")
 				if gRPCClient.On {
-					func_buf.WriteString("\"contractHashId\"")
+					func_buf.WriteString("contractHashId")
 					func_buf.WriteString("\", \"")
 				}
 				func_buf.WriteString(gt.GetContract().GetContractId())
