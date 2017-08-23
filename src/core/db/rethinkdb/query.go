@@ -254,9 +254,9 @@ func GetContractsByMapCondition(conditions map[string]interface{}) (string, erro
 		return "", errors.New("owner blank")
 	}
 	contractState, _ := conditions["status"].(string)
-	if contractState == "" {
-		contractState = "Contract_Signature"
-	}
+	//if contractState == "" {
+	//	contractState = "Contract_Signature"
+	//}
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 	var err error
@@ -357,8 +357,7 @@ func GetContractsLogByMapCondition(conditions map[string]interface{}) (string, e
 	if contractId == "" {
 		return "", errors.New("contractId blank")
 	}
-	contractState := "Contract_Signature"
-	//contractState := "Contract_In_Process"
+	contractState := "Contract_In_Process"
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 	var err error

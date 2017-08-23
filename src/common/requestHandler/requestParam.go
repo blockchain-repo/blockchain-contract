@@ -2,6 +2,7 @@ package requestHandler
 
 import (
 	"unicontract/src/common"
+	"unicontract/src/common/uniledgerlog"
 )
 
 /**
@@ -15,6 +16,7 @@ func _GetIp(yamlConfig map[interface{}]interface{}, chainType string) string {
 		return common.TypeToString(yamlConfig["ip"])
 	}
 	jsonBody := yamlConfig[chainType]
+	uniledgerlog.Warn("_GetIp jsonBody", jsonBody)
 	body := common.TypeToMap(jsonBody)
 	return common.TypeToString(body["ip"])
 	//
@@ -78,6 +80,5 @@ func GetParam(yamlConfig map[interface{}]interface{}, apiName string, chainType 
 	url := _GetUrl(yamlConfig, path, chainType)
 	//获取请求头
 	head := _GetHead(yamlConfig)
-
 	return method, url, head, body
 }

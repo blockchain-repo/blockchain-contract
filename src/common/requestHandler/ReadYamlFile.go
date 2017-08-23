@@ -1,11 +1,10 @@
 package requestHandler
 
 import (
+	"github.com/astaxie/beego"
 	"os"
 	"unicontract/src/common/yaml"
-	"github.com/astaxie/beego"
 )
-
 
 var config map[interface{}]interface{}
 
@@ -14,14 +13,14 @@ var config map[interface{}]interface{}
  * param   :
  * return : 将数据写到map中并返回
  */
-func GetYamlConfig(yamlName string) map[interface{}]interface{}{
+func GetYamlConfig(yamlName string) map[interface{}]interface{} {
 
 	//获取环境变量
 	requestPath := os.Getenv("CONFIGPATH")
 	requestPath = requestPath + "/" + yamlName
 	config = make(map[interface{}]interface{})
-	err := yaml.Read(requestPath,config)
-	if err != nil{
+	err := yaml.Read(requestPath, config)
+	if err != nil {
 		beego.Error(err.Error())
 	}
 
