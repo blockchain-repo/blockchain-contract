@@ -1081,14 +1081,14 @@ func (gt *GeneralTask) Start() (int8, error) {
 				func_buf.WriteString("\"@\"")
 				if gRPCClient.On {
 					func_buf.WriteString("contractHashId")
-					func_buf.WriteString("\", \"")
+					func_buf.WriteString("\",\"")
 				}
 				func_buf.WriteString(gt.GetContract().GetContractId())
-				func_buf.WriteString("\", \"")
+				func_buf.WriteString("\",\"")
 				func_buf.WriteString(gt.GetTaskId())
-				func_buf.WriteString("\", ")
+				func_buf.WriteString("\",")
 				func_buf.WriteString(strconv.FormatInt(int64(gt.GetTaskExecuteIdx()), 10))
-				func_buf.WriteString(", \"")
+				func_buf.WriteString(",\"")
 				func_buf.WriteString(gt.GetContract().GetMainPubkey())
 				func_buf.WriteString("\")")
 				str_function = func_buf.String()
