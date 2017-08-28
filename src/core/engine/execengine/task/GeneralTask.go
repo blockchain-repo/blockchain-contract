@@ -1105,7 +1105,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 			now_json, _ := gt.GetContract().Serialize()
 			uniledgerlog.Debug("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
-			if v_result_object.GetOutput() != nil && v_result_object.GetOutput() != "" {
+			if v_result_object.GetOutput() != nil /*&& v_result_object.GetOutput() != ""*/ {
 				if !gRPCClient.On {
 					_, ok := v_result_object.GetOutput().(string)
 					if ok {
@@ -1230,7 +1230,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
 				uniledgerlog.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
 			} else {
-				output, ok := tmp_output.GetOutput().([][]interface{})
+				output, ok := tmp_output.GetOutput().([]interface{})
 				if ok {
 					slData, r_err := json.Marshal(output)
 					if r_err != nil {
@@ -1240,6 +1240,9 @@ func (gt *GeneralTask) Complete() (int8, error) {
 					}
 					gt.GetContract().SetOutputStruct(string(slData))
 					uniledgerlog.Info("====after transfer asset==" + string(slData))
+				} else {
+					uniledgerlog.Error("tmp_output.GetOutput().([]interface{} assert error")
+					return r_ret, r_err
 				}
 			}
 		}
@@ -1271,7 +1274,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			} else {
 				var func_params map[string]interface{}
 				func_params = make(map[string]interface{})
-				var interf [][]interface{}
+				var interf []interface{}
 				_ = json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &interf)
 				func_params["Param01"] = interf
 				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
