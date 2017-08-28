@@ -1113,7 +1113,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 						uniledgerlog.Info("====after transfer asset==" + v_result_object.GetOutput().(string))
 					}
 				} else {
-					output, ok := v_result_object.GetOutput().([][]interface{})
+					output, ok := v_result_object.GetOutput().([]interface{})
 					if ok {
 						slData, r_err := json.Marshal(output)
 						if r_err != nil {
@@ -1124,7 +1124,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 						gt.GetContract().SetOutputStruct(string(slData))
 						uniledgerlog.Info("====after transfer asset==" + string(slData))
 					} else {
-						uniledgerlog.Error("v_result_object.GetOutput().([][]interface{} assert error")
+						uniledgerlog.Error("v_result_object.GetOutput().([]interface{} assert error")
 						return r_ret, r_err
 					}
 				}
@@ -1230,7 +1230,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
 				uniledgerlog.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
 			} else {
-				output, ok := tmp_output.GetOutput().([][]interface{})
+				output, ok := tmp_output.GetOutput().([]interface{})
 				if ok {
 					slData, r_err := json.Marshal(output)
 					if r_err != nil {
@@ -1241,7 +1241,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 					gt.GetContract().SetOutputStruct(string(slData))
 					uniledgerlog.Info("====after transfer asset==" + string(slData))
 				} else {
-					uniledgerlog.Error("tmp_output.GetOutput().([][]interface{} assert error")
+					uniledgerlog.Error("tmp_output.GetOutput().([]interface{} assert error")
 					return r_ret, r_err
 				}
 			}
@@ -1308,7 +1308,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			gt.GetContract().SetOutputStruct(v_result.GetData().(string))
 			uniledgerlog.Info("====after complete operate==" + v_result.GetData().(string))
 		} else {
-			output, ok := v_result.GetOutput().([][]interface{})
+			output, ok := v_result.GetOutput().([]interface{})
 			if ok {
 				slData, r_err := json.Marshal(output)
 				if r_err != nil {
@@ -1319,7 +1319,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				gt.GetContract().SetOutputStruct(string(slData))
 				uniledgerlog.Info("====after transfer operate==" + string(slData))
 			} else {
-				uniledgerlog.Error("v_result.GetOutput().([][]interface{} assert error")
+				uniledgerlog.Error("v_result.GetOutput().([]interface{} assert error")
 				return r_ret, r_err
 			}
 		}
