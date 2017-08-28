@@ -1113,7 +1113,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 						uniledgerlog.Info("====after transfer asset==" + v_result_object.GetOutput().(string))
 					}
 				} else {
-					output, ok := v_result_object.GetOutput().([][]interface{})
+					output, ok := v_result_object.GetOutput().([]interface{})
 					if ok {
 						slData, r_err := json.Marshal(output)
 						if r_err != nil {
@@ -1123,6 +1123,9 @@ func (gt *GeneralTask) Start() (int8, error) {
 						}
 						gt.GetContract().SetOutputStruct(string(slData))
 						uniledgerlog.Info("====after transfer asset==" + string(slData))
+					} else {
+						uniledgerlog.Error("v_result_object.GetOutput().([]interface{} assert error")
+						return r_ret, r_err
 					}
 				}
 			}
@@ -1215,7 +1218,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				return r_ret, r_err
 			}
 
-			if tmp_output.GetOutput() == nil || tmp_output.GetOutput().(string) == "" {
+			if tmp_output.GetOutput() == nil /*|| tmp_output.GetOutput().(string) == ""*/ {
 				r_ret = -1
 				r_buf.WriteString("[Result]: Generate OutputStruct fail,FuncInterim generage output is nil;")
 				r_buf.WriteString("[Error]: outputStruct is nil;")
@@ -1250,7 +1253,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			} else {
 				var func_params map[string]interface{}
 				func_params = make(map[string]interface{})
-				var interf [][]interface{}
+				var interf []interface{}
 				_ = json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &interf)
 				func_params["Param01"] = interf
 				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
