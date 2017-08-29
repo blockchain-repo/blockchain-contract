@@ -1266,6 +1266,15 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				hostname, _ := os.Hostname()
 				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
 					"FuncInterimComplete", string(slData))
+
+				// 再次 getdata 赋值
+				for v_key, _ := range gt.GetDataValueSetterExpressionList() {
+					v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
+					//1 函数识别 & 执行
+					str_name := v_expr_object.GetName()
+
+					gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
+				}
 			}
 		} else {
 			if !gRPCClient.On {
@@ -1305,23 +1314,26 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		}
 		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
 		if !gRPCClient.On {
-			gt.GetContract().SetOutputStruct(v_result.GetData().(string))
-			uniledgerlog.Info("====after complete operate==" + v_result.GetData().(string))
+			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
+			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
 		} else {
-			output, ok := v_result.GetOutput().([]interface{})
-			if ok {
-				slData, r_err := json.Marshal(output)
-				if r_err != nil {
-					r_ret = -1
-					uniledgerlog.Error(r_err)
-					return r_ret, r_err
-				}
-				gt.GetContract().SetOutputStruct(string(slData))
-				uniledgerlog.Info("====after transfer operate==" + string(slData))
-			} else {
-				uniledgerlog.Error("v_result.GetOutput().([]interface{} assert error")
-				return r_ret, r_err
-			}
+			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
+			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
+
+			//output, ok := v_result.GetOutput().([]interface{})
+			//if ok {
+			//	slData, r_err := json.Marshal(output)
+			//	if r_err != nil {
+			//		r_ret = -1
+			//		uniledgerlog.Error(r_err)
+			//		return r_ret, r_err
+			//	}
+			//	gt.GetContract().SetOutputStruct(string(slData))
+			//	uniledgerlog.Info("====after transfer operate==" + string(slData))
+			//} else {
+			//	uniledgerlog.Error("v_result.GetOutput().([]interface{} assert error")
+			//	return r_ret, r_err
+			//}
 		}
 
 		var map_output_first interface{} = common.Deserialize(gt.GetContract().GetOutputStruct())
