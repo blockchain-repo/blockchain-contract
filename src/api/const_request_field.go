@@ -12,28 +12,29 @@ const (
 	REQUEST_FIELD_CONTRACT_NAME      = "contractName"
 	REQUEST_FIELD_CONTRACT_STARTTIME = "startTime"
 	REQUEST_FIELD_CONTRACT_ENDTIME   = "endTime"
-	REQUEST_FIELD_PAGE               = "page"
+	REQUEST_FIELD_PAGE               = "pageNum"
 	REQUEST_FIELD_PAGE_SIZE          = "pageSize"
+	REQUEST_FIELD_SORT          = "sort"
 )
 
 var ALLOW_REQUEST_PARAMETERS_ALL = map[string]bool{
 	/*************** FOR API AUTH ************/
-	"appId":     true,
-	"token":     true,
-	"timestamp": true,
-	"sign":      true,
+	REQUEST_FIELD_AUTH_APPID:     true,
+	REQUEST_FIELD_AUTH_TOKEN:     true,
+	REQUEST_FIELD_AUTH_TIMESTAMP: true,
+	REQUEST_FIELD_AUTH_SIGN:      true,
 	/*************** FOR API QUERY ***********/
 	//"format":   true, //sort=field1,field2,
-	"sort":     true,
-	"page":     true,
-	"pageSize": true,
+	REQUEST_FIELD_SORT:                  true,
+	REQUEST_FIELD_PAGE:      true,
+	REQUEST_FIELD_PAGE_SIZE: true,
 	/*************** FOR API MODEL QUERY ***********/
-	"contractId":    true,
-	"contractOwner": true,
-	"contractState": true,
-	"contractName":  true,
-	"startTime":     true,
-	"endTime":       true,
+	REQUEST_FIELD_CONTRACT_ID:    true,
+	REQUEST_FIELD_CONTRACT_OWNER: true,
+	REQUEST_FIELD_CONTRACT_STATE: true,
+	REQUEST_FIELD_CONTRACT_NAME:  true,
+	REQUEST_FIELD_CONTRACT_STARTTIME:     true,
+	REQUEST_FIELD_CONTRACT_ENDTIME:       true,
 }
 
 // filter sort invalid fields

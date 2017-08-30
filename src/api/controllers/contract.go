@@ -74,9 +74,14 @@ func (c *ContractController) responseJson(status int32, msg string, data string)
 
 func (c *ContractController) responseContract(status int32, msg string, data *protos.Contract) {
 	responseData := new(protos.ResponseContract)
+	if data == nil {
+		responseData.Result = nil
+	} else {
+		responseData.Result = data
+	}
 	responseData.Code = status
 	responseData.Msg = msg
-	responseData.Result = data
+
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		uniledgerlog.Error("responseContract ", err.Error())
@@ -86,9 +91,13 @@ func (c *ContractController) responseContract(status int32, msg string, data *pr
 
 func (c *ContractController) responseContractExecuteLog(status int32, msg string, data *protos.ContractExecuteLog) {
 	responseData := new(protos.ResponseContractExecuteLog)
+	if data == nil {
+		responseData.Result = nil
+	} else {
+		responseData.Result = data
+	}
 	responseData.Code = status
 	responseData.Msg = msg
-	responseData.Result = data
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		uniledgerlog.Error("responseContractExecuteLog ", err.Error())
@@ -99,9 +108,13 @@ func (c *ContractController) responseContractExecuteLog(status int32, msg string
 /********************* todo temp for pagination start *********************/
 func (c *ContractController) responsePaginationContract(status int32, msg string, data *protos.PaginationContract) {
 	responseData := new(protos.ResponsePaginationContract)
+	if data == nil {
+		responseData.Result = nil
+	} else {
+		responseData.Result = data
+	}
 	responseData.Code = status
 	responseData.Msg = msg
-	responseData.Result = data
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		uniledgerlog.Error("responsePaginationContract ", err.Error())
@@ -111,9 +124,13 @@ func (c *ContractController) responsePaginationContract(status int32, msg string
 
 func (c *ContractController) responsePaginationContractExecuteLog(status int32, msg string, data *protos.PaginationContractExecuteLog) {
 	responseData := new(protos.ResponsePaginationContractExecuteLog)
+	if data == nil {
+		responseData.Result = nil
+	} else {
+		responseData.Result = data
+	}
 	responseData.Code = status
 	responseData.Msg = msg
-	responseData.Result = data
 	body, err := proto.Marshal(responseData)
 	if err != nil {
 		uniledgerlog.Error("responsePaginationContractExecuteLog ", err.Error())
@@ -141,9 +158,7 @@ func fromContractModelArrayStrToPaginationContracts(contractModelStr string, pag
 	pagination.Page = page
 	pagination.PageSize = pageSize
 	pagination.Total = total
-	uniledgerlog.Debug("query PaginationContract len is ", len(contractModel))
-	data_test, _ := json.Marshal(pagination)
-	uniledgerlog.Debug(string(data_test))
+	uniledgerlog.Debug("query PaginationContract len is %d page=%d , pageSize=%d, total=%d  ", len(contractModel), page, pageSize, total)
 	return pagination, nil
 }
 
@@ -368,28 +383,29 @@ func (c *ContractController) Query() {
 	/*------------------- requestParams end ------------------*/
 	if len(contractId) == 0 {
 		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "contractId")
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		c.responseContract(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
 	if len(owner) == 0 {
 		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "owner")
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		c.responseContract(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
 	if len(contractState) != 0 && !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
 		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[Query]", "contractState")
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		c.responseContract(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
 
 	contractModelStr, err := rethinkdb.GetOneContractByCondition(contractId, owner, contractState)
 	if err != nil {
-		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[Query]", contractId)
+		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! msg=%s", "API[Query]", contractId, err)
 		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		c.responseContract(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, nil)
+		//c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
@@ -397,7 +413,7 @@ func (c *ContractController) Query() {
 	if contractModelStr == "" {
 		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[Query]", contractId)
 		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		c.responseContract(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
@@ -405,21 +421,11 @@ func (c *ContractController) Query() {
 	contractProto, err := model.FromContractModelStrToContractProto(contractModelStr)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(model.FromContractModelStrToContractProto)! ", "API[Query]", contractId)
-		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, "")
+		c.responseContract(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
-	contractProtoBytes, err := proto.Marshal(contractProto)
-	if err != nil {
-		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[Query]", contractId)
-		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_PROTO_ERROR, resultMsg, "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PROTO_ERROR, resultMsg+err.Error())()
-		return
-	}
-	contractProtoStr := string(contractProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractProtoStr)
+	c.responseContract(api.RESPONSE_STATUS_OK, resultMsg, contractProto)
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
@@ -488,18 +494,9 @@ func (c *ContractController) QueryAll() {
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
-	contractPaginationProtoBytes, err := proto.Marshal(&paginationContractProto)
-	if err != nil {
-		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[QueryAll]", contractId)
-		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_PROTO_ERROR, resultMsg, "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PROTO_ERROR, resultMsg+err.Error())()
-		return
-	}
-
-	contractPaginationProtoStr := string(contractPaginationProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractPaginationProtoStr)
+	c.responsePaginationContract(api.RESPONSE_STATUS_OK, resultMsg, &paginationContractProto)
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
+
 }
 
 // QueryRecords QueryLog
@@ -513,13 +510,13 @@ func (c *ContractController) QueryLog() {
 	page, err := c.GetInt32(api.REQUEST_FIELD_PAGE, 1)
 	if err != nil || page <= 0 {
 		resultMsg := fmt.Sprintf("%s page(%v) error!", "API[QueryLog]", page)
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	}
 	pageSize, err := c.GetInt32(api.REQUEST_FIELD_PAGE_SIZE, 5)
 	if err != nil || pageSize <= 0 {
 		resultMsg := fmt.Sprintf("%s pageSize(%v) error!", "API[QueryLog]", pageSize)
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	}
 	pageNumStart := (page - 1) * pageSize
@@ -533,7 +530,7 @@ func (c *ContractController) QueryLog() {
 
 	if len(contractId) == 0 {
 		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryLog]", "contractId")
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+		c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 		return
 	}
@@ -542,14 +539,14 @@ func (c *ContractController) QueryLog() {
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)查询错误! ", "API[QueryLog]", contractId)
 		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg+err.Error())()
 		return
 	}
 	if contractOutputsModelStr == "" {
 		resultMsg = fmt.Sprintf("%s(Id=%s)不存在!", "API[QueryLog]", contractId)
 		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, "")
+		c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
 		return
 	}
@@ -559,23 +556,11 @@ func (c *ContractController) QueryLog() {
 	//uniledgerlog.Warn(contractPaginationCExecuteLogProto)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(fromContractOutputsModelArrayStrToContractsForLog)! ", "API[QueryLog]", contractId)
-		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, "")
+		c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg, nil)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_INTERNAL_ERROR, resultMsg+err.Error())()
 		return
 	}
-
-	contractPaginationExecuteLogProtoProtoBytes, err := proto.Marshal(&contractPaginationExecuteLogProto)
-	if err != nil {
-		resultMsg = fmt.Sprintf("%s(Id=%s)转换失败(proto.Marshal) ", "API[QueryLog]", contractId)
-		uniledgerlog.Error(resultMsg)
-		c.responseProto(api.RESPONSE_STATUS_PROTO_ERROR, resultMsg, "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PROTO_ERROR, resultMsg+err.Error())()
-		return
-	}
-
-	contractPaginationExecuteLogProtoStr := string(contractPaginationExecuteLogProtoProtoBytes)
-	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contractPaginationExecuteLogProtoStr)
+	c.responsePaginationContractExecuteLog(api.RESPONSE_STATUS_OK, resultMsg, &contractPaginationExecuteLogProto)
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 

@@ -224,7 +224,6 @@ func GetOneContractByCondition(contractId string, owner string, contractState st
 			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
 			Run(session)
 	}
-
 	if err != nil {
 		return "", err
 	}
@@ -236,6 +235,7 @@ func GetOneContractByCondition(contractId string, owner string, contractState st
 	if err != nil {
 		return "", err
 	}
+	uniledgerlog.Warn("query len is %+v", blo)
 	return common.Serialize(blo), nil
 }
 
@@ -329,9 +329,9 @@ func GetContractsPaginationByCondition(contractId string, owner string, contract
 
 	if contractId == "" && contractState == "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
-			//Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
-			//Max(r.Row.Field("transaction").Field("timestamp")).
-			//Ungroup().Field("reduction").
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Max(r.Row.Field("transaction").Field("timestamp")).
+			Ungroup().Field("reduction").
 			OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).
 			Field("transaction").Field("Contract").
 			Slice(pageNumStart, pageNumEnd).
