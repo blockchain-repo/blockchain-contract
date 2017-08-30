@@ -588,7 +588,8 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	//  第三层...第N层： 子属性变量值
 	//  最后一层：Value
 	v_variable_count := len(v_variable_array)
-	fmt.Println(v_variable_count)
+	uniledgerlog.Info("###### v_variable_count is ", v_variable_count)
+	uniledgerlog.Info("###### v_variable_array is ", v_variable_array)
 	//注意：变量最少需要涵盖两层：component层（v_variable_array[0]）， property层（v_variable_array[1]）
 	//识别第一层：component_name from component_table
 	var parse_component inf.IComponent
