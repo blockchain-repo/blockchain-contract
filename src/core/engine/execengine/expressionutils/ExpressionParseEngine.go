@@ -594,6 +594,9 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	//识别第一层：component_name from component_table
 	var parse_component inf.IComponent
 	v_component := ep.Contract.GetComponentTtem(v_variable_array[0])
+	if v_component == nil {
+		uniledgerlog.Info("###### v_component is nil")
+	}
 	parse_component = ep.ReflectComponent(v_component, v_variable_array[0])
 	//识别第二层： property from property_table
 	var v_component_object reflect.Value = reflect.Value{}
