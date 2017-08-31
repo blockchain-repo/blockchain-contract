@@ -515,6 +515,16 @@ func (gt *GeneralTask) InitGeneralTask() error {
 					}
 					tmp_data.InitBoolData()
 					map_datalist[tmp_data.GetName()] = tmp_data
+				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Array]:
+					tmp_data := data.NewArrayData()
+					tmp_byte_data, _ := json.Marshal(p_data)
+					err = json.Unmarshal(tmp_byte_data, &tmp_data)
+					if err != nil {
+						uniledgerlog.Error("InitGeneralTask(DataList) fail[" + err.Error() + "]")
+						return err
+					}
+					tmp_data.InitArrayData()
+					map_datalist[tmp_data.GetName()] = tmp_data
 				case constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_OperateResult]:
 					tmp_data := data.NewOperateResultData()
 					tmp_byte_data, _ := json.Marshal(p_data)
@@ -621,23 +631,6 @@ func (gt *GeneralTask) GetDiscardCondition() map[string]inf.IExpression {
 	return discardcondition_value
 }
 
-func (gt *GeneralTask) GetDataList() map[string]inf.IData {
-	if gt.PropertyTable[_DataList] == nil {
-		return nil
-	}
-	datalist_property, ok := gt.PropertyTable[_DataList].(property.PropertyT)
-	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return nil
-	}
-	datalist_value, ok := datalist_property.GetValue().(map[string]inf.IData)
-	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-		return nil
-	}
-	return datalist_value
-}
-
 func (gt *GeneralTask) GetDataValueSetterExpressionList() map[string]inf.IExpression {
 	if gt.PropertyTable[_DataValueSetterExpressionList] == nil {
 		return nil
@@ -653,6 +646,23 @@ func (gt *GeneralTask) GetDataValueSetterExpressionList() map[string]inf.IExpres
 		return nil
 	}
 	return dataexpress_value
+}
+
+func (gt *GeneralTask) GetDataList() map[string]inf.IData {
+	if gt.PropertyTable[_DataList] == nil {
+		return nil
+	}
+	datalist_property, ok := gt.PropertyTable[_DataList].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	datalist_value, ok := datalist_property.GetValue().(map[string]inf.IData)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return nil
+	}
+	return datalist_value
 }
 
 func (gt *GeneralTask) GetSelectBranches() []common.SelectBranchExpression {

@@ -297,7 +297,7 @@ func (ep *ExpressionParseEngine) IsExprArray(p_expression string) bool {
 
 //解析字符串是否为 条件表达式
 func (ep *ExpressionParseEngine) IsExprCondition(p_expression string) bool {
-	if strings.Contains(p_expression, "Func") {
+	if strings.HasPrefix(p_expression, "Func") {
 		return false
 	} else {
 		return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Condition])
