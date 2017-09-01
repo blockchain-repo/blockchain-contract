@@ -5,14 +5,13 @@ package contract
 //      运行态： 通过反序列化得到contract实例，然后调用Init方法，完成运行态的初始化
 //      持久态： 执行结果 和 运行状态持久化到数据表中
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"unicontract/src/common/uniledgerlog"
-
-	"bytes"
-	"strconv"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/expressionutils"
@@ -1303,8 +1302,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				return r_ret, fmt.Errorf("assert error")
 			}
 			if ttask.GetName() == doTask.GetName() {
-				uniledgerlog.Error("=========== NowProcessTask:" + doTask.GetName())
-				uniledgerlog.Error("=========== NextProcessTask:" + ttask.GetName())
+				uniledgerlog.Info("=========== NowProcessTask:" + doTask.GetName())
+				uniledgerlog.Info("=========== NextProcessTask:" + ttask.GetName())
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
