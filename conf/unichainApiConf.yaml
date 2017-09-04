@@ -1,13 +1,33 @@
 #ip,port
 ip: "192.168.159.101"
 port: "9984"
-money:
+CONTRACT:
+  ip: "192.168.159.101"
+  port: "9984"
+ContractExecute:
   ip: "192.168.159.101"
   port: "9984"
 house:
+  ip: "192.168.159.101"
+  port: "9984"
+money:
   ip: "192.168.159.102"
   port: "9984"
-
+#
+#ip: "172.17.7.166"
+#port: "8055"
+#CONTRACT:
+#  ip: "172.17.7.166"
+#  port: "8055"
+#ContractExecute:
+#  ip: "172.17.7.166"
+#  port: "8055"
+#house:
+#  ip: "172.17.7.166"
+#  port: "8055"
+#money:
+#  ip: "172.17.7.166"
+#  port: "8056"
 #请求头
 head:
   Content-Type: "application/json"
