@@ -107,7 +107,7 @@ func verifyTimestamp(timestamp string, api_timeout int64, api_timestamp_len int)
 	current_unix_timestamp := nanos / 1000000
 	cost := (current_unix_timestamp - timestamp_int64) / 1000
 	uniledgerlog.Debug("time info", current_unix_timestamp, timestamp_int64, cost)
-	if cost < 0 || cost > api_timeout {
+	if cost <= -30 || cost > api_timeout {
 		resultMsg := fmt.Sprintf("%s timestamp value error!", "Filter[APIBasicFilter]")
 		uniledgerlog.Debug(resultMsg, cost)
 		return api.RESPONSE_STATUS_INVALID_TIMESTAMP, resultMsg
