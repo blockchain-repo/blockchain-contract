@@ -1108,6 +1108,11 @@ func (gt *GeneralTask) Start() (int8, error) {
 			v_result_object := v_result.(common.OperateResult)
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
+			uniledgerlog.Debug("------------------------------------------------------------")
+			uniledgerlog.Debug("gt.GetDataList() : ", gt.GetDataList())
+			uniledgerlog.Debug("str_name : ", str_name)
+			uniledgerlog.Debug("v_result_object : ", v_result_object)
+			uniledgerlog.Debug("------------------------------------------------------------")
 			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
@@ -1278,13 +1283,13 @@ func (gt *GeneralTask) Complete() (int8, error) {
 					"FuncInterimComplete", string(slData))
 
 				// 再次 getdata 赋值
-				for v_key, _ := range gt.GetDataValueSetterExpressionList() {
-					v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
-					//1 函数识别 & 执行
-					str_name := v_expr_object.GetName()
-
-					gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
-				}
+				//for v_key, _ := range gt.GetDataValueSetterExpressionList() {
+				//	v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
+				//	//1 函数识别 & 执行
+				//	str_name := v_expr_object.GetName()
+				//
+				//	gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
+				//}
 			}
 		} else {
 			if !gRPCClient.On {
@@ -1304,13 +1309,13 @@ func (gt *GeneralTask) Complete() (int8, error) {
 					"FuncAllTransferComplete", string(slData))
 
 				// 再次 getdata 赋值
-				for v_key, _ := range gt.GetDataValueSetterExpressionList() {
-					v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
-					//1 函数识别 & 执行
-					str_name := v_expr_object.GetName()
-
-					gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
-				}
+				//for v_key, _ := range gt.GetDataValueSetterExpressionList() {
+				//	v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
+				//	//1 函数识别 & 执行
+				//	str_name := v_expr_object.GetName()
+				//
+				//	gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
+				//}
 			}
 		}
 		//执行结果判断

@@ -54,6 +54,11 @@ func NewContractExecuter() *ContractExecuter {
 //说明：
 //   反序列化回来的都是map类型， property_table中都是实际的struct
 func (ce *ContractExecuter) Load(p_str_json string) error {
+	fmt.Println("=================================================================================")
+	uniledgerlog.Debug("contract json is :")
+	uniledgerlog.Debug(p_str_json)
+	fmt.Println("=================================================================================")
+
 	var err error
 	var r_buf bytes.Buffer
 	r_buf.WriteString("Contract Executeor:Load.")
