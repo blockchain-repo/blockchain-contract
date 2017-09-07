@@ -501,7 +501,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 	//识别并设置表达中的变量的值
 	v_parameters := make(map[string]interface{}, len(v_variables))
 	for _, v_param := range v_variables {
-		fmt.Println("======variable: " + v_param)
+		uniledgerlog.Debug("======variable: " + v_param)
 		if ep.IsExprFunction(v_param) { //函数变量表达式
 			v_result, v_err := ep.ParseExprFunctionValue(v_param)
 			if v_err != nil {
@@ -531,11 +531,11 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 			case reflect.Value:
 				str_result = v_result.(reflect.Value).String()
 			}
-			fmt.Println("=======variable: ", v_param, "  =====value: ", str_result)
+			uniledgerlog.Debug("=======variable: ", v_param, "  =====value: ", str_result)
 			p_expression = strings.Replace(p_expression, v_param, str_result, -1)
 		}
 	}
-	fmt.Println("====================expression 1: ", p_expression)
+	uniledgerlog.Debug("====================expression 1: ", p_expression)
 	//Eval 条件表达式的值
 	v_expression, v_err := govaluate.NewEvaluableExpression(p_expression)
 	if v_err != nil {
@@ -603,7 +603,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	var v_property_field reflect.Value = reflect.Value{}
 
 	v_component_object = reflect.ValueOf(parse_component).Elem()
-	fmt.Println("======component: ", v_variable_array[0], v_component_object.Kind(), "    ", v_component_object.Type(), "   ", v_component_object.Interface())
+	uniledgerlog.Debug("======component: ", v_variable_array[0], v_component_object.Kind(), "    ", v_component_object.Type(), "   ", v_component_object.Interface())
 	//两层达到时，直接返回值
 	if v_variable_count == 2 {
 		v_property_field = v_component_object.FieldByName(v_variable_array[1])
@@ -611,15 +611,16 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			v_err = fmt.Errorf("field[" + v_variable_array[1] + "] is not valid!")
 			return nil, v_err
 		}
-		fmt.Println("======field: ", v_variable_array[1], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
-		fmt.Println("======field: ", v_property_field.Interface())
+		uniledgerlog.Debug("======field: ", v_variable_array[1], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+		uniledgerlog.Debug("======field: ", v_property_field.Interface())
+		panic(nil)
 		return v_property_field.Interface(), v_err
 	}
 	//识别第三层以后的：. subItem from array, map, and other
 	v_idx := 1
 	for v_idx < v_variable_count {
 		v_property_field = v_component_object.FieldByName(v_variable_array[v_idx])
-		fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+		uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		switch v_property_field.Kind() {
 		case reflect.Map:
 			v_idx = v_idx + 1
@@ -628,7 +629,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 			v_component_object = v_property_field.MapIndex(reflect.ValueOf(v_variable_array[v_idx]))
 			v_property_field = reflect.ValueOf(v_component_object)
-			fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		case reflect.Slice:
 			v_idx = v_idx + 1
 			if v_idx >= v_variable_count {
@@ -645,7 +646,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 				v_component_object = reflect.ValueOf(data_arr[v_arr_idx])
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
-			fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		case reflect.Array:
 			v_idx = v_idx + 1
 			if v_idx >= v_variable_count {
@@ -661,7 +662,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 				v_component_object = reflect.ValueOf(v_property_field.Interface())
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
-			fmt.Println("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
 		case reflect.Struct:
 			v_struct_property := v_property_field.Interface()
 			v_component_object = reflect.ValueOf(v_struct_property)
@@ -670,7 +671,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 		}
 		v_idx = v_idx + 1
 	}
-	fmt.Println("======field: ", v_property_field.Interface())
+	uniledgerlog.Debug("======field: ", v_property_field.Interface())
 	return v_property_field.Interface(), v_err
 }
 
@@ -807,7 +808,7 @@ func SplitString(p_str string, p_reg string) map[string]string {
 		map_result[Substr2(p_str, int_begin, int_end)] = Substr2(p_str, int_begin, int_end)
 	}
 	map_result[Substr2(p_str, int_temp, len(p_str))] = Substr2(p_str, int_temp, len(p_str))
-	fmt.Println(map_result)
+	uniledgerlog.Debug(map_result)
 	return map_result
 }
 

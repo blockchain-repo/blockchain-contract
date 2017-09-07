@@ -25,6 +25,9 @@ func (ad ArrayData) GetName() string {
 }
 
 func (ad ArrayData) GetValue() interface{} {
+	//uniledgerlog.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++")
+	//uniledgerlog.Debug("我被调用啦～～～～～～～～～～～～～～～～～～～")
+	//uniledgerlog.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	value_property := ad.PropertyTable[_Value].(property.PropertyT)
 	return value_property.GetValue()
 }
@@ -41,7 +44,14 @@ func (ad ArrayData) GetCtype() string {
 }
 
 func (ad ArrayData) SetValue(p_Value interface{}) {
-	ad.GeneralData.SetValue(p_Value)
+	//uniledgerlog.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++")
+	//uniledgerlog.Debug("我被调用啦～～～～～～～～～～～～～～～～～～～")
+	//uniledgerlog.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++")
+	slData, err := json.Marshal(p_Value)
+	if err != nil {
+		uniledgerlog.Error("SetValue fail[" + err.Error() + "]")
+	}
+	ad.GeneralData.SetValue(string(slData))
 }
 func (ad ArrayData) CleanValueInProcess() {
 	ad.GeneralData.CleanValueInProcess()

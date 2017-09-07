@@ -893,7 +893,7 @@ func (gt *GeneralTask) testCompleteCondition() bool {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			uniledgerlog.Warn("CompleteCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
+			uniledgerlog.Error("CompleteCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -915,7 +915,7 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			uniledgerlog.Warn("DiscardCondition EvaluateExpression[" + value.GetExpressionStr() + "] fail, [" + v_err.Error() + "]")
+			uniledgerlog.Error("DiscardCondition EvaluateExpression[" + value.GetExpressionStr() + "] fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -932,11 +932,11 @@ func (gt *GeneralTask) testDiscardCondition() bool {
 	v_default_function := "FuncIsConPutInUnichian(\"" + v_contract.GetOutputId() + "\")"
 	v_result, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_default_function)
 	if v_err != nil {
-		uniledgerlog.Warn("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
+		uniledgerlog.Error("DiscardCondition EvaluateExpression[" + v_default_function + "] fail, [" + v_err.Error() + "]")
 		r_flag = false
 	}
 	if !v_result.(bool) {
-		uniledgerlog.Warn("DiscardCondition EvaluateExpression[" + v_default_function + "] result is false!")
+		uniledgerlog.Error("DiscardCondition EvaluateExpression[" + v_default_function + "] result is false!")
 		r_flag = false
 	}
 	return r_flag
@@ -951,7 +951,7 @@ func (gt *GeneralTask) testPreCondition() bool {
 		v_contract := gt.GetContract()
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
-			uniledgerlog.Warn("PreCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
+			uniledgerlog.Error("PreCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
 			r_flag = false
 			break
 		}
@@ -989,7 +989,7 @@ func (gt *GeneralTask) PreProcess() error {
 	if gt.GetContract() == nil {
 		r_err = errors.New("PreProcess fail, GetContract is nil!")
 		r_buf.WriteString("PreProcess fail, GetContract is nil!")
-		uniledgerlog.Warn(r_buf.String())
+		uniledgerlog.Error(r_buf.String())
 		return r_err
 	}
 	//outputTaskId, outputTaskExecuteIdx赋值
@@ -1043,7 +1043,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 			//1 函数识别 & 执行
 			str_name := v_expr_object.GetName()
 			str_function := v_expr_object.GetExpressionStr()
-			uniledgerlog.Debug("==Function==" + str_function)
+			uniledgerlog.Info("==Function name==" + str_function)
 			str_function = strings.TrimSpace(str_function)
 			var v_beginwith_flag bool
 			if !gRPCClient.On {
@@ -1065,6 +1065,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 					uniledgerlog.Error(r_buf.String())
 					return r_ret, r_err
 				}
+				uniledgerlog.Info("==Function type==", funcType)
 				if funcType == 2 {
 					v_beginwith_flag = true
 				} else {
@@ -1081,7 +1082,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 					uniledgerlog.Error(r_buf.String())
 					return r_ret, r_err
 				}
-				uniledgerlog.Info("===before transfer asset=====" + str_json_contract)
+				uniledgerlog.Debug("===before transfer asset=====" + str_json_contract)
 				var func_buf bytes.Buffer = bytes.Buffer{}
 				str_json_contract = strings.Replace(str_json_contract, "\\", "\\\\", -1)
 				str_json_contract = strings.Replace(str_json_contract, "\"", "\\\"", -1)
@@ -1108,17 +1109,17 @@ func (gt *GeneralTask) Start() (int8, error) {
 			v_result_object := v_result.(common.OperateResult)
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
-			uniledgerlog.Debug("------------------------------------------------------------")
-			uniledgerlog.Debug("gt.GetDataList() : ", gt.GetDataList())
-			uniledgerlog.Debug("str_name : ", str_name)
-			uniledgerlog.Debug("v_result_object : ", v_result_object)
-			uniledgerlog.Debug("------------------------------------------------------------")
+			//uniledgerlog.Debug("------------------------------------------------------------")
+			//uniledgerlog.Debug("gt.GetDataList() : ", gt.GetDataList())
+			//uniledgerlog.Debug("str_name : ", str_name)
+			//uniledgerlog.Debug("v_result_object : ", v_result_object)
+			//uniledgerlog.Debug("------------------------------------------------------------")
 			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
 			//  2.2 结果赋值到 dataSetterValue函数结果
 			v_expr_object.SetExpressionResult(v_result_object)
 			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_expr_object)
 			now_json, _ := gt.GetContract().Serialize()
-			uniledgerlog.Debug("========after update component=====", now_json)
+			uniledgerlog.Info("========after update component=====", now_json)
 			//  2.3 Output交易产出结构体赋值
 			if v_result_object.GetOutput() != nil /*&& v_result_object.GetOutput() != ""*/ {
 				if !gRPCClient.On {
@@ -1243,7 +1244,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			}
 			if !gRPCClient.On {
 				gt.GetContract().SetOutputStruct(tmp_output.GetOutput().(string))
-				uniledgerlog.Error("====after transfer asset==" + tmp_output.GetOutput().(string))
+				uniledgerlog.Debug("====after transfer asset==" + tmp_output.GetOutput().(string))
 			} else {
 				output, ok := tmp_output.GetOutput().([]interface{})
 				if ok {
@@ -1254,7 +1255,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 						return r_ret, r_err
 					}
 					gt.GetContract().SetOutputStruct(string(slData))
-					uniledgerlog.Info("====after transfer asset==" + string(slData))
+					uniledgerlog.Debug("====after transfer asset==" + string(slData))
 				} else {
 					uniledgerlog.Error("tmp_output.GetOutput().([]interface{} assert error")
 					return r_ret, r_err
@@ -1293,13 +1294,77 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			}
 		} else {
 			if !gRPCClient.On {
-				v_result, r_err = function.FuncTransferAssetComplete(gt.GetContract().GetOutputStruct(),
-					constdef.TaskState[constdef.TaskState_Completed])
+				// TODO : 目前仅支持一个datalist的情况
+				var output_string string
+				for v_key, _ := range gt.GetDataList() {
+					slData, _ := json.Marshal(gt.GetContract().GetComponentTtem(v_key))
+					var m_datalist map[string]interface{}
+					m_datalist = make(map[string]interface{})
+					if err := json.Unmarshal([]byte(slData), &m_datalist); err != nil {
+						uniledgerlog.Error(err)
+					}
+					var m_destination map[string]interface{}
+					m_destination = make(map[string]interface{})
+					if err := json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &m_destination); err != nil {
+						uniledgerlog.Error(err)
+					}
+					uniledgerlog.Debug("=== m_destination ===", m_destination)
+					uniledgerlog.Debug("=== m_datalist ===", m_datalist)
+					uniledgerlog.Debug("=== v_key ===", v_key)
+					_InsertDataListToOutput(m_destination, m_datalist, v_key)
+					slData, err := json.Marshal(m_destination)
+					if err != nil {
+						uniledgerlog.Error(err)
+					}
+					output_string = string(slData)
+				}
+				gt.GetContract().SetOutputStruct(output_string)
+				v_result, r_err = function.FuncTransferAssetComplete(output_string, constdef.TaskState[constdef.TaskState_Completed])
 			} else {
 				var func_params map[string]interface{}
 				func_params = make(map[string]interface{})
 				var interf []interface{}
-				_ = json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &interf)
+				if err := json.Unmarshal([]byte(gt.GetContract().GetOutputStruct()), &interf); err != nil {
+					uniledgerlog.Error(err)
+				}
+
+				for i := 0; i < len(interf); i++ {
+					if interf[i].([]interface{})[1] == "ContractExecute" {
+						// TODO : 目前仅支持一个datalist的情况
+						for v_key, _ := range gt.GetDataList() {
+							slData, _ := json.Marshal(gt.GetContract().GetComponentTtem(v_key))
+							var m_datalist map[string]interface{}
+							m_datalist = make(map[string]interface{})
+							if err := json.Unmarshal([]byte(slData), &m_datalist); err != nil {
+								uniledgerlog.Error(err)
+							}
+							var m_destination map[string]interface{}
+							m_destination = make(map[string]interface{})
+							if err := json.Unmarshal([]byte(interf[i].([]interface{})[2].(string)), &m_destination); err != nil {
+								uniledgerlog.Error(err)
+							}
+							uniledgerlog.Debug("=== m_destination ===", m_destination)
+							uniledgerlog.Debug("=== m_datalist ===", m_datalist)
+							uniledgerlog.Debug("=== v_key ===", v_key)
+							_InsertDataListToOutput(m_destination, m_datalist, v_key)
+							slData, err := json.Marshal(m_destination)
+							if err != nil {
+								uniledgerlog.Error(err)
+							}
+							//uniledgerlog.Error("-------------------------------------")
+							//uniledgerlog.Error(interf[i].([]interface{})[2])
+							interf[i].([]interface{})[2] = string(slData)
+							//uniledgerlog.Error("-------------------------------------")
+							//uniledgerlog.Error(interf[i].([]interface{})[2])
+							//uniledgerlog.Error("-------------------------------------")
+						}
+					}
+				}
+
+				//uniledgerlog.Debug("------------------------------------------------------------")
+				//uniledgerlog.Debug("interf : ", interf)
+				//uniledgerlog.Debug("------------------------------------------------------------")
+
 				func_params["Param01"] = interf
 				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
 
@@ -1322,7 +1387,12 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		if r_err != nil || v_result.GetCode() != 200 {
 			r_ret = -1
 			r_buf.WriteString("[Result]: Task execute fail;")
-			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			if r_err != nil {
+				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+			} else {
+				uniledgerlog.Error(v_result)
+				r_err = fmt.Errorf("result code is not 200")
+			}
 			r_buf.WriteString("Complete fail....")
 			uniledgerlog.Error(r_buf.String())
 			return r_ret, r_err
@@ -1382,7 +1452,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		gt.GetContract().SetOutputId(map_contract["id"].(string))
 		gt.GetContract().SetOutputTaskId(gt.GetTaskId())
 		gt.GetContract().SetOutputTaskExecuteIdx(gt.GetTaskExecuteIdx())
-		uniledgerlog.Error("gt.GetContract().GetOutputId():", gt.GetContract().GetOutputId())
+		uniledgerlog.Info("gt.GetContract().GetOutputId():", gt.GetContract().GetOutputId())
 		uniledgerlog.Info(r_buf.String(), " Inprocess to Complete....")
 		gt.SetState(constdef.TaskState[constdef.TaskState_Completed])
 	} else if gt.IsInProgress() && !gt.testCompleteCondition() {
@@ -1446,6 +1516,15 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	r_buf.WriteString("[ContractID]: " + v_contract.GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + v_contract.GetId() + ";")
 	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
+
+	uniledgerlog.Debug("-----------------------------------------------")
+	uniledgerlog.Debug("ContractId:" + v_contract.GetContractId())
+	uniledgerlog.Debug("Id:" + v_contract.GetId())
+	uniledgerlog.Debug("TaskId:" + gt.GetTaskId())
+	uniledgerlog.Debug("State:" + gt.GetState())
+	uniledgerlog.Debug("TaskExecuteIdx:%d", gt.GetTaskExecuteIdx())
+	uniledgerlog.Debug("-----------------------------------------------")
+
 	switch p_flag {
 	case -1:
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
@@ -1458,17 +1537,10 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		failStruct.FnTaskExecuteIndex = gt.GetTaskExecuteIdx()
 		slFailData, _ := json.Marshal(failStruct)
 		r_err = common.UpdateMonitorFail(string(slFailData))
-		uniledgerlog.Error("-----------------------------------------------")
-		uniledgerlog.Error("ContractId:" + v_contract.GetContractId())
-		uniledgerlog.Error("Id:" + v_contract.GetId())
-		uniledgerlog.Error("TaskId:" + gt.GetTaskId())
-		uniledgerlog.Error("State:" + gt.GetState())
-		uniledgerlog.Error("TaskExecuteIdx:%d", gt.GetTaskExecuteIdx())
-		uniledgerlog.Error("-----------------------------------------------")
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			uniledgerlog.Warn(r_buf.String())
+			uniledgerlog.Error(r_buf.String())
 		} else {
 			r_buf.WriteString("[Result]: PostProcess[UpdateMonitorFail] Succ;")
 			uniledgerlog.Info(r_buf.String())
@@ -1490,7 +1562,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-				uniledgerlog.Warn(r_buf.String())
+				uniledgerlog.Error(r_buf.String())
 			} else {
 				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Succ;")
 				uniledgerlog.Info(r_buf.String())
@@ -1513,7 +1585,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 			if r_err != nil {
 				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
 				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-				uniledgerlog.Warn(r_buf.String())
+				uniledgerlog.Error(r_buf.String())
 			} else {
 				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Succ;")
 				uniledgerlog.Info(r_buf.String())
@@ -1539,7 +1611,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		if r_err != nil {
 			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			uniledgerlog.Warn(r_buf.String())
+			uniledgerlog.Error(r_buf.String())
 		} else {
 			r_buf.WriteString("[Result]: PostProcess[1][UpdateMonitorSucc] Succ;")
 			uniledgerlog.Info(r_buf.String())
@@ -1608,4 +1680,18 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 		v_data.SetValue(p_result.GetData())
 	}
 	gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_data.GetName(), v_data)
+}
+
+func _InsertDataListToOutput(m_destination, m_datalist map[string]interface{}, datalist_cname string) {
+	length := len(m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{}))
+	for i := 0; i < length; i++ {
+		datalist_len := len(m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{}))
+		if datalist_len > 0 {
+			// TODO : 目前仅支持一个datalist的情况
+			cname := m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{})[0].(map[string]interface{})["Cname"].(string)
+			if cname == datalist_cname {
+				m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{})[0] = m_datalist
+			}
+		}
+	}
 }
