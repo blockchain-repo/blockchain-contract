@@ -18,8 +18,9 @@ func Connect() *r.Session { // FIXME: GetSession?
 		})
 	*/
 	ip := config.Config.LocalIp
+	port := config.Config.Port
 	session, err := r.Connect(r.ConnectOpts{
-		Address: ip + ":28015",
+		Address: ip + ":" + port,
 	})
 
 	if err != nil {
@@ -39,8 +40,9 @@ func ConnectDB(dbname string) *r.Session { // FIXME: GetSession?
 	   })
 	*/
 	ip := config.Config.LocalIp
+	port := config.Config.Port
 	session, err := r.Connect(r.ConnectOpts{
-		Address: ip + ":28015",
+		Address:  ip + ":" + port,
 		Database: dbname,
 	})
 

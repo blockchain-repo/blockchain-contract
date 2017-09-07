@@ -21,6 +21,7 @@ type UnicontractConfig struct {
 	//切片
 	Keyring []string `json:"Keyring"`
 	LocalIp string   `json:"LocalIp"`
+	Port    string   `json:"Port"`
 }
 
 /**

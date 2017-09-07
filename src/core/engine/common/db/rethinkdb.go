@@ -55,8 +55,9 @@ func (rethink *rethinkdb) connect() (*r.Session, error) {
 		})
 	*/
 	ip := config.Config.LocalIp
+	port := config.Config.Port
 	session, err := r.Connect(r.ConnectOpts{
-		Address: ip + ":28015",
+		Address: ip + ":" + port,
 	})
 
 	if err != nil {
