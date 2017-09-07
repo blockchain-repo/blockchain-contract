@@ -1,14 +1,14 @@
 package requestHandler
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 /**
  * function : 获取yamlconfig对象
  * param   :
- * return : 
+ * return :
  */
 func TestGetYamlConfig(t *testing.T) {
 	config := GetYamlConfig("unichainApiConf.yaml")
@@ -23,7 +23,7 @@ func TestGetYamlConfig(t *testing.T) {
 func TestGetParam(t *testing.T) {
 
 	config := GetYamlConfig("unichainApiConf.yaml")
-	method,url,head,body :=GetParam(config,"ContractAssetFreeze")
+	method, url, head, body := GetParam(config, "ContractAssetFreeze", "")
 
 	fmt.Println(method)
 	fmt.Println(url)
@@ -39,7 +39,7 @@ func TestGetParam(t *testing.T) {
 func TestGetParam1(t *testing.T) {
 
 	config := GetYamlConfig("unicontractApiConf.yaml")
-	method,url,head,body :=GetParam(config,"ContractAssetFreeze")
+	method, url, head, body := GetParam(config, "ContractAssetFreeze", "")
 
 	fmt.Println(method)
 	fmt.Println(url)
@@ -55,7 +55,7 @@ func TestGetParam1(t *testing.T) {
 func TestGetParam2(t *testing.T) {
 
 	config := GetYamlConfig("unichainApiConf.yaml")
-	method,url,head,body :=GetParam(config,"ContractAssetFreeze")
+	method, url, head, body := GetParam(config, "ContractAssetFreeze", "")
 
 	fmt.Println(method)
 	fmt.Println(url)
@@ -64,7 +64,7 @@ func TestGetParam2(t *testing.T) {
 
 	fmt.Println("===================================")
 	config1 := GetYamlConfig("unicontractApiConf.yaml")
-	method1,url1,head1,body1 :=GetParam(config1,"ContractAssetFreeze")
+	method1, url1, head1, body1 := GetParam(config1, "ContractAssetFreeze", "")
 
 	fmt.Println(method1)
 	fmt.Println(url1)
