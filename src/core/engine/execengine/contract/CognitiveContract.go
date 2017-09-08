@@ -562,7 +562,8 @@ func (cc *CognitiveContract) AddProperty(object interface{}, str_name string, va
 		cc.PropertyTable[str_name] = pro_object
 		common.ReflectSetValue(object, str_name, value)
 	default:
-		fmt.Println("[", str_name, ":", value, "]value type not support!!!")
+		//fmt.Println("[", str_name, ":", value, "]value type not support!!!")
+		uniledgerlog.Error("[", str_name, ":", value, "]value type not support!!!")
 	}
 	return pro_object
 }

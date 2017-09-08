@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
 )
@@ -205,7 +206,8 @@ func AddProperty(object interface{}, p_propertyTable map[string]interface{}, str
 		p_propertyTable[str_name] = pro_object
 		ReflectSetValue(object, str_name, value)
 	default:
-		fmt.Println("[", str_name, ":", value, "]value type not support!!!")
+		//fmt.Println("[", str_name, ":", value, "]value type not support!!!")
+		uniledgerlog.Error("[", str_name, ":", value, "]value type not support!!!")
 	}
 	return pro_object
 }

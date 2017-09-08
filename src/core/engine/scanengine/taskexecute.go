@@ -135,10 +135,13 @@ func _Execute() error {
 		}
 		if ret == 0 {
 			uniledgerlog.Warn(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行"))
+			uniledgerlog.Info("+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*-+")
 		} else if ret == -1 {
 			uniledgerlog.Warn(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行"))
+			uniledgerlog.Info("+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*-+")
 		} else if ret == 1 {
 			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "合约任务执行完成"))
+			uniledgerlog.Info("+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*-+")
 		}
 		//执行机销毁合约
 		contractExecuter.Destory()

@@ -603,7 +603,16 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	var v_property_field reflect.Value = reflect.Value{}
 
 	v_component_object = reflect.ValueOf(parse_component).Elem()
-	uniledgerlog.Debug("======component: ", v_variable_array[0], v_component_object.Kind(), "    ", v_component_object.Type(), "   ", v_component_object.Interface())
+	fmt.Println("=================================================================")
+	uniledgerlog.Debug("component - v_variable_array[0] : ")
+	uniledgerlog.Debug(v_variable_array[0])
+	uniledgerlog.Debug("component - v_component_object.Kind() : ")
+	uniledgerlog.Debug(v_component_object.Kind())
+	uniledgerlog.Debug("component - v_component_object.Type() : ")
+	uniledgerlog.Debug(v_component_object.Type())
+	uniledgerlog.Debug("component - v_component_object.Interface() : ")
+	uniledgerlog.Debug(v_component_object.Interface())
+	fmt.Println("=================================================================")
 	//两层达到时，直接返回值
 	if v_variable_count == 2 {
 		v_property_field = v_component_object.FieldByName(v_variable_array[1])
@@ -611,8 +620,18 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			v_err = fmt.Errorf("field[" + v_variable_array[1] + "] is not valid!")
 			return nil, v_err
 		}
-		uniledgerlog.Debug("======field: ", v_variable_array[1], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
-		uniledgerlog.Debug("======field: ", v_property_field.Interface())
+		fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		uniledgerlog.Debug("field - v_variable_array[1] :")
+		uniledgerlog.Debug(v_variable_array[1])
+		uniledgerlog.Debug("field - v_property_field.Kind() :")
+		uniledgerlog.Debug(v_property_field.Kind())
+		uniledgerlog.Debug("field - v_property_field.String():")
+		uniledgerlog.Debug(v_property_field.String())
+		uniledgerlog.Debug("field - v_property_field.IsValid() :")
+		uniledgerlog.Debug(v_property_field.IsValid())
+		uniledgerlog.Debug("field - v_property_field.Interface() : ")
+		uniledgerlog.Debug(v_property_field.Interface())
+		fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		panic(nil)
 		return v_property_field.Interface(), v_err
 	}

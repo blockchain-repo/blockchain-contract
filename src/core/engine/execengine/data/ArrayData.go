@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"unicontract/src/common/uniledgerlog"
+	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
@@ -12,7 +13,12 @@ import (
 
 type ArrayData struct {
 	GeneralData
+	ValueArray []interface{} `json:"-"`
 }
+
+const (
+	_ValueArray = "ValueArray"
+)
 
 func NewArrayData() *ArrayData {
 	n := &ArrayData{}
@@ -81,6 +87,22 @@ func (ad *ArrayData) InitArrayData() error {
 		uniledgerlog.Error("InitArrayData fail[" + err.Error() + "]")
 		return err
 	}
+
+	v := ad.Value.(string)
+	if v != "" {
+		//uniledgerlog.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		//uniledgerlog.Debug("我被调用啦～～～～～～～～～～～～～～～～～～～")
+		//uniledgerlog.Debug("++++++++++++++++++++++++++++++++++++++++++++++++++++")
+		var interf []interface{}
+		err = json.Unmarshal([]byte(v), &interf)
+		if err != nil {
+			uniledgerlog.Error(err)
+			return err
+		}
+		ad.ValueArray = interf
+	}
+	common.AddProperty(ad, ad.PropertyTable, _ValueArray, ad.ValueArray)
+
 	ad.SetCtype(constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Array])
 	return err
 }
