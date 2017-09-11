@@ -1282,15 +1282,6 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				hostname, _ := os.Hostname()
 				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
 					"FuncInterimComplete", string(slData))
-
-				// 再次 getdata 赋值
-				//for v_key, _ := range gt.GetDataValueSetterExpressionList() {
-				//	v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
-				//	//1 函数识别 & 执行
-				//	str_name := v_expr_object.GetName()
-				//
-				//	gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
-				//}
 			}
 		} else {
 			if !gRPCClient.On {
@@ -1372,15 +1363,6 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				hostname, _ := os.Hostname()
 				v_result, r_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(),
 					"FuncAllTransferComplete", string(slData))
-
-				// 再次 getdata 赋值
-				//for v_key, _ := range gt.GetDataValueSetterExpressionList() {
-				//	v_expr_object := gt.GetDataValueSetterExpressionList()[v_key].(inf.IExpression)
-				//	//1 函数识别 & 执行
-				//	str_name := v_expr_object.GetName()
-				//
-				//	gt.ConsistentValue(gt.GetDataList(), str_name, v_result)
-				//}
 			}
 		}
 		//执行结果判断
@@ -1402,6 +1384,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
 			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
 		} else {
+			// TODO FuncAllTransferComplete 要返回output数据，这里现在处理（断言）是错误的
 			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
 			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
 
@@ -1682,15 +1665,17 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 	gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_data.GetName(), v_data)
 }
 
-func _InsertDataListToOutput(m_destination, m_datalist map[string]interface{}, datalist_cname string) {
-	length := len(m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{}))
+func _InsertDataListToOutput(map_destination, map_datalist map[string]interface{}, datalist_cname string) {
+	length := len(map_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{}))
 	for i := 0; i < length; i++ {
-		datalist_len := len(m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{}))
-		if datalist_len > 0 {
-			// TODO : 目前仅支持一个datalist的情况
-			cname := m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{})[0].(map[string]interface{})["Cname"].(string)
-			if cname == datalist_cname {
-				m_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{})[0] = m_datalist
+		if map_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"] != nil {
+			datalist_len := len(map_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{}))
+			if datalist_len > 0 {
+				// TODO : 目前仅支持一个datalist的情况
+				cname := map_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{})[0].(map[string]interface{})["Cname"].(string)
+				if cname == datalist_cname {
+					map_destination["transaction"].(map[string]interface{})["Contract"].(map[string]interface{})["ContractBody"].(map[string]interface{})["ContractComponents"].([]interface{})[i].(map[string]interface{})["DataList"].([]interface{})[0] = map_datalist
+				}
 			}
 		}
 	}
