@@ -21,6 +21,6 @@ ExecuteEngine:
 
 ##GRPC server相关设置
 GRPC:
-  GRPCon: false
+  GRPCon: true
   GRPCServer: localhost
   GRPCPort: 50051

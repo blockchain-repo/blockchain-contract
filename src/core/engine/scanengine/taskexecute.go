@@ -53,8 +53,10 @@ func _TaskExecute() {
 		}
 
 		if responseResult.Code != _HTTP_OK {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, fmt.Sprintf("responseResult.Code is [ %d ]", responseResult.Code)))
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, fmt.Sprintf("responseResult.Message is [ %s ]", responseResult.Message)))
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR,
+				fmt.Sprintf("responseResult.Code is [ %d ]", responseResult.Code)))
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR,
+				fmt.Sprintf("responseResult.Message is [ %s ]", responseResult.Message)))
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
@@ -63,7 +65,8 @@ func _TaskExecute() {
 		// 1
 		contractData, ok := responseResult.Data.(interface{})
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, "responseResult.Data.(interface{}) is error"))
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR,
+				"responseResult.Data.(interface{}) is error"))
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
@@ -71,7 +74,8 @@ func _TaskExecute() {
 		// 2
 		mapData, ok := contractData.([]interface{})
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, "contractData.([]map[string]interface{}) error"))
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR,
+				"contractData.([]map[string]interface{}) error"))
 			_UpdateToWait(strContractTask.ContractId, strContractTask.ContractHashId)
 			continue
 		}
@@ -113,7 +117,9 @@ func _Execute() error {
 		contractExecuter := execengine.NewContractExecuter()
 		//strData为完整的Output结构体
 		task_load_time := monitor.Monitor.NewTiming()
-		err := contractExecuter.Load(param.strData)
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+			uniledgerlog.NO_ERROR, param.strContractID, "begin to load json string"))
+		err := contractExecuter.Load(param.strData, param.strContractID)
 		task_load_time.Send("task_load")
 		if err != nil {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
@@ -122,10 +128,14 @@ func _Execute() error {
 		}
 		//执行引擎初始化环境
 		if !gRPCClient.On {
+			uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+				uniledgerlog.NO_ERROR, param.strContractID, "begin to load function engine"))
 			contractExecuter.Prepare()
 		}
 		//执行机启动合约执行
 		task_execute_time := monitor.Monitor.NewTiming()
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+			uniledgerlog.NO_ERROR, param.strContractID, "ready to perform"))
 		ret, err := contractExecuter.Start()
 		task_execute_time.Send("task_execute")
 		if err != nil {
@@ -134,16 +144,20 @@ func _Execute() error {
 			continue
 		}
 		if ret == 0 {
-			uniledgerlog.Warn(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行"))
+			uniledgerlog.Warn(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR,
+				"合约执行过程中，某任务没有达到执行条件，暂时退出，等待下轮扫描再次加载执行"))
 			uniledgerlog.Info("+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*-+")
 		} else if ret == -1 {
-			uniledgerlog.Warn(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行"))
+			uniledgerlog.Warn(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR,
+				"合约执行过程中，某任务执行失败，暂时退出，等待下轮扫描再次加载执行"))
 			uniledgerlog.Info("+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*-+")
 		} else if ret == 1 {
 			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "合约任务执行完成"))
 			uniledgerlog.Info("+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*+-*-+")
 		}
 		//执行机销毁合约
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+			uniledgerlog.NO_ERROR, param.strContractID, "execute is over"))
 		contractExecuter.Destory()
 	}
 	return nil

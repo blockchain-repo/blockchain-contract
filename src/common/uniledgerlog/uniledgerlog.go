@@ -21,15 +21,17 @@ import (
 const (
 	LevelError = iota
 	LevelWarn
+	LevelNotice
 	LevelInfo
 	LevelDebug
 )
 
 var mapLevelKeys = map[int]string{
-	LevelError: "ERROR",
-	LevelWarn:  "WARN",
-	LevelInfo:  "INFO",
-	LevelDebug: "DEBUG",
+	LevelError:  "ERROR",
+	LevelWarn:   "WARN",
+	LevelNotice: "NOTICE",
+	LevelInfo:   "INFO",
+	LevelDebug:  "DEBUG",
 }
 
 func _Serialize(obj interface{}, escapeHTML ...bool) string {
@@ -109,6 +111,8 @@ func _WriteLog(key int, format interface{}, v ...interface{}) {
 		f = logs.Error
 	case LevelWarn:
 		f = logs.Warn
+	case LevelNotice:
+		f = logs.Notice
 	case LevelInfo:
 		f = logs.Info
 	case LevelDebug:
@@ -125,6 +129,10 @@ func Error(f interface{}, v ...interface{}) {
 
 func Warn(f interface{}, v ...interface{}) {
 	_WriteLog(LevelWarn, f, v...)
+}
+
+func Notice(f interface{}, v ...interface{}) {
+	_WriteLog(LevelNotice, f, v...)
 }
 
 func Info(f interface{}, v ...interface{}) {

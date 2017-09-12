@@ -573,14 +573,20 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 		cc.PropertyTable = make(map[string]interface{}, 0)
 	}
 	//ID初始化
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, cc.ContractBody.ContractId, "struct init ID"))
 	common.AddProperty(cc, cc.PropertyTable, _Id, cc.Id)
 	//ContractHead初始化
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, cc.ContractBody.ContractId, "struct init ContractHead"))
 	common.AddProperty(cc, cc.PropertyTable, _MainPubkey, cc.ContractHead.MainPubkey)
 	common.AddProperty(cc, cc.PropertyTable, _AssignTime, cc.ContractHead.AssignTime)
 	common.AddProperty(cc, cc.PropertyTable, _OperateTime, cc.ContractHead.OperateTime)
 	common.AddProperty(cc, cc.PropertyTable, _Version, cc.ContractHead.Version)
 	common.AddProperty(cc, cc.PropertyTable, _ConsensusResult, cc.ContractHead.ConsensusResult)
 	//ContractBody初始化
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, cc.ContractBody.ContractId, "struct init ContractBody"))
 	if cc.ContractBody.Cname == "" {
 		uniledgerlog.Warn("Contract Need Cname!")
 		err = errors.New("Contract Need Cname!")
@@ -636,7 +642,8 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	}
 	//将描述态数据加载成运行态，因此value都是gc.xxxx(描述态的)
 	common.AddProperty(cc, cc.PropertyTable, _Cname, cc.ContractBody.Cname)
-	str, ok := common.TernaryOperator(cc.ContractBody.Ctype == "", constdef.ComponentType[constdef.Component_Contract], cc.ContractBody.Ctype).(string)
+	str, ok := common.TernaryOperator(cc.ContractBody.Ctype == "",
+		constdef.ComponentType[constdef.Component_Contract], cc.ContractBody.Ctype).(string)
 	if !ok {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return fmt.Errorf("assert error")
@@ -647,7 +654,8 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	common.AddProperty(cc, cc.PropertyTable, _Description, cc.ContractBody.Description)
 	common.AddProperty(cc, cc.PropertyTable, _MetaAttribute, cc.ContractBody.MetaAttribute)
 	common.AddProperty(cc, cc.PropertyTable, _ContractId, cc.ContractBody.ContractId)
-	str, ok = common.TernaryOperator(cc.ContractBody.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractBody.ContractState).(string)
+	str, ok = common.TernaryOperator(cc.ContractBody.ContractState == "",
+		constdef.ContractState[constdef.Contract_Create], cc.ContractBody.ContractState).(string)
 	if !ok {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return fmt.Errorf("assert error")
@@ -684,9 +692,11 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	cc.FunctionParseEngine = function.NewFunctionParseEngine()
 	cc.ExpressionParseEngine = expressionutils.NewExpressionParseEngine()
 
+	// TODO 以后应该去掉
 	//合约预处理：初始化FunctionEngine & ExpressionEngine
 	cc.loadBuildInFunctions()
 	cc.loadExpressionParser()
+
 	return err
 }
 
@@ -1265,6 +1275,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	//     有(state_inprocess),则清空队列，将该任务入队，跳出判断，进入下一判断
 	//     无(且队列不空时)，继续判断
 	//     无(且队列为空时)，则将当前轮询的后继任务入队，跳出循环，进入下一判断
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, cc.GetContractId(), "load current execute task"))
 	for !r_task_queue.Empty() {
 		tmp_str_task := r_task_queue.Pop()
 		str, ok := tmp_str_task.(string)
@@ -1291,7 +1303,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return r_ret, fmt.Errorf("assert error")
 		}
-		if ttask.GetState() == constdef.TaskState[constdef.TaskState_Discard] || ttask.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
+		if ttask.GetState() == constdef.TaskState[constdef.TaskState_Discard] ||
+			ttask.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
@@ -1308,7 +1321,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
-					r_err = cc.UpdateLoopExecuteTask(t_task)
+					r_err = cc.UpdateLoopExecuteTask(t_task) // TODO ???
 					if r_err != nil {
 						r_ret = -1
 						r_err = errors.New("UpdateLoopExecuteTask fai!")
@@ -1347,6 +1360,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	//       0 : 任务状态流转过程中，在某一状态时，达不到执行条件 返回0; State=Dromant, Inprocess, Completed
 	//       1 : 任务状态流转完成，才会返回 1; State=Digcard
 	//注：此处只代表单个任务的执行结果，每次执行只能执行一个任务
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, cc.GetContractId(), "begin to execute current task"))
 	var f_err error = nil
 	for !r_task_queue.Empty() {
 		tmp_str_task := r_task_queue.Pop()
@@ -1369,6 +1384,8 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return r_ret, fmt.Errorf("assert error")
 		}
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) current task name is (%s), id is (%s), ready to perform]",
+			uniledgerlog.NO_ERROR, cc.GetContractId(), aaaaa.GetName(), aaaaa.GetTaskId()))
 		r_ret, f_err = aaaaa.UpdateState()
 		switch r_ret {
 		case 1: //执行成功后，跳转到下一合约任务；

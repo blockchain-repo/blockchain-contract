@@ -149,12 +149,18 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 		r_err = errors.New("Object pointer is null!")
 		return r_ret, r_err
 	}
+
 	//预处理
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to preprocess]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	r_err = gt.PreProcess()
 	if r_err != nil {
 		uniledgerlog.Error("Task[" + gt.GetName() + "] PreProcess fail!")
 		return r_ret, r_err
 	}
+
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to execute]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	//处理中
 	r_ret, process_err := gt.Start()
 	if process_err != nil {
@@ -171,6 +177,9 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 		//轮询等待后，条件不成立，则暂时退出
 		r_flag = 0
 	}
+
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to postprocess]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	//后处理
 	postProcess_err := gt.PostProcess(r_flag)
 	if postProcess_err != nil {
@@ -345,6 +354,8 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 //===============运行态=====================
 //Init中实现描述态反序列化后得到的Map[string]map结构到 Map[string]Component对象的转化
 func (gt *GeneralTask) InitGeneralTask() error {
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), "init general task"))
 	var err error = nil
 	err = gt.InitGeneralComponent()
 	if err != nil {
@@ -1024,6 +1035,9 @@ func (gt *GeneralTask) Start() (int8, error) {
 	uniledgerlog.Info(r_buf.String(), " begin....")
 	var r_ret int8 = 0
 	var r_err error = nil
+
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), check start precondition]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	if gt.IsDormant() && gt.testPreCondition() {
 		var exec_flag bool = true
 		//如果没有后继任务，则最后一个任务执行结束后，合约完成
@@ -1105,8 +1119,12 @@ func (gt *GeneralTask) Start() (int8, error) {
 				str_function = func_buf.String()
 				uniledgerlog.Debug("==after process Function==" + str_function)
 			}
+
+			uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), evaluate expression]",
+				uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 			v_result, r_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Function], str_function)
 			v_result_object := v_result.(common.OperateResult)
+
 			//2 执行结果赋值
 			//  2.1 结果赋值到 data中,针对Enquiry Task，需要根据分支条件一致性化查询结果值
 			//uniledgerlog.Debug("------------------------------------------------------------")
@@ -1114,13 +1132,22 @@ func (gt *GeneralTask) Start() (int8, error) {
 			//uniledgerlog.Debug("str_name : ", str_name)
 			//uniledgerlog.Debug("v_result_object : ", v_result_object)
 			//uniledgerlog.Debug("------------------------------------------------------------")
+			uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), update consistent value]",
+				uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 			gt.ConsistentValue(gt.GetDataList(), str_name, v_result_object)
+
 			//  2.2 结果赋值到 dataSetterValue函数结果
+			uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), update expression result]",
+				uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 			v_expr_object.SetExpressionResult(v_result_object)
-			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression], v_expr_object.GetName(), v_expr_object)
+			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Expression],
+				v_expr_object.GetName(), v_expr_object)
 			now_json, _ := gt.GetContract().Serialize()
 			uniledgerlog.Info("========after update component=====", now_json)
+
 			//  2.3 Output交易产出结构体赋值
+			uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), update output]",
+				uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 			if v_result_object.GetOutput() != nil /*&& v_result_object.GetOutput() != ""*/ {
 				if !gRPCClient.On {
 					_, ok := v_result_object.GetOutput().(string)
@@ -1173,7 +1200,10 @@ func (gt *GeneralTask) Start() (int8, error) {
 		uniledgerlog.Warn(r_buf.String(), " exit....")
 		return r_ret, r_err
 	}
+
 	//执行完动作后需要等待执行完成
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to complete]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	r_ret, r_err = gt.Complete()
 	return r_ret, r_err
 }
@@ -1189,6 +1219,8 @@ func (gt *GeneralTask) Complete() (int8, error) {
 	var r_err error = nil
 	//   任务执行成功，继续往下执行
 	//   任务执行失败，该任务需要重新执行
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), check complete precondition]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	if gt.IsInProgress() && gt.testCompleteCondition() {
 		//Dormant方法中生成交易产出Output（针对资产方法，合约执行状态+交易产出）；如果没有交易产出Output，则在Complete中生成Output（纯合约执行状态）
 		//1 判断OutputStruct 是否为空，为空则需要在此构造产出结构体
@@ -1262,7 +1294,10 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				}
 			}
 		}
+
 		//4 OutputStruct插入到Output表中
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), complete execute]",
+			uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 		var v_result common.OperateResult = common.OperateResult{}
 		if output_null_flag {
 			if !gRPCClient.On {
@@ -1379,7 +1414,10 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			uniledgerlog.Error(r_buf.String())
 			return r_ret, r_err
 		}
+
 		//5 设置OutputStruct的部分字段更新: OutputId  OutputTaskId, OutputTaskExecuteIdx, OutputStruct
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), update complete output]",
+			uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 		if !gRPCClient.On {
 			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
 			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
@@ -1454,6 +1492,8 @@ func (gt *GeneralTask) Complete() (int8, error) {
 		executeEngineConf = engine.UCVMConf["ExecuteEngine"].(map[interface{}]interface{})
 	}
 
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to discard]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 	var v_sleep_num int = executeEngineConf["task_complete_sleep_count"].(int)
 	time.Sleep(time.Second * time.Duration(executeEngineConf["task_complete_sleep_time"].(int)))
 	for v_sleep_num > 0 {
@@ -1507,6 +1547,9 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 	uniledgerlog.Debug("State:" + gt.GetState())
 	uniledgerlog.Debug("TaskExecuteIdx:%d", gt.GetTaskExecuteIdx())
 	uniledgerlog.Debug("-----------------------------------------------")
+
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), update task schedule state]",
+		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
 
 	switch p_flag {
 	case -1:

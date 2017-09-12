@@ -60,7 +60,7 @@ func Test_UpdateMonitorSendBatch(t *testing.T) {
 }
 
 func Test_UpdateMonitorSend(t *testing.T) {
-	strID := "d5501c6f-3f74-47d7-bcaa-1f7050aa8196"
+	strID := "6a02f281-9ed9-4360-bd68-c475c96042e1"
 	err := UpdateMonitorSend(strID)
 	if err != nil {
 		t.Errorf("not pass, return err is \" %s \"\n", err.Error())

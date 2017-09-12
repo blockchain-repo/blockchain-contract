@@ -32,6 +32,7 @@ func (t TestStruct) func1() {
 
 func (t *TestStruct) func2() {
 	Debug(t)
+	Notice(t)
 }
 
 func Test_log1(t *testing.T) {

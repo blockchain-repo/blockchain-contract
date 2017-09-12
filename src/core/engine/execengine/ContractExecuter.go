@@ -51,9 +51,10 @@ func NewContractExecuter() *ContractExecuter {
 //====运行生命周期：Load(描述态到运行态) =》 Prepare =》 Run  =》 Stop
 //将描述态加载到内存中，形成运行态（即初始化Contract、ComponentTable、PropertyTable）
 //Args: p_str_json      => 完整的contract Output结构体JSON
+//      str_contractId  => contract的id，目前只用于日志记录
 //说明：
 //   反序列化回来的都是map类型， property_table中都是实际的struct
-func (ce *ContractExecuter) Load(p_str_json string) error {
+func (ce *ContractExecuter) Load(p_str_json, str_contractId string) error {
 	fmt.Println("=================================================================================")
 	uniledgerlog.Debug("contract json is :")
 	uniledgerlog.Debug(p_str_json)
@@ -137,6 +138,8 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		return fmt.Errorf("Serialize Error!")
 	}
 	//l 反序列化
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, str_contractId, "deserialize to contract struct"))
 	ret_contract, err := ce.contract_executer.Deserialize(str_json_contract)
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
@@ -152,6 +155,8 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		return fmt.Errorf("Contract Struct Assert Error!")
 	}
 	//2 Init初始化, 填充contract property_table
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, str_contractId, "struct init"))
 	err = ce.contract_executer.InitCognitiveContract()
 	if err != nil {
 		r_buf.WriteString("[Result]:Load Fail;")
@@ -165,6 +170,8 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	//3 Components填充 component_table 和 property_table
 	//component_table: contract_component, task_component, data_component, expression_component
 	//property_table: contract_property, task_property, data_property, expression_property
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, str_contractId, "contract struct load task"))
 	for p_idx, p_component := range ce.contract_executer.GetContractComponents() {
 		uniledgerlog.Debug("component[", p_idx, "]: ", p_component)
 		err = loadTask(ce.contract_executer, p_component)
@@ -177,6 +184,8 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 	}
 	ce.contract_executer.AddComponent(ce.contract_executer)
 	//4 Check合约是否可以执行，并更新合约状态
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, str_contractId, "check if can be executed and update contract state"))
 	if !ce.contract_executer.CanExecute() {
 		r_buf.WriteString("[Result]:Load Fail;")
 		r_buf.WriteString("[Error]:Other Error - Contract can not execute!")
@@ -197,6 +206,8 @@ func (ce *ContractExecuter) Load(p_str_json string) error {
 		return err
 	}
 
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, str_contractId, "load success"))
 	r_buf.WriteString("[Result]:Load Success!")
 	uniledgerlog.Info(r_buf.String())
 	return err

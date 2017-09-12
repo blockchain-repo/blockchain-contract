@@ -55,55 +55,84 @@ func loadTask(p_contract *contract.CognitiveContract, p_component interface{}) e
 			uniledgerlog.Warn(r_buf.String())
 			return err
 		}
+
 		//4 添加任务组件到component_table中
 		p_contract.AddComponent(p_task)
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Action]:
+		//1.反序列化
 		p_task := task.NewAction()
 		byte_task, _ := json.Marshal(map_task)
 		err = json.Unmarshal(byte_task, &p_task)
+
+		//2.初始化
 		p_task.InitAction()
+
+		//3.处理数组属性
 		if err := loadTaskInnerComponent(p_contract, map_task, p_task); err != nil {
 			r_buf.WriteString("[Result]:LoadTask(Action) fail;")
 			r_buf.WriteString("[Error]:Error in LoadTask(loadTaskInnerComponent) ," + err.Error())
 			uniledgerlog.Warn(r_buf.String())
 			return err
 		}
+
+		//4 添加任务组件到component_table中
 		p_contract.AddComponent(p_task)
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision]:
+		//1.反序列化
 		p_task := task.NewDecision()
 		byte_task, _ := json.Marshal(map_task)
 		err = json.Unmarshal(byte_task, &p_task)
+
+		//2.初始化
 		p_task.InitDecision()
+
+		//3.处理数组属性
 		if err := loadTaskInnerComponent(p_contract, map_task, p_task); err != nil {
 			r_buf.WriteString("[Result]:LoadTask(Decision) fail;")
 			r_buf.WriteString("[Error]:Error in LoadTask(loadTaskInnerComponent) ," + err.Error())
 			uniledgerlog.Warn(r_buf.String())
 			return err
 		}
+
+		//4 添加任务组件到component_table中
 		p_contract.AddComponent(p_task)
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Plan]:
+		//1.反序列化
 		p_task := task.NewPlan()
 		byte_task, _ := json.Marshal(map_task)
 		err = json.Unmarshal(byte_task, &p_task)
+
+		//2.初始化
 		p_task.InitPlan()
+
+		//3.处理数组属性
 		if err := loadTaskInnerComponent(p_contract, map_task, p_task); err != nil {
 			r_buf.WriteString("[Result]:LoadTask(Plan) fail;")
 			r_buf.WriteString("[Error]:Error in LoadTask(loadTaskInnerComponent) ," + err.Error())
 			uniledgerlog.Warn(r_buf.String())
 			return err
 		}
+
+		//4 添加任务组件到component_table中
 		p_contract.AddComponent(p_task)
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Unknown]:
+		//1.反序列化
 		p_task := task.NewGeneralTask()
 		byte_task, _ := json.Marshal(map_task)
 		err = json.Unmarshal(byte_task, &p_task)
+
+		//2.初始化
 		p_task.InitGeneralTask()
+
+		//3.处理数组属性
 		if err := loadTaskInnerComponent(p_contract, map_task, p_task); err != nil {
 			r_buf.WriteString("[Result]:LoadTask fail;")
 			r_buf.WriteString("[Error]:Error in LoadTask(loadTaskInnerComponent) ," + err.Error())
 			uniledgerlog.Warn(r_buf.String())
 			return err
 		}
+
+		//4 添加任务组件到component_table中
 		p_contract.AddComponent(p_task)
 	}
 	r_buf.WriteString("[Cname]: " + map_task["Cname"].(string) + "[Ctype]: " + map_task["Ctype"].(string) + "[Result]: LoadTask success;")
@@ -112,6 +141,9 @@ func loadTask(p_contract *contract.CognitiveContract, p_component interface{}) e
 }
 
 func loadTaskInnerComponent(p_contract *contract.CognitiveContract, m_task interface{}, p_task interface{}) error {
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+		uniledgerlog.NO_ERROR, p_contract.GetContractId(), "load inner component"))
+
 	var err error
 	var r_buf bytes.Buffer
 	r_buf.WriteString("loadTaskInnerComponent;")
