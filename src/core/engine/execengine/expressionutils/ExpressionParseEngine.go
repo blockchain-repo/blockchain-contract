@@ -632,7 +632,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 		uniledgerlog.Debug("field - v_property_field.Interface() : ")
 		uniledgerlog.Debug(v_property_field.Interface())
 		fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-		//panic(nil)
+		panic(nil)
 		return v_property_field.Interface(), v_err
 	}
 	//识别第三层以后的：. subItem from array, map, and other

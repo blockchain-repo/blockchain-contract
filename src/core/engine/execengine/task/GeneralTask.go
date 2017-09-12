@@ -354,8 +354,8 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 //===============运行态=====================
 //Init中实现描述态反序列化后得到的Map[string]map结构到 Map[string]Component对象的转化
 func (gt *GeneralTask) InitGeneralTask() error {
-	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
-		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), "init general task"))
+	//uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) %s]",
+	//	uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), "init general task"))
 	var err error = nil
 	err = gt.InitGeneralComponent()
 	if err != nil {
@@ -1354,6 +1354,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 					uniledgerlog.Error(err)
 				}
 
+				var datalistCname string
 				for i := 0; i < len(interf); i++ {
 					if interf[i].([]interface{})[1] == "ContractExecute" {
 						// TODO : 目前仅支持一个datalist的情况
@@ -1372,6 +1373,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 							uniledgerlog.Debug("=== m_destination ===", m_destination)
 							uniledgerlog.Debug("=== m_datalist ===", m_datalist)
 							uniledgerlog.Debug("=== v_key ===", v_key)
+							datalistCname = v_key
 							_InsertDataListToOutput(m_destination, m_datalist, v_key)
 							slData, err := json.Marshal(m_destination)
 							if err != nil {
@@ -1393,6 +1395,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 
 				func_params["Param01"] = interf
 				func_params["Param02"] = constdef.TaskState[constdef.TaskState_Completed]
+				func_params["Param03"] = datalistCname
 
 				slData, _ := json.Marshal(func_params)
 				hostname, _ := os.Hostname()
@@ -1422,22 +1425,23 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
 			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
 		} else {
-			// TODO FuncAllTransferComplete 要返回output数据，这里现在处理（断言）是错误的
 			gt.GetContract().SetOutputStruct(v_result.GetOutput().(string))
 			uniledgerlog.Info("====after complete operate==" + v_result.GetOutput().(string))
 
 			//output, ok := v_result.GetOutput().([]interface{})
 			//if ok {
-			//	slData, r_err := json.Marshal(output)
-			//	if r_err != nil {
+			//	str_output, ok := output[2].(string)
+			//	if !ok {
 			//		r_ret = -1
-			//		uniledgerlog.Error(r_err)
+			//		uniledgerlog.Error("utput[2].(string) assert error")
 			//		return r_ret, r_err
+			//
 			//	}
-			//	gt.GetContract().SetOutputStruct(string(slData))
-			//	uniledgerlog.Info("====after transfer operate==" + string(slData))
+			//	gt.GetContract().SetOutputStruct(str_output)
+			//	uniledgerlog.Info("====after transfer operate==" + str_output)
 			//} else {
-			//	uniledgerlog.Error("v_result.GetOutput().([]interface{} assert error")
+			//	r_ret = -1
+			//	uniledgerlog.Error("v_result.GetOutput().([]interface{}) assert error")
 			//	return r_ret, r_err
 			//}
 		}
