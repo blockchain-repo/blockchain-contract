@@ -527,9 +527,30 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 
 			switch v_result.(type) {
 			case string:
-				str_result = v_result.(string)
+				{
+					uniledgerlog.Debug("v_result.(type) is string")
+					str_result = v_result.(string)
+				}
 			case reflect.Value:
-				str_result = v_result.(reflect.Value).String()
+				{
+					uniledgerlog.Debug("v_result.(type) is reflect.Value")
+					switch v_result.(reflect.Value).Type().Kind() {
+					case reflect.Bool:
+						{
+							uniledgerlog.Debug("v_result.(reflect.Value).Type().Kind() is bool")
+							if v_result.(reflect.Value).Bool() {
+								str_result = "true"
+							} else {
+								str_result = "false"
+							}
+						}
+					default:
+						uniledgerlog.Warn("default : v_result.(reflect.Value).Type().Kind() is %+v",
+							v_result.(reflect.Value).Type().Kind())
+					}
+				}
+			default:
+				uniledgerlog.Warn("default : v_result.(type) is %+v", reflect.TypeOf(v_result))
 			}
 			uniledgerlog.Debug("=======variable: ", v_param, "  =====value: ", str_result)
 			p_expression = strings.Replace(p_expression, v_param, str_result, -1)
@@ -632,7 +653,6 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 		uniledgerlog.Debug("field - v_property_field.Interface() : ")
 		uniledgerlog.Debug(v_property_field.Interface())
 		fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-		panic(nil)
 		return v_property_field.Interface(), v_err
 	}
 	//识别第三层以后的：. subItem from array, map, and other
@@ -649,6 +669,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			v_component_object = v_property_field.MapIndex(reflect.ValueOf(v_variable_array[v_idx]))
 			v_property_field = reflect.ValueOf(v_component_object)
 			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("Map")
 		case reflect.Slice:
 			v_idx = v_idx + 1
 			if v_idx >= v_variable_count {
@@ -666,6 +687,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
 			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("Slice")
 		case reflect.Array:
 			v_idx = v_idx + 1
 			if v_idx >= v_variable_count {
@@ -682,10 +704,13 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
 			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("Array")
 		case reflect.Struct:
 			v_struct_property := v_property_field.Interface()
 			v_component_object = reflect.ValueOf(v_struct_property)
+			uniledgerlog.Debug("Struct")
 		default:
+			uniledgerlog.Debug("default")
 			break
 		}
 		v_idx = v_idx + 1
@@ -901,12 +926,12 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	//正则匹配函数名
 	name_reg := regexp.MustCompile(`\s*([^\(]+)`)
 	func_name := strings.TrimSpace(name_reg.FindString(p_function))
-	uniledgerlog.Info("=======func_name:", func_name)
+	uniledgerlog.Debug("=======func_name:", func_name)
 
 	//正则匹配函数的参数变量
 	param_reg := regexp.MustCompile(`\((.*)\)`)
 	func_param_str := strings.Trim(param_reg.FindString(p_function), "(|)")
-	uniledgerlog.Info("=======func_params:", func_param_str)
+	uniledgerlog.Debug("=======func_params:", func_param_str)
 
 	//函数调用
 	var func_run reflect.Value

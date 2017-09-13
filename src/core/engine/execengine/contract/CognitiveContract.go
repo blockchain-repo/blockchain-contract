@@ -1379,14 +1379,15 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Warn(r_buf.String())
 			return r_ret, r_err
 		}
-		aaaaa, ok := f_s_task.(inf.ITask)
+		w_e_task, ok := f_s_task.(inf.ITask)
 		if !ok {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return r_ret, fmt.Errorf("assert error")
 		}
+
 		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s) current task name is (%s), id is (%s), ready to perform]",
-			uniledgerlog.NO_ERROR, cc.GetContractId(), aaaaa.GetName(), aaaaa.GetTaskId()))
-		r_ret, f_err = aaaaa.UpdateState()
+			uniledgerlog.NO_ERROR, cc.GetContractId(), w_e_task.GetName(), w_e_task.GetTaskId()))
+		r_ret, f_err = w_e_task.UpdateState(r_task_queue.Len())
 		switch r_ret {
 		case 1: //执行成功后，跳转到下一合约任务；
 			// 注意：后续任务不入队列了，等待共识成功后初始化到扫描监控表中，下次加载再执行
@@ -1415,14 +1416,14 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 				cc.SetOrgTaskExecuteIdx(cc.GetOutputTaskExecuteIdx())
 			*/
 		case 0: //执行条件不成立
-			if aaaaa.GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
+			if w_e_task.GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
 				continue
 			} else { //合约退出
-				r_err = errors.New("task[" + aaaaa.GetName() + "] condition not fullfill!")
+				r_err = errors.New("task[" + w_e_task.GetName() + "] condition not fullfill!")
 				break
 			}
 		case -1: //执行失败后，合约退出
-			r_err = errors.New("task[" + aaaaa.GetName() + "] execute fail!")
+			r_err = errors.New("task[" + w_e_task.GetName() + "] execute fail!")
 			break
 		}
 		if f_err != nil {
@@ -1449,7 +1450,8 @@ func (cc *CognitiveContract) CanExecute() bool {
 	}
 	var v_signature_count int = len(tmp1)
 	var v_contract_state string = cc.GetContractState()
-	if v_contract_state == constdef.ContractState[constdef.Contract_Completed] || v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
+	if v_contract_state == constdef.ContractState[constdef.Contract_Completed] ||
+		v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
 		uniledgerlog.Warn("ContractState is Completed or Discarded, contract can't execute!")
 		//此时强制更新扫描表合约执行状态，防止再次被扫描加载
 		err := common.UpdateMonitorDeal(cc.GetContractId(), cc.GetId())
@@ -1460,7 +1462,8 @@ func (cc *CognitiveContract) CanExecute() bool {
 		return v_bool
 	}
 	//constract_state: Create or Signature need check signatures
-	if v_contract_state == constdef.ContractState[constdef.Contract_Signature] || v_contract_state == constdef.ContractState[constdef.Contract_Create] {
+	if v_contract_state == constdef.ContractState[constdef.Contract_Signature] ||
+		v_contract_state == constdef.ContractState[constdef.Contract_Create] {
 		//check owners signature count
 		if v_signature_count < v_owner_count {
 			v_bool = false

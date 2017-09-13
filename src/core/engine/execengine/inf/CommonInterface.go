@@ -83,7 +83,7 @@ type ITask interface {
 	GetState() string
 	SetState(string)
 	GetNextTasks() []string
-	UpdateState() (int8, error)
+	UpdateState(nBrotherNum int) (int8, error)
 	GetTaskId() string
 	GetTaskExecuteIdx() int
 	SetTaskId(string)

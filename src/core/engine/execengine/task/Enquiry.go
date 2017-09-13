@@ -52,8 +52,8 @@ func (e Enquiry) GetNextTasks() []string {
 	return e.GeneralTask.GetNextTasks()
 }
 
-func (e Enquiry) UpdateState() (int8, error) {
-	return e.GeneralTask.UpdateState()
+func (e Enquiry) UpdateState(nBrotherNum int) (int8, error) {
+	return e.GeneralTask.UpdateState(nBrotherNum)
 }
 func (e Enquiry) GetTaskId() string {
 	return e.GeneralTask.GetTaskId()

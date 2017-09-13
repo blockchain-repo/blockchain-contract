@@ -57,8 +57,8 @@ func (d Decision) GetNextTasks() []string {
 	return d.Enquiry.GetNextTasks()
 }
 
-func (d Decision) UpdateState() (int8, error) {
-	return d.Enquiry.UpdateState()
+func (d Decision) UpdateState(nBrotherNum int) (int8, error) {
+	return d.Enquiry.UpdateState(nBrotherNum)
 }
 func (d Decision) GetTaskId() string {
 	return d.Enquiry.GetTaskId()

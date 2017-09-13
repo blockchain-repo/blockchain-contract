@@ -48,8 +48,8 @@ func (a Action) GetNextTasks() []string {
 	return a.Enquiry.GetNextTasks()
 }
 
-func (a Action) UpdateState() (int8, error) {
-	return a.Enquiry.UpdateState()
+func (a Action) UpdateState(nBrotherNum int) (int8, error) {
+	return a.Enquiry.UpdateState(nBrotherNum)
 }
 func (a Action) GetTaskId() string {
 	return a.Enquiry.GetTaskId()

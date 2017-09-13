@@ -80,6 +80,8 @@ func FunctionRun(requestID, funcName, funcParams string) (common.OperateResult, 
 		return result, err
 	}
 
+	log.Info(fmt.Sprintf("[%s][requestID is %s, funcName is %s, funcParams is %s]",
+		log.NO_ERROR, requestID, funcName, funcParams))
 	r1, err := c.ExecuteFunc(context.Background(), &pb.ExecRequest{Params: string(slData)})
 	if err != nil {
 		log.Error(fmt.Sprintf("[%s][%s]", log.OTHER_ERROR, err.Error()))

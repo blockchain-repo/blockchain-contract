@@ -56,8 +56,8 @@ func (p Plan) GetNextTasks() []string {
 	return p.GeneralTask.GetNextTasks()
 }
 
-func (p Plan) UpdateState() (int8, error) {
-	return p.GeneralTask.UpdateState()
+func (p Plan) UpdateState(nBrotherNum int) (int8, error) {
+	return p.GeneralTask.UpdateState(nBrotherNum)
 }
 func (p Plan) GetTaskId() string {
 	return p.GeneralTask.GetTaskId()

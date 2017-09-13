@@ -139,7 +139,7 @@ func (gt *GeneralTask) GetNextTasks() []string {
 //    1. ret = -1：执行失败, 需要回滚
 //    2. ret = 0 ：执行条件未达到
 //    3. ret = 1 ：执行完成,转入后继任务
-func (gt GeneralTask) UpdateState() (int8, error) {
+func (gt GeneralTask) UpdateState(nBrotherNum int) (int8, error) {
 	var r_ret int8 = 0
 	var r_err error = nil
 	var r_str_error string = ""
@@ -159,9 +159,9 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 		return r_ret, r_err
 	}
 
+	//处理中
 	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to execute]",
 		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
-	//处理中
 	r_ret, process_err := gt.Start()
 	if process_err != nil {
 		r_str_error = r_str_error + "[Run_Error]:" + process_err.Error()
@@ -178,10 +178,10 @@ func (gt GeneralTask) UpdateState() (int8, error) {
 		r_flag = 0
 	}
 
+	//后处理
 	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to postprocess]",
 		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
-	//后处理
-	postProcess_err := gt.PostProcess(r_flag)
+	postProcess_err := gt.PostProcess(r_flag, nBrotherNum)
 	if postProcess_err != nil {
 		r_str_error = r_str_error + "[PostProcess_Error]" + postProcess_err.Error()
 	}
@@ -1534,7 +1534,7 @@ func (gt *GeneralTask) Discard() (int8, error) {
 }
 
 //任务运行后进行的后处理
-func (gt *GeneralTask) PostProcess(p_flag int8) error {
+func (gt *GeneralTask) PostProcess(p_flag int8, nBrotherNum int) error {
 	var r_err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
 	//获取当前合约HashID(contract.Id），新建合约HashID(contract.outputId)
@@ -1580,45 +1580,48 @@ func (gt *GeneralTask) PostProcess(p_flag int8) error {
 		//    case1: State=Dormant or Inprocess .更新contractID1 的flag=0，waitNum+1, timestamp
 		//    case2: State=Complete 更新 contractID1 的flag=1,successNum+1, timestamp; 添加 contractID2 的记录 flag=0
 		//    调用扫描引擎接口： UpdateMonitorWait(contractID_old)
-		if gt.GetState() == constdef.TaskState[constdef.TaskState_Dormant] || gt.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
-			var waitStruct common.UpdateMonitorWaitStruct
-			waitStruct.WstrContractID = v_contract.GetContractId()
-			waitStruct.WstrContractHashID = v_contract.GetId()
-			waitStruct.WstrTaskId = gt.GetTaskId()
-			waitStruct.WstrTaskState = gt.GetState()
-			waitStruct.WnTaskExecuteIndex = gt.GetTaskExecuteIdx()
-			slWaitData, _ := json.Marshal(waitStruct)
-			r_err = common.UpdateMonitorWait(string(slWaitData))
-			if r_err != nil {
-				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
-				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-				uniledgerlog.Error(r_buf.String())
-			} else {
-				r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Succ;")
-				uniledgerlog.Info(r_buf.String())
-			}
-		} else if gt.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
-			r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
-			var succStruct common.UpdateMonitorSuccStruct
-			succStruct.SstrContractID = v_contract.GetContractId()
-			succStruct.SstrContractHashIdOld = v_contract.GetId()
-			succStruct.SstrTaskStateOld = gt.GetState()
-			succStruct.SstrTaskIdOld = v_contract.GetOrgTaskId()
-			succStruct.SnTaskExecuteIndexOld = v_contract.GetOrgTaskExecuteIdx()
-			succStruct.SstrContractHashIDNew = v_contract.GetOutputId()
-			succStruct.SstrTaskIdNew = v_contract.GetOutputTaskId()
-			succStruct.SstrTaskStateNew = gt.GetState()
-			succStruct.SnTaskExecuteIndexNew = v_contract.GetOutputTaskExecuteIdx()
-			succStruct.SnFlag = 0
-			slSuccData, _ := json.Marshal(succStruct)
-			r_err = common.UpdateMonitorSucc(string(slSuccData))
-			if r_err != nil {
-				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
-				r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-				uniledgerlog.Error(r_buf.String())
-			} else {
-				r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Succ;")
-				uniledgerlog.Info(r_buf.String())
+		if nBrotherNum == 0 {
+			if gt.GetState() == constdef.TaskState[constdef.TaskState_Dormant] ||
+				gt.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
+				var waitStruct common.UpdateMonitorWaitStruct
+				waitStruct.WstrContractID = v_contract.GetContractId()
+				waitStruct.WstrContractHashID = v_contract.GetId()
+				waitStruct.WstrTaskId = gt.GetTaskId()
+				waitStruct.WstrTaskState = gt.GetState()
+				waitStruct.WnTaskExecuteIndex = gt.GetTaskExecuteIdx()
+				slWaitData, _ := json.Marshal(waitStruct)
+				r_err = common.UpdateMonitorWait(string(slWaitData))
+				if r_err != nil {
+					r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Fail;")
+					r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+					uniledgerlog.Error(r_buf.String())
+				} else {
+					r_buf.WriteString("[Result]: PostProcess[UpdateMonitorWait] Succ;")
+					uniledgerlog.Info(r_buf.String())
+				}
+			} else if gt.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
+				r_buf.WriteString("[ContractHashID_new]: " + v_contract.GetOutputId() + ";")
+				var succStruct common.UpdateMonitorSuccStruct
+				succStruct.SstrContractID = v_contract.GetContractId()
+				succStruct.SstrContractHashIdOld = v_contract.GetId()
+				succStruct.SstrTaskStateOld = gt.GetState()
+				succStruct.SstrTaskIdOld = v_contract.GetOrgTaskId()
+				succStruct.SnTaskExecuteIndexOld = v_contract.GetOrgTaskExecuteIdx()
+				succStruct.SstrContractHashIDNew = v_contract.GetOutputId()
+				succStruct.SstrTaskIdNew = v_contract.GetOutputTaskId()
+				succStruct.SstrTaskStateNew = gt.GetState()
+				succStruct.SnTaskExecuteIndexNew = v_contract.GetOutputTaskExecuteIdx()
+				succStruct.SnFlag = 0
+				slSuccData, _ := json.Marshal(succStruct)
+				r_err = common.UpdateMonitorSucc(string(slSuccData))
+				if r_err != nil {
+					r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Fail;")
+					r_buf.WriteString("[Error]: " + r_err.Error() + ";")
+					uniledgerlog.Error(r_buf.String())
+				} else {
+					r_buf.WriteString("[Result]: PostProcess[0][UpdateMonitorSucc] Succ;")
+					uniledgerlog.Info(r_buf.String())
+				}
 			}
 		}
 	case 1:
