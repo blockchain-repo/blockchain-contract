@@ -1257,10 +1257,12 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		uniledgerlog.Warn(r_buf.String())
 		return r_ret, r_err
 	}
+
 	var r_task_queue *common.Queue = common.NewQueue()
 	for _, v_task := range next_tasks {
 		r_task_queue.Push(v_task)
 	}
+
 	//根据合约中记录的当前执行任务ID（OrgTaskId）获取任务名称
 	var do_process_task inf.ITask
 	if cc.GetOrgTaskId() != "" {
@@ -1270,6 +1272,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			return r_ret, fmt.Errorf("assert error")
 		}
 	}
+
 	//判断后继任务是否有执行过(state_discard 或 state_completed)的：
 	//     有(state_discard 或 state_completed)，则清空队列，将该任务后继任务入队，继续判断；
 	//     有(state_inprocess),则清空队列，将该任务入队，跳出判断，进入下一判断
@@ -1284,44 +1287,38 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return r_ret, fmt.Errorf("assert error")
 		}
+
 		f_f_task := cc.GetTask(str)
 		if f_f_task == nil {
 			r_ret = -1
 			r_err = errors.New("Judge Task, GetTask is null!")
 			r_buf.WriteString("[Result]: UpdateTasksState fail;")
-			str, ok := tmp_str_task.(string)
-			if !ok {
-				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-				return r_ret, fmt.Errorf("assert error")
-			}
-			r_buf.WriteString("[Error]: " + str + "," + r_err.Error() + ";")
+			r_buf.WriteString("[Error]: " + tmp_str_task.(string) + "," + r_err.Error() + ";")
 			uniledgerlog.Warn(r_buf.String())
 			return r_ret, r_err
 		}
-		ttask, ok := f_f_task.(inf.ITask)
+
+		itask, ok := f_f_task.(inf.ITask)
 		if !ok {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return r_ret, fmt.Errorf("assert error")
 		}
-		if ttask.GetState() == constdef.TaskState[constdef.TaskState_Discard] ||
-			ttask.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
+
+		if itask.GetState() == constdef.TaskState[constdef.TaskState_Discard] ||
+			itask.GetState() == constdef.TaskState[constdef.TaskState_Completed] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
+
 			//通过合约中记录的当前执行任务，则直接对后继任务进行重置，解决循环执行问题
-			next_tasks = ttask.GetNextTasks()
-			doTask, ok := do_process_task.(inf.ITask)
-			if !ok {
-				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
-				return r_ret, fmt.Errorf("assert error")
-			}
-			if ttask.GetName() == doTask.GetName() {
-				uniledgerlog.Info("=========== NowProcessTask:" + doTask.GetName())
-				uniledgerlog.Info("=========== NextProcessTask:" + ttask.GetName())
+			next_tasks = itask.GetNextTasks()
+			uniledgerlog.Info("=========== NowProcessTask:" + do_process_task.GetName())
+			uniledgerlog.Info("=========== NextProcessTask:" + itask.GetName())
+			if itask.GetName() == do_process_task.GetName() {
 				for _, t_task := range next_tasks {
 					//注意：解决循环执行任务问题，当后继任务入队时，需要将后继任务更新为Dromant状态
 					//      通过循环执行次数条件,退出循环执行
-					r_err = cc.UpdateLoopExecuteTask(t_task) // TODO ???
+					r_err = cc.UpdateLoopExecuteTask(t_task) // TODO : ???
 					if r_err != nil {
 						r_ret = -1
 						r_err = errors.New("UpdateLoopExecuteTask fai!")
@@ -1333,18 +1330,16 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 					r_task_queue.Push(t_task)
 				}
 			} else {
-				uniledgerlog.Error("----------- NowProcessTask:" + doTask.GetName())
-				uniledgerlog.Error("----------- NextProcessTask:" + ttask.GetName())
 				for _, t_task := range next_tasks {
 					r_task_queue.Push(t_task)
 				}
 				continue
 			}
-		} else if ttask.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
+		} else if itask.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
 			for r_task_queue.Len() != 0 {
 				r_task_queue.Pop()
 			}
-			r_task_queue.Push(ttask.GetName())
+			r_task_queue.Push(itask.GetName()) // TODO : itask.GetName() ???
 			break
 		} else if r_task_queue.Len() != 0 {
 			continue
@@ -1355,6 +1350,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			break
 		}
 	}
+
 	//执行任务流，任务执行返回的状态：
 	//       -1: 任务状态流转过程中，在某一状态时，执行失败，返回 -1; State=Dormaant, Inprocess
 	//       0 : 任务状态流转过程中，在某一状态时，达不到执行条件 返回0; State=Dromant, Inprocess, Completed
@@ -1370,6 +1366,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			return r_ret, fmt.Errorf("assert error")
 		}
+
 		f_s_task := cc.GetTask(str)
 		if f_s_task == nil {
 			r_ret = -1
@@ -1379,6 +1376,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Warn(r_buf.String())
 			return r_ret, r_err
 		}
+
 		w_e_task, ok := f_s_task.(inf.ITask)
 		if !ok {
 			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
@@ -1430,6 +1428,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			uniledgerlog.Error("Contract Task Execute has error" + f_err.Error())
 		}
 	}
+
 	return r_ret, r_err
 }
 

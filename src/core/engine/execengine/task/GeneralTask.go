@@ -190,6 +190,7 @@ func (gt GeneralTask) UpdateState(nBrotherNum int) (int8, error) {
 	}
 	return r_ret, r_err
 }
+
 func (gt *GeneralTask) GetTaskId() string {
 	if gt.PropertyTable[_TaskId] == nil {
 		return ""
@@ -1537,6 +1538,7 @@ func (gt *GeneralTask) Discard() (int8, error) {
 func (gt *GeneralTask) PostProcess(p_flag int8, nBrotherNum int) error {
 	var r_err error = nil
 	var r_buf bytes.Buffer = bytes.Buffer{}
+
 	//获取当前合约HashID(contract.Id），新建合约HashID(contract.outputId)
 	v_contract := gt.GetContract()
 	r_buf.WriteString("Contract Runing:PostProcess.")
@@ -1554,7 +1556,6 @@ func (gt *GeneralTask) PostProcess(p_flag int8, nBrotherNum int) error {
 
 	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), update task schedule state]",
 		uniledgerlog.NO_ERROR, gt.GetContract().GetContractId(), gt.GetName(), gt.GetTaskId()))
-
 	switch p_flag {
 	case -1:
 		//执行失败：1.更新contractID1 的flag=0, failNum+1, timestamp
@@ -1580,7 +1581,7 @@ func (gt *GeneralTask) PostProcess(p_flag int8, nBrotherNum int) error {
 		//    case1: State=Dormant or Inprocess .更新contractID1 的flag=0，waitNum+1, timestamp
 		//    case2: State=Complete 更新 contractID1 的flag=1,successNum+1, timestamp; 添加 contractID2 的记录 flag=0
 		//    调用扫描引擎接口： UpdateMonitorWait(contractID_old)
-		if nBrotherNum == 0 {
+		if nBrotherNum == 0 { // 只有当是同级task中最后一个时，才会更新状态；否则等待其他同级task的执行。
 			if gt.GetState() == constdef.TaskState[constdef.TaskState_Dormant] ||
 				gt.GetState() == constdef.TaskState[constdef.TaskState_In_Progress] {
 				var waitStruct common.UpdateMonitorWaitStruct

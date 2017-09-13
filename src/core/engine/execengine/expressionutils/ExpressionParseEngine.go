@@ -538,11 +538,15 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 					case reflect.Bool:
 						{
 							uniledgerlog.Debug("v_result.(reflect.Value).Type().Kind() is bool")
-							if v_result.(reflect.Value).Bool() {
-								str_result = "true"
-							} else {
-								str_result = "false"
-							}
+
+							str_result = common.TernaryOperator(v_result.(reflect.Value).Bool(),
+								"true", "false").(string)
+
+							//if v_result.(reflect.Value).Bool() {
+							//	str_result = "true"
+							//} else {
+							//	str_result = "false"
+							//}
 						}
 					default:
 						uniledgerlog.Warn("default : v_result.(reflect.Value).Type().Kind() is %+v",
