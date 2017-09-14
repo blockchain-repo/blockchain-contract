@@ -48,6 +48,7 @@ func QueryFuncType(funcName string) (int32, error) {
 	defer conn.Close()
 	c := pb.NewFunctionClient(conn)
 
+	log.Info(fmt.Sprintf("[%s][Execute QueryFuncType for (%s)]", log.NO_ERROR, funcName))
 	ret, err := c.QueryFuncType(context.Background(),
 		&pb.QueryRequest{FunctionName: funcName})
 	if err != nil {

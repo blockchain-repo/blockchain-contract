@@ -452,29 +452,32 @@ func (cc CognitiveContract) SetMainPubkey(p_mainPubkey string) {
 //===============描述态=====================
 //合约对象序列化
 func (model *CognitiveContract) Serialize() (string, error) {
-	var err error = nil
+	var err error
 	if model == nil {
 		return "", err
 	}
 
-	var task_count int = len(model.ComponentTable.CompTable[constdef.ComponentType[constdef.Component_Task]])
+	task_count := len(model.ComponentTable.CompTable[constdef.ComponentType[constdef.Component_Task]])
 	component_array := model.ComponentTable.CompTable[constdef.ComponentType[constdef.Component_Task]]
-	var new_contract_components []interface{} = make([]interface{}, task_count)
+	new_contract_components := make([]interface{}, task_count)
+
 	for v_idx, _ := range component_array {
 		if len(component_array[v_idx]) == 0 {
 			err = fmt.Errorf("ComponentTable has nil task!")
 			uniledgerlog.Error("Contract Serialize fail[" + err.Error() + "]")
 			return "", err
 		}
+
 		//type: map[string]inf.ITask
 		for v_key, _ := range component_array[v_idx] {
 			//update data & expression in task
-			ttask, ok := component_array[v_idx][v_key].(inf.ITask)
+			itask, ok := component_array[v_idx][v_key].(inf.ITask)
 			if !ok {
-				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "assert error"))
 				return "", fmt.Errorf("assert error")
 			}
-			new_task, err := ttask.UpdateStaticState()
+
+			new_task, err := itask.UpdateStaticState()
 			if err != nil {
 				err = fmt.Errorf("Task.UpdateStaticState fail!")
 				uniledgerlog.Error("Task.UpdateStaticState fail[" + err.Error() + "]")

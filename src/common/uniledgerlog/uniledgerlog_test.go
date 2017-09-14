@@ -44,3 +44,10 @@ func Test_log1(t *testing.T) {
 
 	t.Log("ok")
 }
+
+func Test_log2(t *testing.T) {
+	Debug("line 1", 1111, "1234")
+	Debug("line 2", 1111, "1234")
+	Debug("line 3 %d % s", 1111, "1234")
+	Debug("line 4 %d % s", 1111, "1234")
+}
