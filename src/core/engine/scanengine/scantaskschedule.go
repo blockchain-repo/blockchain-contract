@@ -27,34 +27,48 @@ import (
 
 //---------------------------------------------------------------------------
 func _ScanTaskSchedule() {
-	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
+	sleep_time, ok := scanEngineConf["sleep_time"].(int)
+	if !ok {
+		panic("scanEngineConf[\"sleep_time\"].(int) assert error")
+	}
+	ticker := time.NewTicker(time.Second * time.Duration(sleep_time))
+
 	for _ = range ticker.C {
-		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query no send data"))
-		strNodePubkey := config.Config.Keypair.PublicKey
-		retStr, err := engineCommon.GetMonitorNoSendData(strNodePubkey,
-			scanEngineConf["failed_count_threshold"].(int))
-		if err != nil {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
-			continue
+		open, ok := scanEngineConf["open"].(bool)
+		if !ok {
+			panic("scanEngineConf[\"open\"].(bool) assert error")
 		}
-
-		if len(retStr) == 0 {
-			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "all send"))
-			continue
-		}
-
-		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get no send tasks"))
-		var slTasks []db.TaskSchedule
-		json.Unmarshal([]byte(retStr), &slTasks)
-
-		uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))
-		for _, value := range slTasks {
-			gchTaskQueue <- value
-			//wsp@monitor
-			monitor.Monitor.Count("task_running", 1)
-			err = engineCommon.UpdateMonitorSend(value.Id)
+		if open {
+			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query no send data"))
+			strNodePubkey := config.Config.Keypair.PublicKey
+			failed_count_threshold, ok := scanEngineConf["failed_count_threshold"].(int)
+			if !ok {
+				panic("scanEngineConf[\"failed_count_threshold\"].(int) assert error")
+			}
+			retStr, err := engineCommon.GetMonitorNoSendData(strNodePubkey, failed_count_threshold)
 			if err != nil {
 				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+				continue
+			}
+
+			if len(retStr) == 0 {
+				uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "all send"))
+				continue
+			}
+
+			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get no send tasks"))
+			var slTasks []db.TaskSchedule
+			json.Unmarshal([]byte(retStr), &slTasks)
+
+			uniledgerlog.Info(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))
+			for _, value := range slTasks {
+				gchTaskQueue <- value
+				//wsp@monitor
+				monitor.Monitor.Count("task_running", 1)
+				err = engineCommon.UpdateMonitorSend(value.Id)
+				if err != nil {
+					uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+				}
 			}
 		}
 	}

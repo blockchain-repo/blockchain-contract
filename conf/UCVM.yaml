@@ -1,5 +1,6 @@
 ##扫描引擎配置项
 ScanEngine:
+  open: true
   sleep_time: 5                                          # 数据表扫描间隔时间，单位是秒
   task_queue_len: 20                                     # 待执行队列最大长度
   clean_time: 30                                         # 数据表清理扫描间隔时间，单位是分钟

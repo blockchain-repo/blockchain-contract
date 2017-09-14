@@ -35,37 +35,50 @@ func _ScanFailedTask(flag int) {
 		strLogFlag = "wait"
 	}
 
-	ticker := time.NewTicker(time.Second * time.Duration(scanEngineConf["sleep_time"].(int)))
+	sleep_time, ok := scanEngineConf["sleep_time"].(int)
+	if !ok {
+		panic("scanEngineConf[\"sleep_time\"].(int) assert error")
+	}
+	ticker := time.NewTicker(time.Second * time.Duration(sleep_time))
 	for _ = range ticker.C {
-		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query "+strLogFlag+" data"))
-		strNodePubkey := config.Config.Keypair.PublicKey
-		retStr, err := engineCommon.GetMonitorNoSuccessData(strNodePubkey,
-			scanEngineConf[strThresholdName].(int), flag)
-		if err != nil {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
-			continue
+		open, ok := scanEngineConf["open"].(bool)
+		if !ok {
+			panic("scanEngineConf[\"open\"].(bool) assert error")
 		}
+		if open {
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "query "+strLogFlag+" data"))
+			strNodePubkey := config.Config.Keypair.PublicKey
+			nThreshold, ok := scanEngineConf[strThresholdName].(int)
+			if !ok {
+				panic(fmt.Sprintf("scanEngineConf[\"%s\"].(int) assert error", strThresholdName))
+			}
+			retStr, err := engineCommon.GetMonitorNoSuccessData(strNodePubkey, nThreshold, flag)
+			if err != nil {
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.OTHER_ERROR, err.Error()))
+				continue
+			}
 
-		if len(retStr) == 0 {
-			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "no "+strLogFlag+" data"))
-			continue
+			if len(retStr) == 0 {
+				uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "no "+strLogFlag+" data"))
+				continue
+			}
+
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get "+strLogFlag+" tasks"))
+			var slTasks []db.TaskSchedule
+			json.Unmarshal([]byte(retStr), &slTasks)
+
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get task id slice"))
+			slID := _GetTaskID(slTasks)
+
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))
+			engineCommon.UpdateMonitorSendBatch(slID)
+
+			uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "record task"))
+			_Record(flag, slID)
+
+			//task fail count send to monitor,modify value
+			monitor.Monitor.Gauge(fmt.Sprintf("task_%s_count", strLogFlag), 1)
 		}
-
-		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get "+strLogFlag+" tasks"))
-		var slTasks []db.TaskSchedule
-		json.Unmarshal([]byte(retStr), &slTasks)
-
-		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "get task id slice"))
-		slID := _GetTaskID(slTasks)
-
-		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "handle task"))
-		engineCommon.UpdateMonitorSendBatch(slID)
-
-		uniledgerlog.Debug(fmt.Sprintf("[%s][%s]", uniledgerlog.NO_ERROR, "record task"))
-		_Record(flag, slID)
-
-		//task fail count send to monitor,modify value
-		monitor.Monitor.Gauge(fmt.Sprintf("task_%s_count", strLogFlag), 1)
 	}
 
 	gwgTaskExe.Done()
@@ -83,10 +96,17 @@ func _GetTaskID(slTasks []db.TaskSchedule) []interface{} {
 //---------------------------------------------------------------------------
 func _Record(flag int, slID []interface{}) {
 	var strRecordFile string
+	var ok bool
 	if flag == 0 {
-		strRecordFile = scanEngineConf["record_f_file_path"].(string)
+		strRecordFile, ok = scanEngineConf["record_f_file_path"].(string)
+		if !ok {
+			panic("scanEngineConf[\"record_f_file_path\"].(string) assert error")
+		}
 	} else if flag == 1 {
-		strRecordFile = scanEngineConf["record_w_file_path"].(string)
+		strRecordFile, ok = scanEngineConf["record_w_file_path"].(string)
+		if !ok {
+			panic("scanEngineConf[\"record_w_file_path\"].(string) assert error")
+		}
 	}
 
 	var strID string
