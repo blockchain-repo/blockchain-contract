@@ -343,7 +343,7 @@ func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 	var err error
 	var slMapTaskSchedule []interface{}
 	allPublicKeys := config.GetAllPublicKey()
-	for index, _ := range allPublicKeys {
+	for index:= range allPublicKeys {
 		var taskSchedule db.TaskSchedule
 		taskSchedule.Id = common.GenerateUUID()
 		taskSchedule.ContractHashId = taskScheduleBase.ContractHashId

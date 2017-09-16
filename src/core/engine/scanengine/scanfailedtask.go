@@ -87,7 +87,7 @@ func _ScanFailedTask(flag int) {
 //---------------------------------------------------------------------------
 func _GetTaskID(slTasks []db.TaskSchedule) []interface{} {
 	var slID []interface{}
-	for index, _ := range slTasks {
+	for index:= range slTasks {
 		slID = append(slID, slTasks[index].Id)
 	}
 	return slID

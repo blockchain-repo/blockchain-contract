@@ -30,7 +30,7 @@ func Test_WriteFile(t *testing.T) {
 	}
 
 	var strID string
-	for index, _ := range slID {
+	for index:= range slID {
 		strID = fmt.Sprintf("%s\n%s", strID, slID[index])
 	}
 	fmt.Println(strID)

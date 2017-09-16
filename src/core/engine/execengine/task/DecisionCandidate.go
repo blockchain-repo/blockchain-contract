@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -323,35 +324,43 @@ func (dc *DecisionCandidate) AddAgainstArgument(p_against string) {
 }
 
 func (dc *DecisionCandidate) Eval() error {
-	var support_sum int = 0
-	var against_sum int = 0
-	var err error = nil
+	var support_sum int
+	var against_sum int
+	var err error
+
 	text_property, ok := dc.PropertyTable[_Text].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		err = fmt.Errorf("Text Assert Error!")
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, err.Error()))
 		return err
 	}
+
 	if text_property.GetValue() != nil {
 		text_map, ok := text_property.GetValue().(map[string]string)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 			err = fmt.Errorf("Text's Value Assert Error!")
+			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, err.Error()))
 			return err
 		}
 		for _, v_expression := range text_map {
 			v_contract := dc.GetContract()
+
+			uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), Decision evaluate expression is (%s)]",
+				uniledgerlog.NO_ERROR, v_contract.GetContractId(), dc.GetName(), dc.GetTaskId(), v_expression))
+
 			v_result, err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], v_expression)
 			if err != nil {
-				uniledgerlog.Warn("DecisionCandidate.Eval fail[" + err.Error() + "]")
+				uniledgerlog.Error("DecisionCandidate.Eval fail[ %+v ]", err)
 				return err
 			}
+
 			v_bool_result, ok := v_result.(bool)
 			if !ok {
-				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 				err = fmt.Errorf("DecisionCandidate Result Assert Error!")
+				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, err.Error()))
 				return err
 			}
+
 			if v_bool_result {
 				support_sum = support_sum + 1
 				dc.AddSupportArgument(v_expression)

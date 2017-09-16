@@ -3,6 +3,7 @@ package task
 import (
 	"bytes"
 	"fmt"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -57,9 +58,66 @@ func (d Decision) GetNextTasks() []string {
 	return d.Enquiry.GetNextTasks()
 }
 
+//当task为Decision时，重写UpdateState(nBrotherNum int) (int8, error)方法
+//当前任务生命周期的执行：（根据任务状态选择相应的执行态方法进入）
+//入口时机：加载中的任务执行完成Discard,执行下一可执行任务Dormant
+//执行过程：PreProcess => Start or Complete or Discard => PostProcess
+//执行结果：
+//    1. ret = -1：执行失败, 需要回滚
+//    2. ret = 0 ：执行条件未达到
+//    3. ret = 1 ：执行完成,转入后继任务
 func (d Decision) UpdateState(nBrotherNum int) (int8, error) {
-	return d.Enquiry.UpdateState(nBrotherNum)
+	var r_ret int8 = 0
+	var r_err error = nil
+	var r_str_error string = ""
+	var r_flag int8 = -1
+	if &d == nil {
+		r_ret = -1
+		r_err = fmt.Errorf("Object pointer is null!")
+		return r_ret, r_err
+	}
+
+	//预处理
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to preprocess]",
+		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
+	r_err = d.PreProcess()
+	if r_err != nil {
+		uniledgerlog.Error("Task[" + d.GetName() + "] PreProcess fail!")
+		return r_ret, r_err
+	}
+
+	//处理中
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to execute]",
+		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
+	r_ret, process_err := d.Start()
+	if process_err != nil {
+		r_str_error = r_str_error + "[Run_Error]:" + process_err.Error()
+	}
+	switch r_ret {
+	case 1:
+		//正常执行，转入下一任务
+		r_flag = 1
+	case -1:
+		//轮询等待后，执行失败，则暂时退出
+		r_flag = -1
+	case 0:
+		//轮询等待后，条件不成立，则暂时退出
+		r_flag = 0
+	}
+
+	//后处理
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to postprocess]",
+		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
+	postProcess_err := d.PostProcess(r_flag, nBrotherNum)
+	if postProcess_err != nil {
+		r_str_error = r_str_error + "[PostProcess_Error]" + postProcess_err.Error()
+	}
+	if r_str_error != "" {
+		r_err = fmt.Errorf(r_str_error)
+	}
+	return r_ret, r_err
 }
+
 func (d Decision) GetTaskId() string {
 	return d.Enquiry.GetTaskId()
 }
@@ -216,19 +274,27 @@ func (d *Decision) RemoveCandidate(p_candidate interface{}) {
 }
 
 func (d *Decision) evaluateCandidate() error {
-	var err error = nil
+	var err error
+
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), Decision get CandidateList]",
+		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
 	candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
 	if !ok {
-		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		err = fmt.Errorf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "d.PropertyTable[_CandidateList].(property.PropertyT)")
+		uniledgerlog.Error(err.Error())
 		return err
 	}
 	if candlist_property.GetValue() != nil {
 		candlist_map, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
 		if !ok {
-			uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+			err = fmt.Errorf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "candlist_property.GetValue().(map[string]DecisionCandidate)")
+			uniledgerlog.Error(err.Error())
 			return err
 		}
-		for _, v_value := range candlist_map {
+
+		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), Decision begin to evaluate]",
+			uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
+		for v_key, v_value := range candlist_map {
 			v_value.SetContract(d.GetContract())
 			v_value.ResetDecisionCandidate()
 			err := v_value.Eval()
@@ -236,7 +302,10 @@ func (d *Decision) evaluateCandidate() error {
 				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.EXECUTE_ERROR, ""))
 				return err
 			}
+			candlist_map[v_key] = v_value
 		}
+		candlist_property.SetValue(candlist_map)
+		d.PropertyTable[_CandidateList] = candlist_property
 	}
 	return err
 }
@@ -254,37 +323,43 @@ func (d *Decision) ResetCandidate() {
 }
 
 //针对决策单独进行Start操作
-func (gt *Decision) Start() (int8, error) {
-	var r_buf bytes.Buffer = bytes.Buffer{}
-	r_buf.WriteString("Task Process Runing:Dormant State.")
-	r_buf.WriteString("[ContractID]: " + gt.GetContract().GetContractId() + ";")
-	r_buf.WriteString("[ContractHashID]: " + gt.GetContract().GetId() + ";")
-	r_buf.WriteString("[TaskName]: " + gt.GetName() + ";")
-	uniledgerlog.Info(r_buf.String(), " begin....")
+func (d *Decision) Start() (int8, error) {
 	var r_ret int8 = 0
 	var r_err error = nil
-	if gt.IsDormant() && gt.testPreCondition() {
-		err := gt.evaluateCandidate()
+	var r_buf bytes.Buffer = bytes.Buffer{}
+	r_buf.WriteString("Task Process Runing:Dormant State.")
+	r_buf.WriteString("[ContractID]: " + d.GetContract().GetContractId() + ";")
+	r_buf.WriteString("[ContractHashID]: " + d.GetContract().GetId() + ";")
+	r_buf.WriteString("[TaskName]: " + d.GetName() + ";")
+	uniledgerlog.Info(r_buf.String(), "Start begin....")
+
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), check start precondition]",
+		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
+	if d.IsDormant() && d.testPreCondition() {
+		r_err = d.evaluateCandidate()
 		//执行失败，返回 -1
-		if err != nil {
+		if r_err != nil {
 			r_ret = -1
 			r_buf.WriteString("[Result]: Task execute fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
-			r_buf.WriteString("fail....")
+			r_buf.WriteString("Start fail....")
 			uniledgerlog.Error(r_buf.String())
 			return r_ret, r_err
 		}
+
 		r_buf.WriteString("[Result]: Task execute success;")
 		uniledgerlog.Info(r_buf.String(), " Dormant to Inprocess....")
-		gt.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
-	} else if gt.IsDormant() && !gt.testPreCondition() { //未达到执行条件，返回 0
+		d.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
+	} else if d.IsDormant() && !d.testPreCondition() { //未达到执行条件，返回 0
 		r_ret = 0
 		r_buf.WriteString("[Result]: preCondition not true;")
 		uniledgerlog.Warn(r_buf.String(), " exit....")
 		return r_ret, r_err
 	}
-	//执行完动作后需要等待执行完成
-	r_ret, r_err = gt.Complete()
 
+	//执行完动作后需要等待执行完成
+	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), begin to complete]",
+		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
+	r_ret, r_err = d.Complete()
 	return r_ret, r_err
 }
