@@ -107,6 +107,8 @@ func FromContractModelToContractProto(contract ContractModel) (*protos.Contract,
 		ContractComponents: contractComponents,
 		MetaAttribute:      model_contractBody.MetaAttribute,
 		NextTasks:          model_contractBody.NextTasks,
+		ContractProduct:    model_contractBody.ContractProduct,
+		ContractTemplete:   model_contractBody.ContractTemplete,
 	}
 	/************************ contractBody end ***************************/
 
@@ -142,28 +144,23 @@ func contractComponentConvertToProto(components []*ContractComponent) []*protos.
 			/************************ contractBody.ContractComponent.SelectBranchExpression end ***************************/
 
 			contractComponents[i] = &protos.ContractComponent{
-				Cname:             components[i].Cname,
-				Ctype:             components[i].Ctype,
-				Caption:           components[i].Caption,
-				Description:       components[i].Description,
-				State:             components[i].State,
-				PreCondition:      preConditions,
-				CompleteCondition: completeConditions,
-				DiscardCondition:  discardConditions,
-				NextTasks:         components[i].NextTasks,
-				DataList:          componentDataList,
-				CandidateList:     candidateList,
-				//DecisionResult:                decisionResult,
+				Cname:                         components[i].Cname,
+				Ctype:                         components[i].Ctype,
+				Caption:                       components[i].Caption,
+				Description:                   components[i].Description,
+				State:                         components[i].State,
+				PreCondition:                  preConditions,
+				CompleteCondition:             completeConditions,
+				DiscardCondition:              discardConditions,
+				NextTasks:                     components[i].NextTasks,
+				DataList:                      componentDataList,
+				CandidateList:                 candidateList,
 				DataValueSetterExpressionList: dataValueSetterExpressionList,
 				TaskList:                      components[i].TaskList,
-				//SupportArguments:              components[i].SupportArguments,
-				//AgainstArguments:              components[i].AgainstArguments,
-				//Support:                       components[i].Support,
-				//Text:                          components[i].Text,
-				TaskExecuteIdx: components[i].TaskExecuteIdx,
-				TaskId:         components[i].TaskId,
-				SelectBranches: selectBranchExpressions,
-				MetaAttribute:  components[i].MetaAttribute,
+				TaskExecuteIdx:                components[i].TaskExecuteIdx,
+				TaskId:                        components[i].TaskId,
+				SelectBranches:                selectBranchExpressions,
+				MetaAttribute:                 components[i].MetaAttribute,
 			}
 		}
 	}
@@ -209,11 +206,13 @@ func contractComponentSubConvertToProto(componentSubs []*ContractComponentSub) [
 				TaskList:                      componentSubs[i].TaskList,
 				SupportArguments:              componentSubs[i].SupportArguments,
 				AgainstArguments:              componentSubs[i].AgainstArguments,
-				//Support:                       componentSubs[i].Support,
-				Text:           componentSubs[i].Text,
-				TaskExecuteIdx: componentSubs[i].TaskExecuteIdx,
-				TaskId:         componentSubs[i].TaskId,
-				SelectBranches: selectBranchExpressions,
+				Text:                          componentSubs[i].Text,
+				TaskExecuteIdx:                componentSubs[i].TaskExecuteIdx,
+				TaskId:                        componentSubs[i].TaskId,
+				SelectBranches:                selectBranchExpressions,
+				Result:                        componentSubs[i].Result,
+				SupportNum:                    componentSubs[i].SupportNum,
+				AgainstNum:                    componentSubs[i].AgainstNum,
 			}
 		}
 	}
@@ -339,6 +338,8 @@ func componentDataConvertToProto(datas []*ComponentData) []*protos.ComponentData
 				DataRangeFloat:     datas[i].DataRangeFloat,
 				Value:              datas[i].Value,
 				DefaultValue:       datas[i].DefaultValue,
+				ValueBool:          datas[i].ValueBool,
+				DefaultValueBool:   datas[i].DefaultValueBool,
 			}
 		}
 	}

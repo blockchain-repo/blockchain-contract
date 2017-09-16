@@ -84,6 +84,8 @@ func FromContractProtoToContractModel(contract protos.Contract) (*ContractModel,
 		ContractComponents: contractComponents,
 		MetaAttribute:      proto_contractBody.MetaAttribute,
 		NextTasks:          proto_contractBody.NextTasks,
+		ContractProduct:    proto_contractBody.ContractProduct,
+		ContractTemplete:   proto_contractBody.ContractTemplete,
 	}
 	/************************ contractBody end ***************************/
 	return contractModel, nil
@@ -118,28 +120,23 @@ func contractComponentConvertToModel(components []*protos.ContractComponent) []*
 			/************************ contractBody.ContractComponent.SelectBranchExpression end ***************************/
 
 			contractComponents[i] = &ContractComponent{
-				Cname:             components[i].Cname,
-				Ctype:             components[i].Ctype,
-				Caption:           components[i].Caption,
-				Description:       components[i].Description,
-				State:             components[i].State,
-				PreCondition:      preConditions,
-				CompleteCondition: completeConditions,
-				DiscardCondition:  discardConditions,
-				NextTasks:         components[i].NextTasks,
-				DataList:          componentDataList,
-				CandidateList:     candidateList,
-				//DecisionResult:                decisionResult,
+				Cname:                         components[i].Cname,
+				Ctype:                         components[i].Ctype,
+				Caption:                       components[i].Caption,
+				Description:                   components[i].Description,
+				State:                         components[i].State,
+				PreCondition:                  preConditions,
+				CompleteCondition:             completeConditions,
+				DiscardCondition:              discardConditions,
+				NextTasks:                     components[i].NextTasks,
+				DataList:                      componentDataList,
+				CandidateList:                 candidateList,
 				DataValueSetterExpressionList: dataValueSetterExpressionList,
 				TaskList:                      components[i].TaskList,
-				//SupportArguments:              components[i].SupportArguments,
-				//AgainstArguments:              components[i].AgainstArguments,
-				//Support:                       components[i].Support,
-				//Text:                          components[i].Text,
-				TaskExecuteIdx: components[i].TaskExecuteIdx,
-				TaskId:         components[i].TaskId,
-				SelectBranches: selectBranchExpressions,
-				MetaAttribute:  components[i].MetaAttribute,
+				TaskExecuteIdx:                components[i].TaskExecuteIdx,
+				TaskId:                        components[i].TaskId,
+				SelectBranches:                selectBranchExpressions,
+				MetaAttribute:                 components[i].MetaAttribute,
 			}
 		}
 	}
@@ -185,11 +182,13 @@ func contractComponentSubConvertToModel(componentSubs []*protos.ContractComponen
 				TaskList:                      componentSubs[i].TaskList,
 				SupportArguments:              componentSubs[i].SupportArguments,
 				AgainstArguments:              componentSubs[i].AgainstArguments,
-				//Support:                       componentSubs[i].Support,
-				Text:           componentSubs[i].Text,
-				TaskExecuteIdx: componentSubs[i].TaskExecuteIdx,
-				TaskId:         componentSubs[i].TaskId,
-				SelectBranches: selectBranchExpressions,
+				Text:                          componentSubs[i].Text,
+				TaskExecuteIdx:                componentSubs[i].TaskExecuteIdx,
+				TaskId:                        componentSubs[i].TaskId,
+				SelectBranches:                selectBranchExpressions,
+				Result:                        componentSubs[i].Result,
+				SupportNum:                    componentSubs[i].SupportNum,
+				AgainstNum:                    componentSubs[i].AgainstNum,
 			}
 		}
 	}
@@ -316,6 +315,8 @@ func componentDataConvertToModel(datas []*protos.ComponentData) []*ComponentData
 				DataRangeFloat:     datas[i].DataRangeFloat,
 				Value:              datas[i].Value,
 				DefaultValue:       datas[i].DefaultValue,
+				ValueBool:          datas[i].ValueBool,
+				DefaultValueBool:   datas[i].DefaultValueBool,
 			}
 		}
 	}

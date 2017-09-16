@@ -80,18 +80,17 @@ type ComponentDataSub struct {
 }
 
 type ComponentData struct {
-	Cname        string            `json:"Cname"`
-	Ctype        string            `json:"Ctype"`
-	Caption      string            `json:"Caption"`
-	Description  string            `json:"Description"`
-	ModifyDate   string            `json:"ModifyDate"`
-	HardConvType string            `json:"HardConvType"`
-	Category     []string          `json:"Category"`
-	Parent       *ComponentDataSub `json:"Parent"`
-	Mandatory    bool              `json:"Mandatory"`
-	Unit         string            `json:"Unit"`
-	Options      map[string]int32  `json:"Options"`
-	Format       string            `json:"Format"`
+	Cname        string           `json:"Cname"`
+	Ctype        string           `json:"Ctype"`
+	Caption      string           `json:"Caption"`
+	Description  string           `json:"Description"`
+	ModifyDate   string           `json:"ModifyDate"`
+	HardConvType string           `json:"HardConvType"`
+	Category     []string         `json:"Category"`
+	Mandatory    bool             `json:"Mandatory"`
+	Unit         string           `json:"Unit"`
+	Options      map[string]int32 `json:"Options"`
+	Format       string           `json:"Format"`
 	// Value interface{} int64
 	ValueInt int32 `json:"ValueInt"`
 	// Value interface{} unit64
@@ -115,8 +114,10 @@ type ComponentData struct {
 	// DataRange interface{} float64
 	DataRangeFloat []float64 `json:"DataRangeFloat"`
 	// add 2017-06-26
-	Value        string `json:"Value"`
-	DefaultValue string `json:"DefaultValue"`
+	Value            string `json:"Value"`
+	DefaultValue     string `json:"DefaultValue"`
+	ValueBool        bool   `json:"ValueBool"`
+	DefaultValueBool bool   `json:"DefaultValueBool"`
 }
 
 type SelectBranchExpression struct {
@@ -139,13 +140,15 @@ type ContractComponentSub struct {
 	TaskList                      []string                `json:"TaskList"`
 	SupportArguments              []string                `json:"SupportArguments"`
 	AgainstArguments              []string                `json:"AgainstArguments"`
-	Support                       int32                   `json:"Support"`
 	Text                          []string                `json:"Text"`
 	// add date: 2017-05-11 任务执行索引次数 int
 	TaskExecuteIdx int32  `json:"TaskExecuteIdx"`
 	TaskId         string `json:"TaskId"`
 	// 2017-05-27 17:10:00 add
 	SelectBranches []*SelectBranchExpression `json:"SelectBranches"`
+	Result         int32                     `json:"Result"`
+	SupportNum     int32                     `json:"SupportNum"`
+	AgainstNum     int32                     `json:"AgainstNum"`
 }
 
 type ContractComponent struct {
@@ -161,12 +164,7 @@ type ContractComponent struct {
 	DataList                      []*ComponentData        `json:"DataList"`
 	DataValueSetterExpressionList []*ComponentsExpression `json:"DataValueSetterExpressionList"`
 	CandidateList                 []*ContractComponentSub `json:"CandidateList"`
-	DecisionResult                []*ContractComponentSub `json:"DecisionResult"`
 	TaskList                      []string                `json:"TaskList"`
-	SupportArguments              []string                `json:"SupportArguments"`
-	AgainstArguments              []string                `json:"AgainstArguments"`
-	Support                       int32                   `json:"Support"`
-	Text                          []string                `json:"Text"`
 	// add date: 2017-05-11 任务执行索引次数 int
 	TaskExecuteIdx int32  `json:"TaskExecuteIdx"`
 	TaskId         string `json:"TaskId"`
@@ -192,8 +190,10 @@ type ContractBody struct {
 	ContractComponents []*ContractComponent `json:"ContractComponents"`
 	// add date: 2017-05-11 map[string]interface{} 合约属性MetaData
 	//    bytes MetaAttribute = 15;
-	MetaAttribute map[string]string `json:"MetaAttribute"`
-	NextTasks     []string          `json:"NextTasks"`
+	MetaAttribute    map[string]string `json:"MetaAttribute"`
+	NextTasks        []string          `json:"NextTasks"`
+	ContractProduct  string            `json:"ContractProduct"`
+	ContractTemplete string            `json:"ContractTemplete"`
 }
 
 type ContractHead struct {
