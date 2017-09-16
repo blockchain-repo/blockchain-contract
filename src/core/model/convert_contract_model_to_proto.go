@@ -107,8 +107,8 @@ func FromContractModelToContractProto(contract ContractModel) (*protos.Contract,
 		ContractComponents: contractComponents,
 		MetaAttribute:      model_contractBody.MetaAttribute,
 		NextTasks:          model_contractBody.NextTasks,
-		ContractProduct:    model_contractBody.ContractProduct,
-		ContractTemplete:   model_contractBody.ContractTemplete,
+		ContractProductId:  model_contractBody.ContractProductId,
+		ContractTemplateId: model_contractBody.ContractTemplateId,
 	}
 	/************************ contractBody end ***************************/
 
