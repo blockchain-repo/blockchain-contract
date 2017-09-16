@@ -110,7 +110,7 @@ func contractComponentConvertToModel(components []*protos.ContractComponent) []*
 
 			/************************ contractBody.ContractComponent start ***************************/
 			candidateList := contractComponentSubConvertToModel(components[i].CandidateList)
-			decisionResult := contractComponentSubConvertToModel(components[i].DecisionResult)
+			//decisionResult := contractComponentSubConvertToModel(components[i].DecisionResult)
 			/************************ contractBody.ContractComponent end ***************************/
 
 			/************************ contractBody.ContractComponent.SelectBranchExpression start ***************************/
@@ -118,28 +118,28 @@ func contractComponentConvertToModel(components []*protos.ContractComponent) []*
 			/************************ contractBody.ContractComponent.SelectBranchExpression end ***************************/
 
 			contractComponents[i] = &ContractComponent{
-				Cname:                         components[i].Cname,
-				Ctype:                         components[i].Ctype,
-				Caption:                       components[i].Caption,
-				Description:                   components[i].Description,
-				State:                         components[i].State,
-				PreCondition:                  preConditions,
-				CompleteCondition:             completeConditions,
-				DiscardCondition:              discardConditions,
-				NextTasks:                     components[i].NextTasks,
-				DataList:                      componentDataList,
-				CandidateList:                 candidateList,
-				DecisionResult:                decisionResult,
+				Cname:             components[i].Cname,
+				Ctype:             components[i].Ctype,
+				Caption:           components[i].Caption,
+				Description:       components[i].Description,
+				State:             components[i].State,
+				PreCondition:      preConditions,
+				CompleteCondition: completeConditions,
+				DiscardCondition:  discardConditions,
+				NextTasks:         components[i].NextTasks,
+				DataList:          componentDataList,
+				CandidateList:     candidateList,
+				//DecisionResult:                decisionResult,
 				DataValueSetterExpressionList: dataValueSetterExpressionList,
 				TaskList:                      components[i].TaskList,
-				SupportArguments:              components[i].SupportArguments,
-				AgainstArguments:              components[i].AgainstArguments,
-				Support:                       components[i].Support,
-				Text:                          components[i].Text,
-				TaskExecuteIdx:                components[i].TaskExecuteIdx,
-				TaskId:                        components[i].TaskId,
-				SelectBranches:                selectBranchExpressions,
-				MetaAttribute:                 components[i].MetaAttribute,
+				//SupportArguments:              components[i].SupportArguments,
+				//AgainstArguments:              components[i].AgainstArguments,
+				//Support:                       components[i].Support,
+				//Text:                          components[i].Text,
+				TaskExecuteIdx: components[i].TaskExecuteIdx,
+				TaskId:         components[i].TaskId,
+				SelectBranches: selectBranchExpressions,
+				MetaAttribute:  components[i].MetaAttribute,
 			}
 		}
 	}
@@ -185,11 +185,11 @@ func contractComponentSubConvertToModel(componentSubs []*protos.ContractComponen
 				TaskList:                      componentSubs[i].TaskList,
 				SupportArguments:              componentSubs[i].SupportArguments,
 				AgainstArguments:              componentSubs[i].AgainstArguments,
-				Support:                       componentSubs[i].Support,
-				Text:                          componentSubs[i].Text,
-				TaskExecuteIdx:                componentSubs[i].TaskExecuteIdx,
-				TaskId:                        componentSubs[i].TaskId,
-				SelectBranches:                selectBranchExpressions,
+				//Support:                       componentSubs[i].Support,
+				Text:           componentSubs[i].Text,
+				TaskExecuteIdx: componentSubs[i].TaskExecuteIdx,
+				TaskId:         componentSubs[i].TaskId,
+				SelectBranches: selectBranchExpressions,
 			}
 		}
 	}
@@ -289,16 +289,16 @@ func componentDataConvertToModel(datas []*protos.ComponentData) []*ComponentData
 	} else {
 		for i := 0; i < len(datas); i++ {
 
-			parent := componentDataSubsConvertToModel(datas[i].Parent)
+			//parent := componentDataSubsConvertToModel(datas[i].Parent)
 			componentData[i] = &ComponentData{
-				Cname:              datas[i].Cname,
-				Ctype:              datas[i].Ctype,
-				Caption:            datas[i].Caption,
-				Description:        datas[i].Description,
-				ModifyDate:         datas[i].ModifyDate,
-				HardConvType:       datas[i].HardConvType,
-				Category:           datas[i].Category,
-				Parent:             parent,
+				Cname:        datas[i].Cname,
+				Ctype:        datas[i].Ctype,
+				Caption:      datas[i].Caption,
+				Description:  datas[i].Description,
+				ModifyDate:   datas[i].ModifyDate,
+				HardConvType: datas[i].HardConvType,
+				Category:     datas[i].Category,
+				//Parent:             parent,
 				Mandatory:          datas[i].Mandatory,
 				Unit:               datas[i].Unit,
 				Options:            datas[i].Options,
