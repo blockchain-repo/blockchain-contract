@@ -190,10 +190,10 @@ type ContractBody struct {
 	ContractComponents []*ContractComponent `json:"ContractComponents"`
 	// add date: 2017-05-11 map[string]interface{} 合约属性MetaData
 	//    bytes MetaAttribute = 15;
-	MetaAttribute    map[string]string `json:"MetaAttribute"`
-	NextTasks        []string          `json:"NextTasks"`
-	ContractProduct  string            `json:"ContractProduct"`
-	ContractTemplete string            `json:"ContractTemplete"`
+	MetaAttribute      map[string]string `json:"MetaAttribute"`
+	NextTasks          []string          `json:"NextTasks"`
+	ContractProductId  string            `json:"ContractProductId"`
+	ContractTemplateId string            `json:"ContractTemplateId"`
 }
 
 type ContractHead struct {
