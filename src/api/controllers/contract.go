@@ -615,14 +615,9 @@ func (c *ContractController) PressTest() {
 		uniledgerlog.Warn("23423")
 	}
 
-	if startTime == "" {
-		startTime = common.GenTimestamp()
-	}
-	if endTime == "" {
-		endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 300)
-	}
-	contractCaptionTemp := contract.ContractBody.Caption + "_" + time.Nanosecond.String()
-	contractIdTemp := contract.ContractBody.ContractId + "_" + time.Nanosecond.String()
+	randomStr := strconv.FormatInt(time.Now().UnixNano(), 10) + "_" + common.GenerateUUID()
+	contractCaptionTemp := contract.ContractBody.Caption + "_" + randomStr
+	contractIdTemp := contract.ContractBody.ContractId + "_" + randomStr
 	contract.ContractBody.ContractId = contractIdTemp
 	contract.ContractBody.Caption = contractCaptionTemp
 	contract.ContractBody.ContractState = "Contract_Signature"
@@ -641,8 +636,14 @@ func (c *ContractController) PressTest() {
 	contractModel.ContractBody.Description = randomString
 
 	contractModel.ContractBody.CreateTime = common.GenTimestamp()
-	contractModel.ContractBody.StartTime = startTime
-	contractModel.ContractBody.EndTime = endTime
+	if len(startTime) != 0 {
+		startTime = common.GenTimestamp()
+		contractModel.ContractBody.StartTime = startTime
+	}
+	if len(endTime) != 0 {
+		endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 300)
+		contractModel.ContractBody.EndTime = endTime
+	}
 
 	// lost head lead to nil pointer
 	if contractModel.ContractHead == nil {
