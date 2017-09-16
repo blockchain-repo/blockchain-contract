@@ -1,43 +1,44 @@
 package contract
 
 import (
-	"errors"
-	"unicontract/src/core/engine/execengine/property"
-	"unicontract/src/core/engine/execengine/table"
-	"unicontract/src/core/engine/common"
 	"encoding/json"
 	"fmt"
-	"testing"
 	"reflect"
 	"strings"
+	"testing"
+
+	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/property"
+	"unicontract/src/core/engine/execengine/table"
 )
-type GeneralComponentCase struct{
-	Cname string  `json:"Cname"`
-	Ctype string  `json:"Ctype"`
-	Caption string `json:"Caption"`
-	Description string `json:"Description"`
-	PropertyTable  map[string] interface{}  `json:"-"`
+
+type GeneralComponentCase struct {
+	Cname         string                 `json:"Cname"`
+	Ctype         string                 `json:"Ctype"`
+	Caption       string                 `json:"Caption"`
+	Description   string                 `json:"Description"`
+	PropertyTable map[string]interface{} `json:"-"`
 }
 
-func (gc *GeneralComponentCase) InitGeneralComponentCase(p_ctype string)error{
+func (gc *GeneralComponentCase) InitGeneralComponentCase(p_ctype string) error {
 	var err error = nil
 	if gc.Cname == "" {
-		err = errors.New("GeneralComponentCase Need Cname!")
+		err = fmt.Errorf("GeneralComponentCase Need Cname!")
 		return err
 	}
 	if gc.PropertyTable == nil {
-		gc.PropertyTable = make(map[string] interface{}, 0)
+		gc.PropertyTable = make(map[string]interface{}, 0)
 	}
-	gc.AddProperty(gc,"_Ctype", common.TernaryOperator(gc.Ctype == "", constdef.ComponentType[constdef.Component_Unknown], gc.Ctype))
+	gc.AddProperty(gc, "_Ctype", common.TernaryOperator(gc.Ctype == "", constdef.ComponentType[constdef.Component_Unknown], gc.Ctype))
 	gc.AddProperty(gc, "_Cname", gc.Cname)
 
-	gc.AddProperty(gc,"_Caption", gc.Caption)
-	gc.AddProperty(gc,"_Description", gc.Description)
+	gc.AddProperty(gc, "_Caption", gc.Caption)
+	gc.AddProperty(gc, "_Description", gc.Description)
 	return err
 }
 
-func (gc *GeneralComponentCase) AddProperty(v_object interface{}, str_name string, value interface{})property.PropertyT {
+func (gc *GeneralComponentCase) AddProperty(v_object interface{}, str_name string, value interface{}) property.PropertyT {
 	var pro_object property.PropertyT
 	if value == nil {
 		pro_object = *property.NewPropertyT(str_name)
@@ -83,41 +84,40 @@ type ContractCase struct {
 	GeneralComponentCase
 	//TODO: need sort struct
 	//type: map[string][]property.PropertyT   type:  Unknown, Data, Task, Expression
-	ComponentTable table.ComponentTable  `json:"-"`
+	ComponentTable table.ComponentTable `json:"-"`
 
 	//根据实际业务场景增加的属性
-	ContractState string `json:"ContractState"`
-	Creator string `json:"Creator"`
-	CreateTime string `json:"CreateTime"`
-	StartTime string `json:"StartTime"`
-	EndTime string `json:"EndTime"`
-	ContractOwners []string `json:"ContractOwners"`
-	ContractAssets []ContractAsset `json:"ContractAssets"`
+	ContractState      string              `json:"ContractState"`
+	Creator            string              `json:"Creator"`
+	CreateTime         string              `json:"CreateTime"`
+	StartTime          string              `json:"StartTime"`
+	EndTime            string              `json:"EndTime"`
+	ContractOwners     []string            `json:"ContractOwners"`
+	ContractAssets     []ContractAsset     `json:"ContractAssets"`
 	ContractSignatures []ContractSignature `json:"ContractSignatures"`
 	//TODO: need sort struct
 	//type: Unknown, Data, Task, Expression
 	ContractComponents map[string][]interface{} `json:"ContractComponents"`
 }
 
-
 //描述态序列化
 // 序列化过程中，需要识别所有属性、component或table中的内容，将其序列化到字符串
-func (tm *ContractCase)Serialize()string{
+func (tm *ContractCase) Serialize() string {
 	if tm == nil {
 		return ""
 	}
 	var s_model string = ""
-	if s_model,err := json.Marshal(tm);err == nil {
+	if s_model, err := json.Marshal(tm); err == nil {
 		fmt.Println(string(s_model))
-	}else {
+	} else {
 		fmt.Println(err)
 	}
 	return s_model
 }
 
 //输入串后正常反序列化
-func (tm *ContractCase)Deserialize(p_str string) *ContractCase{
-	if p_str == "" || tm == nil{
+func (tm *ContractCase) Deserialize(p_str string) *ContractCase {
+	if p_str == "" || tm == nil {
 		return nil
 	}
 
@@ -126,75 +126,76 @@ func (tm *ContractCase)Deserialize(p_str string) *ContractCase{
 	}
 	return tm
 }
+
 //运行态
-func (cc *ContractCase)InitContractCase()error{
+func (cc *ContractCase) InitContractCase() error {
 	var err error = nil
 	if cc.Cname == "" {
 		//TODO log
-		err = errors.New("Contract Need Cname!")
+		err = fmt.Errorf("Contract Need Cname!")
 		return err
 	}
 	if cc.Caption == "" {
 		//TODO log
-		err = errors.New("Contract Need Caption!")
+		err = fmt.Errorf("Contract Need Caption!")
 		return err
 	}
 	if cc.Description == "" {
 		//TODO log
-		err = errors.New("Contract Need Description!")
+		err = fmt.Errorf("Contract Need Description!")
 		return err
 	}
 	if cc.Creator == "" {
 		//TODO log
-		err = errors.New("Contract Need Creator!")
+		err = fmt.Errorf("Contract Need Creator!")
 		return err
 	}
 	if cc.CreateTime == "" {
 		//TODO log
-		err = errors.New("Contract Need CreateTime!")
+		err = fmt.Errorf("Contract Need CreateTime!")
 		return err
 	}
 	if cc.StartTime == "" {
 		//TODO log
-		err = errors.New("Contract Need StartTime!")
+		err = fmt.Errorf("Contract Need StartTime!")
 		return err
 	}
 	if cc.EndTime == "" {
 		//TODO log
-		err = errors.New("Contract Need EndTime!")
+		err = fmt.Errorf("Contract Need EndTime!")
 		return err
 	}
 	if cc.ContractOwners == nil || len(cc.ContractOwners) == 0 {
 		//TODO log
-		err = errors.New("Contract Need ContractOwners!")
+		err = fmt.Errorf("Contract Need ContractOwners!")
 		return err
 	}
-	if cc.ContractAssets == nil || len(cc.ContractAssets) == 0  {
+	if cc.ContractAssets == nil || len(cc.ContractAssets) == 0 {
 		//TODO log
-		err = errors.New("Contract Need ContractAssets!")
+		err = fmt.Errorf("Contract Need ContractAssets!")
 		return err
 	}
-	if cc.ContractSignatures == nil || len(cc.ContractSignatures) == 0  {
+	if cc.ContractSignatures == nil || len(cc.ContractSignatures) == 0 {
 		//TODO log
-		err = errors.New("Contract Need ContractOwners!")
+		err = fmt.Errorf("Contract Need ContractOwners!")
 		return err
 	}
 	cc.InitGeneralComponentCase(constdef.ComponentType[constdef.Component_Contract])
-	cc.AddProperty(cc,"_ContractState", common.TernaryOperator(cc.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractState))
-	cc.AddProperty(cc,"_Creator", cc.Creator)
-	cc.AddProperty(cc,"_CreateTime", cc.CreateTime)
-	cc.AddProperty(cc,"_StartTime", cc.StartTime)
-	cc.AddProperty(cc,"_EndTime", cc.EndTime)
-	cc.AddProperty(cc,"_ContractOwners", cc.ContractOwners)
-	cc.AddProperty(cc,"_ContractAssets", cc.ContractAssets)
-	cc.AddProperty(cc,"_ContractSignatures", cc.ContractSignatures)
+	cc.AddProperty(cc, "_ContractState", common.TernaryOperator(cc.ContractState == "", constdef.ContractState[constdef.Contract_Create], cc.ContractState))
+	cc.AddProperty(cc, "_Creator", cc.Creator)
+	cc.AddProperty(cc, "_CreateTime", cc.CreateTime)
+	cc.AddProperty(cc, "_StartTime", cc.StartTime)
+	cc.AddProperty(cc, "_EndTime", cc.EndTime)
+	cc.AddProperty(cc, "_ContractOwners", cc.ContractOwners)
+	cc.AddProperty(cc, "_ContractAssets", cc.ContractAssets)
+	cc.AddProperty(cc, "_ContractSignatures", cc.ContractSignatures)
 
 	var meta_map map[string]string = make(map[string]string, 0)
 	meta_map["_UCVM_Version"] = constdef.UCVM_Version
 	meta_map["_UCVM_CopyRight"] = constdef.UCVM_CopyRight
 	meta_map["_UCVM_Date"] = constdef.UCVM_Date
 	//cc.GeneralComponent.AddMetaAttribute(meta_map)
-    //component table初始化 TODO
+	//component table初始化 TODO
 	cc.ComponentTable = *new(table.ComponentTable)
 	cc.InitComponentTable()
 	//cc.loadBuildInFunctions()
@@ -202,18 +203,17 @@ func (cc *ContractCase)InitContractCase()error{
 	return err
 }
 
-func (cc *ContractCase)InitComponentTable(){
+func (cc *ContractCase) InitComponentTable() {
 	if cc.ContractComponents == nil || len(cc.ContractComponents) == 0 {
 		return
 	}
-	for v_key,v_value := range cc.ContractComponents {
+	for v_key, v_value := range cc.ContractComponents {
 		fmt.Println(v_key)
 		fmt.Println(v_value)
 	}
 }
 
-
-func TestM(t *testing.T)  {
+func TestM(t *testing.T) {
 	var p_str string = `{
 "ContractId":"xxxxxxxxxxxxxxxxxxxxx",
 "Cname":"contract_mobilecallback",
@@ -271,7 +271,7 @@ func TestM(t *testing.T)  {
 	fmt.Println("ContractOwners: ", v_model.ContractOwners)
 	fmt.Println("ContractAssets: ", v_model.ContractAssets)
 	fmt.Println("ContractSignatures", v_model.ContractSignatures)
-    fmt.Println("运行态初始化：")
+	fmt.Println("运行态初始化：")
 	v_model.InitContractCase()
 	v_model.InitComponentTable()
 	fmt.Println("    property_table: ")

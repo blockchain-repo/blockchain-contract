@@ -2,9 +2,9 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -175,7 +175,7 @@ func (ud *UintData) SetDataRangeUint(data_range [2]uint) error {
 	} else {
 		var f_range [2]uint = data_range
 		if f_range[0] < 0 || f_range[1] < 0 {
-			err = errors.New("range must > 0")
+			err = fmt.Errorf("range must > 0")
 		} else if f_range[0] <= f_range[1] {
 			ud.DataRangeUint = f_range
 			datarange_property, ok := ud.PropertyTable[_DataRangeUint].(property.PropertyT)
@@ -187,7 +187,7 @@ func (ud *UintData) SetDataRangeUint(data_range [2]uint) error {
 		} else {
 			var str_error string = "Data range Error(low:" + strconv.FormatUint(uint64(f_range[0]), 10) +
 				", high:" + strconv.FormatUint(uint64(f_range[1]), 10) + ")!"
-			err = errors.New(str_error)
+			err = fmt.Errorf(str_error)
 		}
 	}
 	ud.DataRangeUint = data_range
@@ -252,7 +252,7 @@ func (ud *UintData) Add(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -268,7 +268,7 @@ func (ud *UintData) RAdd(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -284,7 +284,7 @@ func (ud *UintData) Sub(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata - f_rightdata, f_error
 }
@@ -300,7 +300,7 @@ func (ud *UintData) RSub(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_rightdata - f_leftdata, f_error
 }
@@ -316,7 +316,7 @@ func (ud *UintData) Mul(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata * f_rightdata, f_error
 }
@@ -332,7 +332,7 @@ func (ud *UintData) RMul(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata * f_rightdata, f_error
 }
@@ -348,10 +348,10 @@ func (ud *UintData) Div(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	if f_rightdata == 0 {
-		return 0, errors.New("Div right num is zero!")
+		return 0, fmt.Errorf("Div right num is zero!")
 	}
 	return f_leftdata / f_rightdata, f_error
 }
@@ -367,10 +367,10 @@ func (ud *UintData) RDiv(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	if f_leftdata == 0 {
-		return 0, errors.New("Div right num is zero!")
+		return 0, fmt.Errorf("Div right num is zero!")
 	}
 	return f_rightdata / f_leftdata, f_error
 }
@@ -386,7 +386,7 @@ func (ud *UintData) Mod(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata % f_rightdata, f_error
 }
@@ -402,7 +402,7 @@ func (ud *UintData) RMod(p_data interface{}) (uint, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_rightdata % f_leftdata, f_error
 }
@@ -418,7 +418,7 @@ func (ud *UintData) Lt(p_data interface{}) (bool, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata < f_rightdata, f_error
 }
@@ -434,7 +434,7 @@ func (ud *UintData) Le(p_data interface{}) (bool, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata <= f_rightdata, f_error
 }
@@ -450,7 +450,7 @@ func (ud *UintData) Eq(p_data interface{}) (bool, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata == f_rightdata, f_error
 }
@@ -466,7 +466,7 @@ func (ud *UintData) Ne(p_data interface{}) (bool, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata != f_rightdata, f_error
 }
@@ -482,7 +482,7 @@ func (ud *UintData) Ge(p_data interface{}) (bool, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata >= f_rightdata, f_error
 }
@@ -498,7 +498,7 @@ func (ud *UintData) Gt(p_data interface{}) (bool, error) {
 	case uint:
 		f_rightdata = p_data.(uint)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata > f_rightdata, f_error
 }

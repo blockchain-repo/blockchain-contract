@@ -7,7 +7,6 @@ package contract
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -592,52 +591,52 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 		uniledgerlog.NO_ERROR, cc.ContractBody.ContractId, "struct init ContractBody"))
 	if cc.ContractBody.Cname == "" {
 		uniledgerlog.Warn("Contract Need Cname!")
-		err = errors.New("Contract Need Cname!")
+		err = fmt.Errorf("Contract Need Cname!")
 		return err
 	}
 	if cc.ContractBody.Caption == "" {
 		uniledgerlog.Warn("Contract Need Caption!")
-		err = errors.New("Contract Need Caption!")
+		err = fmt.Errorf("Contract Need Caption!")
 		return err
 	}
 	if cc.ContractBody.Description == "" {
 		uniledgerlog.Warn("Contract Need Description!")
-		err = errors.New("Contract Need Description!")
+		err = fmt.Errorf("Contract Need Description!")
 		return err
 	}
 	if cc.ContractBody.Creator == "" {
 		uniledgerlog.Warn("Contract Need Creator!")
-		err = errors.New("Contract Need Creator!")
+		err = fmt.Errorf("Contract Need Creator!")
 		return err
 	}
 	if cc.ContractBody.CreateTime == "" {
 		uniledgerlog.Warn("Contract Need CreateTime!")
-		err = errors.New("Contract Need CreateTime!")
+		err = fmt.Errorf("Contract Need CreateTime!")
 		return err
 	}
 	if cc.ContractBody.StartTime == "" {
 		uniledgerlog.Warn("Contract Need StartTime!")
-		err = errors.New("Contract Need StartTime!")
+		err = fmt.Errorf("Contract Need StartTime!")
 		return err
 	}
 	if cc.ContractBody.EndTime == "" {
 		uniledgerlog.Warn("Contract Need EndTime!")
-		err = errors.New("Contract Need EndTime!")
+		err = fmt.Errorf("Contract Need EndTime!")
 		return err
 	}
 	if cc.ContractBody.ContractOwners == nil || len(cc.ContractBody.ContractOwners) == 0 {
 		uniledgerlog.Warn("Contract Need ContractOwners!")
-		err = errors.New("Contract Need ContractOwners!")
+		err = fmt.Errorf("Contract Need ContractOwners!")
 		return err
 	}
 	if cc.ContractBody.ContractAssets == nil || len(cc.ContractBody.ContractAssets) == 0 {
 		uniledgerlog.Warn("Contract Need ContractAssets!")
-		err = errors.New("Contract Need ContractAssets!")
+		err = fmt.Errorf("Contract Need ContractAssets!")
 		return err
 	}
 	if cc.ContractBody.ContractSignatures == nil || len(cc.ContractBody.ContractSignatures) == 0 {
 		uniledgerlog.Warn("Contract Need ContractOwners!")
-		err = errors.New("Contract Need ContractOwners!")
+		err = fmt.Errorf("Contract Need ContractOwners!")
 		return err
 	}
 	if cc.ContractBody.MetaAttribute == nil {
@@ -1254,7 +1253,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 	r_buf.WriteString("[ContractID]: " + cc.GetContractId() + ";")
 	r_buf.WriteString("[ContractHashID]: " + cc.GetId() + ";")
 	if next_tasks == nil || len(next_tasks) == 0 {
-		r_err = errors.New("contract has no start tasks!")
+		r_err = fmt.Errorf("contract has no start tasks!")
 		r_buf.WriteString("[Result]: UpdateTasksState fail;")
 		r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 		uniledgerlog.Warn(r_buf.String())
@@ -1294,7 +1293,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		f_f_task := cc.GetTask(str)
 		if f_f_task == nil {
 			r_ret = -1
-			r_err = errors.New("Judge Task, GetTask is null!")
+			r_err = fmt.Errorf("Judge Task, GetTask is null!")
 			r_buf.WriteString("[Result]: UpdateTasksState fail;")
 			r_buf.WriteString("[Error]: " + tmp_str_task.(string) + "," + r_err.Error() + ";")
 			uniledgerlog.Warn(r_buf.String())
@@ -1324,7 +1323,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 					r_err = cc.UpdateLoopExecuteTask(t_task) // TODO : ???
 					if r_err != nil {
 						r_ret = -1
-						r_err = errors.New("UpdateLoopExecuteTask fai!")
+						r_err = fmt.Errorf("UpdateLoopExecuteTask fai!")
 						r_buf.WriteString("[Result]: UpdateLoopExecuteTask fail;")
 						r_buf.WriteString("[Error]: " + t_task + "," + r_err.Error() + ";")
 						uniledgerlog.Warn(r_buf.String())
@@ -1373,7 +1372,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 		f_s_task := cc.GetTask(str)
 		if f_s_task == nil {
 			r_ret = -1
-			r_err = errors.New("Execute Task, GetTask is null!")
+			r_err = fmt.Errorf("Execute Task, GetTask is null!")
 			r_buf.WriteString("[Result]: UpdateTasksState fail;")
 			r_buf.WriteString("[Error]: " + r_err.Error() + ";")
 			uniledgerlog.Warn(r_buf.String())
@@ -1403,7 +1402,7 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 					r_err = cc.UpdateLoopExecuteTask(t_task)
 					if r_err != nil {
 						r_ret = -1
-						r_err = errors.New("UpdateLoopExecuteTask fai!")
+						r_err = fmt.Errorf("UpdateLoopExecuteTask fai!")
 						r_buf.WriteString("[Result]: UpdateLoopExecuteTask fail;")
 						r_buf.WriteString("[Error]: " + t_task + "," + r_err.Error() + ";")
 						uniledgerlog.Warn(r_buf.String())
@@ -1420,11 +1419,11 @@ func (cc *CognitiveContract) UpdateTasksState() (int8, error) {
 			if w_e_task.GetState() == constdef.TaskState[constdef.TaskState_Dormant] { //继续判断同级中的下一任务
 				continue
 			} else { //合约退出
-				r_err = errors.New("task[" + w_e_task.GetName() + "] condition not fullfill!")
+				r_err = fmt.Errorf("task[" + w_e_task.GetName() + "] condition not fullfill!")
 				break
 			}
 		case -1: //执行失败后，合约退出
-			r_err = errors.New("task[" + w_e_task.GetName() + "] execute fail!")
+			r_err = fmt.Errorf("task[" + w_e_task.GetName() + "] execute fail!")
 			break
 		}
 		if f_err != nil {
@@ -1544,7 +1543,7 @@ func (cc *CognitiveContract) CanExecute() bool {
 func (cc *CognitiveContract) SetOrgTaskInfo(p_relation_map map[string]interface{}) error {
 	var v_err error = nil
 	if p_relation_map == nil {
-		v_err = errors.New("Param[p_relation_json] is nil!")
+		v_err = fmt.Errorf("Param[p_relation_json] is nil!")
 		uniledgerlog.Warn("SetOrgTaskInfo fail, Error[" + v_err.Error() + "]")
 		return v_err
 	}

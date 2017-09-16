@@ -2,9 +2,9 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -128,7 +128,7 @@ func (dd *DateData) strToDate(p_date string) (time.Time, error) {
 	var v_time time.Time
 	var err error = nil
 	if p_date == "" {
-		err = errors.New("Param is null!")
+		err = fmt.Errorf("Param is null!")
 		return time.Time{}, err
 	}
 	format_property, ok := dd.PropertyTable[_Format].(property.PropertyT)
@@ -149,7 +149,7 @@ func (dd *DateData) GetValueInt() (int64, error) {
 		v_time, err = time.Parse(dd.GetFormat(), dd.GetValue().(string))
 		return v_time.Unix(), err
 	} else {
-		return 0, errors.New("Value is nil!")
+		return 0, fmt.Errorf("Value is nil!")
 	}
 }
 
@@ -174,7 +174,7 @@ func (dd *DateData) Add(p_day int) (time.Time, error) {
 		}
 		return date_Value_time.Add(day * time.Duration(p_day)), err
 	} else {
-		err = errors.New("Date Value is nil!")
+		err = fmt.Errorf("Date Value is nil!")
 		return time.Time{}, err
 	}
 }
@@ -202,7 +202,7 @@ func (dd *DateData) Lt(p_date interface{}) (bool, error) {
 			return false, err
 		}
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata.Before(f_rightdata), f_error
 }
@@ -230,7 +230,7 @@ func (dd *DateData) Gt(p_date interface{}) (bool, error) {
 			return false, err
 		}
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata.After(f_rightdata), f_error
 }

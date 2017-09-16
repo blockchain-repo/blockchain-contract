@@ -2,7 +2,7 @@ package function
 
 import (
 	"bytes"
-	"errors"
+	"fmt"
 
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
@@ -31,7 +31,7 @@ func (bif *FunctionParseEngine) LoadFunctionsCommon() error {
 		r_buf.WriteString("[Result]: LoadFunctionsCommon fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -62,7 +62,7 @@ func (bif *FunctionParseEngine) LoadFunctionDEMO() error {
 		r_buf.WriteString("[Result]: LoadFunctionDEMO fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -85,7 +85,7 @@ func (bif *FunctionParseEngine) LoadFunctionTIANJS() error {
 		r_buf.WriteString("[Result]: LoadFunctionTIANJS fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -150,7 +150,7 @@ func (bif *FunctionParseEngine) LoadFunctionGUANGXIBIANMAO() error {
 		r_buf.WriteString("[Result]: LoadFunctionGUANGXIBIAMAO fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -170,7 +170,7 @@ func (bif *FunctionParseEngine) LoadFunctionENERGYTRADING() error {
 		r_buf.WriteString("[Result]: LoadFunctionENEGYTRADING fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -202,7 +202,7 @@ func (bif *FunctionParseEngine) LoadFunctionTRANSFER() error {
 		r_buf.WriteString("[Result]: LoadFunctionTRANSFER fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -222,7 +222,7 @@ func (bif *FunctionParseEngine) LoadFunctionRENTPAYMENT() error {
 		r_buf.WriteString("[Result]: LoadFunctionRENTPAYMENT fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -247,7 +247,7 @@ func (bif *FunctionParseEngine) LoadFunctionHOUSETRANSFER() error {
 		r_buf.WriteString("[Result]: LoadFunctionHOUSETRANSFER fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here
@@ -276,7 +276,7 @@ func (bif *FunctionParseEngine) LoadFunctionAUTOSELLER() error {
 		r_buf.WriteString("[Result]: LoadFunctionAUTOSELLER fail;")
 		r_buf.WriteString("[Error]: ContractFunctions is nil!")
 		uniledgerlog.Error(r_buf.String())
-		v_err = errors.New("ContractFunctions is nil!")
+		v_err = fmt.Errorf("ContractFunctions is nil!")
 		return v_err
 	}
 	//Add Common Method,Here

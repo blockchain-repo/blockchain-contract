@@ -3,7 +3,6 @@ package expressionutils
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -906,7 +905,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 		r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
 		r_buf.WriteString("[Error]: param[p_function] is nil!")
 		uniledgerlog.Warn(r_buf.String())
-		v_err = errors.New(" param[p_function] is nil!")
+		v_err = fmt.Errorf(" param[p_function] is nil!")
 		v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 		return v_result, v_err
 	}
@@ -1026,7 +1025,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 					r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
 					r_buf.WriteString("[Error]: function args(" + v_args + ") parse error!")
 					uniledgerlog.Warn(r_buf.String())
-					v_err = errors.New(" function args(" + v_args + ") parse error!")
+					v_err = fmt.Errorf(" function args(" + v_args + ") parse error!")
 					v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 					return v_result, v_err
 				}

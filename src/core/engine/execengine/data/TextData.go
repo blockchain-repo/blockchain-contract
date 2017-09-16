@@ -2,9 +2,9 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -150,7 +150,7 @@ func (td *TextData) Eq(p_data interface{}) (bool, error) {
 	case string:
 		f_rightdata = p_data.(string)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return strings.EqualFold(f_leftdata, f_rightdata), f_error
 }
@@ -166,7 +166,7 @@ func (td *TextData) Add(p_data interface{}) (string, error) {
 	case string:
 		f_rightdata = p_data.(string)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -182,7 +182,7 @@ func (td *TextData) RAdd(p_data interface{}) (string, error) {
 	case string:
 		f_rightdata = p_data.(string)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_rightdata + f_leftdata, f_error
 }

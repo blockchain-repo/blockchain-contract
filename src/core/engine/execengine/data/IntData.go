@@ -2,9 +2,9 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -206,7 +206,7 @@ func (nd *IntData) SetDataRangeInt(data_range [2]int) error {
 		} else {
 			var str_error string = "Data range Error(low:" + strconv.Itoa(f_range[0]) +
 				", high:" + strconv.Itoa(f_range[1]) + ")!"
-			err = errors.New(str_error)
+			err = fmt.Errorf(str_error)
 		}
 	}
 	nd.DataRangeInt = data_range
@@ -249,7 +249,7 @@ func (nd *IntData) Add(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -274,7 +274,7 @@ func (nd *IntData) RAdd(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -299,7 +299,7 @@ func (nd *IntData) Sub(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata - f_rightdata, f_error
 }
@@ -324,7 +324,7 @@ func (nd *IntData) RSub(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_rightdata - f_leftdata, f_error
 }
@@ -349,7 +349,7 @@ func (nd *IntData) Mul(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata * f_rightdata, f_error
 }
@@ -365,7 +365,7 @@ func (nd *IntData) RMul(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata * f_rightdata, f_error
 }
@@ -385,10 +385,10 @@ func (nd *IntData) Div(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	if f_rightdata == 0 {
-		return -1, errors.New("Div right num is zero!")
+		return -1, fmt.Errorf("Div right num is zero!")
 	}
 	return f_leftdata / f_rightdata, f_error
 }
@@ -408,10 +408,10 @@ func (nd *IntData) RDiv(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	if f_leftdata == 0 {
-		return -1, errors.New("Div right num is zero!")
+		return -1, fmt.Errorf("Div right num is zero!")
 	}
 	return f_rightdata / f_leftdata, f_error
 }
@@ -436,7 +436,7 @@ func (nd *IntData) Mod(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata % f_rightdata, f_error
 }
@@ -456,7 +456,7 @@ func (nd *IntData) RMod(p_data interface{}) (int, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_rightdata % f_leftdata, f_error
 }
@@ -477,7 +477,7 @@ func (nd *IntData) Lt(p_data interface{}) (bool, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata < f_rightdata, f_error
 }
@@ -493,7 +493,7 @@ func (nd *IntData) Le(p_data interface{}) (bool, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata <= f_rightdata, f_error
 }
@@ -509,7 +509,7 @@ func (nd *IntData) Eq(p_data interface{}) (bool, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata == f_rightdata, f_error
 }
@@ -525,7 +525,7 @@ func (nd *IntData) Ne(p_data interface{}) (bool, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata != f_rightdata, f_error
 }
@@ -541,7 +541,7 @@ func (nd *IntData) Ge(p_data interface{}) (bool, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata >= f_rightdata, f_error
 }
@@ -557,7 +557,7 @@ func (nd *IntData) Gt(p_data interface{}) (bool, error) {
 	case int:
 		f_rightdata = p_data.(int)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata > f_rightdata, f_error
 }

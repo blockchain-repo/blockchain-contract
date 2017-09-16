@@ -1,7 +1,6 @@
 package function
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -104,7 +103,7 @@ func FuncSleepTime(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult
 	var v_err error = nil
 	if len(args) != 1 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	//user provide
@@ -140,7 +139,7 @@ func FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 
 	//var v_map_args map[string]interface{} = nil
 	if len(args) != 8 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	uniledgerlog.Info("======after param check FuncTransferAsset==========")
@@ -287,7 +286,7 @@ func FuncTransferAssetComplete(args ...interface{}) (common.OperateResult, error
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 2 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	var contractOutPut string = args[0].(string)
@@ -318,7 +317,7 @@ func FuncCreateAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 6 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	//user provide
@@ -374,7 +373,7 @@ func FuncInterim(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 4 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	var contractStr string = args[0].(string)
@@ -407,7 +406,7 @@ func FuncInterimComplete(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 3 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	var contractOutPut string = args[0].(string)
@@ -442,7 +441,7 @@ func FuncUnfreezeAsset(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 5 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	//user provide
@@ -483,7 +482,7 @@ func FuncGetContracOutputtById(args ...interface{}) (common.OperateResult, error
 	var v_err error = nil
 	v_result := common.OperateResult{}
 	if len(args) != 1 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	var conId string = args[0].(string)
@@ -513,7 +512,7 @@ func FuncIsConPutInUnichian(args ...interface{}) (common.OperateResult, error) {
 	var v_result common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	if len(args) != 1 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 	contractHashId := args[0].(string)

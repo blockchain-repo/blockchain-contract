@@ -121,7 +121,7 @@ func (gc *GeneralComponent) InitGeneralComponent() error {
 	/*
 		if gc.Cname == "" {
 			uniledgerlog.Warn("GeneralComponent Need Cname!")
-			err = errors.New("GeneralComponent Need Cname!")
+			err = fmt.Errorf("GeneralComponent Need Cname!")
 			return err
 
 		}

@@ -2,10 +2,10 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"strconv"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -173,7 +173,7 @@ func (fd *FloatData) SetDataRangeFloat(data_range [2]float64) error {
 		} else {
 			var str_error string = "Data range Error(low:" + strconv.FormatFloat(f_range[0], 'f', -1, 64) +
 				", high:" + strconv.FormatFloat(f_range[1], 'f', -1, 64) + ")!"
-			err = errors.New(str_error)
+			err = fmt.Errorf(str_error)
 		}
 	}
 	fd.DataRangeFloat = data_range
@@ -240,7 +240,7 @@ func (fd *FloatData) Add(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -256,7 +256,7 @@ func (fd *FloatData) RAdd(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata + f_rightdata, f_error
 }
@@ -272,7 +272,7 @@ func (fd *FloatData) Sub(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata - f_rightdata, f_error
 }
@@ -288,7 +288,7 @@ func (fd *FloatData) RSub(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_rightdata - f_leftdata, f_error
 }
@@ -304,7 +304,7 @@ func (fd *FloatData) Mul(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata * f_rightdata, f_error
 }
@@ -320,7 +320,7 @@ func (fd *FloatData) RMul(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata * f_rightdata, f_error
 }
@@ -336,10 +336,10 @@ func (fd *FloatData) Div(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	if f_rightdata == 0 {
-		return -1, errors.New("Div right num is zero!")
+		return -1, fmt.Errorf("Div right num is zero!")
 	}
 	return f_leftdata / f_rightdata, f_error
 }
@@ -355,10 +355,10 @@ func (fd *FloatData) RDiv(p_data interface{}) (float64, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	if f_leftdata == 0 {
-		return -1, errors.New("Div right num is zero!")
+		return -1, fmt.Errorf("Div right num is zero!")
 	}
 	return f_rightdata / f_leftdata, f_error
 }
@@ -379,7 +379,7 @@ func (fd *FloatData) Lt(p_data interface{}) (bool, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata < f_rightdata, f_error
 }
@@ -395,7 +395,7 @@ func (fd *FloatData) Le(p_data interface{}) (bool, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata <= f_rightdata, f_error
 }
@@ -411,7 +411,7 @@ func (fd *FloatData) Eq(p_data interface{}) (bool, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata == f_rightdata, f_error
 }
@@ -427,7 +427,7 @@ func (fd *FloatData) Ne(p_data interface{}) (bool, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata != f_rightdata, f_error
 }
@@ -443,7 +443,7 @@ func (fd *FloatData) Ge(p_data interface{}) (bool, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata >= f_rightdata, f_error
 }
@@ -459,7 +459,7 @@ func (fd *FloatData) Gt(p_data interface{}) (bool, error) {
 	case float64:
 		f_rightdata = p_data.(float64)
 	default:
-		f_error = errors.New("Param Type Error!")
+		f_error = fmt.Errorf("Param Type Error!")
 	}
 	return f_leftdata > f_rightdata, f_error
 }

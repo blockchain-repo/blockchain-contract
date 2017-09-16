@@ -2,8 +2,8 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/constdef"
@@ -125,7 +125,7 @@ func (ad *ArrayData) AppendValue(p_data interface{}) (bool, error) {
 	ad.PropertyTable[_Value] = value_property
 	ad.Value = value_property
 	if ad.Value == nil {
-		err = errors.New("append data Value error!")
+		err = fmt.Errorf("append data Value error!")
 		a_flag = false
 	}
 	return a_flag, err
@@ -140,7 +140,7 @@ func (ad *ArrayData) RemoveValue(idx int) (bool, error) {
 	var err error = nil
 	var a_flag bool = true
 	if value_property.GetValue() == nil {
-		err = errors.New("date Value is nil, remove error!")
+		err = fmt.Errorf("date Value is nil, remove error!")
 		a_flag = false
 	} else {
 		t_data := make([]interface{}, len(value_property.GetValue().([]interface{})))
@@ -157,10 +157,10 @@ func (ad *ArrayData) GetItem(idx int) (interface{}, error) {
 	var err error = nil
 	var r_data interface{} = nil
 	if ad.GetValue() == nil {
-		err = errors.New("date Value is nil, getitem error!")
+		err = fmt.Errorf("date Value is nil, getitem error!")
 	} else {
 		if idx >= len(ad.GetValue().([]interface{})) {
-			err = errors.New("index invalid, getitem error!")
+			err = fmt.Errorf("index invalid, getitem error!")
 		} else {
 			r_data = ad.GetValue().([]interface{})[idx]
 		}

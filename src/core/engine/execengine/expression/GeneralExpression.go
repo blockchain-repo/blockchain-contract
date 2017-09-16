@@ -2,8 +2,8 @@ package expression
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/execengine/component"
@@ -128,7 +128,7 @@ func (ge *GeneralExpression) InitExpression() error {
 	var err error = nil
 	if ge.ExpressionStr == "" {
 		uniledgerlog.Error("ExpressionStr is nil!")
-		errors.New("Expression need ExpressionStr!")
+		fmt.Errorf("Expression need ExpressionStr!")
 		return err
 	}
 	err = ge.InitGeneralComponent()

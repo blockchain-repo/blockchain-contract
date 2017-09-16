@@ -1,9 +1,10 @@
 package function
 
 import (
-	"errors"
+	"fmt"
 	"math/rand"
 	"time"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	"unicontract/src/core/engine/common"
@@ -635,7 +636,7 @@ func FuncCalcAndTransferTrusteeTee(args ...interface{}) (common.OperateResult, e
 
 	//var v_map_args map[string]interface{} = nil
 	if len(args) != 7 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 
@@ -727,7 +728,7 @@ func FuncCalcAndTransferExpectIncome(args ...interface{}) (common.OperateResult,
 
 	//var v_map_args map[string]interface{} = nil
 	if len(args) != 7 {
-		v_err = errors.New("param num error")
+		v_err = fmt.Errorf("param num error")
 		return v_result, v_err
 	}
 

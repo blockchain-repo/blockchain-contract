@@ -1,7 +1,6 @@
 package function
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"unicontract/src/common/uniledgerlog"
@@ -45,7 +44,7 @@ func FuncGetBalance(args ...interface{}) (common.OperateResult, error) {
 	if len(args) != 1 {
 		v_result.SetCode(400)
 		v_result.SetMessage("Need 1 Param, now is 0!")
-		v_err = errors.New("Need 1 Param, now is 0!")
+		v_err = fmt.Errorf("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
 	arg_0, ok := args[0].(string)
@@ -70,7 +69,7 @@ func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetCode(400)
 		v_result.SetData(false)
 		v_result.SetMessage("Need 1 Param, now is 0!")
-		v_err = errors.New("Need 1 Param, now is 0!")
+		v_err = fmt.Errorf("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
 
@@ -90,7 +89,7 @@ func FuncTanferMoney(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetCode(400)
 		v_result.SetData(false)
 		v_result.SetMessage("BANK_COUNT[" + arg_A + "] lt TransferMoney(" + strconv.FormatFloat(arg_money, 'f', 6, 64) + ")!")
-		v_err = errors.New("Need 1 Param, now is 0!")
+		v_err = fmt.Errorf("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
 	BANK_BALANCE[arg_A] = BANK_BALANCE[arg_A] - arg_money
@@ -110,7 +109,7 @@ func FuncDeposit(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetCode(400)
 		v_result.SetData(false)
 		v_result.SetMessage("Need 1 Param, now is 0!")
-		v_err = errors.New("Need 1 Param, now is 0!")
+		v_err = fmt.Errorf("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
 
@@ -132,7 +131,7 @@ func FuncQueryMonthConsumption(args ...interface{}) (common.OperateResult, error
 	if len(args) != 1 {
 		v_result.SetCode(400)
 		v_result.SetMessage("Need 1 Param, now is 0!")
-		v_err = errors.New("Need 1 Param, now is 0!")
+		v_err = fmt.Errorf("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
 
@@ -152,7 +151,7 @@ func FuncBackTelephoneFare(args ...interface{}) (common.OperateResult, error) {
 		v_result.SetCode(400)
 		v_result.SetData(false)
 		v_result.SetMessage("Need 1 Param, now is 0!")
-		v_err = errors.New("Need 1 Param, now is 0!")
+		v_err = fmt.Errorf("Need 1 Param, now is 0!")
 		return v_result, v_err
 	}
 	var arg_B string = args[0].(string)

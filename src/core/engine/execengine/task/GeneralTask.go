@@ -7,7 +7,6 @@ package task
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -146,7 +145,7 @@ func (gt GeneralTask) UpdateState(nBrotherNum int) (int8, error) {
 	var r_flag int8 = -1
 	if &gt == nil {
 		r_ret = -1
-		r_err = errors.New("Object pointer is null!")
+		r_err = fmt.Errorf("Object pointer is null!")
 		return r_ret, r_err
 	}
 
@@ -857,16 +856,16 @@ func (gt *GeneralTask) GetData(p_name string) (interface{}, error) {
 	if datalist_property.GetValue() != nil {
 		data_map, ok := datalist_property.GetValue().(map[string]inf.IData)
 		if !ok {
-			err = errors.New("Find data[" + p_name + "] Error!")
+			err = fmt.Errorf("Find data[" + p_name + "] Error!")
 			return nil, err
 		}
 		r_data, ok := data_map[p_name]
 		if !ok {
-			err = errors.New("Find data[" + p_name + "] Error!")
+			err = fmt.Errorf("Find data[" + p_name + "] Error!")
 		}
 		return r_data, err
 	} else {
-		err = errors.New("DataList is nil,find data[" + p_name + "] Error!")
+		err = fmt.Errorf("DataList is nil,find data[" + p_name + "] Error!")
 		return nil, err
 	}
 }
@@ -881,16 +880,16 @@ func (gt *GeneralTask) GetDataExpression(p_name string) (interface{}, error) {
 	if dataexpressionlist_property.GetValue() != nil {
 		dataexpression_map, ok := dataexpressionlist_property.GetValue().(map[string]inf.IExpression)
 		if !ok {
-			err = errors.New("Find dataExpression[" + p_name + "] Error!")
+			err = fmt.Errorf("Find dataExpression[" + p_name + "] Error!")
 			return nil, err
 		}
 		r_data, ok := dataexpression_map[p_name]
 		if !ok {
-			err = errors.New("Find dataExpression[" + p_name + "] Error!")
+			err = fmt.Errorf("Find dataExpression[" + p_name + "] Error!")
 		}
 		return r_data, err
 	} else {
-		err = errors.New("DataValueSetterExpressionList is nil,find dataExpression[" + p_name + "] Error!")
+		err = fmt.Errorf("DataValueSetterExpressionList is nil,find dataExpression[" + p_name + "] Error!")
 		return nil, err
 	}
 }
@@ -1004,7 +1003,7 @@ func (gt *GeneralTask) PreProcess() error {
 	r_buf.WriteString("Task PreProcess Runing:")
 	//当前合约执行任务为新任务,即OutputStruct
 	if gt.GetContract() == nil {
-		r_err = errors.New("PreProcess fail, GetContract is nil!")
+		r_err = fmt.Errorf("PreProcess fail, GetContract is nil!")
 		r_buf.WriteString("PreProcess fail, GetContract is nil!")
 		uniledgerlog.Error(r_buf.String())
 		return r_err
