@@ -253,6 +253,7 @@ func (c *ContractModel) Sign(private_key string) string {
 	}
 	temp.ContractSignatures = nil
 	contractBodySerialized := common.StructSerialize(temp)
+
 	/*-------------module deep copy end --------------*/
 
 	signatureContractBody := common.Sign(private_key, contractBodySerialized)
