@@ -915,7 +915,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 		r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
 		r_buf.WriteString("[Error]: param[p_function] format error!")
 		uniledgerlog.Warn(r_buf.String())
-		v_err = errors.New(" param[p_function] format error!")
+		v_err = fmt.Errorf(" param[p_function] format error!")
 		v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 		return v_result, v_err
 	}
@@ -1043,7 +1043,20 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	}
 
 	if gRPCClient.On {
+		uniledgerlog.Error(func_params_)
+
 		slData, v_err := json.Marshal(func_params_)
+		if v_err != nil {
+			r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
+			r_buf.WriteString("[Error]: " + v_err.Error() + "!")
+			uniledgerlog.Error(r_buf.String())
+			v_err = fmt.Errorf(r_buf.String())
+			v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
+			return v_result, v_err
+		}
+
+		uniledgerlog.Error(string(slData))
+
 		hostname, _ := os.Hostname()
 		v_result, v_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(), func_name, string(slData))
 		return v_result, v_err
