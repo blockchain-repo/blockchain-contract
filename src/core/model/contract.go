@@ -117,7 +117,7 @@ type ComponentData struct {
 	Value            string `json:"Value"`
 	DefaultValue     string `json:"DefaultValue"`
 	ValueBool        bool   `json:"ValueBool"`
-	DefaultValueBool bool   `json:"DefaultValueBool  "`
+	DefaultValueBool bool   `json:"DefaultValueBool"`
 }
 
 type SelectBranchExpression struct {
