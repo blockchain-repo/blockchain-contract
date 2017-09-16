@@ -2,11 +2,11 @@ package task
 
 import (
 	"testing"
-	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/constdef"
+	"unicontract/src/core/engine/execengine/inf"
 )
 
-func TestInitPlan(t *testing.T){
+func TestInitPlan(t *testing.T) {
 	plan := &Plan{}
 	plan.InitPlan()
 	plan.SetCname("Plan")
@@ -48,7 +48,7 @@ func TestInitPlan(t *testing.T){
 	}
 	//Test RemoveTask
 	plan.RemoveTask("Action")
-	if len(plan.GetTaskList().(map[string]inf.ITask)) != 1{
+	if len(plan.GetTaskList().(map[string]inf.ITask)) != 1 {
 		t.Error("Remove Task Error!")
 	}
 }

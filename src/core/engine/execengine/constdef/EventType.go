@@ -8,8 +8,8 @@ const (
 )
 
 var EventType = map[int]string{
-	EventType_Unknow : "EventType_Unknow",
-	EventType_Engine: "EventType_Engine",
+	EventType_Unknow:    "EventType_Unknow",
+	EventType_Engine:    "EventType_Engine",
 	EventType_Attribute: "EventType_Attribute",
 	EventType_Component: "EventType_Component",
 }

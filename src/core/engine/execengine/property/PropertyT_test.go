@@ -1,14 +1,14 @@
 package property
 
 import (
-	"testing"
 	"fmt"
 	"strconv"
+	"testing"
 )
 
-func TestInitName(t *testing.T){
-	var x,y string = "testing_string", "testing_value"
-	p := &PropertyT{Name:x}
+func TestInitName(t *testing.T) {
+	var x, y string = "testing_string", "testing_value"
+	p := &PropertyT{Name: x}
 	if p == nil {
 		t.Error("Init String Property Error!")
 	} else {
@@ -31,9 +31,9 @@ func TestInitName(t *testing.T){
 	}
 }
 
-func TestInitTString(t *testing.T){
-	var x,y string = "testing_string", "testing_value"
-	p := &PropertyT{x, y,y,y}
+func TestInitTString(t *testing.T) {
+	var x, y string = "testing_string", "testing_value"
+	p := &PropertyT{x, y, y, y}
 	if p == nil {
 		t.Error("Init String Property Error!")
 	} else {
@@ -41,9 +41,9 @@ func TestInitTString(t *testing.T){
 	}
 }
 
-func TestInitTInt(t *testing.T){
-	var x,y int = 100, 200
-	p := &PropertyT{strconv.Itoa(x), y,y,y}
+func TestInitTInt(t *testing.T) {
+	var x, y int = 100, 200
+	p := &PropertyT{strconv.Itoa(x), y, y, y}
 	if p == nil {
 		t.Error("Init Int Property Error!")
 	} else {
@@ -51,9 +51,9 @@ func TestInitTInt(t *testing.T){
 	}
 }
 
-func TestInitTBool(t *testing.T){
-	var x,y bool = true, true
-	p := &PropertyT{strconv.FormatBool(x), y,y,y}
+func TestInitTBool(t *testing.T) {
+	var x, y bool = true, true
+	p := &PropertyT{strconv.FormatBool(x), y, y, y}
 	if p == nil {
 		t.Error("Init Bool Property Error!")
 	} else {
@@ -61,9 +61,9 @@ func TestInitTBool(t *testing.T){
 	}
 }
 
-func TestOpOldvalueTString(t *testing.T){
+func TestOpOldvalueTString(t *testing.T) {
 	var x string = "testing_old_value"
-	p := &PropertyT{x, x,x,x}
+	p := &PropertyT{x, x, x, x}
 	p.SetOldValue(x)
 	if p.GetOldValue() == "" {
 		t.Error("set old_value")
@@ -72,9 +72,9 @@ func TestOpOldvalueTString(t *testing.T){
 	}
 }
 
-func TestOpOldvalueTInt(t *testing.T){
+func TestOpOldvalueTInt(t *testing.T) {
 	var x int = 100
-	p := &PropertyT{strconv.Itoa(x), x,x,x}
+	p := &PropertyT{strconv.Itoa(x), x, x, x}
 	p.SetOldValue(x)
 	if p.GetOldValue() == "" {
 		t.Error("set old_value")
@@ -82,9 +82,9 @@ func TestOpOldvalueTInt(t *testing.T){
 		fmt.Println("OpOldValue: ", p.GetOldValue().(int))
 	}
 }
-func TestOpOldvalueTBool(t *testing.T){
+func TestOpOldvalueTBool(t *testing.T) {
 	var x bool = true
-	p := &PropertyT{strconv.FormatBool(x), x,x,x}
+	p := &PropertyT{strconv.FormatBool(x), x, x, x}
 	p.SetOldValue(x)
 	if p.GetOldValue() == "" {
 		t.Error("set old_value")
@@ -93,9 +93,9 @@ func TestOpOldvalueTBool(t *testing.T){
 	}
 }
 
-func TestOpNewvalueTString(t *testing.T){
+func TestOpNewvalueTString(t *testing.T) {
 	var x string = "testing_new_value"
-	p := &PropertyT{x, x,x,x}
+	p := &PropertyT{x, x, x, x}
 	p.SetNewValue(x)
 	if p.GetNewValue() == "" {
 		t.Error("set new_value")
@@ -104,9 +104,9 @@ func TestOpNewvalueTString(t *testing.T){
 	}
 }
 
-func TestOpNewvalueTInt(t *testing.T){
+func TestOpNewvalueTInt(t *testing.T) {
 	var x int = 300
-	p := &PropertyT{strconv.Itoa(x), x,x,x}
+	p := &PropertyT{strconv.Itoa(x), x, x, x}
 	p.SetNewValue(x)
 	if p.GetNewValue() == "" {
 		t.Error("set new_value")
@@ -115,9 +115,9 @@ func TestOpNewvalueTInt(t *testing.T){
 	}
 }
 
-func TestOpNewvalueTBool(t *testing.T){
+func TestOpNewvalueTBool(t *testing.T) {
 	var x bool = true
-	p := &PropertyT{strconv.FormatBool(x), x,x,x}
+	p := &PropertyT{strconv.FormatBool(x), x, x, x}
 	p.SetNewValue(x)
 	if p.GetNewValue() == "" {
 		t.Error("set new_value")

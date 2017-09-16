@@ -5,11 +5,11 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 )
 
-func TestDecision(t *testing.T){
+func TestDecision(t *testing.T) {
 	des := &Decision{}
 	des.InitDecision()
 	des.SetCname("Decision")
-    des.SetCaption("Decision")
+	des.SetCaption("Decision")
 	des.SetDescription("Decision Test")
 	if des.GetName() != "Decision" {
 		t.Error("Decision Error,GetName Error!")
@@ -23,8 +23,8 @@ func TestDecision(t *testing.T){
 	if des.GetCtype() != constdef.ComponentType[constdef.Component_Task]+"."+constdef.TaskType[constdef.Task_Decision] {
 		t.Error("Decision Error,GetCtype Error!")
 	}
-    //Test AddCandidate
-    var cand_1 DecisionCandidate = DecisionCandidate{}
+	//Test AddCandidate
+	var cand_1 DecisionCandidate = DecisionCandidate{}
 	cand_1.InitDecisionCandidate()
 	cand_1.SetCname("Candidate_1")
 	cand_1.SetCaption("Candidate_1")

@@ -16,15 +16,15 @@ func FuncAutoTransferAssetAtTime(args ...interface{}) (common.OperateResult, err
 	var v_err error = nil
 
 	/*
-		  Args:
-	    	  0: ownerbefore(string):	the pubkey who transfer assets
-			  1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer.
-			2: contractStr(string):the contract str which this task execute
-			3: contractHashId(string): contractHashId
-			4: contractId(string): contractId
-			5: taskId(string): taskId
-			6: TaskExecuteIdx(int): TaskExecuteIdx
-			7: mainPubkey(string): the node pubkey which will freeze asset
+			  Args:
+		    	  0: ownerbefore(string):	the pubkey who transfer assets
+				  1: recipients([][2]interface{}): A list of keys that represent the receivers of this transfer.
+				2: contractStr(string):the contract str which this task execute
+				3: contractHashId(string): contractHashId
+				4: contractId(string): contractId
+				5: taskId(string): taskId
+				6: TaskExecuteIdx(int): TaskExecuteIdx
+				7: mainPubkey(string): the node pubkey which will freeze asset
 	*/
 	//FuncTransferAsset(args ...interface{}) (common.OperateResult, error) {
 

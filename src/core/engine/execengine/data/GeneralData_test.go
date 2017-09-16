@@ -5,10 +5,11 @@ import (
 	"unicontract/src/core/engine/execengine/constdef"
 	"unicontract/src/core/engine/execengine/inf"
 )
-//func (gd *GeneralData) InitGeneralData(str_cname string, default_value  interface{}, str_unit string,
-	//str_ctype string, str_caption string, str_description string){
 
-func CreateGeneralDataObject() *GeneralData{
+//func (gd *GeneralData) InitGeneralData(str_cname string, default_value  interface{}, str_unit string,
+//str_ctype string, str_caption string, str_description string){
+
+func CreateGeneralDataObject() *GeneralData {
 	t_data := new(GeneralData)
 	t_data.InitGeneralData()
 
@@ -69,4 +70,3 @@ func TestGetName(t *testing.T) {
 		t.Error("GeneralData getName nil Error")
 	}
 }
-

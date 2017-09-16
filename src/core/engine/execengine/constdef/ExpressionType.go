@@ -11,10 +11,10 @@ const (
 )
 
 var ExpressionType = map[int]string{
-	Expression_Unknown : "Expression_Unknown",
-	Expression_Constant: "Expression_Constant",
-	Expression_Variable: "Expression_Variable",
+	Expression_Unknown:   "Expression_Unknown",
+	Expression_Constant:  "Expression_Constant",
+	Expression_Variable:  "Expression_Variable",
 	Expression_Condition: "Expression_Condition",
-	Expression_Function: "Expression_Function",
+	Expression_Function:  "Expression_Function",
 	Expression_Candidate: "Expression_Candidate",
 }

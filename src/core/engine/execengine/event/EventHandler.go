@@ -8,35 +8,34 @@ type EventHandler struct {
 	component.GeneralComponent
 	eventType int
 	signature string
-	handler []string
+	handler   []string
 }
 
-func NewEventHandler(signature string, eventtype int)*EventHandler{
-	h := &EventHandler{signature:signature, eventType:eventtype}
+func NewEventHandler(signature string, eventtype int) *EventHandler {
+	h := &EventHandler{signature: signature, eventType: eventtype}
 	return h
 }
 
-func (eh *EventHandler) GetEventType()int{
+func (eh *EventHandler) GetEventType() int {
 	return eh.eventType
 }
 
-func (eh *EventHandler) GetSignature() string{
+func (eh *EventHandler) GetSignature() string {
 	return eh.signature
 }
 
-func (eh *EventHandler) AddHandler(p_handler string){
+func (eh *EventHandler) AddHandler(p_handler string) {
 	if eh.handler != nil {
 		eh.handler = make([]string, 0)
-	}else{
+	} else {
 		eh.handler = append(eh.handler, p_handler)
 	}
 }
 
-func (eh *EventHandler) Fire(){
+func (eh *EventHandler) Fire() {
 	//for _,value := range eh.handler{
-		//TODO
-		//contract express
-		//eh.contract.EvaluateExpression(value)
+	//TODO
+	//contract express
+	//eh.contract.EvaluateExpression(value)
 	//}
 }
-

@@ -17,7 +17,7 @@ func TestFunction(t *testing.T) {
 	if g_function.GetCname() != "Function" {
 		t.Error("InitFunction Error,GetCname Error!")
 	}
-	if g_function.GetCtype() != constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Function] {
+	if g_function.GetCtype() != constdef.ComponentType[constdef.Component_Expression]+"."+constdef.ExpressionType[constdef.Expression_Function] {
 		t.Error("InitFunction Error, GetCtype Error!")
 	}
 	if g_function.GetCaption() != "Function" {

@@ -242,7 +242,7 @@ func (gd *GeneralData) InputOptions() {
 	fmt.Println("input 1->yes  0->no")
 	var input string = ""
 	var err error = nil
-	for key:= range option_map {
+	for key := range option_map {
 		fmt.Println("do you have ", key, " ?")
 		_, err_input := fmt.Scanln(&input)
 		if err_input != nil {
@@ -267,7 +267,7 @@ func (gd *GeneralData) Optionsum() int {
 	option_map := option_property.GetValue().(map[string]int)
 	var sum int = 0
 	if gd.Options != nil {
-		for key:= range option_map {
+		for key := range option_map {
 			sum = sum + option_map[key]
 		}
 	}

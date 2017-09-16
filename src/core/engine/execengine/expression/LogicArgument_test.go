@@ -12,12 +12,12 @@ func TestLogicArgument(t *testing.T) {
 	g_logicargument.SetCname("LogicArgument")
 	g_logicargument.SetCaption("LogicArgument")
 	g_logicargument.SetDescription("LogicArgument Test")
-	g_logicargument.SetExpressionStr( "a > b")
+	g_logicargument.SetExpressionStr("a > b")
 
 	if g_logicargument.GetCname() != "LogicArgument" {
 		t.Error("InitLogicArgument Error, GetCname Error!")
 	}
-	if g_logicargument.GetCtype() != constdef.ComponentType[constdef.Component_Expression] + "." + constdef.ExpressionType[constdef.Expression_Condition] {
+	if g_logicargument.GetCtype() != constdef.ComponentType[constdef.Component_Expression]+"."+constdef.ExpressionType[constdef.Expression_Condition] {
 		t.Error("InitLogicArgument Error, GetCtype Error!")
 	}
 	if g_logicargument.GetCaption() != "LogicArgument" {

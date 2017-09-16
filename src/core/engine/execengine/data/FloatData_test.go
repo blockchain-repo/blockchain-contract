@@ -1,13 +1,13 @@
 package data
 
 import (
-	"testing"
 	"fmt"
 	"math"
+	"testing"
 	"unicontract/src/core/engine/execengine/constdef"
 )
 
-func CreateFloatDataObject() *FloatData{
+func CreateFloatDataObject() *FloatData {
 	t_int := new(FloatData)
 	t_int.InitFloatData()
 	t_int.SetCname("TestMoney")
@@ -19,7 +19,7 @@ func CreateFloatDataObject() *FloatData{
 	return t_int
 }
 
-func Testfloat64Init(t *testing.T){
+func Testfloat64Init(t *testing.T) {
 	t_int := new(FloatData)
 	t_int.InitFloatData()
 	t_int.SetCname("TestMoney")
@@ -30,7 +30,7 @@ func Testfloat64Init(t *testing.T){
 	if t_int == nil {
 		t.Error("FloatData init Error!")
 	}
-	if t_int.GetCtype() != constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Float]{
+	if t_int.GetCtype() != constdef.ComponentType[constdef.Component_Data]+"."+constdef.DataType[constdef.Data_Numeric_Float] {
 		t.Error("t_ctype value Error!")
 	}
 	if t_int.GetCname() != "TestMoney" {
@@ -62,12 +62,12 @@ func Testfloat64Init(t *testing.T){
 
 func TestFloatDataRange(t *testing.T) {
 	t_int := CreateFloatDataObject()
-	var t_range_1 [2]float64 = [2]float64{0.0,0.0}
-	var t_range_2 [2]float64 = [2]float64{0.0,1.0}
-	var t_range_3 [2]float64 = [2]float64{1.0,1.0}
-	var t_range_4 [2]float64 = [2]float64{1.0,0.0}
-	var t_range_5 [2]float64 = [2]float64{1.0,-1.0}
-	var t_range_6 [2]float64 = [2]float64{-1.0,-1.0}
+	var t_range_1 [2]float64 = [2]float64{0.0, 0.0}
+	var t_range_2 [2]float64 = [2]float64{0.0, 1.0}
+	var t_range_3 [2]float64 = [2]float64{1.0, 1.0}
+	var t_range_4 [2]float64 = [2]float64{1.0, 0.0}
+	var t_range_5 [2]float64 = [2]float64{1.0, -1.0}
+	var t_range_6 [2]float64 = [2]float64{-1.0, -1.0}
 	//default [0, 0]
 	var t_range_7 [2]float64
 	if err := t_int.SetDataRange(t_range_1); err != nil {
@@ -118,7 +118,7 @@ func Testfloat64CheckRange(t *testing.T) {
 func Testfloat64Add(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_int,err := t_int.Add(float64(200)) ; err == nil {
+	if v_int, err := t_int.Add(float64(200)); err == nil {
 		if v_int != float64(300) {
 			t.Error("FloatData add error,result not equal 300!")
 		} else {
@@ -129,11 +129,10 @@ func Testfloat64Add(t *testing.T) {
 	}
 }
 
-
 func Testfloat64RAdd(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_int,err := t_int.RAdd(float64(200)) ; err == nil {
+	if v_int, err := t_int.RAdd(float64(200)); err == nil {
 		if v_int != float64(300) {
 			t.Error("FloatData add error,result not equal 300!")
 		} else {
@@ -147,7 +146,7 @@ func Testfloat64RAdd(t *testing.T) {
 func Testfloat64Sub(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(400))
-	if v_int,err := t_int.Sub(float64(200)) ; err == nil {
+	if v_int, err := t_int.Sub(float64(200)); err == nil {
 		if v_int != float64(200) {
 			t.Error("FloatData Sub error,result not equal 200!")
 		} else {
@@ -161,7 +160,7 @@ func Testfloat64Sub(t *testing.T) {
 func Testfloat64RSub(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_int,err := t_int.RSub(float64(300)) ; err == nil {
+	if v_int, err := t_int.RSub(float64(300)); err == nil {
 		if v_int != float64(200) {
 			t.Error("FloatData RSub error,result not equal 200!")
 		} else {
@@ -175,7 +174,7 @@ func Testfloat64RSub(t *testing.T) {
 func Testfloat64Mul(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(4))
-	if v_int,err := t_int.Mul(float64(2)) ; err == nil {
+	if v_int, err := t_int.Mul(float64(2)); err == nil {
 		if v_int != float64(8) {
 			t.Error("FloatData Mul error,result not equal 8!")
 		} else {
@@ -189,8 +188,8 @@ func Testfloat64Mul(t *testing.T) {
 func Testfloat64RMul(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(2))
-	if v_int,err := t_int.RMul(float64(4)) ; err == nil {
-		if v_int != float64(8){
+	if v_int, err := t_int.RMul(float64(4)); err == nil {
+		if v_int != float64(8) {
 			t.Error("FloatData RMul error,result not equal 8!")
 		} else {
 			fmt.Println("2 * 4 = ", v_int)
@@ -203,7 +202,7 @@ func Testfloat64RMul(t *testing.T) {
 func Testfloat64Div(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(4))
-	if v_int,err := t_int.Div(float64(2)) ; err == nil {
+	if v_int, err := t_int.Div(float64(2)); err == nil {
 		if v_int != float64(2) {
 			t.Error("FloatData Div error,result not equal 8!")
 		} else {
@@ -217,7 +216,7 @@ func Testfloat64Div(t *testing.T) {
 func Testfloat64DivError(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(4))
-	if _,err := t_int.Div(float64(0)) ; err == nil {
+	if _, err := t_int.Div(float64(0)); err == nil {
 		fmt.Println("4 / 0 = error")
 		t.Error("FloatData Div error, zero exist!")
 	}
@@ -226,7 +225,7 @@ func Testfloat64DivError(t *testing.T) {
 func Testfloat64RDiv(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(2))
-	if v_int,err := t_int.RDiv(float64(4)) ; err == nil {
+	if v_int, err := t_int.RDiv(float64(4)); err == nil {
 		if v_int != float64(2) {
 			t.Error("FloatData RDiv error,result not equal 8!")
 		} else {
@@ -237,11 +236,10 @@ func Testfloat64RDiv(t *testing.T) {
 	}
 }
 
-
 func Testfloat64Lt(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_bool,err := t_int.Lt(float64(200)) ; err == nil {
+	if v_bool, err := t_int.Lt(float64(200)); err == nil {
 		if !v_bool {
 			t.Error("FloatData Lt error,result not equal true!")
 		} else {
@@ -255,7 +253,7 @@ func Testfloat64Lt(t *testing.T) {
 func Testfloat64LtFail(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if v_bool,err := t_int.Lt(float64(100)) ; err == nil {
+	if v_bool, err := t_int.Lt(float64(100)); err == nil {
 		if v_bool {
 			t.Error("FloatData Lt error,result not equal true!")
 		} else {
@@ -269,16 +267,15 @@ func Testfloat64LtFail(t *testing.T) {
 func Testfloat64LtError(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if _,err := t_int.Lt("a") ; err == nil {
+	if _, err := t_int.Lt("a"); err == nil {
 		t.Error("FloatData Lt error!")
 	}
 }
 
-
 func Testfloat64Le(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_bool,err := t_int.Le(float64(100)) ; err == nil {
+	if v_bool, err := t_int.Le(float64(100)); err == nil {
 		if !v_bool {
 			t.Error("FloatData Le error,result not equal true!")
 		} else {
@@ -292,7 +289,7 @@ func Testfloat64Le(t *testing.T) {
 func Testfloat64LeFail(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if v_bool,err := t_int.Le(float64(100)) ; err == nil {
+	if v_bool, err := t_int.Le(float64(100)); err == nil {
 		if v_bool {
 			t.Error("FloatData Le error,result not equal true!")
 		} else {
@@ -306,7 +303,7 @@ func Testfloat64LeFail(t *testing.T) {
 func Testfloat64LeError(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if _,err := t_int.Le("a") ; err == nil {
+	if _, err := t_int.Le("a"); err == nil {
 		t.Error("FloatData Lt error!")
 	}
 }
@@ -314,7 +311,7 @@ func Testfloat64LeError(t *testing.T) {
 func Testfloat64Gt(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if v_bool,err := t_int.Gt(float64(100)) ; err == nil {
+	if v_bool, err := t_int.Gt(float64(100)); err == nil {
 		if !v_bool {
 			t.Error("FloatData Gt error,result not equal true!")
 		} else {
@@ -328,7 +325,7 @@ func Testfloat64Gt(t *testing.T) {
 func Testfloat64GtFail(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_bool,err := t_int.Gt(float64(200)) ; err == nil {
+	if v_bool, err := t_int.Gt(float64(200)); err == nil {
 		if v_bool {
 			t.Error("FloatData Gt error,result not equal true!")
 		} else {
@@ -342,7 +339,7 @@ func Testfloat64GtFail(t *testing.T) {
 func Testfloat64GtError(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if _,err := t_int.Gt("a") ; err == nil {
+	if _, err := t_int.Gt("a"); err == nil {
 		t.Error("FloatData Gt error!")
 	}
 }
@@ -350,7 +347,7 @@ func Testfloat64GtError(t *testing.T) {
 func Testfloat64Ge(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if v_bool,err := t_int.Ge(float64(200)) ; err == nil {
+	if v_bool, err := t_int.Ge(float64(200)); err == nil {
 		if !v_bool {
 			t.Error("FloatData Ge error,result not equal true!")
 		} else {
@@ -364,7 +361,7 @@ func Testfloat64Ge(t *testing.T) {
 func Testfloat64GeFail(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(100))
-	if v_bool,err := t_int.Ge(float64(200)) ; err == nil {
+	if v_bool, err := t_int.Ge(float64(200)); err == nil {
 		if v_bool {
 			t.Error("FloatData Ge error,result not equal true!")
 		} else {
@@ -378,7 +375,7 @@ func Testfloat64GeFail(t *testing.T) {
 func Testfloat64GeError(t *testing.T) {
 	t_int := CreateFloatDataObject()
 	t_int.SetValue(float64(200))
-	if _,err := t_int.Ge("a") ; err == nil {
+	if _, err := t_int.Ge("a"); err == nil {
 		t.Error("FloatData Ge error!")
 	}
 }

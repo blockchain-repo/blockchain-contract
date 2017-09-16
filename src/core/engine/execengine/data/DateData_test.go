@@ -1,12 +1,12 @@
 package data
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 	"time"
 )
 
-func CreateDateDataObject() *DateData{
+func CreateDateDataObject() *DateData {
 	t_int := new(DateData)
 	t_int.InitDateData()
 	t_int.SetCname("TestDate")
@@ -17,7 +17,7 @@ func CreateDateDataObject() *DateData{
 	return t_int
 }
 
-func TestDateInit(t *testing.T){
+func TestDateInit(t *testing.T) {
 	t_int := new(DateData)
 	t_int.InitDateData()
 	t_int.SetCname("TestDate")
@@ -49,7 +49,7 @@ func TestDateInit(t *testing.T){
 	fmt.Println(t_int.GetCname(), " ", t_int.GetDefaultValue(), " ", t_int.GetFormat(), " ", t_int.GetCaption(), " ", t_int.GetDescription())
 }
 
-func TestFormatOP(t *testing.T){
+func TestFormatOP(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var v_format string = "2017-12-01 01:01:30"
 	t_date.SetFormat(v_format)
@@ -58,23 +58,23 @@ func TestFormatOP(t *testing.T){
 	}
 }
 
-func TestStrToDateNull(t *testing.T){
+func TestStrToDateNull(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var now_date_miao int64 = time.Now().Unix()
 	var not_date_formaat string = time.Unix(now_date_miao, 0).Format(t_date.GetFormat())
-	if _,err := t_date.strToDate(not_date_formaat);err != nil {
+	if _, err := t_date.strToDate(not_date_formaat); err != nil {
 		t.Error("StrToDate(param is null) Error!")
 	}
-	if _,err := t_date.strToDate("");err == nil {
+	if _, err := t_date.strToDate(""); err == nil {
 		t.Error("StrToDate(param is null) Error!")
 	}
 }
 
-func TestStrToDateOK(t *testing.T){
+func TestStrToDateOK(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var v_date_int int64 = 1491927053
 	var v_date_format string = "2017-04-11 16:10:53"
-	if v_time,err := t_date.strToDate(v_date_format);err != nil{
+	if v_time, err := t_date.strToDate(v_date_format); err != nil {
 		t.Error("StrToDate Error!")
 	} else {
 		if v_time.Unix() != v_date_int {
@@ -86,7 +86,7 @@ func TestStrToDateOK(t *testing.T){
 	}
 }
 
-func TestGetValueInt(t *testing.T){
+func TestGetValueInt(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var v_date_int int64 = 1491927053
 	var v_date_format string = "2017-04-11 16:10:53"
@@ -96,19 +96,19 @@ func TestGetValueInt(t *testing.T){
 	}
 	var r_date int64
 	var r_err error
-	r_date,r_err = t_date.GetValueInt()
+	r_date, r_err = t_date.GetValueInt()
 	if r_date != v_date_int {
-		t.Error("GetValueInt Error(" +  r_err.Error() + ")!")
+		t.Error("GetValueInt Error(" + r_err.Error() + ")!")
 	}
 }
 
-func TestDateAdd(t *testing.T){
+func TestDateAdd(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var v_date_format string = "2017-04-11 16:10:53"
 	t_date.SetValue(v_date_format)
-    var v_date_add time.Time
+	var v_date_add time.Time
 	var v_err error
-	v_date_add,v_err = t_date.Add(1)
+	v_date_add, v_err = t_date.Add(1)
 	if v_err != nil {
 		t.Error("Date Add Error!")
 	} else if v_date_add.Format(t_date.GetFormat()) != "2017-04-12 16:10:53" {
@@ -117,7 +117,7 @@ func TestDateAdd(t *testing.T){
 
 }
 
-func TestDateLt(t *testing.T){
+func TestDateLt(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var v_date_int int64 = 1491927053
 	var v_date_format string = "2017-04-11 16:10:53"
@@ -127,13 +127,13 @@ func TestDateLt(t *testing.T){
 	}
 	var r_date int64
 	var r_err error
-	r_date,r_err = t_date.GetValueInt()
+	r_date, r_err = t_date.GetValueInt()
 	if r_date != v_date_int {
-		t.Error("GetValueInt Error(" +  r_err.Error() + ")!")
+		t.Error("GetValueInt Error(" + r_err.Error() + ")!")
 	}
 }
 
-func TestDateGt(t *testing.T){
+func TestDateGt(t *testing.T) {
 	t_date := CreateDateDataObject()
 	var v_date_int int64 = 1491927053
 	var v_date_format string = "2017-04-11 16:10:53"
@@ -143,9 +143,8 @@ func TestDateGt(t *testing.T){
 	}
 	var r_date int64
 	var r_err error
-	r_date,r_err = t_date.GetValueInt()
+	r_date, r_err = t_date.GetValueInt()
 	if r_date != v_date_int {
-		t.Error("GetValueInt Error(" +  r_err.Error() + ")!")
+		t.Error("GetValueInt Error(" + r_err.Error() + ")!")
 	}
 }
-

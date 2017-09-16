@@ -7,7 +7,7 @@ const (
 )
 
 var EventPriority = map[int]string{
-	EventPriority_Unknow : "EventPriority_Unknow",
-	EventPriority_Immediate: "EventPriority_Immediate",
+	EventPriority_Unknow:           "EventPriority_Unknow",
+	EventPriority_Immediate:        "EventPriority_Immediate",
 	EventPriority_AfterEngineCycle: "EventPriority_AfterEngineCycle",
 }

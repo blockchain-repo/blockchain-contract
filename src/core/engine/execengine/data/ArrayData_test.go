@@ -1,11 +1,11 @@
 package data
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
-func CreateArrayDataObject() *ArrayData{
+func CreateArrayDataObject() *ArrayData {
 	t_array := new(ArrayData)
 	t_array.InitArrayData()
 	t_array.SetCname("TestArray")
@@ -16,7 +16,7 @@ func CreateArrayDataObject() *ArrayData{
 	return t_array
 }
 
-func TestArrayInit(t *testing.T){
+func TestArrayInit(t *testing.T) {
 	t_array := new(ArrayData)
 	t_array.InitArrayData()
 	t_array.SetCname("TestArray")
@@ -47,23 +47,23 @@ func TestArrayInit(t *testing.T){
 
 func TestAppendValue(t *testing.T) {
 	t_array := CreateArrayDataObject()
-	if v_bool,err := t_array.AppendValue(100); err == nil {
+	if v_bool, err := t_array.AppendValue(100); err == nil {
 		if v_bool {
 			if t_array.Len() != 1 {
 				t.Error("Array appendValue Error, get len Error")
 			}
-		}else {
+		} else {
 			t.Error("Array appendValue Error!")
 		}
 	} else {
 		t.Error("Array appendValue Error!")
 	}
-	if v_bool,err := t_array.AppendValue("test array append"); err == nil {
+	if v_bool, err := t_array.AppendValue("test array append"); err == nil {
 		if v_bool {
 			if t_array.Len() != 2 {
 				t.Error("Array appendValue Error, get len Error")
 			}
-		}else {
+		} else {
 			t.Error("Array appendValue Error!")
 		}
 	} else {
@@ -82,12 +82,12 @@ func TestRemoveValue(t *testing.T) {
 	t_array.AppendValue(100)
 	t_array.AppendValue(200)
 	t_array.AppendValue(300)
-	if v_bool,err := t_array.RemoveValue(1); err == nil {
+	if v_bool, err := t_array.RemoveValue(1); err == nil {
 		if v_bool {
 			if t_array.Len() != 2 {
 				t.Error("Array RemoveValue Error, get len Error")
 			}
-		}else {
+		} else {
 			t.Error("Array RemoveValue Error!")
 		}
 	} else {
@@ -97,13 +97,14 @@ func TestRemoveValue(t *testing.T) {
 
 func TestRemoveValueNull(t *testing.T) {
 	t_array := CreateArrayDataObject()
-	if _,err := t_array.RemoveValue(1); err == nil {
+	if _, err := t_array.RemoveValue(1); err == nil {
 		t.Error("Array RemoveValue Error!")
 	}
-	if v_bool,_ := t_array.RemoveValue(2); v_bool {
+	if v_bool, _ := t_array.RemoveValue(2); v_bool {
 		t.Error("Array RemoveValue Error!")
 	}
 }
+
 /*
 func TestArrayGetItem(t *testing.T) {
 	t_array := CreateArrayDataObject()
@@ -130,7 +131,7 @@ func TestArrayGetItem(t *testing.T) {
 */
 func TestArrayLen(t *testing.T) {
 	t_array := CreateArrayDataObject()
-    if t_array.Len() != 0 {
+	if t_array.Len() != 0 {
 		t.Error("Array is nil, Len[0] Error!")
 	}
 	t_array.AppendValue(100)

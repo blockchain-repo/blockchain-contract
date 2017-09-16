@@ -1,12 +1,12 @@
 package data
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 	"unicontract/src/core/engine/execengine/constdef"
 )
 
-func CreateIntDataObject() *IntData{
+func CreateIntDataObject() *IntData {
 	t_int := new(IntData)
 	t_int.InitIntData()
 	t_int.SetCname("TestMoney")
@@ -18,7 +18,7 @@ func CreateIntDataObject() *IntData{
 	return t_int
 }
 
-func TestIntInit(t *testing.T){
+func TestIntInit(t *testing.T) {
 	t_int := new(IntData)
 	t_int.InitIntData()
 	t_int.SetCname("TestMoney")
@@ -29,7 +29,7 @@ func TestIntInit(t *testing.T){
 	if t_int == nil {
 		t.Error("IntData init Error!")
 	}
-	if t_int.GetCtype() != constdef.ComponentType[constdef.Component_Data] + "." + constdef.DataType[constdef.Data_Numeric_Int] {
+	if t_int.GetCtype() != constdef.ComponentType[constdef.Component_Data]+"."+constdef.DataType[constdef.Data_Numeric_Int] {
 		t.Error("t_ctype value Error!")
 	}
 	if t_int.GetCname() != "TestMoney" {
@@ -62,11 +62,11 @@ func TestIntInit(t *testing.T){
 
 func TestIntDataRange(t *testing.T) {
 	t_int := CreateIntDataObject()
-	var t_range_1 [2]int = [2]int{-1,-1}
-	var t_range_2 [2]int = [2]int{-1,0}
-	var t_range_3 [2]int = [2]int{0,1}
-	var t_range_4 [2]int = [2]int{1,1}
-	var t_range_5 [2]int = [2]int{1,-1}
+	var t_range_1 [2]int = [2]int{-1, -1}
+	var t_range_2 [2]int = [2]int{-1, 0}
+	var t_range_3 [2]int = [2]int{0, 1}
+	var t_range_4 [2]int = [2]int{1, 1}
+	var t_range_5 [2]int = [2]int{1, -1}
 	//default [0, 0]
 	var t_range_6 [2]int
 	if err := t_int.SetDataRange(t_range_1); err != nil {
@@ -114,7 +114,7 @@ func TestCheckRange(t *testing.T) {
 func TestAdd(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_int,err := t_int.Add(200) ; err == nil {
+	if v_int, err := t_int.Add(200); err == nil {
 		if v_int != 300 {
 			t.Error("IntData add error,result not equal 300!")
 		} else {
@@ -128,7 +128,7 @@ func TestAdd(t *testing.T) {
 func TestRAdd(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_int,err := t_int.RAdd(200) ; err == nil {
+	if v_int, err := t_int.RAdd(200); err == nil {
 		if v_int != 300 {
 			t.Error("IntData add error,result not equal 300!")
 		} else {
@@ -142,7 +142,7 @@ func TestRAdd(t *testing.T) {
 func TestSub(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(400)
-	if v_int,err := t_int.Sub(200) ; err == nil {
+	if v_int, err := t_int.Sub(200); err == nil {
 		if v_int != 200 {
 			t.Error("IntData Sub error,result not equal 200!")
 		} else {
@@ -156,7 +156,7 @@ func TestSub(t *testing.T) {
 func TestRSub(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_int,err := t_int.RSub(300) ; err == nil {
+	if v_int, err := t_int.RSub(300); err == nil {
 		if v_int != 200 {
 			t.Error("IntData RSub error,result not equal 200!")
 		} else {
@@ -170,7 +170,7 @@ func TestRSub(t *testing.T) {
 func TestMul(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(4)
-	if v_int,err := t_int.Mul(2) ; err == nil {
+	if v_int, err := t_int.Mul(2); err == nil {
 		if v_int != 8 {
 			t.Error("IntData Mul error,result not equal 8!")
 		} else {
@@ -184,7 +184,7 @@ func TestMul(t *testing.T) {
 func TestRMul(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(2)
-	if v_int,err := t_int.RMul(4) ; err == nil {
+	if v_int, err := t_int.RMul(4); err == nil {
 		if v_int != 8 {
 			t.Error("IntData RMul error,result not equal 8!")
 		} else {
@@ -198,7 +198,7 @@ func TestRMul(t *testing.T) {
 func TestDiv(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(4)
-	if v_int,err := t_int.Div(2) ; err == nil {
+	if v_int, err := t_int.Div(2); err == nil {
 		if v_int != 2 {
 			t.Error("IntData Div error,result not equal 8!")
 		} else {
@@ -212,7 +212,7 @@ func TestDiv(t *testing.T) {
 func TestDivError(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(4)
-	if _,err := t_int.Div(0) ; err == nil {
+	if _, err := t_int.Div(0); err == nil {
 		fmt.Println("4 / 0 = error")
 		t.Error("IntData Div error, zero exist!")
 	}
@@ -221,7 +221,7 @@ func TestDivError(t *testing.T) {
 func TestRDiv(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(2)
-	if v_int,err := t_int.RDiv(4) ; err == nil {
+	if v_int, err := t_int.RDiv(4); err == nil {
 		if v_int != 2 {
 			t.Error("IntData RDiv error,result not equal 8!")
 		} else {
@@ -235,7 +235,7 @@ func TestRDiv(t *testing.T) {
 func TestMod(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(5)
-	if v_int,err := t_int.Mod(2) ; err == nil {
+	if v_int, err := t_int.Mod(2); err == nil {
 		if v_int != 1 {
 			t.Error("IntData Mod error,result not equal 1!")
 		} else {
@@ -258,7 +258,7 @@ func TestNeg(t *testing.T) {
 func TestLt(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_bool,err := t_int.Lt(200) ; err == nil {
+	if v_bool, err := t_int.Lt(200); err == nil {
 		if !v_bool {
 			t.Error("IntData Lt error,result not equal true!")
 		} else {
@@ -272,7 +272,7 @@ func TestLt(t *testing.T) {
 func TestLtFail(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if v_bool,err := t_int.Lt(100) ; err == nil {
+	if v_bool, err := t_int.Lt(100); err == nil {
 		if v_bool {
 			t.Error("IntData Lt error,result not equal true!")
 		} else {
@@ -286,16 +286,15 @@ func TestLtFail(t *testing.T) {
 func TestLtError(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if _,err := t_int.Lt("a") ; err == nil {
+	if _, err := t_int.Lt("a"); err == nil {
 		t.Error("IntData Lt error!")
 	}
 }
 
-
 func TestLe(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_bool,err := t_int.Le(100) ; err == nil {
+	if v_bool, err := t_int.Le(100); err == nil {
 		if !v_bool {
 			t.Error("IntData Le error,result not equal true!")
 		} else {
@@ -309,7 +308,7 @@ func TestLe(t *testing.T) {
 func TestLeFail(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if v_bool,err := t_int.Le(100) ; err == nil {
+	if v_bool, err := t_int.Le(100); err == nil {
 		if v_bool {
 			t.Error("IntData Le error,result not equal true!")
 		} else {
@@ -323,7 +322,7 @@ func TestLeFail(t *testing.T) {
 func TestLeError(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if _,err := t_int.Le("a") ; err == nil {
+	if _, err := t_int.Le("a"); err == nil {
 		t.Error("IntData Lt error!")
 	}
 }
@@ -331,7 +330,7 @@ func TestLeError(t *testing.T) {
 func TestGt(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if v_bool,err := t_int.Gt(100) ; err == nil {
+	if v_bool, err := t_int.Gt(100); err == nil {
 		if !v_bool {
 			t.Error("IntData Gt error,result not equal true!")
 		} else {
@@ -345,7 +344,7 @@ func TestGt(t *testing.T) {
 func TestGtFail(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_bool,err := t_int.Gt(200) ; err == nil {
+	if v_bool, err := t_int.Gt(200); err == nil {
 		if v_bool {
 			t.Error("IntData Gt error,result not equal true!")
 		} else {
@@ -359,7 +358,7 @@ func TestGtFail(t *testing.T) {
 func TestGtError(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if _,err := t_int.Gt("a") ; err == nil {
+	if _, err := t_int.Gt("a"); err == nil {
 		t.Error("IntData Gt error!")
 	}
 }
@@ -367,7 +366,7 @@ func TestGtError(t *testing.T) {
 func TestGe(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if v_bool,err := t_int.Ge(200) ; err == nil {
+	if v_bool, err := t_int.Ge(200); err == nil {
 		if !v_bool {
 			t.Error("IntData Ge error,result not equal true!")
 		} else {
@@ -381,7 +380,7 @@ func TestGe(t *testing.T) {
 func TestGeFail(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(100)
-	if v_bool,err := t_int.Ge(200) ; err == nil {
+	if v_bool, err := t_int.Ge(200); err == nil {
 		if v_bool {
 			t.Error("IntData Ge error,result not equal true!")
 		} else {
@@ -395,7 +394,7 @@ func TestGeFail(t *testing.T) {
 func TestGeError(t *testing.T) {
 	t_int := CreateIntDataObject()
 	t_int.SetValue(200)
-	if _,err := t_int.Ge("a") ; err == nil {
+	if _, err := t_int.Ge("a"); err == nil {
 		t.Error("IntData Ge error!")
 	}
 }

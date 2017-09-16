@@ -273,7 +273,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	gt.TaskExecuteIdx = gt.GetTaskExecuteIdx()
 	// Data组件信息 更新到描述态
 	var new_data_array []interface{} = make([]interface{}, len(gt.DataList))
-	for v_idx:= range gt.DataList {
+	for v_idx := range gt.DataList {
 		if gt.DataList[v_idx] == nil {
 			err = fmt.Errorf("gt.DataList has nil data!")
 			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
@@ -289,7 +289,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 
 	//Expression组件(DataValueSetterExpressionList)信息 更新到描述态
 	var new_expression_array []interface{} = make([]interface{}, len(gt.DataValueSetterExpressionList))
-	for v_idx:= range gt.DataValueSetterExpressionList {
+	for v_idx := range gt.DataValueSetterExpressionList {
 		if gt.DataValueSetterExpressionList[v_idx] == nil {
 			err = fmt.Errorf("gt.DataValueSetterExpressionList has nil data!")
 			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
@@ -304,7 +304,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	gt.DataValueSetterExpressionList = new_expression_array
 	//Expression组件(PreCondition)信息 更新到描述态
 	var new_pre_array []interface{} = make([]interface{}, len(gt.PreCondition))
-	for v_idx:= range gt.PreCondition {
+	for v_idx := range gt.PreCondition {
 		if gt.PreCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.PreCondition has nil data!")
 			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
@@ -320,7 +320,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	gt.PreCondition = new_pre_array
 	//Expression组件(CompleteCondition)信息 更新到描述态
 	var new_complete_array []interface{} = make([]interface{}, len(gt.CompleteCondition))
-	for v_idx:= range gt.CompleteCondition {
+	for v_idx := range gt.CompleteCondition {
 		if gt.CompleteCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.CompleteCondition has nil data!")
 			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
@@ -335,7 +335,7 @@ func (gt *GeneralTask) UpdateStaticState() (interface{}, error) {
 	gt.CompleteCondition = new_complete_array
 	//Expression组件(DiscardCondition)信息 更新到描述态
 	var new_discard_array []interface{} = make([]interface{}, len(gt.DiscardCondition))
-	for v_idx:= range gt.DiscardCondition {
+	for v_idx := range gt.DiscardCondition {
 		if gt.DiscardCondition[v_idx] == nil {
 			err = fmt.Errorf("gt.DiscardCondition has nil data!")
 			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
@@ -1057,7 +1057,7 @@ func (gt *GeneralTask) Start() (int8, error) {
 		//TODO 待处理，避免一般操作任务，重复执行
 		//TODO DataValueSetterExpressionList 和 Data的对应（通过 Cname进行对应， expression_function_A\data_int_expression_function_A）
 		uniledgerlog.Debug("Task %s DataSetterExpressionList() size is %d", gt.GetName(), len(gt.GetDataValueSetterExpressionList()))
-		for v_key:= range gt.GetDataValueSetterExpressionList() {
+		for v_key := range gt.GetDataValueSetterExpressionList() {
 			v_expr_object := gt.GetDataValueSetterExpressionList()[v_key]
 
 			//1 执行
@@ -1382,7 +1382,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 			if !gRPCClient.On {
 				// TODO : 目前仅支持一个datalist的情况
 				var output_string string
-				for v_key:= range gt.GetDataList() {
+				for v_key := range gt.GetDataList() {
 					slData, r_err := json.Marshal(gt.GetContract().GetComponentTtem(v_key))
 					if r_err != nil {
 						r_ret = -1
@@ -1429,7 +1429,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 				for i := 0; i < len(interf); i++ {
 					if interf[i].([]interface{})[1] == "ContractExecute" {
 						// TODO : 目前仅支持一个datalist的情况
-						for v_key:= range gt.GetDataList() {
+						for v_key := range gt.GetDataList() {
 							slData, r_err := json.Marshal(gt.GetContract().GetComponentTtem(v_key))
 							if r_err != nil {
 								r_ret = -1
@@ -1760,7 +1760,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 	if len(p_dataList) == 0 {
 		return
 	}
-	for v_key:= range p_dataList {
+	for v_key := range p_dataList {
 		if strings.Contains(v_key, p_name) {
 			v_data = p_dataList[v_key]
 			v_data.SetValue(p_result.GetData())
@@ -1772,7 +1772,7 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 		// 根据函数执行结果和分支情况决定最终的结果值
 		select_branchs := gt.GetSelectBranches()
 		if len(select_branchs) != 0 {
-			for v_idx:= range select_branchs {
+			for v_idx := range select_branchs {
 				select_object := select_branchs[v_idx]
 				select_value, select_err := gt.GetContract().EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], select_object.GetBranchExpressionStr())
 				if select_err != nil {

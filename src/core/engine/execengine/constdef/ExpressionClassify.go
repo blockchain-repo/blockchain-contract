@@ -23,14 +23,14 @@ const (
 )
 
 var ExpressionClassify = map[int]string{
-	Expr_Num :"Expr_Num",
-	Expr_Float: "Expr_Float",
-	Expr_Bool: "Expr_Bool",
-	Expr_String: "Expr_String",
-	Expr_Date: "Expr_Date",
-	Expr_Array: "Expr_Array",
+	Expr_Num:       "Expr_Num",
+	Expr_Float:     "Expr_Float",
+	Expr_Bool:      "Expr_Bool",
+	Expr_String:    "Expr_String",
+	Expr_Date:      "Expr_Date",
+	Expr_Array:     "Expr_Array",
 	Expr_Condition: "Expr_Condition",
-	Expr_Function: "Expr_Function",
-	Expr_Variable: "Expr_Variable",
+	Expr_Function:  "Expr_Function",
+	Expr_Variable:  "Expr_Variable",
 	Expr_Candidate: "Expr_Candidate",
 }

@@ -1,10 +1,10 @@
 package function
 
 import (
-	"unicontract/src/common/uniledgerlog"
 	"math/rand"
 	"testing"
 	"time"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func TestFuncGetNowDate(t *testing.T) {

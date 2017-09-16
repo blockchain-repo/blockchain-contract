@@ -2,7 +2,7 @@ package constdef
 
 import "testing"
 
-func TestContratVersion(t *testing.T){
+func TestContratVersion(t *testing.T) {
 	var version string = UCVM_Version
 	var copyright = UCVM_CopyRight
 	var date = UCVM_Date

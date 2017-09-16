@@ -1,39 +1,39 @@
 package function
 
 import (
-	"testing"
-	"unicontract/src/core/engine/common"
-	"reflect"
 	"fmt"
+	"reflect"
 	"regexp"
 	"strings"
+	"testing"
+	"unicontract/src/core/engine/common"
 )
 
-func TestRegex(t *testing.T){
-	reg,_ := regexp.Compile(`[a-zA-Z_0-9]+\(.*\)`)
+func TestRegex(t *testing.T) {
+	reg, _ := regexp.Compile(`[a-zA-Z_0-9]+\(.*\)`)
 	v_function := "testMethod(p_arg_1, p_arg_2, p_arg_3)"
-	v_bool,v_err := regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
+	v_bool, v_err := regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
 	if !v_bool || v_err != nil {
 		t.Error("param[" + v_function + "] function format error!")
 	}
 	fmt.Println(reg.FindString(v_function))
 
 	v_function = " testMethod (p_arg)"
-	v_bool,v_err = regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
+	v_bool, v_err = regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
 	if v_bool {
 		t.Error("param[" + v_function + "] function format error!")
 	}
 	fmt.Println(reg.FindString(v_function))
 
 	v_function = "testMethod_1()"
-	v_bool,v_err = regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
+	v_bool, v_err = regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
 	if !v_bool || v_err != nil {
 		t.Error("param[" + v_function + "] function format error!")
 	}
 	fmt.Println(reg.FindString(v_function))
 
 	v_function = "testMethod_2"
-	v_bool,v_err = regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
+	v_bool, v_err = regexp.MatchString(`[a-zA-Z_0-9]+\(.*\)`, v_function)
 	if v_bool {
 		t.Error("param[" + v_function + "] function format error!")
 	}
@@ -41,26 +41,26 @@ func TestRegex(t *testing.T){
 }
 
 //测试：可变参数方法
-func TestArgsReflect(t *testing.T){
+func TestArgsReflect(t *testing.T) {
 	var v_arg_0 int = 1
 	var v_arg_1 string = "abc"
-	var v_arg_2 map[string]string = map[string]string{"a":"aValue", "b":"bValue", "c":"cValue"}
-	v_result,_ := FuncTestMethod(v_arg_0, v_arg_1, v_arg_2)
+	var v_arg_2 map[string]string = map[string]string{"a": "aValue", "b": "bValue", "c": "cValue"}
+	v_result, _ := FuncTestMethod(v_arg_0, v_arg_1, v_arg_2)
 	fmt.Println("result: ", v_result)
 	fmt.Println()
 }
 
 //测试：方法反射
-func TestMethodReflect(t *testing.T){
-	var func_set map[string]func(arg...interface{})(common.OperateResult,error) = make(map[string]func(arg...interface{})(common.OperateResult,error) , 0)
+func TestMethodReflect(t *testing.T) {
+	var func_set map[string]func(arg ...interface{}) (common.OperateResult, error) = make(map[string]func(arg ...interface{}) (common.OperateResult, error), 0)
 	func_set["TestMethod"] = FuncTestMethod
 
 	//反射机制 1.1
 	var func_name string = "TestMethod"
-	v_result,_ := func_set[func_name](1, "abc", map[string]string{"a":"aValue", "b":"bValue", "c":"cValue"})
+	v_result, _ := func_set[func_name](1, "abc", map[string]string{"a": "aValue", "b": "bValue", "c": "cValue"})
 	fmt.Println("result: ", v_result)
 	fmt.Println()
-	v_result,_ = func_set[func_name]("test method reflect")
+	v_result, _ = func_set[func_name]("test method reflect")
 	fmt.Println("result: ", v_result)
 	fmt.Println()
 
@@ -83,9 +83,9 @@ func TestMethodReflect(t *testing.T){
 	params := make([]reflect.Value, 0)
 	params = append(params, reflect.ValueOf(20))
 	params = append(params, reflect.ValueOf("abc"))
-	params = append(params, reflect.ValueOf(map[string]string{"a":"aValue", "b":"bValue", "c":"cValue"}))
+	params = append(params, reflect.ValueOf(map[string]string{"a": "aValue", "b": "bValue", "c": "cValue"}))
 
 	rs := func_run.Call(params)
-	fmt.Println("result:",rs[0].Interface())
-	fmt.Println("err:",rs[1].Interface())
+	fmt.Println("result:", rs[0].Interface())
+	fmt.Println("err:", rs[1].Interface())
 }

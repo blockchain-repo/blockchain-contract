@@ -175,7 +175,7 @@ func (ct *ComponentTable) UpdateComponent(c_type string, c_name string, c_compon
 	//获取ctype对应的组件数组
 	task_component_array := ct.CompTable[c_type]
 	var new_task_component_array []map[string]interface{} = make([]map[string]interface{}, len(task_component_array))
-	for v_idx:= range task_component_array {
+	for v_idx := range task_component_array {
 		//替换组件数组中对应的组件
 		for v_key, v_value := range task_component_array[v_idx] {
 			if v_key == c_name {

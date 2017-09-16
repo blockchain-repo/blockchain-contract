@@ -460,7 +460,7 @@ func (model *CognitiveContract) Serialize() (string, error) {
 	component_array := model.ComponentTable.CompTable[constdef.ComponentType[constdef.Component_Task]]
 	new_contract_components := make([]interface{}, task_count)
 
-	for v_idx:= range component_array {
+	for v_idx := range component_array {
 		if len(component_array[v_idx]) == 0 {
 			err = fmt.Errorf("ComponentTable has nil task!")
 			uniledgerlog.Error("Contract Serialize fail[" + err.Error() + "]")
@@ -468,7 +468,7 @@ func (model *CognitiveContract) Serialize() (string, error) {
 		}
 
 		//type: map[string]inf.ITask
-		for v_key:= range component_array[v_idx] {
+		for v_key := range component_array[v_idx] {
 			//update data & expression in task
 			itask, ok := component_array[v_idx][v_key].(inf.ITask)
 			if !ok {
