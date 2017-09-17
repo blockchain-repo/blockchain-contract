@@ -27,14 +27,18 @@ func init() {
 
 	beego.InsertFilter("/*", beego.BeforeRouter, filters.MonitorFilter, false)
 	// filter shouldn`t use the api log!
-	if auth_verify {
-		// auth request app_id and app_key, return token
-		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIBasicFilter, true)
-		if auth_verify_rate_limit {
-			beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
-		}
 
-	}
+	//TODO temp deal
+	_ =auth_verify
+	_ = auth_verify_rate_limit
+	//if auth_verify {
+	//	// auth request app_id and app_key, return token
+	//	beego.InsertFilter("/*", beego.BeforeRouter, filters.APIBasicFilter, true)
+	//	if auth_verify_rate_limit {
+	//		beego.InsertFilter("/*", beego.BeforeRouter, filters.APIRateLimitFilter, true)
+	//	}
+	//
+	//}
 
 	//todo 1. auth_verify=true
 	//false will ignore all the filters
