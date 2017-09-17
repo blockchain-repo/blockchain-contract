@@ -8,7 +8,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"strconv"
 	"time"
-	"unicontract/src/api"
+	api "unicontract/src/api"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/common/uniledgerlog"
@@ -623,7 +623,6 @@ func (c *ContractController) PressTest() {
 	contract.ContractBody.ContractProductId = contractProductIdTemp
 	contract.ContractBody.Caption = contractCaptionTemp
 	contract.ContractBody.ContractState = "Contract_Signature"
-	uniledgerlog.Warn(endTime)
 
 	//todo 1. replace createTime, Signatures, owner, start and end time!
 
@@ -636,17 +635,29 @@ func (c *ContractController) PressTest() {
 	randomString := common.GenerateUUID() + "_node" + c.Ctx.Request.RequestURI + "_token_"
 	contractModel.ContractBody.Caption = randomString
 	contractModel.ContractBody.Description = randomString
-
 	contractModel.ContractBody.CreateTime = common.GenTimestamp()
-	startTime = common.GenTimestamp()
-	//if len(startTime) != 0 {
+	/************************** startTime endTime deal start **********************/
+	if len(startTime) != 13 {
+		_startTime := contractModel.ContractBody.StartTime
+		if len(_startTime) == 0 {
+			startTime = common.GenTimestamp()
+		} else if len(_startTime) != 13 {
+			startTime, _ = common.GenSpecialTimestamp(_startTime)
+		}
+	}
 	contractModel.ContractBody.StartTime = startTime
-	//}
-	endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 3600*24*360)
-	//if len(endTime) != 0 {
+
+	if len(endTime) != 13 {
+		_endTime := contractModel.ContractBody.EndTime
+		if len(_endTime) == 0 {
+			endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 3600*24*360)
+		} else if len(_endTime) != 13 {
+			endTime, _ = common.GenSpecialTimestamp(_endTime)
+		}
+	}
 	contractModel.ContractBody.EndTime = endTime
-	uniledgerlog.Warn("ContractBody %+v ", contractModel.ContractBody)
-	//}
+	uniledgerlog.Warn("%+v ", contractModel.ContractBody)
+	/************************** startTime endTime deal end **********************/
 
 	// lost head lead to nil pointer
 	if contractModel.ContractHead == nil {
