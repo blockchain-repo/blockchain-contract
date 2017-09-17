@@ -8,7 +8,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"strconv"
 	"time"
-	api "unicontract/src/api"
+	"unicontract/src/api"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/common/uniledgerlog"
@@ -638,14 +638,15 @@ func (c *ContractController) PressTest() {
 	contractModel.ContractBody.Description = randomString
 
 	contractModel.ContractBody.CreateTime = common.GenTimestamp()
-	if len(startTime) != 0 {
-		startTime = common.GenTimestamp()
-		contractModel.ContractBody.StartTime = startTime
-	}
-	if len(endTime) != 0 {
-		endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 300)
-		contractModel.ContractBody.EndTime = endTime
-	}
+	startTime = common.GenTimestamp()
+	//if len(startTime) != 0 {
+	contractModel.ContractBody.StartTime = startTime
+	//}
+	endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 3600*24*360)
+	//if len(endTime) != 0 {
+	contractModel.ContractBody.EndTime = endTime
+	uniledgerlog.Warn("ContractBody %+v ", contractModel.ContractBody)
+	//}
 
 	// lost head lead to nil pointer
 	if contractModel.ContractHead == nil {
