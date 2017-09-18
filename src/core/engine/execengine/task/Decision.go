@@ -281,7 +281,7 @@ func (d *Decision) RemoveCandidate(p_candidate interface{}) {
 
 func (d *Decision) evaluateCandidate() error {
 	var err error
-
+	uniledgerlog.Error("%+v", d.PropertyTable)
 	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), Decision get CandidateList]",
 		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
 	candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
@@ -308,7 +308,6 @@ func (d *Decision) evaluateCandidate() error {
 				uniledgerlog.Error(err.Error())
 				return err
 			}
-			uniledgerlog.Error("%+v", tmp_DecisionCandidate)
 			tmp_DecisionCandidate.SetContract(d.GetContract())
 			tmp_DecisionCandidate.ResetDecisionCandidate()
 			err := tmp_DecisionCandidate.Eval()
@@ -321,6 +320,7 @@ func (d *Decision) evaluateCandidate() error {
 		candlist_property.SetValue(candlist_map)
 		d.PropertyTable[_CandidateList] = candlist_property
 	}
+	uniledgerlog.Error("%+v", d.PropertyTable)
 	return err
 }
 
@@ -364,6 +364,13 @@ func (d *Decision) Start() (int8, error) {
 		r_buf.WriteString("[Result]: Task execute success;")
 		uniledgerlog.Info(r_buf.String(), " Dormant to Inprocess....")
 		d.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
+		uniledgerlog.Error("-------------------------")
+		uniledgerlog.Error("%+v", d.GetName())
+		uniledgerlog.Error("%+v", d.GetContract().GetComponentTtem(d.GetName()))
+		d.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Task],
+			d.GetName(), *d)
+		uniledgerlog.Error("%+v", d.GetContract().GetComponentTtem(d.GetName()))
+		uniledgerlog.Error("-------------------------")
 	} else if d.IsDormant() && !d.testPreCondition() { //未达到执行条件，返回 0
 		r_ret = 0
 		r_buf.WriteString("[Result]: preCondition not true;")

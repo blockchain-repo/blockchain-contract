@@ -51,6 +51,8 @@ type CognitiveContractHead struct {
 
 type CognitiveContractBody struct {
 	//合约默认属性
+	//ContractProductId  string              `json:"ContractProductId"`
+	//ContractTemplateId string              `json:"ContractTemplateId"`
 	ContractId         string              `json:"ContractId"`
 	Cname              string              `json:"Cname"`
 	Ctype              string              `json:"Ctype"`
