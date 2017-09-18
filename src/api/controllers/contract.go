@@ -887,7 +887,7 @@ func (c *ContractController) Terminate() {
 		return
 	}
 	uniledgerlog.Warn("API[Terminate]contractProductId: " + contractProductId + "contractId: " + contractId)
-	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(true))))
+	c.responseJson(api.RESPONSE_STATUS_OK, resultMsg, "terminate success")
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
