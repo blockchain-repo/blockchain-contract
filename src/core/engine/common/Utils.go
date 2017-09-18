@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/execengine/inf"
 	"unicontract/src/core/engine/execengine/property"
@@ -107,7 +108,7 @@ func AddProperty(object interface{}, p_propertyTable map[string]interface{}, str
 	var pro_object property.PropertyT
 	if p_propertyTable == nil {
 		//TODO
-		fmt.Println("param[p_propertyTable] is nil!!!")
+		uniledgerlog.Error("param[p_propertyTable] is nil!!!")
 		return pro_object
 	}
 	if value == nil {
@@ -199,6 +200,10 @@ func AddProperty(object interface{}, p_propertyTable map[string]interface{}, str
 	case map[string]inf.ITask:
 		pro_object = property.PropertyT{Name: str_name}
 		pro_object.SetValue(value.(map[string]inf.ITask))
+		p_propertyTable[str_name] = pro_object
+	case map[string]interface{}: // 只针对决策(Decision)组件
+		pro_object = property.PropertyT{Name: str_name}
+		pro_object.SetValue(value.(map[string]interface{}))
 		p_propertyTable[str_name] = pro_object
 	case []interface{}:
 		pro_object = property.PropertyT{Name: str_name}

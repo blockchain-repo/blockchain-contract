@@ -238,6 +238,8 @@ func Test_IsExprCondition(t *testing.T) {
 	v_express_parse := NewExpressionParseEngine()
 
 	slTestRightStr := []string{
+		`contract_decision.DecitionTwo.Value == &quot;1&quot;`,
+		`contract_decision.DecitionTwo.Value == "1";`,
 		"",
 		"a&&b", "a&&b||c", "!a&&!b", "!a&&!b||!c",
 		"a && b", "a&&b",

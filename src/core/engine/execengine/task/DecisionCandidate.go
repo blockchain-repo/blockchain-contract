@@ -362,13 +362,14 @@ func (dc *DecisionCandidate) Eval() error {
 			}
 
 			if v_bool_result {
-				support_sum = support_sum + 1
+				support_sum++
 				dc.AddSupportArgument(v_expression)
 			} else {
-				against_sum = against_sum + 1
+				against_sum++
 				dc.AddAgainstArgument(v_expression)
 			}
 		}
+		uniledgerlog.Debug("support_sum is %d, against_sum is %d", support_sum, against_sum)
 		dc.SetSupportNum(support_sum)
 		dc.SetAgainstNum(against_sum)
 

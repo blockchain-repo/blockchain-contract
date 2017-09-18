@@ -175,6 +175,8 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 			return v_return, fmt.Errorf("assert error")
 		}
 		v_return, v_err = strconv.ParseBool(str)
+	} else {
+		uniledgerlog.Error("type if %s is unknown", p_expression)
 	}
 	if v_err != nil {
 		var r_buf bytes.Buffer = bytes.Buffer{}
@@ -524,30 +526,35 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 			v_parameters[v_param] = v_result
 			var str_result string = ""
 
-			switch v_result.(type) {
-			case string:
+			//switch v_result.(type) {
+			//case string:
+			//	{
+			//		uniledgerlog.Debug("v_result.(type) is string")
+			//		str_result = v_result.(string)
+			//	}
+			//case reflect.Value:
+			//	{
+			uniledgerlog.Debug("v_result.(type) is reflect.Value")
+			switch v_result.(reflect.Value).Type().Kind() {
+			case reflect.Bool:
 				{
-					uniledgerlog.Debug("v_result.(type) is string")
-					str_result = v_result.(string)
+					uniledgerlog.Debug("v_result.(reflect.Value).Type().Kind() is bool")
+					str_result = common.TernaryOperator(v_result.(reflect.Value).Bool(),
+						"true", "false").(string)
 				}
-			case reflect.Value:
+			case reflect.String:
 				{
-					uniledgerlog.Debug("v_result.(type) is reflect.Value")
-					switch v_result.(reflect.Value).Type().Kind() {
-					case reflect.Bool:
-						{
-							uniledgerlog.Debug("v_result.(reflect.Value).Type().Kind() is bool")
-							str_result = common.TernaryOperator(v_result.(reflect.Value).Bool(),
-								"true", "false").(string)
-						}
-					default:
-						uniledgerlog.Warn("default : v_result.(reflect.Value).Type().Kind() is %+v",
-							v_result.(reflect.Value).Type().Kind())
-					}
+					uniledgerlog.Debug("v_result.(reflect.Value).Type().Kind() is string")
+					str_result = "\"" + v_result.(reflect.Value).String() + "\""
 				}
 			default:
-				uniledgerlog.Warn("default : v_result.(type) is %+v", reflect.TypeOf(v_result))
+				uniledgerlog.Warn("default : v_result.(reflect.Value).Type().Kind() is %+v",
+					v_result.(reflect.Value).Type().Kind())
 			}
+			//	}
+			//default:
+			//	uniledgerlog.Warn("default : v_result.(type) is %+v", reflect.TypeOf(v_result))
+			//}
 			uniledgerlog.Debug("=======variable: ", v_param, "  =====value: ", str_result)
 			p_expression = strings.Replace(p_expression, v_param, str_result, -1)
 		}
@@ -647,7 +654,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 		uniledgerlog.Debug("field - v_property_field.IsValid() :")
 		uniledgerlog.Debug(v_property_field.IsValid())
 		uniledgerlog.Debug("field - v_property_field.Interface() : ")
-		uniledgerlog.Debug(v_property_field.Interface())
+		uniledgerlog.Debug("%+v", v_property_field.Interface())
 		fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		return v_property_field.Interface(), v_err
 	}
@@ -655,7 +662,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	v_idx := 1
 	for v_idx < v_variable_count {
 		v_property_field = v_component_object.FieldByName(v_variable_array[v_idx])
-		uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+		uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
 		switch v_property_field.Kind() {
 		case reflect.Map:
 			v_idx = v_idx + 1
@@ -664,7 +671,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 			v_component_object = v_property_field.MapIndex(reflect.ValueOf(v_variable_array[v_idx]))
 			v_property_field = reflect.ValueOf(v_component_object)
-			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
 			uniledgerlog.Debug("Map")
 		case reflect.Slice:
 			v_idx = v_idx + 1
@@ -682,7 +689,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 				v_component_object = reflect.ValueOf(data_arr[v_arr_idx])
 			}
 			v_property_field = reflect.ValueOf(v_component_object)
-			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
 			uniledgerlog.Debug("Slice")
 		case reflect.Array:
 			v_idx = v_idx + 1
@@ -707,7 +714,6 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			uniledgerlog.Debug("Struct")
 		default:
 			uniledgerlog.Debug("default")
-			break
 		}
 		v_idx = v_idx + 1
 	}

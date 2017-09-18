@@ -169,15 +169,21 @@ func (d *Decision) InitDecision() error {
 		uniledgerlog.Error("InitDecision fail[" + err.Error() + "]")
 		return err
 	}
+
 	d.SetCtype(constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Decision])
+
 	//condidatelist arrar to map
 	if d.CandidateList == nil {
 		d.CandidateList = make([]DecisionCandidate, 0)
 	}
-	map_candidatelist := make(map[string]DecisionCandidate, 0)
+
+	//map_candidatelist := make(map[string]DecisionCandidate, 0)
+	map_candidatelist := make(map[string]interface{}, 0) // 实质上是 map[string]DecisionCandidate
 	for _, p_cand := range d.CandidateList {
+		p_cand.InitDecisionCandidate()
 		map_candidatelist[p_cand.GetName()] = p_cand
 	}
+
 	common.AddProperty(d, d.PropertyTable, _CandidateList, map_candidatelist)
 	return err
 }
@@ -285,7 +291,8 @@ func (d *Decision) evaluateCandidate() error {
 		return err
 	}
 	if candlist_property.GetValue() != nil {
-		candlist_map, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+		//candlist_map, ok := candlist_property.GetValue().(map[string]DecisionCandidate)
+		candlist_map, ok := candlist_property.GetValue().(map[string]interface{})
 		if !ok {
 			err = fmt.Errorf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "candlist_property.GetValue().(map[string]DecisionCandidate)")
 			uniledgerlog.Error(err.Error())
@@ -295,14 +302,21 @@ func (d *Decision) evaluateCandidate() error {
 		uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), Decision begin to evaluate]",
 			uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
 		for v_key, v_value := range candlist_map {
-			v_value.SetContract(d.GetContract())
-			v_value.ResetDecisionCandidate()
-			err := v_value.Eval()
+			tmp_DecisionCandidate, ok := v_value.(DecisionCandidate)
+			if !ok {
+				err = fmt.Errorf("[%s][%s]", uniledgerlog.ASSERT_ERROR, "candlist_property.GetValue().(map[string]DecisionCandidate)")
+				uniledgerlog.Error(err.Error())
+				return err
+			}
+			uniledgerlog.Error("%+v", tmp_DecisionCandidate)
+			tmp_DecisionCandidate.SetContract(d.GetContract())
+			tmp_DecisionCandidate.ResetDecisionCandidate()
+			err := tmp_DecisionCandidate.Eval()
 			if err != nil {
 				uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.EXECUTE_ERROR, ""))
 				return err
 			}
-			candlist_map[v_key] = v_value
+			candlist_map[v_key] = tmp_DecisionCandidate
 		}
 		candlist_property.SetValue(candlist_map)
 		d.PropertyTable[_CandidateList] = candlist_property
