@@ -8,7 +8,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"strconv"
 	"time"
-	api "unicontract/src/api"
+	"unicontract/src/api"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/common/uniledgerlog"
@@ -434,6 +434,12 @@ func (c *ContractController) QueryAll() {
 	cost_start := time.Now()
 	resultMsg := fmt.Sprintf("%s 查询成功!", "API[QueryAll]")
 	/*------------------- requestParams start ------------------*/
+	startTime := c.GetString(api.REQUEST_FIELD_CONTRACT_STARTTIME)
+	endTime := c.GetString(api.REQUEST_FIELD_CONTRACT_ENDTIME)
+	//todo deal
+	uniledgerlog.Warn("startTime", startTime)
+	uniledgerlog.Warn("endTime", endTime)
+
 	contractProductId := c.GetString(api.REQUEST_FIELD_CONTRACT_PRODUCT_ID)
 	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
 	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
@@ -860,6 +866,24 @@ func (c *ContractController) QueryRecords() {
 	}
 
 	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(str))))
+	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
+}
+
+func (c *ContractController) Terminate() {
+	cost_start := time.Now()
+	resultMsg := fmt.Sprintf("%s 操作成功!", "API[Terminate]")
+	contractProductId := c.GetString(api.REQUEST_FIELD_CONTRACT_PRODUCT_ID)
+	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
+	//todo
+	ok := true
+	if !ok {
+		resultMsg = fmt.Sprintf("%s操作失败[%s]! ", "API[Terminate] ", contractId)
+		c.responseJson(api.RESPONSE_STATUS_ERROR, "", resultMsg)
+		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_DB_ERROR_OP, resultMsg)()
+		return
+	}
+	uniledgerlog.Warn("API[Terminate]contractProductId: " + contractProductId + "contractId: " + contractId)
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(resultMsg))))
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 

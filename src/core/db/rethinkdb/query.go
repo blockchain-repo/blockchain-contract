@@ -245,6 +245,25 @@ func GetContractsPaginationByCondition(contractProductId string, owner string, c
 	//}
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
+	//res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+	//	Filter(func(row r.Term) r.Term {
+	//		if contractProductId != "" {
+	//			row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId").Contains(contractProductId)
+	//		}
+	//		if owner != "" {
+	//			row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)
+	//		}
+	//		if contractState != "" {
+	//			row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)
+	//		}
+	//		return row
+	//	}).
+	//	Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId")).
+	//	Max(r.Row.Field("transaction").Field("timestamp")).
+	//	Ungroup().Field("reduction").
+	//	Count().
+	//	Run(session)
+
 	if contractProductId == "" && contractState == "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId")).
@@ -270,8 +289,8 @@ func GetContractsPaginationByCondition(contractProductId string, owner string, c
 			Run(session)
 	} else if contractProductId != "" && contractState == "" && owner == "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
-			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractProductId)).
-			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId").Eq(contractProductId)).
+			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId")).
 			Max(r.Row.Field("transaction").Field("timestamp")).
 			Ungroup().Field("reduction").
 			Count().
@@ -406,6 +425,45 @@ func GetContractsPaginationByCondition(contractProductId string, owner string, c
 			Slice(pageNumStart, pageNumEnd).
 			Run(session)
 	}
+
+	//if contractProductId != "" {
+	//	row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId").Contains(contractProductId)
+	//}
+	//if owner != "" {
+	//	row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)
+	//}
+	//if contractState != "" {
+	//	row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)
+	//}
+
+	//query_condition := map[string]interface{}{
+	//	"contractProductId": contractProductId,
+	//	"owner":             owner,
+	//	//"contractState":     contractState,
+	//}
+	////delete(query_condition, "owner")
+	//
+	//res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+	//	Filter(query_condition). //func(row r.Term) r.Term {
+	//	//
+	//	////return row.Field("transaction").Field("Contract").Field("ContractBody").Map(func(contractBody r.Term) r.Term {
+	//	////	return contractBody.Field("ContractProductId")
+	//	////}).Contains(contractProductId)
+	//	//
+	//	//uniledgerlog.Warn("contractProductId", contractProductId)
+	//	//uniledgerlog.Warn("owner", owner)
+	//	//uniledgerlog.Warn("contractState", contractState)
+	//	//
+	//	//
+	//	//return row
+	//	//}
+	//
+	//	Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId")).
+	//	Max(r.Row.Field("transaction").Field("timestamp")).
+	//	Ungroup().Field("reduction").
+	//	OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+	//	Slice(pageNumStart, pageNumEnd).
+	//	Run(session)
 
 	if err != nil {
 		return 0, "", err

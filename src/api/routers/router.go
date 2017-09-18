@@ -29,7 +29,7 @@ func init() {
 	// filter shouldn`t use the api log!
 
 	//TODO temp deal
-	_ =auth_verify
+	_ = auth_verify
 	_ = auth_verify_rate_limit
 	//if auth_verify {
 	//	// auth request app_id and app_key, return token
@@ -61,6 +61,7 @@ func init() {
 			beego.NSRouter("/queryAll", &controllers.ContractController{}, "post:QueryAll"),
 			beego.NSRouter("/queryLog", &controllers.ContractController{}, "post:QueryLog"),
 			beego.NSRouter("/pressTest", &controllers.ContractController{}, "post:PressTest"),
+			beego.NSRouter("/terminate", &controllers.ContractController{}, "post:Terminate"),
 			//demo使用---------------------------------------------------------------------------------------------------
 			beego.NSRouter("/queryOutput", &controllers.ContractController{}, "post:QueryOutput"),
 			beego.NSRouter("/queryOutputNum", &controllers.ContractController{}, "post:QueryOutputNum"),
