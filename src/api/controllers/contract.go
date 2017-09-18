@@ -649,6 +649,8 @@ func (c *ContractController) PressTest() {
 			startTime = common.GenTimestamp()
 		} else if len(_startTime) != 13 {
 			startTime, _ = common.GenSpecialTimestamp(_startTime)
+		} else {
+			startTime = _startTime
 		}
 	}
 	contractModel.ContractBody.StartTime = startTime
@@ -659,6 +661,8 @@ func (c *ContractController) PressTest() {
 			endTime, _ = common.GenSpecialTimestampAfterSeconds(startTime, 3600*24*360)
 		} else if len(_endTime) != 13 {
 			endTime, _ = common.GenSpecialTimestamp(_endTime)
+		} else {
+			endTime = _endTime
 		}
 	}
 	contractModel.ContractBody.EndTime = endTime
@@ -883,7 +887,7 @@ func (c *ContractController) Terminate() {
 		return
 	}
 	uniledgerlog.Warn("API[Terminate]contractProductId: " + contractProductId + "contractId: " + contractId)
-	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(resultMsg))))
+	c.Ctx.ResponseWriter.Write([]byte(base64.StdEncoding.EncodeToString([]byte(true))))
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 }
 
