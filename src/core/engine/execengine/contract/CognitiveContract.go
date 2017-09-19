@@ -51,8 +51,8 @@ type CognitiveContractHead struct {
 
 type CognitiveContractBody struct {
 	//合约默认属性
-	//ContractProductId  string              `json:"ContractProductId"`
-	//ContractTemplateId string              `json:"ContractTemplateId"`
+	ContractProductId  string              `json:"ContractProductId"`
+	ContractTemplateId string              `json:"ContractTemplateId"`
 	ContractId         string              `json:"ContractId"`
 	Cname              string              `json:"Cname"`
 	Ctype              string              `json:"Ctype"`
@@ -88,6 +88,8 @@ const (
 	_Caption            = "_Caption"
 	_Description        = "_Description"
 	_MetaAttribute      = "_MetaAttribute"
+	_ContractProductId  = "_ContractProductId"
+	_ContractTemplateId = "_ContractTemplateId"
 	_ContractId         = "_ContractId"
 	_ContractState      = "_ContractState"
 	_Creator            = "_Creator"
@@ -657,6 +659,8 @@ func (cc *CognitiveContract) InitCognitiveContract() error {
 	common.AddProperty(cc, cc.PropertyTable, _Caption, cc.ContractBody.Caption)
 	common.AddProperty(cc, cc.PropertyTable, _Description, cc.ContractBody.Description)
 	common.AddProperty(cc, cc.PropertyTable, _MetaAttribute, cc.ContractBody.MetaAttribute)
+	common.AddProperty(cc, cc.PropertyTable, _ContractProductId, cc.ContractBody.ContractProductId)
+	common.AddProperty(cc, cc.PropertyTable, _ContractTemplateId, cc.ContractBody.ContractTemplateId)
 	common.AddProperty(cc, cc.PropertyTable, _ContractId, cc.ContractBody.ContractId)
 	str, ok = common.TernaryOperator(cc.ContractBody.ContractState == "",
 		constdef.ContractState[constdef.Contract_Create], cc.ContractBody.ContractState).(string)
@@ -1130,6 +1134,28 @@ func (gc *CognitiveContract) SetMetaAttribute(p_metaAttribute map[string]string)
 	gc.PropertyTable[_MetaAttribute] = metaAttribute_property
 }
 
+func (cc *CognitiveContract) SetContractProductId(p_ContractProductId string) {
+	cc.ContractBody.ContractProductId = p_ContractProductId
+	contractProductId_property, ok := cc.PropertyTable[_ContractProductId].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return
+	}
+	contractProductId_property.SetValue(p_ContractProductId)
+	cc.PropertyTable[_ContractProductId] = contractProductId_property
+}
+
+func (cc *CognitiveContract) SetContractTemplateId(p_ContractTemplateId string) {
+	cc.ContractBody.ContractTemplateId = p_ContractTemplateId
+	contractTemplateId_property, ok := cc.PropertyTable[_ContractTemplateId].(property.PropertyT)
+	if !ok {
+		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
+		return
+	}
+	contractTemplateId_property.SetValue(p_ContractTemplateId)
+	cc.PropertyTable[_ContractTemplateId] = contractTemplateId_property
+}
+
 func (cc *CognitiveContract) SetContractId(p_ConstractId string) {
 	cc.ContractBody.ContractId = p_ConstractId
 	contractid_property, ok := cc.PropertyTable[_ContractId].(property.PropertyT)
@@ -1140,6 +1166,7 @@ func (cc *CognitiveContract) SetContractId(p_ConstractId string) {
 	contractid_property.SetValue(p_ConstractId)
 	cc.PropertyTable[_ContractId] = contractid_property
 }
+
 func (cc *CognitiveContract) SetContractState(p_State string) {
 	cc.ContractBody.ContractState = p_State
 	state_property, ok := cc.PropertyTable[_ContractState].(property.PropertyT)
@@ -1150,6 +1177,7 @@ func (cc *CognitiveContract) SetContractState(p_State string) {
 	state_property.SetValue(p_State)
 	cc.PropertyTable[_ContractState] = state_property
 }
+
 func (cc *CognitiveContract) SetCreator(p_Creator string) {
 	cc.ContractBody.Creator = p_Creator
 	creator_property, ok := cc.PropertyTable[_Creator].(property.PropertyT)
