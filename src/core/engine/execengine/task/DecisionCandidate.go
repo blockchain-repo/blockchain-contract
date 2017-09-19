@@ -110,12 +110,17 @@ func (dc *DecisionCandidate) GetSupportArguments() []string {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
-	supportargument_value, ok := supportargument_property.GetValue().([]string)
+	supportargument_value, ok := supportargument_property.GetValue().(map[string]string)
 	if !ok {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
-	return supportargument_value
+
+	var supportargument []string
+	for _, v := range supportargument_value {
+		supportargument = append(supportargument, v)
+	}
+	return supportargument
 }
 
 func (dc *DecisionCandidate) GetAgainstArguments() []string {
@@ -127,12 +132,17 @@ func (dc *DecisionCandidate) GetAgainstArguments() []string {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
-	againstargument_value, ok := againstargument_property.GetValue().([]string)
+	againstargument_value, ok := againstargument_property.GetValue().(map[string]string)
 	if !ok {
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return nil
 	}
-	return againstargument_value
+
+	var againstargument []string
+	for _, v := range againstargument_value {
+		againstargument = append(againstargument, v)
+	}
+	return againstargument
 }
 
 func (dc *DecisionCandidate) GetSupportNum() int {

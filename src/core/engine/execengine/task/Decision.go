@@ -140,7 +140,82 @@ func (d Decision) CleanValueInProcess() {
 }
 
 func (d Decision) UpdateStaticState() (interface{}, error) {
-	return d.Enquiry.UpdateStaticState()
+	var err error = nil
+	// State
+	d.State = d.GetState()
+	// TaskExecuteIdx
+	d.TaskExecuteIdx = d.GetTaskExecuteIdx()
+
+	// Data组(datalist)件信息 更新到描述态
+	// Decision 组件没有datalist字段，无需更新
+
+	// Expression组件(DataValueSetterExpressionList)信息 更新到描述态
+	// Decision 组件没有DataValueSetterExpressionList字段，无需更新
+
+	//Expression组件(PreCondition)信息 更新到描述态
+	var new_pre_array []interface{} = make([]interface{}, len(d.PreCondition))
+	for v_idx := range d.PreCondition {
+		if d.PreCondition[v_idx] == nil {
+			err = fmt.Errorf("gt.PreCondition has nil data!")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_pre_map := d.PreCondition[v_idx].(map[string]interface{})
+		new_pre := d.GetContract().GetExpression(v_pre_map["Cname"].(string))
+
+		expression_json, _ := new_pre.(inf.IExpression).Serialize()
+		new_pre_array[v_idx] = common.Deserialize(expression_json)
+
+	}
+	d.PreCondition = new_pre_array
+
+	//Expression组件(CompleteCondition)信息 更新到描述态
+	var new_complete_array []interface{} = make([]interface{}, len(d.CompleteCondition))
+	for v_idx := range d.CompleteCondition {
+		if d.CompleteCondition[v_idx] == nil {
+			err = fmt.Errorf("gt.CompleteCondition has nil data!")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_complete_map := d.CompleteCondition[v_idx].(map[string]interface{})
+		new_complete := d.GetContract().GetExpression(v_complete_map["Cname"].(string))
+
+		expression_json, _ := new_complete.(inf.IExpression).Serialize()
+		new_complete_array[v_idx] = common.Deserialize(expression_json)
+	}
+	d.CompleteCondition = new_complete_array
+
+	//Expression组件(DiscardCondition)信息 更新到描述态
+	var new_discard_array []interface{} = make([]interface{}, len(d.DiscardCondition))
+	for v_idx := range d.DiscardCondition {
+		if d.DiscardCondition[v_idx] == nil {
+			err = fmt.Errorf("gt.DiscardCondition has nil data!")
+			uniledgerlog.Error("UpdateStaticState fail[" + err.Error() + "]")
+			return nil, err
+		}
+		v_discard_map := d.DiscardCondition[v_idx].(map[string]interface{})
+		new_discard := d.GetContract().GetExpression(v_discard_map["Cname"].(string))
+
+		expression_json, _ := new_discard.(inf.IExpression).Serialize()
+		new_discard_array[v_idx] = common.Deserialize(expression_json)
+	}
+	d.DiscardCondition = new_discard_array
+
+	inter := d.GetContract().GetComponentTtem(d.GetName())
+	for index := range d.CandidateList {
+		DecisionCandidate_name := d.CandidateList[index].Cname
+		tmp_DecisionCandidate := inter.(*Decision).GetProperty(_CandidateList).(map[string]interface{})[DecisionCandidate_name].(DecisionCandidate)
+
+		d.CandidateList[index].AgainstArguments = append(d.CandidateList[index].AgainstArguments,
+			tmp_DecisionCandidate.GetAgainstArguments()...)
+		d.CandidateList[index].AgainstNum = tmp_DecisionCandidate.GetAgainstNum()
+		d.CandidateList[index].SupportArguments = append(d.CandidateList[index].SupportArguments,
+			tmp_DecisionCandidate.GetSupportArguments()...)
+		d.CandidateList[index].SupportNum = tmp_DecisionCandidate.GetSupportNum()
+		d.CandidateList[index].Result = tmp_DecisionCandidate.GetResult()
+	}
+
+	return d, err
 }
 
 //====================描述态==========================
@@ -281,7 +356,7 @@ func (d *Decision) RemoveCandidate(p_candidate interface{}) {
 
 func (d *Decision) evaluateCandidate() error {
 	var err error
-	uniledgerlog.Error("%+v", d.PropertyTable)
+
 	uniledgerlog.Notice(fmt.Sprintf("[%s][The contract(%s), task name is (%s), id is (%s), Decision get CandidateList]",
 		uniledgerlog.NO_ERROR, d.GetContract().GetContractId(), d.GetName(), d.GetTaskId()))
 	candlist_property, ok := d.PropertyTable[_CandidateList].(property.PropertyT)
@@ -320,7 +395,6 @@ func (d *Decision) evaluateCandidate() error {
 		candlist_property.SetValue(candlist_map)
 		d.PropertyTable[_CandidateList] = candlist_property
 	}
-	uniledgerlog.Error("%+v", d.PropertyTable)
 	return err
 }
 
@@ -364,13 +438,7 @@ func (d *Decision) Start() (int8, error) {
 		r_buf.WriteString("[Result]: Task execute success;")
 		uniledgerlog.Info(r_buf.String(), " Dormant to Inprocess....")
 		d.SetState(constdef.TaskState[constdef.TaskState_In_Progress])
-		uniledgerlog.Error("-------------------------")
-		uniledgerlog.Error("%+v", d.GetName())
-		uniledgerlog.Error("%+v", d.GetContract().GetComponentTtem(d.GetName()))
-		d.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Task],
-			d.GetName(), *d)
-		uniledgerlog.Error("%+v", d.GetContract().GetComponentTtem(d.GetName()))
-		uniledgerlog.Error("-------------------------")
+		//d.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Task], d.GetName(), d)
 	} else if d.IsDormant() && !d.testPreCondition() { //未达到执行条件，返回 0
 		r_ret = 0
 		r_buf.WriteString("[Result]: preCondition not true;")
