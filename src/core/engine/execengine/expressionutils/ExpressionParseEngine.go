@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	common0 "unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
@@ -535,7 +536,14 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 			case string:
 				{
 					uniledgerlog.Debug("v_result.(type) is string")
-					str_result = v_result.(string)
+
+					// 以下针对data_date 日期格式数据做处理
+					tmp_str := v_result.(string)
+					if str_time, err := TryConvertToDate(tmp_str); err == nil {
+						tmp_str = str_time
+					}
+
+					str_result = "\"" + tmp_str + "\""
 				}
 			case reflect.Value:
 				{
@@ -560,11 +568,11 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 			default:
 				uniledgerlog.Warn("default : v_result.(type) is %+v", reflect.TypeOf(v_result))
 			}
-			uniledgerlog.Debug("=======variable: ", v_param, "  =====value: ", str_result)
+			uniledgerlog.Debug("variable: ", v_param, "  value: ", str_result)
 			p_expression = strings.Replace(p_expression, v_param, str_result, -1)
 		}
 	}
-	uniledgerlog.Debug("====================expression 1: ", p_expression)
+	uniledgerlog.Debug("expression is: ", p_expression)
 	//Eval 条件表达式的值
 	v_expression, v_err := govaluate.NewEvaluableExpression(p_expression)
 	if v_err != nil {
@@ -583,6 +591,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 		uniledgerlog.Error(fmt.Sprintf("[%s][%s]", uniledgerlog.ASSERT_ERROR, ""))
 		return false, fmt.Errorf("assert error")
 	}
+	uniledgerlog.Debug("expression evaluate result is : ", b)
 	return b, v_err
 }
 
@@ -1127,4 +1136,19 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 		uniledgerlog.Info(retResult, retErr)
 		return retResult, retErr
 	}
+}
+
+// 尝试转换成时间函数
+func TryConvertToDate(str_timeStamp string) (string, error) {
+	timeStamp, err := strconv.Atoi(str_timeStamp)
+	if err != nil {
+		return "", err
+	}
+	tm := time.Unix(int64(timeStamp)/1000, 0)
+	format := "2006-01-02 15:04:05"
+	timeFormat, err := time.Parse(format, tm.Format(format))
+	if err != nil {
+		return "", err
+	}
+	return timeFormat.Format(format), err
 }

@@ -965,6 +965,7 @@ func (gt *GeneralTask) testPreCondition() bool {
 	}
 	for _, value := range gt.GetPreCondition() {
 		v_contract := gt.GetContract()
+		uniledgerlog.Debug("PreCondition is [%s]", value.GetExpressionStr())
 		v_bool, v_err := v_contract.EvaluateExpression(constdef.ExpressionType[constdef.Expression_Condition], value.GetExpressionStr())
 		if v_err != nil {
 			uniledgerlog.Error("PreCondition EvaluateExpression[" + value.GetExpressionStr() + " fail, [" + v_err.Error() + "]")
