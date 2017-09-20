@@ -317,7 +317,7 @@ func UpdateMonitorSucc(information string) error {
 
 //---------------------------------------------------------------------------
 // 直接把task干死
-func UpdateMonitorDeal(strContractID string, strContractHashID string) error {
+func UpdateMonitorDead(strContractID string, strContractHashID string) error {
 	strNodePubkey := config.Config.Keypair.PublicKey
 	if len(strNodePubkey) == 0 ||
 		len(strContractID) == 0 ||
@@ -343,7 +343,7 @@ func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 	var err error
 	var slMapTaskSchedule []interface{}
 	allPublicKeys := config.GetAllPublicKey()
-	for index:= range allPublicKeys {
+	for index := range allPublicKeys {
 		var taskSchedule db.TaskSchedule
 		taskSchedule.Id = common.GenerateUUID()
 		taskSchedule.ContractHashId = taskScheduleBase.ContractHashId
@@ -368,6 +368,32 @@ func GetTaskState(strContractID, strContractHashId string) (db.RunState, error) 
 	failedThreshold, _ := scanEngineConf["failed_count_threshold"].(int)
 	waitThreshold, _ := scanEngineConf["wait_count_threshold"].(int)
 	return GetTaskScheduleState(strContractID, strContractHashId, failedThreshold, waitThreshold)
+}
+
+//---------------------------------------------------------------------------
+// 终止合约
+func TerminateContractBatch(strContractID string) error {
+	strNodePubkey := config.Config.Keypair.PublicKey
+	if len(strNodePubkey) == 0 ||
+		len(strContractID) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	slID, err := GetIDs(strNodePubkey, strContractID)
+	if err != nil {
+		return err
+	}
+
+	if len(slID) == 0 {
+		return fmt.Errorf("not find")
+	}
+
+	var slID_interface []interface{}
+	for index := range slID {
+		slID_interface = append(slID_interface, slID[index])
+	}
+
+	return SetContractTerminateBatch(slID_interface)
 }
 
 //---------------------------------------------------------------------------

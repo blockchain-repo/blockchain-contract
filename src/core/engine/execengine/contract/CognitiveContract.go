@@ -1485,7 +1485,7 @@ func (cc *CognitiveContract) CanExecute() bool {
 		v_contract_state == constdef.ContractState[constdef.Contract_Discarded] {
 		uniledgerlog.Warn("ContractState is Completed or Discarded, contract can't execute!")
 		//此时强制更新扫描表合约执行状态，防止再次被扫描加载
-		err := common.UpdateMonitorDeal(cc.GetContractId(), cc.GetId())
+		err := common.UpdateMonitorDead(cc.GetContractId(), cc.GetId())
 		if err != nil {
 			uniledgerlog.Error("Contract Completed or Discarded, Update Task Monitor fail[" + err.Error() + "]")
 		}

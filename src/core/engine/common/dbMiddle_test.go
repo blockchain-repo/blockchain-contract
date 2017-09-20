@@ -99,6 +99,19 @@ func Test_GetID(t *testing.T) {
 	}
 }
 
+func Test_GetIDs(t *testing.T) {
+	strNodePubkey := config.Config.Keypair.PublicKey
+	strContractID := "7b908fc9-c5b4-49a3-a47a-85e630e2acfe"
+
+	slID, err := GetIDs(strNodePubkey, strContractID)
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Log(slID)
+		t.Log(len(slID))
+	}
+}
+
 func Test_GetValidTime(t *testing.T) {
 	strID := "9be998c1-dda6-44b9-971f-2e7e906f1098"
 	startTime, endTime, err := GetValidTime(strID)
@@ -225,4 +238,21 @@ func Test_SetTaskScheduleCount(t *testing.T) {
 	} else {
 		t.Logf("pass\n")
 	}
+}
+
+func Test_SetContractTerminateBatch(t *testing.T) {
+	slID := []interface{}{"1d5c3165-bc4a-4045-a088-c439a18b5e6b",
+		"3dccb0ae-add8-46d1-a484-8385b52bb5e7",
+		"5294f5ef-5eb6-43df-b3b4-ef61e31f3ab5",
+		"9a6a2084-3624-43c7-adc1-bc4d4bff7c49",
+		"81dc7bcc-1aa8-4780-820b-89ebf7f68a08",
+		"bfb0063e-feb2-4b01-bc54-5a0525250ed5",
+		"f4d01f1e-853a-4b5a-8b0b-d74de190bfea",
+	}
+
+	err := SetContractTerminateBatch(slID)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log("ok")
 }

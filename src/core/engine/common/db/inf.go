@@ -48,6 +48,7 @@ type Datebase interface {
 	UpdateToAdd(strDBName, strTableName, strID, strField string, num int) (bool, error)
 	Query(dbName, tableName, id string) (map[string]interface{}, error)
 
+	QueryByContractId(strDBName, strTableName, strNodePubkey, strContractID string) ([]map[string]interface{}, error)
 	QueryByIdAndHashId(strDBName, strTableName, strNodePubkey, strContractID, strContractHashId string) (map[string]interface{}, error)
 	GetTaskSchedulesNoSend(strDBName, strTableName, strNowTime, strNodePubkey string, nThreshold int) ([]map[string]interface{}, error)
 	GetTaskSchedulesNoSuccess(strDBName, strTableName, strCount, strNodePubkey string, nThreshold int, flag int) ([]map[string]interface{}, error)

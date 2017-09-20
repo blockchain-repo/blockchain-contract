@@ -54,7 +54,7 @@ func DeleteTaskSchedules(slID []interface{}) (int, error) {
 }
 
 //---------------------------------------------------------------------------
-// 根据nodePubkey和contractID获得表内ID
+// 根据nodePubkeyco、ntractID和strContractHashId获得表内ID
 func GetID(strNodePubkey, strContractID, strContractHashId string) (string, error) {
 	task, err := DBInf.QueryByIdAndHashId(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE,
 		strNodePubkey, strContractID, strContractHashId)
@@ -68,6 +68,26 @@ func GetID(strNodePubkey, strContractID, strContractHashId string) (string, erro
 	}
 
 	return id, nil
+}
+
+//---------------------------------------------------------------------------
+// 根据nodePubkey和contractID获得表内ID
+func GetIDs(strNodePubkey, strContractID string) ([]string, error) {
+	tasks, err := DBInf.QueryByContractId(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, strNodePubkey, strContractID)
+	if err != nil {
+		return nil, err
+	}
+
+	var slID []string
+	for index := range tasks {
+		id, ok := tasks[index]["id"].(string)
+		if !ok {
+			return nil, fmt.Errorf("assert error")
+		}
+		slID = append(slID, id)
+	}
+
+	return slID, nil
 }
 
 //---------------------------------------------------------------------------
@@ -295,6 +315,16 @@ func SetTaskScheduleCount(strID string, flag int) error {
 	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
 
 	_, err = DBInf.Update(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, strID, strJSON)
+	return err
+}
+
+//---------------------------------------------------------------------------
+// 批量设置SendFlag字段，发送为1,未发送为0
+func SetContractTerminateBatch(slID []interface{}) error {
+	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+		1, common.GenTimestamp())
+
+	_, err := DBInf.UpdateBatch(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, strJSON, slID)
 	return err
 }
 

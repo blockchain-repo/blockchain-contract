@@ -221,6 +221,29 @@ func (rethink *rethinkdb) Query(dbName, tableName, id string) (map[string]interf
 }
 
 //---------------------------------------------------------------------------
+func (rethink *rethinkdb) QueryByContractId(strDBName, strTableName, strNodePubkey, strContractID string) ([]map[string]interface{}, error) {
+	res, err := r.DB(strDBName).
+		Table(strTableName).
+		Filter(r.Row.Field("ContractId").Eq(strContractID)).
+		Filter(r.Row.Field("NodePubkey").Eq(strNodePubkey)).
+		Run(rethink.session)
+	if err != nil {
+		return nil, err
+	}
+
+	if res.IsNil() {
+		return nil, fmt.Errorf("query result is null")
+	}
+
+	var tasks []map[string]interface{}
+	err = res.All(&tasks)
+	if err != nil {
+		return nil, err
+	}
+	return tasks, err
+}
+
+//---------------------------------------------------------------------------
 func (rethink *rethinkdb) QueryByIdAndHashId(strDBName, strTableName, strNodePubkey, strContractID, strContractHashId string) (map[string]interface{}, error) {
 	res, err := r.DB(strDBName).
 		Table(strTableName).
