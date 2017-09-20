@@ -1427,7 +1427,7 @@ func (gt *GeneralTask) Complete() (int8, error) {
 
 				var datalistCname string
 				for i := 0; i < len(interf); i++ {
-					if interf[i].([]interface{})[1] == "ContractExecute" {
+					if interf[i].([]interface{})[1] == "ContractExecute" || len(interf) == 1 {
 						// TODO : 目前仅支持一个datalist的情况
 						for v_key := range gt.GetDataList() {
 							slData, r_err := json.Marshal(gt.GetContract().GetComponentTtem(v_key))

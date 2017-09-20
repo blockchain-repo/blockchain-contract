@@ -957,7 +957,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	var func_params_ map[string]interface{}
 	count := 1
 	if gRPCClient.On {
-		func_params_ = make(map[string]interface{})
+		func_params_ = make(map[string]interface{}, 10)
 		_ = func_run
 		_ = func_params
 	} else {
@@ -1053,7 +1053,41 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 				}
 
 				if gRPCClient.On {
-					func_params_[fmt.Sprintf("Param%02d", count)] = v_arg_value
+					var inter interface{}
+					switch v_arg_value.(type) {
+					case reflect.Value:
+						{
+							uniledgerlog.Debug("v_arg_value.(type) is reflect.Value")
+							switch v_arg_value.(reflect.Value).Type().Kind() {
+							case reflect.Int:
+								{
+									uniledgerlog.Debug("v_arg_value.(reflect.Value).Type().Kind() is int")
+									inter = v_arg_value.(reflect.Value).Int()
+								}
+							case reflect.Bool:
+								{
+									uniledgerlog.Debug("v_arg_value.(reflect.Value).Type().Kind() is bool")
+									inter = v_arg_value.(reflect.Value).Bool()
+								}
+							case reflect.String:
+								{
+									uniledgerlog.Debug("v_arg_value.(reflect.Value).Type().Kind() is string")
+									inter = v_arg_value.(reflect.Value).String()
+								}
+							default:
+								uniledgerlog.Warn("default : v_arg_value.(reflect.Value).Type().Kind() is %+v",
+									v_arg_value.(reflect.Value).Type().Kind())
+								inter = v_arg_value
+							}
+						}
+					default:
+						{
+							uniledgerlog.Debug("v_arg_value.(type) is %+v", reflect.TypeOf(v_arg_value))
+							inter = v_arg_value
+						}
+					}
+
+					func_params_[fmt.Sprintf("Param%02d", count)] = inter
 					count++
 					_ = index
 				} else {
@@ -1064,8 +1098,6 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 	}
 
 	if gRPCClient.On {
-		uniledgerlog.Error(func_params_)
-
 		slData, v_err := json.Marshal(func_params_)
 		if v_err != nil {
 			r_buf.WriteString("[Result]: RunFunction(" + p_function + ") fail;")
@@ -1075,8 +1107,6 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 			v_result = common.OperateResult{Code: 400, Message: r_buf.String()}
 			return v_result, v_err
 		}
-
-		uniledgerlog.Error(string(slData))
 
 		hostname, _ := os.Hostname()
 		v_result, v_err = gRPCClient.FunctionRun(hostname+"|"+common0.GenTimestamp(), func_name, string(slData))
