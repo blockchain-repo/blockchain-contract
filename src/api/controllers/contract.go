@@ -682,11 +682,15 @@ func (c *ContractController) PressTest() {
 	//generate contractOwnersLen keypair
 	owners := make(map[string]string)
 	ownersPubkeys := make([]string, contractOwnersLen)
-	for i := 0; i < contractOwnersLen; i++ {
-		publicKeyBase58, privateKeyBase58 := common.GenerateKeyPair()
-		owners[publicKeyBase58] = privateKeyBase58
-		ownersPubkeys[i] = publicKeyBase58
-	}
+	//for i := 0; i < contractOwnersLen; i++ {
+	//	publicKeyBase58, privateKeyBase58 := common.GenerateKeyPair()
+	//	owners[publicKeyBase58] = privateKeyBase58
+	//	ownersPubkeys[i] = publicKeyBase58
+	//}
+	publicKeyBase58 := "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	privateKeyBase58 := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	owners[publicKeyBase58] = privateKeyBase58
+	ownersPubkeys[0] = publicKeyBase58
 
 	// random contractOwners 随机生成的合约拥有者数组
 	contractOwners := ownersPubkeys

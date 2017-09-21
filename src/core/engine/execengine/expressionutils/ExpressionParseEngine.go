@@ -199,7 +199,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string)
 		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
-	if ep.IsExprFunction(p_expression) {
+	if ep.IsExprFunction(p_expression) { // TODO : 这里要加else判断
 		v_return, v_err = ep.ParseExprFunctionValue(p_expression)
 	}
 	if v_err != nil {
@@ -528,6 +528,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 			var str_result string = ""
 
 			switch v_result.(type) {
+			// TODO : 类型还要根据实际增加
 			case int:
 				{
 					uniledgerlog.Debug("v_result.(type) is int")
@@ -549,6 +550,7 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 				{
 					uniledgerlog.Debug("v_result.(type) is reflect.Value")
 					switch v_result.(reflect.Value).Type().Kind() {
+					// TODO : 类型还要根据实际增加
 					case reflect.Bool:
 						{
 							uniledgerlog.Debug("v_result.(reflect.Value).Type().Kind() is bool")
@@ -731,7 +733,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 
 			v_property_field = reflect.ValueOf(v_component_object)
-			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), "    ", v_property_field.String(), "   ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
 		case reflect.Struct:
 			v_struct_property := v_property_field.Interface()
 			v_component_object = reflect.ValueOf(v_struct_property)
@@ -1068,6 +1070,7 @@ func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateR
 						{
 							uniledgerlog.Debug("v_arg_value.(type) is reflect.Value")
 							switch v_arg_value.(reflect.Value).Type().Kind() {
+							// TODO : 类型还要根据实际增加
 							case reflect.Int:
 								{
 									uniledgerlog.Debug("v_arg_value.(reflect.Value).Type().Kind() is int")
