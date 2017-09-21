@@ -152,6 +152,42 @@ func GetContractContentByCondition(contractProductId string, owner string) (stri
 	return common.Serialize(blo), nil
 }
 
+func GetExecuteContractContentByCondition(contractId string, owner string) (string, error) {
+	if contractId == "" {
+		return "", errors.New("contractId blank")
+	}
+	// company owner
+	if owner == "" {
+		return "", errors.New("owner blank")
+	}
+	contractState := "Contract_Signature"
+	//contractState := "Contract_In_Process"
+	session := ConnectDB(DBNAME)
+	var res *r.Cursor
+	var err error
+	res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
+		Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+		Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
+		Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
+		Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId")).
+		Max(r.Row.Field("transaction").Field("timestamp")).
+		Ungroup().Field("reduction").
+		OrderBy(r.Asc(r.Row.Field("transaction").Field("timestamp"))).Field("transaction").Field("Contract").
+		Run(session)
+	if err != nil {
+		return "", err
+	}
+	if res.IsNil() {
+		return "", nil
+	}
+	var blo map[string]interface{}
+	err = res.One(&blo)
+	if err != nil {
+		return "", err
+	}
+	return common.Serialize(blo), nil
+}
+
 //根据传入条件查询 publish contract 合约 仅取出一条 , ContractState = Contract_Create
 func GetPublishContractByCondition(contractProductId string, owner string, contractState string) (string, error) {
 	if contractProductId == "" {
@@ -206,7 +242,8 @@ func GetOneContractByCondition(contractId string, owner string, contractState st
 	var err error
 	if owner != "" {
 		res, err = r.Table(TABLE_CONTRACT_OUTPUTS).
-			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState)).
+			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq(contractState).
+				Or(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractState").Eq("Contract_In_Process"))).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractOwners").Contains(owner)).
 			Filter(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractId").Eq(contractId)).
 			Group(r.Row.Field("transaction").Field("Contract").Field("ContractBody").Field("ContractProductId")).
@@ -619,6 +656,7 @@ func GetContractsLogPaginationByCondition(contractId string, owner string, contr
 		return 0, "", errors.New("contractId blank")
 	}
 	contractState = "Contract_In_Process"
+	//contractState = "Contract_Signature"
 	session := ConnectDB(DBNAME)
 	var res *r.Cursor
 
@@ -670,7 +708,6 @@ func GetContractsLogPaginationByCondition(contractId string, owner string, contr
 	if err != nil {
 		return 0, "", err
 	}
-
 	return totalRecords, common.Serialize(blo), nil
 }
 
