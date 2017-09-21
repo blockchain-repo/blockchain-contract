@@ -81,7 +81,7 @@ func Test_createTx(t *testing.T) {
 	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, _ := Create(tx_signers, recipients, &metadata, asset, relation, contract)
-	output = NodeSign(output)
+	output,_,_ = NodeSign(output)
 	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
@@ -114,7 +114,7 @@ func TestInterim(t *testing.T) {
 	relation.GenerateRelation(contract.Id, contract.ContractBody.ContractId, "taskId", 0)
 
 	output, _ := Interim(&metadata, relation, contract)
-	output = NodeSign(output)
+	output,_,_ = NodeSign(output)
 	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
@@ -139,7 +139,7 @@ func Test_FreezeTx(t *testing.T) {
 		uniledgerlog.Info(err)
 		return
 	}
-	output = NodeSign(output)
+	output,_,_ = NodeSign(output)
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)
 }
@@ -162,7 +162,7 @@ func TestTransfer(t *testing.T) {
 		uniledgerlog.Info(err)
 		return
 	}
-	output = NodeSign(output)
+	output,_,_ = NodeSign(output)
 	uniledgerlog.Info(common.StructSerialize(output))
 	b := rethinkdb.InsertContractOutput(common.StructSerialize(output))
 	fmt.Println(b)

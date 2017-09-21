@@ -123,9 +123,17 @@ func txSend(arg interface{}) interface{} {
 			uniledgerlog.Error("err is \" %s \"\n", err.Error())
 		}
 	}
+	if ("Contract_Discarded" == contractState) && (len(contractSign) == len(contractOwner)) {
+		contractionId := coModel.Transaction.ContractModel.ContractBody.ContractId
+		err := engineCommon.TerminateContractBatch(contractionId)
+		if err != nil {
+			uniledgerlog.Error("err is \" %s \"\n", err.Error())
+		}
+	}
 	//var chainType = ""
 	//write the contractoutput to unichain.
 	chainType := coModel.Chaintype
+	uniledgerlog.Info(chainType)
 	result, err := chain.CreateContractTx(common.StructSerialize(coModel), chainType)
 	if err != nil {
 		uniledgerlog.Error(err.Error())
@@ -137,6 +145,7 @@ func txSend(arg interface{}) interface{} {
 		return nil
 	}
 	if result.Code != 200 {
+		uniledgerlog.Error(result.Message)
 		uniledgerlog.Error(errors.New("request send failed"))
 		SaveOutputErrorData(_TableNameSendFailingRecords, coModel)
 		//count, err := rethinkdb.GetSendFailingRecordsCount()
