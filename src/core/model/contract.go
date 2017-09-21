@@ -5,7 +5,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
-	"unicontract/src/core/protos"
+	//"unicontract/src/core/protos"
 )
 
 type ContractSignature struct {
@@ -244,7 +244,7 @@ func (c *ContractModel) Sign(private_key string) string {
 	var contractBodyClone = c.ContractBody
 
 	// new obj
-	var temp protos.ContractBody
+	var temp ContractBody
 
 	contractBodyCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneBytes, &temp)
@@ -265,9 +265,9 @@ func (c *ContractModel) IsSignatureValid() bool {
 
 	/*-------------module deep copy start --------------*/
 	var contractBodyClone = c.ContractBody
-
+	uniledgerlog.Warn("contractBodyClone %+v", contractBodyClone)
 	// new obj
-	var temp protos.ContractBody
+	var temp ContractBody
 
 	contractBodyCloneCloneBytes, _ := json.Marshal(contractBodyClone)
 	err := json.Unmarshal(contractBodyCloneCloneBytes, &temp)
@@ -325,7 +325,7 @@ func (c *ContractModel) ToString() string {
 // return the  id (hash generate)
 func (c *ContractModel) GenerateId() string {
 	contractBodySerialized := common.StructSerialize(c.ContractBody)
-	//uniledgerlog.Warn("contractBodySerialized:\n", contractBodySerialized)
+	uniledgerlog.Warn("contractBodySerialized:\n", contractBodySerialized)
 	return common.HashData(contractBodySerialized)
 }
 
