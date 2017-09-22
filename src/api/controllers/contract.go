@@ -632,6 +632,7 @@ func (c *ContractController) PressTest() {
 	/*------------------- requestParams start ------------------*/
 	startTime := c.GetString(api.REQUEST_FIELD_CONTRACT_STARTTIME)
 	endTime := c.GetString(api.REQUEST_FIELD_CONTRACT_ENDTIME)
+	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
 	resultMsg := fmt.Sprintf("%s 操作成功!", "API[PressTest]")
 	if len(startTime) != 0 {
 		_, err := strconv.ParseInt(startTime, 10, 64)
@@ -676,14 +677,23 @@ func (c *ContractController) PressTest() {
 		uniledgerlog.Warn("23423")
 	}
 
-	randomStr := strconv.FormatInt(time.Now().UnixNano(), 10) + "_" + common.GenerateUUID()
+	randomStr := strconv.FormatInt(time.Now().UnixNano(), 10)
 	contractCaptionTemp := contract.ContractBody.Caption + "_" + randomStr
-	contractIdTemp := contract.ContractBody.ContractId + "_" + randomStr
-	contractProductIdTemp := "CP0001-" + time.Now().Format("20060102150405") + "-" + randomStr
+	//contractIdTemp := "CT0001-" + time.Now().Format("20060102150405") + "-" + randomStr
+	//contractProductIdTemp := "CP0001-" + time.Now().Format("20060102150405") + "-" + randomStr
+	contractIdTemp := "CT0001-20170922192534-163576"
+	contractProductIdTemp := "CP0001-20170922135702-580792"
 	contract.ContractBody.ContractId = contractIdTemp
 	contract.ContractBody.ContractProductId = contractProductIdTemp
 	contract.ContractBody.Caption = contractCaptionTemp
-	contract.ContractBody.ContractState = "Contract_Signature"
+
+	if len(contractState) == 0 {
+		contract.ContractBody.ContractState = "Contract_Signature"
+	} else if contractState == "Contract_In_Process" {
+		contract.ContractBody.ContractState = "Contract_In_Process"
+	} else if contractState == "Contract_Discard" {
+		contract.ContractBody.ContractState = "Contract_Discard"
+	}
 
 	//todo 1. replace createTime, Signatures, owner, start and end time!
 
@@ -742,8 +752,10 @@ func (c *ContractController) PressTest() {
 	//	owners[publicKeyBase58] = privateKeyBase58
 	//	ownersPubkeys[i] = publicKeyBase58
 	//}
-	publicKeyBase58 := "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
-	privateKeyBase58 := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	//publicKeyBase58 := "3FyHdZVX4adfSSTg7rZDPMzqzM8k5fkpu43vbRLvEXLJ"
+	//privateKeyBase58 := "5Pv7F7g9BvNDEMdb8HV5aLHpNTNkxVpNqnLTQ58Z5heC"
+	publicKeyBase58 := "HdzXz6HyffzBqJbmWDpkdQmuGGtaMqPusKEqaSUC26oN"
+	privateKeyBase58 := "EqrEnk5mTPMGPeiRNGbkhRqmyfw7pmhwiK1RGuLAuoh"
 	owners[publicKeyBase58] = privateKeyBase58
 	ownersPubkeys[0] = publicKeyBase58
 
