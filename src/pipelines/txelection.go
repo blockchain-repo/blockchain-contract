@@ -51,6 +51,7 @@ func txValidate(arg interface{}) interface{} {
 	coModel := arg.(model.ContractOutput)
 
 	if !coModel.HasEnoughVotes() {
+		//TODO always has enough votes
 		//not enough votes
 		return nil
 	}
@@ -59,6 +60,18 @@ func txValidate(arg interface{}) interface{} {
 		uniledgerlog.Error(errors.New("invalid hash"))
 		return nil
 	}
+	/*	if coModel.Transaction.Operation == "TRANSFER" {
+		isFreeze := false
+		conditions := coModel.Transaction.Conditions
+
+		for _, value := range conditions {
+			isFreeze = value.Isfreeze
+			if isFreeze {
+				return coModel
+			}
+		}
+
+	}*/
 	if coModel.Transaction.Operation == "CONTRACT" {
 		//TODO ValidateVote  no-need-tood
 		//if !coModel.ValidateVote(){

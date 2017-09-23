@@ -3,6 +3,7 @@ package task
 import (
 	"bytes"
 	"fmt"
+	"sort"
 
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/core/engine/common"
@@ -208,9 +209,13 @@ func (d Decision) UpdateStaticState() (interface{}, error) {
 
 		d.CandidateList[index].AgainstArguments = append(d.CandidateList[index].AgainstArguments,
 			tmp_DecisionCandidate.GetAgainstArguments()...)
+		// TODO ： 注意，所有从map中取回的slice都要进行排序
+		sort.Strings(d.CandidateList[index].AgainstArguments)
 		d.CandidateList[index].AgainstNum = tmp_DecisionCandidate.GetAgainstNum()
 		d.CandidateList[index].SupportArguments = append(d.CandidateList[index].SupportArguments,
 			tmp_DecisionCandidate.GetSupportArguments()...)
+		// TODO ： 注意，所有从map中取回的slice都要进行排序
+		sort.Strings(d.CandidateList[index].SupportArguments)
 		d.CandidateList[index].SupportNum = tmp_DecisionCandidate.GetSupportNum()
 		d.CandidateList[index].Result = tmp_DecisionCandidate.GetResult()
 	}
