@@ -184,44 +184,62 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 		tempTransaction := contractOutput[i].Transaction
 		tempRelation := tempTransaction.Relation
 		tempContractBody := tempTransaction.ContractModel.ContractBody
-		taskId := tempRelation.TaskId
-		if taskId == "" {
-			uniledgerlog.Error("taskId is blank!", err)
-			//continue
-			return pagination, err
-		}
 		tempContractComponents := tempContractBody.ContractComponents
+		taskId := tempRelation.TaskId
 		var tempContractComponent model.ContractComponent
-		for j := 0; j < len(tempContractComponents); j++ {
-			if tempContractComponents[j].TaskId == taskId {
-				tempContractComponent = *tempContractComponents[j]
-				break
+		contractExecuteLogsCaption := ""
+		contractExecuteLogsCname := ""
+		contractExecuteLogsCtype := ""
+		contractExecuteLogsDescription := ""
+		contractExecuteLogsState := ""
+		var contractExecuteLogsMetaAttribute map[string]string
+		if tempContractBody.ContractState == "Contract_In_Process" {
+			for j := 0; j < len(tempContractComponents); j++ {
+				if tempContractComponents[j].TaskId == taskId {
+					tempContractComponent = *tempContractComponents[j]
+					contractExecuteLogsCaption = tempContractComponent.Caption
+					contractExecuteLogsCname = tempContractComponent.Cname
+					contractExecuteLogsCtype = tempContractComponent.Ctype
+					contractExecuteLogsDescription = tempContractComponent.Description
+					contractExecuteLogsState = tempContractComponent.State
+					contractExecuteLogsMetaAttribute = tempContractComponent.MetaAttribute
+					break
+				}
 			}
+
+		} else {
+			contractExecuteLogsState = tempContractBody.ContractState
+			if tempContractBody.ContractState == "Contract_Signature" {
+				contractExecuteLogsDescription = "签约"
+			} else if tempContractBody.ContractState == "Contract_Completed" {
+				contractExecuteLogsDescription = "完成"
+			} else if tempContractBody.ContractState == "Contract_Discarded" {
+				contractExecuteLogsDescription = "终止"
+			}
+
 		}
 
-		uniledgerlog.Error(tempContractComponent)
 		contractExecuteLogs[i] = &protos.ContractExecuteLog{
 			ContractHashId: tempRelation.ContractHashId,
 			TaskId:         taskId,
 			Timestamp:      tempTransaction.Timestamp,
-			Caption:        tempContractComponent.Caption,
-			Cname:          tempContractComponent.Cname,
+			Caption:        contractExecuteLogsCaption,
+			Cname:          contractExecuteLogsCname,
 			CreateTime:     tempContractBody.CreateTime,
-			Ctype:          tempContractComponent.Ctype,
-			Description:    tempContractComponent.Description,
-			State:          tempContractComponent.State,
-			MetaAttribute:  tempContractComponent.MetaAttribute,
+			Ctype:          contractExecuteLogsCtype,
+			Description:    contractExecuteLogsDescription,
+			State:          contractExecuteLogsState,
+			MetaAttribute:  contractExecuteLogsMetaAttribute,
 		}
 
 	}
+
 	pagination.Data = contractExecuteLogs
 	pagination.Page = page
 	pagination.PageSize = pageSize
 	pagination.Total = total
 
-	uniledgerlog.Debug("query PaginationContractExecuteLog len is ", len(contractExecuteLogs))
-	data_test, _ := json.Marshal(pagination)
-	uniledgerlog.Warn(string(data_test))
+	//uniledgerlog.Debug("query PaginationContractExecuteLog len is ", len(contractExecuteLogs))
 	return pagination, nil
 }
 
@@ -229,7 +247,6 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 func (c *ContractController) Create() {
 	cost_start := time.Now()
 	resultMsg := fmt.Sprintf("%s 查询创建成功!", "API[Create]")
-	uniledgerlog.Debug("Create contractModel:\n", cost_start)
 	contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
 		c.responseProto(status, err.Error(), "")
@@ -238,14 +255,12 @@ func (c *ContractController) Create() {
 		return
 	}
 	contractModel, err := model.FromContractProtoToContractModel(*contract)
-	uniledgerlog.Debug("contractModel:\n", contractModel)
 	contractModel.ContractHead = &model.ContractHead{
 		Version: 1,
 	}
 	//TODO 额外验证 合约基本字段、owners、component为空
 	contractHead := contractModel.ContractHead
 	contractBody := contractModel.ContractBody
-	uniledgerlog.Debug("contractBody:\n", contractBody)
 	if contractHead == nil || contractBody == nil {
 		resultMsg = fmt.Sprintf("%s %s ", "API[Create]", "contract 验证不通过, Head or Body is blank!")
 		c.responseProto(api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg, "")
@@ -483,15 +498,12 @@ func (c *ContractController) QueryAll() {
 	startTime := c.GetString(api.REQUEST_FIELD_CONTRACT_STARTTIME)
 	endTime := c.GetString(api.REQUEST_FIELD_CONTRACT_ENDTIME)
 
+	_ = startTime
+	_ = endTime
+	contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
 	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
 	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
 	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
-	//todo deal
-	uniledgerlog.Warn("startTime", startTime)
-	uniledgerlog.Warn("endTime", endTime)
-	uniledgerlog.Warn("contractId", contractId)
-	uniledgerlog.Warn("owner", owner)
-	uniledgerlog.Warn("contractState", contractState)
 	if len(contractState) == 0 {
 		contractState = "Contract_Signature"
 	}
@@ -510,8 +522,6 @@ func (c *ContractController) QueryAll() {
 	pageNumStart := (page - 1) * pageSize
 	pageNumEnd := pageNumStart + pageSize
 
-	//contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
-	//_=contractName
 	/*------------------- requestParams end ------------------*/
 
 	//if len(owner) == 0 {
@@ -527,7 +537,7 @@ func (c *ContractController) QueryAll() {
 		return
 	}
 
-	totalRecords, contractModelStr, err := rethinkdb.GetContractsPaginationByCondition(contractId, owner, contractState, pageNumStart, pageNumEnd)
+	totalRecords, contractModelStr, err := rethinkdb.GetContractsPaginationByCondition(contractName, contractId, owner, pageNumStart, pageNumEnd)
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(contractId=%s)查询错误! ", "API[QueryAll]", contractId)
 		uniledgerlog.Error(resultMsg)
@@ -563,8 +573,8 @@ func (c *ContractController) QueryLog() {
 
 	/*------------------- requestParams start ------------------*/
 	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
-	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
-	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE, "Contract_In_Process")
+	//owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
+	//contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE, "Contract_In_Process")
 	page, err := c.GetInt32(api.REQUEST_FIELD_PAGE, 1)
 	if err != nil || page <= 0 {
 		resultMsg := fmt.Sprintf("%s page(%v) error!", "API[QueryLog]", page)
@@ -593,9 +603,9 @@ func (c *ContractController) QueryLog() {
 		return
 	}
 
-	totalRecords, contractOutputsModelStr, err := rethinkdb.GetContractsLogPaginationByCondition(contractId, owner, contractState, pageNumStart, pageNumEnd)
-	uniledgerlog.Warn("totalRecords: %+v", totalRecords)
-	uniledgerlog.Warn("contractOutputsModelStr: %+v", contractOutputsModelStr)
+	totalRecords, contractOutputsModelStr, err := rethinkdb.GetContractsLogPaginationByCondition(contractId, "", "", pageNumStart, pageNumEnd)
+	//uniledgerlog.Warn("totalRecords: %+v", totalRecords)
+	//uniledgerlog.Warn("contractOutputsModelStr: %+v", contractOutputsModelStr)
 
 	if err != nil {
 		resultMsg = fmt.Sprintf("%s(contractId=%s)查询错误! ", "API[QueryLog]", contractId)
@@ -946,7 +956,7 @@ func (c *ContractController) QueryRecords() {
 
 func (c *ContractController) Terminate() {
 	cost_start := time.Now()
-	resultMsg := fmt.Sprintf("%s 创建成功!", "API[Terminate]")
+	resultMsg := fmt.Sprintf("%s 合约终止成功!", "API[Terminate]")
 	uniledgerlog.Debug("Create contractModel:\n", cost_start)
 	contract, err, status := c.parseProtoRequestBody()
 	if err != nil {
@@ -956,30 +966,17 @@ func (c *ContractController) Terminate() {
 		return
 	}
 	contractModel, err := model.FromContractProtoToContractModel(*contract)
-	if contractModel == nil {
-		resultMsg = fmt.Sprintf("%s %s ", "API[Terminate]", "contractModel is blank!")
-		c.responseProto(api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg, "")
-		monitor.Monitor.Count("request_fail", 1)
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg)()
-		return
-	}
 	uniledgerlog.Debug("contractModel:\n", contractModel)
 	contractModel.ContractHead = &model.ContractHead{
 		Version: 1,
 	}
+	//TODO 额外验证 合约基本字段、owners、component为空
 	contractHead := contractModel.ContractHead
 	contractBody := contractModel.ContractBody
+	uniledgerlog.Debug("contractBody:\n", contractBody)
+	uniledgerlog.Debug("contractHead:\n", contractHead)
 	if contractHead == nil || contractBody == nil {
 		resultMsg = fmt.Sprintf("%s %s ", "API[Terminate]", "contract 验证不通过, Head or Body is blank!")
-		c.responseProto(api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg, "")
-		monitor.Monitor.Count("request_fail", 1)
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg)()
-		return
-	}
-	contractProductId := contractModel.ContractBody.ContractProductId
-	contractId := contractModel.ContractBody.ContractId
-	if len(contractProductId) == 0 || len(contractId) == 0 {
-		resultMsg = fmt.Sprintf("%s %s ", "API[Terminate]", "contractProductId or contractId won`t be blank!")
 		c.responseProto(api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg, "")
 		monitor.Monitor.Count("request_fail", 1)
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg)()

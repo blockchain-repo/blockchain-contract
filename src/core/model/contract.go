@@ -307,6 +307,7 @@ func (c *ContractModel) IsSignatureValid() bool {
 			return false
 		}
 		// contract signature verify
+		uniledgerlog.Error(contractBody_serialized)
 		verifyFlag := common.Verify(ownerPubkey, contractBody_serialized, signature)
 		//uniledgerlog.Debug("contract verify[owner:", ownerPubkey, ",signature:", signature, "contractBody", contractBody_serialized, "]\n", verifyFlag)
 		if !verifyFlag {

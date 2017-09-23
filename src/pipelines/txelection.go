@@ -136,7 +136,9 @@ func txSend(arg interface{}) interface{} {
 			uniledgerlog.Error("err is \" %s \"\n", err.Error())
 		}
 	}
-	if ("Contract_Discarded" == contractState) && (len(contractSign) == len(contractOwner)) {
+	//TODO qianming num  not equal owner num
+	//if ("Contract_Discarded" == contractState) && (len(contractSign) == len(contractOwner)) {
+	if "Contract_Discarded" == contractState {
 		contractionId := coModel.Transaction.ContractModel.ContractBody.ContractId
 		err := engineCommon.TerminateContractBatch(contractionId)
 		if err != nil {
