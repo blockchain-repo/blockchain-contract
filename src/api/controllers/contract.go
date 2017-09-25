@@ -277,7 +277,7 @@ func (c *ContractController) Create() {
 		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_CONTRACT_ERROR_MODEL, resultMsg)()
 		return
 	}
-	contract_write_time := monitor.Monitor.NewTiming()
+	//contract_write_time := monitor.Monitor.NewTiming()
 	ok := core.WriteContract(*contractModel)
 	if !ok {
 		resultMsg = fmt.Sprintf("%s 合约写入失败(WriteContract) ", "API[Create]")
@@ -288,7 +288,7 @@ func (c *ContractController) Create() {
 		return
 	}
 
-	contract_write_time.Send("contract_write")
+	//contract_write_time.Send("contract_write")
 	c.responseProto(api.RESPONSE_STATUS_OK, resultMsg, contract.Id)
 	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_OK, resultMsg)()
 
