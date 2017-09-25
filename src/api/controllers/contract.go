@@ -503,10 +503,7 @@ func (c *ContractController) QueryAll() {
 	contractName := c.GetString(api.REQUEST_FIELD_CONTRACT_NAME)
 	contractId := c.GetString(api.REQUEST_FIELD_CONTRACT_ID)
 	owner := c.GetString(api.REQUEST_FIELD_CONTRACT_OWNER)
-	contractState := c.GetString(api.REQUEST_FIELD_CONTRACT_STATE)
-	if len(contractState) == 0 {
-		contractState = "Contract_Signature"
-	}
+
 	page, err := c.GetInt32(api.REQUEST_FIELD_PAGE, 1)
 	if err != nil || page <= 0 {
 		resultMsg := fmt.Sprintf("%s page(%v) error!", "API[QueryAll]", page)
@@ -530,12 +527,12 @@ func (c *ContractController) QueryAll() {
 	//	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
 	//	return
 	//}
-	if len(contractState) != 0 && !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
-		resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryAll]", "contractState")
-		c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
-		defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
-		return
-	}
+	//if len(contractState) != 0 && !api.REQUEST_CONTRACT_STATE_MAP[contractState] {
+	//	resultMsg = fmt.Sprintf("%s %s 值错误!", "API[QueryAll]", "contractState")
+	//	c.responseProto(api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg, "")
+	//	defer api.TimeCost(cost_start, c.Ctx, api.RESPONSE_STATUS_PARAMETER_ERROR_VALUE, resultMsg)()
+	//	return
+	//}
 
 	totalRecords, contractModelStr, err := rethinkdb.GetContractsPaginationByCondition(contractName, contractId, owner, pageNumStart, pageNumEnd)
 	if err != nil {
