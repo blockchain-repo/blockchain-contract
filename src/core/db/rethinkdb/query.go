@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	r "gopkg.in/gorethink/gorethink.v3"
 	"strconv"
 	"time"
+
 	"unicontract/src/common"
 	"unicontract/src/common/uniledgerlog"
+
+	r "gopkg.in/gorethink/gorethink.v3"
 )
 
 func Get(db string, name string, id string) *r.Cursor {

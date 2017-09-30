@@ -5,6 +5,13 @@ import (
 	"time"
 
 	"unicontract/src/common/uniledgerlog"
+
+	"github.com/astaxie/beego"
+)
+
+var (
+	NodeInputChannelSize  int
+	NodeOutputChannelSize int
 )
 
 type Node struct {
@@ -69,6 +76,17 @@ type Pipeline struct {
 func (p *Pipeline) setup(indata *Node) {
 	inNode := []*Node{indata}
 	nodes_all := append(inNode, p.nodes...)
+	var err error
+	NodeInputChannelSize, err = beego.AppConfig.Int("PipelineNodeInputChannelSize")
+	if err != nil {
+		uniledgerlog.Error(err)
+		NodeInputChannelSize = 10
+	}
+	NodeOutputChannelSize, err = beego.AppConfig.Int("PipelineNodeOutputChannelSize")
+	if err != nil {
+		uniledgerlog.Error(err)
+		NodeOutputChannelSize = 10
+	}
 	p.connect(nodes_all)
 }
 
@@ -79,8 +97,8 @@ func (p *Pipeline) connect(nodes []*Node) (ch chan interface{}) {
 	}
 
 	head := nodes[0]
-	head.input = make(chan interface{}, 10)
-	head.output = make(chan interface{}, 10)
+	head.input = make(chan interface{}, NodeInputChannelSize)
+	head.output = make(chan interface{}, NodeOutputChannelSize)
 	tail := nodes[1:]
 	head.output = p.connect(tail)
 	return head.input
