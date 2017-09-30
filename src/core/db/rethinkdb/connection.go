@@ -19,27 +19,6 @@ var (
 	rethinkDBReconnectCount int
 )
 
-func init() {
-	var err error
-	rethinkDBInitialCap, err = beego.AppConfig.Int("RethinkDBInitialCap")
-	if err != nil {
-		uniledgerlog.Error(err)
-		rethinkDBInitialCap = 50
-	}
-
-	rethinkDBMaxOpen, err = beego.AppConfig.Int("RethinkDBMaxOpen")
-	if err != nil {
-		uniledgerlog.Error(err)
-		rethinkDBMaxOpen = 100
-	}
-
-	rethinkDBReconnectCount, err = beego.AppConfig.Int("RethinkDBReconnectCount")
-	if err != nil {
-		uniledgerlog.Error(err)
-		rethinkDBReconnectCount = 5
-	}
-}
-
 func Connect() *r.Session { // FIXME: GetSession?
 	/*
 		conf := config.ReadConfig(config.DevelopmentEnv)
@@ -65,6 +44,25 @@ func Connect() *r.Session { // FIXME: GetSession?
 func ConnectDB(dbname string) *r.Session { // FIXME: GetSession?
 	var err error
 	one.Do(func() {
+		var err error
+		rethinkDBInitialCap, err = beego.AppConfig.Int("RethinkDBInitialCap")
+		if err != nil {
+			uniledgerlog.Error(err)
+			rethinkDBInitialCap = 50
+		}
+
+		rethinkDBMaxOpen, err = beego.AppConfig.Int("RethinkDBMaxOpen")
+		if err != nil {
+			uniledgerlog.Error(err)
+			rethinkDBMaxOpen = 100
+		}
+
+		rethinkDBReconnectCount, err = beego.AppConfig.Int("RethinkDBReconnectCount")
+		if err != nil {
+			uniledgerlog.Error(err)
+			rethinkDBReconnectCount = 5
+		}
+
 		ip := config.Config.LocalIp
 		port := config.Config.Port
 		session, err = r.Connect(r.ConnectOpts{
