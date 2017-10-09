@@ -192,6 +192,13 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 		contractExecuteLogsCtype := ""
 		contractExecuteLogsDescription := ""
 		contractExecuteLogsState := ""
+		contractExecuteLogsContractState := tempContractBody.ContractState
+		if len(contractExecuteLogsContractState) != 0 {
+			if v, ok := api.Constants_ContractState[contractExecuteLogsContractState]; ok {
+				contractExecuteLogsContractState = v
+			}
+		}
+
 		var contractExecuteLogsMetaAttribute map[string]string
 		if tempContractBody.ContractState == "Contract_In_Process" {
 			for j := 0; j < len(tempContractComponents); j++ {
@@ -202,19 +209,23 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 					contractExecuteLogsCtype = tempContractComponent.Ctype
 					contractExecuteLogsDescription = tempContractComponent.Description
 					contractExecuteLogsState = tempContractComponent.State
+					if len(contractExecuteLogsState) != 0 {
+						if v, ok := api.Constants_TaskState[contractExecuteLogsState]; ok {
+							contractExecuteLogsState = v
+						}
+
+					}
 					contractExecuteLogsMetaAttribute = tempContractComponent.MetaAttribute
 					break
 				}
 			}
 
 		} else {
-			contractExecuteLogsState = tempContractBody.ContractState
-			if tempContractBody.ContractState == "Contract_Signature" {
-				contractExecuteLogsDescription = "签约"
-			} else if tempContractBody.ContractState == "Contract_Completed" {
-				contractExecuteLogsDescription = "完成"
-			} else if tempContractBody.ContractState == "Contract_Discarded" {
-				contractExecuteLogsDescription = "终止"
+			if len(tempContractBody.ContractState) != 0 {
+				if v, ok := api.Constants_ContractState[tempContractBody.ContractState]; ok {
+					contractExecuteLogsDescription = v
+					contractExecuteLogsCaption = v
+				}
 			}
 
 		}
@@ -230,6 +241,7 @@ func fromContractOutputsModelArrayStrToPaginationContractsExecuteLog(contractOut
 			Description:    contractExecuteLogsDescription,
 			State:          contractExecuteLogsState,
 			MetaAttribute:  contractExecuteLogsMetaAttribute,
+			ContractState:  contractExecuteLogsContractState,
 		}
 
 	}
