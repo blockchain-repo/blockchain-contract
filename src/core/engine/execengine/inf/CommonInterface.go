@@ -9,6 +9,8 @@ type ICognitiveContract interface {
 		SetEvent(IEvent)
 	*/
 	GetContractId() string
+	GetContractProductId() string
+	GetContractTemplateId() string
 	GetUCVMVersion() string
 	GetUCVMCopyRight() string
 	GetTask(string) interface{}

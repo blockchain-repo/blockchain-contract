@@ -1768,6 +1768,12 @@ func (gt *GeneralTask) ConsistentValue(p_dataList map[string]inf.IData, p_name s
 			gt.GetContract().UpdateComponentRunningState(constdef.ComponentType[constdef.Component_Data], v_data.GetName(), v_data)
 		}
 	}
+
+	if v_data == nil {
+		uniledgerlog.Error("function and datalist Cname are different !!")
+		return
+	}
+
 	switch gt.GetCtype() {
 	case constdef.ComponentType[constdef.Component_Task] + "." + constdef.TaskType[constdef.Task_Enquiry]:
 		// 根据函数执行结果和分支情况决定最终的结果值

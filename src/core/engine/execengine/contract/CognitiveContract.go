@@ -132,6 +132,30 @@ func (cc CognitiveContract) GetContractId() string {
 	return value
 }
 
+func (cc CognitiveContract) GetContractProductId() string {
+	contractProductId_property, ok := cc.PropertyTable[_ContractProductId].(property.PropertyT)
+	if !ok {
+		return ""
+	}
+	value, ok := contractProductId_property.GetValue().(string)
+	if !ok {
+		return ""
+	}
+	return value
+}
+
+func (cc CognitiveContract) GetContractTemplateId() string {
+	contractTemplateId_property, ok := cc.PropertyTable[_ContractTemplateId].(property.PropertyT)
+	if !ok {
+		return ""
+	}
+	value, ok := contractTemplateId_property.GetValue().(string)
+	if !ok {
+		return ""
+	}
+	return value
+}
+
 func (cc CognitiveContract) GetUCVMVersion() string {
 	return constdef.UCVM_Version
 }
@@ -206,6 +230,7 @@ func (cc CognitiveContract) GetContract() inf.ICognitiveContract {
 func (cc CognitiveContract) GetName() string {
 	return cc.GetCname()
 }
+
 func (gc *CognitiveContract) GetCtype() string {
 	if gc.PropertyTable[_Ctype] == nil {
 		return ""
@@ -237,6 +262,7 @@ func (gc *CognitiveContract) GetId() string {
 	}
 	return str
 }
+
 func (gc *CognitiveContract) GetOrgTaskId() string {
 	if gc.PropertyTable[_OrgTaskId] == nil {
 		return ""
@@ -353,6 +379,7 @@ func (cc CognitiveContract) SetOrgId(p_OrgId string) {
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OrgId] = OrgId_property
 }
+
 func (cc CognitiveContract) SetOrgTaskId(p_OrgTaskId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OrgTaskId = p_OrgTaskId
@@ -376,6 +403,7 @@ func (cc CognitiveContract) SetOrgTaskExecuteIdx(p_OrgTaskExecuteIdx int) {
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OrgTaskExecuteIdx] = OrgTaskExecuteIdx_property
 }
+
 func (cc CognitiveContract) SetOutputId(p_outputId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OutputId = p_outputId
@@ -387,6 +415,7 @@ func (cc CognitiveContract) SetOutputId(p_outputId string) {
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_OutputId] = outputid_property
 }
+
 func (cc CognitiveContract) SetOutputTaskId(p_OutputTaskId string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	cc.OutputTaskId = p_OutputTaskId
@@ -573,6 +602,7 @@ func (cc *CognitiveContract) AddProperty(object interface{}, str_name string, va
 	}
 	return pro_object
 }
+
 func (cc *CognitiveContract) InitCognitiveContract() error {
 	var err error = nil
 	if cc.PropertyTable == nil {
@@ -744,6 +774,7 @@ func (cc *CognitiveContract) AddContractWoner(p_owner string) {
 		return
 	}
 }
+
 func (cc *CognitiveContract) AddContractAsset(p_asset ContractAsset) {
 	contractAssets_property, ok := cc.PropertyTable[_ContractAssets].(property.PropertyT)
 	if !ok {
@@ -767,6 +798,7 @@ func (cc *CognitiveContract) AddContractAsset(p_asset ContractAsset) {
 		return
 	}
 }
+
 func (cc *CognitiveContract) AddSignature(p_signature ContractSignature) {
 	contractSignature_property, ok := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
 	if !ok {
@@ -790,6 +822,7 @@ func (cc *CognitiveContract) AddSignature(p_signature ContractSignature) {
 		return
 	}
 }
+
 func (gc *CognitiveContract) AddMetaAttribute(metaProperty interface{}) {
 	tmp, ok := metaProperty.(map[string]string)
 	if !ok {
@@ -955,6 +988,7 @@ func (cc CognitiveContract) SetId(p_Id string) {
 	//Take case: Setter method need set value for gc.PropertyTable[xxxx]
 	cc.PropertyTable[_Id] = id_property
 }
+
 func (gc *CognitiveContract) SetCname(str_name string) {
 	//Take case: Setter method need set value for gc.xxxxxx
 	gc.ContractBody.Cname = str_name
@@ -981,6 +1015,7 @@ func (cc *CognitiveContract) GetContractState() string {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetCreator() string {
 	creator_property, ok := cc.PropertyTable[_Creator].(property.PropertyT)
 	if !ok {
@@ -994,6 +1029,7 @@ func (cc *CognitiveContract) GetCreator() string {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetCreateTime() string {
 	CreateTime_property, ok := cc.PropertyTable[_CreateTime].(property.PropertyT)
 	if !ok {
@@ -1007,6 +1043,7 @@ func (cc *CognitiveContract) GetCreateTime() string {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetStartTime() string {
 	startTime_property, ok := cc.PropertyTable[_StartTime].(property.PropertyT)
 	if !ok {
@@ -1020,6 +1057,7 @@ func (cc *CognitiveContract) GetStartTime() string {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetEndTime() string {
 	endTime_property, ok := cc.PropertyTable[_EndTime].(property.PropertyT)
 	if !ok {
@@ -1033,6 +1071,7 @@ func (cc *CognitiveContract) GetEndTime() string {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetContractOwners() interface{} {
 	contractOwners_property, ok := cc.PropertyTable[_ContractOwners].(property.PropertyT)
 	if !ok {
@@ -1046,6 +1085,7 @@ func (cc *CognitiveContract) GetContractOwners() interface{} {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetContractAssets() interface{} {
 	contractAssets_property, ok := cc.PropertyTable[_ContractAssets].(property.PropertyT)
 	if !ok {
@@ -1059,6 +1099,7 @@ func (cc *CognitiveContract) GetContractAssets() interface{} {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetContractSignatures() interface{} {
 	contractSignatures, ok := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
 	if !ok {
@@ -1072,9 +1113,11 @@ func (cc *CognitiveContract) GetContractSignatures() interface{} {
 	}
 	return str
 }
+
 func (cc *CognitiveContract) GetContractComponents() []interface{} {
 	return cc.ContractBody.ContractComponents
 }
+
 func (cc *CognitiveContract) GetNextTasks() []string {
 	nexttasks_property, ok := cc.PropertyTable[_NextTasks].(property.PropertyT)
 	if !ok {
@@ -1188,6 +1231,7 @@ func (cc *CognitiveContract) SetCreator(p_Creator string) {
 	creator_property.SetValue(p_Creator)
 	cc.PropertyTable[_Creator] = creator_property
 }
+
 func (cc *CognitiveContract) SetCreateTime(p_CreateTime string) {
 	cc.ContractBody.CreateTime = p_CreateTime
 	CreateTime_property, ok := cc.PropertyTable[_CreateTime].(property.PropertyT)
@@ -1198,6 +1242,7 @@ func (cc *CognitiveContract) SetCreateTime(p_CreateTime string) {
 	CreateTime_property.SetValue(p_CreateTime)
 	cc.PropertyTable[_CreateTime] = CreateTime_property
 }
+
 func (cc *CognitiveContract) SetStartTime(p_StartTime string) {
 	cc.ContractBody.StartTime = p_StartTime
 	starttime_property, ok := cc.PropertyTable[_StartTime].(property.PropertyT)
@@ -1208,6 +1253,7 @@ func (cc *CognitiveContract) SetStartTime(p_StartTime string) {
 	starttime_property.SetValue(p_StartTime)
 	cc.PropertyTable[_StartTime] = starttime_property
 }
+
 func (cc *CognitiveContract) SetEndTime(p_EndTime string) {
 	cc.ContractBody.EndTime = p_EndTime
 	endtime_property, ok := cc.PropertyTable[_EndTime].(property.PropertyT)
@@ -1218,6 +1264,7 @@ func (cc *CognitiveContract) SetEndTime(p_EndTime string) {
 	endtime_property.SetValue(p_EndTime)
 	cc.PropertyTable[_EndTime] = endtime_property
 }
+
 func (cc *CognitiveContract) SetContractOwners(p_ContractOwners []string) {
 	cc.ContractBody.ContractOwners = p_ContractOwners
 	contractowners_property, ok := cc.PropertyTable[_ContractOwners].(property.PropertyT)
@@ -1228,6 +1275,7 @@ func (cc *CognitiveContract) SetContractOwners(p_ContractOwners []string) {
 	contractowners_property.SetValue(p_ContractOwners)
 	cc.PropertyTable[_ContractOwners] = contractowners_property
 }
+
 func (cc *CognitiveContract) SetContractAssets(p_ContractAssets []ContractAsset) {
 	cc.ContractBody.ContractAssets = p_ContractAssets
 	contractassets_property, ok := cc.PropertyTable[_ContractAssets].(property.PropertyT)
@@ -1238,6 +1286,7 @@ func (cc *CognitiveContract) SetContractAssets(p_ContractAssets []ContractAsset)
 	contractassets_property.SetValue(p_ContractAssets)
 	cc.PropertyTable[_ContractAssets] = contractassets_property
 }
+
 func (cc *CognitiveContract) SetContractSignatures(p_ContractSignatures []ContractSignature) {
 	cc.ContractBody.ContractSignatures = p_ContractSignatures
 	contractsignatures_property, ok := cc.PropertyTable[_ContractSignatures].(property.PropertyT)
@@ -1248,6 +1297,7 @@ func (cc *CognitiveContract) SetContractSignatures(p_ContractSignatures []Contra
 	contractsignatures_property.SetValue(p_ContractSignatures)
 	cc.PropertyTable[_ContractSignatures] = contractsignatures_property
 }
+
 func (cc *CognitiveContract) SetNextTasks(p_NextTasks []string) {
 	cc.ContractBody.NextTasks = p_NextTasks
 	nexttasks_property, ok := cc.PropertyTable[_NextTasks].(property.PropertyT)
@@ -1258,6 +1308,7 @@ func (cc *CognitiveContract) SetNextTasks(p_NextTasks []string) {
 	nexttasks_property.SetValue(p_NextTasks)
 	cc.PropertyTable[_NextTasks] = nexttasks_property
 }
+
 func (cc *CognitiveContract) SetContractComponents(p_components []interface{}) {
 	cc.ContractBody.ContractComponents = p_components
 }

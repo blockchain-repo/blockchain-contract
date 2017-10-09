@@ -8,12 +8,13 @@ import (
 	"unicontract/src/chain"
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
+	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
 	engineCommon "unicontract/src/core/engine/common"
 	"unicontract/src/core/engine/common/db"
 	"unicontract/src/core/model"
 
-	"unicontract/src/common/uniledgerlog"
+	"github.com/astaxie/beego"
 )
 
 func txHeadFilter(arg interface{}) interface{} {
@@ -183,10 +184,15 @@ func getTxChangefeed() *ChangeFeed {
 
 func createTxPip() (txPip Pipeline) {
 	txNodeSlice := make([]*Node, 0)
-	txNodeSlice = append(txNodeSlice, &Node{target: txHeadFilter, routineNum: 1, name: "txHeadFilter"})
-	txNodeSlice = append(txNodeSlice, &Node{target: txValidate, routineNum: 1, name: "txValidate"})
-	txNodeSlice = append(txNodeSlice, &Node{target: txQueryEists, routineNum: 1, name: "txQueryEists"})
-	txNodeSlice = append(txNodeSlice, &Node{target: txSend, routineNum: 1, name: "txSends", timeout: 10})
+	NodeGoroutineNum, err := beego.AppConfig.Int("PipelineNodeGoroutineNum")
+	if err != nil {
+		uniledgerlog.Error(err)
+		NodeGoroutineNum = 1
+	}
+	txNodeSlice = append(txNodeSlice, &Node{target: txHeadFilter, routineNum: NodeGoroutineNum, name: "txHeadFilter"})
+	txNodeSlice = append(txNodeSlice, &Node{target: txValidate, routineNum: NodeGoroutineNum, name: "txValidate"})
+	txNodeSlice = append(txNodeSlice, &Node{target: txQueryEists, routineNum: NodeGoroutineNum, name: "txQueryEists"})
+	txNodeSlice = append(txNodeSlice, &Node{target: txSend, routineNum: NodeGoroutineNum, name: "txSends", timeout: 10})
 	txPip = Pipeline{
 		nodes: txNodeSlice,
 	}

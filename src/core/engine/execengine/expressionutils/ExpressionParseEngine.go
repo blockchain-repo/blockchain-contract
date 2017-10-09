@@ -55,6 +55,7 @@ func (ep *ExpressionParseEngine) SetContract(p_contract inf.ICognitiveContract) 
 //   3. 条件表达式   ExpressionType[Expression_Condition]
 //   4. 函数表达式   ExpressionType[Expression_Function]
 //   5. 决策表达式   ExpressionType[Expression_Candidate]
+//Have read
 func (ep *ExpressionParseEngine) EvaluateExpressionValue(p_exprtype string, p_expression string) (interface{}, error) {
 	var v_return interface{} = nil
 	var v_err error = nil
@@ -94,6 +95,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionValue(p_exprtype string, p_ex
 //   4.纯字符串    => 直接返回该表达式值 string
 //   5.纯日期串    => 转化为时间戳再返回 int64
 //   6.纯数组串    => 转化为数组返回     []interface{}
+//Have read
 func (ep *ExpressionParseEngine) EvaluateExpressionConstant(p_expression string) (interface{}, error) {
 	var v_return interface{} = nil
 	var v_err error = nil
@@ -126,6 +128,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionConstant(p_expression string)
 //解析变量表达式，并求表达式的值
 //变量表达式分类：
 //   变量表达式  => 解析变量表达式，并返回变量表达式的值
+//Have read
 func (ep *ExpressionParseEngine) EvaluateExpressionVariable(p_expression string) (interface{}, error) {
 	var v_return interface{} = nil
 	var v_err error = nil
@@ -135,7 +138,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionVariable(p_expression string)
 		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
-	if ep.IsExprVariable(p_expression) {
+	if ep.IsExprVariable(p_expression) { // TODO : add else branch
 		v_return, v_err = ep.ParseExprVariableValue(p_expression)
 		if v_err != nil {
 			var r_buf bytes.Buffer = bytes.Buffer{}
@@ -151,6 +154,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionVariable(p_expression string)
 //解析条件表达式，并求表达式的值
 //条件表达式分类：
 //   1）纯bool值  2）函数bool值  3）逻辑bool值
+//Have read
 func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string) (bool, error) {
 	var v_return bool = false
 	var v_err error = nil
@@ -165,7 +169,8 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 	} else if ep.IsExprCondition(p_expression) {
 		v_return, v_err = ep.ParseExprConditionValue(p_expression)
 	} else if ep.IsExprFunction(p_expression) {
-		v_common_result, v_err := ep.ParseExprFunctionValue(p_expression)
+		var v_common_result common.OperateResult
+		v_common_result, v_err = ep.ParseExprFunctionValue(p_expression)
 		if v_common_result.GetCode() != 200 {
 			uniledgerlog.Warn("[Result]:EvaluateExpressionCondition fail(Code != 200);")
 			return v_return, v_err
@@ -191,6 +196,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCondition(p_expression string
 //解析函数表达式，并求表达式的值
 //函数表达式分类：
 //   函数表达式  => 解析函数表达式，并返回表达式的值
+//Have read
 func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string) (common.OperateResult, error) {
 	var v_return common.OperateResult = common.OperateResult{}
 	var v_err error = nil
@@ -199,7 +205,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string)
 		uniledgerlog.Warn(errMsg)
 		return v_return, fmt.Errorf(errMsg)
 	}
-	if ep.IsExprFunction(p_expression) { // TODO : 这里要加else判断
+	if ep.IsExprFunction(p_expression) { // TODO : add else branch
 		v_return, v_err = ep.ParseExprFunctionValue(p_expression)
 	}
 	if v_err != nil {
@@ -213,6 +219,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionFunction(p_expression string)
 
 //解析决策候选者表达式，并求表达式的值
 //决策候选者表达式分类：
+//Have read
 func (ep *ExpressionParseEngine) EvaluateExpressionCandidate(p_expression string) (interface{}, error) {
 	var v_return interface{} = nil
 	var v_err error = nil
@@ -237,6 +244,7 @@ func (ep *ExpressionParseEngine) EvaluateExpressionCandidate(p_expression string
 //   7.条件表达式  => 解析条件表达式，并返回表达式的值      Expr_Condition
 //   8.函数表达式  => 解析函数表达式，并返回表达式的值      Expr_Function
 //   9.变量表达式  => 解析变量表达式，并返回变量表达式的值  Expr_Variable
+//Have read
 func (ep *ExpressionParseEngine) ParseExpressionClassify(p_expression string) string {
 	var v_classify string = ""
 
@@ -268,36 +276,43 @@ func (ep *ExpressionParseEngine) IsSingleWord(p_expression string) bool {
 }
 
 //解析字符串是否为 纯数字值
+//Have read
 func (ep *ExpressionParseEngine) IsExprNum(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Num])
 }
 
 //解析字符串是否为 纯浮点值
+//Have read
 func (ep *ExpressionParseEngine) IsExprFloat(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Float])
 }
 
 //解析字符串是否为 纯Bool值
+//Have read
 func (ep *ExpressionParseEngine) IsExprBool(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Bool])
 }
 
 //解析字符串是否为 纯字符串值
+//Have read
 func (ep *ExpressionParseEngine) IsExprString(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_String])
 }
 
 //解析字符串是否为 纯日期类型
+//Have read
 func (ep *ExpressionParseEngine) IsExprDate(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Date])
 }
 
 //解析字符串是否为 纯数组值
+//Have read
 func (ep *ExpressionParseEngine) IsExprArray(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Array])
 }
 
 //解析字符串是否为 条件表达式
+//Have read
 func (ep *ExpressionParseEngine) IsExprCondition(p_expression string) bool {
 	if strings.HasPrefix(p_expression, "Func") {
 		return false
@@ -307,102 +322,122 @@ func (ep *ExpressionParseEngine) IsExprCondition(p_expression string) bool {
 }
 
 //解析字符串是否为 函数串表达式
+//Have read
 func (ep *ExpressionParseEngine) IsExprFunction(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Func])
 }
 
 //解析字符串是否为 常量表达式
+//Have read
 func (ep *ExpressionParseEngine) IsExprConst(p_expression string) bool {
 	return ep.IsExprFloat(p_expression) || ep.IsExprBool(p_expression) || ep.IsExprDate(p_expression) || ep.IsExprString(p_expression) || ep.IsExprNum(p_expression) || ep.IsExprArray(p_expression)
 }
 
 //解析字符串是否为 变量表达式
+//Have read
 func (ep *ExpressionParseEngine) IsExprVariable(p_expression string) bool {
 	return ep.IsMatchRegexp(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name])
 }
 
 //---------------------------------------------------------------------------
 //解析变量名是否为：合约名称[1 合约层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameContract(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Contract])
 }
 
 //解析变量名是否为： 查询组件名称[2 Task组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameTaskEnquiry(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Task_Enquiry])
 }
 
 //解析变量名是否为 动作组件名称[2 Task组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameTaskAction(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Task_Action])
 }
 
 //解析变量名是否为 决策组件名称[2  Task组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameTaskDecision(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Task_Decision])
 }
 
 //解析变量名是否为 计划组件名称[2 Task组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameTaskPlan(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Task_Plan])
 }
 
 //解析变量名是否为 候选组件名称[2 Task组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameTaskCandidate(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Task_Candidate])
 }
 
 //解析变量名是否为 IntData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataInt(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Int])
 }
 
 //解析变量名是否为 UintData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataUint(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Uint])
 }
 
 //解析变量名是否为 FloatData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataFloat(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Float])
 }
 
 //解析变量名是否为 TextData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataText(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Text])
 }
 
 //解析变量名是否为 DateData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataDate(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Date])
 }
 
 //解析变量名是否为 ArrayData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataArray(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Array])
 }
 
 //解析变量名是否为 MatrixData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataMatrix(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Matrix])
 }
 
 //解析变量名是否为 CompoundData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataCompound(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_Compound])
 }
 
 //解析变量名是否为 OperateResultData组件名称[3 Data组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameDataOperateResult(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Data_OperateResult])
 }
 
 //解析变量名是否为 FunctionExpression组件名称[4 Expression组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameExprFunc(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Expr_Func])
 }
 
 //解析变量名是否为 LogicArgumentExpression组件名称[4 Expression组件层]
+//Have read
 func (ep *ExpressionParseEngine) IsNameExprArgu(p_expression string) bool {
 	return strings.HasPrefix(p_expression, constdef.ExpressionRegexp[constdef.Regexp_Name_Expr_Argu])
 }
@@ -432,6 +467,7 @@ func (ep *ExpressionParseEngine) IsMatchRegexp(p_expression string, p_regstr str
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 //解析表达式的值 纯数字值
+//Have read
 func (ep *ExpressionParseEngine) ParseExprNumValue(p_expression string) (int64, error) {
 	var v_return int64
 	var v_err error = nil
@@ -441,6 +477,7 @@ func (ep *ExpressionParseEngine) ParseExprNumValue(p_expression string) (int64, 
 }
 
 //解析表达式的值 纯浮点数值
+//Have read
 func (ep *ExpressionParseEngine) ParseExprFloatValue(p_expression string) (float64, error) {
 	var v_return float64
 	var v_err error = nil
@@ -449,6 +486,7 @@ func (ep *ExpressionParseEngine) ParseExprFloatValue(p_expression string) (float
 }
 
 //解析表达式的值 纯Bool值
+//Have read
 func (ep *ExpressionParseEngine) ParseExprBoolValue(p_expression string) (bool, error) {
 	var v_return bool
 	var v_err error = nil
@@ -457,6 +495,7 @@ func (ep *ExpressionParseEngine) ParseExprBoolValue(p_expression string) (bool, 
 }
 
 //解析表达式的值 纯字符串值
+//Have read
 func (ep *ExpressionParseEngine) ParseExprStringValue(p_expression string) (string, error) {
 	var v_return string
 	var v_err error = nil
@@ -465,6 +504,7 @@ func (ep *ExpressionParseEngine) ParseExprStringValue(p_expression string) (stri
 }
 
 //解析表达式的值 纯日期类型
+//Have read
 func (ep *ExpressionParseEngine) ParseExprDateValue(p_expression string) (string, error) {
 	var v_return string
 	var v_err error = nil
@@ -473,6 +513,7 @@ func (ep *ExpressionParseEngine) ParseExprDateValue(p_expression string) (string
 }
 
 //解析表达式的值 数组类型
+//Have read
 func (ep *ExpressionParseEngine) ParseExprArrayValue(p_expression string) ([]interface{}, error) {
 	var v_return []interface{}
 	var v_err error = nil
@@ -491,6 +532,7 @@ func (ep *ExpressionParseEngine) ParseExprArrayValue(p_expression string) ([]int
 
 //解析表达式的值 纯条件表达式值
 //重点：
+//Have read
 func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (bool, error) {
 	var v_err error = nil
 	//识别条件表达式中的变量 map[string]string
@@ -599,13 +641,14 @@ func (ep *ExpressionParseEngine) ParseExprConditionValue(p_expression string) (b
 
 //解析表达式的值 纯函数值
 //重点：
+//Have read
 func (ep *ExpressionParseEngine) ParseExprFunctionValue(p_expression string) (common.OperateResult, error) {
 	var v_return common.OperateResult = common.OperateResult{}
 	var v_err error = nil
 	v_return, v_err = ep.RunFunction(p_expression)
 	if v_err != nil {
-		uniledgerlog.Warn("RunFunction(" + p_expression + ") fail(" + v_err.Error() + ")")
-		return v_return, v_err
+		uniledgerlog.Error("RunFunction(" + p_expression + ") fail(" + v_err.Error() + ")")
+		//return v_return, v_err
 	}
 	return v_return, v_err
 }
@@ -616,6 +659,7 @@ func (ep *ExpressionParseEngine) ParseExprFunctionValue(p_expression string) (co
 //          concract_xxxx._ContractState
 //          enquiry_xxxxx._DataList.
 //重点：
+//Have read
 func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (interface{}, error) {
 	var v_err error = nil
 	//过滤字符串两边的空格
@@ -679,7 +723,8 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 	v_idx := 1
 	for v_idx < v_variable_count {
 		v_property_field = v_component_object.FieldByName(v_variable_array[v_idx])
-		uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
+		uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ",
+			v_property_field.String(), " ", v_property_field.IsValid())
 
 		switch v_property_field.Kind() {
 		case reflect.Map:
@@ -691,7 +736,8 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 
 			v_component_object = v_property_field.MapIndex(reflect.ValueOf(v_variable_array[v_idx]))
 			v_property_field = reflect.ValueOf(v_component_object)
-			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ",
+				v_property_field.String(), " ", v_property_field.IsValid())
 		case reflect.Slice:
 			uniledgerlog.Debug("Slice")
 			v_idx = v_idx + 1
@@ -715,7 +761,8 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 
 			v_property_field = reflect.ValueOf(v_component_object)
-			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ",
+				v_property_field.String(), " ", v_property_field.IsValid())
 		case reflect.Array:
 			uniledgerlog.Debug("Array")
 			v_idx = v_idx + 1
@@ -733,7 +780,8 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 			}
 
 			v_property_field = reflect.ValueOf(v_component_object)
-			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ", v_property_field.String(), " ", v_property_field.IsValid())
+			uniledgerlog.Debug("======field: ", v_variable_array[v_idx], v_property_field.Kind(), " ",
+				v_property_field.String(), " ", v_property_field.IsValid())
 		case reflect.Struct:
 			v_struct_property := v_property_field.Interface()
 			v_component_object = reflect.ValueOf(v_struct_property)
@@ -753,6 +801,7 @@ func (ep *ExpressionParseEngine) ParseExprVariableValue(p_expression string) (in
 //   任务组件：
 //   数据组件：
 //   描述组件：
+//Have read
 func (ep *ExpressionParseEngine) ReflectComponent(p_component interface{}, p_variable string) inf.IComponent {
 	var parse_component inf.IComponent
 	ok := false
@@ -886,6 +935,7 @@ func SplitString(p_str string, p_reg string) map[string]string {
 }
 
 //识别条件表达式中变量数组
+//Have read
 func (ep *ExpressionParseEngine) ParseVariablesInExprCondition(p_expression string) (map[string]string, error) {
 	var v_return map[string]string = nil
 	var v_err error = nil
@@ -896,7 +946,7 @@ func (ep *ExpressionParseEngine) ParseVariablesInExprCondition(p_expression stri
 	//初始化返回结果
 	v_return = make(map[string]string, 0)
 	//获取分隔符字符串
-	v_variable_arr := SplitString(p_expression, constdef.ExpressionTagString)
+	v_variable_arr := SplitString(p_expression, constdef.ExpressionTagString) // TODO : ?
 	for _, v_variable := range v_variable_arr {
 		v_variable = strings.TrimSpace(v_variable)
 		if v_variable == "" {
@@ -930,6 +980,7 @@ func (ep *ExpressionParseEngine) ParseVariablesInExprCondition(p_expression stri
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 //函数运行
+//Have read
 func (ep *ExpressionParseEngine) RunFunction(p_function string) (common.OperateResult, error) {
 	var v_err error = nil
 	var v_result common.OperateResult = common.OperateResult{}

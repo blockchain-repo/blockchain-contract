@@ -17,6 +17,10 @@ import (
 	"unicontract/src/core/model"
 )
 
+import (
+	"github.com/astaxie/beego"
+)
+
 //---------------------------------------------------------------------------
 const (
 	_VERSION          = 2
@@ -47,8 +51,13 @@ func getCEChangefeed() *ChangeFeed {
 //---------------------------------------------------------------------------
 func createCEPip() (cePip Pipeline) {
 	ceNodeSlice := make([]*Node, 0)
-	ceNodeSlice = append(ceNodeSlice, &Node{target: ceHeadFilter, routineNum: 1, name: "ceHeadFilter"})
-	ceNodeSlice = append(ceNodeSlice, &Node{target: ceQueryExists, routineNum: 1, name: "ceQueryExists"})
+	NodeGoroutineNum, err := beego.AppConfig.Int("PipelineNodeGoroutineNum")
+	if err != nil {
+		uniledgerlog.Error(err)
+		NodeGoroutineNum = 1
+	}
+	ceNodeSlice = append(ceNodeSlice, &Node{target: ceHeadFilter, routineNum: NodeGoroutineNum, name: "ceHeadFilter"})
+	ceNodeSlice = append(ceNodeSlice, &Node{target: ceQueryExists, routineNum: NodeGoroutineNum, name: "ceQueryExists"})
 	cePip = Pipeline{
 		nodes: ceNodeSlice,
 	}
@@ -122,8 +131,9 @@ func ceHeadFilter(arg interface{}) interface{} {
 
 			if pass { // 合约合法
 				uniledgerlog.Debug("1.3 ceHeadFilter --->")
-				ceQueryExists(*pContractOutput)
 				contract_election_time.Send("contract_election")
+				//ceQueryExists(*pContractOutput)
+				return *pContractOutput
 			} else { // 合约不合法
 				uniledgerlog.Debug("1.3 contract invalid and insert consensusFailure")
 				var consensusFailure model.ConsensusFailure

@@ -3,16 +3,20 @@ package db
 import (
 	"fmt"
 	"sync"
+	//"time"
 )
 
 import (
 	"unicontract/src/common/uniledgerlog"
 	"unicontract/src/config"
+	"unicontract/src/core/engine"
 )
 
 import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
+
+var scanEngineConf map[interface{}]interface{}
 
 //---------------------------------------------------------------------------
 type rethinkdb struct {
@@ -45,24 +49,34 @@ func GetInstance() *rethinkdb {
 
 //---------------------------------------------------------------------------
 func (rethink *rethinkdb) connect() (*r.Session, error) {
-	/*
-		conf := config.ReadConfig(config.DevelopmentEnv)
-		session, err := r.Connect(r.ConnectOpts{
-			Address:    conf.DatabaseUrl,
-			Database:   conf.DatabaseName,
-			InitialCap: conf.DatabaseInitialCap,
-			MaxOpen:    conf.DatabaseMaxOpen,
-		})
-	*/
+	scanEngineConf = engine.UCVMConf["ScanEngine"].(map[interface{}]interface{})
+	rethinkdbInitialCap, _ := scanEngineConf["rethinkdbInitialCap"].(int)
+	rethinkdbMaxOpen, _ := scanEngineConf["rethinkdbMaxOpen"].(int)
 	ip := config.Config.LocalIp
 	port := config.Config.Port
 	session, err := r.Connect(r.ConnectOpts{
-		Address: ip + ":" + port,
+		Address:    ip + ":" + port,
+		InitialCap: rethinkdbInitialCap,
+		MaxOpen:    rethinkdbMaxOpen,
 	})
-
 	if err != nil {
 		return nil, err
 	}
+
+	//count := 5
+	//for count > 0 {
+	//	if !session.IsConnected() {
+	//		count--
+	//		err = session.Reconnect()
+	//		if err != nil {
+	//			return nil, err
+	//		}
+	//	} else {
+	//		break
+	//	}
+	//	time.Sleep(time.Millisecond * 500)
+	//}
+
 	return session, nil
 }
 
