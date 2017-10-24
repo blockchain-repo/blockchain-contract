@@ -26,7 +26,9 @@ func Insert(db string, name string, jsonstr string) r.WriteResponse {
 	session := ConnectDB(db)
 	res, err := r.Table(name).Insert(r.JSON(jsonstr)).RunWrite(session)
 	if err != nil {
-		uniledgerlog.Error(err.Error())
+		//uniledgerlog.Error(err.Error())
+		uniledgerlog.Error("res.Errors : ", res.Errors)
+		uniledgerlog.Error("res.Inserted :", res.Inserted)
 	}
 	return res
 }
@@ -727,22 +729,22 @@ func GetContractsLogPaginationByCondition(contractId string, owner string, contr
 //根据 contract.id 获取合约处理主节点
 func GetContractMainPubkeyByContract(id string) (string, error) {
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_CONTRACTS).Get(id).Count().Default(0).Run(session)
-	if err != nil {
-		return "", err
-	}
-
-	var blo int
-	err = res.One(&blo)
-	if err != nil {
-		return "", err
-	}
-	if blo == 0 {
-		return "", nil
-	}
+	//res, err := r.Table(TABLE_CONTRACTS).Get(id).Count().Default(0).Run(session)
+	//if err != nil {
+	//	return "", err
+	//}
+	//
+	//var blo int
+	//err = res.One(&blo)
+	//if err != nil {
+	//	return "", err
+	//}
+	//if blo == 0 {
+	//	return "", nil
+	//}
 
 	// continue ...
-	res, err = r.Table(TABLE_CONTRACTS).Get(id).Field("ContractHead").Field("MainPubkey").Run(session)
+	res, err := r.Table(TABLE_CONTRACTS).Get(id).Field("ContractHead").Field("MainPubkey").Run(session)
 	if err != nil {
 		return "", err
 	}
@@ -962,7 +964,8 @@ func GetVotesByContractId(contractId string) (string, error) {
 	}
 
 	session := ConnectDB(DBNAME)
-	res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("Vote").Field("VoteFor").Eq(contractId)).Run(session)
+	//res, err := r.Table(TABLE_VOTES).Filter(r.Row.Field("Vote").Field("VoteFor").Eq(contractId)).Run(session)
+	res, err := r.Table(TABLE_VOTES).GetAllByIndex("Vote_VoteFor", contractId).Run(session)
 	if err != nil {
 		return "", err
 	}

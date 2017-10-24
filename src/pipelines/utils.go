@@ -46,6 +46,12 @@ func Pipe(apps ...func(in io.Reader, out io.Writer)) func(in io.Reader, out io.W
 	return app
 }
 
+func Trace(msg string, start time.Time, printFunc func(f interface{}, v ...interface{})) func() {
+	return func() {
+		printFunc("%s cost (%f ms)", msg, float32(time.Since(start).Nanoseconds())/1000000)
+	}
+}
+
 func SaveOutputErrorData(tableName string, coModel model.ContractOutput) bool {
 
 	//uniledgerlog.Info("in SaveOutputErrorData--dataid : ", common.Serialize(coModel.Id))

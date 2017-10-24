@@ -1,8 +1,6 @@
 package rethinkdb
 
 import (
-	"fmt"
-
 	"unicontract/src/common/uniledgerlog"
 
 	r "gopkg.in/gorethink/gorethink.v3"
@@ -46,6 +44,19 @@ var Tables = []string{TABLE_CONTRACTS,
 	TABLE_EARNINGS,
 }
 
+func CreateTableIndex(db string) {
+	session := ConnectDB(db)
+	response, err := r.Table(TABLE_VOTES).IndexCreateFunc(
+		"Vote_VoteFor",
+		r.Row.Field("Vote").Field("VoteFor"),
+		r.IndexCreateOpts{Multi: true},
+	).RunWrite(session)
+	if err != nil {
+		uniledgerlog.Error("Error creating index:", err)
+	}
+	uniledgerlog.Info("%d index created", response.Created)
+}
+
 func CreateTable(db string, name string) {
 	session := ConnectDB(db)
 	respo, err := r.TableCreate(name).RunWrite(session)
@@ -53,7 +64,7 @@ func CreateTable(db string, name string) {
 		uniledgerlog.Error("Error creating table: %s", err)
 	}
 
-	fmt.Printf("%d table created\n", respo.TablesCreated)
+	uniledgerlog.Info("%d table created\n", respo.TablesCreated)
 }
 
 func CreateDatabase(name string) {
@@ -63,7 +74,7 @@ func CreateDatabase(name string) {
 		uniledgerlog.Error("Error creating database: %s", err)
 	}
 
-	fmt.Printf("%d DB created\n", resp.DBsCreated)
+	uniledgerlog.Info("%d DB created\n", resp.DBsCreated)
 }
 
 func DropDatabase() {
@@ -74,7 +85,7 @@ func DropDatabase() {
 		uniledgerlog.Error("Error dropping database: %s", err)
 	}
 
-	fmt.Printf("%d DB dropped, %d tables dropped\n", resp.DBsDropped, resp.TablesDropped)
+	uniledgerlog.Info("%d DB dropped, %d tables dropped\n", resp.DBsDropped, resp.TablesDropped)
 }
 
 func InitDatabase() {
@@ -84,4 +95,6 @@ func InitDatabase() {
 	for _, x := range Tables {
 		CreateTable(dbname, x)
 	}
+
+	CreateTableIndex(dbname)
 }

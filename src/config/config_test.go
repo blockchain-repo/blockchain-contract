@@ -1,25 +1,24 @@
 package config
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 /**
- * function : 
+ * function :
  * param   :
- * return : 
+ * return :
  */
 
 func TestWriteConToFile(t *testing.T) {
 	WriteConToFile()
 }
 
-func TestTest(t *testing.T){
+func TestTest(t *testing.T) {
 	fmt.Println(Config.Keyring)
 	fmt.Println(Config.Keypair.PrivateKey)
 	fmt.Println(Config.Keypair.PublicKey)
-
 }
 
 func TestReadUnicontractConfig(t *testing.T) {

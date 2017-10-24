@@ -132,7 +132,7 @@ func Test_GetContractMainPubkeyByContract(t *testing.T) {
 	id := "ecd4200f171d4be58e3e428b1c104045c7c9fdd367ea6a112c57cd9069eb6720"
 	main_pubkey, err := GetContractMainPubkeyByContract(id)
 	if err != nil {
-		fmt.Println("error Test_GetContractMainPubkeyById")
+		fmt.Println("error Test_GetContractMainPubkeyById", err)
 	}
 	fmt.Println("222", main_pubkey)
 }
