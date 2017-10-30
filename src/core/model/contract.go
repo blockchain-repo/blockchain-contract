@@ -290,9 +290,21 @@ func (c *ContractModel) IsSignatureValid() bool {
 		return false
 	}
 	contractSignatures := c.ContractBody.ContractSignatures
+
+	contractSignaturesOwnerMap := make(map[string]bool)
+
 	for _, contractSignature := range contractSignatures {
 
 		ownerPubkey := contractSignature.OwnerPubkey
+
+		_, ok := contractSignaturesOwnerMap[ownerPubkey]
+		if ok {
+			uniledgerlog.Error("IsSignatureValid contractSignatures中 ", ownerPubkey, " 存在重复项", contractOwners)
+			return false
+		} else {
+			contractSignaturesOwnerMap[ownerPubkey] = true
+		}
+
 		if !contractOwnersSet.Has(ownerPubkey) {
 			uniledgerlog.Error("IsSignatureValid contractOwner ", ownerPubkey, " 不存在于", contractOwners)
 			return false
