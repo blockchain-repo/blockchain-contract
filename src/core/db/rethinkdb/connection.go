@@ -1,6 +1,7 @@
 package rethinkdb
 
 import (
+	"math/rand"
 	"sync"
 	"time"
 
@@ -12,11 +13,9 @@ import (
 )
 
 var (
-	one                     sync.Once
-	session                 *r.Session
-	rethinkDBInitialCap     int
-	rethinkDBMaxOpen        int
-	rethinkDBReconnectCount int
+	one              sync.Once
+	slSession        []*r.Session
+	rethinkDBMaxOpen int
 )
 
 func Connect() *r.Session { // FIXME: GetSession?
@@ -44,51 +43,27 @@ func Connect() *r.Session { // FIXME: GetSession?
 func ConnectDB(dbname string) *r.Session { // FIXME: GetSession?
 	var err error
 	one.Do(func() {
-		var err error
-		rethinkDBInitialCap, err = beego.AppConfig.Int("RethinkDBInitialCap")
-		if err != nil {
-			uniledgerlog.Error(err)
-			rethinkDBInitialCap = 50
-		}
-
+		slSession = make([]*r.Session, 0)
 		rethinkDBMaxOpen, err = beego.AppConfig.Int("RethinkDBMaxOpen")
 		if err != nil {
 			uniledgerlog.Error(err)
 			rethinkDBMaxOpen = 100
 		}
-
-		rethinkDBReconnectCount, err = beego.AppConfig.Int("RethinkDBReconnectCount")
-		if err != nil {
-			uniledgerlog.Error(err)
-			rethinkDBReconnectCount = 5
-		}
-
+	})
+	if len(slSession) < rethinkDBMaxOpen {
 		ip := config.Config.LocalIp
 		port := config.Config.Port
-		session, err = r.Connect(r.ConnectOpts{
-			Address:    ip + ":" + port,
-			Database:   dbname,
-			InitialCap: rethinkDBInitialCap,
-			MaxOpen:    rethinkDBMaxOpen,
+		session, err := r.Connect(r.ConnectOpts{
+			Address:  ip + ":" + port,
+			Database: dbname,
 		})
+
 		if err != nil {
 			uniledgerlog.Error(err.Error())
 		}
-	})
-
-	count := rethinkDBReconnectCount
-	for count > 0 {
-		if !session.IsConnected() {
-			count--
-			err = session.Reconnect()
-			if err != nil {
-				uniledgerlog.Error(err.Error())
-			}
-		} else {
-			break
-		}
-		time.Sleep(time.Millisecond * 500)
+		slSession = append(slSession, session)
+		return session
 	}
-
-	return session
+	rand.Seed(time.Now().UnixNano())
+	return slSession[rand.Intn(len(slSession))]
 }
