@@ -12,6 +12,7 @@ import (
 	"unicontract/src/common"
 	"unicontract/src/common/monitor"
 	"unicontract/src/common/uniledgerlog"
+	"unicontract/src/config"
 	"unicontract/src/core"
 	"unicontract/src/core/db/rethinkdb"
 	"unicontract/src/core/engine/execengine/function"
@@ -1017,3 +1018,29 @@ func (c *ContractController) Terminate() {
 }
 
 //demo使用---------------------------------------------------------------------------------------------------------------
+
+// 部署检测使用-----------------------------------------------------------------------------------------------------------
+/**
+ * function : 部署检测节点公约环
+ * param   :
+ * return : 将节点公约环及ip返回
+ */
+func (c *ContractController) DetectConfig() {
+
+	publicKey := config.Config.Keypair.PublicKey
+	nodeKeyring := config.Config.Keyring
+	keyrings := append(nodeKeyring, publicKey)
+	nodeIp := config.Config.LocalIp
+
+	result := make(map[string]interface{})
+
+	result["keyrings"] = keyrings
+	result["keyrings"] = keyrings
+	result["nodeIp"] = nodeIp
+
+	data, _ := json.Marshal(result)
+
+	c.Ctx.WriteString(string(data))
+}
+
+// 部署检测结束-----------------------------------------------------------------------------------------------------------

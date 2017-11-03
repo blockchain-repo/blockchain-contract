@@ -71,6 +71,9 @@ func init() {
 			beego.NSRouter("/queryAmmeterBalance", &controllers.ContractController{}, "post:QueryAmmeterBalance"),
 			beego.NSRouter("/queryRecords", &controllers.ContractController{}, "post:QueryRecords"),
 			//demo使用---------------------------------------------------------------------------------------------------
+
+			// 部署检测使用
+			beego.NSRouter("/detect", &controllers.ContractController{}, "get:DetectConfig"),
 		),
 	)
 	beego.AddNamespace(ns)
