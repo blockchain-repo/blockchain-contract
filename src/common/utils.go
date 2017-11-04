@@ -12,8 +12,8 @@ import (
 	"time"
 	"unicontract/src/common/basic"
 
-	"unicontract/src/common/uniledgerlog"
 	"github.com/google/uuid"
+	"unicontract/src/common/uniledgerlog"
 )
 
 func GenDate() string {
@@ -339,4 +339,68 @@ func IsExistFileOrDir(file string) bool {
 		return false
 	}
 	return true
+}
+
+/**
+根据key获取paramsMap中相应的参数, 并且转换为string型
+for rethinkDB filter, 需要是同一级的,并且只能组合相等条件的参数
+*/
+func EqualParamStringGetForFilter(paramsMap map[string]interface{}, key string, conditionMap map[string]interface{}) map[string]interface{} {
+	param := paramsMap[key]
+	paramVal, _ := param.(string)
+	paramVal = strings.Trim(paramVal, " ")
+	if len(paramVal) != 0 {
+		conditionMap[key] = paramVal
+	}
+	return conditionMap
+}
+
+/**
+根据key获取paramsMap中相应的参数, 并且转换为valType型
+for rethinkDB filter, 需要是同一级的,并且只能组合相等条件的参数
+*/
+func EqualParamGetForFilter(paramsMap map[string]interface{}, key string, conditionMap map[string]interface{}, valType string) map[string]interface{} {
+	param := paramsMap[key]
+	if len(valType) == 0 {
+		valType = "string"
+	}
+	if valType == "string" {
+		EqualParamStringGetForFilter(paramsMap, key, conditionMap)
+	} else if valType == "int" {
+		paramVal, _ := param.(int)
+		conditionMap[key] = paramVal
+	}
+	return conditionMap
+}
+
+/**
+根据key获取paramsMap中相应的参数, 并且转换为string型
+for rethinkDB filter, 需要是同一级的,并且只能组合相等条件的参数
+*/
+func EqualParamsStringGetForFilter(paramsMap map[string]interface{}, conditionMap map[string]interface{}, key ...string) map[string]interface{} {
+	for i := 0; i < len(key); i++ {
+		conditionMap = EqualParamGetForFilter(paramsMap, key[i], conditionMap, "string")
+	}
+	return conditionMap
+}
+
+/**
+根据 keyAndTypeMap 获取paramsMap中相应的参数, 并且转换为keyAndTypeMap 中 key对应的类型
+for rethinkDB filter, 需要是同一级的,并且只能组合相等条件的参数
+*/
+func EqualParamsGetAllForFilter(paramsMap map[string]interface{}, keyAndTypeMap map[string]string, conditionMap map[string]interface{}) map[string]interface{} {
+	for k, v := range keyAndTypeMap {
+		conditionMap = EqualParamGetForFilter(paramsMap, k, conditionMap, v)
+	}
+	return conditionMap
+}
+
+/**
+根据 key 获取paramsMap中相应的参数, 并且转换为string, for rethinkDB filter
+*/
+func ParamsGetStringValForFilter(paramsMap map[string]interface{}, key string) string {
+	val := paramsMap[key]
+	valStr, _ := val.(string)
+	valStr = strings.Trim(valStr, " ")
+	return valStr
 }
