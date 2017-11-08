@@ -1,0 +1,52 @@
+#ip,port
+ip: ""
+port: ""
+
+#请求头
+head:
+  Content-Type: "application/json"
+
+#1.查询Agent A和B的public key接口
+GetAgentPublicKey:
+  method: "post"
+  path: ""
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#2.发送session key
+SendSessionKey:
+  method: "post"
+  path: ""
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#3.发送信封加密key
+SendEncKey:
+  method: "post"
+  path: ""
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#4.查询Agent A和B是否已经收到消息
+GetAgentState:
+  method: "post"
+  path: ""
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
+
+#5.发送数据
+SendData:
+  method: "post"
+  path: ""
+
+  jsonBody:
+    beginTime: "123"
+    endTime: "123"
