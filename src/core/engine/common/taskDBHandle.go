@@ -13,6 +13,7 @@ package common
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
 )
 
 import (
@@ -54,6 +55,11 @@ type UpdateMonitorSuccStruct struct {
 	SnTaskExecuteIndexNew int
 	SnFlag                int
 }
+
+var (
+	one          sync.Once
+	beginToSleep bool
+)
 
 //---------------------------------------------------------------------------
 // 查询没有发送的task
@@ -340,6 +346,15 @@ func UpdateMonitorDead(strContractID string, strContractHashID string) error {
 //---------------------------------------------------------------------------
 // 只供头节点调用，根据公钥环为每个节点插入待执行任务
 func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
+	one.Do(func() {
+		var ok bool
+		beginToSleep, ok = scanEngineConf["begin_to_sleep"].(bool)
+		if !ok {
+			uniledgerlog.Error("beginToSleep param is error")
+			beginToSleep = false
+		}
+	})
+
 	var err error
 	var slMapTaskSchedule []interface{}
 	allPublicKeys := config.GetAllPublicKey()
@@ -353,6 +368,11 @@ func InsertTaskSchedules(taskScheduleBase db.TaskSchedule) error {
 		taskSchedule.NodePubkey = allPublicKeys[index]
 		taskSchedule.StartTime = taskScheduleBase.StartTime
 		taskSchedule.EndTime = taskScheduleBase.EndTime
+		if beginToSleep {
+			taskSchedule.SendFlag = 1
+		} else {
+			taskSchedule.SendFlag = 0
+		}
 
 		mapObj, _ := common.StructToMap(taskSchedule)
 		slMapTaskSchedule = append(slMapTaskSchedule, mapObj)
@@ -368,6 +388,32 @@ func GetTaskState(strContractID, strContractHashId string) (db.RunState, error) 
 	failedThreshold, _ := scanEngineConf["failed_count_threshold"].(int)
 	waitThreshold, _ := scanEngineConf["wait_count_threshold"].(int)
 	return GetTaskScheduleState(strContractID, strContractHashId, failedThreshold, waitThreshold)
+}
+
+//---------------------------------------------------------------------------
+// 开始合约
+func StartContractBatch(strContractID string) error {
+	strNodePubkey := config.Config.Keypair.PublicKey
+	if len(strNodePubkey) == 0 ||
+		len(strContractID) == 0 {
+		return fmt.Errorf("param is null")
+	}
+
+	slID, err := GetIDs(strNodePubkey, strContractID)
+	if err != nil {
+		return err
+	}
+
+	if len(slID) == 0 {
+		return fmt.Errorf("not find")
+	}
+
+	var slID_interface []interface{}
+	for index := range slID {
+		slID_interface = append(slID_interface, slID[index])
+	}
+
+	return SetTaskScheduleFlagBatch(slID_interface, false)
 }
 
 //---------------------------------------------------------------------------
@@ -393,7 +439,7 @@ func TerminateContractBatch(strContractID string) error {
 		slID_interface = append(slID_interface, slID[index])
 	}
 
-	return SetContractTerminateBatch(slID_interface)
+	return SetTaskScheduleOverFlagBatch(slID_interface)
 }
 
 //---------------------------------------------------------------------------

@@ -286,6 +286,16 @@ func SetTaskScheduleOverFlag(strID string) error {
 }
 
 //---------------------------------------------------------------------------
+// 批量设置OverFlag字段，发送为1,未发送为0
+func SetTaskScheduleOverFlagBatch(slID []interface{}) error {
+	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
+		1, common.GenTimestamp())
+
+	_, err := DBInf.UpdateBatch(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, strJSON, slID)
+	return err
+}
+
+//---------------------------------------------------------------------------
 // 设置TaskId,TaskState和TaskExecuteIndex字段的值
 func SetTaskState(strID, strTaskId, strState string, nTaskExecuteIndex int) error {
 	strJSON := fmt.Sprintf("{\"TaskId\":\"%s\",\"TaskState\":\"%s\",\"TaskExecuteIndex\":%d}",
@@ -315,16 +325,6 @@ func SetTaskScheduleCount(strID string, flag int) error {
 	strJSON := fmt.Sprintf("{\"LastExecuteTime\":\"%s\"}", common.GenTimestamp())
 
 	_, err = DBInf.Update(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, strID, strJSON)
-	return err
-}
-
-//---------------------------------------------------------------------------
-// 批量设置SendFlag字段，发送为1,未发送为0
-func SetContractTerminateBatch(slID []interface{}) error {
-	strJSON := fmt.Sprintf("{\"OverFlag\":%d,\"LastExecuteTime\":\"%s\"}",
-		1, common.GenTimestamp())
-
-	_, err := DBInf.UpdateBatch(db.DATABASEB_NAME, db.TABLE_TASK_SCHEDULE, strJSON, slID)
 	return err
 }
 
